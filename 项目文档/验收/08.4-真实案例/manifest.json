@@ -1,0 +1,365 @@
+{
+  "version": "08.4-public-case-archive@1",
+  "date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "task": "08.4",
+  "cases": 7,
+  "files": 35,
+  "dataRule": "DEC-001 KEEP-09 project-authored public developer acceptance inputs only",
+  "source": "First passing Chrome capture per representative; raw request/result bytes copied without reformatting",
+  "completeMatrix": false,
+  "fullMatrix": "42 inputs per browser in .artifacts/08.4/browser-captures; independently verified separately",
+  "entries": [
+    {
+      "key": "assignment-negative",
+      "caseId": "case.c.assignment",
+      "project": "chrome",
+      "browserVersion": "155.0.8059.84",
+      "sourceKind": "public-content-original",
+      "values": {
+        "x": -7
+      },
+      "stdout": "-5\n",
+      "identity": {
+        "contextId": "c81c559b-9966-4c33-a700-f452ecf007b8",
+        "contextRevision": 5,
+        "runId": "e423f711-53ba-40e8-bf33-76aa5e9eb853",
+        "sourceRevision": 5,
+        "submissionId": "d169de4a-f0bd-4fa6-b050-78af52bdaaf8",
+        "testCaseKey": null
+      },
+      "steps": 6,
+      "files": [
+        {
+          "path": "assignment-negative/request.json",
+          "bytes": 1202,
+          "sha256": "4cadbb303abab8843f596be684cf5f4769a7c28484bc46d20a9eba8944fd6633"
+        },
+        {
+          "path": "assignment-negative/result.json",
+          "bytes": 8061,
+          "sha256": "e43c839ed833b49e14dbf5dc5f19bc32774daa1bbcc8155a152bd973fc2576b3"
+        },
+        {
+          "path": "assignment-negative/catalog.json",
+          "bytes": 2128,
+          "sha256": "15f511c4dc6fe22028ac640f2d41b73e9ebf142ee445e07c6b0beb58aa3cd076"
+        },
+        {
+          "path": "assignment-negative/source.c",
+          "bytes": 106,
+          "sha256": "71f46c571e4e6d6ad85392d73c0b163bee50dc7726e097590551f6f466911325"
+        },
+        {
+          "path": "assignment-negative/ui.json",
+          "bytes": 4407,
+          "sha256": "e0de06ec72cfbde0b5b54a49d5e7cf2a254b38a47a963e124643498fe1e04cd8"
+        }
+      ]
+    },
+    {
+      "key": "branch-positive",
+      "caseId": "case.c.branch",
+      "project": "chrome",
+      "browserVersion": "155.0.8059.84",
+      "sourceKind": "public-content-original",
+      "values": {
+        "x": 1
+      },
+      "stdout": "1\n",
+      "identity": {
+        "contextId": "65ce3bd5-41f9-4986-b4ef-5ce99d548ca1",
+        "contextRevision": 4,
+        "runId": "ba93d5c5-9ffb-4116-9dbf-a4be69d8ec3b",
+        "sourceRevision": 4,
+        "submissionId": "b1913d2a-86a5-40f9-acc6-e533dcff7476",
+        "testCaseKey": null
+      },
+      "steps": 8,
+      "files": [
+        {
+          "path": "branch-positive/request.json",
+          "bytes": 1248,
+          "sha256": "f079fed520bcf8387a486f548ef88b470361603b71d901f36c0affbd6efd0584"
+        },
+        {
+          "path": "branch-positive/result.json",
+          "bytes": 9997,
+          "sha256": "a06d748ae857c299c51bdb3fa6b5b3b82dae1120ab6dc880494e1851f4aab93e"
+        },
+        {
+          "path": "branch-positive/catalog.json",
+          "bytes": 2110,
+          "sha256": "a6fdc67a31a15f4935f1eb20b9b8c346e6d713d84017340910e772c3e4c55372"
+        },
+        {
+          "path": "branch-positive/source.c",
+          "bytes": 150,
+          "sha256": "8d5f3cdb706af55b46eed61c023cb35e0660fc4372ef571bd820b083f12493af"
+        },
+        {
+          "path": "branch-positive/ui.json",
+          "bytes": 4605,
+          "sha256": "d23dd96e42040a2de5d01eddaa82bdbae8d1a58ba6e48bcb171ab2f7e4b09a4d"
+        }
+      ]
+    },
+    {
+      "key": "loops-normal",
+      "caseId": "case.c.loops",
+      "project": "chrome",
+      "browserVersion": "155.0.8059.84",
+      "sourceKind": "public-content-original",
+      "values": {
+        "n": 5
+      },
+      "stdout": "15\n15\n",
+      "identity": {
+        "contextId": "6292b01b-8ec3-405c-84a0-a84c5a950482",
+        "contextRevision": 5,
+        "runId": "1df57b1a-2d2e-43d7-b632-69aa1da8634a",
+        "sourceRevision": 5,
+        "submissionId": "2000ec9c-f5e6-4caa-a216-049d35f6c6c6",
+        "testCaseKey": null
+      },
+      "steps": 67,
+      "files": [
+        {
+          "path": "loops-normal/request.json",
+          "bytes": 1426,
+          "sha256": "b671c9f1a76b4b20e3d79abcf20e61eabb5ce4d89327447b903e5fe13c2e41bd"
+        },
+        {
+          "path": "loops-normal/result.json",
+          "bytes": 72095,
+          "sha256": "a195c1ecb56bee8f0d4c8d32c2aaccabce9ad4b88373efcde545618c46dcdffc"
+        },
+        {
+          "path": "loops-normal/catalog.json",
+          "bytes": 2377,
+          "sha256": "a5fc10d5cb02e0888ee8bc362930156f2d193411d3228954f5dfaa36b8c2c75f"
+        },
+        {
+          "path": "loops-normal/source.c",
+          "bytes": 321,
+          "sha256": "04101a70238e31441cc1a32ca1d98a63511ca66598f7ac2f3e0fdd026232a9a7"
+        },
+        {
+          "path": "loops-normal/ui.json",
+          "bytes": 10238,
+          "sha256": "c610a822b8a39d82e7906f12e62a121aa412ccb67646563d93b038a6fc3e3370"
+        }
+      ]
+    },
+    {
+      "key": "array-mixed",
+      "caseId": "case.c.array-traversal",
+      "project": "chrome",
+      "browserVersion": "155.0.8059.84",
+      "sourceKind": "public-content-original",
+      "values": {
+        "values": [
+          -2,
+          5,
+          5,
+          0
+        ]
+      },
+      "stdout": "8\n",
+      "identity": {
+        "contextId": "b993c9aa-3af8-463a-908f-a9d910b32e74",
+        "contextRevision": 5,
+        "runId": "bb766647-424a-470e-912a-84c0e2a4a002",
+        "sourceRevision": 5,
+        "submissionId": "e8cda48f-50f7-40aa-90bb-cab109df8773",
+        "testCaseKey": null
+      },
+      "steps": 34,
+      "files": [
+        {
+          "path": "array-mixed/request.json",
+          "bytes": 1406,
+          "sha256": "72f825e244df94e6c234311cad85426fcc3f0daf77bc6ffc282354b54f660b6b"
+        },
+        {
+          "path": "array-mixed/result.json",
+          "bytes": 38514,
+          "sha256": "b60d0700a982ada918303be003571b5686bd1d085fbf36c0c441afd7fdd98d7a"
+        },
+        {
+          "path": "array-mixed/catalog.json",
+          "bytes": 2641,
+          "sha256": "0d9f30287d311b7e6f67264302bb20d4845a01c9c264de2e9e738a9f4a1d3bd3"
+        },
+        {
+          "path": "array-mixed/source.c",
+          "bytes": 221,
+          "sha256": "cb79f73bde96399291ca4d6df1c880308e93f332305e83de53f17cc33aedbefe"
+        },
+        {
+          "path": "array-mixed/ui.json",
+          "bytes": 7127,
+          "sha256": "7a1f358f619613c3d8d3b0a1c9bdfdc21e052aa7cb7ab39d0eb56e748028fa84"
+        }
+      ]
+    },
+    {
+      "key": "bubble-sort-mixed",
+      "caseId": "case.c.bubble-sort",
+      "project": "chrome",
+      "browserVersion": "155.0.8059.84",
+      "sourceKind": "public-content-original",
+      "values": {
+        "values": [
+          4,
+          -1,
+          4,
+          0
+        ]
+      },
+      "stdout": "-1 0 4 4\n",
+      "identity": {
+        "contextId": "345863ed-ea60-43ed-b540-b77068d14f19",
+        "contextRevision": 2,
+        "runId": "96dc2ee8-d1ac-4268-ad67-687da6cd3796",
+        "sourceRevision": 2,
+        "submissionId": "6426c049-019a-47b6-b0de-2ebfe6dfa6ef",
+        "testCaseKey": null
+      },
+      "steps": 125,
+      "files": [
+        {
+          "path": "bubble-sort-mixed/request.json",
+          "bytes": 1745,
+          "sha256": "dc1a6fec75f0677acf3660cc71f4207005f776ca87104533ce0d4c0e0c799c1a"
+        },
+        {
+          "path": "bubble-sort-mixed/result.json",
+          "bytes": 150079,
+          "sha256": "1ced7821236ae2d288071498cd21ce8d24325e42115289e57a8d201fea5f54b6"
+        },
+        {
+          "path": "bubble-sort-mixed/catalog.json",
+          "bytes": 3182,
+          "sha256": "9bb20fa30122f6e62de678c43b6210a634b19f6ee158ee44f4178098d6f2d40a"
+        },
+        {
+          "path": "bubble-sort-mixed/source.c",
+          "bytes": 547,
+          "sha256": "aa3cfedf8a3b12e0396f22de2976bf121ede0970e6998305418f795975dadbd3"
+        },
+        {
+          "path": "bubble-sort-mixed/ui.json",
+          "bytes": 16142,
+          "sha256": "2cc1a7141a74bff89eef03a69a977a70750aa1084467bf21727403d75b0fe444"
+        }
+      ]
+    },
+    {
+      "key": "selection-sort-mixed",
+      "caseId": "case.c.selection-sort",
+      "project": "chrome",
+      "browserVersion": "155.0.8059.84",
+      "sourceKind": "public-content-original",
+      "values": {
+        "values": [
+          4,
+          -1,
+          4,
+          0
+        ]
+      },
+      "stdout": "-1 0 4 4\n",
+      "identity": {
+        "contextId": "638f07c8-1922-481a-a424-3b78e48b5f6d",
+        "contextRevision": 9,
+        "runId": "e2262c78-8c99-47af-b644-c3c808523eaa",
+        "sourceRevision": 9,
+        "submissionId": "d3103dea-1370-49aa-931c-0caefe1dbcf5",
+        "testCaseKey": null
+      },
+      "steps": 134,
+      "files": [
+        {
+          "path": "selection-sort-mixed/request.json",
+          "bytes": 1841,
+          "sha256": "e029dfd43142a10567c44e8799f2d18dc8325adb2ed2a662dc4270d98422fe49"
+        },
+        {
+          "path": "selection-sort-mixed/result.json",
+          "bytes": 159816,
+          "sha256": "e6aea2afa5d3e31f9e8e5dde0b6b8a8bacefe1af7a60218b309f652574b4258f"
+        },
+        {
+          "path": "selection-sort-mixed/catalog.json",
+          "bytes": 3271,
+          "sha256": "01540967af210aa9e1636429d9ef7652d984a3d80cd1488ac8b008c5ebf924cd"
+        },
+        {
+          "path": "selection-sort-mixed/source.c",
+          "bytes": 633,
+          "sha256": "fcec96f5f62742423d4d7f49a21d3bf6bcd4f91cb37cdf46a509e83ad41edd0d"
+        },
+        {
+          "path": "selection-sort-mixed/ui.json",
+          "bytes": 17141,
+          "sha256": "e3d7870748d8d690fd55038278274c7340fa990e39bd6bd644d96e9723034e92"
+        }
+      ]
+    },
+    {
+      "key": "search-duplicate",
+      "caseId": "case.c.binary-search-first",
+      "project": "chrome",
+      "browserVersion": "155.0.8059.84",
+      "sourceKind": "public-content-original",
+      "values": {
+        "values": [
+          -2,
+          0,
+          0,
+          4,
+          8
+        ],
+        "target": 0
+      },
+      "stdout": "1\n",
+      "identity": {
+        "contextId": "8114607c-925f-4ec0-aa8d-a3ec38a19a54",
+        "contextRevision": 17,
+        "runId": "97c1ae94-a18a-4d23-95b7-8e374100c600",
+        "sourceRevision": 17,
+        "submissionId": "dc601977-e6ac-4498-af87-5c4aa4aad395",
+        "testCaseKey": null
+      },
+      "steps": 51,
+      "files": [
+        {
+          "path": "search-duplicate/request.json",
+          "bytes": 1791,
+          "sha256": "e05409cba671ef59b78633f9627e854265c08fe0f1682c2ed84f8b0c895a153d"
+        },
+        {
+          "path": "search-duplicate/result.json",
+          "bytes": 62731,
+          "sha256": "b92562101b6a751c40ccb747d6bbd21d37c670b097411071e5fbbb155bd9590f"
+        },
+        {
+          "path": "search-duplicate/catalog.json",
+          "bytes": 3402,
+          "sha256": "ec32c444791b313b659036ad79a84240b0e043ed77d8199a431faaabdf608c52"
+        },
+        {
+          "path": "search-duplicate/source.c",
+          "bytes": 500,
+          "sha256": "2c893cf9f3f886256276fb2ba047c7f343035cfb83bf9422ab76454b7fef057b"
+        },
+        {
+          "path": "search-duplicate/ui.json",
+          "bytes": 9022,
+          "sha256": "50ef1faf15bdccfef75106a2b753a9605d80a87707eb09b88a6c77f0f486234a"
+        }
+      ]
+    }
+  ]
+}

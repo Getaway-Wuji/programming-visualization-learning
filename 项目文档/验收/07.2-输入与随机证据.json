@@ -1,0 +1,370 @@
+{
+  "task": "07.2",
+  "date": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "status": "已验收",
+  "evidenceLevel": "real-browser-Rust-WASM-explicit-input-and-reproducible-random",
+  "contractsChanged": false,
+  "dependenciesChanged": false,
+  "limitsChanged": false,
+  "additionalRule": "generator.c.p0-input@1.0.0 reserved generator semantics, new standalone 07.2 rules and vectors only",
+  "scope": {
+    "cases": 7,
+    "chapters": 3,
+    "lessons": 6,
+    "exercises": 6,
+    "blocks": 20,
+    "integers": [
+      -999,
+      999
+    ],
+    "sequenceMaximum": 30,
+    "sourceBytes": 32768,
+    "requestBytes": 65536,
+    "resultBytes": 16777216,
+    "jsonDepth": 32,
+    "fuel": 1000000,
+    "steps": 20000,
+    "liveBytes": 1048576,
+    "outputBytes": 16384,
+    "deadlineMs": 1000,
+    "wasmMaximumPages": 2048,
+    "contentPurpose": "contract-fixture",
+    "learningEventsEmitted": false
+  },
+  "validation": {
+    "fullCheckExitCode": 0,
+    "fullCheckLog": ".artifacts/07.2/check-final.log",
+    "rustTests": 359,
+    "newRustInputTests": 4,
+    "frontendUnitTests": 298,
+    "inputUnitTests": 25,
+    "newPerformanceTests": 7,
+    "browserPassed": 255,
+    "browserUnexpected": 0,
+    "browserSkipped": 0,
+    "browserFlaky": 0,
+    "inputBrowserScenarios": 14,
+    "inputBrowserRuns": 42,
+    "projects": [
+      "chrome",
+      "edge",
+      "firefox-automation"
+    ],
+    "browserReport": ".artifacts/07.2/browser-final.json",
+    "unitReport": ".artifacts/07.2/unit-final.json",
+    "stockFirefox": "158.0",
+    "stockFirefoxReport": ".artifacts/07.2/firefox-input.json",
+    "afterFullCheckOnlyChange": "Stock Firefox old all-textarea empty/readOnly selector scoped to actual code-panel; targeted eslint/prettier and complete stock Firefox rerun passed. No product change after full check.",
+    "independentSchemaAudit": {
+      "evidenceKind": "Independent generic frozen-schema interpreter versus build-time specialized validator; public authored protocol fixtures only.",
+      "fixtureCount": 12,
+      "specimensPerKindPerFixture": 150,
+      "randomSeed": 1729,
+      "checked": 3600,
+      "differenceCount": 0,
+      "differences": [],
+      "staticReview": {
+        "conclusion": "No blocking omission found in the reviewed frozen-schema specialization or the canonical/trace validation paths.",
+        "schema": "Every validation keyword present in the frozen schema is generated, including dependentRequired, additionalProperties, propertyNames, allOf/anyOf/oneOf/not and if/then/else. The frozen schema contains no $ref sibling constraints or nonprimitive const/enum values that the specialization would ignore.",
+        "deferredTrace": "Only iteration is deferred: every step and checkpoint is still schema-checked, including their nested fields and conditional result constraints. Object caches distinguish schema definitions and do not substitute for deferred item checks.",
+        "json": "The pre-allocation lexical pass enforces sorted unique ASCII identifier keys, canonical safe integers (no exponent, leading zero, floating point or -0), canonical string escapes, valid Unicode scalars, no BOM/whitespace, and at most 32 nested containers. Fatal streaming UTF-8 decoding precedes it. Native and chunked allocation are followed by full canonical re-encoding comparison.",
+        "trace": "Relationship validation still covers complete node/source/binding references, each forward delta precondition, full state invariants and observations/counters, every 128-step checkpoint, terminal completeness, and the entire inverse sequence back to the initial state. It does not merely sample first/last steps.",
+        "cancellation": "The owner guard remains around decode chunks, asynchronous validation work, canonical comparison and acceptance; forward and inverse trace traversal yield per atomic step. The broader-packet allocation fallback was being completed by its owner during review; this audit does not replace the full cancellation/deadline regression results."
+      },
+      "reviewedFiles": {
+        "scripts/generate-execution-schema.mjs": "2255fbbc9079ee682018f0d12f93b4b15445f1b420793c118cb23f16dba8fdf9",
+        "web/src/engine/execution-json.ts": "506a16d22744c5ade39b53aa681fc34a308b7120395f417cb50090d3bc39b46d",
+        "web/src/engine/protocol.ts": "b07db0984f431aed7a2343cf8b62f25b9fe20b2adfc814034a3bac240e68244f",
+        "web/src/engine/trace-validation.ts": "088c2dc809b12b4b0a28ce441aa8aed4a62415932dfe230b3add52bcfe7eea79",
+        "web/src/engine/execution-schema.generated.ts": "f279d2e1f1af9478330961094165048eb85f840254da78df4a13ad9f715dc3ec"
+      },
+      "limitations": "Schema equivalence sampling only; not a proof of provenance, Rust behavior, trace relationships, performance, or the complete schema input space."
+    },
+    "nativeAndWasmClippyWarnings": 0,
+    "behaviors": "manual/empty/malformed/range/length/order/index; deterministic seeded vectors; real values unchanged templates; old preparation/result races; reset/switch/refresh/peer-clear; module failure retry; no input retention/transport"
+  },
+  "maximumInput": {
+    "note": "Actual production 1000ms acceptance, full schema/canonical/checkpoint/forward+inverse validation; separate 500ms/11.4 complete performance remains unaccepted.",
+    "input": {
+      "values": [
+        30,
+        29,
+        28,
+        27,
+        26,
+        25,
+        24,
+        23,
+        22,
+        21,
+        20,
+        19,
+        18,
+        17,
+        16,
+        15,
+        14,
+        13,
+        12,
+        11,
+        10,
+        9,
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1
+      ]
+    },
+    "steps": 5330,
+    "stockFirefoxResult": {
+      "bindingCount": 2,
+      "codes": [],
+      "completeness": "complete",
+      "cursor": 5330,
+      "elapsedMs": 486,
+      "exitCode": 0,
+      "identity": {
+        "contextId": "5151c037-c18f-4338-8320-62f6d16ffd62",
+        "contextRevision": 5,
+        "runId": "8d92d6d0-00dc-4ee1-bb42-14684387b579",
+        "sourceRevision": 5,
+        "submissionId": "c0ddfbeb-2e5a-4f50-827a-23ee16d59225",
+        "testCaseKey": null
+      },
+      "judge": null,
+      "nodeCount": 122,
+      "output": "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30\n",
+      "producer": "rust",
+      "stats": {
+        "fuelUsed": 964127,
+        "maxAstDepth": 4,
+        "maxSyntaxDepth": 8,
+        "peakVirtualBytes": 136,
+        "rustMicros": 238000
+      },
+      "status": "completed",
+      "steps": 5330
+    },
+    "independentNode": {
+      "case": "case.c.bubble-sort",
+      "n30": true,
+      "bytes": 7047200,
+      "steps": 5330,
+      "status": "completed",
+      "rustMs": 364.43039999999996,
+      "decodeMs": 233.07209999999998,
+      "guards": 44347,
+      "maxGuardGapMs": 20.748100000000022,
+      "pages": 1216
+    },
+    "finalUnit": {
+      "note": "Real current Rust/WASM in Node; timings are technical observations, browser original-deadline acceptance is tested separately.",
+      "buildId": "d0614714ac5673bfbd7c8b512dd35b39661da9b40993aefdd13e6a2f0b8d04ae",
+      "bytes": 7047218,
+      "steps": 5330,
+      "rustMs": 454.04320000000007,
+      "decodeMs": 284.9557,
+      "maxGuardGapMs": 20.971499999999878,
+      "guards": 44352
+    }
+  },
+  "wasm": {
+    "bytes": 840011,
+    "memories": [
+      {
+        "minimum": 17,
+        "maximum": 2048,
+        "shared": false
+      }
+    ],
+    "imports": [
+      {
+        "module": "./c_viz_wasm_bg.js",
+        "name": "__wbg_now_1b05fba468b632aa",
+        "kind": "function"
+      },
+      {
+        "module": "./c_viz_wasm_bg.js",
+        "name": "__wbindgen_init_externref_table",
+        "kind": "function"
+      },
+      {
+        "module": "./c_viz_wasm_bg.js",
+        "name": "__wbindgen_generic_0000000000000001",
+        "kind": "function"
+      }
+    ],
+    "exports": [
+      {
+        "name": "memory",
+        "kind": "memory"
+      },
+      {
+        "name": "build_probe",
+        "kind": "function"
+      },
+      {
+        "name": "execute_request",
+        "kind": "function"
+      },
+      {
+        "name": "prepare_case",
+        "kind": "function"
+      },
+      {
+        "name": "prepare_input",
+        "kind": "function"
+      },
+      {
+        "name": "__abort_handler",
+        "kind": "global"
+      },
+      {
+        "name": "__instance_terminated",
+        "kind": "global"
+      },
+      {
+        "name": "__wbindgen_externrefs",
+        "kind": "table"
+      },
+      {
+        "name": "__externref_table_dealloc",
+        "kind": "function"
+      },
+      {
+        "name": "__wbindgen_free",
+        "kind": "function"
+      },
+      {
+        "name": "__wbindgen_malloc",
+        "kind": "function"
+      },
+      {
+        "name": "__wbindgen_realloc",
+        "kind": "function"
+      },
+      {
+        "name": "__wbindgen_start",
+        "kind": "function"
+      }
+    ],
+    "hashes": {
+      "package-lock.json": "1f20229c85a01249648dceb447bae286adfaeb94efbe575ad8e11188b41dc078",
+      "Cargo.lock": "4984880e9904d0fd39a4774eb03f6800f23e13ece5bf164e87746fc76bc52cf2",
+      "web/src/generated/c_viz_wasm.js": "01899582e424bfa4736f48e360e36b49058628779417baf72f76f3c22d973cda",
+      "web/src/generated/c_viz_wasm_bg.wasm": "d0614714ac5673bfbd7c8b512dd35b39661da9b40993aefdd13e6a2f0b8d04ae"
+    }
+  },
+  "fileIntegrity": {
+    "baselineCount": 294,
+    "modified": [
+      "README.md",
+      "engine/core/src/exec.rs",
+      "engine/wasm/src/lib.rs",
+      "scripts/firefox-stable.mjs",
+      "tests/browser/adapters.spec.ts",
+      "tests/browser/harness/main.ts",
+      "tests/browser/integration.spec.ts",
+      "tests/browser/navigation.spec.ts",
+      "tests/unit/execution-protocol.test.ts",
+      "web/src/components/CaseExecution.tsx",
+      "web/src/engine/execution-client.ts",
+      "web/src/engine/execution.worker.ts",
+      "web/src/engine/protocol.ts",
+      "web/src/engine/trace-validation.ts",
+      "web/src/pages/Workspaces.tsx",
+      "web/src/styles.css",
+      "项目文档/任务进度与交接.md"
+    ],
+    "added": [
+      "engine/core/tests/input_prepare_acceptance.rs",
+      "scripts/generate-execution-schema.mjs",
+      "tests/browser/harness/input-data.ts",
+      "tests/browser/input-data.spec.ts",
+      "tests/unit/execution-performance.test.ts",
+      "tests/unit/input-data.test.ts",
+      "web/src/components/InputPanel.tsx",
+      "web/src/engine/execution-json.ts",
+      "web/src/engine/execution-schema.generated.ts",
+      "web/src/engine/input-data.ts",
+      "项目文档/交接/07.2-交接.md",
+      "项目文档/架构决策/07.2-输入与随机记录规则.md",
+      "项目文档/验收/07.2-输入与随机证据.json",
+      "项目文档/验收/07.2-输入与随机验收.md",
+      "项目文档/验收/07.2-随机生成向量.json"
+    ],
+    "deleted": [],
+    "protectedCount": 277,
+    "sourceHashes": {
+      "README.md": "535d9e3711cb1ac750497c62bef8d45bb0026fd5ab2cc635739e5545f39f15d2",
+      "engine/core/src/exec.rs": "6fa8f72da17fe3c6ad807db5681d2a2625171572046d9e12c2b02e8df1e2faf0",
+      "engine/wasm/src/lib.rs": "0c2c5aec8b80de0683a551a75f0e7abba5b3a22182beb8261b17095a6bab570d",
+      "scripts/firefox-stable.mjs": "744b6e3f76fef1b5b2d46a36968b67038df8d2b06654279a75e5976e2fe4ec76",
+      "tests/browser/adapters.spec.ts": "03d26d56f4c32c8fc046d62bf495fd4ca125024c788cc2ff6010a12d068465b8",
+      "tests/browser/harness/main.ts": "2e205a2f4dab60d90bd05e1bff99d57c65f17b6c85b943568e6e5541b0b80f2b",
+      "tests/browser/integration.spec.ts": "5362e59ac83730c39da6241eb97671113e6a037b4fe1eb46b7a2425e1d28fb50",
+      "tests/browser/navigation.spec.ts": "021f57e2a877bddb2cd50adbc89bed13753530ced3220f8831db63aac479ad05",
+      "tests/unit/execution-protocol.test.ts": "ab3a9782bae88fca4cfdac8b5a8dcda2f7774881cafa4a26044e33d3755fff41",
+      "web/src/components/CaseExecution.tsx": "f9fa3031887b7b8593148f802fea0ed48f7f449171c20a2f5f066358ff6974dd",
+      "web/src/engine/execution-client.ts": "08c1c09325245f1329d45b46d5cf34541d4bda5441973dc84838f02ba5adaa0b",
+      "web/src/engine/execution.worker.ts": "720be0c8c1129d3a84d0484d0828e93426d5fa8480852bc7c5c0c77c2aecf013",
+      "web/src/engine/protocol.ts": "b07db0984f431aed7a2343cf8b62f25b9fe20b2adfc814034a3bac240e68244f",
+      "web/src/engine/trace-validation.ts": "088c2dc809b12b4b0a28ce441aa8aed4a62415932dfe230b3add52bcfe7eea79",
+      "web/src/pages/Workspaces.tsx": "800475409d95c7fad734044be11e869c86f3b2f7f8eb42cd028d730179b7aac9",
+      "web/src/styles.css": "43d21875a1fc442b395735107770811d7c450536bf19bf17362dcbf826ace114",
+      "项目文档/任务进度与交接.md": "abfb7f3a6d8ea34499f59b4b2bfd960d48a941b159582c96bc8690015e974485",
+      "engine/core/tests/input_prepare_acceptance.rs": "5f1155ad8935ea0fcdf02c2c1525dbf23604f2bf59835fefe9b4a3f7a5477cd9",
+      "scripts/generate-execution-schema.mjs": "2255fbbc9079ee682018f0d12f93b4b15445f1b420793c118cb23f16dba8fdf9",
+      "tests/browser/harness/input-data.ts": "2d1a59b493b1964ddecea5d77008bb9f7340b673e0ccdff112d20c7e38777ae4",
+      "tests/browser/input-data.spec.ts": "eeabf9a731cf9268d6b9ae2b771cd089144174dff2305fed39f5989f3f0ebb61",
+      "tests/unit/execution-performance.test.ts": "d8200103549d27821128bd5f8b573090ed074eab525e231a6834a484011061bc",
+      "tests/unit/input-data.test.ts": "33098793b90f2f94ebcc03567fdc6dcf5a7132b86efca5a4fbc93c0f24eef5eb",
+      "web/src/components/InputPanel.tsx": "ab9a34fbff48984b8f49b4bf9c63ff914d42435a77de8d1f102d79a58a506453",
+      "web/src/engine/execution-json.ts": "506a16d22744c5ade39b53aa681fc34a308b7120395f417cb50090d3bc39b46d",
+      "web/src/engine/execution-schema.generated.ts": "f279d2e1f1af9478330961094165048eb85f840254da78df4a13ad9f715dc3ec",
+      "web/src/engine/input-data.ts": "24308d8b45c108c725774094da94579a4431e77fccc70683c45c8eb7e3dc6cd4",
+      "项目文档/交接/07.2-交接.md": "d6303345f9985f0e9f969549f382127234d8c3fb89b83644b1eb110ce9a74aa9",
+      "项目文档/架构决策/07.2-输入与随机记录规则.md": "a4ddc5cda861823b0ae940041f2e10ef15cf8d17be66d18bdade05aab849ddd4",
+      "项目文档/验收/07.2-输入与随机验收.md": "6e75738d3e27be712eeb3d2fec2c8d0340669cbd1c3413551e47256def61f846",
+      "项目文档/验收/07.2-随机生成向量.json": "da969d506d20ef71b9e838c5e9b1cb2ae0443c6d16f0e1f2f7e99233c501babf"
+    },
+    "selfHashExcluded": "项目文档/验收/07.2-输入与随机证据.json",
+    "protectedScope": "All 02.1–02.4 frozen files/goldens/indices, old acceptance/handoffs, dependencies/locks/root config/routes/storage/learning models and all other unchanged baseline files individually SHA256 checked."
+  },
+  "artifactHashes": {
+    ".artifacts/07.2/baseline.json": "f42cb6286a745a311beeb7a7a747fadba233c9e44bdb7b4ec6979afe40e450f5",
+    ".artifacts/07.2/check-final.log": "16c06e24ab40e61a1baf2603e0a28ac3037ec0b94a6bc15fd0714e6bf4a4ddd2",
+    ".artifacts/07.2/browser-final.json": "e60088eb5fd3a534171104a6ddf50e57894e25711084edf671e8044161a3bbdf",
+    ".artifacts/07.2/unit-final.json": "8320f91ca0cd47d9e1624b5b6623304ddd7000d1421af36cc0e8a501af23e8c4",
+    ".artifacts/07.2/firefox-stable.log": "93486ee0a9e5f78022424a26282df7ccf0037108a9c6f50d2a26b97a40abdf04",
+    ".artifacts/07.2/firefox-input.json": "4b5f32dcd4534628f9ff2cc844141a0cb7aa716c15804e7b78cfffc6bfa22ae1",
+    ".artifacts/07.2/firefox-execution-regression.json": "e8f7db80d5158ea44d5dfc8fcfccd189d6adaedccb30584e90638b17eaa8d56a",
+    ".artifacts/07.2/performance-results.json": "9e024cade98a3ff087b292e47508d75e5fa5ed757d964e3317083f68f57be0df",
+    ".artifacts/07.2/performance-unit.json": "897c901a96b8a85d02d50c793f1cae50cd1e71c59dde0e247f90f86fa60c7762",
+    ".artifacts/07.2/audit-schema.json": "2b5581e9b483d3f09d81b84eed0350f441cd3bcf0233ea71d68d1bb86de6f31d",
+    ".artifacts/07.2/artifact-hashes-final.json": "f63a2ac0e2bf7c18c128f0cdd29d2bf895e806cb979c1a8dc1480aab063f642f",
+    ".artifacts/07.2/wasm-build-final.json": "46c5e97b6fe36e479532b4bd8aefc5f2136d1b7a48e11a659bb2c6ec73f60f57",
+    ".artifacts/07.2/audit-schema-differential.mjs": "080438f6bac1615d586fe7d141b36e84e39f3cdc51f93db5683af1244e79c013",
+    ".artifacts/07.2/performance-probe.mjs": "d0e4c645364fcf92ba98f59d7aaa9eeecf0c9dcd579f196528eb189cf47ddcc9",
+    ".artifacts/07.2/performance-transform.mjs": "4cadd58d086deb37284350c9d860c541bfba9445d529195a8dcf4a2a8b557f78",
+    ".artifacts/07.2/input-data-unit.json": "c770e40e8c71b7a26d587a4ea94ab2ed069770a45c2a27bbfca839d8c35f4052",
+    ".artifacts/07.2/chrome-input-initial.log": "28019a911d8d053771a6d5cc2321a96787091d67f00f05dd3530c9fdf3e4550c",
+    ".artifacts/07.2/chrome-input-fixed.log": "bcf86ee05e315e6fbf016a1cac3644e2daae0991fb41465c75db3e39e50b7b7a",
+    ".artifacts/07.2/chrome-input-repro-final.log": "9987e57616f98640f2b39ace0f62e402963fec75054bc9da06558f41192fa1a9",
+    ".artifacts/07.2/firefox-stable-initial.log": "4b5160367a971d225fec9aef15fd8093ae122911155f9e1312871e0e1a0fe470"
+  },
+  "limitations": [
+    "07.3",
+    "08 player/highlight",
+    "judge/real learning events and rewards",
+    "published content",
+    "11.4 complete 500ms cold/warm/network/device performance",
+    "11.5 P0 gate",
+    "production hosting/CDN/accessibility"
+  ]
+}

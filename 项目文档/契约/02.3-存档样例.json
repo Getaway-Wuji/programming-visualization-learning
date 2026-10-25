@@ -1,0 +1,55 @@
+{
+  "contractVersion": "1.0.0",
+  "purpose": "contract-fixture",
+  "limitations": "Synthetic store projections only; no user records, IndexedDB writes, real execution or production reward policy.",
+  "demoPolicy": {
+    "ref": { "id": "policy.fixture.p0", "version": "1.0.0" },
+    "points": {
+      "reward.exercise.first-pass": 10,
+      "reward.lesson.first-completion": 20,
+      "reward.case.first-view": 8,
+      "reward.daily-goal.once": 5
+    }
+  },
+  "snapshots": [
+    {
+      "id": "fixture.save.initial",
+      "purpose": "contract-fixture",
+      "snapshot": {
+        "meta": { "schemaVersion": "1.0.0", "dbVersion": 1, "generation": "11111111-1111-4111-8111-111111111111", "revision": 0, "timeZone": "Asia/Shanghai", "createdAt": "2026-10-13T16:00:00.000Z", "activePackageRef": { "id": "content.c.p0", "version": "1.0.0" } },
+        "settings": { "theme": "system", "reducedMotion": "system", "playbackRate": 1, "goalTemplate": null },
+        "avatar": { "presetId": "avatar.basic.01", "accentColor": "#168A72" },
+        "progress": [], "dailyFacts": [], "goals": [], "ledger": [], "receipts": [], "aliases": []
+      }
+    },
+    {
+      "id": "fixture.save.persisted-projection",
+      "purpose": "contract-fixture",
+      "snapshot": {
+        "meta": { "schemaVersion": "1.0.0", "dbVersion": 1, "generation": "11111111-1111-4111-8111-111111111111", "revision": 3, "timeZone": "Asia/Shanghai", "createdAt": "2026-10-13T16:00:00.000Z", "activePackageRef": { "id": "content.c.p0", "version": "1.0.0" } },
+        "settings": { "theme": "system", "reducedMotion": "system", "playbackRate": 1, "goalTemplate": { "revision": 1, "targets": { "exercise": 1, "lesson": 1, "case": 0 } } },
+        "avatar": { "presetId": "avatar.basic.01", "accentColor": "#168A72" },
+        "progress": [
+          { "eventType": "lesson.study-confirmed", "result": "confirmed", "subjectRef": { "id": "lesson.c.variables-output", "version": "1.0.0" }, "packageRef": { "id": "content.c.p0", "version": "1.0.0" }, "learningRevision": 1, "firstAt": "2026-10-13T16:00:00.000Z", "lastAt": "2026-10-13T16:00:00.000Z" },
+          { "eventType": "exercise.passed", "result": "passed", "subjectRef": { "id": "exercise.c.echo", "version": "1.0.0" }, "packageRef": { "id": "content.c.p0", "version": "1.0.0" }, "learningRevision": 1, "firstAt": "2026-10-13T16:01:00.000Z", "lastAt": "2026-10-13T16:01:00.000Z" },
+          { "eventType": "lesson.completed", "result": "completed", "subjectRef": { "id": "lesson.c.variables-output", "version": "1.0.0" }, "packageRef": { "id": "content.c.p0", "version": "1.0.0" }, "learningRevision": 1, "firstAt": "2026-10-13T16:01:00.000Z", "lastAt": "2026-10-13T16:01:00.000Z" }
+        ],
+        "dailyFacts": [
+          { "eventType": "exercise.passed", "subjectRef": { "id": "exercise.c.echo", "version": "1.0.0" }, "canonicalSubjectId": "exercise.c.echo", "occurredAt": "2026-10-13T16:01:00.000Z", "localDate": "2026-10-14" },
+          { "eventType": "lesson.completed", "subjectRef": { "id": "lesson.c.variables-output", "version": "1.0.0" }, "canonicalSubjectId": "lesson.c.variables-output", "occurredAt": "2026-10-13T16:01:00.000Z", "localDate": "2026-10-14" }
+        ],
+        "goals": [ { "localDate": "2026-10-14", "goalVersion": 1, "targets": { "exercise": 1, "lesson": 1, "case": 0 }, "achievedAt": "2026-10-13T16:01:00.000Z" } ],
+        "ledger": [
+          { "sourceId": "reward.exercise.first-pass", "subjectId": "exercise.c.echo", "localDate": "2026-10-14", "occurredAt": "2026-10-13T16:01:00.000Z", "status": "posted", "points": 10, "policyRef": { "id": "policy.fixture.p0", "version": "1.0.0" } },
+          { "sourceId": "reward.lesson.first-completion", "subjectId": "lesson.c.variables-output", "localDate": "2026-10-14", "occurredAt": "2026-10-13T16:01:00.000Z", "status": "posted", "points": 20, "policyRef": { "id": "policy.fixture.p0", "version": "1.0.0" } },
+          { "sourceId": "reward.daily-goal.once", "subjectId": "local-goal.2026-10-14", "localDate": "2026-10-14", "occurredAt": "2026-10-13T16:01:00.000Z", "status": "posted", "points": 5, "policyRef": { "id": "policy.fixture.p0", "version": "1.0.0" } }
+        ],
+        "receipts": [
+          { "eventId": "00000001-0000-4000-8000-000000000001", "eventType": "lesson.study-confirmed", "subjectRef": { "id": "lesson.c.variables-output", "version": "1.0.0" }, "packageRef": { "id": "content.c.p0", "version": "1.0.0" }, "learningRevision": 1, "result": "confirmed", "goalVersion": 1, "occurredAt": "2026-10-13T16:00:00.000Z", "localDate": "2026-10-14", "committedRevision": 2 },
+          { "eventId": "00000002-0000-4000-8000-000000000002", "eventType": "exercise.passed", "subjectRef": { "id": "exercise.c.echo", "version": "1.0.0" }, "packageRef": { "id": "content.c.p0", "version": "1.0.0" }, "learningRevision": 1, "result": "passed", "goalVersion": 1, "occurredAt": "2026-10-13T16:01:00.000Z", "localDate": "2026-10-14", "committedRevision": 3 }
+        ],
+        "aliases": []
+      }
+    }
+  ]
+}

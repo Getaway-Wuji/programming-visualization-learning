@@ -1,0 +1,1330 @@
+{
+  "caseViewVersion": "1.0.0",
+  "purpose": "case-view",
+  "capabilities": [
+    "case.view-confirmed"
+  ],
+  "sourceSha256": "713133313e65ba9ea000daa18d5feaea84beeb65f296b8102edc5de114fa2611",
+  "catalogs": [
+    {
+      "packageRef": {
+        "id": "content.c.p0",
+        "version": "1.0.1"
+      },
+      "subject": {
+        "id": "case.c.assignment",
+        "version": "1.0.1",
+        "title": "变量赋值",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "kind": "demo",
+        "learningRevision": 1,
+        "acceptedPriorVersions": [],
+        "knowledgeRefs": [
+          {
+            "id": "knowledge.c.variables",
+            "version": "1.0.0"
+          }
+        ],
+        "relatedLessonRefs": [
+          {
+            "id": "lesson.c.variables-output",
+            "version": "1.0.1"
+          }
+        ],
+        "programRef": {
+          "id": "program.c.assignment",
+          "version": "1.0.0"
+        },
+        "teaching": {
+          "objectives": [
+            "观察初始化、赋值和输出"
+          ],
+          "explanation": "从输入声明读取x，再执行x=x+2，把新值写回同一个变量，最后输出。默认x=3输出5和换行，x=-2输出0。逐步观察初始化、读取、写回和输出；后退时应一起恢复变量与输出。它演示赋值，不替代原样输出练习。",
+          "exampleProgramRefs": [
+            {
+              "id": "program.c.assignment",
+              "version": "1.0.0"
+            }
+          ],
+          "commonMistakes": [
+            "把倒放动画当状态恢复"
+          ],
+          "boundaryNotes": [
+            "正零负输入",
+            "输出恢复"
+          ],
+          "source": {
+            "document": "content/c/p0/README.md",
+            "locator": "case.c.assignment；项目原创；沿用08.4已验证程序"
+          }
+        },
+        "resultRule": "assignment-add-two",
+        "rewardRef": {
+          "id": "reward.case.first-view",
+          "version": "1.0.0"
+        }
+      },
+      "program": {
+        "id": "program.c.assignment",
+        "version": "1.0.0",
+        "title": "变量赋值演示参考",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "inputRef": {
+          "id": "input.c.scalar-x",
+          "version": "1.0.0"
+        },
+        "exampleInput": {
+          "x": 3
+        },
+        "sourceExample": "#include <stdio.h>\nint main(void) {\n    int x = 3;\n    x = x + 2;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+        "bindings": [
+          {
+            "bindingKey": "param.x",
+            "inputKey": "x",
+            "targetName": "x",
+            "targetKind": "scalar",
+            "from": "field"
+          }
+        ],
+        "blockRefs": [
+          {
+            "id": "block.c.main",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.integer",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-int",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.assign-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.arithmetic",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.printf",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.return",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.unary",
+            "version": "1.0.0"
+          }
+        ],
+        "reference": {
+          "document": "../架构决策/01.3-正反样例清单.md",
+          "locator": "REF-07"
+        }
+      },
+      "inputSpec": {
+        "id": "input.c.scalar-x",
+        "version": "1.0.0",
+        "title": "普通整数x",
+        "fields": [
+          {
+            "key": "x",
+            "kind": "integer",
+            "min": -999,
+            "max": 999
+          }
+        ],
+        "relations": []
+      }
+    },
+    {
+      "packageRef": {
+        "id": "content.c.p0",
+        "version": "1.0.1"
+      },
+      "subject": {
+        "id": "case.c.branch",
+        "version": "1.0.1",
+        "title": "分支判断",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "kind": "demo",
+        "learningRevision": 1,
+        "acceptedPriorVersions": [],
+        "knowledgeRefs": [
+          {
+            "id": "knowledge.c.conditions",
+            "version": "1.0.0"
+          }
+        ],
+        "relatedLessonRefs": [
+          {
+            "id": "lesson.c.conditions",
+            "version": "1.0.1"
+          }
+        ],
+        "programRef": {
+          "id": "program.c.nonnegative",
+          "version": "1.0.0"
+        },
+        "teaching": {
+          "objectives": [
+            "观察正零负三组的两条路径"
+          ],
+          "explanation": "判断x>=0：正数和0走if输出1，负数走else输出0，均带换行。默认-3输出0。切换5、0、-3，观察只走其中一条路；0是检查>=边界的关键。",
+          "exampleProgramRefs": [
+            {
+              "id": "program.c.nonnegative",
+              "version": "1.0.0"
+            }
+          ],
+          "commonMistakes": [
+            "零被误分为负数"
+          ],
+          "boundaryNotes": [
+            "0边界"
+          ],
+          "source": {
+            "document": "content/c/p0/README.md",
+            "locator": "case.c.branch；项目原创；沿用08.4已验证程序"
+          }
+        },
+        "resultRule": "nonnegative-branch",
+        "rewardRef": {
+          "id": "reward.case.first-view",
+          "version": "1.0.0"
+        }
+      },
+      "program": {
+        "id": "program.c.nonnegative",
+        "version": "1.0.0",
+        "title": "非负分支参考",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "inputRef": {
+          "id": "input.c.scalar-x",
+          "version": "1.0.0"
+        },
+        "exampleInput": {
+          "x": -3
+        },
+        "sourceExample": "#include <stdio.h>\nint main(void) {\n    int x = -3;\n    if (x >= 0) {\n        printf(\"1\\n\");\n    } else {\n        printf(\"0\\n\");\n    }\n    return 0;\n}\n",
+        "bindings": [
+          {
+            "bindingKey": "param.x",
+            "inputKey": "x",
+            "targetName": "x",
+            "targetKind": "scalar",
+            "from": "field"
+          }
+        ],
+        "blockRefs": [
+          {
+            "id": "block.c.main",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.integer",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-int",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.comparison",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.if",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.printf",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.return",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.unary",
+            "version": "1.0.0"
+          }
+        ],
+        "reference": {
+          "document": "../架构决策/01.3-正反样例清单.md",
+          "locator": "REF-03"
+        }
+      },
+      "inputSpec": {
+        "id": "input.c.scalar-x",
+        "version": "1.0.0",
+        "title": "普通整数x",
+        "fields": [
+          {
+            "key": "x",
+            "kind": "integer",
+            "min": -999,
+            "max": 999
+          }
+        ],
+        "relations": []
+      }
+    },
+    {
+      "packageRef": {
+        "id": "content.c.p0",
+        "version": "1.0.1"
+      },
+      "subject": {
+        "id": "case.c.loops",
+        "version": "1.0.1",
+        "title": "循环",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "kind": "demo",
+        "learningRevision": 1,
+        "acceptedPriorVersions": [],
+        "knowledgeRefs": [
+          {
+            "id": "knowledge.c.loops",
+            "version": "1.0.0"
+          }
+        ],
+        "relatedLessonRefs": [
+          {
+            "id": "lesson.c.loops",
+            "version": "1.0.1"
+          }
+        ],
+        "programRef": {
+          "id": "program.c.two-loop-sums",
+          "version": "1.0.0"
+        },
+        "teaching": {
+          "objectives": [
+            "比较while/for的控制和作用域"
+          ],
+          "explanation": "while和for分别使用独立累加器从1加到n。默认n=5输出两行15；n=0不进入循环体，输出两行0。比较计数器、条件、更新与块作用域，不把播放快慢当算法耗时。",
+          "exampleProgramRefs": [
+            {
+              "id": "program.c.two-loop-sums",
+              "version": "1.0.0"
+            }
+          ],
+          "commonMistakes": [
+            "for退出后仍读取j"
+          ],
+          "boundaryNotes": [
+            "n=0、1、30"
+          ],
+          "source": {
+            "document": "content/c/p0/README.md",
+            "locator": "case.c.loops；项目原创；沿用08.4已验证程序"
+          }
+        },
+        "resultRule": "two-loop-sums",
+        "rewardRef": {
+          "id": "reward.case.first-view",
+          "version": "1.0.0"
+        }
+      },
+      "program": {
+        "id": "program.c.two-loop-sums",
+        "version": "1.0.0",
+        "title": "两种循环求和参考",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "inputRef": {
+          "id": "input.c.loop-count",
+          "version": "1.0.0"
+        },
+        "exampleInput": {
+          "n": 5
+        },
+        "sourceExample": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int i = 1;\n    int sumWhile = 0;\n    while (i <= n) {\n        sumWhile = sumWhile + i;\n        i = i + 1;\n    }\n    int sumFor = 0;\n    for (int j = 1; j <= n; j = j + 1) {\n        sumFor = sumFor + j;\n    }\n    printf(\"%d\\n%d\\n\", sumWhile, sumFor);\n    return 0;\n}\n",
+        "bindings": [
+          {
+            "bindingKey": "param.n",
+            "inputKey": "n",
+            "targetName": "n",
+            "targetKind": "scalar",
+            "from": "field"
+          }
+        ],
+        "blockRefs": [
+          {
+            "id": "block.c.main",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.integer",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-int",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.assign-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.arithmetic",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.comparison",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.while",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.for",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.printf",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.return",
+            "version": "1.0.0"
+          }
+        ],
+        "reference": {
+          "document": "../架构决策/01.3-正反样例清单.md",
+          "locator": "REF-04"
+        }
+      },
+      "inputSpec": {
+        "id": "input.c.loop-count",
+        "version": "1.0.0",
+        "title": "循环次数n",
+        "fields": [
+          {
+            "key": "n",
+            "kind": "integer",
+            "min": 0,
+            "max": 30
+          }
+        ],
+        "relations": []
+      }
+    },
+    {
+      "packageRef": {
+        "id": "content.c.p0",
+        "version": "1.0.1"
+      },
+      "subject": {
+        "id": "case.c.array-traversal",
+        "version": "1.0.1",
+        "title": "数组遍历",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "kind": "demo",
+        "learningRevision": 1,
+        "acceptedPriorVersions": [],
+        "knowledgeRefs": [
+          {
+            "id": "knowledge.c.arrays",
+            "version": "1.0.0"
+          },
+          {
+            "id": "knowledge.c.loops",
+            "version": "1.0.0"
+          }
+        ],
+        "relatedLessonRefs": [
+          {
+            "id": "lesson.c.array-sum",
+            "version": "1.0.1"
+          }
+        ],
+        "programRef": {
+          "id": "program.c.array-sum",
+          "version": "1.0.0"
+        },
+        "teaching": {
+          "objectives": [
+            "观察下标读取和累加"
+          ],
+          "explanation": "从sum=0、i=0开始，循环读取values[i]并累加直到i==n。默认[3,-1,2]的累计值是3、2、4，输出4和换行。空输入不读占位数组，输出0。",
+          "exampleProgramRefs": [
+            {
+              "id": "program.c.array-sum",
+              "version": "1.0.0"
+            }
+          ],
+          "commonMistakes": [
+            "空序列读占位值"
+          ],
+          "boundaryNotes": [
+            "空、单项、多项"
+          ],
+          "source": {
+            "document": "content/c/p0/README.md",
+            "locator": "case.c.array-traversal；项目原创；沿用08.4已验证程序"
+          }
+        },
+        "resultRule": "logical-array-sum",
+        "rewardRef": {
+          "id": "reward.case.first-view",
+          "version": "1.0.0"
+        }
+      },
+      "program": {
+        "id": "program.c.array-sum",
+        "version": "1.0.0",
+        "title": "数组求和参考",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "inputRef": {
+          "id": "input.c.int-sequence",
+          "version": "1.0.0"
+        },
+        "exampleInput": {
+          "values": [
+            3,
+            -1,
+            2
+          ]
+        },
+        "sourceExample": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, -1, 2};\n    int sum = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        sum = sum + values[i];\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n",
+        "bindings": [
+          {
+            "bindingKey": "param.n",
+            "inputKey": "values",
+            "targetName": "n",
+            "targetKind": "logical-length",
+            "from": "length-of"
+          },
+          {
+            "bindingKey": "param.values",
+            "inputKey": "values",
+            "targetName": "values",
+            "targetKind": "array",
+            "from": "field",
+            "emptyStorage": "one-zero-placeholder"
+          }
+        ],
+        "blockRefs": [
+          {
+            "id": "block.c.main",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.integer",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-int",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.assign-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.arithmetic",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.comparison",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.for",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-array",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-array",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.printf",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.return",
+            "version": "1.0.0"
+          }
+        ],
+        "reference": {
+          "document": "../架构决策/01.3-正反样例清单.md",
+          "locator": "REF-06"
+        }
+      },
+      "inputSpec": {
+        "id": "input.c.int-sequence",
+        "version": "1.0.0",
+        "title": "逻辑整数序列",
+        "fields": [
+          {
+            "key": "values",
+            "kind": "sequence",
+            "min": -999,
+            "max": 999,
+            "minItems": 0,
+            "maxItems": 30
+          }
+        ],
+        "relations": [
+          {
+            "kind": "length-of",
+            "field": "values",
+            "target": "n"
+          }
+        ]
+      }
+    },
+    {
+      "packageRef": {
+        "id": "content.c.p0",
+        "version": "1.0.1"
+      },
+      "subject": {
+        "id": "case.c.bubble-sort",
+        "version": "1.0.1",
+        "title": "冒泡排序",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "kind": "algorithm",
+        "learningRevision": 1,
+        "acceptedPriorVersions": [],
+        "knowledgeRefs": [
+          {
+            "id": "knowledge.c.sorting",
+            "version": "1.0.0"
+          }
+        ],
+        "relatedLessonRefs": [
+          {
+            "id": "lesson.c.array-sum",
+            "version": "1.0.1"
+          }
+        ],
+        "programRef": {
+          "id": "program.c.bubble-sort",
+          "version": "1.0.0"
+        },
+        "teaching": {
+          "objectives": [
+            "观察相邻比较和严格大于时交换"
+          ],
+          "explanation": "相邻两项只有左值严格大于右值才交换，每轮把一个最大值移到右端并缩短尾部；该版本没有提前退出。默认[3,1,2]最后为[1,2,3]，输出1 2 3和换行。同值不交换；空输入只输出换行。交换通过临时变量和两次数组写入完成，以真实轨迹为准。",
+          "exampleProgramRefs": [
+            {
+              "id": "program.c.bubble-sort",
+              "version": "1.0.0"
+            }
+          ],
+          "commonMistakes": [
+            "同值也交换",
+            "用动画时间当运行性能"
+          ],
+          "boundaryNotes": [
+            "空、单项、已序、逆序、重复、负数；n最多30",
+            "空stdout仅换行，非空单空格无尾空格"
+          ],
+          "source": {
+            "document": "content/c/p0/README.md",
+            "locator": "case.c.bubble-sort；项目原创；沿用08.4已验证程序"
+          }
+        },
+        "resultRule": "bubble-ascending",
+        "rewardRef": {
+          "id": "reward.case.first-view",
+          "version": "1.0.0"
+        }
+      },
+      "program": {
+        "id": "program.c.bubble-sort",
+        "version": "1.0.0",
+        "title": "冒泡排序参考",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "inputRef": {
+          "id": "input.c.int-sequence",
+          "version": "1.0.0"
+        },
+        "exampleInput": {
+          "values": [
+            3,
+            1,
+            2
+          ]
+        },
+        "sourceExample": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, 1, 2};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+        "bindings": [
+          {
+            "bindingKey": "param.n",
+            "inputKey": "values",
+            "targetName": "n",
+            "targetKind": "logical-length",
+            "from": "length-of"
+          },
+          {
+            "bindingKey": "param.values",
+            "inputKey": "values",
+            "targetName": "values",
+            "targetKind": "array",
+            "from": "field",
+            "emptyStorage": "one-zero-placeholder"
+          }
+        ],
+        "blockRefs": [
+          {
+            "id": "block.c.main",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.integer",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-int",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.assign-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.arithmetic",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.comparison",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.if",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.for",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-array",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-array",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.write-array",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.printf",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.return",
+            "version": "1.0.0"
+          }
+        ],
+        "reference": {
+          "document": "../架构决策/01.3-正反样例清单.md",
+          "locator": "REF-08"
+        }
+      },
+      "inputSpec": {
+        "id": "input.c.int-sequence",
+        "version": "1.0.0",
+        "title": "逻辑整数序列",
+        "fields": [
+          {
+            "key": "values",
+            "kind": "sequence",
+            "min": -999,
+            "max": 999,
+            "minItems": 0,
+            "maxItems": 30
+          }
+        ],
+        "relations": [
+          {
+            "kind": "length-of",
+            "field": "values",
+            "target": "n"
+          }
+        ]
+      }
+    },
+    {
+      "packageRef": {
+        "id": "content.c.p0",
+        "version": "1.0.1"
+      },
+      "subject": {
+        "id": "case.c.selection-sort",
+        "version": "1.0.1",
+        "title": "选择排序",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "kind": "algorithm",
+        "learningRevision": 1,
+        "acceptedPriorVersions": [],
+        "knowledgeRefs": [
+          {
+            "id": "knowledge.c.sorting",
+            "version": "1.0.0"
+          }
+        ],
+        "relatedLessonRefs": [
+          {
+            "id": "lesson.c.array-sum",
+            "version": "1.0.1"
+          }
+        ],
+        "programRef": {
+          "id": "program.c.selection-sort",
+          "version": "1.0.0"
+        },
+        "teaching": {
+          "objectives": [
+            "观察剩余区最小下标和非自交换"
+          ],
+          "explanation": "每轮先记住剩余区第一个下标，扫描发现严格更小的值才更新最小下标；最后仅在位置不同时交换。默认[3,1,2]成为[1,2,3]。同值保留首次最小下标，但远距离交换可能改变相等元素的相对次序，因此不承诺稳定。空数组只输出换行。",
+          "exampleProgramRefs": [
+            {
+              "id": "program.c.selection-sort",
+              "version": "1.0.0"
+            }
+          ],
+          "commonMistakes": [
+            "宣称稳定排序",
+            "自交换计为真实交换"
+          ],
+          "boundaryNotes": [
+            "空、单项、已序、逆序、重复、负数；n最多30",
+            "输出规范与冒泡相同"
+          ],
+          "source": {
+            "document": "content/c/p0/README.md",
+            "locator": "case.c.selection-sort；项目原创；沿用08.4已验证程序"
+          }
+        },
+        "resultRule": "selection-ascending",
+        "rewardRef": {
+          "id": "reward.case.first-view",
+          "version": "1.0.0"
+        }
+      },
+      "program": {
+        "id": "program.c.selection-sort",
+        "version": "1.0.0",
+        "title": "选择排序参考",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "inputRef": {
+          "id": "input.c.int-sequence",
+          "version": "1.0.0"
+        },
+        "exampleInput": {
+          "values": [
+            3,
+            1,
+            2
+          ]
+        },
+        "sourceExample": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, 1, 2};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+        "bindings": [
+          {
+            "bindingKey": "param.n",
+            "inputKey": "values",
+            "targetName": "n",
+            "targetKind": "logical-length",
+            "from": "length-of"
+          },
+          {
+            "bindingKey": "param.values",
+            "inputKey": "values",
+            "targetName": "values",
+            "targetKind": "array",
+            "from": "field",
+            "emptyStorage": "one-zero-placeholder"
+          }
+        ],
+        "blockRefs": [
+          {
+            "id": "block.c.main",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.integer",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-int",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.assign-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.arithmetic",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.comparison",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.if",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.for",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-array",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-array",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.write-array",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.printf",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.return",
+            "version": "1.0.0"
+          }
+        ],
+        "reference": {
+          "document": "../架构决策/01.3-正反样例清单.md",
+          "locator": "REF-09"
+        }
+      },
+      "inputSpec": {
+        "id": "input.c.int-sequence",
+        "version": "1.0.0",
+        "title": "逻辑整数序列",
+        "fields": [
+          {
+            "key": "values",
+            "kind": "sequence",
+            "min": -999,
+            "max": 999,
+            "minItems": 0,
+            "maxItems": 30
+          }
+        ],
+        "relations": [
+          {
+            "kind": "length-of",
+            "field": "values",
+            "target": "n"
+          }
+        ]
+      }
+    },
+    {
+      "packageRef": {
+        "id": "content.c.p0",
+        "version": "1.0.1"
+      },
+      "subject": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.1",
+        "title": "二分搜索首次匹配",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "kind": "algorithm",
+        "learningRevision": 1,
+        "acceptedPriorVersions": [],
+        "knowledgeRefs": [
+          {
+            "id": "knowledge.c.binary-search",
+            "version": "1.0.0"
+          }
+        ],
+        "relatedLessonRefs": [
+          {
+            "id": "lesson.c.array-sum",
+            "version": "1.0.1"
+          }
+        ],
+        "programRef": {
+          "id": "program.c.binary-search-first",
+          "version": "1.0.0"
+        },
+        "teaching": {
+          "objectives": [
+            "在非递减数组中找首次0基下标"
+          ],
+          "explanation": "数组必须非递减，手动乱序会被拒绝。使用闭区间[left,right]与中点left+(right-left)/2；遇到目标先记下位置，再到左侧找更早匹配。默认[-2,0,0,4,8]查0得到0基下标1；未找到和空数组都返回-1，输出后换行。不能遇到相等就立即返回中点。",
+          "exampleProgramRefs": [
+            {
+              "id": "program.c.binary-search-first",
+              "version": "1.0.0"
+            }
+          ],
+          "commonMistakes": [
+            "手动乱序被静默排序",
+            "重复命中返回任意位置"
+          ],
+          "boundaryNotes": [
+            "空/未命中输出-1和换行",
+            "首尾/重复/范围外；n最多30"
+          ],
+          "source": {
+            "document": "content/c/p0/README.md",
+            "locator": "case.c.binary-search-first；项目原创；沿用08.4已验证程序"
+          }
+        },
+        "resultRule": "binary-first-index",
+        "rewardRef": {
+          "id": "reward.case.first-view",
+          "version": "1.0.0"
+        }
+      },
+      "program": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0",
+        "title": "首次匹配二分参考",
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "inputRef": {
+          "id": "input.c.sorted-search",
+          "version": "1.0.0"
+        },
+        "exampleInput": {
+          "values": [
+            -2,
+            0,
+            0,
+            4,
+            8
+          ],
+          "target": 0
+        },
+        "sourceExample": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int values[5] = {-2, 0, 0, 4, 8};\n    int target = 0;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+        "bindings": [
+          {
+            "bindingKey": "param.n",
+            "inputKey": "values",
+            "targetName": "n",
+            "targetKind": "logical-length",
+            "from": "length-of"
+          },
+          {
+            "bindingKey": "param.values",
+            "inputKey": "values",
+            "targetName": "values",
+            "targetKind": "array",
+            "from": "field",
+            "emptyStorage": "one-zero-placeholder"
+          },
+          {
+            "bindingKey": "param.target",
+            "inputKey": "target",
+            "targetName": "target",
+            "targetKind": "scalar",
+            "from": "field"
+          }
+        ],
+        "blockRefs": [
+          {
+            "id": "block.c.main",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.integer",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-int",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.assign-variable",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.arithmetic",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.comparison",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.if",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.while",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.declare-array",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.read-array",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.printf",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.return",
+            "version": "1.0.0"
+          },
+          {
+            "id": "block.c.unary",
+            "version": "1.0.0"
+          }
+        ],
+        "reference": {
+          "document": "../架构决策/01.3-正反样例清单.md",
+          "locator": "REF-10"
+        }
+      },
+      "inputSpec": {
+        "id": "input.c.sorted-search",
+        "version": "1.0.0",
+        "title": "有序数组和目标",
+        "fields": [
+          {
+            "key": "values",
+            "kind": "sequence",
+            "min": -999,
+            "max": 999,
+            "minItems": 0,
+            "maxItems": 30
+          },
+          {
+            "key": "target",
+            "kind": "integer",
+            "min": -999,
+            "max": 999
+          }
+        ],
+        "relations": [
+          {
+            "kind": "length-of",
+            "field": "values",
+            "target": "n"
+          },
+          {
+            "kind": "nondecreasing",
+            "field": "values"
+          }
+        ]
+      }
+    }
+  ],
+  "templateBindings": {
+    "case.c.assignment": [
+      {
+        "bindingKey": "param.x",
+        "byteRange": {
+          "start": 40,
+          "end": 50
+        }
+      }
+    ],
+    "case.c.branch": [
+      {
+        "bindingKey": "param.x",
+        "byteRange": {
+          "start": 40,
+          "end": 51
+        }
+      }
+    ],
+    "case.c.loops": [
+      {
+        "bindingKey": "param.n",
+        "byteRange": {
+          "start": 40,
+          "end": 50
+        }
+      }
+    ],
+    "case.c.array-traversal": [
+      {
+        "bindingKey": "param.n",
+        "byteRange": {
+          "start": 40,
+          "end": 50
+        }
+      },
+      {
+        "bindingKey": "param.values",
+        "byteRange": {
+          "start": 55,
+          "end": 82
+        }
+      }
+    ],
+    "case.c.bubble-sort": [
+      {
+        "bindingKey": "param.n",
+        "byteRange": {
+          "start": 40,
+          "end": 50
+        }
+      },
+      {
+        "bindingKey": "param.values",
+        "byteRange": {
+          "start": 55,
+          "end": 81
+        }
+      }
+    ],
+    "case.c.selection-sort": [
+      {
+        "bindingKey": "param.n",
+        "byteRange": {
+          "start": 40,
+          "end": 50
+        }
+      },
+      {
+        "bindingKey": "param.values",
+        "byteRange": {
+          "start": 55,
+          "end": 81
+        }
+      }
+    ],
+    "case.c.binary-search-first": [
+      {
+        "bindingKey": "param.n",
+        "byteRange": {
+          "start": 40,
+          "end": 50
+        }
+      },
+      {
+        "bindingKey": "param.values",
+        "byteRange": {
+          "start": 55,
+          "end": 88
+        }
+      },
+      {
+        "bindingKey": "param.target",
+        "byteRange": {
+          "start": 93,
+          "end": 108
+        }
+      }
+    ]
+  }
+}

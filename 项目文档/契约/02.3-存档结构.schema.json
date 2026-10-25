@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:save-01:1.0.0",
+  "title": "SAVE-01 1.0.0",
+  "$comment": "A snapshot is the read-only projection of nine IndexedDB stores. It is not an import, backup or product persistence API. Format annotations and local structure checks do not replace calendar/time-zone validation, content references, compound-key uniqueness, revision/generation transactions, reward integrity or migration checks. Contract-fixture wrappers are outside this schema; validate their snapshot field only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "settings", "avatar", "progress", "dailyFacts", "goals", "ledger", "receipts", "aliases"],
+  "properties": {
+    "meta": {"$ref": "#/$defs/meta"},
+    "settings": {"$ref": "#/$defs/settings"},
+    "avatar": {"$ref": "#/$defs/avatar"},
+    "progress": {"type": "array", "items": {"$ref": "#/$defs/progress"}},
+    "dailyFacts": {"type": "array", "items": {"$ref": "#/$defs/dailyFact"}},
+    "goals": {"type": "array", "items": {"$ref": "#/$defs/goal"}},
+    "ledger": {"type": "array", "items": {"$ref": "#/$defs/ledgerEntry"}},
+    "receipts": {"type": "array", "items": {"$ref": "#/$defs/receipt"}},
+    "aliases": {"type": "array", "items": {"$ref": "#/$defs/alias"}}
+  },
+  "$defs": {
+    "entityId": {"type": "string", "minLength": 1, "maxLength": 96, "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$"},
+    "version": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
+    "uuid": {
+      "type": "string", "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "safeUint": {"type": "integer", "minimum": 0, "maximum": 9007199254740991},
+    "safePositiveInt": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
+    "ref": {
+      "type": "object", "additionalProperties": false, "required": ["id", "version"],
+      "properties": {"id": {"$ref": "#/$defs/entityId"}, "version": {"$ref": "#/$defs/version"}}
+    },
+    "utcTime": {
+      "type": "string", "format": "date-time",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}Z$"
+    },
+    "nullableUtcTime": {"oneOf": [{"$ref": "#/$defs/utcTime"}, {"type": "null"}]},
+    "localDate": {
+      "type": "string", "format": "date",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+    },
+    "localGoalId": {
+      "type": "string", "pattern": "^local-goal\\.[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+    },
+    "localGoalRef": {
+      "type": "object", "additionalProperties": false, "required": ["id", "version"],
+      "properties": {"id": {"$ref": "#/$defs/localGoalId"}, "version": {"type": "string", "pattern": "^[1-9][0-9]*$"}}
+    },
+    "subjectId": {"oneOf": [{"$ref": "#/$defs/entityId"}, {"$ref": "#/$defs/localGoalId"}]},
+    "caseKey": {"type": "string", "minLength": 1, "maxLength": 96, "pattern": "^[a-z][a-z0-9-]*$"},
+    "meta": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "dbVersion", "generation", "revision", "timeZone", "createdAt", "activePackageRef"],
+      "properties": {
+        "schemaVersion": {"const": "1.0.0"}, "dbVersion": {"const": 1}, "generation": {"$ref": "#/$defs/uuid"},
+        "revision": {"$ref": "#/$defs/safeUint"},
+        "timeZone": {"type": "string", "minLength": 1},
+        "createdAt": {"$ref": "#/$defs/utcTime"}, "activePackageRef": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "targets": {
+      "type": "object", "additionalProperties": false, "required": ["exercise", "lesson", "case"],
+      "properties": {
+        "exercise": {"type": "integer", "minimum": 0, "maximum": 100},
+        "lesson": {"type": "integer", "minimum": 0, "maximum": 100},
+        "case": {"type": "integer", "minimum": 0, "maximum": 100}
+      },
+      "anyOf": [
+        {"properties": {"exercise": {"minimum": 1}}},
+        {"properties": {"lesson": {"minimum": 1}}},
+        {"properties": {"case": {"minimum": 1}}}
+      ]
+    },
+    "goalTemplate": {
+      "type": "object", "additionalProperties": false, "required": ["revision", "targets"],
+      "properties": {"revision": {"$ref": "#/$defs/safePositiveInt"}, "targets": {"$ref": "#/$defs/targets"}}
+    },
+    "settings": {
+      "type": "object", "additionalProperties": false, "required": ["theme", "reducedMotion", "playbackRate", "goalTemplate"],
+      "properties": {
+        "theme": {"enum": ["system", "light", "dark"]}, "reducedMotion": {"enum": ["system", "on", "off"]},
+        "playbackRate": {"enum": [0.25, 0.5, 1, 1.5, 2, 4]},
+        "goalTemplate": {"oneOf": [{"$ref": "#/$defs/goalTemplate"}, {"type": "null"}]}
+      }
+    },
+    "avatar": {
+      "type": "object", "additionalProperties": false, "required": ["presetId", "accentColor"],
+      "properties": {
+        "presetId": {"$ref": "#/$defs/entityId"}, "accentColor": {"type": "string", "pattern": "^#[0-9A-F]{6}$"}
+      }
+    },
+    "contentEventType": {
+      "enum": ["lesson.started", "lesson.study-confirmed", "exercise.attempt-evaluated", "exercise.passed", "lesson.completed", "case.view-confirmed"]
+    },
+    "allEventType": {
+      "enum": ["lesson.started", "lesson.study-confirmed", "exercise.attempt-evaluated", "exercise.passed", "lesson.completed", "case.view-confirmed", "daily-goal.achieved"]
+    },
+    "progress": {
+      "type": "object", "additionalProperties": false,
+      "required": ["eventType", "result", "subjectRef", "packageRef", "learningRevision", "firstAt", "lastAt"],
+      "properties": {
+        "eventType": {"$ref": "#/$defs/contentEventType"}, "result": {"enum": ["started", "confirmed", "failed", "passed", "completed"]},
+        "subjectRef": {"$ref": "#/$defs/ref"}, "packageRef": {"$ref": "#/$defs/ref"}, "learningRevision": {"$ref": "#/$defs/safePositiveInt"},
+        "firstAt": {"$ref": "#/$defs/utcTime"}, "lastAt": {"$ref": "#/$defs/utcTime"},
+        "resultCategory": {"enum": ["wrong-answer", "teaching-goal-unmet", "program-error", "cancelled", "resource-limit", "infrastructure-failure"]},
+        "failedCaseKey": {"oneOf": [{"$ref": "#/$defs/caseKey"}, {"type": "null"}]}
+      },
+      "allOf": [
+        {"if": {"properties": {"eventType": {"const": "lesson.started"}}}, "then": {"properties": {"result": {"const": "started"}}}},
+        {"if": {"properties": {"eventType": {"enum": ["lesson.study-confirmed", "case.view-confirmed"]}}}, "then": {"properties": {"result": {"const": "confirmed"}}}},
+        {"if": {"properties": {"eventType": {"const": "exercise.passed"}}}, "then": {"properties": {"result": {"const": "passed"}}}},
+        {"if": {"properties": {"eventType": {"const": "lesson.completed"}}}, "then": {"properties": {"result": {"const": "completed"}}}},
+        {
+          "if": {"properties": {"eventType": {"const": "exercise.attempt-evaluated"}}},
+          "then": {"required": ["resultCategory", "failedCaseKey"], "properties": {"result": {"const": "failed"}}},
+          "else": {"not": {"anyOf": [{"required": ["resultCategory"]}, {"required": ["failedCaseKey"]}]}}
+        }
+      ]
+    },
+    "dailyFact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["eventType", "subjectRef", "canonicalSubjectId", "occurredAt", "localDate"],
+      "properties": {
+        "eventType": {"enum": ["exercise.passed", "lesson.completed", "case.view-confirmed"]}, "subjectRef": {"$ref": "#/$defs/ref"},
+        "canonicalSubjectId": {"$ref": "#/$defs/entityId"}, "occurredAt": {"$ref": "#/$defs/utcTime"}, "localDate": {"$ref": "#/$defs/localDate"}
+      }
+    },
+    "goal": {
+      "type": "object", "additionalProperties": false, "required": ["localDate", "goalVersion", "targets", "achievedAt"],
+      "properties": {
+        "localDate": {"$ref": "#/$defs/localDate"}, "goalVersion": {"$ref": "#/$defs/safePositiveInt"},
+        "targets": {"oneOf": [{"$ref": "#/$defs/targets"}, {"type": "null"}]}, "achievedAt": {"$ref": "#/$defs/nullableUtcTime"}
+      },
+      "allOf": [
+        {"if": {"properties": {"targets": {"type": "null"}}}, "then": {"properties": {"achievedAt": {"type": "null"}}}}
+      ]
+    },
+    "rewardSourceId": {
+      "enum": ["reward.exercise.first-pass", "reward.lesson.first-completion", "reward.case.first-view", "reward.daily-goal.once"]
+    },
+    "ledgerEntry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sourceId", "subjectId", "localDate", "occurredAt", "status", "points", "policyRef"],
+      "properties": {
+        "sourceId": {"$ref": "#/$defs/rewardSourceId"}, "subjectId": {"$ref": "#/$defs/subjectId"},
+        "localDate": {"$ref": "#/$defs/localDate"}, "occurredAt": {"$ref": "#/$defs/utcTime"},
+        "status": {"enum": ["pending", "posted"]}, "points": {"oneOf": [{"$ref": "#/$defs/safeUint"}, {"type": "null"}]},
+        "policyRef": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "pending"}}}, "then": {"properties": {"points": {"type": "null"}, "policyRef": {"type": "null"}}}},
+        {"if": {"properties": {"status": {"const": "posted"}}}, "then": {"properties": {"points": {"$ref": "#/$defs/safeUint"}, "policyRef": {"$ref": "#/$defs/ref"}}}},
+        {
+          "if": {"properties": {"sourceId": {"const": "reward.daily-goal.once"}}},
+          "then": {"properties": {"subjectId": {"$ref": "#/$defs/localGoalId"}}},
+          "else": {"properties": {"subjectId": {"$ref": "#/$defs/entityId"}}}
+        }
+      ]
+    },
+    "receipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["eventId", "eventType", "subjectRef", "packageRef", "learningRevision", "result", "goalVersion", "occurredAt", "localDate", "committedRevision"],
+      "properties": {
+        "eventId": {"$ref": "#/$defs/uuid"}, "eventType": {"$ref": "#/$defs/allEventType"},
+        "subjectRef": {"oneOf": [{"$ref": "#/$defs/ref"}, {"$ref": "#/$defs/localGoalRef"}]},
+        "packageRef": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+        "learningRevision": {"oneOf": [{"$ref": "#/$defs/safePositiveInt"}, {"type": "null"}]},
+        "result": {"enum": ["started", "confirmed", "failed", "passed", "completed", "achieved"]}, "goalVersion": {"$ref": "#/$defs/safePositiveInt"},
+        "occurredAt": {"$ref": "#/$defs/utcTime"}, "localDate": {"$ref": "#/$defs/localDate"}, "committedRevision": {"$ref": "#/$defs/safePositiveInt"},
+        "resultCategory": {"enum": ["wrong-answer", "teaching-goal-unmet", "program-error", "cancelled", "resource-limit", "infrastructure-failure"]},
+        "failedCaseKey": {"oneOf": [{"$ref": "#/$defs/caseKey"}, {"type": "null"}]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"eventType": {"const": "daily-goal.achieved"}}},
+          "then": {"properties": {"subjectRef": {"$ref": "#/$defs/localGoalRef"}, "packageRef": {"type": "null"}, "learningRevision": {"type": "null"}, "result": {"const": "achieved"}}},
+          "else": {"properties": {"subjectRef": {"$ref": "#/$defs/ref"}, "packageRef": {"$ref": "#/$defs/ref"}, "learningRevision": {"$ref": "#/$defs/safePositiveInt"}}}
+        },
+        {"if": {"properties": {"eventType": {"const": "lesson.started"}}}, "then": {"properties": {"result": {"const": "started"}}}},
+        {"if": {"properties": {"eventType": {"enum": ["lesson.study-confirmed", "case.view-confirmed"]}}}, "then": {"properties": {"result": {"const": "confirmed"}}}},
+        {"if": {"properties": {"eventType": {"const": "exercise.passed"}}}, "then": {"properties": {"result": {"const": "passed"}}}},
+        {"if": {"properties": {"eventType": {"const": "lesson.completed"}}}, "then": {"properties": {"result": {"const": "completed"}}}},
+        {
+          "if": {"properties": {"eventType": {"const": "exercise.attempt-evaluated"}}},
+          "then": {"required": ["resultCategory", "failedCaseKey"], "properties": {"result": {"const": "failed"}}},
+          "else": {"not": {"anyOf": [{"required": ["resultCategory"]}, {"required": ["failedCaseKey"]}]}}
+        }
+      ]
+    },
+    "alias": {
+      "type": "object", "additionalProperties": false, "required": ["fromRef", "toRef", "fromAcceptedPriorVersions", "kind", "learningRevision", "manifestRef"],
+      "properties": {
+        "fromRef": {"$ref": "#/$defs/ref"}, "toRef": {"$ref": "#/$defs/ref"},
+        "fromAcceptedPriorVersions": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/version"}},
+        "kind": {"enum": ["lesson", "exercise", "case"]}, "learningRevision": {"$ref": "#/$defs/safePositiveInt"}, "manifestRef": {"$ref": "#/$defs/ref"}
+      }
+    }
+  }
+}

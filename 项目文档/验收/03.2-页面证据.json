@@ -1,0 +1,1529 @@
+{
+  "taskId": "03.2",
+  "startedDate": "2026-10-14",
+  "acceptedDate": "2026-10-15",
+  "timeZone": "Asia/Shanghai",
+  "evidenceLevel": "page-navigation-browser-smoke",
+  "engineeringBuildId": "pages-84a1fe95cf4f9b72",
+  "contractVersionsChanged": false,
+  "dependenciesChanged": false,
+  "interpreterReady": false,
+  "sourceHashes": {
+    "README.md": "1b490567617302b56575446a7de8bbc121f078790907002b78908f5ef7e5f400",
+    "package.json": "ed37ececfb23c0652fd63350be797d701138a3eee8bfb1106f32ba84e1b9442e",
+    "scripts/check.mjs": "4712f8a6f2fecc8e31e27bc7b4e7d4bfffb6c8e8442bda878d2461dc0d1e0e36",
+    "scripts/firefox-stable.mjs": "4f2f5047994c9a5d4fa35e20bcc655c155a2f688c8093dfbf3c4b44ea499b7e6",
+    "tests/browser/build-probe.spec.ts": "fb1c9fd0a3fb1661d1a86fcd9e5268548e83709437f2d119b04f4718df764400",
+    "tests/browser/navigation.spec.ts": "214a9bb639bd72fbab99a9dba26416bca848372f12e85943c401db1a4f9900ca",
+    "web/src/App.tsx": "2b0d6c03239a02a27376b8ff1b6afcaed3cafe1f8ea5b2fb45701fed3c896eee",
+    "web/src/components/Icon.tsx": "541f701338588fb224795e8fc903593edd9528d28880f57a618f4e0ad7f6124f",
+    "web/src/components/Layout.tsx": "736b9588207ec957621d2ca5d3706fa4712729187d93b86bedd271510b383ebd",
+    "web/src/components/Ui.tsx": "df6469e1980c37cc08942e6ff453d7e0169e382d6d0a6d28645ddae861571aac",
+    "web/src/navigation.ts": "4bf27f754b226b410c208081a5ab1dcd6f2b0f3ef41dd52db11a37a8b083e9af",
+    "web/src/pages/CatalogPages.tsx": "608692e0b934b1eaeb78fd09f77aa44e654fa7e5ce27cdcc6e9a0a3be078f21c",
+    "web/src/pages/HomePage.tsx": "0e90e68006958811995fcce5aca58ec424c2b95b8c20e9385bc6cf9dbcb40d7a",
+    "web/src/pages/LessonPage.tsx": "45fb5b12ea4e5fcb503cd1855707280aaf251b7cbd5473f3d96d44258556902b",
+    "web/src/pages/SettingsPage.tsx": "a0786a8888672cf1965ee27002942a7d372d31fb70cdc0cc904c4be059fbe929",
+    "web/src/pages/Workspaces.tsx": "cb35d0d4a9d7cf7e40d81f051e36465476ac620417a2e46c35cca7bf4bae63fb",
+    "web/src/styles.css": "705fc5cc9dcfe0435cea49108717dd0b69213125ecb3058d60c7252d396210c5"
+  },
+  "modifiedFiles": [
+    "README.md",
+    "package.json",
+    "scripts/check.mjs",
+    "scripts/firefox-stable.mjs",
+    "tests/browser/build-probe.spec.ts",
+    "web/src/App.tsx",
+    "web/src/styles.css",
+    "项目文档/任务进度与交接.md"
+  ],
+  "newFiles": [
+    "tests/browser/navigation.spec.ts",
+    "web/src/components/Icon.tsx",
+    "web/src/components/Layout.tsx",
+    "web/src/components/Ui.tsx",
+    "web/src/navigation.ts",
+    "web/src/pages/CatalogPages.tsx",
+    "web/src/pages/HomePage.tsx",
+    "web/src/pages/LessonPage.tsx",
+    "web/src/pages/SettingsPage.tsx",
+    "web/src/pages/Workspaces.tsx",
+    "项目文档/交接/03.2-交接.md",
+    "项目文档/架构决策/03.2-路由与交互规范.md",
+    "项目文档/验收/03.2-页面证据.json",
+    "项目文档/验收/03.2-页面验收.md"
+  ],
+  "protectedFiles": [
+    {
+      "path": "eslint.config.mjs",
+      "sha256": "6d09e66addacb77812d164933db4b816b7172d42a6271a923d34ec7ab9d80208",
+      "unchanged": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "1f20229c85a01249648dceb447bae286adfaeb94efbe575ad8e11188b41dc078",
+      "unchanged": true
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "f85f74c3f9bf13cfb68855f5e125bbd206d6e07440f7d3145a5872ad14e2bdb2",
+      "unchanged": true
+    },
+    {
+      "path": ".npmrc",
+      "sha256": "90593d48670bf79ee22182ffb9c52bbbf9b5203fead400fdbda93ddd0d495f08",
+      "unchanged": true
+    },
+    {
+      "path": ".node-version",
+      "sha256": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
+      "unchanged": true
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "4e5a38c8a9f56fa3e85c67b94b3acd7f1ce24bf3410780f52f2bb2b8f5fe947c",
+      "unchanged": true
+    },
+    {
+      "path": ".env.example",
+      "sha256": "68d7096e8ba9d35872b213366994975b6767619140811d6349aafdf8c73e2733",
+      "unchanged": true
+    },
+    {
+      "path": ".editorconfig",
+      "sha256": "84935724f67dd1a1b3bbdbad6510edf888b703fbff656dc40caebf9db2f4646a",
+      "unchanged": true
+    },
+    {
+      "path": ".cargo/config.toml",
+      "sha256": "a0aa817c9b6dd9d206ae36a67057d61a64dc35c2c13a42dbcabee3605f135a06",
+      "unchanged": true
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "4984880e9904d0fd39a4774eb03f6800f23e13ece5bf164e87746fc76bc52cf2",
+      "unchanged": true
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "5095edf9b4d4d37077ff5746c612b7aec80b7d61f082c1ece98c57bc5cb62600",
+      "unchanged": true
+    },
+    {
+      "path": "engine/wasm/src/lib.rs",
+      "sha256": "090b02a4737f2ca392f81589f78d99ad8cc63cca1da055cfb98a0b8391160f10",
+      "unchanged": true
+    },
+    {
+      "path": "engine/wasm/Cargo.toml",
+      "sha256": "6ebcd1c4cd0289b50c37813af3da27d514e068c628b781db8894c148eacec774",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/03.1-工程验收.md",
+      "sha256": "8ca5d73444db2521ab70e256cbb0fd768a631fbd9b98761baf03b8aa2e171ba6",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/03.1-工程证据.json",
+      "sha256": "943c4c3354ec2141ec22f535d8a8c8666d6af8b4709e61eeed1ad922f0138fdf",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/02.4-文档验收.md",
+      "sha256": "2279d7c72fa492e808e168b0a0104d9d8dfe478f11383c456b2dd324ee452857",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/02.4-共享资料检查.mjs",
+      "sha256": "62cbd713e31aeaf546d12440108ebe3ba56c2ea56ec186a7efbb3dd7087440ea",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/02.4-Schema验证.ps1",
+      "sha256": "b3f2168fc6f28488e9fbb5e0a8216c116d9bacc124976e9eefed4bc4ee45cfa5",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/02.3-文档验收.md",
+      "sha256": "ab96ebbd8f5d549a233522f16eea371e94c9597fc3f128a07527bb120653cd92",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/02.3-契约模型检查.mjs",
+      "sha256": "3fbbd5a0f4a024589b299dee9aa06a189a094025faa8503af085293ca0c24432",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/02.2-文档验收.md",
+      "sha256": "48a9cd7800775eac34d7534d5283348afa3f9d2357de6091ff3194be4d639d17",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/02.2-契约夹具检查.mjs",
+      "sha256": "d2d531178457b311204b65c629cbcef0434ec04e8d8831877cf1283fd3f9981a",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/02.1-文档验收.md",
+      "sha256": "774ab30324a2e544bbb3d60dcab24c81b37f3ccead1f735852538c7ba6f28843",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/01.4-文档验收.md",
+      "sha256": "0e9ca4d93cdf28df14fdc3b0f86364fe28ed4623527fbbc5b6601e67a666387c",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/01.3-文档验收.md",
+      "sha256": "fa3201761c64830615b5f4f680fd5a6c44e456388d32a87175de1f0d730ac1f1",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/01.2-文档验收.md",
+      "sha256": "4f3f29ffb4a2ca0cf0780f74efe0808901a35521f03b389447ece4d5e6f20a81",
+      "unchanged": true
+    },
+    {
+      "path": ".prettierignore",
+      "sha256": "3dd10f58084cfbf1c8cf2a4d1a7f9b1e3522a1bd8c6b2bc890a303d496a43b17",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/验收/01.1-文档验收.md",
+      "sha256": "a651a6438bae957a38729611b819093aeaa4908e005a31962f5f6c0112a53277",
+      "unchanged": true
+    },
+    {
+      "path": ".prettierrc.json",
+      "sha256": "8ed94b187d53a0f63aa2f9d9f37dcbf1b8d7c685747e3556c501ae9ed9fe9eea",
+      "unchanged": true
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "d1653577c2b501004a8673161e0094d381f6ec3e0b2ecf5e00a3eb3a021fd6b3",
+      "unchanged": true
+    },
+    {
+      "path": "编程学习平台.md",
+      "sha256": "4183f95a3ae106eb6137ddbbe1feca2b0b139f7115a7dfe8fcc66de30bda1005",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/需求覆盖与范围裁决.md",
+      "sha256": "541047242c023be62698ef39a0774587cbd22b4a5c1fcee7762e415f24749930",
+      "unchanged": true
+    },
+    {
+      "path": "content/README.md",
+      "sha256": "4220dcd56e0732f4b9273b9e6e60ee4455215c08dde97b0868a8b2fc406cebc6",
+      "unchanged": true
+    },
+    {
+      "path": "engine/core/Cargo.toml",
+      "sha256": "eb97cec62f1cb9eba0622240f7bf6eed1e5db10311bfba9f253b3efccba0282b",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/wasm-inspect.mjs",
+      "sha256": "ea566cd74020907752bb09df309c2b1f3f0499587db2d5473ac6f8ad218d2977",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/wasm-inspect.d.mts",
+      "sha256": "70e82f89fa6824a9b4d223b33a0a3700144eba53e9b9fba152de76e1583e17a9",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/task.ps1",
+      "sha256": "877c0230f361e368d58dcc1a180f27e694ecebcab6b6b6458e8fca6050c773bd",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/setup.ps1",
+      "sha256": "e4d7038e4cb230d0cda59f9e786f8154b2aa4d2dc66c4b75780e59718454214d",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/serve-checks.mjs",
+      "sha256": "ed8eade17873ed86f617d2b1b42c458be1a535c044c03a74978c1a3a7a12db75",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/rust-check.mjs",
+      "sha256": "fd7c4fe61b42de47ca0be9aef970f445b624f2beeda476c93e87924885f2cb8d",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/process.mjs",
+      "sha256": "ae868ac10644347762d732d54824473a63d14be2d666b5bdb99b2b5577d47a23",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/environment.mjs",
+      "sha256": "0f5d00ec46d7cad86d0e302615291a55a04ab1a3923a626f4c6d29f08163ba43",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/build.mjs",
+      "sha256": "427494bf341475d20651922335af19fe2554642cfb91078f5d6deca24ed10610",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/build-wasm.mjs",
+      "sha256": "d0ad1ff7e0d677c1e3b3b3d02e5a6ff0aab746767d4b0d40da2ca1dc361e04f6",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/artifacts.mjs",
+      "sha256": "7a69ced93cbbfaefeac356a24bea96e1d5f67238c2ad5870f01f95d694828a70",
+      "unchanged": true
+    },
+    {
+      "path": "项目守则.md",
+      "sha256": "4f2ca51c822933f36dd8bb1d8bac7d8a3c2b83e2eac989e7893bc4181f81958e",
+      "unchanged": true
+    },
+    {
+      "path": "engine/core/src/lib.rs",
+      "sha256": "2014fcd7cc3fa707dddaa0b4e148483314645f14406213eb4160f5da2ff78aca",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/开发路线与依赖.md",
+      "sha256": "a136d3f138c27b7cf62ded2925431f4ef57e462d942d6ff117333ac5e1c5a257",
+      "unchanged": true
+    },
+    {
+      "path": "tsconfig.tools.json",
+      "sha256": "ad19a9ee0385d2eefcd5cd06e83d8c312b46aeeb2d635d720233bac14da8a3c8",
+      "unchanged": true
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "6b5bb2b09ba913b4e0b7a90a90543ebd30168cc0d4922624158dadf62e17cef8",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/交接/03.1-交接.md",
+      "sha256": "00bf086760706830ebac272380fa97d42508fa5b036e883766774ab0ce898c72",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/交接/02.4-交接.md",
+      "sha256": "e130c57e6a0abcff54c46a0e08c38b6d67ab62aacc137554e144eba51aedd6f4",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/交接/02.3-交接.md",
+      "sha256": "39ec97c0f2efe979d44d47f5cc9b438dfa8d96702dde0e347c8915845e3a1723",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/交接/02.2-交接.md",
+      "sha256": "646eb04a9c75a91cc53781490a2c114e8e816b57775575c1e3c63317846ebcd5",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/交接/02.1-交接.md",
+      "sha256": "67debbd56d8149efcc699b6cab82b16017a7a210974c7923b4a35ab9749fb0cb",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/交接/01.4-交接.md",
+      "sha256": "a175bccbc266ee667c23de4a37b80251679185365ee95a4a69d0ebd9e8ef706f",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/交接/01.3-交接.md",
+      "sha256": "9b1f764d70021932b7f1decef4a2b1687fcc9b9dc52b703d40abf186c692184e",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/交接/01.2-交接.md",
+      "sha256": "72b8890b4692341fbcf1eaf090a29c944bf1e269a8bb7a2c76d5579a50b05ff3",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/交接/01.1-交接.md",
+      "sha256": "c9c75cfc5e4ec72ec5fee1dfda445ce5ff61a9f9cdda22850ad199cf018bfb4c",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第09步-完成课程与基础练习闭环.md",
+      "sha256": "a5271aedbb57ce714e707b0d71da8058fb9e65a9ce3e36037accb44f8aff76ef",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第08步-实现播放器与基础可视化.md",
+      "sha256": "909b690d29780f1271b2d6003497f51d26590f8e85ff1825a611e8a6be5e99fe",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第07步-打通真实执行与数据输入.md",
+      "sha256": "905655a8f752d0e8051d3eadfd23096cd507b12f37a073752857fa772d3d0d78",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第06步-实现受限执行与真实轨迹.md",
+      "sha256": "1610d65cf7b9eda27b1f95d533409d70eb9cf673829687bc3fd67eab9fb4a0a4",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第05步-实现 C 子集解析与语义检查.md",
+      "sha256": "b1751ca7990578c2104b2521810dc9ba09dd958f9551e53ce523c3464b9541bb",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第04步-完成浏览器本地数据基础.md",
+      "sha256": "5eae9f1f751e10d3448b81d1d21539c6b724ed8bc44899feb9bccda873dd4f3f",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第03步-建立工程骨架与页面框架.md",
+      "sha256": "acf3bc09ae77299462cdc1e1d88b3b90b3f4d62162eaf2833e0335f72070ec69",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第02步-制定共享契约与标准样例.md",
+      "sha256": "34f77e5333a19f120f8de3216a2af613686ad835961a7a2c8b324624c1b5af87",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第01步-冻结需求范围与实施决策.md",
+      "sha256": "525d14111a288ddbaf0c03595d029c91ad04de105a2ba0e7b2e1c0f417e035d3",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/README.md",
+      "sha256": "ed819d65684e406cb637bc60e6271423918722acf25521677d3e950b44e85850",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第14步-实现诊断教学、编译流程与 Bug 闯关.md",
+      "sha256": "06dff0f21c82311028927ca08008e4ee76877d87a8f7dd2be925ffa3f5722f7c",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第13步-完善积木双向联动与学习约束.md",
+      "sha256": "e2ba57842f747652e62aa56342cc7ddcf44194b99e00c382b532b36c9e91d64f",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第12步-扩展执行语义及内存调用栈调试.md",
+      "sha256": "7013c542367f5c1a54044faace3883a843345f07c470cbe9e386175d8d190519",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第11步-接入基础激励并验收一期.md",
+      "sha256": "194f791f1c87c095515a41bb67044be0b05523c8acd929204fca6544a7f391f5",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第10步-完成积木到 C 的单向编程.md",
+      "sha256": "6ecedf82ad5089283085a9dff5a661cf90a31afcaddf05266e698261937fa802",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第16步-完善教学交互、算法目录并验收二期.md",
+      "sha256": "6787b976e71a0a00802b9af4d5f8635c940fa350e6b443b2767cccfa204cd673",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第15步-建立知识图谱、复习卡片与徽章.md",
+      "sha256": "5e2719d6e61c0682b889147aa9571f029af7653238ba8535e5cf33a89a6b7621",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第17步-建设受支持子集的自定义代码工作台.md",
+      "sha256": "aefcbe623ca7fa7a244d66a9f76e3551f63290b1aeda6b62a4c3f0dc5bee7f30",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第18步-建设进阶算法课程、多解法与语言对照.md",
+      "sha256": "90a8868def48f50bf17f73ff3046b4355b3567b606675a7dfdfd213e0711ee9a",
+      "unchanged": true
+    },
+    {
+      "path": "tests/vitest.config.ts",
+      "sha256": "25d300888ecd7405fd37ad7b781e918ca3f72c5af1a389193eda2c09d7cab38c",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第20步-完成笔记导出与三期交付.md",
+      "sha256": "7fa4a999b22ef5b697243dbd32c9e8c75bf83f81cc803db9372c94feeb5984b4",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/任务包/第19步-实现薄弱点出题与 AI 可视化调试.md",
+      "sha256": "d7c07817eaf35ec59722dd49de62abc8c64ef7059f152495ddcb16584e292a65",
+      "unchanged": true
+    },
+    {
+      "path": "tests/browser.vite.config.ts",
+      "sha256": "de1984c7612b7c9ba4c283a38e7bf5179c4d99d952fe9f6fa84af991833f2aa9",
+      "unchanged": true
+    },
+    {
+      "path": "tests/playwright.config.ts",
+      "sha256": "9514b59f683eccfa2dc260801b046488ef7db46b41d2a6a9d6ad9d4d84d4c249",
+      "unchanged": true
+    },
+    {
+      "path": "vite.config.ts",
+      "sha256": "d57a79831d2a41870bdede6166d3868e3b4b6a7077ca120ede0944808761bc8f",
+      "unchanged": true
+    },
+    {
+      "path": "tsconfig.web.json",
+      "sha256": "68bc12fb6d06e2d41f254a2f0ddb4a5a153a9a8f5c6d451a3f5c6d9332274cab",
+      "unchanged": true
+    },
+    {
+      "path": "web/src/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+      "unchanged": true
+    },
+    {
+      "path": "web/src/main.tsx",
+      "sha256": "11e29d4df5e4b4c5ab4591d341378944c64b8adc4f669ebe4b3e005f85eadb29",
+      "unchanged": true
+    },
+    {
+      "path": "shared/fixtures/README.md",
+      "sha256": "b7b48b4b92c9dff1a93959fae3adc7a38e63939201c0d3a996fde0ba36a448cf",
+      "unchanged": true
+    },
+    {
+      "path": "web/index.html",
+      "sha256": "2dc117c34a86bcbf713271a07c8c8df82445c6cfc68acef44d943e0eaeb8008e",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.1-内容样例.json",
+      "sha256": "0117b47ef6a0c9d9ea87b645a57ec401f9cad5002b4ee7ba7315ccdf5088e85c",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.1-内容格式与引用契约.md",
+      "sha256": "f066679625d0260d0d2749c6a8cdc3070ef4404b0cc64c6604d36865ce8c2b35",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.1-内容结构.schema.json",
+      "sha256": "696f241dbdc21baadfc1b37a252dd262d7ef6bc43827ea15538cca42f20bcf82",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.4-预算边界样例.json",
+      "sha256": "21dc036b93cdceca20ba62193e373b601c7b8e757b17c9c7d17569a85680314c",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.4-语义与输入样例.json",
+      "sha256": "d8e855c8b6f0fa6291333776da9933e187c4e7fc426352560d814850ba3e1d01",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.4-变更登记样例.json",
+      "sha256": "c6f34e76acfc116f4d936003b5babefc0949a7b2ef5335b31125a48680d308c1",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.4-双方兼容验证说明.md",
+      "sha256": "24baa280a8953827eb610fbbc8e78d8ca78be7520783d09ab5366376e9f6d275",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.4-协议版本与变更流程.md",
+      "sha256": "7b7f290a3f1a38ac085789ff58a6ccde916517b2f0c9fe5f35c41924229bdfc0",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.4-共享样例索引.json",
+      "sha256": "8fabbf4accce5ecb8c5bc80d1744450968d7aa94522a878df6dfe44ab109bc0f",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.4-共享样例清单.md",
+      "sha256": "aa6146770db193d7d6e0c8c6d6be0a8f4f98e0d5bf0ee0d9fd1e35f08fb706e9",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.3-迁移与恢复规则.md",
+      "sha256": "f48676599200b05f48e6c864354918e9af5d328f8b10d9878c1a2f1a05243f17",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.3-迁移与并发场景.json",
+      "sha256": "790e2a1fea61cf6ba2c0fc24e098e56c0a51dea8f1cf88105e55dd3238e7bfa7",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.3-本地数据模型.md",
+      "sha256": "b08675d9c185eba1bf482b39238a58bfc07e30a96789b4b59e257f984922eddd",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.3-存档结构.schema.json",
+      "sha256": "8589ded821e4a5a266033d490f92de9a59e0c50285963c3dae7d9033d474c281",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.3-存档样例.json",
+      "sha256": "b65d217beb571f072bc60217b87a5c931ad4f4b5a88f7e424145c3a920090fc9",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.3-事务日期与奖励幂等.md",
+      "sha256": "86bed223741ab2f51acfb35528c152197dd8ab6673862a305933a5f76a5f3af7",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.2-诊断预算与判题观测.md",
+      "sha256": "fc5cf4e65f93bc7115dead1ac8a4f74b9be0429aacb6515bac9310114aa2f910",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.2-正常轨迹样例.json",
+      "sha256": "f45fcec2e3a231bf22e59db08af9d631215a1925b7973e5fe135fdcd8b16d860",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.2-执行请求与生命周期契约.md",
+      "sha256": "a95d628071a8637bab7b8ddd8044dbdbb36e77b97f6b8b6c14cc270299fe122e",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.2-执行与轨迹.schema.json",
+      "sha256": "a49e80c9447e46f6cc7ede415449ab583e4b2c13a00791184013f31229fba3e7",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.2-异常与恢复场景.json",
+      "sha256": "d030794e9cdf3d7a19bbb0256651337fc9e27f8354be6d10e0399c48a4bb8af4",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.2-失败与超限轨迹样例.json",
+      "sha256": "4d362460d9f9af064ae13fe3673474f59973f5adf9300a405e7b680ff751230f",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.2-StepDSL状态与源码映射.md",
+      "sha256": "0a56ee8cc76ff1adef1e80a7216c76b537cf5b044b65fccd46892f28d84485c7",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.1-非法配置样例.json",
+      "sha256": "4f064b2478a95043774fd7b282997f52ce17182667693b78b5c908e932d8160f",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.1-配置合法性规则.md",
+      "sha256": "0bc191a09a3e0d923025e9fe2be966050723be505c0194126829356c7388e3fa",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/契约/02.1-学习事件与奖励边界.md",
+      "sha256": "8b6645c9f7cda70ae69c516a148dd250bfccd05c1cebc492f0345690c85b2278",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/03.1-工程目录与质量入口.md",
+      "sha256": "793eed24a7fbe4b77c73ec6aa08205dbd7009fbf52980dde160cea697b6315cc",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/02.3-本地存档与一致性决议.md",
+      "sha256": "f9fbd411b9076ee21a3ea7a93e519cc059cc4e863dedc5102bdb04dd8a7c0b53",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/02.2-StepDSL可逆与编码决议.md",
+      "sha256": "fa81b856b9561bbd643ff79e60f55db0d1fce06b80683c891bf0bae51dd3d5f3",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.4-资源预算表.md",
+      "sha256": "8ab8bc555c1b13e516a4749000f32a70736abbf3390f9485655228b9077b0c87",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.4-技术版本与工程方案.md",
+      "sha256": "f91abc7fe4bac4c8e60794c78eb67987401f42a74863c921f1a9c76c7cebb47a",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.4-性能基线与验收条件.md",
+      "sha256": "83030120e3f560305d5432ccdf1103f9d4848a38a55d873e2086fc3f0711f062",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.3-课程积木与算法清单.md",
+      "sha256": "a30d2c18577b9fa55ef4f94c60f8fd1d20c8158cd208dc9e1b2ab941033a9780",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.3-正反样例清单.md",
+      "sha256": "6793cc003f88f04f49c9755a9dfeb817ea943d7130686b00a6f42f243907624c",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.3-一期C子集支持矩阵.md",
+      "sha256": "24f3593c7d348bf6f024da4780bd285d3604f0a089f4b6b65d0b6e6b7d59c208",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.2-日志与数据保留规则.md",
+      "sha256": "5d82e2574a6030094e324d0219b1083803e6692fe2f309514089239f0c810c99",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.2-数据流与处理边界.md",
+      "sha256": "4006c23a937a97d6355b13de0b7f3b20fe66084920c7e2020c42260e51aa07b0",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.2-执行位置与运行形态决议.md",
+      "sha256": "d531c22a84129a66d87413b7e6f6aa36c3f834a6573a607aedd3ac3ca0424a08",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.1-页面清单.md",
+      "sha256": "12c34040acac88ec39638657fcc356c488effee7b59e2a75940cec650ced5589",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.1-原需求核对与差异记录.md",
+      "sha256": "3a82627029f3c43c7060ed961fb3835a19c79d00551cbb43aa84b2d0b954adee",
+      "unchanged": true
+    },
+    {
+      "path": "项目文档/架构决策/01.1-一期范围与用户路径.md",
+      "sha256": "5ea507d09a690d6276c8af665e59ba14b2733238182dffbe1bdec28d53452d98",
+      "unchanged": true
+    },
+    {
+      "path": "tests/unit/wasm-artifact.test.ts",
+      "sha256": "8daacebb7896c9cfba5f4e47844147d4db2869f646c5f86c60aa9f5c5877ee1f",
+      "unchanged": true
+    },
+    {
+      "path": "tests/browser/harness/types.ts",
+      "sha256": "f26490b25a0675e3a01862f080a519cbf8edf035cea93d4f7741101436577100",
+      "unchanged": true
+    },
+    {
+      "path": "tests/browser/harness/probe.worker.ts",
+      "sha256": "406a6211a09f92eb0efba9db5cf6c457ac35df884145709b872796f44e90b8ec",
+      "unchanged": true
+    },
+    {
+      "path": "tests/browser/harness/main.ts",
+      "sha256": "89dd80a003e6deaf65d8b1e5b3303829dddd69c4e96a6bae7e2c67191178850d",
+      "unchanged": true
+    },
+    {
+      "path": "tests/browser/harness/index.html",
+      "sha256": "011f20ea0022e292ef156c3031c6844239037b6b2c2876d4f88141e220073354",
+      "unchanged": true
+    }
+  ],
+  "environment": {
+    "node": "v24.21.0",
+    "npm": "11.19.0",
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "bindgen": "wasm-bindgen 0.2.129"
+  },
+  "system": {
+    "computer": {
+      "Model": "83KY",
+      "TotalPhysicalMemory": 33752997888
+    },
+    "cpu": {
+      "Name": "Intel(R) Core(TM) Ultra 9 275HX",
+      "NumberOfLogicalProcessors": 24
+    },
+    "powershell": "7.6.5",
+    "os": {
+      "Caption": "Microsoft Windows 11 专业版",
+      "Version": "10.0.26300",
+      "BuildNumber": "26300"
+    }
+  },
+  "checks": {
+    "qualityExitCode": 0,
+    "typescript": "passed",
+    "eslint": "passed zero warnings",
+    "prettier": "passed",
+    "rustFmt": "passed",
+    "rustClippyNative": "passed zero warnings",
+    "rustClippyWasm": "passed zero warnings",
+    "rustTests": 2,
+    "vitest": 1,
+    "sharedRegistryEntries": 452,
+    "schemaBodiesPassed": 27,
+    "screenshotVisualQA": "passed: home/course/practice/visualize/settings/390px practice",
+    "playwright": {
+      "startTime": "2026-10-14T16:32:23.116Z",
+      "duration": 49991.883,
+      "expected": 24,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "subpathBuild": "passed: /c-viz/ asset prefixes in isolated production build; not browser subpath test",
+    "markdownLinks": "passed: four files, 15 links",
+    "powershellSyntax": "passed"
+  },
+  "browserTests": [
+    {
+      "title": "production React entry renders without loading the engine",
+      "project": "chrome",
+      "status": "passed",
+      "attempts": 1,
+      "browserVersion": "155.0.8059.79"
+    },
+    {
+      "title": "cold and warm Module runs call real Rust in fresh workers",
+      "project": "chrome",
+      "status": "passed",
+      "attempts": 1,
+      "browserVersion": "155.0.8059.79"
+    },
+    {
+      "title": "missing WASM rejects and a later cold run recovers",
+      "project": "chrome",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "production React entry renders without loading the engine",
+      "project": "edge",
+      "status": "passed",
+      "attempts": 1,
+      "browserVersion": "155.0.4283.45"
+    },
+    {
+      "title": "cold and warm Module runs call real Rust in fresh workers",
+      "project": "edge",
+      "status": "passed",
+      "attempts": 1,
+      "browserVersion": "155.0.4283.45"
+    },
+    {
+      "title": "missing WASM rejects and a later cold run recovers",
+      "project": "edge",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "production React entry renders without loading the engine",
+      "project": "firefox-automation",
+      "status": "passed",
+      "attempts": 1,
+      "browserVersion": "157.0"
+    },
+    {
+      "title": "cold and warm Module runs call real Rust in fresh workers",
+      "project": "firefox-automation",
+      "status": "passed",
+      "attempts": 1,
+      "browserVersion": "157.0"
+    },
+    {
+      "title": "missing WASM rejects and a later cold run recovers",
+      "project": "firefox-automation",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "public routes preserve content relationships, refresh and browser history",
+      "project": "chrome",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "workspaces keep the required pane order, read-only source and unavailable actions",
+      "project": "chrome",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "keyboard navigation, native dialogs and settings tabs remain usable",
+      "project": "chrome",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "unknown addresses and real lazy module failures provide recovery",
+      "project": "chrome",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "desktop and narrower layouts avoid horizontal page overflow",
+      "project": "chrome",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "public routes preserve content relationships, refresh and browser history",
+      "project": "edge",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "workspaces keep the required pane order, read-only source and unavailable actions",
+      "project": "edge",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "keyboard navigation, native dialogs and settings tabs remain usable",
+      "project": "edge",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "unknown addresses and real lazy module failures provide recovery",
+      "project": "edge",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "desktop and narrower layouts avoid horizontal page overflow",
+      "project": "edge",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "public routes preserve content relationships, refresh and browser history",
+      "project": "firefox-automation",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "workspaces keep the required pane order, read-only source and unavailable actions",
+      "project": "firefox-automation",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "keyboard navigation, native dialogs and settings tabs remain usable",
+      "project": "firefox-automation",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "unknown addresses and real lazy module failures provide recovery",
+      "project": "firefox-automation",
+      "status": "passed",
+      "attempts": 1
+    },
+    {
+      "title": "desktop and narrower layouts avoid horizontal page overflow",
+      "project": "firefox-automation",
+      "status": "passed",
+      "attempts": 1
+    }
+  ],
+  "firefoxStable": {
+    "evidenceLevel": "page-navigation-browser-smoke",
+    "capabilities": {
+      "acceptInsecureCerts": false,
+      "browserName": "firefox",
+      "browserVersion": "158.0",
+      "moz:accessibilityChecks": false,
+      "moz:buildID": "20261007201254",
+      "moz:geckodriverVersion": "0.37.1",
+      "moz:headless": true,
+      "moz:platformVersion": "10.0",
+      "moz:processID": 44056,
+      "moz:profile": "C:\\Users\\Spring\\AppData\\Local\\Temp\\rust_mozprofile2OGU1b",
+      "moz:shutdownTimeout": 60000,
+      "moz:webdriverClick": true,
+      "moz:windowless": false,
+      "pageLoadStrategy": "normal",
+      "platformName": "windows",
+      "proxy": {},
+      "setWindowRect": true,
+      "strictFileInteractability": false,
+      "timeouts": {
+        "implicit": 0,
+        "pageLoad": 300000,
+        "script": 30000
+      },
+      "unhandledPromptBehavior": "dismiss and notify",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:158.0) Gecko/20100101 Firefox/158.0"
+    },
+    "viewport": {
+      "devicePixelRatio": 1,
+      "height": 900,
+      "width": 1440
+    },
+    "navigation": {
+      "pages": [
+        {
+          "path": "/",
+          "activeNavigation": [
+            "学习首页"
+          ],
+          "breadcrumbLinks": [],
+          "emptyStates": [
+            "每日目标尚未启用"
+          ],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "",
+          "heading": "让每一步，都看得明白。",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-01",
+          "sourceAreas": []
+        },
+        {
+          "path": "/#/courses",
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/",
+              "text": "学习首页"
+            }
+          ],
+          "emptyStates": [],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/courses",
+          "heading": "从基础开始，一步步学懂。",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-02",
+          "sourceAreas": []
+        },
+        {
+          "path": "/#/courses/chapter.c.values",
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/",
+              "text": "学习首页"
+            },
+            {
+              "href": "#/courses",
+              "text": "C 语言课程"
+            }
+          ],
+          "emptyStates": [],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/courses/chapter.c.values",
+          "heading": "变量与表达式",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-02",
+          "sourceAreas": []
+        },
+        {
+          "path": "/#/lessons/lesson.c.variables-output",
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/courses",
+              "text": "C 语言课程"
+            },
+            {
+              "href": "#/courses/chapter.c.values",
+              "text": "变量与表达式"
+            }
+          ],
+          "emptyStates": [
+            "课程内容正在准备"
+          ],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/lessons/lesson.c.variables-output",
+          "heading": "变量和输出",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-03",
+          "sourceAreas": []
+        },
+        {
+          "path": "/#/practice/exercise.c.echo",
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/courses",
+              "text": "C 语言课程"
+            },
+            {
+              "href": "#/lessons/lesson.c.variables-output",
+              "text": "变量和输出"
+            }
+          ],
+          "emptyStates": [
+            "积木工作区尚未启用"
+          ],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/practice/exercise.c.echo",
+          "heading": "输出输入变量",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-04",
+          "sourceAreas": [
+            {
+              "empty": true,
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "path": "/#/cases",
+          "activeNavigation": [
+            "算法与演示"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/",
+              "text": "学习首页"
+            }
+          ],
+          "emptyStates": [],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/cases",
+          "heading": "让数据变化，有迹可循。",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-05",
+          "sourceAreas": []
+        },
+        {
+          "path": "/#/visualize/case.c.bubble-sort",
+          "activeNavigation": [
+            "算法与演示"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/cases",
+              "text": "算法与演示"
+            }
+          ],
+          "emptyStates": [
+            "等待真实执行结果"
+          ],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/visualize/case.c.bubble-sort",
+          "heading": "冒泡排序",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-06",
+          "sourceAreas": [
+            {
+              "empty": true,
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "path": "/#/practice/exercise.c.echo/review",
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/lessons/lesson.c.variables-output",
+              "text": "变量和输出"
+            },
+            {
+              "href": "#/practice/exercise.c.echo",
+              "text": "输出输入变量"
+            }
+          ],
+          "emptyStates": [
+            "还没有可复盘的运行"
+          ],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/practice/exercise.c.echo/review",
+          "heading": "输出输入变量 · 本次复盘",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-06",
+          "sourceAreas": [
+            {
+              "empty": true,
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "path": "/#/settings?panel=data",
+          "activeNavigation": [
+            "本地设置"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/",
+              "text": "学习首页"
+            }
+          ],
+          "emptyStates": [
+            "尚未启用本地保存"
+          ],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/settings?panel=data",
+          "heading": "本地设置",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-07",
+          "sourceAreas": []
+        }
+      ],
+      "layouts": [
+        {
+          "path": "/#/practice/exercise.c.echo",
+          "disabledButtons": true,
+          "left": {
+            "width": 566,
+            "x": 252
+          },
+          "right": {
+            "width": 566,
+            "x": 838
+          }
+        },
+        {
+          "path": "/#/visualize/case.c.bubble-sort",
+          "disabledButtons": true,
+          "left": {
+            "width": 498.0833129882813,
+            "x": 252
+          },
+          "right": {
+            "width": 633.9166870117188,
+            "x": 770.0833129882812
+          }
+        }
+      ],
+      "restoredLesson": {
+        "activeNavigation": [
+          "C 语言课程"
+        ],
+        "breadcrumbLinks": [
+          {
+            "href": "#/courses",
+            "text": "C 语言课程"
+          },
+          {
+            "href": "#/courses/chapter.c.values",
+            "text": "变量与表达式"
+          }
+        ],
+        "emptyStates": [
+          "课程内容正在准备"
+        ],
+        "engineRequests": 0,
+        "forbiddenLinks": 0,
+        "hash": "#/lessons/lesson.c.variables-output",
+        "heading": "变量和输出",
+        "horizontalOverflow": false,
+        "pageId": "PAGE-03",
+        "sourceAreas": []
+      },
+      "dialogs": [
+        {
+          "panel": "points",
+          "title": "积分明细",
+          "escapeClosed": true,
+          "focusRestored": true
+        },
+        {
+          "panel": "goals",
+          "title": "每日目标",
+          "escapeClosed": true,
+          "focusRestored": true
+        },
+        {
+          "panel": "history",
+          "title": "打卡历史",
+          "escapeClosed": true,
+          "focusRestored": true
+        }
+      ],
+      "keyboardSkip": true,
+      "settingsKeyboardTabs": true,
+      "unknownCaseRecovery": true
+    },
+    "excluded": [
+      "real-C-execution",
+      "learning-storage",
+      "awards",
+      "formal-performance"
+    ]
+  },
+  "firstAttempt": {
+    "stats": {
+      "startTime": "2026-10-14T16:27:38.025Z",
+      "duration": 69189.476,
+      "expected": 21,
+      "skipped": 0,
+      "unexpected": 3,
+      "flaky": 0
+    },
+    "failedTests": [
+      {
+        "title": "keyboard navigation, native dialogs and settings tabs remain usable",
+        "project": "chrome",
+        "status": "failed",
+        "attempts": 1,
+        "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('link', { name: '跳到主要内容' })\nExpected: focused\nReceived: inactive\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" getByRole('link', { name: '跳到主要内容' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: '跳到主要内容' })\u001b[22m\n\u001b[2m    14 × locator resolved to <a class=\"skip-link\" href=\"#main-content\">跳到主要内容</a>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n"
+      },
+      {
+        "title": "keyboard navigation, native dialogs and settings tabs remain usable",
+        "project": "edge",
+        "status": "failed",
+        "attempts": 1,
+        "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('link', { name: '跳到主要内容' })\nExpected: focused\nReceived: inactive\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" getByRole('link', { name: '跳到主要内容' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: '跳到主要内容' })\u001b[22m\n\u001b[2m    14 × locator resolved to <a class=\"skip-link\" href=\"#main-content\">跳到主要内容</a>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n"
+      },
+      {
+        "title": "keyboard navigation, native dialogs and settings tabs remain usable",
+        "project": "firefox-automation",
+        "status": "failed",
+        "attempts": 1,
+        "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('link', { name: '跳到主要内容' })\nExpected: focused\nReceived: inactive\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" getByRole('link', { name: '跳到主要内容' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: '跳到主要内容' })\u001b[22m\n\u001b[2m    13 × locator resolved to <a class=\"skip-link\" href=\"#main-content\">跳到主要内容</a>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n"
+      }
+    ],
+    "resolution": "Keep native initial tab order; only focus titles after in-document pathname changes and lazy completion. Remove pointer click that changed keyboard starting position; also assert SPA heading focus.",
+    "targetedKeyboardRetest": "3/3 passed",
+    "resolved": true
+  },
+  "artifacts": {
+    "evidenceLevel": "engineering-build",
+    "entries": [
+      {
+        "path": "web/dist/assets/CatalogPages-CvHI-OUs.js",
+        "bytes": 2949,
+        "gzipBytes": 1300,
+        "brotliBytes": 1024,
+        "sha256": "9ce0c26fb5c4a93c7a4ecd2ac488c47e9925bfa1873ea84c4e31eba9914a53df"
+      },
+      {
+        "path": "web/dist/assets/index-ByDUBi1f.css",
+        "bytes": 20832,
+        "gzipBytes": 5230,
+        "brotliBytes": 4537,
+        "sha256": "85304b67480c81160c0a968f04e9ba4160d43b95d98fc3ee04204fddcbab3638"
+      },
+      {
+        "path": "web/dist/assets/index-ChQrUTU6.js",
+        "bytes": 274915,
+        "gzipBytes": 86892,
+        "brotliBytes": 74636,
+        "sha256": "518c6cc64121a7704e2d615881a7957df6a59a41e9502fbc1a7c295f080f22ed"
+      },
+      {
+        "path": "web/dist/assets/LessonPage-BJ8wKH8N.js",
+        "bytes": 2612,
+        "gzipBytes": 1199,
+        "brotliBytes": 911,
+        "sha256": "c604738b3dc13ce1b1ead7a8f102d326708f6321271d7d6bd7dd4b45049f7e80"
+      },
+      {
+        "path": "web/dist/assets/SettingsPage-DVuTQx3t.js",
+        "bytes": 3641,
+        "gzipBytes": 1606,
+        "brotliBytes": 1230,
+        "sha256": "8cd331508b89331fb5de0fa0579dbfc86830913ba206082a0fdcd2e09d22a7b8"
+      },
+      {
+        "path": "web/dist/assets/Workspaces-CtyMfGwB.js",
+        "bytes": 8815,
+        "gzipBytes": 2704,
+        "brotliBytes": 2133,
+        "sha256": "be8ecc32b80f09222b5a3e8319fd338d176f98552e25d68ba9eb99ab36e90827"
+      },
+      {
+        "path": "web/dist/index.html",
+        "bytes": 465,
+        "gzipBytes": 329,
+        "brotliBytes": 199,
+        "sha256": "84a1fe95cf4f9b72ee472fb9cacd6672bf4865a91eff4cb097c0232585537296"
+      },
+      {
+        "path": ".artifacts/browser-dist/assets/c_viz_wasm_bg-DjijL53u.wasm",
+        "bytes": 35556,
+        "gzipBytes": 13621,
+        "brotliBytes": 11496,
+        "sha256": "62c6bf6c214d7f7904ab71bb57b4f7ca1a178cbcfde0bd18c515913c08a44a9a"
+      },
+      {
+        "path": ".artifacts/browser-dist/assets/index-DJJVDhux.js",
+        "bytes": 3591,
+        "gzipBytes": 1895,
+        "brotliBytes": 1574,
+        "sha256": "8754918c8981163b624d482cb7e81597dcded57bc192f58a28781f88d41cfb3b"
+      },
+      {
+        "path": ".artifacts/browser-dist/assets/probe.worker-CDdpF3JW.js",
+        "bytes": 3160,
+        "gzipBytes": 1552,
+        "brotliBytes": 1353,
+        "sha256": "94e7460cf27a7758769c6860823750b4375a183d41ad7de8988d48fa9d988e07"
+      },
+      {
+        "path": ".artifacts/browser-dist/index.html",
+        "bytes": 579,
+        "gzipBytes": 416,
+        "brotliBytes": 277,
+        "sha256": "7a0550664af9399995bb5bbae13f9f134d0cccd090f11233ef10efc0d0889e09"
+      }
+    ],
+    "gzipTotals": {
+      "web/dist/": 99260,
+      ".artifacts/browser-dist/": 17484
+    }
+  },
+  "wasm": {
+    "evidenceLevel": "engineering-build",
+    "interpreterReady": false,
+    "environment": {
+      "node": "v24.21.0",
+      "npm": "11.19.0",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+      "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+      "bindgen": "wasm-bindgen 0.2.129"
+    },
+    "memories": [
+      {
+        "minimum": 17,
+        "maximum": 2048,
+        "shared": false
+      }
+    ],
+    "features": [
+      "+bulk-memory",
+      "+bulk-memory-opt",
+      "+call-indirect-overlong",
+      "+multivalue",
+      "+mutable-globals",
+      "+nontrapping-fptoint",
+      "+reference-types",
+      "+sign-ext"
+    ],
+    "imports": [
+      {
+        "module": "./c_viz_wasm_bg.js",
+        "name": "__wbindgen_init_externref_table",
+        "kind": "function"
+      },
+      {
+        "module": "./c_viz_wasm_bg.js",
+        "name": "__wbindgen_generic_0000000000000001",
+        "kind": "function"
+      }
+    ],
+    "exports": [
+      {
+        "name": "memory",
+        "kind": "memory"
+      },
+      {
+        "name": "build_probe",
+        "kind": "function"
+      },
+      {
+        "name": "__abort_handler",
+        "kind": "global"
+      },
+      {
+        "name": "__instance_terminated",
+        "kind": "global"
+      },
+      {
+        "name": "__wbindgen_externrefs",
+        "kind": "table"
+      },
+      {
+        "name": "__externref_table_dealloc",
+        "kind": "function"
+      },
+      {
+        "name": "__wbindgen_free",
+        "kind": "function"
+      },
+      {
+        "name": "__wbindgen_start",
+        "kind": "function"
+      }
+    ],
+    "bytes": 35556,
+    "hashes": {
+      "package-lock.json": "1f20229c85a01249648dceb447bae286adfaeb94efbe575ad8e11188b41dc078",
+      "Cargo.lock": "4984880e9904d0fd39a4774eb03f6800f23e13ece5bf164e87746fc76bc52cf2",
+      "web/src/generated/c_viz_wasm.js": "050c8cf0c4b193105bdb5d6cb7b12494625d61d0eb47114419041c317400c053",
+      "web/src/generated/c_viz_wasm_bg.wasm": "62c6bf6c214d7f7904ab71bb57b4f7ca1a178cbcfde0bd18c515913c08a44a9a"
+    }
+  },
+  "screenshots": [
+    {
+      "path": ".artifacts/03.2-screenshots/courses.png",
+      "sha256": "18bdb5663711751a4634a31ea23d9f3c6321fef64fdba3a9a83b649271e17e48"
+    },
+    {
+      "path": ".artifacts/03.2-screenshots/home.png",
+      "sha256": "4438e4a0dbaa3e92c0b806c51e201f4f41c95d6f042ea3c521dd52a53ed4e3b6"
+    },
+    {
+      "path": ".artifacts/03.2-screenshots/practice-narrow.png",
+      "sha256": "12edc93caf7ba7ffdd4f2de3a9a4c2c8ad5372ba4d4478910bf92dcee09d1473"
+    },
+    {
+      "path": ".artifacts/03.2-screenshots/practice.png",
+      "sha256": "8c954c3fa36003a90fd94c022ba8095faf16e3a119e999ff1cd55521d3be800a"
+    },
+    {
+      "path": ".artifacts/03.2-screenshots/settings.png",
+      "sha256": "f585b2098fba5d015d6e2dabe4614506f4ad7e139deb8c5ebb746cd58c6f8e72"
+    },
+    {
+      "path": ".artifacts/03.2-screenshots/visualize.png",
+      "sha256": "e0784305b325f325a252ea37a487da2dd54d81587ab02430c2858a7630b8d224"
+    }
+  ],
+  "routes": [
+    "/",
+    "/courses",
+    "/courses/:chapterId",
+    "/lessons/:lessonId",
+    "/practice/:exerciseId",
+    "/cases",
+    "/visualize/:caseId",
+    "/practice/:exerciseId/review",
+    "/settings"
+  ],
+  "metadataCoverage": {
+    "chapters": 3,
+    "lessons": 6,
+    "exercises": 6,
+    "cases": 7,
+    "source": "Frozen public navigation IDs/titles/relationships only; no publishable content package or fixture runtime import"
+  },
+  "notTested": [
+    "03.3 real content/WASM adapter errors and cancellation",
+    "04 IndexedDB/migration/concurrency/save and clear",
+    "05-08 C/EXEC/Step DSL/player/real budget",
+    "09-11 published lessons/judging/progress/rewards",
+    "Formal 2s/500ms/60fps, HTTPS/network/CDN and complete accessibility matrix"
+  ],
+  "notes": [
+    "Formal Firefox158 data is separate from Playwright Firefox157; no claim that all automated injection/narrow checks ran on stock Firefox.",
+    "Resource gzip totals are local calculations over all build files, not actual wire transfer or formal budgets.",
+    "No learning/user execution data in evidence."
+  ]
+}

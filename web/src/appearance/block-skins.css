@@ -1,0 +1,361 @@
+/* Skins for the real Zelos blocks. Path geometry, connection shapes, field
+   metrics and pointer targets remain owned by Blockly. Semantic colours are
+   keyed from its existing fill attributes, never written into the program. */
+[data-appearance] .block-canvas {
+  --block-program: #dce7f5;
+  --block-variable: #ddece5;
+  --block-number: #e6e8f7;
+  --block-control: #f2e6d3;
+  --block-logic: #eae0f2;
+  --block-output: #f2dfea;
+  --block-ink: #24344c;
+  --block-edge: #708095;
+  --block-field: #ffffff;
+  --block-field-ink: #24344c;
+  --block-field-edge: #8292aa;
+  --block-field-radius: 4px;
+  --block-arrow-filter: brightness(0);
+  --block-ui-filter: none;
+  --block-filter: none;
+  --block-stroke: 1px;
+  --block-canvas: var(--p05-surface);
+  --block-tool-surface: var(--p05-raised);
+  --block-tool-ink: var(--p05-text);
+  --block-tool-active: var(--p05-active);
+  --block-tool-radius: 5px;
+  --block-tool-shadow: none;
+  --block-selection: var(--p05-accent);
+  --block-selection-filter: none;
+}
+
+[data-appearance='cute'] .block-canvas {
+  --block-program: #eddded;
+  --block-variable: #ddebe4;
+  --block-number: #e5e1f5;
+  --block-control: #f3e4d0;
+  --block-logic: #ebdcf1;
+  --block-output: #f3dae6;
+  --block-ink: #513445;
+  --block-edge: #96667f;
+  --block-field-edge: #a47c91;
+  --block-field-ink: #513445;
+  --block-field-radius: 10px;
+  --block-filter: drop-shadow(0 -1px 0 #ffffff) drop-shadow(0 2px 2px #b982a74a);
+  --block-stroke: 1.4px;
+  --block-tool-radius: 15px;
+  --block-tool-shadow: inset 0 1px 0 #ffffff;
+  --block-selection-filter: drop-shadow(0 0 3px #be185d45);
+}
+
+[data-appearance='glass'] .block-canvas {
+  --block-program: #e1e8ed;
+  --block-variable: #e0e9e5;
+  --block-number: #e4e6ef;
+  --block-control: #ede6dc;
+  --block-logic: #e8e2ec;
+  --block-output: #ece1e8;
+  --block-ink: #343e4c;
+  --block-edge: #6b7c8a;
+  --block-field-ink: #343e4c;
+  --block-field-edge: #84929e;
+  --block-field-radius: 7px;
+  --block-filter: drop-shadow(0 -1px 0 #ffffff) drop-shadow(0 2px 1px #6d7c8c24);
+  --block-tool-radius: 9px;
+  --block-tool-shadow: inset 0 1px 0 #ffffffb3;
+}
+
+[data-appearance='soft'] .block-canvas {
+  --block-program: #e5dfd4;
+  --block-variable: #dee3d8;
+  --block-number: #e0dfe8;
+  --block-control: #ece1c9;
+  --block-logic: #e5dde5;
+  --block-output: #eadbd9;
+  --block-ink: #403d35;
+  --block-edge: #7a776d;
+  --block-field: #faf8f3;
+  --block-field-ink: #403d35;
+  --block-field-edge: #8d887c;
+  --block-field-radius: 6px;
+  --block-filter: drop-shadow(-1px -1px 0 #ffffff) drop-shadow(1px 2px 0 #9b928569);
+  --block-tool-radius: 12px;
+  --block-tool-shadow: inset 2px 2px 4px #b1aa9f66, inset -2px -2px 4px #ffffff;
+}
+
+/* The flow-space editor keeps a dark stage in both modes, like a code pane. */
+[data-appearance='cool'] .block-canvas {
+  --block-program: #25354a;
+  --block-variable: #29413f;
+  --block-number: #303c5c;
+  --block-control: #473f34;
+  --block-logic: #433653;
+  --block-output: #493549;
+  --block-ink: #e7eefc;
+  --block-edge: #8cace1;
+  --block-field: #172236;
+  --block-field-ink: #edf3ff;
+  --block-field-edge: #8ba1bc;
+  --block-field-radius: 5px;
+  --block-canvas: #111b2b;
+  --block-arrow-filter: brightness(0) invert(1);
+  --block-ui-filter: invert(1) brightness(1.6);
+  --block-tool-surface: #172236;
+  --block-tool-ink: #e7eefc;
+  --block-tool-active: #2a3d62;
+  --block-tool-radius: 7px;
+  --block-tool-shadow: inset 0 1px 0 #96baff40;
+  --block-filter: drop-shadow(0 0 2px #6a94ff26);
+  --block-stroke: 1.2px;
+  --block-selection: #b7ceff;
+  --block-selection-filter: drop-shadow(0 0 4px #7a9bff99);
+}
+
+[data-appearance='tech'] .block-canvas {
+  --block-program: #e3e9f1;
+  --block-variable: #e3ece9;
+  --block-number: #e8e6f0;
+  --block-control: #ece8dc;
+  --block-logic: #e9e3ed;
+  --block-output: #ece3e8;
+  --block-ink: #394759;
+  --block-edge: #748193;
+  --block-field: #f9fbff;
+  --block-field-ink: #394759;
+  --block-field-edge: #8592a4;
+  --block-field-radius: 8px;
+  --block-filter: drop-shadow(0 -1px 0 #ffffff) drop-shadow(0 2px 3px #a0aec44d);
+  --block-tool-radius: 12px;
+  --block-tool-shadow: 2px 3px 5px #b6c0d355, -2px -2px 4px #ffffff;
+}
+
+[data-appearance][data-theme='dark'] .block-canvas {
+  --block-arrow-filter: brightness(0) invert(1);
+  --block-ui-filter: invert(1) brightness(1.6);
+  --block-program: #29364b;
+  --block-variable: #283d38;
+  --block-number: #30364e;
+  --block-control: #443c2d;
+  --block-logic: #3d3049;
+  --block-output: #473343;
+  --block-ink: #eaf0fc;
+  --block-edge: #9baac2;
+  --block-field: #192234;
+  --block-field-ink: #eaf0fc;
+  --block-field-edge: #8ba1bc;
+}
+
+[data-appearance='cute'][data-theme='dark'] .block-canvas {
+  --block-program: #433444;
+  --block-variable: #2f413b;
+  --block-number: #3d3550;
+  --block-control: #4b3d33;
+  --block-logic: #44324d;
+  --block-output: #4e3244;
+  --block-ink: #f9eaf2;
+  --block-edge: #c7a0ba;
+  --block-filter: drop-shadow(0 -1px 0 #f9eaf233) drop-shadow(0 2px 2px #07050b66);
+  --block-tool-shadow: inset 0 1px 0 #f9eaf224;
+}
+
+[data-appearance='glass'][data-theme='dark'] .block-canvas {
+  --block-program: #303c49;
+  --block-variable: #30413f;
+  --block-number: #383e50;
+  --block-control: #464039;
+  --block-logic: #433b4a;
+  --block-output: #473d46;
+  --block-ink: #edf0f6;
+  --block-edge: #a7b5c2;
+  --block-filter: drop-shadow(0 -1px 0 #ffffff2e) drop-shadow(0 2px 1px #03050a55);
+  --block-tool-shadow: inset 0 1px 0 #ffffff24;
+}
+
+[data-appearance='soft'][data-theme='dark'] .block-canvas {
+  --block-program: #393830;
+  --block-variable: #343b32;
+  --block-number: #393941;
+  --block-control: #443e2e;
+  --block-logic: #403641;
+  --block-output: #443534;
+  --block-ink: #f0ede5;
+  --block-field: #25251f;
+  --block-field-ink: #f0ede5;
+  --block-edge: #b4ad9b;
+  --block-filter: drop-shadow(-1px -1px 0 #f0ede524) drop-shadow(1px 2px 0 #07070488);
+  --block-tool-shadow: inset 2px 2px 4px #090b0d77, inset -2px -2px 4px #f0ede51a;
+}
+
+[data-appearance='cool'][data-theme='dark'] .block-canvas {
+  --block-program: #25354a;
+  --block-variable: #29413f;
+  --block-number: #303c5c;
+  --block-control: #473f34;
+  --block-logic: #433653;
+  --block-output: #493549;
+  --block-edge: #8cace1;
+}
+
+[data-appearance='tech'][data-theme='dark'] .block-canvas {
+  --block-filter: drop-shadow(0 -1px 0 #ffffff21) drop-shadow(0 2px 3px #02050a88);
+  --block-tool-shadow: 2px 3px 5px #02050a66, -1px -1px 3px #ffffff12;
+}
+
+[data-appearance] .block-canvas .blocklyMainBackground,
+[data-appearance] .block-canvas .blocklyFlyoutBackground {
+  /* ThemeManager writes component surfaces inline. Keep one controlled CSS
+     surface for each skin, including a dark code stage in the flow theme. */
+  fill: var(--block-canvas) !important;
+  fill-opacity: 1;
+}
+
+[data-appearance] .block-canvas .blocklyToolbox {
+  background: var(--block-tool-surface) !important;
+  color: var(--block-tool-ink);
+  border-right: 1px solid var(--p05-border);
+  padding: 12px 0;
+}
+
+[data-appearance] .block-canvas .blocklyToolboxCategory {
+  border-left-width: 3px !important;
+  margin: 3px 7px 7px;
+  padding: 5px 8px 5px 3px;
+  height: 28px;
+  line-height: 28px;
+  border-radius: var(--block-tool-radius);
+  box-sizing: content-box;
+}
+
+[data-appearance] .block-canvas .blocklyToolboxCategoryLabel {
+  color: var(--block-tool-ink);
+  font-family: 'Microsoft YaHei UI', 'Microsoft YaHei', system-ui, sans-serif;
+  font-size: 13px;
+}
+
+[data-appearance] .block-canvas .blocklyToolboxCategory.blocklyToolboxSelected,
+[data-appearance] .block-canvas .blocklyToolboxCategory:not(.blocklyToolboxSelected):hover {
+  background: var(--block-tool-active) !important;
+  box-shadow: var(--block-tool-shadow);
+}
+
+[data-appearance]
+  .block-canvas
+  .blocklyToolboxCategory.blocklyToolboxSelected
+  .blocklyToolboxCategoryLabel {
+  color: var(--block-tool-ink);
+  font-weight: 600;
+}
+
+/* The variables live on each block, so nested expressions retain their own
+   semantic family rather than borrowing the containing statement's colour. */
+[data-appearance] .block-canvas .blocklyBlock:has(> .blocklyPath[fill='#5ba5a5']) {
+  --block-fill: var(--block-program);
+}
+[data-appearance] .block-canvas .blocklyBlock:has(> .blocklyPath[fill='#5ba586']) {
+  --block-fill: var(--block-variable);
+}
+[data-appearance] .block-canvas .blocklyBlock:has(> .blocklyPath[fill='#5b67a5']) {
+  --block-fill: var(--block-number);
+}
+[data-appearance] .block-canvas .blocklyBlock:has(> .blocklyPath[fill='#a5865b']) {
+  --block-fill: var(--block-control);
+}
+[data-appearance] .block-canvas .blocklyBlock:has(> .blocklyPath[fill='#865ba5']) {
+  --block-fill: var(--block-logic);
+}
+[data-appearance] .block-canvas .blocklyBlock:has(> .blocklyPath[fill='#a55ba5']) {
+  --block-fill: var(--block-output);
+}
+
+[data-appearance]
+  .block-canvas
+  .blocklyBlock:not(.blocklyInsertionMarker, .blocklyDisabled)
+  > .blocklyPath:not(.blocklyPathSelected) {
+  fill: var(--block-fill, var(--block-program));
+  stroke: var(--block-edge);
+  stroke-width: var(--block-stroke);
+  filter: var(--block-filter);
+}
+
+/* Do not alter font size/weight: Zelos measures those metrics for its paths. */
+[data-appearance] .block-canvas .blocklyBlock > .blocklyLabelField > .blocklyText {
+  fill: var(--block-ink);
+}
+
+[data-appearance] .block-canvas .blocklyBlock .blocklyField > .blocklyFieldRect {
+  fill: var(--block-field);
+  fill-opacity: 1;
+  stroke: var(--block-field-edge);
+  stroke-width: 1px;
+  rx: var(--block-field-radius);
+  ry: var(--block-field-radius);
+}
+
+[data-appearance] .block-canvas .blocklyField:not(.blocklyLabelField) .blocklyText,
+[data-appearance] .block-canvas .blocklyDropdownText {
+  /* Zelos sets dropdown text with !important in its reviewed stylesheet. */
+  fill: var(--block-field-ink) !important;
+}
+
+[data-appearance] .block-canvas .blocklyDropdownField > image {
+  filter: var(--block-arrow-filter);
+}
+
+[data-appearance] .block-canvas .blocklyZoom image,
+[data-appearance] .block-canvas .blocklyTrash image {
+  filter: var(--block-ui-filter);
+}
+
+[data-appearance] .block-canvas .blocklyDropdownArrow {
+  fill: var(--block-field-ink);
+}
+
+[data-appearance] .block-canvas .blocklyEditableText:hover > .blocklyFieldRect,
+[data-appearance] .block-canvas .blocklyField.blocklyActiveFocus > .blocklyFieldRect {
+  stroke: var(--block-selection);
+  stroke-width: 2px;
+}
+
+[data-appearance] .block-canvas .blocklyBlock.blocklySelected > .blocklyPath {
+  stroke: var(--block-selection);
+  stroke-width: 2.5px;
+  filter: var(--block-selection-filter);
+}
+
+/* Zelos appends this outline after the fields. An opaque fill would cover
+   the selected block's labels and nested expressions. */
+[data-appearance] .block-canvas .blocklyBlock > .blocklyPathSelected {
+  fill: none;
+}
+
+[data-appearance] .block-canvas .blocklyBlock.blocklyHighlighted > .blocklyPath {
+  stroke: var(--block-selection);
+  stroke-width: 3px;
+  stroke-dasharray: 6 3;
+  filter: var(--block-selection-filter);
+}
+
+[data-appearance] .block-canvas .blocklyHighlightedConnectionPathVisible {
+  stroke: var(--block-selection);
+  stroke-width: 4px;
+}
+
+[data-appearance] .block-canvas .blocklyInsertionMarker > .blocklyPath {
+  fill: var(--block-selection);
+  fill-opacity: 0.3;
+  stroke: var(--block-selection);
+  stroke-width: 1.5px;
+}
+
+[data-appearance] .blocklyWidgetDiv .blocklyHtmlInput {
+  color: var(--p05-text);
+  background: var(--p05-surface);
+  border-color: var(--p05-accent);
+}
+
+@media (prefers-contrast: more) {
+  [data-appearance][data-theme] .block-canvas {
+    --block-stroke: 2px;
+    --block-filter: none;
+    --block-selection-filter: none;
+  }
+}

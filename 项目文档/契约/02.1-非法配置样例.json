@@ -1,0 +1,34 @@
+{
+  "fixtureVersion": "1.0.0",
+  "baseFile": "02.1-内容样例.json",
+  "purpose": "contract-validation-only",
+  "scenarios": [
+    {"id":"invalid.missing-reference","operations":[{"op":"set","path":"/lessons/0/requiredExerciseRefs/0/id","value":"exercise.c.missing"}],"expectedCode":"CONTENT_REF_MISSING"},
+    {"id":"invalid.duplicate-id","operations":[{"op":"set","path":"/knowledgePoints/1/id","value":"knowledge.c.entry"}],"expectedCode":"CONTENT_ID_DUPLICATE"},
+    {"id":"invalid.reference-version","operations":[{"op":"set","path":"/lessons/0/requiredExerciseRefs/0/version","value":"1.0.1"}],"expectedCode":"CONTENT_REF_VERSION"},
+    {"id":"invalid.reference-type","operations":[{"op":"set","path":"/lessons/0/requiredExerciseRefs/0/id","value":"program.c.echo"}],"expectedCode":"CONTENT_REF_TYPE"},
+    {"id":"invalid.reserved-language","operations":[{"op":"set","path":"/programs/0/languageRef/id","value":"lang.cpp"}],"expectedCode":"CONTENT_LANGUAGE_RESERVED"},
+    {"id":"invalid.empty-required","operations":[{"op":"set","path":"/lessons/0/requiredExerciseRefs","value":[]}],"expectedCode":"CONTENT_REQUIRED_EMPTY"},
+    {"id":"invalid.owner-mismatch","operations":[{"op":"set","path":"/exercises/0/lessonRef/id","value":"lesson.c.expressions"}],"expectedCode":"CONTENT_RELATION_INVALID"},
+    {"id":"invalid.contract-version","operations":[{"op":"set","path":"/contractVersion","value":"2.0.0"}],"expectedCode":"CONTENT_CONTRACT_UNSUPPORTED"},
+    {"id":"invalid.input-domain","operations":[{"op":"set","path":"/exercises/0/tests/0/input/x","value":1000}],"expectedCode":"CONTENT_INPUT_INVALID"},
+    {"id":"invalid.input-index","operations":[{"op":"set","path":"/exercises/4/tests/0/input/k","value":3}],"expectedCode":"CONTENT_INPUT_INVALID"},
+    {"id":"invalid.input-order","operations":[{"op":"set","path":"/programs/9/exampleInput/values","value":[2,1]}],"expectedCode":"CONTENT_INPUT_INVALID"},
+    {"id":"invalid.input-empty-update","operations":[{"op":"set","path":"/exercises/4/tests/0/input/values","value":[]}],"expectedCode":"CONTENT_INPUT_INVALID"},
+    {"id":"invalid.binding-missing","operations":[{"op":"remove","path":"/programs/4/bindings/1"}],"expectedCode":"CONTENT_BINDING_INVALID"},
+    {"id":"invalid.block-coverage","operations":[{"op":"remove","path":"/lessons/0/blockRefs/5"}],"expectedCode":"CONTENT_BLOCK_MAPPING_INVALID"},
+    {"id":"invalid.judge-rule","operations":[{"op":"set","path":"/exercises/3/judgeRef/id","value":"judge.c.echo"}],"expectedCode":"CONTENT_JUDGE_INVALID"},
+    {"id":"invalid.judge-tests","operations":[{"op":"remove","path":"/exercises/3/tests/3"}],"expectedCode":"CONTENT_JUDGE_INVALID"},
+    {"id":"invalid.case-rule","operations":[{"op":"set","path":"/cases/6/resultRule","value":"bubble-ascending"}],"expectedCode":"CONTENT_CASE_INVALID"},
+    {"id":"invalid.reward-source","operations":[{"op":"set","path":"/exercises/0/rewardRef/id","value":"reward.lesson.first-completion"}],"expectedCode":"CONTENT_REWARD_INVALID"},
+    {"id":"invalid.learning-compatibility","operations":[{"op":"append","path":"/lessons/0/acceptedPriorVersions","value":"1.0.0"}],"expectedCode":"CONTENT_LEARNING_COMPATIBILITY_INVALID"},
+    {"id":"invalid.prerequisite-cycle","operations":[{"op":"append","path":"/knowledgePoints/0/prerequisiteRefs","value":{"id":"knowledge.c.variables","version":"1.0.0"}}],"expectedCode":"CONTENT_PREREQUISITE_CYCLE"},
+    {"id":"invalid.unknown-field","operations":[{"op":"set","path":"/lessons/0/autoComplete","value":true}],"expectedCode":"CONTENT_SCHEMA_INVALID"},
+    {"id":"invalid.duplicate-list","operations":[{"op":"append","path":"/lessons/0/requiredExerciseRefs","value":{"id":"exercise.c.echo","version":"1.0.0"}}],"expectedCode":"CONTENT_LIST_DUPLICATE"},
+    {"id":"invalid.statement-as-expression","operations":[{"op":"set","path":"/blocks/4/connectionType","value":"int-expression"}],"expectedCode":"CONTENT_BLOCK_MAPPING_INVALID"}
+  ],
+  "rawJsonScenarios": [
+    {"id":"invalid.json-duplicate-key","rawJson":"{\"contractVersion\":\"1.0.0\",\"contractVersion\":\"2.0.0\"}","expectedCode":"CONTENT_JSON_DUPLICATE_KEY"},
+    {"id":"invalid.json-trailing-comma","rawJson":"{\"contractVersion\":\"1.0.0\",}","expectedCode":"CONTENT_JSON_INVALID"}
+  ]
+}

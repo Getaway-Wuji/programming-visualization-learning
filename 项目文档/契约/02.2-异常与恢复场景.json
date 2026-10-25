@@ -1,0 +1,923 @@
+{
+  "fixtureVersion": "1.0.0",
+  "origin": "synthetic-contract-fixture",
+  "note": "All mutation/lifecycle/budget/coordinate vectors are authored contract assertions, not Rust, Worker or browser performance evidence.",
+  "invalidResults": [
+    {
+      "id": "invalid.protocol-version",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/protocolVersion",
+          "value": "2.0.0"
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_VERSION"
+    },
+    {
+      "id": "invalid.dsl-version",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/dslVersion",
+          "value": "2.0.0"
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_VERSION"
+    },
+    {
+      "id": "invalid.step-kind",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/steps/0/kind",
+          "value": "unknown.event"
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.operation",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/steps/2/changes/0/op",
+          "value": "unknown.op"
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.sequence-gap",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/steps/1/seq",
+          "value": 3
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.cell-before",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/steps/2/changes/0/before",
+          "value": 999
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.cell-index",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/steps/10/changes/0/index",
+          "value": 2
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.node-reference",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/steps/0/location/nodeId",
+          "value": "n999"
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.object-read",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/steps/6/observations/0/objectId",
+          "value": "o999"
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.checkpoint",
+      "fixtureId": "fixture.trace.checkpoint-128",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/checkpoints/1/state/control/nextNodeId",
+          "value": "n1"
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.complete-prefix",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/completeness",
+          "value": "prefix"
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.return-value",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/terminal/exitCode",
+          "value": 7
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.run-identity",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/identity/runId",
+          "value": "old-run"
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "invalid.source-revision",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/identity/sourceRevision",
+          "value": 2
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "invalid.adapter-success",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/producer",
+          "value": "adapter"
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "invalid.output-byte-count",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/steps/6/changes/0/afterBytes",
+          "value": 3
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.checkpoint-zero",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/trace/checkpoints/0/state/output",
+          "value": "fake"
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.source-range",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/nodeMap/3/byteRange/end",
+          "value": 9999
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.terminal-location",
+      "fixtureId": "fixture.trace.scope-array",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/terminal/location/kind",
+          "value": "synthetic"
+        },
+        {
+          "op": "set",
+          "path": "/result/terminal/location/reason",
+          "value": "unknown-reason"
+        },
+        {
+          "op": "remove",
+          "path": "/result/terminal/location/nodeId"
+        },
+        {
+          "op": "remove",
+          "path": "/result/terminal/location/edge"
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "invalid.judge-observation",
+      "fixtureId": "fixture.trace.array-before-return",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/judgeResult/observations/0/values/1",
+          "value": 99
+        }
+      ],
+      "expectedCode": "E_TRACE_INVALID"
+    },
+    {
+      "id": "invalid.judge-missing-check",
+      "fixtureId": "fixture.trace.array-before-return",
+      "operations": [
+        {
+          "op": "remove",
+          "path": "/result/judgeResult/checks/0"
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "invalid.judge-evidence-missing",
+      "fixtureId": "fixture.trace.array-before-return",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/judgeResult/observations",
+          "value": []
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "invalid.frozen-answer",
+      "fixtureId": "fixture.trace.array-before-return",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/request/judge/expectedStdout",
+          "value": "99\n"
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "invalid.expected-array-missing",
+      "fixtureId": "fixture.trace.array-before-return",
+      "operations": [
+        {
+          "op": "remove",
+          "path": "/request/judge/expectedArray"
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "invalid.null-trace-status",
+      "fixtureId": "fixture.trace.cancelled",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/result/terminal/status",
+          "value": "unknown"
+        }
+      ],
+      "expectedCode": "E_PROTOCOL_INVALID"
+    }
+  ],
+  "lifecycleCases": [
+    {
+      "id": "race.cancel-before-validation",
+      "events": [
+        {
+          "kind": "receive",
+          "at": 900,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 1,
+          "producer": "rust"
+        },
+        {
+          "kind": "cancel",
+          "at": 950
+        },
+        {
+          "kind": "validate",
+          "at": 999
+        }
+      ],
+      "expected": {
+        "status": "cancelled",
+        "resultsAccepted": 0
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    },
+    {
+      "id": "race.validation-at-deadline",
+      "events": [
+        {
+          "kind": "receive",
+          "at": 900,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 1,
+          "producer": "rust"
+        },
+        {
+          "kind": "validate",
+          "at": 1000
+        }
+      ],
+      "expected": {
+        "status": "expired",
+        "resultsAccepted": 0
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    },
+    {
+      "id": "race.validation-before-deadline",
+      "events": [
+        {
+          "kind": "receive",
+          "at": 900,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 1,
+          "producer": "rust"
+        },
+        {
+          "kind": "validate",
+          "at": 999
+        }
+      ],
+      "expected": {
+        "status": "accepted",
+        "resultsAccepted": 1
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    },
+    {
+      "id": "race.cancel-after-acceptance",
+      "events": [
+        {
+          "kind": "receive",
+          "at": 100,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 1,
+          "producer": "rust"
+        },
+        {
+          "kind": "validate",
+          "at": 200
+        },
+        {
+          "kind": "cancel",
+          "at": 300
+        }
+      ],
+      "expected": {
+        "status": "accepted",
+        "resultsAccepted": 1
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    },
+    {
+      "id": "race.edit-during-validation",
+      "events": [
+        {
+          "kind": "receive",
+          "at": 100,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 1,
+          "producer": "rust"
+        },
+        {
+          "kind": "edit",
+          "at": 150
+        },
+        {
+          "kind": "validate",
+          "at": 200
+        }
+      ],
+      "expected": {
+        "status": "invalidated",
+        "resultsAccepted": 0
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    },
+    {
+      "id": "race.old-worker",
+      "events": [
+        {
+          "kind": "receive",
+          "at": 100,
+          "sourceRunId": "old-run",
+          "runId": "old-run",
+          "revision": 1,
+          "producer": "rust"
+        },
+        {
+          "kind": "validate",
+          "at": 200
+        }
+      ],
+      "expected": {
+        "status": "running",
+        "resultsAccepted": 0
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    },
+    {
+      "id": "race.old-revision",
+      "events": [
+        {
+          "kind": "receive",
+          "at": 100,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 0,
+          "producer": "rust"
+        },
+        {
+          "kind": "validate",
+          "at": 200
+        }
+      ],
+      "expected": {
+        "status": "running",
+        "resultsAccepted": 0
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    },
+    {
+      "id": "race.duplicate-accepted-result",
+      "events": [
+        {
+          "kind": "receive",
+          "at": 100,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 1,
+          "producer": "rust"
+        },
+        {
+          "kind": "validate",
+          "at": 200
+        },
+        {
+          "kind": "receive",
+          "at": 300,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 1,
+          "producer": "rust"
+        },
+        {
+          "kind": "validate",
+          "at": 400
+        }
+      ],
+      "expected": {
+        "status": "accepted",
+        "resultsAccepted": 1
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    },
+    {
+      "id": "race.same-context-view",
+      "events": [
+        {
+          "kind": "receive",
+          "at": 100,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 1,
+          "producer": "rust"
+        },
+        {
+          "kind": "validate",
+          "at": 200
+        },
+        {
+          "kind": "view",
+          "at": 300
+        }
+      ],
+      "expected": {
+        "status": "accepted",
+        "resultsAccepted": 1
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    },
+    {
+      "id": "race.fixture-forbidden-in-product",
+      "events": [
+        {
+          "kind": "receive",
+          "at": 100,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 1,
+          "producer": "fixture"
+        },
+        {
+          "kind": "validate",
+          "at": 200
+        }
+      ],
+      "expected": {
+        "status": "failed",
+        "resultsAccepted": 0
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    },
+    {
+      "id": "race.resume-after-deadline",
+      "events": [
+        {
+          "kind": "resume",
+          "at": 1001
+        },
+        {
+          "kind": "receive",
+          "at": 1002,
+          "sourceRunId": "run-a",
+          "runId": "run-a",
+          "revision": 1,
+          "producer": "rust"
+        }
+      ],
+      "expected": {
+        "status": "expired",
+        "resultsAccepted": 0
+      },
+      "initial": {
+        "status": "running",
+        "contextRevision": 1,
+        "runId": "run-a",
+        "deadline": 1000
+      }
+    }
+  ],
+  "canonicalVectors": [
+    {
+      "value": {
+        "z": 0,
+        "a": "中文\n"
+      },
+      "expected": "{\"a\":\"中文\\n\",\"z\":0}"
+    },
+    {
+      "value": {
+        "b": "😀",
+        "a": "\"\\"
+      },
+      "expected": "{\"a\":\"\\\"\\\\\",\"b\":\"😀\"}"
+    },
+    {
+      "value": {
+        "z": [
+          null,
+          true,
+          -2147483648,
+          2147483647
+        ],
+        "a": "\u0001\t\r"
+      },
+      "expected": "{\"a\":\"\\u0001\\t\\r\",\"z\":[null,true,-2147483648,2147483647]}"
+    }
+  ],
+  "coordinateVectors": [
+    {
+      "source": "// 😀中\r\nint main(void) { return 0; }\n",
+      "points": [
+        {
+          "byteOffset": 0,
+          "line": 1,
+          "column": 1,
+          "utf16Offset": 0
+        },
+        {
+          "byteOffset": 3,
+          "line": 1,
+          "column": 4,
+          "utf16Offset": 3
+        },
+        {
+          "byteOffset": 7,
+          "line": 1,
+          "column": 5,
+          "utf16Offset": 5
+        },
+        {
+          "byteOffset": 12,
+          "line": 2,
+          "column": 1,
+          "utf16Offset": 8
+        }
+      ],
+      "invalidByteOffsets": [
+        4,
+        5,
+        6,
+        8,
+        9,
+        11
+      ]
+    }
+  ],
+  "rawJsonVectors": [
+    {
+      "id": "encoding.duplicate-key",
+      "json": "{\"a\":1,\"a\":2}",
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "encoding.unpaired-surrogate",
+      "json": "{\"a\":\"\\ud800\"}",
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "encoding.trailing-comma",
+      "json": "{\"a\":1,}",
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "encoding.noncanonical",
+      "json": "{\"z\":0,\"a\":1}",
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "encoding.noninteger",
+      "json": "{\"a\":1.5}",
+      "expectedCode": "E_PROTOCOL_INVALID"
+    },
+    {
+      "id": "encoding.depth",
+      "json": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "expectedCode": "E_PROTOCOL_INVALID"
+    }
+  ],
+  "budgetVectors": [
+    {
+      "dimension": "sourceBytes",
+      "limit": 32768,
+      "at": 32768,
+      "over": 32769,
+      "expectedCode": "E_SOURCE_LIMIT"
+    },
+    {
+      "dimension": "requestBytes",
+      "limit": 65536,
+      "at": 65536,
+      "over": 65537,
+      "expectedCode": "E_REQUEST_LIMIT"
+    },
+    {
+      "dimension": "syntaxDepth",
+      "limit": 64,
+      "at": 64,
+      "over": 65,
+      "expectedCode": "E_DEPTH_LIMIT"
+    },
+    {
+      "dimension": "astDepth",
+      "limit": 64,
+      "at": 64,
+      "over": 65,
+      "expectedCode": "E_DEPTH_LIMIT"
+    },
+    {
+      "dimension": "fuel",
+      "limit": 1000000,
+      "at": 1000000,
+      "over": 1000001,
+      "expectedCode": "E_FUEL_LIMIT"
+    },
+    {
+      "dimension": "steps",
+      "limit": 20000,
+      "at": 20000,
+      "over": 20001,
+      "expectedCode": "E_STEP_LIMIT"
+    },
+    {
+      "dimension": "liveBytes",
+      "limit": 1048576,
+      "at": 1048576,
+      "over": 1048577,
+      "expectedCode": "E_MEMORY_LIMIT"
+    },
+    {
+      "dimension": "outputBytes",
+      "limit": 16384,
+      "at": 16384,
+      "over": 16385,
+      "expectedCode": "E_OUTPUT_LIMIT"
+    },
+    {
+      "dimension": "resultBytes",
+      "limit": 16777216,
+      "at": 16777216,
+      "over": 16777217,
+      "expectedCode": "E_RESULT_LIMIT"
+    }
+  ],
+  "contributionVectors": [
+    {
+      "id": "contribution.transparent-copy",
+      "operation": "identity",
+      "input": {
+        "loop.i1": 1,
+        "loop.i2": 1
+      },
+      "expected": {
+        "loop.i1": 1,
+        "loop.i2": 1
+      },
+      "expression": {
+        "kind": "add",
+        "left": {
+          "kind": "symbol",
+          "name": "loop.i1"
+        },
+        "right": {
+          "kind": "symbol",
+          "name": "loop.i2"
+        }
+      }
+    },
+    {
+      "id": "contribution.multiply-zero",
+      "operation": "times-zero",
+      "input": {
+        "loop.i1": 1
+      },
+      "expected": {},
+      "expression": {
+        "kind": "add",
+        "left": {
+          "kind": "multiply",
+          "left": {
+            "kind": "symbol",
+            "name": "loop.i1"
+          },
+          "right": {
+            "kind": "constant",
+            "value": 0
+          }
+        },
+        "right": {
+          "kind": "constant",
+          "value": 465
+        }
+      }
+    },
+    {
+      "id": "contribution.subtract-self",
+      "operation": "subtract-self",
+      "input": {
+        "loop.i1": 1
+      },
+      "expected": {},
+      "expression": {
+        "kind": "add",
+        "left": {
+          "kind": "subtract",
+          "left": {
+            "kind": "symbol",
+            "name": "loop.i1"
+          },
+          "right": {
+            "kind": "symbol",
+            "name": "loop.i1"
+          }
+        },
+        "right": {
+          "kind": "constant",
+          "value": 465
+        }
+      }
+    },
+    {
+      "id": "contribution.overwrite",
+      "operation": "overwrite-constant",
+      "input": {
+        "loop.i1": 1
+      },
+      "expected": {},
+      "expression": {
+        "kind": "constant",
+        "value": 465
+      }
+    },
+    {
+      "id": "contribution.zero-input-value",
+      "operation": "identity",
+      "input": {
+        "input.index0": 1
+      },
+      "expected": {
+        "input.index0": 1
+      },
+      "actualInputValue": 0,
+      "expression": {
+        "kind": "symbol",
+        "name": "input.index0"
+      }
+    }
+  ],
+  "futureRealChecks": [
+    "Rust AST/trace generation and six judge modes",
+    "All 24 reference tests and intentionally wrong solutions",
+    "All n=30 course workloads within steps/fuel/result limits",
+    "Cancel/deadline actual Worker timing",
+    "Full 16MiB result/32KiB multibyte-source and 64/65 depth boundaries",
+    "Chrome/Edge/Firefox and 500ms end-to-end",
+    "C declaration capacity 31 and maximum live virtual allocation"
+  ]
+}
+

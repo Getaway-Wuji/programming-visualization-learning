@@ -1,0 +1,112 @@
+.profile-summary {
+  margin-block: 8px 24px;
+}
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.profile-avatar {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  flex: 0 0 auto;
+  color: var(--ink);
+  background: var(--surface-tone, #f1f4ed);
+  border-radius: 12px;
+}
+.profile-avatar svg {
+  display: block;
+  width: 48px;
+  height: 48px;
+}
+.profile-avatar-unavailable {
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.5;
+  border: 1px solid var(--line);
+}
+.profile-identity-copy {
+  min-width: 0;
+}
+.profile-level {
+  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.profile-level-progress {
+  margin-top: 20px;
+  font-variant-numeric: tabular-nums;
+}
+.profile-level-progress progress {
+  width: 100%;
+  height: 8px;
+  accent-color: var(--green);
+}
+.profile-level-progress p {
+  margin-block: 8px;
+}
+.profile-level-progress .muted {
+  font-size: 12px;
+}
+.profile-retry {
+  margin-top: 14px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  font: inherit;
+}
+.avatar-options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.avatar-options label {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.avatar-options label:has(input:checked) {
+  border-color: var(--ink);
+}
+.avatar-options label:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.avatar-options .profile-avatar {
+  width: 52px;
+  height: 52px;
+  background: transparent;
+}
+.avatar-options .profile-avatar svg {
+  width: 36px;
+  height: 36px;
+}
+.avatar-options input {
+  margin: 0;
+  accent-color: var(--green);
+}
+.avatar-choice-group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.avatar-choice-group legend {
+  margin-bottom: 14px;
+}
+.profile-avatar-standalone {
+  margin-bottom: 18px;
+}
+@media (max-width: 540px) {
+  .avatar-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

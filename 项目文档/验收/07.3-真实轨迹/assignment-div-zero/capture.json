@@ -1,0 +1,41 @@
+{
+  "captureVersion": "07.3-browser-capture@1",
+  "evidenceLevel": "production-ui-real-worker",
+  "dataRule": "DEC-001 KEEP-09 public developer samples only",
+  "caseKey": "assignment-div-zero",
+  "caseId": "case.c.assignment",
+  "project": "chrome",
+  "browserVersion": "155.0.8059.84",
+  "variant": "division",
+  "sourceKind": "test-isolated-content-fault",
+  "provenance": "public-developer-test/isolated-fault-content-copy",
+  "worker": {
+    "id": 2,
+    "url": "http://127.0.0.1:4178/assets/execution.worker-akcQuOEr.js",
+    "kind": "execute",
+    "operationId": "9f3e8620-b23a-4c74-bec9-dd2b01df3f5c",
+    "responseOperationId": "9f3e8620-b23a-4c74-bec9-dd2b01df3f5c",
+    "responseOk": true,
+    "terminated": true,
+    "moduleSeen": true
+  },
+  "requestByteLength": 1224,
+  "resultByteLength": 6452,
+  "requestSha256": "b4fe01b7ab7e757e27953641c402e68ba105321e93710777543ed666a4e9665f",
+  "resultSha256": "13f21a167001fb8d5901e323a071a836b3bdb0801347f41d499e95837ad07655",
+  "catalogSha256": "c708b9c8cd24fc4f46c99bbf5200334dcc2989eef77234bf1337bb8f21ed60f7",
+  "sourceSha256": "051a81e174368f00334277d5b60e99a7e9cbf290986e905ca9f015eb834b95c0",
+  "expected": {
+    "status": "program-error",
+    "stdout": "-7\n",
+    "completeness": "prefix",
+    "diagnosticCode": "E_DIV_ZERO"
+  },
+  "fault": {
+    "programId": "program.c.assignment",
+    "originalSource": "#include <stdio.h>\nint main(void) {\n    int x = 3;\n    x = x + 2;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+    "modifiedSource": "#include <stdio.h>\nint main(void) {\n    int x = 3;\n    printf(\"%d\\n\", x); x = x / 0;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+    "find": "x = x + 2;",
+    "replace": "printf(\"%d\\n\", x); x = x / 0;"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "captureVersion": "07.3-browser-capture@1",
+  "evidenceLevel": "production-ui-real-worker",
+  "dataRule": "DEC-001 KEEP-09 public developer samples only",
+  "caseKey": "array-out-of-bounds",
+  "caseId": "case.c.array-traversal",
+  "project": "chrome",
+  "browserVersion": "155.0.8059.84",
+  "variant": "bounds",
+  "sourceKind": "test-isolated-content-fault",
+  "provenance": "public-developer-test/isolated-fault-content-copy",
+  "worker": {
+    "id": 2,
+    "url": "http://127.0.0.1:4178/assets/execution.worker-akcQuOEr.js",
+    "kind": "execute",
+    "operationId": "e7a5006b-fe7e-4308-be83-57370703e8c1",
+    "responseOperationId": "e7a5006b-fe7e-4308-be83-57370703e8c1",
+    "responseOk": true,
+    "terminated": true,
+    "moduleSeen": true
+  },
+  "requestByteLength": 1428,
+  "resultByteLength": 37419,
+  "requestSha256": "dc4b022f7906215991d0b27bed3abd17680aff0340ab743775936146df47b6c6",
+  "resultSha256": "7b21ed3a5b8b4e3b672f96e86d729182ff763f9f37f8afaf16820ea4863d3113",
+  "catalogSha256": "40d46f70be0c835e996ef529129b885412f8383a7d0dd872f4884ac430d2baba",
+  "sourceSha256": "8d22ec204d07ca69cec30dafa95d1c5448c32b5bc0964de68e8d2d41013b5a6b",
+  "expected": {
+    "status": "program-error",
+    "stdout": "8\n",
+    "completeness": "prefix",
+    "diagnosticCode": "E_INDEX_BOUNDS"
+  },
+  "fault": {
+    "programId": "program.c.array-sum",
+    "originalSource": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, -1, 2};\n    int sum = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        sum = sum + values[i];\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n",
+    "modifiedSource": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, -1, 2};\n    int sum = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        sum = sum + values[i];\n    }\n    printf(\"%d\\n\", sum);\n    sum = values[n];\n    return 0;\n}\n",
+    "find": "    return 0;",
+    "replace": "    sum = values[n];\n    return 0;"
+  }
+}

@@ -1,0 +1,4742 @@
+{
+  "fixtureContractVersion": "1.0.0",
+  "purpose": "contract-fixture",
+  "evidenceLevel": "declared-expectation",
+  "limitations": "公开合成源码/输入与冻结预期，仅用于契约资料和后续双方验收准备；不是Rust实测、真实Step DSL、正式课程或产品执行能力。无效输入保留原类型/值，source=null表示实例生成前拒绝；INPUT-07的setup是受控映射/绑定坏例，不是执行脚本。单个met实例不能替代整题完整测试组、真实动态教学证据及有效提交身份，不生成学习事件/奖励。",
+  "cases": [
+    {
+      "id": "fixture.semantic.ref.01",
+      "origin": "REF-01",
+      "category": "reference",
+      "topics": [
+        "variables",
+        "output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.echo",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.echo",
+        "version": "1.0.0"
+      },
+      "input": {
+        "x": 7
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "7\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "公开参考程序REF-01的默认输入实例；仅冻结预期。练习单实例不能替代整组测试/分支覆盖，不能据本资料发学习奖励。"
+      },
+      "ownerTasks": [
+        "05.3",
+        "06.1",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.ref.02",
+      "origin": "REF-02",
+      "category": "reference",
+      "topics": [
+        "expressions",
+        "precedence",
+        "int32"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int result = (2 * x) + 3;\n    printf(\"%d\\n\", result);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.two-x-plus-three",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.two-x-plus-three",
+        "version": "1.0.0"
+      },
+      "input": {
+        "x": 7
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "17\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "公开参考程序REF-02的默认输入实例；仅冻结预期。练习单实例不能替代整组测试/分支覆盖，不能据本资料发学习奖励。"
+      },
+      "ownerTasks": [
+        "05.3",
+        "06.1",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.ref.03",
+      "origin": "REF-03",
+      "category": "reference",
+      "topics": [
+        "conditions",
+        "branch"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = -3;\n    if (x >= 0) {\n        printf(\"1\\n\");\n    } else {\n        printf(\"0\\n\");\n    }\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.nonnegative",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.nonnegative",
+        "version": "1.0.0"
+      },
+      "input": {
+        "x": -3
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "0\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "公开参考程序REF-03的默认输入实例；仅冻结预期。练习单实例不能替代整组测试/分支覆盖，不能据本资料发学习奖励。"
+      },
+      "ownerTasks": [
+        "05.3",
+        "06.1",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.ref.04",
+      "origin": "REF-04",
+      "category": "reference",
+      "topics": [
+        "loops",
+        "while",
+        "for",
+        "scope"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int i = 1;\n    int sumWhile = 0;\n    while (i <= n) {\n        sumWhile = sumWhile + i;\n        i = i + 1;\n    }\n    int sumFor = 0;\n    for (int j = 1; j <= n; j = j + 1) {\n        sumFor = sumFor + j;\n    }\n    printf(\"%d\\n%d\\n\", sumWhile, sumFor);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.two-loop-sums",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.two-loop-sums",
+        "version": "1.0.0"
+      },
+      "input": {
+        "n": 5
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "15\n15\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "公开参考程序REF-04的默认输入实例；仅冻结预期。练习单实例不能替代整组测试/分支覆盖，不能据本资料发学习奖励。"
+      },
+      "ownerTasks": [
+        "05.3",
+        "06.1",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.ref.05",
+      "origin": "REF-05",
+      "category": "reference",
+      "topics": [
+        "arrays",
+        "array-write",
+        "input-binding"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {4, 0, -2};\n    int k = 1;\n    values[k] = values[k] + 1;\n    printf(\"%d\\n\", values[k]);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          4,
+          0,
+          -2
+        ],
+        "k": 1
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "公开参考程序REF-05的默认输入实例；仅冻结预期。练习单实例不能替代整组测试/分支覆盖，不能据本资料发学习奖励。"
+      },
+      "ownerTasks": [
+        "05.3",
+        "06.1",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.ref.06",
+      "origin": "REF-06",
+      "category": "reference",
+      "topics": [
+        "arrays",
+        "loop",
+        "accumulation"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, -1, 2};\n    int sum = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        sum = sum + values[i];\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.array-sum",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          3,
+          -1,
+          2
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "4\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "公开参考程序REF-06的默认输入实例；仅冻结预期。练习单实例不能替代整组测试/分支覆盖，不能据本资料发学习奖励。"
+      },
+      "ownerTasks": [
+        "05.3",
+        "06.1",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.ref.07",
+      "origin": "REF-07",
+      "category": "reference",
+      "topics": [
+        "variables",
+        "assignment",
+        "reversibility"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 3;\n    x = x + 2;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.assignment",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.assignment",
+        "version": "1.0.0"
+      },
+      "input": {
+        "x": 3
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "5\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "公开参考程序REF-07的默认输入实例；仅冻结预期。练习单实例不能替代整组测试/分支覆盖，不能据本资料发学习奖励。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.ref.08",
+      "origin": "REF-08",
+      "category": "reference",
+      "topics": [
+        "arrays",
+        "bubble-sort",
+        "swap"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, 1, 2};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          3,
+          1,
+          2
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 2 3\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "公开参考程序REF-08的默认输入实例；仅冻结预期。练习单实例不能替代整组测试/分支覆盖，不能据本资料发学习奖励。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.ref.09",
+      "origin": "REF-09",
+      "category": "reference",
+      "topics": [
+        "arrays",
+        "selection-sort",
+        "swap"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, 1, 2};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          3,
+          1,
+          2
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 2 3\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "公开参考程序REF-09的默认输入实例；仅冻结预期。练习单实例不能替代整组测试/分支覆盖，不能据本资料发学习奖励。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.ref.10",
+      "origin": "REF-10",
+      "category": "reference",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int values[5] = {-2, 0, 0, 4, 8};\n    int target = 0;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          -2,
+          0,
+          0,
+          4,
+          8
+        ],
+        "target": 0
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "公开参考程序REF-10的默认输入实例；仅冻结预期。练习单实例不能替代整组测试/分支覆盖，不能据本资料发学习奖励。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.01",
+      "origin": "POS-01",
+      "category": "positive",
+      "topics": [
+        "variables",
+        "read",
+        "output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.echo",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.echo",
+        "version": "1.0.0"
+      },
+      "input": {
+        "x": 7
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "7\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "变量实际读取后输出。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.02",
+      "origin": "POS-02",
+      "category": "positive",
+      "topics": [
+        "expressions",
+        "precedence"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int result = (2 * x) + 3;\n    printf(\"%d\\n\", result);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.two-x-plus-three",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.two-x-plus-three",
+        "version": "1.0.0"
+      },
+      "input": {
+        "x": 7
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "17\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "乘法优先于加法。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.03",
+      "origin": "POS-03",
+      "category": "positive",
+      "topics": [
+        "int32",
+        "division",
+        "remainder"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"%d %d %d %d\\n\", -7/3, -7%3, 7/-3, 7%-3);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "-2 -1 -2 1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "除法向0截断；余数符号与被除数相同。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.04",
+      "origin": "POS-04",
+      "category": "positive",
+      "topics": [
+        "short-circuit",
+        "logical",
+        "division"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int z=0; printf(\"%d %d %d\\n\", 0 && (1/z), 1 || (1/z), !2);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "0 1 0\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "短路右侧不运行，不触发除零，也不伪造读取或右值。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.05",
+      "origin": "POS-05",
+      "category": "positive",
+      "topics": [
+        "scope",
+        "shadowing",
+        "reversibility"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x=1; { int x=2; printf(\"%d \",x); } printf(\"%d\\n\",x);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "2 1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "内层对象销毁后恢复外层x；后退还原对象存活和输出。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.06",
+      "origin": "POS-06",
+      "category": "positive",
+      "topics": [
+        "for",
+        "break",
+        "continue",
+        "scope"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int s=0; for(int i=0;i<5;i=i+1){ if(i==2){continue;} if(i==3){break;} s=s+i; } printf(\"%d\\n\",s);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "continue仍执行for更新，break跳过更新；for变量退出销毁。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.07",
+      "origin": "POS-07",
+      "category": "positive",
+      "topics": [
+        "while",
+        "continue",
+        "accumulation"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int i=0; int s=0; while(i<4){ i=i+1; if(i==2){continue;} s=s+i; } printf(\"%d\\n\",s);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "8\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "while的continue重新检查条件，累加1+3+4。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.08",
+      "origin": "POS-08",
+      "category": "positive",
+      "topics": [
+        "arrays",
+        "partial-initialization",
+        "int32"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int a[3]={+5,-2}; printf(\"%d %d %d\\n\",a[0],a[1],a[2]);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "5 -2 0\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "非空字面量列表允许单一正负号，剩余元素补0。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.09",
+      "origin": "POS-09",
+      "category": "positive",
+      "topics": [
+        "uninitialized",
+        "scalar-write"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x; x=4; printf(\"%d\\n\",x);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "4\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "未初始化绑定可以先赋值再读取。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.10",
+      "origin": "POS-10",
+      "category": "positive",
+      "topics": [
+        "arrays",
+        "uninitialized",
+        "array-write"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int a[2]; a[1]=7; printf(\"%d\\n\",a[1]);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "7\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "仅读取已写入的a[1]；a[0]仍未初始化。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.11",
+      "origin": "POS-11",
+      "category": "positive",
+      "topics": [
+        "arrays",
+        "logical-empty",
+        "accumulation"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 0;\n    int values[1] = {0};\n    int sum = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        sum = sum + values[i];\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.array-sum",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": []
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "0\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "完整源码显示n=0及values[1]={0}，不读取占位槽。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.12",
+      "origin": "POS-12",
+      "category": "positive",
+      "topics": [
+        "loops",
+        "while",
+        "for",
+        "zero-iteration"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 0;\n    int i = 1;\n    int sumWhile = 0;\n    while (i <= n) {\n        sumWhile = sumWhile + i;\n        i = i + 1;\n    }\n    int sumFor = 0;\n    for (int j = 1; j <= n; j = j + 1) {\n        sumFor = sumFor + j;\n    }\n    printf(\"%d\\n%d\\n\", sumWhile, sumFor);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.two-loop-sums",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.two-loop-sums",
+        "version": "1.0.0"
+      },
+      "input": {
+        "n": 0
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "0\n0\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "完整源码绑定n=0，两种循环均零次执行。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.13",
+      "origin": "POS-13",
+      "category": "positive",
+      "topics": [
+        "int32",
+        "integer-boundaries"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int lo=(-2147483647-1); int hi=2147483647; printf(\"%d %d\\n\",lo,hi);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "-2147483648 2147483647\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "完整int32端点；最小值由受支持表达式生成。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.14",
+      "origin": "POS-14",
+      "category": "positive",
+      "topics": [
+        "utf8",
+        "output",
+        "printf-format"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"中文: %d%%\\n\",50);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "中文: 50%\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "普通中文、%d、%%和换行转义均在支持范围。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.15",
+      "origin": "POS-15",
+      "category": "positive",
+      "topics": [
+        "main",
+        "implicit-return"
+      ],
+      "source": "int main(void) { }\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "到main末尾隐式返回0；没有输出。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.16",
+      "origin": "POS-16",
+      "category": "positive",
+      "topics": [
+        "return",
+        "nonzero-exit"
+      ],
+      "source": "int main(void) {\n    return 7;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "",
+        "exitCode": 7,
+        "judgeStatus": null,
+        "note": "正常语言执行返回7，不是程序错误；本独立语义探针无练习Ref，不能据此认可练习通过。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.17",
+      "origin": "POS-17",
+      "category": "positive",
+      "topics": [
+        "expressions",
+        "associativity",
+        "precedence"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"%d %d\\n\",8/4/2,2+3*4);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 14\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "除法左结合，乘法优先于加法。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.18",
+      "origin": "POS-18",
+      "category": "positive",
+      "topics": [
+        "comparison",
+        "associativity"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"%d\\n\",3<2<1);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "先算3<2得到0，再比较0<1；不是数学连锁比较。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.19",
+      "origin": "POS-19",
+      "category": "positive",
+      "topics": [
+        "short-circuit",
+        "uninitialized"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x; printf(\"%d\\n\",1 || x);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "声明存在但短路跳过实际读取，不能产生未初始化诊断。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.20",
+      "origin": "POS-20",
+      "category": "positive",
+      "topics": [
+        "return",
+        "unreachable",
+        "utf8"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"前\\n\"); return 0; printf(\"后\\n\");\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "前\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "返回后语句不执行，但全部源码仍须通过静态检查。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.21",
+      "origin": "POS-21",
+      "category": "positive",
+      "topics": [
+        "main",
+        "entry-spelling"
+      ],
+      "source": "int main() { return 0; }\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "受支持的另一种main入口拼写。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3",
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.22-lf",
+      "origin": "POS-22",
+      "category": "positive",
+      "topics": [
+        "utf8",
+        "comments",
+        "source-location",
+        "lf"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    // 变量说明\n    int x = 7;\n    /* 输出说明 */\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.echo",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.echo",
+        "version": "1.0.0"
+      },
+      "input": {
+        "x": 7
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "7\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "中文注释不执行；LF与CRLF必须使用各自源码字节定位，不沿用另一版本坐标。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "06.3",
+        "08.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.pos.22-crlf",
+      "origin": "POS-22",
+      "category": "positive",
+      "topics": [
+        "utf8",
+        "comments",
+        "source-location",
+        "crlf"
+      ],
+      "source": "#include <stdio.h>\r\nint main(void) {\r\n    // 变量说明\r\n    int x = 7;\r\n    /* 输出说明 */\r\n    printf(\"%d\\n\", x);\r\n    return 0;\r\n}\r\n",
+      "programRef": {
+        "id": "program.c.echo",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.echo",
+        "version": "1.0.0"
+      },
+      "input": {
+        "x": 7
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "7\n",
+        "exitCode": 0,
+        "judgeStatus": "met",
+        "note": "中文注释不执行；LF与CRLF必须使用各自源码字节定位，不沿用另一版本坐标。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "06.3",
+        "08.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.01",
+      "origin": "NEG-01",
+      "category": "negative",
+      "topics": [
+        "unsupported-type",
+        "unsupported-literal"
+      ],
+      "source": "int main(void) {\n    double x=1.5;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "浮点类型/字面量不支持，不截断为int。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.02",
+      "origin": "NEG-02",
+      "category": "negative",
+      "topics": [
+        "unsupported-increment",
+        "longest-token"
+      ],
+      "source": "int main(void) {\n    int x=0; x++;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "拒绝++，不能拆成两个一元+。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.03",
+      "origin": "NEG-03",
+      "category": "negative",
+      "topics": [
+        "unsupported-compound-assignment"
+      ],
+      "source": "int main(void) {\n    int x=0; x+=1;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "拒绝复合赋值。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.04",
+      "origin": "NEG-04",
+      "category": "negative",
+      "topics": [
+        "unsupported-assignment-expression"
+      ],
+      "source": "int main(void) {\n    int x=0; if((x=1)){ }\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "赋值语句不能作为条件表达式。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.05",
+      "origin": "NEG-05",
+      "category": "negative",
+      "topics": [
+        "unsupported-input",
+        "unsupported-address"
+      ],
+      "source": "int main(void) {\n    int x; scanf(\"%d\", &x);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_NAME_INVALID",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "scanf/取址不支持；不得调用宿主输入库。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.06",
+      "origin": "NEG-06",
+      "category": "negative",
+      "topics": [
+        "unsupported-function"
+      ],
+      "source": "int f(void){return 1;} int main(void){return 0;}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_NAME_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "仅main入口，拒绝非main用户函数。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.07",
+      "origin": "NEG-07",
+      "category": "negative",
+      "topics": [
+        "unsupported-pointer"
+      ],
+      "source": "int main(void) {\n    int *p;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "一期不支持指针声明。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.08",
+      "origin": "NEG-08",
+      "category": "negative",
+      "topics": [
+        "unsupported-sizeof"
+      ],
+      "source": "int main(void) {\n    int x=sizeof(int);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_NAME_INVALID",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "sizeof不是一期支持的纯表达式。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.09",
+      "origin": "NEG-09",
+      "category": "negative",
+      "topics": [
+        "unsupported-preprocessor"
+      ],
+      "source": "#define X 1\nint main(void){return 0;}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "拒绝宏，不启用真实预处理。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.10",
+      "origin": "NEG-10",
+      "category": "negative",
+      "topics": [
+        "unsupported-header"
+      ],
+      "source": "#include <stdlib.h>\nint main(void){return 0;}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "只识别约定stdio教学行，拒绝其他头文件。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.11",
+      "origin": "NEG-11",
+      "category": "negative",
+      "topics": [
+        "name",
+        "declaration-order"
+      ],
+      "source": "int main(void) {\n    x=1; int x;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_NAME_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "先用后声明/未定义名字，静态拒绝。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.12",
+      "origin": "NEG-12",
+      "category": "negative",
+      "topics": [
+        "name",
+        "duplicate-declaration"
+      ],
+      "source": "int main(void) {\n    int x=1; int x=2;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_NAME_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "同一作用域重复声明，静态拒绝。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.13",
+      "origin": "NEG-13",
+      "category": "negative",
+      "topics": [
+        "scope",
+        "for",
+        "name"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    for(int i=0;i<1;i=i+1){ } printf(\"%d\\n\",i);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_NAME_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "for退出后i不在作用域，不能静默保留绑定。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.14",
+      "origin": "NEG-14",
+      "category": "negative",
+      "topics": [
+        "continue",
+        "loop-context"
+      ],
+      "source": "int main(void) {\n    continue;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_TYPE_INVALID",
+          "E_UNSUPPORTED_SYNTAX"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "循环外continue为静态语义错误。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.15",
+      "origin": "NEG-15",
+      "category": "negative",
+      "topics": [
+        "arrays",
+        "zero-capacity"
+      ],
+      "source": "int main(void) {\n    int a[0];\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_TYPE_INVALID",
+          "E_UNSUPPORTED_SYNTAX"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "声明容量必须为正；不是教学逻辑空序列的占位规则。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.16",
+      "origin": "NEG-16",
+      "category": "negative",
+      "topics": [
+        "arrays",
+        "unsupported-vla"
+      ],
+      "source": "int main(void) {\n    int n=2; int a[n];\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_TYPE_INVALID",
+          "E_UNSUPPORTED_SYNTAX"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "数组长度只接受正十进制常量token，拒绝VLA。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.17",
+      "origin": "NEG-17",
+      "category": "negative",
+      "topics": [
+        "arrays",
+        "initializer-capacity"
+      ],
+      "source": "int main(void) {\n    int a[2]={1,2,3};\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "初始化项超过声明容量，静态拒绝。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.18",
+      "origin": "NEG-18",
+      "category": "negative",
+      "topics": [
+        "arrays",
+        "unsupported-empty-initializer"
+      ],
+      "source": "int main(void) {\n    int a[2]={};\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "空初始化列表不在P0矩阵中。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.19",
+      "origin": "NEG-19",
+      "category": "negative",
+      "topics": [
+        "arrays",
+        "unsupported-initializer-expression"
+      ],
+      "source": "int main(void) {\n    int a[2]={1+2,0};\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "初始化列表仅支持有符号字面量，不接受运算表达式项。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.20",
+      "origin": "NEG-20",
+      "category": "negative",
+      "topics": [
+        "printf-format",
+        "unsupported-format"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"%f\\n\",1);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_FORMAT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "格式%f不支持，静态拒绝。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.21",
+      "origin": "NEG-21",
+      "category": "negative",
+      "topics": [
+        "printf-format",
+        "missing-argument"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"%d\\n\");\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_FORMAT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "printf的%d缺对应int参数。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.22",
+      "origin": "NEG-22",
+      "category": "negative",
+      "topics": [
+        "printf-format",
+        "extra-argument"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"text\",1);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_FORMAT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "printf没有转换位却有多余参数。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.23",
+      "origin": "NEG-23",
+      "category": "negative",
+      "topics": [
+        "printf-format",
+        "literal-required"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int fmt=0; printf(fmt,1);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_FORMAT_INVALID",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "格式必须是单个字符串字面量。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.24",
+      "origin": "NEG-24",
+      "category": "negative",
+      "topics": [
+        "integer-literal",
+        "integer-boundaries"
+      ],
+      "source": "int main(void) {\n    int x=2147483648;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "正字面量token超范围，不能自动选long或当作运行溢出。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.25",
+      "origin": "NEG-25",
+      "category": "negative",
+      "topics": [
+        "parse",
+        "missing-semicolon"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x=1 printf(\"%d\\n\",x);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "缺少声明分号，解析拒绝。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.26",
+      "origin": "NEG-26",
+      "category": "negative",
+      "topics": [
+        "lex",
+        "unclosed-comment",
+        "utf8"
+      ],
+      "source": "int main(void) {\n    /* 未结束\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "块注释未闭合，词法拒绝。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.27",
+      "origin": "NEG-27",
+      "category": "negative",
+      "topics": [
+        "uninitialized",
+        "scalar-read",
+        "output-atomicity"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x; printf(\"%d\\n\",x);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_UNINITIALIZED"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "实际读取未初始化x，失败printf不追加输出。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.28",
+      "origin": "NEG-28",
+      "category": "negative",
+      "topics": [
+        "uninitialized",
+        "shadowing",
+        "declaration-order"
+      ],
+      "source": "int main(void) {\n    int x=5; { int x=x; }\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_UNINITIALIZED"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "新内层x在初值求值前已存在但未初始化，不能读取外层5。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.29",
+      "origin": "NEG-29",
+      "category": "negative",
+      "topics": [
+        "uninitialized",
+        "array-read",
+        "output-atomicity"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int a[2]; printf(\"%d\\n\",a[0]);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_UNINITIALIZED"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "a[0]未初始化；其他槽不会自动变为0。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.30",
+      "origin": "NEG-30",
+      "category": "negative",
+      "topics": [
+        "array-bounds",
+        "negative-index",
+        "output-atomicity"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int a[2]={0}; printf(\"%d\\n\",a[-1]);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_INDEX_BOUNDS"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "负下标按实际容量越界，整次输出不追加。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.31",
+      "origin": "NEG-31",
+      "category": "negative",
+      "topics": [
+        "array-bounds",
+        "array-write"
+      ],
+      "source": "int main(void) {\n    int a[2]={0}; a[2]=1;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_INDEX_BOUNDS"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "下标等于声明长度，失败写入不发生。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.32",
+      "origin": "NEG-32",
+      "category": "negative",
+      "topics": [
+        "division",
+        "zero-divisor",
+        "uninitialized"
+      ],
+      "source": "int main(void) {\n    int z=0; int x=1/z;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_DIV_ZERO"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "除零失败，已声明x保持未初始化。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.33",
+      "origin": "NEG-33",
+      "category": "negative",
+      "topics": [
+        "remainder",
+        "zero-divisor"
+      ],
+      "source": "int main(void) {\n    int z=0; int x=1%z;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_DIV_ZERO"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "余数除数0产生除零诊断。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.34",
+      "origin": "NEG-34",
+      "category": "negative",
+      "topics": [
+        "int32",
+        "overflow",
+        "write-atomicity"
+      ],
+      "source": "int main(void) {\n    int x=2147483647; x=x+1;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_INT_OVERFLOW"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "加法溢出，x仍为最大值，不回绕。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.35",
+      "origin": "NEG-35",
+      "category": "negative",
+      "topics": [
+        "int32",
+        "overflow",
+        "multiplication"
+      ],
+      "source": "int main(void) {\n    int x=50000; int y=x*x;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_INT_OVERFLOW"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "乘法溢出，y未初始化；这是引擎语义探针，不按课程输入域拒绝50000。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.36",
+      "origin": "NEG-36",
+      "category": "negative",
+      "topics": [
+        "int32",
+        "overflow",
+        "unary-negation"
+      ],
+      "source": "int main(void) {\n    int x=(-2147483647-1); int y=-x;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_INT_OVERFLOW"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "INT_MIN取负不可表示。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.37",
+      "origin": "NEG-37",
+      "category": "negative",
+      "topics": [
+        "int32",
+        "overflow",
+        "division"
+      ],
+      "source": "int main(void) {\n    int x=(-2147483647-1); int y=x/-1;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_INT_OVERFLOW"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "INT_MIN/-1不可表示，诊断溢出。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.38",
+      "origin": "NEG-38",
+      "category": "negative",
+      "topics": [
+        "int32",
+        "overflow",
+        "remainder"
+      ],
+      "source": "int main(void) {\n    int x=(-2147483647-1); int y=x%-1;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "execute"
+        ],
+        "allowedCodes": [
+          "E_INT_OVERFLOW"
+        ],
+        "stdout": "",
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "INT_MIN%-1同样诊断溢出，不返回0冒充有效。 仅允许真实有效前缀，不能将失败动作提交为成功步骤。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.39",
+      "origin": "NEG-39",
+      "category": "negative",
+      "topics": [
+        "name",
+        "short-circuit",
+        "static-check"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"%d\\n\",1 || missing);\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_NAME_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "短路不跳过静态名字检查，missing不存在。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.40",
+      "origin": "NEG-40",
+      "category": "negative",
+      "topics": [
+        "control-body",
+        "braces-required"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    if(1) printf(\"1\\n\");\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "控制体必须是花括号块，不接受单语句形式。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.41",
+      "origin": "NEG-41",
+      "category": "negative",
+      "topics": [
+        "integer-literal",
+        "leading-zero"
+      ],
+      "source": "int main(void) {\n    int x=010;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "多位前导零/八进制形式拒绝，不读成十进制10。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.42",
+      "origin": "NEG-42",
+      "category": "negative",
+      "topics": [
+        "unsupported-escape",
+        "printf-format"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"a\\tb\");\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_FORMAT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "字符串转义\\t不支持，不静默删除。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.43",
+      "origin": "NEG-43",
+      "category": "negative",
+      "topics": [
+        "return",
+        "expression-required"
+      ],
+      "source": "int main(void) {\n    return;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_TYPE_INVALID",
+          "E_UNSUPPORTED_SYNTAX"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "return必须有int表达式。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.44",
+      "origin": "NEG-44",
+      "category": "negative",
+      "topics": [
+        "arrays",
+        "unsupported-array-assignment"
+      ],
+      "source": "int main(void) {\n    int a[2]={0}; int b[2]={0}; a=b;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "拒绝整数组赋值/数组退化。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.45",
+      "origin": "NEG-45",
+      "category": "negative",
+      "topics": [
+        "longest-token",
+        "unsupported-decrement"
+      ],
+      "source": "int main(void) {\n    int x=1--1;\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "lex",
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_LEX_INVALID",
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "最长匹配识别--，不能拆成减去负号。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.neg.46",
+      "origin": "NEG-46",
+      "category": "negative",
+      "topics": [
+        "arrays",
+        "unsupported-trailing-comma"
+      ],
+      "source": "int main(void) {\n    int a[2]={1,2,};\n}\n",
+      "programRef": null,
+      "subjectRef": null,
+      "input": null,
+      "setup": null,
+      "expected": {
+        "terminalStatus": "program-error",
+        "allowedStages": [
+          "parse",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_PARSE_INVALID",
+          "E_UNSUPPORTED_SYNTAX",
+          "E_TYPE_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "P0初始化列表拒绝尾逗号。 原来源未精确冻结机器诊断文字；只允许列明的有限阶段/错误码，不能用取消或资源超限替代。"
+      },
+      "ownerTasks": [
+        "05.1",
+        "05.2",
+        "05.3"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.01-bubble",
+      "origin": "SORT-01",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "bubble-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, 1, 2};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          3,
+          1,
+          2
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 2 3\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "普通未排序输入。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.01-selection",
+      "origin": "SORT-01",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "selection-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, 1, 2};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          3,
+          1,
+          2
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 2 3\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "普通未排序输入。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.02-bubble",
+      "origin": "SORT-02",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "bubble-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {1, 2, 3};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          1,
+          2,
+          3
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 2 3\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "已升序，不发生数组交换写入。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.02-selection",
+      "origin": "SORT-02",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "selection-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {1, 2, 3};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          1,
+          2,
+          3
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 2 3\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "已升序，不发生数组交换写入。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.03-bubble",
+      "origin": "SORT-03",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "bubble-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, 2, 1};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          3,
+          2,
+          1
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 2 3\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "逆序输入。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.03-selection",
+      "origin": "SORT-03",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "selection-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, 2, 1};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          3,
+          2,
+          1
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 2 3\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "逆序输入。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.04-bubble",
+      "origin": "SORT-04",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "bubble-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {2, 2, 1, 2};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          2,
+          2,
+          1,
+          2
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 2 2 2\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "重复值边界；冒泡严格大于才交换，选择相同最小值留首个下标。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.04-selection",
+      "origin": "SORT-04",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "selection-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {2, 2, 1, 2};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          2,
+          2,
+          1,
+          2
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1 2 2 2\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "重复值边界；冒泡严格大于才交换，选择相同最小值留首个下标。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.05-bubble",
+      "origin": "SORT-05",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "bubble-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {-3, 0, -1};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          -3,
+          0,
+          -1
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "-3 -1 0\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "负数/零混合。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.05-selection",
+      "origin": "SORT-05",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "selection-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {-3, 0, -1};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          -3,
+          0,
+          -1
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "-3 -1 0\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "负数/零混合。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.06-bubble",
+      "origin": "SORT-06",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "bubble-sort",
+        "sorted-output",
+        "logical-empty"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 0;\n    int values[1] = {0};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": []
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "n=0/values[1]={0}；逻辑空数组不读取占位，输出仅换行。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.06-selection",
+      "origin": "SORT-06",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "selection-sort",
+        "sorted-output",
+        "logical-empty"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 0;\n    int values[1] = {0};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": []
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "n=0/values[1]={0}；逻辑空数组不读取占位，输出仅换行。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.07-bubble",
+      "origin": "SORT-07",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "bubble-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 1;\n    int values[1] = {7};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          7
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "7\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "单元素，无排序体迭代。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.07-selection",
+      "origin": "SORT-07",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "selection-sort",
+        "sorted-output"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 1;\n    int values[1] = {7};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          7
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "7\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "单元素，无排序体迭代。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.08-bubble",
+      "origin": "SORT-08",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "bubble-sort",
+        "sorted-output",
+        "max-course-length"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 30;\n    int values[30] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "30个0，单空格无尾空格并换行；无交换写入。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.sort.08-selection",
+      "origin": "SORT-08",
+      "category": "sort",
+      "topics": [
+        "arrays",
+        "selection-sort",
+        "sorted-output",
+        "max-course-length"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 30;\n    int values[30] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "30个0，单空格无尾空格并换行；无交换写入。 两算法使用独立输入副本；本资料不实现二期对比。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "06.4",
+        "08.4"
+      ]
+    },
+    {
+      "id": "fixture.semantic.search.01",
+      "origin": "SEARCH-01",
+      "category": "search",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int values[5] = {-2, 0, 0, 4, 8};\n    int target = 0;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          -2,
+          0,
+          0,
+          4,
+          8
+        ],
+        "target": 0
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "返回第一个0的下标1，不能返回下标2。 保持非递减输入、闭区间和向左继续搜索规则。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4",
+        "07.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.search.02",
+      "origin": "SEARCH-02",
+      "category": "search",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int values[5] = {-2, 0, 0, 4, 8};\n    int target = -2;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          -2,
+          0,
+          0,
+          4,
+          8
+        ],
+        "target": -2
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "0\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "首元素命中。 保持非递减输入、闭区间和向左继续搜索规则。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4",
+        "07.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.search.03",
+      "origin": "SEARCH-03",
+      "category": "search",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int values[5] = {-2, 0, 0, 4, 8};\n    int target = 8;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          -2,
+          0,
+          0,
+          4,
+          8
+        ],
+        "target": 8
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "4\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "尾元素命中。 保持非递减输入、闭区间和向左继续搜索规则。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4",
+        "07.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.search.04",
+      "origin": "SEARCH-04",
+      "category": "search",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int values[5] = {-2, 0, 0, 4, 8};\n    int target = 3;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          -2,
+          0,
+          0,
+          4,
+          8
+        ],
+        "target": 3
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "-1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "范围内未找到。 保持非递减输入、闭区间和向左继续搜索规则。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4",
+        "07.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.search.05",
+      "origin": "SEARCH-05",
+      "category": "search",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int values[5] = {-2, 0, 0, 4, 8};\n    int target = -9;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          -2,
+          0,
+          0,
+          4,
+          8
+        ],
+        "target": -9
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "-1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "目标低于所有元素。 保持非递减输入、闭区间和向左继续搜索规则。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4",
+        "07.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.search.06",
+      "origin": "SEARCH-06",
+      "category": "search",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int values[5] = {-2, 0, 0, 4, 8};\n    int target = 9;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          -2,
+          0,
+          0,
+          4,
+          8
+        ],
+        "target": 9
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "-1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "目标高于所有元素。 保持非递减输入、闭区间和向左继续搜索规则。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4",
+        "07.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.search.07",
+      "origin": "SEARCH-07",
+      "category": "search",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match",
+        "logical-empty"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 0;\n    int values[1] = {0};\n    int target = 0;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [],
+        "target": 0
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "-1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "逻辑空输入；right=-1，不读占位槽。 保持非递减输入、闭区间和向左继续搜索规则。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4",
+        "07.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.search.08",
+      "origin": "SEARCH-08",
+      "category": "search",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 1;\n    int values[1] = {7};\n    int target = 7;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          7
+        ],
+        "target": 7
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "0\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "单项命中。 保持非递减输入、闭区间和向左继续搜索规则。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4",
+        "07.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.search.09",
+      "origin": "SEARCH-09",
+      "category": "search",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 1;\n    int values[1] = {7};\n    int target = 6;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          7
+        ],
+        "target": 6
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "-1\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "单项未命中。 保持非递减输入、闭区间和向左继续搜索规则。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4",
+        "07.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.search.10",
+      "origin": "SEARCH-10",
+      "category": "search",
+      "topics": [
+        "arrays",
+        "binary-search",
+        "first-match"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 30;\n    int values[30] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};\n    int target = 0;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "target": 0
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [],
+        "allowedCodes": [],
+        "stdout": "0\n",
+        "exitCode": 0,
+        "judgeStatus": null,
+        "note": "30项重复值；首个命中为0。 保持非递减输入、闭区间和向左继续搜索规则。"
+      },
+      "ownerTasks": [
+        "06.1",
+        "06.2",
+        "06.3",
+        "08.4",
+        "07.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.01",
+      "origin": "INPUT-01",
+      "category": "input",
+      "topics": [
+        "input-validation"
+      ],
+      "source": null,
+      "programRef": {
+        "id": "program.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [],
+        "k": 0
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight"
+        ],
+        "allowedCodes": [
+          "E_INPUT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "数组更新题要求至少1项；不是C零长声明错误。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.02-blank",
+      "origin": "INPUT-02",
+      "category": "input",
+      "topics": [
+        "input-validation"
+      ],
+      "source": null,
+      "programRef": {
+        "id": "program.c.array-sum",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          ""
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight"
+        ],
+        "allowedCodes": [
+          "E_INPUT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "保留原元素值，拒绝空白、非整数文本或小数中的对应类型。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.02-text",
+      "origin": "INPUT-02",
+      "category": "input",
+      "topics": [
+        "input-validation"
+      ],
+      "source": null,
+      "programRef": {
+        "id": "program.c.array-sum",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          "abc"
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight"
+        ],
+        "allowedCodes": [
+          "E_INPUT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "保留原元素值，拒绝空白、非整数文本或小数中的对应类型。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.02-fraction",
+      "origin": "INPUT-02",
+      "category": "input",
+      "topics": [
+        "input-validation"
+      ],
+      "source": null,
+      "programRef": {
+        "id": "program.c.array-sum",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          1.5
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight"
+        ],
+        "allowedCodes": [
+          "E_INPUT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "保留原元素值，拒绝空白、非整数文本或小数中的对应类型。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.03-positive",
+      "origin": "INPUT-03",
+      "category": "input",
+      "topics": [
+        "input-validation"
+      ],
+      "source": null,
+      "programRef": {
+        "id": "program.c.array-sum",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          1000
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight"
+        ],
+        "allowedCodes": [
+          "E_INPUT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "输入元素超出-999..999；计算后得到1000仍可按int32合法。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.03-negative",
+      "origin": "INPUT-03",
+      "category": "input",
+      "topics": [
+        "input-validation"
+      ],
+      "source": null,
+      "programRef": {
+        "id": "program.c.array-sum",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          -1000
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight"
+        ],
+        "allowedCodes": [
+          "E_INPUT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "输入元素超出-999..999；计算后得到1000仍可按int32合法。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.04",
+      "origin": "INPUT-04",
+      "category": "input",
+      "topics": [
+        "input-validation"
+      ],
+      "source": null,
+      "programRef": {
+        "id": "program.c.array-sum",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight"
+        ],
+        "allowedCodes": [
+          "E_INPUT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "31个域内元素超过课程逻辑长度30；不得截断。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.05-at-length",
+      "origin": "INPUT-05",
+      "category": "input",
+      "topics": [
+        "input-validation"
+      ],
+      "source": null,
+      "programRef": {
+        "id": "program.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          1,
+          2
+        ],
+        "k": 2
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight"
+        ],
+        "allowedCodes": [
+          "E_INPUT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "索引输入不在[0,n)，不能把它发送执行后再冒充C越界验收。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.05-negative",
+      "origin": "INPUT-05",
+      "category": "input",
+      "topics": [
+        "input-validation"
+      ],
+      "source": null,
+      "programRef": {
+        "id": "program.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          1,
+          2
+        ],
+        "k": -1
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight"
+        ],
+        "allowedCodes": [
+          "E_INPUT_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "索引输入不在[0,n)，不能把它发送执行后再冒充C越界验收。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.06",
+      "origin": "INPUT-06",
+      "category": "input",
+      "topics": [
+        "input-validation"
+      ],
+      "source": null,
+      "programRef": {
+        "id": "program.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "case.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          2,
+          1
+        ],
+        "target": 0
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight"
+        ],
+        "allowedCodes": [
+          "E_INPUT_ORDER"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "二分输入乱序；不得静默排序。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.07-deleted",
+      "origin": "INPUT-07",
+      "category": "input",
+      "topics": [
+        "input-validation",
+        "input-binding"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int values[3] = {4, 0, -2};\n    int k = 1;\n    values[k] = values[k] + 1;\n    printf(\"%d\\n\", values[k]);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          4,
+          0,
+          -2
+        ],
+        "k": 1
+      },
+      "setup": "binding-deleted",
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_BINDING_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "完整代码删除逻辑长度输入声明；绑定到原声明身份的param.n缺失。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.07-renamed",
+      "origin": "INPUT-07",
+      "category": "input",
+      "topics": [
+        "input-validation",
+        "input-binding"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int count = 3;\n    int values[3] = {4, 0, -2};\n    int k = 1;\n    values[k] = values[k] + 1;\n    printf(\"%d\\n\", values[k]);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          4,
+          0,
+          -2
+        ],
+        "k": 1
+      },
+      "setup": "binding-renamed",
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_BINDING_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "完整代码把n声明改名count；不能以同值/同位置改绑为新的输入源。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.07-duplicate",
+      "origin": "INPUT-07",
+      "category": "input",
+      "topics": [
+        "input-validation",
+        "input-binding"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {4, 0, -2};\n    int k = 1;\n    values[k] = values[k] + 1;\n    printf(\"%d\\n\", values[k]);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          4,
+          0,
+          -2
+        ],
+        "k": 1
+      },
+      "setup": "binding-duplicate",
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_BINDING_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "完整代码保持公开实例；setup要求前置映射重复登记同一bindingKey，不能因源码相同跳过绑定唯一性检查。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.input.07-n-mismatch",
+      "origin": "INPUT-07",
+      "category": "input",
+      "topics": [
+        "input-validation",
+        "input-binding"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 2;\n    int values[3] = {4, 0, -2};\n    int k = 1;\n    values[k] = values[k] + 1;\n    printf(\"%d\\n\", values[k]);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          4,
+          0,
+          -2
+        ],
+        "k": 1
+      },
+      "setup": "binding-n-mismatch",
+      "expected": {
+        "terminalStatus": "rejected",
+        "allowedStages": [
+          "preflight",
+          "semantic"
+        ],
+        "allowedCodes": [
+          "E_BINDING_INVALID"
+        ],
+        "stdout": null,
+        "exitCode": null,
+        "judgeStatus": null,
+        "note": "完整代码显示n=2，但values容量/输入长度为3；源码绑定值和真实输入派生长度不一致。 提交前明确拒绝，不截断/补默认/隐藏改值，不发运行成功或学习奖励；不是资源超限。"
+      },
+      "ownerTasks": [
+        "07.2",
+        "06.2",
+        "09.3",
+        "10.2"
+      ]
+    },
+    {
+      "id": "fixture.semantic.wrong.01",
+      "origin": "WRONG-01",
+      "category": "wrong-answer",
+      "topics": [
+        "conditions",
+        "boundary-zero",
+        "wrong-answer"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 0;\n    if (x > 0) {\n        printf(\"1\\n\");\n    } else {\n        printf(\"0\\n\");\n    }\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.nonnegative",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.nonnegative",
+        "version": "1.0.0"
+      },
+      "input": {
+        "x": 0
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [
+          "judge"
+        ],
+        "allowedCodes": [
+          "J_STDOUT_MISMATCH"
+        ],
+        "stdout": "0\n",
+        "exitCode": 0,
+        "judgeStatus": "unmet",
+        "note": "x=0时误走else输出0，题目要求1。 C运行正常结束；判题未满足仅在judgeResult/checks编码，不将terminal改成程序错误。"
+      },
+      "ownerTasks": [
+        "09.3",
+        "06.1"
+      ]
+    },
+    {
+      "id": "fixture.semantic.wrong.02",
+      "origin": "WRONG-02",
+      "category": "wrong-answer",
+      "topics": [
+        "while",
+        "for",
+        "teaching-goal",
+        "partial-target"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int i = 1;\n    int sumWhile = 0;\n    while (i <= n) {\n        sumWhile = sumWhile + i;\n        i = i + 1;\n    }\n    int sumFor = 15;\n    printf(\"%d\\n%d\\n\", sumWhile, sumFor);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.two-loop-sums",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.two-loop-sums",
+        "version": "1.0.0"
+      },
+      "input": {
+        "n": 5
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [
+          "judge"
+        ],
+        "allowedCodes": [
+          "J_TEACHING_TARGET"
+        ],
+        "stdout": "15\n15\n",
+        "exitCode": 0,
+        "judgeStatus": "unmet",
+        "note": "n=5虽然两行数字碰巧正确，但缺真实for累加子目标；整题不能通过。 C运行正常结束；判题未满足仅在judgeResult/checks编码，不将terminal改成程序错误。"
+      },
+      "ownerTasks": [
+        "09.3",
+        "06.1"
+      ]
+    },
+    {
+      "id": "fixture.semantic.wrong.03",
+      "origin": "WRONG-03",
+      "category": "wrong-answer",
+      "topics": [
+        "arrays",
+        "wrong-index",
+        "teaching-goal",
+        "wrong-answer"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {4, 0, -2};\n    int k = 1;\n    values[0] = values[0] + 1;\n    printf(\"%d\\n\", values[k]);\n    return 0;\n}\n",
+      "programRef": {
+        "id": "program.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "subjectRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.0.0"
+      },
+      "input": {
+        "values": [
+          4,
+          0,
+          -2
+        ],
+        "k": 1
+      },
+      "setup": null,
+      "expected": {
+        "terminalStatus": "completed",
+        "allowedStages": [
+          "judge"
+        ],
+        "allowedCodes": [
+          "J_STDOUT_MISMATCH",
+          "J_TEACHING_TARGET"
+        ],
+        "stdout": "0\n",
+        "exitCode": 0,
+        "judgeStatus": "unmet",
+        "note": "values=[4,0,-2],k=1；错误改为[5,0,-2]且输出0，不满足仅指定元素+1及输出1。 C运行正常结束；判题未满足仅在judgeResult/checks编码，不将terminal改成程序错误。"
+      },
+      "ownerTasks": [
+        "09.3",
+        "06.2"
+      ]
+    }
+  ]
+}

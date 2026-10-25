@@ -1,0 +1,1271 @@
+{
+  "task": "06.4",
+  "date": "2026-10-16",
+  "timezone": "Asia/Shanghai",
+  "recordedAt": "2026-10-16 20:49:42 +08:00",
+  "status": "已验收",
+  "evidenceLevel": "real-metered-rust-pipeline-canonical-bounded-buffers-native-and-wasm32-failure-recovery",
+  "versionsChanged": false,
+  "dependenciesChanged": false,
+  "scope": {
+    "subset": "P0-C V1.0",
+    "budget": "BUDGET-P0 V1.0 / budget.p0@1.0.0",
+    "contracts": [
+      "EXEC-01 1.0.0",
+      "STEP-01 1.0.0",
+      "DIAG-01 1.0.0",
+      "JSON-INT-01 1.0.0"
+    ],
+    "api": "run::run(source, &mut Meter) / run_bytes; input::prepare_metered and verify_instance_metered share that Meter",
+    "limits": {
+      "sourceBytes": 32768,
+      "requestBytes": 65536,
+      "syntaxDepth": 64,
+      "astDepth": 64,
+      "fuel": 1000000,
+      "steps": 20000,
+      "liveBytes": 1048576,
+      "outputBytes": 16384,
+      "resultBytes": 16777216,
+      "deadlineMaximumMs": 1000,
+      "jsonContainers": 32,
+      "wasmMaximumPages": 2048
+    },
+    "prechargeBeforeGrowth": true,
+    "failedWorkNeverRefunded": true,
+    "meterIsPerRunAndNotReusable": true,
+    "actualStaticInputExecutionMetadataEncodingFinalAssemblyMetered": true,
+    "finalizationReserve": 4096,
+    "terminalByteReserve": 65536,
+    "finalCopyChargedPer64Bytes": true,
+    "encodedFuelEqualsActualTotal": true,
+    "originalStatic1215920CounterexampleStopsBeforeCompletion": true,
+    "clockIntervalMaximumFuel": 1024,
+    "allAtomicAndEncodedCommitsCheckClock": true,
+    "wasmMustInjectClock": true,
+    "cancellationAndDeadlineSticky": true,
+    "cancelDeadlineHaveNoTraceStatsBytes": true,
+    "sameRuntimeAndAtomicStepBoundaries": true,
+    "copyOnWriteArraysAndProvenance": true,
+    "linearDynamicTableChanges": true,
+    "indexedFlowProjection": true,
+    "fixedSchemaFragmentsAvoidDoubleCloningOrReencoding": true,
+    "canonicalDepthUnicodeUniqueKeysIntegerChecks": true,
+    "resultIsCompleteBoundedInternalReport": true,
+    "formalExecIdentityAndEnvelopeImplemented": false,
+    "rustMicrosUnmeasured": true
+  },
+  "validation": {
+    "fullCheckLog": ".artifacts/06.4/check-02.log",
+    "fullCheckExitCode": 0,
+    "fullCheckRustPassed": 330,
+    "frontendUnitPassed": 226,
+    "browserPassed": 177,
+    "finalRustLog": ".artifacts/06.4/check-rust-final.log",
+    "finalRustExitCode": 0,
+    "finalRustPassed": 331,
+    "priorRust": 272,
+    "newMeterCodecTests": 13,
+    "newRealBudgetTests": 46,
+    "finalNativeAndWasmClippyWarnings": 0,
+    "finalBuildLog": ".artifacts/06.4/build-last.log",
+    "finalBuildExitCode": 0,
+    "finalBufferAndEncodingDiagnosticFixesRecheckedAfterFullRegression": true,
+    "contentFixtureChecks": 26,
+    "registryEntries": 452,
+    "schemaBodies": 27,
+    "ownedDevPreviewPassed": true,
+    "nodeMapConsistencyRegressionReproducedAtFuel": 6946,
+    "nodeMapFuelSweep": "5000..8997 in steps of 7",
+    "independent": {
+      "parity": {
+        "allBoundedTracesValidated": true,
+        "comparedCheckpoints": 324,
+        "comparedSteps": 5221,
+        "completed": 255,
+        "encodedBytesChecked": 6055868,
+        "encodedFuelEqualsMeterUsed": true,
+        "evidenceLevel": "independent-exact-legacy-and-bounded-trace-parity",
+        "exactNodeMaps": true,
+        "finalReportFieldsMatchReturnedValues": true,
+        "maximumFuel": 13544,
+        "programErrors": 67,
+        "programs": 323,
+        "resourceLimits": 1,
+        "traceMismatchCount": 0
+      },
+      "pipeline": {
+        "clock": "controlled-zero-to-isolate-fuel",
+        "evidenceLevel": "independent-native-public-source-probe",
+        "rows": [
+          {
+            "algorithm": "bubble",
+            "legacyTraceBytes": 6932365,
+            "legacyTracedMicros": 2147632,
+            "legacyTracedStatus": "Completed { exit_code: 0 }",
+            "legacyTracedSteps": 5210,
+            "meteredBytes": 6942297,
+            "meteredDiagnostics": [],
+            "meteredMicros": 925584,
+            "meteredStats": {
+              "fuelUsed": 912674,
+              "maxAstDepth": 4,
+              "maxSyntaxDepth": 8,
+              "peakVirtualBytes": 132,
+              "rustMicros": null
+            },
+            "meteredStatus": "Completed",
+            "meteredSteps": 5210,
+            "pattern": "descending",
+            "sourceBytes": 250,
+            "unrecordedOutputCorrect": true,
+            "unrecordedWork": 32190
+          },
+          {
+            "algorithm": "bubble",
+            "legacyTraceBytes": 3266684,
+            "legacyTracedMicros": 985521,
+            "legacyTracedStatus": "Completed { exit_code: 0 }",
+            "legacyTracedSteps": 2600,
+            "meteredBytes": 3276615,
+            "meteredDiagnostics": [],
+            "meteredMicros": 368678,
+            "meteredStats": {
+              "fuelUsed": 376348,
+              "maxAstDepth": 4,
+              "maxSyntaxDepth": 8,
+              "peakVirtualBytes": 128,
+              "rustMicros": null
+            },
+            "meteredStatus": "Completed",
+            "meteredSteps": 2600,
+            "pattern": "ascending",
+            "sourceBytes": 250,
+            "unrecordedOutputCorrect": true,
+            "unrecordedWork": 17400
+          },
+          {
+            "algorithm": "bubble",
+            "legacyTraceBytes": 3265284,
+            "legacyTracedMicros": 950825,
+            "legacyTracedStatus": "Completed { exit_code: 0 }",
+            "legacyTracedSteps": 2600,
+            "meteredBytes": 3275199,
+            "meteredDiagnostics": [],
+            "meteredMicros": 380348,
+            "meteredStats": {
+              "fuelUsed": 376190,
+              "maxAstDepth": 4,
+              "maxSyntaxDepth": 8,
+              "peakVirtualBytes": 128,
+              "rustMicros": null
+            },
+            "meteredStatus": "Completed",
+            "meteredSteps": 2600,
+            "pattern": "equal",
+            "sourceBytes": 229,
+            "unrecordedOutputCorrect": true,
+            "unrecordedWork": 17400
+          },
+          {
+            "algorithm": "bubble",
+            "legacyTraceBytes": 4704357,
+            "legacyTracedMicros": 1331050,
+            "legacyTracedStatus": "Completed { exit_code: 0 }",
+            "legacyTracedSteps": 3620,
+            "meteredBytes": 4715541,
+            "meteredDiagnostics": [],
+            "meteredMicros": 557763,
+            "meteredStats": {
+              "fuelUsed": 591744,
+              "maxAstDepth": 4,
+              "maxSyntaxDepth": 8,
+              "peakVirtualBytes": 132,
+              "rustMicros": null
+            },
+            "meteredStatus": "Completed",
+            "meteredSteps": 3620,
+            "pattern": "duplicate-negative",
+            "sourceBytes": 243,
+            "unrecordedOutputCorrect": true,
+            "unrecordedWork": 23208
+          },
+          {
+            "algorithm": "selection",
+            "legacyTraceBytes": 4310456,
+            "legacyTracedMicros": 1411865,
+            "legacyTracedStatus": "Completed { exit_code: 0 }",
+            "legacyTracedSteps": 3464,
+            "meteredBytes": 4320834,
+            "meteredDiagnostics": [],
+            "meteredMicros": 562894,
+            "meteredStats": {
+              "fuelUsed": 530779,
+              "maxAstDepth": 3,
+              "maxSyntaxDepth": 8,
+              "peakVirtualBytes": 132,
+              "rustMicros": null
+            },
+            "meteredStatus": "Completed",
+            "meteredSteps": 3464,
+            "pattern": "descending",
+            "sourceBytes": 266,
+            "unrecordedOutputCorrect": true,
+            "unrecordedWork": 16577
+          },
+          {
+            "algorithm": "selection",
+            "legacyTraceBytes": 3283746,
+            "legacyTracedMicros": 1166985,
+            "legacyTracedStatus": "Completed { exit_code: 0 }",
+            "legacyTracedSteps": 2699,
+            "meteredBytes": 3294123,
+            "meteredDiagnostics": [],
+            "meteredMicros": 385177,
+            "meteredStats": {
+              "fuelUsed": 393833,
+              "maxAstDepth": 3,
+              "maxSyntaxDepth": 8,
+              "peakVirtualBytes": 132,
+              "rustMicros": null
+            },
+            "meteredStatus": "Completed",
+            "meteredSteps": 2699,
+            "pattern": "ascending",
+            "sourceBytes": 266,
+            "unrecordedOutputCorrect": true,
+            "unrecordedWork": 14807
+          },
+          {
+            "algorithm": "selection",
+            "legacyTraceBytes": 3281984,
+            "legacyTracedMicros": 1026416,
+            "legacyTracedStatus": "Completed { exit_code: 0 }",
+            "legacyTracedSteps": 2699,
+            "meteredBytes": 3292345,
+            "meteredDiagnostics": [],
+            "meteredMicros": 385173,
+            "meteredStats": {
+              "fuelUsed": 393668,
+              "maxAstDepth": 3,
+              "maxSyntaxDepth": 8,
+              "peakVirtualBytes": 132,
+              "rustMicros": null
+            },
+            "meteredStatus": "Completed",
+            "meteredSteps": 2699,
+            "pattern": "equal",
+            "sourceBytes": 245,
+            "unrecordedOutputCorrect": true,
+            "unrecordedWork": 14807
+          },
+          {
+            "algorithm": "selection",
+            "legacyTraceBytes": 3592298,
+            "legacyTracedMicros": 1118797,
+            "legacyTracedStatus": "Completed { exit_code: 0 }",
+            "legacyTracedSteps": 2942,
+            "meteredBytes": 3603928,
+            "meteredDiagnostics": [],
+            "meteredMicros": 419639,
+            "meteredStats": {
+              "fuelUsed": 440928,
+              "maxAstDepth": 3,
+              "maxSyntaxDepth": 8,
+              "peakVirtualBytes": 132,
+              "rustMicros": null
+            },
+            "meteredStatus": "Completed",
+            "meteredSteps": 2942,
+            "pattern": "duplicate-negative",
+            "sourceBytes": 259,
+            "unrecordedOutputCorrect": true,
+            "unrecordedWork": 15689
+          }
+        ],
+        "timing": "debug-native-observation-not-PERF-BASE-01"
+      },
+      "codec": {
+        "acceptedCanonicalRandom": 0,
+        "canonicalBytes": 102810,
+        "canonicalGeneratedCases": 2000,
+        "evidenceLevel": "independent-native-codec-fuzz",
+        "panics": 0,
+        "randomByteCases": 20000,
+        "rejectedRandom": 20000,
+        "seed": "0x0604a1d17b51c04d",
+        "serdeReferenceAndCanonicalRoundTrips": true
+      },
+      "controls": {
+        "evidenceLevel": "real-native-monotonic-controls-mechanism",
+        "notBrowserLifecycleOrForegroundUiEvidence": true,
+        "productDoesNotSpawnThreads": true,
+        "rows": [
+          {
+            "elapsedMicros": 1042,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 439,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1188,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 594,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1153,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 708,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1153,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 749,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1158,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 749,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1132,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 655,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1109,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 708,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1134,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 708,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1129,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 749,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1144,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 749,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1136,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 749,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1447,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 594,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1129,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 708,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1097,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 708,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1175,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 810,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1222,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 810,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1119,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 749,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1200,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 810,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1134,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 749,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "elapsedMicros": 1148,
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 810,
+            "kind": "deadline",
+            "laterChargeRejectedWithoutProgress": true,
+            "remainingMs": 1,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 5462,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 875,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 6404,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 1232,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 5776,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 1104,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 5776,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 1081,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 6090,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 956,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 6090,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 933,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 6301,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 1198,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 5933,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 875,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 6656,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 1066,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 6090,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 799,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 5244,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 881,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 4995,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 1105,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 5987,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 820,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 6185,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 1158,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 5305,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 1343,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 6342,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 1018,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 6893,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 870,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 5516,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 759,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 5714,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 831,
+            "traceAndStatsNull": true
+          },
+          {
+            "freshMeterRealExecutionRecovered": true,
+            "fuelBeforeStop": 6561,
+            "kind": "cancel",
+            "laterChargeRejectedWithoutProgress": true,
+            "nativeProbeTimerMs": 10,
+            "recoveryMicros": 1236,
+            "traceAndStatsNull": true
+          }
+        ]
+      },
+      "wasm-core": {
+        "evidenceLevel": "temporary-harness-real-wasm32-core-budget-execution",
+        "harnessWasmSha256": "119c29df3605063ae2cf8c45118ecf5b46838705bdba4348b3173cc82b4ee85a",
+        "harnessBytes": 677692,
+        "node": "v24.21.0",
+        "maximumLinearPages": 2048,
+        "observedPeakLinearPages": 1977,
+        "imports": [
+          {
+            "module": "budget_audit",
+            "name": "now_ms",
+            "kind": "function"
+          },
+          {
+            "module": "budget_audit",
+            "name": "cancelled",
+            "kind": "function"
+          }
+        ],
+        "productExportsChanged": false,
+        "browserExecLifecycleImplemented": false,
+        "timingsAreNotBrowserPerformanceAcceptance": true,
+        "rows": [
+          {
+            "browserExecImplemented": false,
+            "case": 0,
+            "diagnostics": [],
+            "encodedBytes": 2684,
+            "exitCode": 0,
+            "freshMeterCompleted": true,
+            "meterFuelUsed": 208,
+            "outputBytes": 0,
+            "productExportsChanged": false,
+            "stats": {
+              "fuelUsed": 208,
+              "maxAstDepth": 0,
+              "maxSyntaxDepth": 1,
+              "peakVirtualBytes": 0,
+              "rustMicros": null
+            },
+            "statsNull": false,
+            "status": "Completed",
+            "steps": 2,
+            "stoppedMeterRejectedFurtherWork": true,
+            "testOnlyFuelLimit": 1000000,
+            "traceNull": false,
+            "nodeElapsedMicros": 7699,
+            "hostClockChecks": 20,
+            "hostCancelChecks": 19,
+            "observedPeakLinearPages": 18
+          },
+          {
+            "browserExecImplemented": false,
+            "case": 1,
+            "diagnostics": [
+              {
+                "code": "E_ENCODING_FAILURE",
+                "details": {},
+                "location": {
+                  "kind": "synthetic",
+                  "reason": "encoding-failure"
+                },
+                "origin": "adapter",
+                "severity": "error",
+                "stage": "encode"
+              }
+            ],
+            "encodedBytes": 0,
+            "exitCode": null,
+            "freshMeterCompleted": true,
+            "meterFuelUsed": 781937,
+            "outputBytes": null,
+            "productExportsChanged": false,
+            "stats": null,
+            "statsNull": true,
+            "status": "InfrastructureFailure",
+            "steps": null,
+            "stoppedMeterRejectedFurtherWork": true,
+            "testOnlyFuelLimit": 1000000,
+            "traceNull": true,
+            "nodeElapsedMicros": 769502,
+            "hostClockChecks": 44816,
+            "hostCancelChecks": 44815,
+            "observedPeakLinearPages": 1977,
+            "formalLoopHadControlledEncodingFallback": true
+          },
+          {
+            "browserExecImplemented": false,
+            "case": 2,
+            "diagnostics": [
+              {
+                "code": "E_MEMORY_LIMIT",
+                "details": {
+                  "attempted": 1048580,
+                  "dimension": "liveBytes",
+                  "limit": 1048576,
+                  "used": 0
+                },
+                "location": {
+                  "byteRange": {
+                    "end": 25,
+                    "start": 11
+                  },
+                  "kind": "source"
+                },
+                "origin": "rust",
+                "severity": "error",
+                "stage": "execute"
+              }
+            ],
+            "encodedBytes": 2279,
+            "exitCode": null,
+            "freshMeterCompleted": true,
+            "meterFuelUsed": 254,
+            "outputBytes": 0,
+            "productExportsChanged": false,
+            "stats": {
+              "fuelUsed": 254,
+              "maxAstDepth": 0,
+              "maxSyntaxDepth": 2,
+              "peakVirtualBytes": 0,
+              "rustMicros": null
+            },
+            "statsNull": false,
+            "status": "ResourceLimit",
+            "steps": 1,
+            "stoppedMeterRejectedFurtherWork": true,
+            "testOnlyFuelLimit": 1000000,
+            "traceNull": false,
+            "nodeElapsedMicros": 693,
+            "hostClockChecks": 17,
+            "hostCancelChecks": 16,
+            "observedPeakLinearPages": 18
+          },
+          {
+            "browserExecImplemented": false,
+            "case": 3,
+            "diagnostics": [
+              {
+                "code": "E_OUTPUT_LIMIT",
+                "details": {
+                  "attempted": 16385,
+                  "dimension": "outputBytes",
+                  "limit": 16384,
+                  "used": 1
+                },
+                "location": {
+                  "byteRange": {
+                    "end": 16418,
+                    "start": 23
+                  },
+                  "kind": "source"
+                },
+                "origin": "rust",
+                "severity": "error",
+                "stage": "execute"
+              }
+            ],
+            "encodedBytes": 2947,
+            "exitCode": null,
+            "freshMeterCompleted": true,
+            "meterFuelUsed": 52115,
+            "outputBytes": 1,
+            "productExportsChanged": false,
+            "stats": {
+              "fuelUsed": 52115,
+              "maxAstDepth": 0,
+              "maxSyntaxDepth": 2,
+              "peakVirtualBytes": 0,
+              "rustMicros": null
+            },
+            "statsNull": false,
+            "status": "ResourceLimit",
+            "steps": 2,
+            "stoppedMeterRejectedFurtherWork": true,
+            "testOnlyFuelLimit": 1000000,
+            "traceNull": false,
+            "nodeElapsedMicros": 1123,
+            "hostClockChecks": 70,
+            "hostCancelChecks": 69,
+            "observedPeakLinearPages": 19
+          },
+          {
+            "browserExecImplemented": false,
+            "case": 4,
+            "diagnostics": [
+              {
+                "code": "E_DEADLINE",
+                "details": {
+                  "attempted": 1000,
+                  "dimension": "deadline",
+                  "limit": 1000,
+                  "used": 1000
+                },
+                "location": {
+                  "kind": "synthetic",
+                  "reason": "encoding-failure"
+                },
+                "origin": "rust",
+                "severity": "error",
+                "stage": "execute"
+              }
+            ],
+            "encodedBytes": 0,
+            "exitCode": null,
+            "freshMeterCompleted": true,
+            "meterFuelUsed": 1859,
+            "outputBytes": null,
+            "productExportsChanged": false,
+            "stats": null,
+            "statsNull": true,
+            "status": "ResourceLimit",
+            "steps": null,
+            "stoppedMeterRejectedFurtherWork": true,
+            "testOnlyFuelLimit": 1000000,
+            "traceNull": true,
+            "nodeElapsedMicros": 924,
+            "hostClockChecks": 100,
+            "hostCancelChecks": 99,
+            "observedPeakLinearPages": 22
+          },
+          {
+            "browserExecImplemented": false,
+            "case": 5,
+            "diagnostics": [
+              {
+                "code": "E_CANCELLED",
+                "details": {},
+                "location": {
+                  "kind": "synthetic",
+                  "reason": "adapter-cancel"
+                },
+                "origin": "adapter",
+                "severity": "error",
+                "stage": "encode"
+              }
+            ],
+            "encodedBytes": 0,
+            "exitCode": null,
+            "freshMeterCompleted": true,
+            "meterFuelUsed": 1900,
+            "outputBytes": null,
+            "productExportsChanged": false,
+            "stats": null,
+            "statsNull": true,
+            "status": "Cancelled",
+            "steps": null,
+            "stoppedMeterRejectedFurtherWork": true,
+            "testOnlyFuelLimit": 1000000,
+            "traceNull": true,
+            "nodeElapsedMicros": 894,
+            "hostClockChecks": 100,
+            "hostCancelChecks": 100,
+            "observedPeakLinearPages": 22
+          },
+          {
+            "browserExecImplemented": false,
+            "case": 6,
+            "diagnostics": [],
+            "encodedBytes": 4352,
+            "exitCode": 0,
+            "freshMeterCompleted": true,
+            "meterFuelUsed": 380,
+            "outputBytes": 0,
+            "productExportsChanged": false,
+            "stats": {
+              "fuelUsed": 380,
+              "maxAstDepth": 0,
+              "maxSyntaxDepth": 2,
+              "peakVirtualBytes": 1048576,
+              "rustMicros": null
+            },
+            "statsNull": false,
+            "status": "Completed",
+            "steps": 3,
+            "stoppedMeterRejectedFurtherWork": true,
+            "testOnlyFuelLimit": 1000000,
+            "traceNull": false,
+            "nodeElapsedMicros": 681,
+            "hostClockChecks": 23,
+            "hostCancelChecks": 22,
+            "observedPeakLinearPages": 18
+          },
+          {
+            "browserExecImplemented": false,
+            "case": 7,
+            "diagnostics": [],
+            "encodedBytes": 6942297,
+            "exitCode": 0,
+            "freshMeterCompleted": true,
+            "meterFuelUsed": 912674,
+            "outputBytes": 81,
+            "productExportsChanged": false,
+            "stats": {
+              "fuelUsed": 912674,
+              "maxAstDepth": 4,
+              "maxSyntaxDepth": 8,
+              "peakVirtualBytes": 132,
+              "rustMicros": null
+            },
+            "statsNull": false,
+            "status": "Completed",
+            "steps": 5210,
+            "stoppedMeterRejectedFurtherWork": true,
+            "testOnlyFuelLimit": 1000000,
+            "traceNull": false,
+            "nodeElapsedMicros": 288675,
+            "hostClockChecks": 15791,
+            "hostCancelChecks": 15790,
+            "observedPeakLinearPages": 1198
+          },
+          {
+            "browserExecImplemented": false,
+            "case": 8,
+            "diagnostics": [
+              {
+                "code": "E_FUEL_LIMIT",
+                "details": {
+                  "attempted": 200001,
+                  "dimension": "fuel",
+                  "limit": 200000,
+                  "used": 153357
+                },
+                "location": {
+                  "kind": "synthetic",
+                  "reason": "encoding-failure"
+                },
+                "origin": "rust",
+                "severity": "error",
+                "stage": "encode"
+              }
+            ],
+            "encodedBytes": 2657681,
+            "exitCode": null,
+            "freshMeterCompleted": true,
+            "meterFuelUsed": 194898,
+            "outputBytes": 0,
+            "productExportsChanged": false,
+            "stats": {
+              "fuelUsed": 194898,
+              "maxAstDepth": 1,
+              "maxSyntaxDepth": 3,
+              "peakVirtualBytes": 0,
+              "rustMicros": null
+            },
+            "statsNull": false,
+            "status": "ResourceLimit",
+            "steps": 2919,
+            "stoppedMeterRejectedFurtherWork": true,
+            "testOnlyFuelLimit": 200000,
+            "traceNull": false,
+            "nodeElapsedMicros": 66181,
+            "hostClockChecks": 8833,
+            "hostCancelChecks": 8832,
+            "observedPeakLinearPages": 444
+          }
+        ]
+      },
+      "wasm-memory": {
+        "evidenceLevel": "controlled-wasm-memory-mechanism",
+        "productionWasmSha256": "62c6bf6c214d7f7904ab71bb57b4f7ca1a178cbcfde0bd18c515913c08a44a9a",
+        "productionWasmBytes": 35556,
+        "node": "v24.21.0",
+        "initialPages": 17,
+        "maximumPages": 2048,
+        "maximumBytes": 134217728,
+        "successfulGrowPreviousPages": 17,
+        "failedWasmGrowResult": -1,
+        "failedJsGrow": "RangeError",
+        "bytesAtBothEndsPreservedAfterFailure": true,
+        "imports": [
+          {
+            "module": "./c_viz_wasm_bg.js",
+            "name": "__wbindgen_init_externref_table",
+            "kind": "function"
+          },
+          {
+            "module": "./c_viz_wasm_bg.js",
+            "name": "__wbindgen_generic_0000000000000001",
+            "kind": "function"
+          }
+        ],
+        "productExportsChanged": false,
+        "teachingProgramExhausted128MiB": false
+      }
+    },
+    "stableFirefoxSpecialtyRerun": false
+  },
+  "production": {
+    "browserProgramSubmission": false,
+    "newWasmExport": false,
+    "interpreterReady": false,
+    "newLearningFacts": false,
+    "nativeUserCExecution": false,
+    "userSourceOrTracePersisted": false
+  },
+  "files": {
+    "new": [
+      "engine/core/src/budget.rs",
+      "engine/core/src/codec.rs",
+      "engine/core/src/run.rs",
+      "engine/core/src/trace_wire.rs",
+      "engine/core/tests/budget_acceptance.rs",
+      "项目文档/架构决策/06.4-统一预算与失败终止落地.md",
+      "项目文档/验收/06.4-预算与终止验收.md",
+      "项目文档/验收/06.4-预算与终止证据.json",
+      "项目文档/交接/06.4-交接.md"
+    ],
+    "updated": [
+      "README.md",
+      "项目文档/任务进度与交接.md",
+      "engine/core/src/format.rs",
+      "engine/core/src/diagnostic.rs",
+      "engine/core/src/ast.rs",
+      "engine/core/src/lexer.rs",
+      "engine/core/src/input.rs",
+      "engine/core/src/parser.rs",
+      "engine/core/src/lib.rs",
+      "engine/core/src/runtime.rs",
+      "engine/core/src/source.rs",
+      "engine/core/src/semantic.rs",
+      "engine/core/src/runtime_trace.rs",
+      "engine/core/src/runtime_state.rs"
+    ],
+    "hashesExcludingThisEvidence": [
+      {
+        "path": "README.md",
+        "sha256": "0ec690c4f2d9c3d69d5b40e987e5dbf8d4cf74a34839f58d867755c47c6d99a1"
+      },
+      {
+        "path": "项目文档/任务进度与交接.md",
+        "sha256": "b4a7b3b0808f5d994deac7297a95e5867310adc17c258015207be31c0d9f94a6"
+      },
+      {
+        "path": "engine/core/src/format.rs",
+        "sha256": "071f08f9a89ee0aff4ad9bc7594671fc4b95c138861db43bde271b7730443a45"
+      },
+      {
+        "path": "engine/core/src/diagnostic.rs",
+        "sha256": "f8bbc299d96e7ace64737ff09b0c38a9455d030d4dd769f6cda64c498a9b6c17"
+      },
+      {
+        "path": "engine/core/src/ast.rs",
+        "sha256": "46156fa3b6f749342bc5f3cd95c16811c4873aad3717da7096818e33d34d6a6c"
+      },
+      {
+        "path": "engine/core/src/lexer.rs",
+        "sha256": "cd44914f419d2d4b024915de707130d778448901ddd3d634452a9be649304395"
+      },
+      {
+        "path": "engine/core/src/input.rs",
+        "sha256": "a0e2251131607e30acccc5c557746c7173c0978c8805b1c101ced615c0339cb9"
+      },
+      {
+        "path": "engine/core/src/parser.rs",
+        "sha256": "c480fe8b799fda3d71a56e0a59cc90006b8a48e1821b861ffa5af5befa24e0d3"
+      },
+      {
+        "path": "engine/core/src/lib.rs",
+        "sha256": "c102e9aafb1eddff4db9a13868096d8ecd1a130e00be7d122c5310a7e3bfb79a"
+      },
+      {
+        "path": "engine/core/src/runtime.rs",
+        "sha256": "a28b6c443cbe08a640ff611e0e241fa697dc2595888f1dad1fa833e09428b44e"
+      },
+      {
+        "path": "engine/core/src/source.rs",
+        "sha256": "6fb8313c991d892917ecbfcd17d2a81d89d7e6ddc875c8e5e8daf80c60f21976"
+      },
+      {
+        "path": "engine/core/src/semantic.rs",
+        "sha256": "fb42840d8f06039837697b098f365493fbeb44d8393261e6b28df5262854f4a6"
+      },
+      {
+        "path": "engine/core/src/runtime_trace.rs",
+        "sha256": "8537192121291bc1c08220df471a7b2a8a716968134707ca4389d875b98b9002"
+      },
+      {
+        "path": "engine/core/src/runtime_state.rs",
+        "sha256": "379e74558d53f2fb3bd254edb1969def78701eefa498594e6b547af7c7f62054"
+      },
+      {
+        "path": "engine/core/src/budget.rs",
+        "sha256": "0682417706479d0919a8434b8e5ae0f4961ff72d542d16d39fb5ab24af3c22ac"
+      },
+      {
+        "path": "engine/core/src/codec.rs",
+        "sha256": "1086804cb568b5b01eb43c6ec81885ca4ec8f743d30fc031a86284e91081552d"
+      },
+      {
+        "path": "engine/core/src/run.rs",
+        "sha256": "676c4ee9fa6a456af4cefbb74ed81eafd142ae50a90c6770ffbc98b447e808e0"
+      },
+      {
+        "path": "engine/core/src/trace_wire.rs",
+        "sha256": "3e9fd5a61b7cbf3d64d9e7c9cbfe71b5e4b29a91e8e075fc15d616d95588319c"
+      },
+      {
+        "path": "engine/core/tests/budget_acceptance.rs",
+        "sha256": "76f100cfeb4c6c43912e0b78bcfb7ae963a25f58af4d2621d8c228de41664aa2"
+      },
+      {
+        "path": "项目文档/架构决策/06.4-统一预算与失败终止落地.md",
+        "sha256": "6646178f8ad7ff7539b95230aa66e9dc2564c70d6ce718f09db9e75a0e456b17"
+      },
+      {
+        "path": "项目文档/验收/06.4-预算与终止验收.md",
+        "sha256": "8e44af00a81b53b2cf30cfe3194ee28fbe2d73adbf80e948e8acfa3b9767b9b9"
+      },
+      {
+        "path": "项目文档/交接/06.4-交接.md",
+        "sha256": "15d5cfb86ab34967c8545e54d408a2ff6c2070343fb40775c33591ced5cfe6d2"
+      }
+    ]
+  },
+  "protection": {
+    "baselineFiles": 269,
+    "authorizedChanged": 14,
+    "protectedUnchanged": 255,
+    "unexpectedModified": [],
+    "productWasmSurface": [
+      {
+        "path": "web/src/generated/c_viz_wasm_bg.wasm",
+        "bytes": 35556,
+        "sha256": "62c6bf6c214d7f7904ab71bb57b4f7ca1a178cbcfde0bd18c515913c08a44a9a",
+        "unchanged": true
+      },
+      {
+        "path": "web/src/generated/c_viz_wasm_bg.wasm.d.ts",
+        "bytes": 390,
+        "sha256": "b9288b57156ae2ec204286743a08cd57173702feeea4831e1ccf5a79a32bda99",
+        "unchanged": true
+      },
+      {
+        "path": "web/src/generated/c_viz_wasm.d.ts",
+        "bytes": 1510,
+        "sha256": "78b91587ce622cd19839afa35d975eb592e4ca86bc052144f9d707196fed965f",
+        "unchanged": true
+      },
+      {
+        "path": "web/src/generated/c_viz_wasm.js",
+        "bytes": 5778,
+        "sha256": "050c8cf0c4b193105bdb5d6cb7b12494625d61d0eb47114419041c317400c053",
+        "unchanged": true
+      },
+      {
+        "path": "web/src/generated/engine-build.ts",
+        "bytes": 202,
+        "sha256": "c4286e89bfd2b2faf8e05f3e811ac6bef377c425943ac3cfa269b0f90988ab0f",
+        "unchanged": true
+      }
+    ]
+  },
+  "artifacts": [
+    ".artifacts/06.4/check-02.log",
+    ".artifacts/06.4/check-rust-final.log",
+    ".artifacts/06.4/build-last.log",
+    ".artifacts/06.4/baseline.json",
+    ".artifacts/06.4/wasm-before.json",
+    ".artifacts/06.4/wasm-after.json",
+    ".artifacts/06.4/budget-audit-codec-before.json",
+    ".artifacts/06.4/budget-audit-codec.json",
+    ".artifacts/06.4/budget-audit-codec.log",
+    ".artifacts/06.4/budget-audit-codec.rs",
+    ".artifacts/06.4/budget-audit-controls-before.json",
+    ".artifacts/06.4/budget-audit-controls.json",
+    ".artifacts/06.4/budget-audit-controls.log",
+    ".artifacts/06.4/budget-audit-controls.rs",
+    ".artifacts/06.4/budget-audit-final-sources.json",
+    ".artifacts/06.4/budget-audit-parity.json",
+    ".artifacts/06.4/budget-audit-parity.log",
+    ".artifacts/06.4/budget-audit-parity.rs",
+    ".artifacts/06.4/budget-audit-pipeline-before.json",
+    ".artifacts/06.4/budget-audit-pipeline.json",
+    ".artifacts/06.4/budget-audit-pipeline.log",
+    ".artifacts/06.4/budget-audit-pipeline.rs",
+    ".artifacts/06.4/budget-audit-wasm-core-before.json",
+    ".artifacts/06.4/budget-audit-wasm-core-before.log",
+    ".artifacts/06.4/budget-audit-wasm-core-progress.json",
+    ".artifacts/06.4/budget-audit-wasm-core.json",
+    ".artifacts/06.4/budget-audit-wasm-core.log",
+    ".artifacts/06.4/budget-audit-wasm-core.mjs",
+    ".artifacts/06.4/budget-audit-wasm-core.rs",
+    ".artifacts/06.4/budget-audit-wasm-memory-before.json",
+    ".artifacts/06.4/budget-audit-wasm-memory.json",
+    ".artifacts/06.4/budget-audit-wasm-memory.log",
+    ".artifacts/06.4/budget-audit-wasm-memory.mjs"
+  ],
+  "earlierFailuresPreserved": [
+    ".artifacts/06.4/budget-tests-01.log",
+    ".artifacts/06.4/budget-tests-02.log",
+    ".artifacts/06.4/node-map-before-fix.log",
+    ".artifacts/06.4/budget-audit-wasm-core-before.json",
+    ".artifacts/06.4/budget-audit-pipeline-before.json"
+  ],
+  "actualLimitations": [
+    "Formal extreme infinite-loop trace can reach WASM heap pressure and safely fall back to adapter E_ENCODING_FAILURE stage encode; no trap/fake success/prefix/stats, fresh execution recovers",
+    "16MiB canonical bytes do not bound decoded object heap; 128MiB applies only to WASM linear memory",
+    "No product EXEC identity/Worker hard cancellation/host lifecycle integration yet; 07 must include all envelope bytes and fuel",
+    "No browser C playback, judge targets, learning events or full 2s/500ms/60fps acceptance",
+    "rustMicros remains null; probe observations are not browser performance acceptance"
+  ],
+  "nextTask": "07.1",
+  "step06Complete": true,
+  "phase1Accepted": false
+}

@@ -1,0 +1,13 @@
+[package]
+name = "c-viz-wasm"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+c-viz-core = { path = "../core" }
+wasm-bindgen.workspace = true

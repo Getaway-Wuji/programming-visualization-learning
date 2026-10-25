@@ -1,0 +1,26 @@
+{
+  "caseId": "case.c.bubble-sort",
+  "route": "#/visualize/case.c.bubble-sort",
+  "displayedSource": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {4, -1, 4, 0};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "inputValues": {
+    "values": [
+      4,
+      -1,
+      4,
+      0
+    ]
+  },
+  "draft": {
+    "values": "4, -1, 4, 0"
+  },
+  "stdout": "-1 0 4 4\n",
+  "status": "completed",
+  "terminalText": "程序正常结束",
+  "stepsText": "有效轨迹：125 步",
+  "stepCount": 125,
+  "diagnosticCodes": [],
+  "diagnosticText": [],
+  "readOnly": true,
+  "runId": "18e7319e-2209-45a2-891b-c297f1e50494",
+  "submissionId": "21bff491-a306-4c4c-abf8-caf64494331c"
+}

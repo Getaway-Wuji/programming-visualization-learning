@@ -1,0 +1,249 @@
+/* Shared geometry, theme-owned materials. 216/60 + flexible canvas = full width. */
+:root[data-appearance] .p05-app .sidebar-collapse {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: end;
+  margin: -12px 0 20px;
+  min-height: 36px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+@media (min-width: 1101px) {
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] {
+    grid-template-columns: 60px minmax(0, 1fr);
+  }
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .sidebar {
+    width: 60px;
+    padding: 20px 8px;
+    align-items: center;
+  }
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .sidebar-collapse {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    align-self: center;
+    margin: 0 0 20px;
+  }
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .sidebar .brand {
+    padding: 0;
+    margin-bottom: 28px;
+  }
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .sidebar .brand-mark {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .sidebar .brand-text,
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .sidebar-note,
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .sidebar-footer,
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .nav-link span,
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .sidebar-collapse span {
+    display: none;
+  }
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .sidebar nav {
+    width: 44px;
+  }
+  :root[data-appearance] .p05-app[data-sidebar='collapsed'] .nav-link {
+    width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 10px;
+  }
+}
+.p05-app .workbench-focus-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+.p05-app[data-workbench-mode='focus'] .main-content {
+  padding: 16px;
+}
+.p05-app[data-workbench-mode='focus'] .page-heading {
+  margin-bottom: 16px;
+}
+.p05-app[data-workbench-mode='focus'] .page-title {
+  font-size: 22px;
+}
+.p05-app[data-workbench-mode='focus'] .page-kicker,
+.p05-app[data-workbench-mode='focus'] .page-description {
+  display: none;
+}
+.p05-app .layout-save-notice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 12px 24px;
+}
+.workspace-context-toggle {
+  margin: 4px 0 16px;
+}
+.workspace-context > [hidden],
+.adaptive-workbench [hidden] {
+  display: none !important;
+}
+.adaptive-workbench {
+  width: 100%;
+  min-width: 0;
+  margin-top: 16px;
+  container-type: inline-size;
+}
+.workbench-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-height: 44px;
+  margin-bottom: 8px;
+}
+.workbench-tools .text-link,
+.workbench-resize-hint {
+  font-size: 12px;
+}
+.workbench-resize-hint {
+  color: var(--p05-muted);
+}
+.workbench-split {
+  display: grid;
+  grid-template-columns:
+    clamp(
+      var(--pane-first-min),
+      calc((100% - var(--pane-gutter)) * var(--split-ratio) / 100),
+      calc(100% - var(--pane-gutter) - var(--pane-second-min))
+    )
+    var(--pane-gutter) minmax(0, 1fr);
+  align-items: stretch;
+  min-width: 0;
+}
+.workbench-region {
+  min-width: 0;
+}
+.workbench-region-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.workbench-region-heading .pane-expand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+.pane-expand svg {
+  width: 16px;
+  height: 16px;
+}
+.workbench-region-content {
+  min-width: 0;
+}
+.workbench-region-content > .workbench-panel,
+.workbench-region-content > .practice-generated-code > .workbench-panel {
+  min-height: 520px;
+}
+.workbench-region-content > .practice-generated-code {
+  min-width: 0;
+}
+.adaptive-workbench .block-canvas {
+  height: clamp(440px, 58dvh, 720px);
+}
+.workbench-divider {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  position: relative;
+  touch-action: none;
+  cursor: col-resize;
+  border-radius: 6px;
+  outline-offset: -3px;
+}
+.workbench-divider span {
+  align-self: center;
+  width: 4px;
+  height: 48px;
+  border-radius: 4px;
+  background: var(--p05-border);
+}
+.workbench-divider:hover,
+.workbench-divider:focus-visible {
+  background: var(--p05-active);
+}
+.workbench-divider:hover span,
+.workbench-divider:focus-visible span {
+  background: var(--p05-accent);
+}
+.workbench-divider[aria-disabled='true'] {
+  cursor: default;
+}
+.adaptive-workbench[data-expanded='first'] .workbench-split,
+.adaptive-workbench[data-expanded='second'] .workbench-split,
+.adaptive-workbench[data-narrow='true'] .workbench-split {
+  grid-template-columns: minmax(0, 1fr);
+}
+.workbench-tabs {
+  display: flex;
+  width: 100%;
+  padding: 4px;
+  gap: 4px;
+  border-radius: 12px;
+  background: var(--p05-active);
+}
+.workbench-tabs button {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--p05-text);
+}
+.workbench-tabs [aria-selected='true'] {
+  background: var(--p05-surface);
+  color: var(--p05-accent);
+  font-weight: 600;
+}
+/* Prose retains a comfortable reading measure; the tool canvas has no page cap. */
+.lesson-main .section-card > p,
+.lesson-main .section-card > ul,
+.lesson-main .section-card > ol {
+  max-width: 76ch;
+}
+@media (max-width: 1100px) {
+  :root[data-appearance] .p05-app .sidebar-collapse {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  :root[data-appearance] .p05-app .topbar {
+    padding: 12px 16px;
+    gap: 8px;
+    height: auto;
+    min-height: 68px;
+  }
+  .p05-app .topbar-title,
+  .p05-app .local-note .preview-badge,
+  .p05-app .workbench-focus-toggle span {
+    display: none;
+  }
+  .p05-app .local-note {
+    gap: 8px;
+  }
+  .workbench-region-content > .workbench-panel {
+    min-height: 420px;
+  }
+}

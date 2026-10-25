@@ -1,0 +1,166 @@
+/* Array positions follow the trace order. A shared scale is calculated once per
+   array in BasicTraceView; wrapping never rescales an individual row. */
+.basic-trace-view .trace-array {
+  min-width: 0;
+  margin-top: 12px;
+}
+
+.basic-trace-view .array-heading {
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+}
+
+.basic-trace-view .array-chart-guide {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin: 0 0 10px;
+  color: var(--p05-muted, var(--muted));
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.basic-trace-view .array-scale-label {
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.basic-trace-view .array-chart-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
+  padding: 10px;
+  border: 1px solid var(--p05-border, var(--line));
+  border-radius: 8px;
+}
+
+.basic-trace-view .array-chart-scroll:focus-visible {
+  outline: 2px solid var(--p05-accent, currentColor);
+  outline-offset: 3px;
+}
+
+.basic-trace-view .array-chart {
+  display: grid;
+  /* The 8px gap plus a >=52px cell fits the actual pane, not the window.
+     A long integer reserves its own full label width instead of being clipped. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--array-cell-min, 52px)), 1fr));
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.basic-trace-view .array-chart .array-cell {
+  display: grid;
+  grid-template-rows: minmax(22px, auto) var(--array-plot-height, 96px) 18px 20px;
+  justify-items: center;
+  align-items: center;
+  min-width: 0;
+  padding: 6px 4px 4px;
+  border: 2px solid var(--p05-control, var(--line));
+  border-radius: 6px;
+  color: var(--p05-text, inherit);
+  background: var(--p05-surface, transparent);
+}
+
+.basic-trace-view .array-chart .array-cell[data-read='true'] {
+  background: var(--p05-active, var(--surface-tone));
+}
+
+.basic-trace-view .array-chart .array-cell[data-write='true'] {
+  border-color: var(--p05-warning, currentColor);
+}
+
+.basic-trace-view .array-chart .array-value {
+  min-width: 0;
+  width: 100%;
+  min-height: 0;
+  color: var(--p05-text, inherit);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.basic-trace-view .array-chart .bar-plot {
+  width: 100%;
+  height: var(--array-plot-height, 96px);
+}
+
+.basic-trace-view .array-chart .bar-plot::before {
+  left: -6px;
+  right: -6px;
+  background: var(--p05-control, currentColor);
+}
+
+.basic-trace-view .array-chart .value-bar {
+  left: 50%;
+  width: min(76%, 48px);
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: var(--p05-accent, currentColor);
+}
+
+.basic-trace-view .array-chart .value-negative {
+  background: color-mix(
+    in srgb,
+    var(--p05-accent, currentColor) 55%,
+    var(--p05-muted, currentColor)
+  );
+}
+
+.basic-trace-view .array-chart .value-zero {
+  transform: translate(-50%, 50%);
+  background: var(--p05-text, currentColor);
+}
+
+.basic-trace-view .array-chart .value-unknown {
+  border: 1px dashed var(--p05-control, currentColor);
+  background: /* taste-skill-ignore: semantic hatch for uninitialized values */ repeating-linear-gradient(
+    45deg,
+    var(--p05-active, transparent),
+    var(--p05-active, transparent) 3px,
+    transparent 3px,
+    transparent 6px
+  );
+}
+
+.basic-trace-view .array-chart .array-index,
+.basic-trace-view .array-chart .access-label {
+  min-width: 0;
+  color: var(--p05-muted, var(--muted));
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.basic-trace-view .array-chart .array-cell[data-read='true'] .access-label,
+.basic-trace-view .array-chart .array-cell[data-write='true'] .access-label {
+  color: var(--p05-text, inherit);
+  font-weight: 600;
+}
+
+.basic-trace-view .array-uninitialized-note {
+  margin: 8px 0 0;
+  color: var(--p05-muted, var(--muted));
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .basic-trace-view .array-chart *,
+  .basic-trace-view .array-chart *::before {
+    animation: none;
+    transition: none;
+  }
+}

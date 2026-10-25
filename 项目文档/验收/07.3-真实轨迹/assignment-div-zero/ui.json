@@ -1,0 +1,25 @@
+{
+  "caseId": "case.c.assignment",
+  "route": "#/visualize/case.c.assignment",
+  "displayedSource": "#include <stdio.h>\nint main(void) {\n    int x = -7;\n    printf(\"%d\\n\", x); x = x / 0;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+  "inputValues": {
+    "x": -7
+  },
+  "draft": {
+    "x": "-7"
+  },
+  "stdout": "-7\n",
+  "status": "program-error",
+  "terminalText": "程序发生错误",
+  "stepsText": "有效轨迹：4 步（未完成的有效前缀）",
+  "stepCount": 4,
+  "diagnosticCodes": [
+    "E_DIV_ZERO"
+  ],
+  "diagnosticText": [
+    "E_DIV_ZERO · 阶段：execute"
+  ],
+  "readOnly": true,
+  "runId": "e49e6e13-6048-419f-8aac-68fa3fbecb47",
+  "submissionId": "a6e60458-3c3c-4c74-bee1-54d608822a41"
+}

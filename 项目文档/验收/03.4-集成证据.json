@@ -1,0 +1,4034 @@
+{
+  "task": "03.4",
+  "date": "2026-10-15",
+  "timezone": "Asia/Shanghai",
+  "evidenceLevel": "early-skeleton-real-browser-Rust-integration",
+  "interpreterReady": false,
+  "contractVersionsChanged": false,
+  "dependenciesChanged": false,
+  "files": {
+    "new": [
+      "scripts/startup-check.mjs",
+      "tests/browser/integration.spec.ts",
+      "项目文档/架构决策/03.4-工程目录与协作归属.md",
+      "项目文档/验收/03.4-集成验收.md",
+      "项目文档/交接/03.4-交接.md",
+      "项目文档/验收/03.4-集成证据.json"
+    ],
+    "updated": [
+      "README.md",
+      "package.json",
+      "scripts/check.mjs",
+      "scripts/firefox-stable.mjs",
+      "scripts/serve-checks.mjs",
+      "项目文档/任务进度与交接.md"
+    ],
+    "sourceHashes": [
+      {
+        "path": "scripts/startup-check.mjs",
+        "sha256": "53550352313e29d9d812cc209904c2934c6efd67ce3a101c1a40315055692414"
+      },
+      {
+        "path": "tests/browser/integration.spec.ts",
+        "sha256": "0c10bad00d6d0853ca4645bb300aecb61b874888196200312cd1c3f6374a01a3"
+      },
+      {
+        "path": "README.md",
+        "sha256": "58d6d76c42a8eae40fac8e05c93702fd405e37d33423a0f2fa7e552dde54439e"
+      },
+      {
+        "path": "package.json",
+        "sha256": "bc23bd29340e16c706a92c14869c81627c34c0a22083c48c09f341348661a743"
+      },
+      {
+        "path": "scripts/check.mjs",
+        "sha256": "740a7ac8909b85b1bdecfa806e7ed207e1f652886f4d436ea66b2adf22b60730"
+      },
+      {
+        "path": "scripts/firefox-stable.mjs",
+        "sha256": "af6f2ed665792f61ee884cfd5fb3ee9ce59307c346feff3cd09cfeee82fc409f"
+      },
+      {
+        "path": "scripts/serve-checks.mjs",
+        "sha256": "fa82ca1751d1645ca0e7482e0af382160abf6a4888f797ccd92182fdbe468dc8"
+      }
+    ],
+    "documentationHashes": [
+      {
+        "path": "项目文档/架构决策/03.4-工程目录与协作归属.md",
+        "sha256": "ee477fe868c4deb7a20cd4289ca44cdd9cdc375426b552c5a94bb46e1341a0b0"
+      },
+      {
+        "path": "项目文档/验收/03.4-集成验收.md",
+        "sha256": "c3fa5d955179c607e2baaf78ab45a9a37ccf446c67751ac829191a440352a33c"
+      },
+      {
+        "path": "项目文档/交接/03.4-交接.md",
+        "sha256": "5169d9fd6597554db942f69fe754fd3c8569bc5a32f32df05331b3cf29a53b92"
+      }
+    ],
+    "authorizedBefore": [
+      {
+        "path": "README.md",
+        "sha256": "1cf5f86a5221f25df225d77b1f48ac3fc746dbf7af295d023e3802fedbd5b3d9"
+      },
+      {
+        "path": "package.json",
+        "sha256": "3ad9b9a186d331a6f0db8e8a46d1a85ca17c33513a572b96d105cb7038be39e0"
+      },
+      {
+        "path": "scripts/firefox-stable.mjs",
+        "sha256": "a0ae09a14fdef3f657c59b99857edb163dc6e33933eefcda47ba2842bb805530"
+      },
+      {
+        "path": "scripts/serve-checks.mjs",
+        "sha256": "ed8eade17873ed86f617d2b1b42c458be1a535c044c03a74978c1a3a7a12db75"
+      },
+      {
+        "path": "scripts/check.mjs",
+        "sha256": "4712f8a6f2fecc8e31e27bc7b4e7d4bfffb6c8e8442bda878d2461dc0d1e0e36",
+        "source": "03.2 preserved source hash; 03.3 unchanged"
+      }
+    ]
+  },
+  "predecessor": {
+    "task": "03.3",
+    "verifiedSourceAndProtectedHashes": 174,
+    "drift": 0,
+    "evidence": {
+      "path": "项目文档/验收/03.3-适配证据.json",
+      "sha256": "d1e5d236661e06330166bb00b52977b8ee7dd25b68b32ddb141dafea69fa0c9c"
+    }
+  },
+  "originalProtection": {
+    "count": 170,
+    "mismatches": 0,
+    "files": [
+      {
+        "path": ".cargo/config.toml",
+        "sha256": "a0aa817c9b6dd9d206ae36a67057d61a64dc35c2c13a42dbcabee3605f135a06"
+      },
+      {
+        "path": ".editorconfig",
+        "sha256": "84935724f67dd1a1b3bbdbad6510edf888b703fbff656dc40caebf9db2f4646a"
+      },
+      {
+        "path": ".env.example",
+        "sha256": "68d7096e8ba9d35872b213366994975b6767619140811d6349aafdf8c73e2733"
+      },
+      {
+        "path": ".gitignore",
+        "sha256": "3636878d9aaa0f866c392d740a043b0dcf15ed3aa030797c614930565c0a91d2"
+      },
+      {
+        "path": ".node-version",
+        "sha256": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f"
+      },
+      {
+        "path": ".npmrc",
+        "sha256": "90593d48670bf79ee22182ffb9c52bbbf9b5203fead400fdbda93ddd0d495f08"
+      },
+      {
+        "path": ".prettierignore",
+        "sha256": "3dd10f58084cfbf1c8cf2a4d1a7f9b1e3522a1bd8c6b2bc890a303d496a43b17"
+      },
+      {
+        "path": ".prettierrc.json",
+        "sha256": "8ed94b187d53a0f63aa2f9d9f37dcbf1b8d7c685747e3556c501ae9ed9fe9eea"
+      },
+      {
+        "path": "编程学习平台.md",
+        "sha256": "4183f95a3ae106eb6137ddbbe1feca2b0b139f7115a7dfe8fcc66de30bda1005"
+      },
+      {
+        "path": "项目守则.md",
+        "sha256": "4f2ca51c822933f36dd8bb1d8bac7d8a3c2b83e2eac989e7893bc4181f81958e"
+      },
+      {
+        "path": "项目文档/架构决策/01.1-页面清单.md",
+        "sha256": "12c34040acac88ec39638657fcc356c488effee7b59e2a75940cec650ced5589"
+      },
+      {
+        "path": "项目文档/架构决策/01.1-一期范围与用户路径.md",
+        "sha256": "5ea507d09a690d6276c8af665e59ba14b2733238182dffbe1bdec28d53452d98"
+      },
+      {
+        "path": "项目文档/架构决策/01.1-原需求核对与差异记录.md",
+        "sha256": "3a82627029f3c43c7060ed961fb3835a19c79d00551cbb43aa84b2d0b954adee"
+      },
+      {
+        "path": "项目文档/架构决策/01.2-日志与数据保留规则.md",
+        "sha256": "5d82e2574a6030094e324d0219b1083803e6692fe2f309514089239f0c810c99"
+      },
+      {
+        "path": "项目文档/架构决策/01.2-数据流与处理边界.md",
+        "sha256": "4006c23a937a97d6355b13de0b7f3b20fe66084920c7e2020c42260e51aa07b0"
+      },
+      {
+        "path": "项目文档/架构决策/01.2-执行位置与运行形态决议.md",
+        "sha256": "d531c22a84129a66d87413b7e6f6aa36c3f834a6573a607aedd3ac3ca0424a08"
+      },
+      {
+        "path": "项目文档/架构决策/01.3-课程积木与算法清单.md",
+        "sha256": "a30d2c18577b9fa55ef4f94c60f8fd1d20c8158cd208dc9e1b2ab941033a9780"
+      },
+      {
+        "path": "项目文档/架构决策/01.3-一期C子集支持矩阵.md",
+        "sha256": "24f3593c7d348bf6f024da4780bd285d3604f0a089f4b6b65d0b6e6b7d59c208"
+      },
+      {
+        "path": "项目文档/架构决策/01.3-正反样例清单.md",
+        "sha256": "6793cc003f88f04f49c9755a9dfeb817ea943d7130686b00a6f42f243907624c"
+      },
+      {
+        "path": "项目文档/架构决策/01.4-技术版本与工程方案.md",
+        "sha256": "f91abc7fe4bac4c8e60794c78eb67987401f42a74863c921f1a9c76c7cebb47a"
+      },
+      {
+        "path": "项目文档/架构决策/01.4-性能基线与验收条件.md",
+        "sha256": "83030120e3f560305d5432ccdf1103f9d4848a38a55d873e2086fc3f0711f062"
+      },
+      {
+        "path": "项目文档/架构决策/01.4-资源预算表.md",
+        "sha256": "8ab8bc555c1b13e516a4749000f32a70736abbf3390f9485655228b9077b0c87"
+      },
+      {
+        "path": "项目文档/架构决策/02.2-StepDSL可逆与编码决议.md",
+        "sha256": "fa81b856b9561bbd643ff79e60f55db0d1fce06b80683c891bf0bae51dd3d5f3"
+      },
+      {
+        "path": "项目文档/架构决策/02.3-本地存档与一致性决议.md",
+        "sha256": "f9fbd411b9076ee21a3ea7a93e519cc059cc4e863dedc5102bdb04dd8a7c0b53"
+      },
+      {
+        "path": "项目文档/架构决策/03.1-工程目录与质量入口.md",
+        "sha256": "793eed24a7fbe4b77c73ec6aa08205dbd7009fbf52980dde160cea697b6315cc"
+      },
+      {
+        "path": "项目文档/架构决策/03.2-路由与交互规范.md",
+        "sha256": "c2c69512325f728831de5db4130d79e778d80b3939890060361e0ae62f59235f"
+      },
+      {
+        "path": "项目文档/架构决策/03.3-内容与执行适配规范.md",
+        "sha256": "bf4afae795fc18b597e6f7d98525b61a3f7bbfbde17e2ce957d1d7689297a008"
+      },
+      {
+        "path": "项目文档/交接/01.1-交接.md",
+        "sha256": "c9c75cfc5e4ec72ec5fee1dfda445ce5ff61a9f9cdda22850ad199cf018bfb4c"
+      },
+      {
+        "path": "项目文档/交接/01.2-交接.md",
+        "sha256": "72b8890b4692341fbcf1eaf090a29c944bf1e269a8bb7a2c76d5579a50b05ff3"
+      },
+      {
+        "path": "项目文档/交接/01.3-交接.md",
+        "sha256": "9b1f764d70021932b7f1decef4a2b1687fcc9b9dc52b703d40abf186c692184e"
+      },
+      {
+        "path": "项目文档/交接/01.4-交接.md",
+        "sha256": "a175bccbc266ee667c23de4a37b80251679185365ee95a4a69d0ebd9e8ef706f"
+      },
+      {
+        "path": "项目文档/交接/02.1-交接.md",
+        "sha256": "67debbd56d8149efcc699b6cab82b16017a7a210974c7923b4a35ab9749fb0cb"
+      },
+      {
+        "path": "项目文档/交接/02.2-交接.md",
+        "sha256": "646eb04a9c75a91cc53781490a2c114e8e816b57775575c1e3c63317846ebcd5"
+      },
+      {
+        "path": "项目文档/交接/02.3-交接.md",
+        "sha256": "39ec97c0f2efe979d44d47f5cc9b438dfa8d96702dde0e347c8915845e3a1723"
+      },
+      {
+        "path": "项目文档/交接/02.4-交接.md",
+        "sha256": "e130c57e6a0abcff54c46a0e08c38b6d67ab62aacc137554e144eba51aedd6f4"
+      },
+      {
+        "path": "项目文档/交接/03.1-交接.md",
+        "sha256": "00bf086760706830ebac272380fa97d42508fa5b036e883766774ab0ce898c72"
+      },
+      {
+        "path": "项目文档/交接/03.2-交接.md",
+        "sha256": "18e903d67c510a73dfb5f9d2c0eda92ba6915b4b38043f32c9325a7d95bec08a"
+      },
+      {
+        "path": "项目文档/交接/03.3-交接.md",
+        "sha256": "67eeccada6efced53b137bfefcd1018142dcf74f0e3e10edd1f9b7c5b4fe60fa"
+      },
+      {
+        "path": "项目文档/开发路线与依赖.md",
+        "sha256": "a136d3f138c27b7cf62ded2925431f4ef57e462d942d6ff117333ac5e1c5a257"
+      },
+      {
+        "path": "项目文档/契约/02.1-非法配置样例.json",
+        "sha256": "4f064b2478a95043774fd7b282997f52ce17182667693b78b5c908e932d8160f"
+      },
+      {
+        "path": "项目文档/契约/02.1-内容格式与引用契约.md",
+        "sha256": "f066679625d0260d0d2749c6a8cdc3070ef4404b0cc64c6604d36865ce8c2b35"
+      },
+      {
+        "path": "项目文档/契约/02.1-内容结构.schema.json",
+        "sha256": "696f241dbdc21baadfc1b37a252dd262d7ef6bc43827ea15538cca42f20bcf82"
+      },
+      {
+        "path": "项目文档/契约/02.1-内容样例.json",
+        "sha256": "0117b47ef6a0c9d9ea87b645a57ec401f9cad5002b4ee7ba7315ccdf5088e85c"
+      },
+      {
+        "path": "项目文档/契约/02.1-配置合法性规则.md",
+        "sha256": "0bc191a09a3e0d923025e9fe2be966050723be505c0194126829356c7388e3fa"
+      },
+      {
+        "path": "项目文档/契约/02.1-学习事件与奖励边界.md",
+        "sha256": "8b6645c9f7cda70ae69c516a148dd250bfccd05c1cebc492f0345690c85b2278"
+      },
+      {
+        "path": "项目文档/契约/02.2-失败与超限轨迹样例.json",
+        "sha256": "4d362460d9f9af064ae13fe3673474f59973f5adf9300a405e7b680ff751230f"
+      },
+      {
+        "path": "项目文档/契约/02.2-异常与恢复场景.json",
+        "sha256": "d030794e9cdf3d7a19bbb0256651337fc9e27f8354be6d10e0399c48a4bb8af4"
+      },
+      {
+        "path": "项目文档/契约/02.2-诊断预算与判题观测.md",
+        "sha256": "fc5cf4e65f93bc7115dead1ac8a4f74b9be0429aacb6515bac9310114aa2f910"
+      },
+      {
+        "path": "项目文档/契约/02.2-正常轨迹样例.json",
+        "sha256": "f45fcec2e3a231bf22e59db08af9d631215a1925b7973e5fe135fdcd8b16d860"
+      },
+      {
+        "path": "项目文档/契约/02.2-执行请求与生命周期契约.md",
+        "sha256": "a95d628071a8637bab7b8ddd8044dbdbb36e77b97f6b8b6c14cc270299fe122e"
+      },
+      {
+        "path": "项目文档/契约/02.2-执行与轨迹.schema.json",
+        "sha256": "a49e80c9447e46f6cc7ede415449ab583e4b2c13a00791184013f31229fba3e7"
+      },
+      {
+        "path": "项目文档/契约/02.2-StepDSL状态与源码映射.md",
+        "sha256": "0a56ee8cc76ff1adef1e80a7216c76b537cf5b044b65fccd46892f28d84485c7"
+      },
+      {
+        "path": "项目文档/契约/02.3-本地数据模型.md",
+        "sha256": "b08675d9c185eba1bf482b39238a58bfc07e30a96789b4b59e257f984922eddd"
+      },
+      {
+        "path": "项目文档/契约/02.3-存档结构.schema.json",
+        "sha256": "8589ded821e4a5a266033d490f92de9a59e0c50285963c3dae7d9033d474c281"
+      },
+      {
+        "path": "项目文档/契约/02.3-存档样例.json",
+        "sha256": "b65d217beb571f072bc60217b87a5c931ad4f4b5a88f7e424145c3a920090fc9"
+      },
+      {
+        "path": "项目文档/契约/02.3-迁移与并发场景.json",
+        "sha256": "790e2a1fea61cf6ba2c0fc24e098e56c0a51dea8f1cf88105e55dd3238e7bfa7"
+      },
+      {
+        "path": "项目文档/契约/02.3-迁移与恢复规则.md",
+        "sha256": "f48676599200b05f48e6c864354918e9af5d328f8b10d9878c1a2f1a05243f17"
+      },
+      {
+        "path": "项目文档/契约/02.3-事务日期与奖励幂等.md",
+        "sha256": "86bed223741ab2f51acfb35528c152197dd8ab6673862a305933a5f76a5f3af7"
+      },
+      {
+        "path": "项目文档/契约/02.4-变更登记样例.json",
+        "sha256": "c6f34e76acfc116f4d936003b5babefc0949a7b2ef5335b31125a48680d308c1"
+      },
+      {
+        "path": "项目文档/契约/02.4-共享样例清单.md",
+        "sha256": "aa6146770db193d7d6e0c8c6d6be0a8f4f98e0d5bf0ee0d9fd1e35f08fb706e9"
+      },
+      {
+        "path": "项目文档/契约/02.4-共享样例索引.json",
+        "sha256": "8fabbf4accce5ecb8c5bc80d1744450968d7aa94522a878df6dfe44ab109bc0f"
+      },
+      {
+        "path": "项目文档/契约/02.4-双方兼容验证说明.md",
+        "sha256": "24baa280a8953827eb610fbbc8e78d8ca78be7520783d09ab5366376e9f6d275"
+      },
+      {
+        "path": "项目文档/契约/02.4-协议版本与变更流程.md",
+        "sha256": "7b7f290a3f1a38ac085789ff58a6ccde916517b2f0c9fe5f35c41924229bdfc0"
+      },
+      {
+        "path": "项目文档/契约/02.4-语义与输入样例.json",
+        "sha256": "d8e855c8b6f0fa6291333776da9933e187c4e7fc426352560d814850ba3e1d01"
+      },
+      {
+        "path": "项目文档/契约/02.4-预算边界样例.json",
+        "sha256": "21dc036b93cdceca20ba62193e373b601c7b8e757b17c9c7d17569a85680314c"
+      },
+      {
+        "path": "项目文档/任务包/第01步-冻结需求范围与实施决策.md",
+        "sha256": "525d14111a288ddbaf0c03595d029c91ad04de105a2ba0e7b2e1c0f417e035d3"
+      },
+      {
+        "path": "项目文档/任务包/第02步-制定共享契约与标准样例.md",
+        "sha256": "34f77e5333a19f120f8de3216a2af613686ad835961a7a2c8b324624c1b5af87"
+      },
+      {
+        "path": "项目文档/任务包/第03步-建立工程骨架与页面框架.md",
+        "sha256": "acf3bc09ae77299462cdc1e1d88b3b90b3f4d62162eaf2833e0335f72070ec69"
+      },
+      {
+        "path": "项目文档/任务包/第04步-完成浏览器本地数据基础.md",
+        "sha256": "5eae9f1f751e10d3448b81d1d21539c6b724ed8bc44899feb9bccda873dd4f3f"
+      },
+      {
+        "path": "项目文档/任务包/第05步-实现 C 子集解析与语义检查.md",
+        "sha256": "b1751ca7990578c2104b2521810dc9ba09dd958f9551e53ce523c3464b9541bb"
+      },
+      {
+        "path": "项目文档/任务包/第06步-实现受限执行与真实轨迹.md",
+        "sha256": "1610d65cf7b9eda27b1f95d533409d70eb9cf673829687bc3fd67eab9fb4a0a4"
+      },
+      {
+        "path": "项目文档/任务包/第07步-打通真实执行与数据输入.md",
+        "sha256": "905655a8f752d0e8051d3eadfd23096cd507b12f37a073752857fa772d3d0d78"
+      },
+      {
+        "path": "项目文档/任务包/第08步-实现播放器与基础可视化.md",
+        "sha256": "909b690d29780f1271b2d6003497f51d26590f8e85ff1825a611e8a6be5e99fe"
+      },
+      {
+        "path": "项目文档/任务包/第09步-完成课程与基础练习闭环.md",
+        "sha256": "a5271aedbb57ce714e707b0d71da8058fb9e65a9ce3e36037accb44f8aff76ef"
+      },
+      {
+        "path": "项目文档/任务包/第10步-完成积木到 C 的单向编程.md",
+        "sha256": "6ecedf82ad5089283085a9dff5a661cf90a31afcaddf05266e698261937fa802"
+      },
+      {
+        "path": "项目文档/任务包/第11步-接入基础激励并验收一期.md",
+        "sha256": "194f791f1c87c095515a41bb67044be0b05523c8acd929204fca6544a7f391f5"
+      },
+      {
+        "path": "项目文档/任务包/第12步-扩展执行语义及内存调用栈调试.md",
+        "sha256": "7013c542367f5c1a54044faace3883a843345f07c470cbe9e386175d8d190519"
+      },
+      {
+        "path": "项目文档/任务包/第13步-完善积木双向联动与学习约束.md",
+        "sha256": "e2ba57842f747652e62aa56342cc7ddcf44194b99e00c382b532b36c9e91d64f"
+      },
+      {
+        "path": "项目文档/任务包/第14步-实现诊断教学、编译流程与 Bug 闯关.md",
+        "sha256": "06dff0f21c82311028927ca08008e4ee76877d87a8f7dd2be925ffa3f5722f7c"
+      },
+      {
+        "path": "项目文档/任务包/第15步-建立知识图谱、复习卡片与徽章.md",
+        "sha256": "5e2719d6e61c0682b889147aa9571f029af7653238ba8535e5cf33a89a6b7621"
+      },
+      {
+        "path": "项目文档/任务包/第16步-完善教学交互、算法目录并验收二期.md",
+        "sha256": "6787b976e71a0a00802b9af4d5f8635c940fa350e6b443b2767cccfa204cd673"
+      },
+      {
+        "path": "项目文档/任务包/第17步-建设受支持子集的自定义代码工作台.md",
+        "sha256": "aefcbe623ca7fa7a244d66a9f76e3551f63290b1aeda6b62a4c3f0dc5bee7f30"
+      },
+      {
+        "path": "项目文档/任务包/第18步-建设进阶算法课程、多解法与语言对照.md",
+        "sha256": "90a8868def48f50bf17f73ff3046b4355b3567b606675a7dfdfd213e0711ee9a"
+      },
+      {
+        "path": "项目文档/任务包/第19步-实现薄弱点出题与 AI 可视化调试.md",
+        "sha256": "d7c07817eaf35ec59722dd49de62abc8c64ef7059f152495ddcb16584e292a65"
+      },
+      {
+        "path": "项目文档/任务包/第20步-完成笔记导出与三期交付.md",
+        "sha256": "7fa4a999b22ef5b697243dbd32c9e8c75bf83f81cc803db9372c94feeb5984b4"
+      },
+      {
+        "path": "项目文档/任务包/README.md",
+        "sha256": "ed819d65684e406cb637bc60e6271423918722acf25521677d3e950b44e85850"
+      },
+      {
+        "path": "项目文档/需求覆盖与范围裁决.md",
+        "sha256": "541047242c023be62698ef39a0774587cbd22b4a5c1fcee7762e415f24749930"
+      },
+      {
+        "path": "项目文档/验收/01.1-文档验收.md",
+        "sha256": "a651a6438bae957a38729611b819093aeaa4908e005a31962f5f6c0112a53277"
+      },
+      {
+        "path": "项目文档/验收/01.2-文档验收.md",
+        "sha256": "4f3f29ffb4a2ca0cf0780f74efe0808901a35521f03b389447ece4d5e6f20a81"
+      },
+      {
+        "path": "项目文档/验收/01.3-文档验收.md",
+        "sha256": "fa3201761c64830615b5f4f680fd5a6c44e456388d32a87175de1f0d730ac1f1"
+      },
+      {
+        "path": "项目文档/验收/01.4-文档验收.md",
+        "sha256": "0e9ca4d93cdf28df14fdc3b0f86364fe28ed4623527fbbc5b6601e67a666387c"
+      },
+      {
+        "path": "项目文档/验收/02.1-文档验收.md",
+        "sha256": "774ab30324a2e544bbb3d60dcab24c81b37f3ccead1f735852538c7ba6f28843"
+      },
+      {
+        "path": "项目文档/验收/02.2-契约夹具检查.mjs",
+        "sha256": "d2d531178457b311204b65c629cbcef0434ec04e8d8831877cf1283fd3f9981a"
+      },
+      {
+        "path": "项目文档/验收/02.2-文档验收.md",
+        "sha256": "48a9cd7800775eac34d7534d5283348afa3f9d2357de6091ff3194be4d639d17"
+      },
+      {
+        "path": "项目文档/验收/02.3-契约模型检查.mjs",
+        "sha256": "3fbbd5a0f4a024589b299dee9aa06a189a094025faa8503af085293ca0c24432"
+      },
+      {
+        "path": "项目文档/验收/02.3-文档验收.md",
+        "sha256": "ab96ebbd8f5d549a233522f16eea371e94c9597fc3f128a07527bb120653cd92"
+      },
+      {
+        "path": "项目文档/验收/02.4-共享资料检查.mjs",
+        "sha256": "62cbd713e31aeaf546d12440108ebe3ba56c2ea56ec186a7efbb3dd7087440ea"
+      },
+      {
+        "path": "项目文档/验收/02.4-文档验收.md",
+        "sha256": "2279d7c72fa492e808e168b0a0104d9d8dfe478f11383c456b2dd324ee452857"
+      },
+      {
+        "path": "项目文档/验收/02.4-Schema验证.ps1",
+        "sha256": "b3f2168fc6f28488e9fbb5e0a8216c116d9bacc124976e9eefed4bc4ee45cfa5"
+      },
+      {
+        "path": "项目文档/验收/03.1-工程验收.md",
+        "sha256": "8ca5d73444db2521ab70e256cbb0fd768a631fbd9b98761baf03b8aa2e171ba6"
+      },
+      {
+        "path": "项目文档/验收/03.1-工程证据.json",
+        "sha256": "943c4c3354ec2141ec22f535d8a8c8666d6af8b4709e61eeed1ad922f0138fdf"
+      },
+      {
+        "path": "项目文档/验收/03.2-页面验收.md",
+        "sha256": "ae5bfa613cfe87a5b55eb5e0c0de8bad5bdf7daf0915519e6ea61a03c3a658ae"
+      },
+      {
+        "path": "项目文档/验收/03.2-页面证据.json",
+        "sha256": "391238e3bf263f109cf0394f7056df9017796159a9ad935606cfa8b2488191f2"
+      },
+      {
+        "path": "项目文档/验收/03.3-适配验收.md",
+        "sha256": "b9e44cf53a87ddfd5f65122e754ab24d25d49ebd4f6b1ed1a064c324ba42de5b"
+      },
+      {
+        "path": "项目文档/验收/03.3-适配证据.json",
+        "sha256": "d1e5d236661e06330166bb00b52977b8ee7dd25b68b32ddb141dafea69fa0c9c"
+      },
+      {
+        "path": "AGENTS.md",
+        "sha256": "5095edf9b4d4d37077ff5746c612b7aec80b7d61f082c1ece98c57bc5cb62600"
+      },
+      {
+        "path": "Cargo.lock",
+        "sha256": "4984880e9904d0fd39a4774eb03f6800f23e13ece5bf164e87746fc76bc52cf2"
+      },
+      {
+        "path": "Cargo.toml",
+        "sha256": "d1653577c2b501004a8673161e0094d381f6ec3e0b2ecf5e00a3eb3a021fd6b3"
+      },
+      {
+        "path": "content/README.md",
+        "sha256": "75458ebdd2934483af8c51b2eb1f275b7b7437ae0915bb05c78a853090337c84"
+      },
+      {
+        "path": "engine/core/Cargo.toml",
+        "sha256": "eb97cec62f1cb9eba0622240f7bf6eed1e5db10311bfba9f253b3efccba0282b"
+      },
+      {
+        "path": "engine/core/src/lib.rs",
+        "sha256": "2014fcd7cc3fa707dddaa0b4e148483314645f14406213eb4160f5da2ff78aca"
+      },
+      {
+        "path": "engine/wasm/Cargo.toml",
+        "sha256": "6ebcd1c4cd0289b50c37813af3da27d514e068c628b781db8894c148eacec774"
+      },
+      {
+        "path": "engine/wasm/src/lib.rs",
+        "sha256": "090b02a4737f2ca392f81589f78d99ad8cc63cca1da055cfb98a0b8391160f10"
+      },
+      {
+        "path": "eslint.config.mjs",
+        "sha256": "6d09e66addacb77812d164933db4b816b7172d42a6271a923d34ec7ab9d80208"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "1f20229c85a01249648dceb447bae286adfaeb94efbe575ad8e11188b41dc078"
+      },
+      {
+        "path": "rust-toolchain.toml",
+        "sha256": "f85f74c3f9bf13cfb68855f5e125bbd206d6e07440f7d3145a5872ad14e2bdb2"
+      },
+      {
+        "path": "scripts/artifacts.mjs",
+        "sha256": "7a69ced93cbbfaefeac356a24bea96e1d5f67238c2ad5870f01f95d694828a70"
+      },
+      {
+        "path": "scripts/build-content.mjs",
+        "sha256": "3369f5435f35f01fbc13b5847979cb9ca31222371c43b7a73575de154135ca90"
+      },
+      {
+        "path": "scripts/build-wasm.mjs",
+        "sha256": "fec5f37e4e9ec7a382e5f99133e2c15dd8a4f99288f7e4c1931f5f9c3e7b4900"
+      },
+      {
+        "path": "scripts/build.mjs",
+        "sha256": "fdcc0d737e624d2cf450f4dc9267a858947b57962d4f57d75c3cdadb7428ca34"
+      },
+      {
+        "path": "scripts/environment.mjs",
+        "sha256": "0f5d00ec46d7cad86d0e302615291a55a04ab1a3923a626f4c6d29f08163ba43"
+      },
+      {
+        "path": "scripts/process.mjs",
+        "sha256": "ae868ac10644347762d732d54824473a63d14be2d666b5bdb99b2b5577d47a23"
+      },
+      {
+        "path": "scripts/rust-check.mjs",
+        "sha256": "fd7c4fe61b42de47ca0be9aef970f445b624f2beeda476c93e87924885f2cb8d"
+      },
+      {
+        "path": "scripts/setup.ps1",
+        "sha256": "e4d7038e4cb230d0cda59f9e786f8154b2aa4d2dc66c4b75780e59718454214d"
+      },
+      {
+        "path": "scripts/task.ps1",
+        "sha256": "877c0230f361e368d58dcc1a180f27e694ecebcab6b6b6458e8fca6050c773bd"
+      },
+      {
+        "path": "scripts/wasm-inspect.d.mts",
+        "sha256": "70e82f89fa6824a9b4d223b33a0a3700144eba53e9b9fba152de76e1583e17a9"
+      },
+      {
+        "path": "scripts/wasm-inspect.mjs",
+        "sha256": "ea566cd74020907752bb09df309c2b1f3f0499587db2d5473ac6f8ad218d2977"
+      },
+      {
+        "path": "shared/fixtures/README.md",
+        "sha256": "b7b48b4b92c9dff1a93959fae3adc7a38e63939201c0d3a996fde0ba36a448cf"
+      },
+      {
+        "path": "tests/browser.vite.config.ts",
+        "sha256": "de1984c7612b7c9ba4c283a38e7bf5179c4d99d952fe9f6fa84af991833f2aa9"
+      },
+      {
+        "path": "tests/browser/adapters.spec.ts",
+        "sha256": "eb476ed35fea702649109ad7c56f5be309c0ab71c2d5c2daeddb50186ee7eefa"
+      },
+      {
+        "path": "tests/browser/build-probe.spec.ts",
+        "sha256": "fb1c9fd0a3fb1661d1a86fcd9e5268548e83709437f2d119b04f4718df764400"
+      },
+      {
+        "path": "tests/browser/harness/index.html",
+        "sha256": "011f20ea0022e292ef156c3031c6844239037b6b2c2876d4f88141e220073354"
+      },
+      {
+        "path": "tests/browser/harness/main.ts",
+        "sha256": "89dd80a003e6deaf65d8b1e5b3303829dddd69c4e96a6bae7e2c67191178850d"
+      },
+      {
+        "path": "tests/browser/harness/probe.worker.ts",
+        "sha256": "406a6211a09f92eb0efba9db5cf6c457ac35df884145709b872796f44e90b8ec"
+      },
+      {
+        "path": "tests/browser/harness/types.ts",
+        "sha256": "f26490b25a0675e3a01862f080a519cbf8edf035cea93d4f7741101436577100"
+      },
+      {
+        "path": "tests/browser/navigation.spec.ts",
+        "sha256": "214a9bb639bd72fbab99a9dba26416bca848372f12e85943c401db1a4f9900ca"
+      },
+      {
+        "path": "tests/playwright.config.ts",
+        "sha256": "9514b59f683eccfa2dc260801b046488ef7db46b41d2a6a9d6ad9d4d84d4c249"
+      },
+      {
+        "path": "tests/unit/content-loader.test.ts",
+        "sha256": "4ae48dfbe2db8ce9dda9ff16c99dfdf5c6005b3768a0243230706d3ff683523f"
+      },
+      {
+        "path": "tests/unit/engine-client.test.ts",
+        "sha256": "06054013bb47952a4c053727d6d5f186136614d2733008e70c3c3d8da96c3a75"
+      },
+      {
+        "path": "tests/unit/wasm-artifact.test.ts",
+        "sha256": "8daacebb7896c9cfba5f4e47844147d4db2869f646c5f86c60aa9f5c5877ee1f"
+      },
+      {
+        "path": "tests/vitest.config.ts",
+        "sha256": "25d300888ecd7405fd37ad7b781e918ca3f72c5af1a389193eda2c09d7cab38c"
+      },
+      {
+        "path": "tsconfig.json",
+        "sha256": "6b5bb2b09ba913b4e0b7a90a90543ebd30168cc0d4922624158dadf62e17cef8"
+      },
+      {
+        "path": "tsconfig.tools.json",
+        "sha256": "ad19a9ee0385d2eefcd5cd06e83d8c312b46aeeb2d635d720233bac14da8a3c8"
+      },
+      {
+        "path": "tsconfig.web.json",
+        "sha256": "68bc12fb6d06e2d41f254a2f0ddb4a5a153a9a8f5c6d451a3f5c6d9332274cab"
+      },
+      {
+        "path": "vite.config.ts",
+        "sha256": "d57a79831d2a41870bdede6166d3868e3b4b6a7077ca120ede0944808761bc8f"
+      },
+      {
+        "path": "web/src/App.tsx",
+        "sha256": "2b0d6c03239a02a27376b8ff1b6afcaed3cafe1f8ea5b2fb45701fed3c896eee"
+      },
+      {
+        "path": "web/src/components/ContentSample.tsx",
+        "sha256": "f43325bcce0281e111cae3f3892a491ea98ee8836617d89e66e5958d70c81add"
+      },
+      {
+        "path": "web/src/components/EngineConnection.tsx",
+        "sha256": "e09a3706a6938e895e6c0e7d8074c5602b6c6ddcd068731ce01cc4734c0296d9"
+      },
+      {
+        "path": "web/src/components/Icon.tsx",
+        "sha256": "541f701338588fb224795e8fc903593edd9528d28880f57a618f4e0ad7f6124f"
+      },
+      {
+        "path": "web/src/components/Layout.tsx",
+        "sha256": "736b9588207ec957621d2ca5d3706fa4712729187d93b86bedd271510b383ebd"
+      },
+      {
+        "path": "web/src/components/Ui.tsx",
+        "sha256": "df6469e1980c37cc08942e6ff453d7e0169e382d6d0a6d28645ddae861571aac"
+      },
+      {
+        "path": "web/src/content/baseline.mjs",
+        "sha256": "07d0810527cabbbc7397ea9d91625a42d2299f187cdcc4317e465ecc3df7bffd"
+      },
+      {
+        "path": "web/src/content/index.ts",
+        "sha256": "cedb3f95d915d2373e959a562b7817862d8d9def28cff021fb2dad5d0cae7d8b"
+      },
+      {
+        "path": "web/src/content/repository.ts",
+        "sha256": "42347f942fa496479465129b05ae78780c58774d266bcfa8c58523f0fa47d066"
+      },
+      {
+        "path": "web/src/content/schema.mjs",
+        "sha256": "1a47726cdea11493de353d568489290b480318ca23d6be1ec7ba4f970ea7e91a"
+      },
+      {
+        "path": "web/src/content/types.ts",
+        "sha256": "f3288ac041b36483f51a480a1c7f9d600db1b787c7c204d26c40f9373ea9bcf3"
+      },
+      {
+        "path": "web/src/content/validator.d.mts",
+        "sha256": "1077d330f47bcb2cc20c8aaaecaef867660dacf563aa7340446e767878cd3aeb"
+      },
+      {
+        "path": "web/src/content/validator.mjs",
+        "sha256": "330596304e7b484bac53cd02bba8e2bfbe1e7fd7350a03723f43e9f13611a882"
+      },
+      {
+        "path": "web/src/engine/client.ts",
+        "sha256": "9a8488743bae1c911e2997bb8b0f3da5a59962730b4debd47c52e796c3a17bda"
+      },
+      {
+        "path": "web/src/engine/probe.worker.ts",
+        "sha256": "23992ed22c161e0101111d416119baffd8e637b1a7079a1da390ce2ccee2dec0"
+      },
+      {
+        "path": "web/src/engine/types.ts",
+        "sha256": "8825365352fbbd843f598376524bb2ab7fb2425136ec3b5f1a762157839c3de7"
+      },
+      {
+        "path": "web/src/main.tsx",
+        "sha256": "11e29d4df5e4b4c5ab4591d341378944c64b8adc4f669ebe4b3e005f85eadb29"
+      },
+      {
+        "path": "web/src/navigation.ts",
+        "sha256": "4bf27f754b226b410c208081a5ab1dcd6f2b0f3ef41dd52db11a37a8b083e9af"
+      },
+      {
+        "path": "web/src/pages/CatalogPages.tsx",
+        "sha256": "2c9edb002eddd12a35682e55399a63bc48203b5156701826ce3f898d91f4090b"
+      },
+      {
+        "path": "web/src/pages/HomePage.tsx",
+        "sha256": "0e90e68006958811995fcce5aca58ec424c2b95b8c20e9385bc6cf9dbcb40d7a"
+      },
+      {
+        "path": "web/src/pages/LessonPage.tsx",
+        "sha256": "4f89a2751299237468c8ab715a42e9534bff52d59d0ba79b965508d3416eeabc"
+      },
+      {
+        "path": "web/src/pages/SettingsPage.tsx",
+        "sha256": "a0786a8888672cf1965ee27002942a7d372d31fb70cdc0cc904c4be059fbe929"
+      },
+      {
+        "path": "web/src/pages/Workspaces.tsx",
+        "sha256": "e229ac3d5b46d680ecf32827271d591d0f541dd9ddc701e43f3e0cffa2302b4d"
+      },
+      {
+        "path": "web/src/styles.css",
+        "sha256": "14ccec1a46eff851ead85b5b803c43ef127270e891a2382d273ed73d049249ef"
+      },
+      {
+        "path": "web/src/vite-env.d.ts",
+        "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      }
+    ]
+  },
+  "checks": {
+    "command": "pwsh -NoProfile -File scripts/task.ps1 check",
+    "exitCode": 0,
+    "log": {
+      "path": ".artifacts/03.4-check.log",
+      "sha256": "97ee93e2a6d37a8d5e067d1486d4ad56a985f6559425651ef82d16157f8fbeaf"
+    },
+    "rustTests": 2,
+    "contentFixtureChecks": 26,
+    "sharedIndexEntries": 452,
+    "schemaBodies": 27,
+    "unit": {
+      "total": 80,
+      "passed": 80,
+      "failed": 0,
+      "report": {
+        "path": ".artifacts/unit-results.json",
+        "sha256": "00df1ea00c85cd89b10a38fe11ab1caa0df574f93c1aeda738ba4df78beac0c4"
+      }
+    },
+    "browser": {
+      "stats": {
+        "startTime": "2026-10-14T21:23:32.276Z",
+        "duration": 102186.87,
+        "expected": 51,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "versions": {
+        "chrome": "155.0.8059.79",
+        "edge": "155.0.4283.45",
+        "firefox-automation": "157.0"
+      },
+      "cases": [
+        {
+          "file": "adapters.spec.ts",
+          "title": "standard content is fetched, validated, labelled and read as reference only",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 858,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "HTTP, duplicate JSON key, unknown version and missing reference reject the complete package and recover",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2335,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "on-demand cold and warm checks call real Rust in separate terminated workers using one Module",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 994,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "missing WASM, invalid WASM and failed Worker show infrastructure feedback and retry successfully",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2034,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "cancelling a delayed download rejects the old load and a new check starts cleanly",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 821,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "an old real compilation cannot replace the Module or state of a newer accepted check",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1006,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "the total deadline includes loading and a late resource cannot turn timeout into success",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2104,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "cancelling or switching cases terminates an already created Worker and never exposes its old result",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1027,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "standard content is fetched, validated, labelled and read as reference only",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 932,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "HTTP, duplicate JSON key, unknown version and missing reference reject the complete package and recover",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2525,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "on-demand cold and warm checks call real Rust in separate terminated workers using one Module",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1049,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "missing WASM, invalid WASM and failed Worker show infrastructure feedback and retry successfully",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2124,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "cancelling a delayed download rejects the old load and a new check starts cleanly",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 808,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "an old real compilation cannot replace the Module or state of a newer accepted check",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1011,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "the total deadline includes loading and a late resource cannot turn timeout into success",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2080,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "cancelling or switching cases terminates an already created Worker and never exposes its old result",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1018,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "standard content is fetched, validated, labelled and read as reference only",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1737,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "HTTP, duplicate JSON key, unknown version and missing reference reject the complete package and recover",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2850,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "on-demand cold and warm checks call real Rust in separate terminated workers using one Module",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1241,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "missing WASM, invalid WASM and failed Worker show infrastructure feedback and retry successfully",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2546,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "cancelling a delayed download rejects the old load and a new check starts cleanly",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 962,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "an old real compilation cannot replace the Module or state of a newer accepted check",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1014,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "the total deadline includes loading and a late resource cannot turn timeout into success",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2231,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "adapters.spec.ts",
+          "title": "cancelling or switching cases terminates an already created Worker and never exposes its old result",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1305,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "build-probe.spec.ts",
+          "title": "production React entry renders without loading the engine",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 381,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "build-probe.spec.ts",
+          "title": "cold and warm Module runs call real Rust in fresh workers",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 378,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "build-probe.spec.ts",
+          "title": "missing WASM rejects and a later cold run recovers",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 274,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "build-probe.spec.ts",
+          "title": "production React entry renders without loading the engine",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 416,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "build-probe.spec.ts",
+          "title": "cold and warm Module runs call real Rust in fresh workers",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 405,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "build-probe.spec.ts",
+          "title": "missing WASM rejects and a later cold run recovers",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 288,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "build-probe.spec.ts",
+          "title": "production React entry renders without loading the engine",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 392,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "build-probe.spec.ts",
+          "title": "cold and warm Module runs call real Rust in fresh workers",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 990,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "build-probe.spec.ts",
+          "title": "missing WASM rejects and a later cold run recovers",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 330,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "integration.spec.ts",
+          "title": "continuous public learning navigation integrates validated samples and real Rust module checks without learning writes",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 6840,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "integration.spec.ts",
+          "title": "continuous public learning navigation integrates validated samples and real Rust module checks without learning writes",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 4970,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "integration.spec.ts",
+          "title": "continuous public learning navigation integrates validated samples and real Rust module checks without learning writes",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 3964,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "public routes preserve content relationships, refresh and browser history",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 3913,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "workspaces keep the required pane order, read-only source and unavailable actions",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1726,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "keyboard navigation, native dialogs and settings tabs remain usable",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1308,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "unknown addresses and real lazy module failures provide recovery",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 3437,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "desktop and narrower layouts avoid horizontal page overflow",
+          "project": "chrome",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 3038,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "public routes preserve content relationships, refresh and browser history",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 4326,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "workspaces keep the required pane order, read-only source and unavailable actions",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1656,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "keyboard navigation, native dialogs and settings tabs remain usable",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1318,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "unknown addresses and real lazy module failures provide recovery",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 3459,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "desktop and narrower layouts avoid horizontal page overflow",
+          "project": "edge",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2483,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "public routes preserve content relationships, refresh and browser history",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 3357,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "workspaces keep the required pane order, read-only source and unavailable actions",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1741,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "keyboard navigation, native dialogs and settings tabs remain usable",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 1395,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "unknown addresses and real lazy module failures provide recovery",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 3578,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "navigation.spec.ts",
+          "title": "desktop and narrower layouts avoid horizontal page overflow",
+          "project": "firefox-automation",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration": 2719,
+              "errors": []
+            }
+          ]
+        }
+      ],
+      "continuousObservations": [
+        {
+          "project": "chrome",
+          "routes": [
+            {
+              "pageId": "PAGE-01",
+              "hash": "#/"
+            },
+            {
+              "pageId": "PAGE-02",
+              "hash": "#/courses"
+            },
+            {
+              "pageId": "PAGE-03",
+              "hash": "#/lessons/lesson.c.variables-output"
+            },
+            {
+              "pageId": "PAGE-02",
+              "hash": "#/courses/chapter.c.values"
+            },
+            {
+              "pageId": "PAGE-03",
+              "hash": "#/lessons/lesson.c.variables-output"
+            },
+            {
+              "pageId": "PAGE-02",
+              "hash": "#/courses/chapter.c.values"
+            },
+            {
+              "pageId": "PAGE-03",
+              "hash": "#/lessons/lesson.c.variables-output"
+            },
+            {
+              "pageId": "PAGE-04",
+              "hash": "#/practice/exercise.c.echo"
+            },
+            {
+              "pageId": "PAGE-06",
+              "hash": "#/practice/exercise.c.echo/review"
+            },
+            {
+              "pageId": "PAGE-04",
+              "hash": "#/practice/exercise.c.echo"
+            },
+            {
+              "pageId": "PAGE-05",
+              "hash": "#/cases"
+            },
+            {
+              "pageId": "PAGE-06",
+              "hash": "#/visualize/case.c.bubble-sort"
+            },
+            {
+              "pageId": "PAGE-06",
+              "hash": "#/visualize/case.c.bubble-sort"
+            },
+            {
+              "pageId": "PAGE-07",
+              "hash": "#/settings"
+            }
+          ],
+          "requests": [
+            {
+              "url": "http://127.0.0.1:4178/",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-CVT65eQX.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-uB6Znnda.css",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/CatalogPages-rnSZlUz3.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/ContentSample-CNDKeSTJ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/LessonPage-DmGh29oK.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/Workspaces-Bo_jvExw.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/c_viz_wasm_bg-DjijL53u.wasm",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-CVT65eQX.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-uB6Znnda.css",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/Workspaces-Bo_jvExw.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/ContentSample-CNDKeSTJ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/c_viz_wasm_bg-DjijL53u.wasm",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/SettingsPage-CZL39OGI.js",
+              "method": "GET",
+              "hasBody": false
+            }
+          ],
+          "headerChecks": [
+            {
+              "url": "http://127.0.0.1:4178/",
+              "status": 200,
+              "mime": "text/html; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "status": 200,
+              "mime": "application/json; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/manifest.json",
+              "status": 200,
+              "mime": "application/json; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "status": 200,
+              "mime": "application/json; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/c_viz_wasm_bg-DjijL53u.wasm",
+              "status": 200,
+              "mime": "application/wasm",
+              "cache": "public, max-age=31536000, immutable",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-CVT65eQX.js",
+              "status": 200,
+              "mime": "text/javascript; charset=utf-8",
+              "cache": "public, max-age=31536000, immutable",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "status": 200,
+              "mime": "text/javascript; charset=utf-8",
+              "cache": "public, max-age=31536000, immutable",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            }
+          ],
+          "content": {
+            "purpose": "contract-fixture",
+            "contractVersion": "1.0.0",
+            "packageVersion": "1.0.0",
+            "originalBytesMatched": true
+          },
+          "cold": {
+            "compileCalls": 1,
+            "storageWrites": 0,
+            "databaseOpens": 0,
+            "securityPolicyViolations": 0,
+            "maximumActiveWorkers": 1,
+            "workers": [
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "76e8121b-364e-4508-b562-d441cfb21162",
+                "nonce": 2207375883,
+                "workerInstanceId": "4e8f6212-9b6e-47f7-853b-e76e094488ed",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 2207375883,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              }
+            ]
+          },
+          "warm": {
+            "compileCalls": 1,
+            "storageWrites": 0,
+            "databaseOpens": 0,
+            "securityPolicyViolations": 0,
+            "maximumActiveWorkers": 1,
+            "workers": [
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "76e8121b-364e-4508-b562-d441cfb21162",
+                "nonce": 2207375883,
+                "workerInstanceId": "4e8f6212-9b6e-47f7-853b-e76e094488ed",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 2207375883,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              },
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "e3b5df8c-ea54-4f74-b30d-0a6ef6176ebf",
+                "nonce": 3505431678,
+                "workerInstanceId": "05a12a65-8d1b-46e7-b1a8-dcf63e53ce34",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 3505431678,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              }
+            ]
+          },
+          "refreshed": {
+            "compileCalls": 1,
+            "storageWrites": 0,
+            "databaseOpens": 0,
+            "securityPolicyViolations": 0,
+            "maximumActiveWorkers": 1,
+            "workers": [
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "678e31f7-c1f0-4fc2-b215-353660f6567e",
+                "nonce": 960585199,
+                "workerInstanceId": "360abc91-64ee-43ef-bb4c-b186f8a4d79c",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 960585199,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              }
+            ]
+          }
+        },
+        {
+          "project": "edge",
+          "routes": [
+            {
+              "pageId": "PAGE-01",
+              "hash": "#/"
+            },
+            {
+              "pageId": "PAGE-02",
+              "hash": "#/courses"
+            },
+            {
+              "pageId": "PAGE-03",
+              "hash": "#/lessons/lesson.c.variables-output"
+            },
+            {
+              "pageId": "PAGE-02",
+              "hash": "#/courses/chapter.c.values"
+            },
+            {
+              "pageId": "PAGE-03",
+              "hash": "#/lessons/lesson.c.variables-output"
+            },
+            {
+              "pageId": "PAGE-02",
+              "hash": "#/courses/chapter.c.values"
+            },
+            {
+              "pageId": "PAGE-03",
+              "hash": "#/lessons/lesson.c.variables-output"
+            },
+            {
+              "pageId": "PAGE-04",
+              "hash": "#/practice/exercise.c.echo"
+            },
+            {
+              "pageId": "PAGE-06",
+              "hash": "#/practice/exercise.c.echo/review"
+            },
+            {
+              "pageId": "PAGE-04",
+              "hash": "#/practice/exercise.c.echo"
+            },
+            {
+              "pageId": "PAGE-05",
+              "hash": "#/cases"
+            },
+            {
+              "pageId": "PAGE-06",
+              "hash": "#/visualize/case.c.bubble-sort"
+            },
+            {
+              "pageId": "PAGE-06",
+              "hash": "#/visualize/case.c.bubble-sort"
+            },
+            {
+              "pageId": "PAGE-07",
+              "hash": "#/settings"
+            }
+          ],
+          "requests": [
+            {
+              "url": "http://127.0.0.1:4178/",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-CVT65eQX.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-uB6Znnda.css",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/CatalogPages-rnSZlUz3.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/ContentSample-CNDKeSTJ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/LessonPage-DmGh29oK.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/Workspaces-Bo_jvExw.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/c_viz_wasm_bg-DjijL53u.wasm",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-CVT65eQX.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-uB6Znnda.css",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/Workspaces-Bo_jvExw.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/ContentSample-CNDKeSTJ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/c_viz_wasm_bg-DjijL53u.wasm",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/SettingsPage-CZL39OGI.js",
+              "method": "GET",
+              "hasBody": false
+            }
+          ],
+          "headerChecks": [
+            {
+              "url": "http://127.0.0.1:4178/",
+              "status": 200,
+              "mime": "text/html; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "status": 200,
+              "mime": "application/json; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/manifest.json",
+              "status": 200,
+              "mime": "application/json; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "status": 200,
+              "mime": "application/json; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/c_viz_wasm_bg-DjijL53u.wasm",
+              "status": 200,
+              "mime": "application/wasm",
+              "cache": "public, max-age=31536000, immutable",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-CVT65eQX.js",
+              "status": 200,
+              "mime": "text/javascript; charset=utf-8",
+              "cache": "public, max-age=31536000, immutable",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "status": 200,
+              "mime": "text/javascript; charset=utf-8",
+              "cache": "public, max-age=31536000, immutable",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            }
+          ],
+          "content": {
+            "purpose": "contract-fixture",
+            "contractVersion": "1.0.0",
+            "packageVersion": "1.0.0",
+            "originalBytesMatched": true
+          },
+          "cold": {
+            "compileCalls": 1,
+            "storageWrites": 0,
+            "databaseOpens": 0,
+            "securityPolicyViolations": 0,
+            "maximumActiveWorkers": 1,
+            "workers": [
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "f9ff73cb-b76f-451c-8eed-9efc97fbba69",
+                "nonce": 907903221,
+                "workerInstanceId": "5206cd5d-32b0-47a7-8764-a9ecec701524",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 907903221,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              }
+            ]
+          },
+          "warm": {
+            "compileCalls": 1,
+            "storageWrites": 0,
+            "databaseOpens": 0,
+            "securityPolicyViolations": 0,
+            "maximumActiveWorkers": 1,
+            "workers": [
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "f9ff73cb-b76f-451c-8eed-9efc97fbba69",
+                "nonce": 907903221,
+                "workerInstanceId": "5206cd5d-32b0-47a7-8764-a9ecec701524",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 907903221,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              },
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "e4b50cd3-90c1-4102-8a9a-66605ac316ed",
+                "nonce": 187701570,
+                "workerInstanceId": "70191d4e-d1c0-4f29-a385-962171fa03f6",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 187701570,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              }
+            ]
+          },
+          "refreshed": {
+            "compileCalls": 1,
+            "storageWrites": 0,
+            "databaseOpens": 0,
+            "securityPolicyViolations": 0,
+            "maximumActiveWorkers": 1,
+            "workers": [
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "380ca5c8-251a-4021-b70d-3561216ddca1",
+                "nonce": 1427071527,
+                "workerInstanceId": "0c041249-82d7-4fb1-baef-151692af6a48",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 1427071527,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              }
+            ]
+          }
+        },
+        {
+          "project": "firefox-automation",
+          "routes": [
+            {
+              "pageId": "PAGE-01",
+              "hash": "#/"
+            },
+            {
+              "pageId": "PAGE-02",
+              "hash": "#/courses"
+            },
+            {
+              "pageId": "PAGE-03",
+              "hash": "#/lessons/lesson.c.variables-output"
+            },
+            {
+              "pageId": "PAGE-02",
+              "hash": "#/courses/chapter.c.values"
+            },
+            {
+              "pageId": "PAGE-03",
+              "hash": "#/lessons/lesson.c.variables-output"
+            },
+            {
+              "pageId": "PAGE-02",
+              "hash": "#/courses/chapter.c.values"
+            },
+            {
+              "pageId": "PAGE-03",
+              "hash": "#/lessons/lesson.c.variables-output"
+            },
+            {
+              "pageId": "PAGE-04",
+              "hash": "#/practice/exercise.c.echo"
+            },
+            {
+              "pageId": "PAGE-06",
+              "hash": "#/practice/exercise.c.echo/review"
+            },
+            {
+              "pageId": "PAGE-04",
+              "hash": "#/practice/exercise.c.echo"
+            },
+            {
+              "pageId": "PAGE-05",
+              "hash": "#/cases"
+            },
+            {
+              "pageId": "PAGE-06",
+              "hash": "#/visualize/case.c.bubble-sort"
+            },
+            {
+              "pageId": "PAGE-06",
+              "hash": "#/visualize/case.c.bubble-sort"
+            },
+            {
+              "pageId": "PAGE-07",
+              "hash": "#/settings"
+            }
+          ],
+          "requests": [
+            {
+              "url": "http://127.0.0.1:4178/",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-CVT65eQX.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-uB6Znnda.css",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/CatalogPages-rnSZlUz3.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/ContentSample-CNDKeSTJ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/LessonPage-DmGh29oK.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/Workspaces-Bo_jvExw.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/c_viz_wasm_bg-DjijL53u.wasm",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-CVT65eQX.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/Workspaces-Bo_jvExw.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/ContentSample-CNDKeSTJ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/c_viz_wasm_bg-DjijL53u.wasm",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "method": "GET",
+              "hasBody": false
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/SettingsPage-CZL39OGI.js",
+              "method": "GET",
+              "hasBody": false
+            }
+          ],
+          "headerChecks": [
+            {
+              "url": "http://127.0.0.1:4178/",
+              "status": 200,
+              "mime": "text/html; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "status": 200,
+              "mime": "application/json; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/manifest.json",
+              "status": 200,
+              "mime": "application/json; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/content/sample/02.1-content-1.0.0.json",
+              "status": 200,
+              "mime": "application/json; charset=utf-8",
+              "cache": "no-cache",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/c_viz_wasm_bg-DjijL53u.wasm",
+              "status": 200,
+              "mime": "application/wasm",
+              "cache": "public, max-age=31536000, immutable",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/index-CVT65eQX.js",
+              "status": 200,
+              "mime": "text/javascript; charset=utf-8",
+              "cache": "public, max-age=31536000, immutable",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            },
+            {
+              "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+              "status": 200,
+              "mime": "text/javascript; charset=utf-8",
+              "cache": "public, max-age=31536000, immutable",
+              "nosniff": "nosniff",
+              "policy": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
+            }
+          ],
+          "content": {
+            "purpose": "contract-fixture",
+            "contractVersion": "1.0.0",
+            "packageVersion": "1.0.0",
+            "originalBytesMatched": true
+          },
+          "cold": {
+            "compileCalls": 1,
+            "storageWrites": 0,
+            "databaseOpens": 0,
+            "securityPolicyViolations": 0,
+            "maximumActiveWorkers": 1,
+            "workers": [
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "b58dc755-4796-4f48-b5b5-4bbb7173eb51",
+                "nonce": 4133012367,
+                "workerInstanceId": "2753b43a-a475-4a2e-9825-756be5649fce",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 4133012367,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              }
+            ]
+          },
+          "warm": {
+            "compileCalls": 1,
+            "storageWrites": 0,
+            "databaseOpens": 0,
+            "securityPolicyViolations": 0,
+            "maximumActiveWorkers": 1,
+            "workers": [
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "b58dc755-4796-4f48-b5b5-4bbb7173eb51",
+                "nonce": 4133012367,
+                "workerInstanceId": "2753b43a-a475-4a2e-9825-756be5649fce",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 4133012367,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              },
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "9c9fcfe1-3376-43cf-853d-d7611e29dfb5",
+                "nonce": 889983795,
+                "workerInstanceId": "97abf952-c21f-4bc1-b304-4668bd5c8c72",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 889983795,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              }
+            ]
+          },
+          "refreshed": {
+            "compileCalls": 1,
+            "storageWrites": 0,
+            "databaseOpens": 0,
+            "securityPolicyViolations": 0,
+            "maximumActiveWorkers": 1,
+            "workers": [
+              {
+                "url": "http://127.0.0.1:4178/assets/probe.worker-CXI4eXaZ.js",
+                "terminated": true,
+                "moduleToken": 1,
+                "requestKeys": [
+                  "checkId",
+                  "kind",
+                  "module",
+                  "nonce"
+                ],
+                "resultKeys": [
+                  "engineVersion",
+                  "interpreterReady",
+                  "kind",
+                  "nonce",
+                  "probeVersion"
+                ],
+                "requestKind": "build-check",
+                "checkId": "1a5b2093-73e6-427d-be95-33b9f83f6797",
+                "nonce": 2332271459,
+                "workerInstanceId": "93f2a418-6f03-42bc-a357-3ddec48759b3",
+                "maximumPages": 2048,
+                "build": {
+                  "kind": "build-probe",
+                  "probeVersion": "1.0.0",
+                  "nonce": 2332271459,
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "startup": {
+    "evidenceLevel": "real-owned-dev-and-preview-startup",
+    "environment": {
+      "node": "v24.21.0",
+      "npm": "11.19.0",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+      "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+      "bindgen": "wasm-bindgen 0.2.129"
+    },
+    "records": [
+      {
+        "mode": "dev",
+        "port": 5174,
+        "browserVersion": "155.0.8059.79",
+        "contentReady": true,
+        "interpreterReady": false,
+        "audit": {
+          "workers": [
+            {
+              "terminated": true,
+              "nonce": 1151003439,
+              "build": {
+                "kind": "build-probe",
+                "probeVersion": "1.0.0",
+                "nonce": 1151003439,
+                "engineVersion": "0.1.0",
+                "interpreterReady": false
+              },
+              "workerInstanceId": "a8aaa648-b367-4954-b406-c6e9fdf79438"
+            }
+          ],
+          "writes": 0,
+          "databaseOpens": 0
+        },
+        "requests": [
+          {
+            "path": "/",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/@vite/client",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/main.tsx",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/@react-refresh",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/@fs/D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/node_modules/.vite/deps/react.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/@fs/D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/node_modules/.vite/deps/react-dom_client.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/App.tsx",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/styles.css",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/@fs/D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/node_modules/.vite/deps/react_jsx-dev-runtime.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/@fs/D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/node_modules/.vite/deps/react-CyPM6oeg.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/@fs/D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/node_modules/.vite/deps/react-router.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/components/Layout.tsx",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/components/Ui.tsx",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/pages/HomePage.tsx",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/components/Icon.tsx",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/navigation.ts",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/@fs/D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/node_modules/vite/dist/client/env.mjs",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/@fs/D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/node_modules/.vite/deps/react-dom-BtEp0Q6R.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/pages/LessonPage.tsx",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/components/ContentSample.tsx",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/content/index.ts",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/content/validator.mjs",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/content/repository.ts",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/content/schema.mjs",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/content/baseline.mjs",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/content/sample/02.1-content-1.0.0.json",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/content/sample/02.1-content-1.0.0.json",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/pages/Workspaces.tsx",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/components/EngineConnection.tsx",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/engine/client.ts",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/engine/types.ts",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/generated/c_viz_wasm_bg.wasm",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/generated/engine-build.ts",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/content/sample/02.1-content-1.0.0.json",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/content/sample/02.1-content-1.0.0.json",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/generated/c_viz_wasm_bg.wasm",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/engine/probe.worker.ts",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/@fs/D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/node_modules/vite/dist/client/env.mjs",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          },
+          {
+            "path": "/src/generated/c_viz_wasm.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:5174"
+          }
+        ],
+        "pageErrors": []
+      },
+      {
+        "mode": "preview",
+        "port": 4174,
+        "browserVersion": "155.0.8059.79",
+        "contentReady": true,
+        "interpreterReady": false,
+        "audit": {
+          "workers": [
+            {
+              "terminated": true,
+              "nonce": 307539001,
+              "build": {
+                "kind": "build-probe",
+                "probeVersion": "1.0.0",
+                "nonce": 307539001,
+                "engineVersion": "0.1.0",
+                "interpreterReady": false
+              },
+              "workerInstanceId": "ef3d9459-4ebe-4ed0-ba73-b38e0158b742"
+            }
+          ],
+          "writes": 0,
+          "databaseOpens": 0
+        },
+        "requests": [
+          {
+            "path": "/",
+            "method": "GET",
+            "origin": "http://127.0.0.1:4174"
+          },
+          {
+            "path": "/assets/index-CVT65eQX.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:4174"
+          },
+          {
+            "path": "/assets/index-uB6Znnda.css",
+            "method": "GET",
+            "origin": "http://127.0.0.1:4174"
+          },
+          {
+            "path": "/assets/LessonPage-DmGh29oK.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:4174"
+          },
+          {
+            "path": "/assets/ContentSample-CNDKeSTJ.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:4174"
+          },
+          {
+            "path": "/content/sample/02.1-content-1.0.0.json",
+            "method": "GET",
+            "origin": "http://127.0.0.1:4174"
+          },
+          {
+            "path": "/assets/Workspaces-Bo_jvExw.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:4174"
+          },
+          {
+            "path": "/content/sample/02.1-content-1.0.0.json",
+            "method": "GET",
+            "origin": "http://127.0.0.1:4174"
+          },
+          {
+            "path": "/assets/c_viz_wasm_bg-DjijL53u.wasm",
+            "method": "GET",
+            "origin": "http://127.0.0.1:4174"
+          },
+          {
+            "path": "/assets/probe.worker-CXI4eXaZ.js",
+            "method": "GET",
+            "origin": "http://127.0.0.1:4174"
+          }
+        ],
+        "pageErrors": []
+      }
+    ],
+    "ownedProcessesStopped": true,
+    "userPreviewPort4173Untouched": true,
+    "freshMachineInstallTested": false
+  },
+  "firefoxStable": {
+    "command": "test:firefox-stable",
+    "exitCode": 0,
+    "log": {
+      "path": ".artifacts/03.4-firefox.log",
+      "sha256": "f4b79f451bafa5f17bf292a3277d13fe71e70153e6cd75352adb56b764bacac8"
+    },
+    "evidenceLevel": "real-stock-Firefox-continuous-skeleton-integration",
+    "capabilities": {
+      "acceptInsecureCerts": false,
+      "browserName": "firefox",
+      "browserVersion": "158.0",
+      "moz:accessibilityChecks": false,
+      "moz:buildID": "20261007201254",
+      "moz:geckodriverVersion": "0.37.1",
+      "moz:headless": true,
+      "moz:platformVersion": "10.0",
+      "moz:processID": 45468,
+      "moz:profile": "C:\\Users\\Spring\\AppData\\Local\\Temp\\rust_mozprofilext2tWH",
+      "moz:shutdownTimeout": 60000,
+      "moz:webdriverClick": true,
+      "moz:windowless": false,
+      "pageLoadStrategy": "normal",
+      "platformName": "windows",
+      "proxy": {},
+      "setWindowRect": true,
+      "strictFileInteractability": false,
+      "timeouts": {
+        "implicit": 0,
+        "pageLoad": 300000,
+        "script": 30000
+      },
+      "unhandledPromptBehavior": "dismiss and notify",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:158.0) Gecko/20100101 Firefox/158.0"
+    },
+    "viewport": {
+      "devicePixelRatio": 1,
+      "height": 900,
+      "width": 1440
+    },
+    "integratedJourney": {
+      "pages": [
+        {
+          "activeNavigation": [
+            "学习首页"
+          ],
+          "breadcrumbLinks": [],
+          "emptyStates": [
+            "每日目标尚未启用"
+          ],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "",
+          "heading": "让每一步，都看得明白。",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-01",
+          "sourceAreas": []
+        },
+        {
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/",
+              "text": "学习首页"
+            }
+          ],
+          "emptyStates": [],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/courses",
+          "heading": "从基础开始，一步步学懂。",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-02",
+          "sourceAreas": []
+        },
+        {
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/courses",
+              "text": "C 语言课程"
+            },
+            {
+              "href": "#/courses/chapter.c.values",
+              "text": "变量与表达式"
+            }
+          ],
+          "emptyStates": [],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/lessons/lesson.c.variables-output",
+          "heading": "变量和输出",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-03",
+          "sourceAreas": []
+        },
+        {
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/",
+              "text": "学习首页"
+            },
+            {
+              "href": "#/courses",
+              "text": "C 语言课程"
+            }
+          ],
+          "emptyStates": [],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/courses/chapter.c.values",
+          "heading": "变量与表达式",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-02",
+          "sourceAreas": []
+        },
+        {
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/courses",
+              "text": "C 语言课程"
+            },
+            {
+              "href": "#/courses/chapter.c.values",
+              "text": "变量与表达式"
+            }
+          ],
+          "emptyStates": [],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/lessons/lesson.c.variables-output",
+          "heading": "变量和输出",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-03",
+          "sourceAreas": []
+        },
+        {
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/courses",
+              "text": "C 语言课程"
+            },
+            {
+              "href": "#/lessons/lesson.c.variables-output",
+              "text": "变量和输出"
+            }
+          ],
+          "emptyStates": [
+            "积木工作区尚未启用"
+          ],
+          "engineRequests": 0,
+          "forbiddenLinks": 0,
+          "hash": "#/practice/exercise.c.echo",
+          "heading": "输出输入变量",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-04",
+          "sourceAreas": [
+            {
+              "empty": true,
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/lessons/lesson.c.variables-output",
+              "text": "变量和输出"
+            },
+            {
+              "href": "#/practice/exercise.c.echo",
+              "text": "输出输入变量"
+            }
+          ],
+          "emptyStates": [
+            "还没有可复盘的运行"
+          ],
+          "engineRequests": 1,
+          "forbiddenLinks": 0,
+          "hash": "#/practice/exercise.c.echo/review",
+          "heading": "输出输入变量 · 本次复盘",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-06",
+          "sourceAreas": [
+            {
+              "empty": true,
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "activeNavigation": [
+            "C 语言课程"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/courses",
+              "text": "C 语言课程"
+            },
+            {
+              "href": "#/lessons/lesson.c.variables-output",
+              "text": "变量和输出"
+            }
+          ],
+          "emptyStates": [
+            "积木工作区尚未启用"
+          ],
+          "engineRequests": 1,
+          "forbiddenLinks": 0,
+          "hash": "#/practice/exercise.c.echo",
+          "heading": "输出输入变量",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-04",
+          "sourceAreas": [
+            {
+              "empty": true,
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "activeNavigation": [
+            "算法与演示"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/",
+              "text": "学习首页"
+            }
+          ],
+          "emptyStates": [],
+          "engineRequests": 1,
+          "forbiddenLinks": 0,
+          "hash": "#/cases",
+          "heading": "让数据变化，有迹可循。",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-05",
+          "sourceAreas": []
+        },
+        {
+          "activeNavigation": [
+            "算法与演示"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/cases",
+              "text": "算法与演示"
+            }
+          ],
+          "emptyStates": [
+            "等待真实执行结果"
+          ],
+          "engineRequests": 1,
+          "forbiddenLinks": 0,
+          "hash": "#/visualize/case.c.bubble-sort",
+          "heading": "冒泡排序",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-06",
+          "sourceAreas": [
+            {
+              "empty": true,
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "activeNavigation": [
+            "本地设置"
+          ],
+          "breadcrumbLinks": [
+            {
+              "href": "#/",
+              "text": "学习首页"
+            }
+          ],
+          "emptyStates": [
+            "尚未启用本地保存"
+          ],
+          "engineRequests": 1,
+          "forbiddenLinks": 0,
+          "hash": "#/settings",
+          "heading": "本地设置",
+          "horizontalOverflow": false,
+          "pageId": "PAGE-07",
+          "sourceAreas": []
+        }
+      ],
+      "audit": {
+        "databaseOpens": 0,
+        "workers": [
+          {
+            "build": {
+              "engineVersion": "0.1.0",
+              "interpreterReady": false,
+              "kind": "build-probe",
+              "nonce": 3873685223,
+              "probeVersion": "1.0.0"
+            },
+            "instance": "2fd125d7-4aa4-4845-989c-d409ddc1a4fb",
+            "moduleToken": 1,
+            "nonce": 3873685223,
+            "terminated": true
+          },
+          {
+            "build": {
+              "engineVersion": "0.1.0",
+              "interpreterReady": false,
+              "kind": "build-probe",
+              "nonce": 235681358,
+              "probeVersion": "1.0.0"
+            },
+            "instance": "d974a2e7-e336-4746-b5bc-da066f7c0d5e",
+            "moduleToken": 1,
+            "nonce": 235681358,
+            "terminated": true
+          }
+        ],
+        "writes": 0
+      },
+      "interpreterReady": false
+    },
+    "regressionAdapters": {
+      "evidenceLevel": "content-and-build-module-adapter",
+      "capabilities": {
+        "acceptInsecureCerts": false,
+        "browserName": "firefox",
+        "browserVersion": "158.0",
+        "moz:accessibilityChecks": false,
+        "moz:buildID": "20261007201254",
+        "moz:geckodriverVersion": "0.37.1",
+        "moz:headless": true,
+        "moz:platformVersion": "10.0",
+        "moz:processID": 45468,
+        "moz:profile": "C:\\Users\\Spring\\AppData\\Local\\Temp\\rust_mozprofilext2tWH",
+        "moz:shutdownTimeout": 60000,
+        "moz:webdriverClick": true,
+        "moz:windowless": false,
+        "pageLoadStrategy": "normal",
+        "platformName": "windows",
+        "proxy": {},
+        "setWindowRect": true,
+        "strictFileInteractability": false,
+        "timeouts": {
+          "implicit": 0,
+          "pageLoad": 300000,
+          "script": 30000
+        },
+        "unhandledPromptBehavior": "dismiss and notify",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:158.0) Gecko/20100101 Firefox/158.0"
+      },
+      "viewport": {
+        "devicePixelRatio": 1,
+        "height": 900,
+        "width": 1440
+      },
+      "interpreterReady": false,
+      "adapters": [
+        {
+          "fault": "none",
+          "terminal": "ready",
+          "beforeRetry": {
+            "fetches": 1,
+            "workers": [
+              {
+                "build": {
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false,
+                  "kind": "build-probe",
+                  "nonce": 2955523270,
+                  "probeVersion": "1.0.0"
+                },
+                "instance": "aea9c68f-42eb-4384-89e5-e993a782733e",
+                "terminated": true
+              }
+            ],
+            "writes": 0
+          },
+          "afterRetry": {
+            "code": "",
+            "fetches": 1,
+            "text": "执行模块连接执行模块检查通过。C 解释器尚未接入，当前不能运行程序或生成轨迹。检查执行模块",
+            "workers": [
+              {
+                "build": {
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false,
+                  "kind": "build-probe",
+                  "nonce": 2955523270,
+                  "probeVersion": "1.0.0"
+                },
+                "instance": "aea9c68f-42eb-4384-89e5-e993a782733e",
+                "terminated": true
+              },
+              {
+                "build": {
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false,
+                  "kind": "build-probe",
+                  "nonce": 3766999344,
+                  "probeVersion": "1.0.0"
+                },
+                "instance": "d80d7a7b-a33f-4fd7-a96d-54e6417c9cf2",
+                "terminated": true
+              }
+            ],
+            "writes": 0
+          }
+        },
+        {
+          "fault": "missing",
+          "terminal": "failed",
+          "beforeRetry": {
+            "fetches": 1,
+            "workers": [],
+            "writes": 0
+          },
+          "afterRetry": {
+            "code": "",
+            "fetches": 2,
+            "text": "执行模块连接执行模块检查通过。C 解释器尚未接入，当前不能运行程序或生成轨迹。检查执行模块",
+            "workers": [
+              {
+                "build": {
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false,
+                  "kind": "build-probe",
+                  "nonce": 1609585489,
+                  "probeVersion": "1.0.0"
+                },
+                "instance": "7a31fd8b-2460-48e1-8275-c5b505922e64",
+                "terminated": true
+              }
+            ],
+            "writes": 0
+          }
+        },
+        {
+          "fault": "delayed-cancel",
+          "terminal": "cancelled",
+          "beforeRetry": {
+            "fetches": 1,
+            "workers": [],
+            "writes": 0
+          },
+          "afterRetry": {
+            "code": "",
+            "fetches": 2,
+            "text": "执行模块连接执行模块检查通过。C 解释器尚未接入，当前不能运行程序或生成轨迹。检查执行模块",
+            "workers": [
+              {
+                "build": {
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false,
+                  "kind": "build-probe",
+                  "nonce": 1191965975,
+                  "probeVersion": "1.0.0"
+                },
+                "instance": "205ad203-62bd-485b-97e6-b9b006259aa2",
+                "terminated": true
+              }
+            ],
+            "writes": 0
+          }
+        },
+        {
+          "fault": "delayed-timeout",
+          "terminal": "timed-out",
+          "beforeRetry": {
+            "fetches": 1,
+            "workers": [],
+            "writes": 0
+          },
+          "afterRetry": {
+            "code": "",
+            "fetches": 2,
+            "text": "执行模块连接执行模块检查通过。C 解释器尚未接入，当前不能运行程序或生成轨迹。检查执行模块",
+            "workers": [
+              {
+                "build": {
+                  "engineVersion": "0.1.0",
+                  "interpreterReady": false,
+                  "kind": "build-probe",
+                  "nonce": 2108916054,
+                  "probeVersion": "1.0.0"
+                },
+                "instance": "64c1f9f8-cc1e-48b3-95ad-24a3f19fae19",
+                "terminated": true
+              }
+            ],
+            "writes": 0
+          }
+        }
+      ]
+    }
+  },
+  "content": {
+    "manifest": {
+      "contractVersion": "1.0.0",
+      "packageId": "content.c.p0",
+      "packageVersion": "1.0.0",
+      "purpose": "contract-fixture",
+      "file": "02.1-content-1.0.0.json",
+      "bytes": 49906,
+      "sha256": "0117b47ef6a0c9d9ea87b645a57ec401f9cad5002b4ee7ba7315ccdf5088e85c",
+      "schemaSha256": "696f241dbdc21baadfc1b37a252dd262d7ef6bc43827ea15538cca42f20bcf82",
+      "entityCount": 82,
+      "refCount": 405,
+      "staticValidation": "schema-and-config-only",
+      "rustCValidation": false,
+      "publicationVerified": false
+    },
+    "sources": [
+      [
+        "项目文档/契约/02.1-内容结构.schema.json",
+        "696f241dbdc21baadfc1b37a252dd262d7ef6bc43827ea15538cca42f20bcf82"
+      ],
+      [
+        "项目文档/契约/02.1-内容样例.json",
+        "0117b47ef6a0c9d9ea87b645a57ec401f9cad5002b4ee7ba7315ccdf5088e85c"
+      ],
+      [
+        "项目文档/契约/02.1-非法配置样例.json",
+        "4f064b2478a95043774fd7b282997f52ce17182667693b78b5c908e932d8160f"
+      ]
+    ],
+    "checks": [
+      {
+        "id": "valid.contract-fixture",
+        "result": "accepted"
+      },
+      {
+        "id": "invalid.missing-reference",
+        "result": "rejected",
+        "code": "CONTENT_REF_MISSING"
+      },
+      {
+        "id": "invalid.duplicate-id",
+        "result": "rejected",
+        "code": "CONTENT_ID_DUPLICATE"
+      },
+      {
+        "id": "invalid.reference-version",
+        "result": "rejected",
+        "code": "CONTENT_REF_VERSION"
+      },
+      {
+        "id": "invalid.reference-type",
+        "result": "rejected",
+        "code": "CONTENT_REF_TYPE"
+      },
+      {
+        "id": "invalid.reserved-language",
+        "result": "rejected",
+        "code": "CONTENT_LANGUAGE_RESERVED"
+      },
+      {
+        "id": "invalid.empty-required",
+        "result": "rejected",
+        "code": "CONTENT_REQUIRED_EMPTY"
+      },
+      {
+        "id": "invalid.owner-mismatch",
+        "result": "rejected",
+        "code": "CONTENT_RELATION_INVALID"
+      },
+      {
+        "id": "invalid.contract-version",
+        "result": "rejected",
+        "code": "CONTENT_CONTRACT_UNSUPPORTED"
+      },
+      {
+        "id": "invalid.input-domain",
+        "result": "rejected",
+        "code": "CONTENT_INPUT_INVALID"
+      },
+      {
+        "id": "invalid.input-index",
+        "result": "rejected",
+        "code": "CONTENT_INPUT_INVALID"
+      },
+      {
+        "id": "invalid.input-order",
+        "result": "rejected",
+        "code": "CONTENT_INPUT_INVALID"
+      },
+      {
+        "id": "invalid.input-empty-update",
+        "result": "rejected",
+        "code": "CONTENT_INPUT_INVALID"
+      },
+      {
+        "id": "invalid.binding-missing",
+        "result": "rejected",
+        "code": "CONTENT_BINDING_INVALID"
+      },
+      {
+        "id": "invalid.block-coverage",
+        "result": "rejected",
+        "code": "CONTENT_BLOCK_MAPPING_INVALID"
+      },
+      {
+        "id": "invalid.judge-rule",
+        "result": "rejected",
+        "code": "CONTENT_JUDGE_INVALID"
+      },
+      {
+        "id": "invalid.judge-tests",
+        "result": "rejected",
+        "code": "CONTENT_JUDGE_INVALID"
+      },
+      {
+        "id": "invalid.case-rule",
+        "result": "rejected",
+        "code": "CONTENT_CASE_INVALID"
+      },
+      {
+        "id": "invalid.reward-source",
+        "result": "rejected",
+        "code": "CONTENT_REWARD_INVALID"
+      },
+      {
+        "id": "invalid.learning-compatibility",
+        "result": "rejected",
+        "code": "CONTENT_LEARNING_COMPATIBILITY_INVALID"
+      },
+      {
+        "id": "invalid.prerequisite-cycle",
+        "result": "rejected",
+        "code": "CONTENT_PREREQUISITE_CYCLE"
+      },
+      {
+        "id": "invalid.unknown-field",
+        "result": "rejected",
+        "code": "CONTENT_SCHEMA_INVALID"
+      },
+      {
+        "id": "invalid.duplicate-list",
+        "result": "rejected",
+        "code": "CONTENT_LIST_DUPLICATE"
+      },
+      {
+        "id": "invalid.statement-as-expression",
+        "result": "rejected",
+        "code": "CONTENT_BLOCK_MAPPING_INVALID"
+      },
+      {
+        "id": "invalid.json-duplicate-key",
+        "result": "rejected",
+        "code": "CONTENT_JSON_DUPLICATE_KEY"
+      },
+      {
+        "id": "invalid.json-trailing-comma",
+        "result": "rejected",
+        "code": "CONTENT_JSON_INVALID"
+      }
+    ]
+  },
+  "wasm": {
+    "evidenceLevel": "engineering-build",
+    "interpreterReady": false,
+    "environment": {
+      "node": "v24.21.0",
+      "npm": "11.19.0",
+      "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+      "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+      "bindgen": "wasm-bindgen 0.2.129"
+    },
+    "memories": [
+      {
+        "minimum": 17,
+        "maximum": 2048,
+        "shared": false
+      }
+    ],
+    "features": [
+      "+bulk-memory",
+      "+bulk-memory-opt",
+      "+call-indirect-overlong",
+      "+multivalue",
+      "+mutable-globals",
+      "+nontrapping-fptoint",
+      "+reference-types",
+      "+sign-ext"
+    ],
+    "imports": [
+      {
+        "module": "./c_viz_wasm_bg.js",
+        "name": "__wbindgen_init_externref_table",
+        "kind": "function"
+      },
+      {
+        "module": "./c_viz_wasm_bg.js",
+        "name": "__wbindgen_generic_0000000000000001",
+        "kind": "function"
+      }
+    ],
+    "exports": [
+      {
+        "name": "memory",
+        "kind": "memory"
+      },
+      {
+        "name": "build_probe",
+        "kind": "function"
+      },
+      {
+        "name": "__abort_handler",
+        "kind": "global"
+      },
+      {
+        "name": "__instance_terminated",
+        "kind": "global"
+      },
+      {
+        "name": "__wbindgen_externrefs",
+        "kind": "table"
+      },
+      {
+        "name": "__externref_table_dealloc",
+        "kind": "function"
+      },
+      {
+        "name": "__wbindgen_free",
+        "kind": "function"
+      },
+      {
+        "name": "__wbindgen_start",
+        "kind": "function"
+      }
+    ],
+    "bytes": 35556,
+    "hashes": {
+      "package-lock.json": "1f20229c85a01249648dceb447bae286adfaeb94efbe575ad8e11188b41dc078",
+      "Cargo.lock": "4984880e9904d0fd39a4774eb03f6800f23e13ece5bf164e87746fc76bc52cf2",
+      "web/src/generated/c_viz_wasm.js": "050c8cf0c4b193105bdb5d6cb7b12494625d61d0eb47114419041c317400c053",
+      "web/src/generated/c_viz_wasm_bg.wasm": "62c6bf6c214d7f7904ab71bb57b4f7ca1a178cbcfde0bd18c515913c08a44a9a"
+    }
+  },
+  "artifacts": {
+    "evidenceLevel": "engineering-build",
+    "entries": [
+      {
+        "path": "web/dist/assets/CatalogPages-rnSZlUz3.js",
+        "bytes": 3062,
+        "gzipBytes": 1346,
+        "brotliBytes": 1064,
+        "sha256": "4917b3195f1516dd3dc6473caf5ba45e732f26f0f977a20233ae8bb820c5daed"
+      },
+      {
+        "path": "web/dist/assets/ContentSample-CNDKeSTJ.js",
+        "bytes": 48690,
+        "gzipBytes": 11603,
+        "brotliBytes": 10048,
+        "sha256": "76ab37420c1d8a87a66e3d5acab1e41c04aeddd3c8f0810d5081ef62226ce4f2"
+      },
+      {
+        "path": "web/dist/assets/c_viz_wasm_bg-DjijL53u.wasm",
+        "bytes": 35556,
+        "gzipBytes": 13621,
+        "brotliBytes": 11496,
+        "sha256": "62c6bf6c214d7f7904ab71bb57b4f7ca1a178cbcfde0bd18c515913c08a44a9a"
+      },
+      {
+        "path": "web/dist/assets/index-CVT65eQX.js",
+        "bytes": 275260,
+        "gzipBytes": 87065,
+        "brotliBytes": 74782,
+        "sha256": "eb5fc9815d03b6e03feaf0a4dd40f0dd1c050f76ca2b31a69fce703516be0c48"
+      },
+      {
+        "path": "web/dist/assets/index-uB6Znnda.css",
+        "bytes": 21120,
+        "gzipBytes": 5316,
+        "brotliBytes": 4608,
+        "sha256": "8d10c251b38b308b022d4efa38ce510e92de82461953d540908ec5cee01b567b"
+      },
+      {
+        "path": "web/dist/assets/LessonPage-DmGh29oK.js",
+        "bytes": 2068,
+        "gzipBytes": 1038,
+        "brotliBytes": 800,
+        "sha256": "ef9e15fc1d5dc15bec01ba1537b9c9477b47aee556db80ac60baaf9fd11c1674"
+      },
+      {
+        "path": "web/dist/assets/probe.worker-CXI4eXaZ.js",
+        "bytes": 2983,
+        "gzipBytes": 1403,
+        "brotliBytes": 1236,
+        "sha256": "7fe2ab77af8c13c24d82083f927cfd675c7371a7644ad71f606ab6566260c7e9"
+      },
+      {
+        "path": "web/dist/assets/SettingsPage-CZL39OGI.js",
+        "bytes": 3641,
+        "gzipBytes": 1605,
+        "brotliBytes": 1250,
+        "sha256": "c174465fd276760baa8d9d7497c705a3656e0cf91922209650e4fff12223d15f"
+      },
+      {
+        "path": "web/dist/assets/Workspaces-Bo_jvExw.js",
+        "bytes": 14917,
+        "gzipBytes": 5213,
+        "brotliBytes": 4318,
+        "sha256": "786b13b701b03c05e6c5d89bd2c16053d795eb47caa2060f3630a4a8add1ba95"
+      },
+      {
+        "path": "web/dist/content/sample/02.1-content-1.0.0.json",
+        "bytes": 49906,
+        "gzipBytes": 7408,
+        "brotliBytes": 6024,
+        "sha256": "0117b47ef6a0c9d9ea87b645a57ec401f9cad5002b4ee7ba7315ccdf5088e85c"
+      },
+      {
+        "path": "web/dist/content/sample/manifest.json",
+        "bytes": 495,
+        "gzipBytes": 308,
+        "brotliBytes": 269,
+        "sha256": "ef1a12ddfbb24ae46b73384a56d935edd5cfa6783a18f5c38f04264f63de7b88"
+      },
+      {
+        "path": "web/dist/index.html",
+        "bytes": 465,
+        "gzipBytes": 330,
+        "brotliBytes": 199,
+        "sha256": "13c28bf98e2ccf8da5712870ed8db5e6c846b2b6c0510b34ca2d404f4e552a32"
+      },
+      {
+        "path": ".artifacts/browser-dist/assets/c_viz_wasm_bg-DjijL53u.wasm",
+        "bytes": 35556,
+        "gzipBytes": 13621,
+        "brotliBytes": 11496,
+        "sha256": "62c6bf6c214d7f7904ab71bb57b4f7ca1a178cbcfde0bd18c515913c08a44a9a"
+      },
+      {
+        "path": ".artifacts/browser-dist/assets/index-DJJVDhux.js",
+        "bytes": 3591,
+        "gzipBytes": 1895,
+        "brotliBytes": 1574,
+        "sha256": "8754918c8981163b624d482cb7e81597dcded57bc192f58a28781f88d41cfb3b"
+      },
+      {
+        "path": ".artifacts/browser-dist/assets/probe.worker-CDdpF3JW.js",
+        "bytes": 3160,
+        "gzipBytes": 1552,
+        "brotliBytes": 1353,
+        "sha256": "94e7460cf27a7758769c6860823750b4375a183d41ad7de8988d48fa9d988e07"
+      },
+      {
+        "path": ".artifacts/browser-dist/index.html",
+        "bytes": 579,
+        "gzipBytes": 416,
+        "brotliBytes": 277,
+        "sha256": "7a0550664af9399995bb5bbae13f9f134d0cccd090f11233ef10efc0d0889e09"
+      }
+    ],
+    "gzipTotals": {
+      "web/dist/": 136256,
+      ".artifacts/browser-dist/": 17484
+    }
+  },
+  "screenshots": [
+    {
+      "path": ".artifacts/browser-test-output/integration-continuous-pub-ced82-cks-without-learning-writes-chrome/integrated-case-reference-and-probe.png",
+      "sha256": "0eafcde41b67ebadbce38348763ff78d4de494864f3c708803909f56df557a66"
+    },
+    {
+      "path": ".artifacts/browser-test-output/integration-continuous-pub-ced82-cks-without-learning-writes-chrome/integrated-empty-review.png",
+      "sha256": "8cdf684e3adecfda4c097489c6aea0056d78437f1a89201a8ddec2183ec9385a"
+    },
+    {
+      "path": ".artifacts/browser-test-output/integration-continuous-pub-ced82-cks-without-learning-writes-chrome/integrated-lesson-reference.png",
+      "sha256": "c88f257d3ca82228d0fce714b28aed89a8309b4a3bcc94da9eed28387cbf0438"
+    },
+    {
+      "path": ".artifacts/browser-test-output/integration-continuous-pub-ced82-cks-without-learning-writes-edge/integrated-case-reference-and-probe.png",
+      "sha256": "cce300133e5becba0d9d9144c8f1363210f11e2d7719b6aab7bfac9ac0a56f62"
+    },
+    {
+      "path": ".artifacts/browser-test-output/integration-continuous-pub-ced82-cks-without-learning-writes-edge/integrated-empty-review.png",
+      "sha256": "8cdf684e3adecfda4c097489c6aea0056d78437f1a89201a8ddec2183ec9385a"
+    },
+    {
+      "path": ".artifacts/browser-test-output/integration-continuous-pub-ced82-cks-without-learning-writes-edge/integrated-lesson-reference.png",
+      "sha256": "c88f257d3ca82228d0fce714b28aed89a8309b4a3bcc94da9eed28387cbf0438"
+    },
+    {
+      "path": ".artifacts/browser-test-output/integration-continuous-pub-ced82-cks-without-learning-writes-firefox-automation/integrated-case-reference-and-probe.png",
+      "sha256": "c5e60d2238b085f83cbc36f286bcabc88c33f9fbd4910f8e889b961a93941950"
+    },
+    {
+      "path": ".artifacts/browser-test-output/integration-continuous-pub-ced82-cks-without-learning-writes-firefox-automation/integrated-empty-review.png",
+      "sha256": "ab8865ad81b2ce04a95b90f72338008e16c1576f044e2cbe49e237648bbc1f9a"
+    },
+    {
+      "path": ".artifacts/browser-test-output/integration-continuous-pub-ced82-cks-without-learning-writes-firefox-automation/integrated-lesson-reference.png",
+      "sha256": "a2e55c229223364357ac810509e3f362a8cc5541ba1103ee500e68b15115e3ce"
+    },
+    {
+      "path": ".artifacts/03.4-startup-dev.png",
+      "sha256": "d700642db1b6848c7951f1be81fd4a042d6372c58cda121a26d1f5736160f3e9"
+    },
+    {
+      "path": ".artifacts/03.4-startup-preview.png",
+      "sha256": "946c4c05be55fb83b3927647334563674b1829a0349485756f1cb90a5e7255dd"
+    },
+    {
+      "path": ".artifacts/03.4-firefox-journey.png",
+      "sha256": "37b159be2a3362d625b88267aa8ae46f1df8e83ee39d6b947a2f3db71343f6b6"
+    }
+  ],
+  "staticPolicy": {
+    "scope": "local production-like QA HTTP service only",
+    "source": "scripts/serve-checks.mjs",
+    "jsonMime": "application/json; charset=utf-8",
+    "unhashedCache": "no-cache",
+    "hashedAssetsCache": "public, max-age=31536000, immutable",
+    "sameOrigin": true,
+    "generalUnsafeEvalAllowed": false,
+    "positiveRealWasmAndWorkerPathTested": true,
+    "allNegativeCspCasesTested": false,
+    "formalHostingVerified": false
+  },
+  "reviews": [
+    {
+      "reviewer": "baseline_audit",
+      "level": "read-only early scope/static server/startup review",
+      "found": [
+        "JSON MIME omission",
+        "unhashed manifest immutable cache",
+        "local CSP not previously measured",
+        "cleanup must survive browser close failure"
+      ],
+      "resolution": "registered root changes; final real checks passed"
+    },
+    {
+      "reviewer": "root",
+      "level": "final takeover and evidence/file/link/visual review",
+      "collaboratorsStoppedForUsageLimit": true
+    }
+  ],
+  "notTested": [
+    "fresh machine reinstall",
+    "full C/AST/binding/block/publishable review",
+    "real C interpreter / EXEC / JSON-INT / Step DSL / judge / player",
+    "complete backward program state",
+    "IndexedDB / learning events / rewards",
+    "all negative CSP cases",
+    "formal HTTPS/CDN/logging/CSP/performance matrix",
+    "all accessibility/mobile combinations"
+  ],
+  "phaseConclusion": {
+    "step03AllFourSubtasksAccepted": true,
+    "totalAccepted": 12,
+    "totalNotStarted": 76,
+    "nextTask": "04.1",
+    "nextTaskClaimed": false,
+    "phaseP0Accepted": false,
+    "phaseGate": "11.5"
+  }
+}

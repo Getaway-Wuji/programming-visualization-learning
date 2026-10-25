@@ -1,0 +1,120 @@
+.block-workspace {
+  min-width: 0;
+}
+.block-help {
+  margin: 0 0 0.75rem;
+  color: var(--text-muted, #536475);
+  font-size: 0.9rem;
+}
+.block-canvas {
+  height: 440px;
+  min-height: 320px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #b9c9cf;
+  border-radius: 0.65rem;
+  background: #f8fbfc;
+}
+.block-canvas-disabled {
+  opacity: 0.65;
+}
+.block-accessible {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #b9c9cf;
+  border-radius: 0.6rem;
+  background: #f7fafb;
+}
+.block-accessible summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+.block-edit-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+.block-workspace label {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+  font-size: 0.88rem;
+}
+.block-workspace select,
+.block-workspace input,
+.block-workspace textarea {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  color: #223647;
+  background: white;
+  border: 1px solid #9db1bb;
+  border-radius: 0.35rem;
+  padding: 0.45rem;
+  font: inherit;
+}
+.block-workspace input[type='checkbox'] {
+  width: auto;
+  justify-self: start;
+}
+.block-workspace button {
+  padding: 0.48rem 0.7rem;
+}
+.block-fields,
+.block-connect {
+  margin: 1rem 0 0;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid #c6d4d9;
+  border-radius: 0.45rem;
+}
+.block-fields legend,
+.block-connect legend {
+  padding: 0 0.3rem;
+  font-size: 0.9rem;
+}
+.block-fields p,
+.block-actions {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.block-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.block-notice {
+  min-height: 1.4em;
+  margin: 0.7rem 0 0;
+  color: #294f66;
+}
+.block-errors {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #fff4df;
+  color: #75410d;
+  border: 1px solid #d9ad63;
+  border-radius: 0.45rem;
+}
+.block-errors p {
+  margin-top: 0;
+}
+.block-workspace :focus-visible {
+  outline: 3px solid #2272aa;
+  outline-offset: 2px;
+}
+@media (max-width: 850px) {
+  .block-edit-grid,
+  .block-fields,
+  .block-connect {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .block-canvas {
+    height: 400px;
+  }
+}

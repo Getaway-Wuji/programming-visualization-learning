@@ -1,0 +1,1968 @@
+{
+  "fixtureVersion": "1.0.0",
+  "origin": "synthetic-contract-fixture",
+  "note": "Authored error/prefix/null-trace fixtures, not actual C execution or Worker failure evidence.",
+  "fixtures": [
+    {
+      "id": "fixture.trace.uninitialized",
+      "request": {
+        "kind": "execute",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-4",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-4",
+          "runId": "fixture-run-4",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "mode": "contract-probe",
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "source": {
+          "text": "int main(void) {\n    int x = x;\n    return 0;\n}\n",
+          "blockMap": [],
+          "bindingMap": []
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "judge": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "remainingMs": 1000
+      },
+      "result": {
+        "kind": "result",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-4",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-4",
+          "runId": "fixture-run-4",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "producer": "fixture",
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 47
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 15,
+              "end": 47
+            }
+          },
+          {
+            "nodeId": "n3",
+            "kind": "declaration",
+            "parentId": "n2",
+            "byteRange": {
+              "start": 21,
+              "end": 31
+            }
+          },
+          {
+            "nodeId": "n4",
+            "kind": "expression",
+            "parentId": "n3",
+            "byteRange": {
+              "start": 29,
+              "end": 30
+            }
+          },
+          {
+            "nodeId": "n5",
+            "kind": "return",
+            "parentId": "n2",
+            "byteRange": {
+              "start": 36,
+              "end": 45
+            }
+          },
+          {
+            "nodeId": "n6",
+            "kind": "expression",
+            "parentId": "n5",
+            "byteRange": {
+              "start": 43,
+              "end": 44
+            }
+          }
+        ],
+        "resolvedBindings": [],
+        "trace": {
+          "dslVersion": "1.0.0",
+          "completeness": "prefix",
+          "initialState": {
+            "frames": [],
+            "scopes": [],
+            "objects": [],
+            "control": {
+              "phase": "ready",
+              "nextNodeId": "n1",
+              "activeFrameId": null,
+              "returnValue": null,
+              "flowStack": []
+            },
+            "allocator": {
+              "nextAddress": 4096,
+              "liveBytes": 0,
+              "nextObject": 1,
+              "nextScope": 1,
+              "nextFrame": 1
+            },
+            "output": "",
+            "counters": {
+              "comparisons": 0,
+              "scalarWrites": 0,
+              "arrayWrites": 0,
+              "swaps": 0
+            }
+          },
+          "steps": [
+            {
+              "seq": 1,
+              "kind": "program.enter",
+              "location": {
+                "kind": "source",
+                "nodeId": "n1",
+                "edge": "start"
+              },
+              "changes": [
+                {
+                  "op": "record",
+                  "table": "frames",
+                  "id": "f1",
+                  "index": 0,
+                  "before": null,
+                  "after": {
+                    "id": "f1",
+                    "functionNodeId": "n1",
+                    "parentFrameId": null,
+                    "scopeIds": [
+                      "s1"
+                    ]
+                  }
+                },
+                {
+                  "op": "record",
+                  "table": "scopes",
+                  "id": "s1",
+                  "index": 0,
+                  "before": null,
+                  "after": {
+                    "id": "s1",
+                    "frameId": "f1",
+                    "parentScopeId": null,
+                    "nodeId": "n2",
+                    "kind": "main",
+                    "objectIds": []
+                  }
+                },
+                {
+                  "op": "allocator",
+                  "before": {
+                    "nextAddress": 4096,
+                    "liveBytes": 0,
+                    "nextObject": 1,
+                    "nextScope": 1,
+                    "nextFrame": 1
+                  },
+                  "after": {
+                    "nextAddress": 4096,
+                    "liveBytes": 0,
+                    "nextObject": 1,
+                    "nextScope": 2,
+                    "nextFrame": 2
+                  }
+                },
+                {
+                  "op": "control",
+                  "before": {
+                    "phase": "ready",
+                    "nextNodeId": "n1",
+                    "activeFrameId": null,
+                    "returnValue": null,
+                    "flowStack": []
+                  },
+                  "after": {
+                    "phase": "running",
+                    "nextNodeId": "n3",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  }
+                }
+              ],
+              "observations": []
+            },
+            {
+              "seq": 2,
+              "kind": "object.declare",
+              "location": {
+                "kind": "source",
+                "nodeId": "n3",
+                "edge": "whole"
+              },
+              "changes": [
+                {
+                  "op": "record",
+                  "table": "objects",
+                  "id": "o1",
+                  "index": 0,
+                  "before": null,
+                  "after": {
+                    "id": "o1",
+                    "declarationNodeId": "n3",
+                    "frameId": "f1",
+                    "scopeId": "s1",
+                    "name": "x",
+                    "kind": "int",
+                    "length": 1,
+                    "baseAddress": 4096,
+                    "defaultValue": null,
+                    "cells": []
+                  }
+                },
+                {
+                  "op": "record",
+                  "table": "scopes",
+                  "id": "s1",
+                  "index": 0,
+                  "before": {
+                    "id": "s1",
+                    "frameId": "f1",
+                    "parentScopeId": null,
+                    "nodeId": "n2",
+                    "kind": "main",
+                    "objectIds": []
+                  },
+                  "after": {
+                    "id": "s1",
+                    "frameId": "f1",
+                    "parentScopeId": null,
+                    "nodeId": "n2",
+                    "kind": "main",
+                    "objectIds": [
+                      "o1"
+                    ]
+                  }
+                },
+                {
+                  "op": "allocator",
+                  "before": {
+                    "nextAddress": 4096,
+                    "liveBytes": 0,
+                    "nextObject": 1,
+                    "nextScope": 2,
+                    "nextFrame": 2
+                  },
+                  "after": {
+                    "nextAddress": 4100,
+                    "liveBytes": 4,
+                    "nextObject": 2,
+                    "nextScope": 2,
+                    "nextFrame": 2
+                  }
+                },
+                {
+                  "op": "control",
+                  "before": {
+                    "phase": "running",
+                    "nextNodeId": "n3",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  },
+                  "after": {
+                    "phase": "running",
+                    "nextNodeId": "n3",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  }
+                }
+              ],
+              "observations": []
+            }
+          ],
+          "checkpoints": [
+            {
+              "cursor": 0,
+              "state": {
+                "frames": [],
+                "scopes": [],
+                "objects": [],
+                "control": {
+                  "phase": "ready",
+                  "nextNodeId": "n1",
+                  "activeFrameId": null,
+                  "returnValue": null,
+                  "flowStack": []
+                },
+                "allocator": {
+                  "nextAddress": 4096,
+                  "liveBytes": 0,
+                  "nextObject": 1,
+                  "nextScope": 1,
+                  "nextFrame": 1
+                },
+                "output": "",
+                "counters": {
+                  "comparisons": 0,
+                  "scalarWrites": 0,
+                  "arrayWrites": 0,
+                  "swaps": 0
+                }
+              }
+            }
+          ]
+        },
+        "terminal": {
+          "status": "program-error",
+          "exitCode": null,
+          "cursor": 2,
+          "location": {
+            "kind": "source",
+            "nodeId": "n4",
+            "edge": "whole"
+          },
+          "diagnostics": [
+            {
+              "code": "E_UNINITIALIZED",
+              "severity": "error",
+              "origin": "rust",
+              "stage": "execute",
+              "location": {
+                "kind": "source",
+                "nodeId": "n4",
+                "edge": "whole"
+              },
+              "details": {
+                "relatedNodeIds": [
+                  "n3"
+                ]
+              }
+            }
+          ]
+        },
+        "judgeResult": null,
+        "stats": null
+      },
+      "expected": {
+        "stepCount": 2,
+        "output": "",
+        "exitCode": null,
+        "cursorAssertions": [
+          {
+            "cursor": 2,
+            "objectId": "o1",
+            "values": [
+              null
+            ],
+            "objectCount": 1
+          }
+        ],
+        "roundTrip": true
+      }
+    },
+    {
+      "id": "fixture.trace.divide-zero",
+      "request": {
+        "kind": "execute",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-5",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-5",
+          "runId": "fixture-run-5",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "mode": "contract-probe",
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "source": {
+          "text": "int main(void) {\n    int x = 5;\n    x = 1 / 0;\n    return 0;\n}\n",
+          "blockMap": [],
+          "bindingMap": []
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "judge": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "remainingMs": 1000
+      },
+      "result": {
+        "kind": "result",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-5",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-5",
+          "runId": "fixture-run-5",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "producer": "fixture",
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 62
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 15,
+              "end": 62
+            }
+          },
+          {
+            "nodeId": "n3",
+            "kind": "declaration",
+            "parentId": "n2",
+            "byteRange": {
+              "start": 21,
+              "end": 31
+            }
+          },
+          {
+            "nodeId": "n4",
+            "kind": "expression",
+            "parentId": "n3",
+            "byteRange": {
+              "start": 29,
+              "end": 30
+            }
+          },
+          {
+            "nodeId": "n5",
+            "kind": "assignment",
+            "parentId": "n2",
+            "byteRange": {
+              "start": 36,
+              "end": 46
+            }
+          },
+          {
+            "nodeId": "n6",
+            "kind": "expression",
+            "parentId": "n5",
+            "byteRange": {
+              "start": 40,
+              "end": 45
+            }
+          },
+          {
+            "nodeId": "n7",
+            "kind": "expression",
+            "parentId": "n6",
+            "byteRange": {
+              "start": 40,
+              "end": 41
+            }
+          },
+          {
+            "nodeId": "n8",
+            "kind": "expression",
+            "parentId": "n6",
+            "byteRange": {
+              "start": 44,
+              "end": 45
+            }
+          },
+          {
+            "nodeId": "n9",
+            "kind": "return",
+            "parentId": "n2",
+            "byteRange": {
+              "start": 51,
+              "end": 60
+            }
+          },
+          {
+            "nodeId": "n10",
+            "kind": "expression",
+            "parentId": "n9",
+            "byteRange": {
+              "start": 58,
+              "end": 59
+            }
+          }
+        ],
+        "resolvedBindings": [],
+        "trace": {
+          "dslVersion": "1.0.0",
+          "completeness": "prefix",
+          "initialState": {
+            "frames": [],
+            "scopes": [],
+            "objects": [],
+            "control": {
+              "phase": "ready",
+              "nextNodeId": "n1",
+              "activeFrameId": null,
+              "returnValue": null,
+              "flowStack": []
+            },
+            "allocator": {
+              "nextAddress": 4096,
+              "liveBytes": 0,
+              "nextObject": 1,
+              "nextScope": 1,
+              "nextFrame": 1
+            },
+            "output": "",
+            "counters": {
+              "comparisons": 0,
+              "scalarWrites": 0,
+              "arrayWrites": 0,
+              "swaps": 0
+            }
+          },
+          "steps": [
+            {
+              "seq": 1,
+              "kind": "program.enter",
+              "location": {
+                "kind": "source",
+                "nodeId": "n1",
+                "edge": "start"
+              },
+              "changes": [
+                {
+                  "op": "record",
+                  "table": "frames",
+                  "id": "f1",
+                  "index": 0,
+                  "before": null,
+                  "after": {
+                    "id": "f1",
+                    "functionNodeId": "n1",
+                    "parentFrameId": null,
+                    "scopeIds": [
+                      "s1"
+                    ]
+                  }
+                },
+                {
+                  "op": "record",
+                  "table": "scopes",
+                  "id": "s1",
+                  "index": 0,
+                  "before": null,
+                  "after": {
+                    "id": "s1",
+                    "frameId": "f1",
+                    "parentScopeId": null,
+                    "nodeId": "n2",
+                    "kind": "main",
+                    "objectIds": []
+                  }
+                },
+                {
+                  "op": "allocator",
+                  "before": {
+                    "nextAddress": 4096,
+                    "liveBytes": 0,
+                    "nextObject": 1,
+                    "nextScope": 1,
+                    "nextFrame": 1
+                  },
+                  "after": {
+                    "nextAddress": 4096,
+                    "liveBytes": 0,
+                    "nextObject": 1,
+                    "nextScope": 2,
+                    "nextFrame": 2
+                  }
+                },
+                {
+                  "op": "control",
+                  "before": {
+                    "phase": "ready",
+                    "nextNodeId": "n1",
+                    "activeFrameId": null,
+                    "returnValue": null,
+                    "flowStack": []
+                  },
+                  "after": {
+                    "phase": "running",
+                    "nextNodeId": "n3",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  }
+                }
+              ],
+              "observations": []
+            },
+            {
+              "seq": 2,
+              "kind": "object.declare",
+              "location": {
+                "kind": "source",
+                "nodeId": "n3",
+                "edge": "whole"
+              },
+              "changes": [
+                {
+                  "op": "record",
+                  "table": "objects",
+                  "id": "o1",
+                  "index": 0,
+                  "before": null,
+                  "after": {
+                    "id": "o1",
+                    "declarationNodeId": "n3",
+                    "frameId": "f1",
+                    "scopeId": "s1",
+                    "name": "x",
+                    "kind": "int",
+                    "length": 1,
+                    "baseAddress": 4096,
+                    "defaultValue": null,
+                    "cells": []
+                  }
+                },
+                {
+                  "op": "record",
+                  "table": "scopes",
+                  "id": "s1",
+                  "index": 0,
+                  "before": {
+                    "id": "s1",
+                    "frameId": "f1",
+                    "parentScopeId": null,
+                    "nodeId": "n2",
+                    "kind": "main",
+                    "objectIds": []
+                  },
+                  "after": {
+                    "id": "s1",
+                    "frameId": "f1",
+                    "parentScopeId": null,
+                    "nodeId": "n2",
+                    "kind": "main",
+                    "objectIds": [
+                      "o1"
+                    ]
+                  }
+                },
+                {
+                  "op": "allocator",
+                  "before": {
+                    "nextAddress": 4096,
+                    "liveBytes": 0,
+                    "nextObject": 1,
+                    "nextScope": 2,
+                    "nextFrame": 2
+                  },
+                  "after": {
+                    "nextAddress": 4100,
+                    "liveBytes": 4,
+                    "nextObject": 2,
+                    "nextScope": 2,
+                    "nextFrame": 2
+                  }
+                },
+                {
+                  "op": "control",
+                  "before": {
+                    "phase": "running",
+                    "nextNodeId": "n3",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  },
+                  "after": {
+                    "phase": "running",
+                    "nextNodeId": "n3",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  }
+                }
+              ],
+              "observations": []
+            },
+            {
+              "seq": 3,
+              "kind": "value.initialize",
+              "location": {
+                "kind": "source",
+                "nodeId": "n3",
+                "edge": "whole"
+              },
+              "changes": [
+                {
+                  "op": "cell",
+                  "objectId": "o1",
+                  "index": 0,
+                  "before": null,
+                  "after": 5
+                },
+                {
+                  "op": "counters",
+                  "before": {
+                    "comparisons": 0,
+                    "scalarWrites": 0,
+                    "arrayWrites": 0,
+                    "swaps": 0
+                  },
+                  "after": {
+                    "comparisons": 0,
+                    "scalarWrites": 1,
+                    "arrayWrites": 0,
+                    "swaps": 0
+                  }
+                },
+                {
+                  "op": "control",
+                  "before": {
+                    "phase": "running",
+                    "nextNodeId": "n3",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  },
+                  "after": {
+                    "phase": "running",
+                    "nextNodeId": "n5",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  }
+                }
+              ],
+              "observations": []
+            }
+          ],
+          "checkpoints": [
+            {
+              "cursor": 0,
+              "state": {
+                "frames": [],
+                "scopes": [],
+                "objects": [],
+                "control": {
+                  "phase": "ready",
+                  "nextNodeId": "n1",
+                  "activeFrameId": null,
+                  "returnValue": null,
+                  "flowStack": []
+                },
+                "allocator": {
+                  "nextAddress": 4096,
+                  "liveBytes": 0,
+                  "nextObject": 1,
+                  "nextScope": 1,
+                  "nextFrame": 1
+                },
+                "output": "",
+                "counters": {
+                  "comparisons": 0,
+                  "scalarWrites": 0,
+                  "arrayWrites": 0,
+                  "swaps": 0
+                }
+              }
+            }
+          ]
+        },
+        "terminal": {
+          "status": "program-error",
+          "exitCode": null,
+          "cursor": 3,
+          "location": {
+            "kind": "source",
+            "nodeId": "n6",
+            "edge": "whole"
+          },
+          "diagnostics": [
+            {
+              "code": "E_DIV_ZERO",
+              "severity": "error",
+              "origin": "rust",
+              "stage": "execute",
+              "location": {
+                "kind": "source",
+                "nodeId": "n6",
+                "edge": "whole"
+              },
+              "details": {
+                "actual": 0
+              }
+            }
+          ]
+        },
+        "judgeResult": null,
+        "stats": null
+      },
+      "expected": {
+        "stepCount": 3,
+        "output": "",
+        "exitCode": null,
+        "cursorAssertions": [
+          {
+            "cursor": 3,
+            "objectId": "o1",
+            "values": [
+              5
+            ]
+          }
+        ],
+        "roundTrip": true
+      }
+    },
+    {
+      "id": "fixture.trace.output-limit",
+      "request": {
+        "kind": "execute",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-6",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-6",
+          "runId": "fixture-run-6",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "mode": "contract-probe",
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "source": {
+          "text": "int main(void) {\n    printf(\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\");\n    printf(\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\");\n    printf(\"x\");\n    return 0;\n}\n",
+          "blockMap": [],
+          "bindingMap": []
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "judge": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "remainingMs": 1000
+      },
+      "result": {
+        "kind": "result",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-6",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-6",
+          "runId": "fixture-run-6",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "producer": "fixture",
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 16465
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 15,
+              "end": 16465
+            }
+          },
+          {
+            "nodeId": "n3",
+            "kind": "output",
+            "parentId": "n2",
+            "byteRange": {
+              "start": 21,
+              "end": 8224
+            }
+          },
+          {
+            "nodeId": "n4",
+            "kind": "output",
+            "parentId": "n2",
+            "byteRange": {
+              "start": 8229,
+              "end": 16432
+            }
+          },
+          {
+            "nodeId": "n5",
+            "kind": "output",
+            "parentId": "n2",
+            "byteRange": {
+              "start": 16437,
+              "end": 16449
+            }
+          },
+          {
+            "nodeId": "n6",
+            "kind": "return",
+            "parentId": "n2",
+            "byteRange": {
+              "start": 16454,
+              "end": 16463
+            }
+          },
+          {
+            "nodeId": "n7",
+            "kind": "expression",
+            "parentId": "n6",
+            "byteRange": {
+              "start": 16461,
+              "end": 16462
+            }
+          }
+        ],
+        "resolvedBindings": [],
+        "trace": {
+          "dslVersion": "1.0.0",
+          "completeness": "prefix",
+          "initialState": {
+            "frames": [],
+            "scopes": [],
+            "objects": [],
+            "control": {
+              "phase": "ready",
+              "nextNodeId": "n1",
+              "activeFrameId": null,
+              "returnValue": null,
+              "flowStack": []
+            },
+            "allocator": {
+              "nextAddress": 4096,
+              "liveBytes": 0,
+              "nextObject": 1,
+              "nextScope": 1,
+              "nextFrame": 1
+            },
+            "output": "",
+            "counters": {
+              "comparisons": 0,
+              "scalarWrites": 0,
+              "arrayWrites": 0,
+              "swaps": 0
+            }
+          },
+          "steps": [
+            {
+              "seq": 1,
+              "kind": "program.enter",
+              "location": {
+                "kind": "source",
+                "nodeId": "n1",
+                "edge": "start"
+              },
+              "changes": [
+                {
+                  "op": "record",
+                  "table": "frames",
+                  "id": "f1",
+                  "index": 0,
+                  "before": null,
+                  "after": {
+                    "id": "f1",
+                    "functionNodeId": "n1",
+                    "parentFrameId": null,
+                    "scopeIds": [
+                      "s1"
+                    ]
+                  }
+                },
+                {
+                  "op": "record",
+                  "table": "scopes",
+                  "id": "s1",
+                  "index": 0,
+                  "before": null,
+                  "after": {
+                    "id": "s1",
+                    "frameId": "f1",
+                    "parentScopeId": null,
+                    "nodeId": "n2",
+                    "kind": "main",
+                    "objectIds": []
+                  }
+                },
+                {
+                  "op": "allocator",
+                  "before": {
+                    "nextAddress": 4096,
+                    "liveBytes": 0,
+                    "nextObject": 1,
+                    "nextScope": 1,
+                    "nextFrame": 1
+                  },
+                  "after": {
+                    "nextAddress": 4096,
+                    "liveBytes": 0,
+                    "nextObject": 1,
+                    "nextScope": 2,
+                    "nextFrame": 2
+                  }
+                },
+                {
+                  "op": "control",
+                  "before": {
+                    "phase": "ready",
+                    "nextNodeId": "n1",
+                    "activeFrameId": null,
+                    "returnValue": null,
+                    "flowStack": []
+                  },
+                  "after": {
+                    "phase": "running",
+                    "nextNodeId": "n3",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  }
+                }
+              ],
+              "observations": []
+            },
+            {
+              "seq": 2,
+              "kind": "output.append",
+              "location": {
+                "kind": "source",
+                "nodeId": "n3",
+                "edge": "whole"
+              },
+              "changes": [
+                {
+                  "op": "output",
+                  "beforeBytes": 0,
+                  "afterBytes": 8192,
+                  "append": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                },
+                {
+                  "op": "control",
+                  "before": {
+                    "phase": "running",
+                    "nextNodeId": "n3",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  },
+                  "after": {
+                    "phase": "running",
+                    "nextNodeId": "n4",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  }
+                }
+              ],
+              "observations": []
+            },
+            {
+              "seq": 3,
+              "kind": "output.append",
+              "location": {
+                "kind": "source",
+                "nodeId": "n4",
+                "edge": "whole"
+              },
+              "changes": [
+                {
+                  "op": "output",
+                  "beforeBytes": 8192,
+                  "afterBytes": 16384,
+                  "append": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                },
+                {
+                  "op": "control",
+                  "before": {
+                    "phase": "running",
+                    "nextNodeId": "n4",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  },
+                  "after": {
+                    "phase": "running",
+                    "nextNodeId": "n5",
+                    "activeFrameId": "f1",
+                    "returnValue": null,
+                    "flowStack": [
+                      {
+                        "nodeId": "n2",
+                        "stage": "block",
+                        "iteration": 0
+                      }
+                    ]
+                  }
+                }
+              ],
+              "observations": []
+            }
+          ],
+          "checkpoints": [
+            {
+              "cursor": 0,
+              "state": {
+                "frames": [],
+                "scopes": [],
+                "objects": [],
+                "control": {
+                  "phase": "ready",
+                  "nextNodeId": "n1",
+                  "activeFrameId": null,
+                  "returnValue": null,
+                  "flowStack": []
+                },
+                "allocator": {
+                  "nextAddress": 4096,
+                  "liveBytes": 0,
+                  "nextObject": 1,
+                  "nextScope": 1,
+                  "nextFrame": 1
+                },
+                "output": "",
+                "counters": {
+                  "comparisons": 0,
+                  "scalarWrites": 0,
+                  "arrayWrites": 0,
+                  "swaps": 0
+                }
+              }
+            }
+          ]
+        },
+        "terminal": {
+          "status": "resource-limit",
+          "exitCode": null,
+          "cursor": 3,
+          "location": {
+            "kind": "source",
+            "nodeId": "n5",
+            "edge": "whole"
+          },
+          "diagnostics": [
+            {
+              "code": "E_OUTPUT_LIMIT",
+              "severity": "error",
+              "origin": "rust",
+              "stage": "execute",
+              "location": {
+                "kind": "source",
+                "nodeId": "n5",
+                "edge": "whole"
+              },
+              "details": {
+                "dimension": "outputBytes",
+                "limit": 16384,
+                "used": 16384,
+                "attempted": 16385
+              }
+            }
+          ]
+        },
+        "judgeResult": null,
+        "stats": null
+      },
+      "expected": {
+        "stepCount": 3,
+        "outputBytes": 16384,
+        "exitCode": null,
+        "cursorAssertions": [
+          {
+            "cursor": 3,
+            "outputBytes": 16384
+          }
+        ],
+        "roundTrip": true
+      }
+    },
+    {
+      "id": "fixture.trace.cancelled",
+      "request": {
+        "kind": "execute",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-7",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-7",
+          "runId": "fixture-run-7",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "mode": "contract-probe",
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "source": {
+          "text": "int main(void) { return 0; }\n",
+          "blockMap": [],
+          "bindingMap": []
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "judge": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "remainingMs": 1000
+      },
+      "result": {
+        "kind": "result",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-7",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-7",
+          "runId": "fixture-run-7",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "producer": "fixture",
+        "nodeMap": [],
+        "resolvedBindings": [],
+        "trace": null,
+        "terminal": {
+          "status": "cancelled",
+          "exitCode": null,
+          "cursor": null,
+          "location": {
+            "kind": "synthetic",
+            "reason": "adapter-cancel"
+          },
+          "diagnostics": [
+            {
+              "code": "E_CANCELLED",
+              "severity": "error",
+              "origin": "adapter",
+              "stage": "execute",
+              "location": {
+                "kind": "synthetic",
+                "reason": "adapter-cancel"
+              },
+              "details": {}
+            }
+          ]
+        },
+        "judgeResult": null,
+        "stats": null
+      },
+      "expected": {
+        "traceAvailable": false,
+        "exitCode": null,
+        "terminalStatus": "cancelled"
+      }
+    },
+    {
+      "id": "fixture.trace.module-failure",
+      "request": {
+        "kind": "execute",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-8",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-8",
+          "runId": "fixture-run-8",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "mode": "contract-probe",
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "source": {
+          "text": "int main(void) { return 0; }\n",
+          "blockMap": [],
+          "bindingMap": []
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "judge": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "remainingMs": 1000
+      },
+      "result": {
+        "kind": "result",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-8",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-8",
+          "runId": "fixture-run-8",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "producer": "fixture",
+        "nodeMap": [],
+        "resolvedBindings": [],
+        "trace": null,
+        "terminal": {
+          "status": "infrastructure-failure",
+          "exitCode": null,
+          "cursor": null,
+          "location": {
+            "kind": "synthetic",
+            "reason": "module-load"
+          },
+          "diagnostics": [
+            {
+              "code": "E_MODULE_LOAD",
+              "severity": "error",
+              "origin": "adapter",
+              "stage": "load",
+              "location": {
+                "kind": "synthetic",
+                "reason": "module-load"
+              },
+              "details": {}
+            }
+          ]
+        },
+        "judgeResult": null,
+        "stats": null
+      },
+      "expected": {
+        "traceAvailable": false,
+        "exitCode": null,
+        "terminalStatus": "infrastructure-failure"
+      }
+    },
+    {
+      "id": "fixture.trace.deadline",
+      "request": {
+        "kind": "execute",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-9",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-9",
+          "runId": "fixture-run-9",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "mode": "contract-probe",
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "source": {
+          "text": "int main(void) { return 0; }\n",
+          "blockMap": [],
+          "bindingMap": []
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "judge": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "remainingMs": 1000
+      },
+      "result": {
+        "kind": "result",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-9",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-9",
+          "runId": "fixture-run-9",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "producer": "fixture",
+        "nodeMap": [],
+        "resolvedBindings": [],
+        "trace": null,
+        "terminal": {
+          "status": "resource-limit",
+          "exitCode": null,
+          "cursor": null,
+          "location": {
+            "kind": "synthetic",
+            "reason": "adapter-deadline"
+          },
+          "diagnostics": [
+            {
+              "code": "E_DEADLINE",
+              "severity": "error",
+              "origin": "adapter",
+              "stage": "receive",
+              "location": {
+                "kind": "synthetic",
+                "reason": "adapter-deadline"
+              },
+              "details": {
+                "dimension": "deadline",
+                "limit": 1000,
+                "used": 1000,
+                "attempted": 1000
+              }
+            }
+          ]
+        },
+        "judgeResult": null,
+        "stats": null
+      },
+      "expected": {
+        "traceAvailable": false,
+        "exitCode": null,
+        "terminalStatus": "resource-limit"
+      }
+    },
+    {
+      "id": "fixture.trace.parse-failure",
+      "request": {
+        "kind": "execute",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-12",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-12",
+          "runId": "fixture-run-12",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "mode": "contract-probe",
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "source": {
+          "text": "int main(void) { int x = ; }\n",
+          "blockMap": [],
+          "bindingMap": []
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "judge": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "remainingMs": 1000
+      },
+      "result": {
+        "kind": "result",
+        "protocolVersion": "1.0.0",
+        "traceVersion": "1.0.0",
+        "diagnosticVersion": "1.0.0",
+        "judgeVersion": "1.0.0",
+        "encodingVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture-context-12",
+          "contextRevision": 1,
+          "submissionId": "fixture-submission-12",
+          "runId": "fixture-run-12",
+          "sourceRevision": 1,
+          "testCaseKey": null
+        },
+        "engineRef": {
+          "id": "engine.c.p0",
+          "version": "1.0.0",
+          "buildId": "contract-fixture"
+        },
+        "packageRef": {
+          "id": "content.c.p0",
+          "version": "1.0.0"
+        },
+        "languageRef": {
+          "id": "lang.c",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.c.p0",
+          "version": "1.0.0"
+        },
+        "programRef": null,
+        "subjectRef": null,
+        "learningRevision": null,
+        "budgetRef": {
+          "id": "budget.p0",
+          "version": "1.0.0"
+        },
+        "producer": "fixture",
+        "nodeMap": [],
+        "resolvedBindings": [],
+        "trace": null,
+        "terminal": {
+          "status": "program-error",
+          "exitCode": null,
+          "cursor": null,
+          "location": {
+            "kind": "source",
+            "byteRange": {
+              "start": 25,
+              "end": 26
+            }
+          },
+          "diagnostics": [
+            {
+              "code": "E_PARSE_INVALID",
+              "severity": "error",
+              "origin": "rust",
+              "stage": "parse",
+              "location": {
+                "kind": "source",
+                "byteRange": {
+                  "start": 25,
+                  "end": 26
+                }
+              },
+              "details": {}
+            }
+          ]
+        },
+        "judgeResult": null,
+        "stats": null
+      },
+      "expected": {
+        "traceAvailable": false,
+        "exitCode": null,
+        "terminalStatus": "program-error"
+      }
+    }
+  ]
+}
+

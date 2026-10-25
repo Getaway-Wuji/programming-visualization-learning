@@ -1,0 +1,30 @@
+{
+  "caseId": "case.c.array-traversal",
+  "route": "#/visualize/case.c.array-traversal",
+  "displayedSource": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {-2, 5, 5, 0};\n    int sum = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        sum = sum + values[i];\n    }\n    printf(\"%d\\n\", sum);\n    sum = values[n];\n    return 0;\n}\n",
+  "inputValues": {
+    "values": [
+      -2,
+      5,
+      5,
+      0
+    ]
+  },
+  "draft": {
+    "values": "-2, 5, 5, 0"
+  },
+  "stdout": "8\n",
+  "status": "program-error",
+  "terminalText": "程序发生错误",
+  "stepsText": "有效轨迹：33 步（未完成的有效前缀）",
+  "stepCount": 33,
+  "diagnosticCodes": [
+    "E_INDEX_BOUNDS"
+  ],
+  "diagnosticText": [
+    "E_INDEX_BOUNDS · 阶段：execute"
+  ],
+  "readOnly": true,
+  "runId": "c0660a7b-c9d1-4c05-ae32-ca116fe755db",
+  "submissionId": "79c01e51-c02f-4ea8-a231-9a8f16867731"
+}
