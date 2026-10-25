@@ -1,0 +1,130 @@
+{
+  "releaseVersion": "1.0.8",
+  "library": "blockly",
+  "libraryVersion": "13.4.0",
+  "acceptanceGate": "10.3-real-blockly-rust-playback",
+  "reviewedAtUtc": "2026-10-25T16:41:47.590Z",
+  "blockTypes": [
+    "cv_main",
+    "cv_integer",
+    "cv_declare",
+    "cv_variable",
+    "cv_assign",
+    "cv_unary",
+    "cv_arithmetic",
+    "cv_compare",
+    "cv_logic",
+    "cv_if",
+    "cv_while",
+    "cv_for",
+    "cv_break",
+    "cv_continue",
+    "cv_array_declare",
+    "cv_array_read",
+    "cv_array_write",
+    "cv_print",
+    "cv_return",
+    "cv_scope"
+  ],
+  "files": [
+    {
+      "path": "web/src/blocks/model.ts",
+      "sha256": "aa167809c0634cd1518aa0d08269465b202db103d4b792f6996caadc604ac6f1"
+    },
+    {
+      "path": "web/src/blocks/generator.ts",
+      "sha256": "3cf82571678602e1a416f40a37351be4d1d4c3027b5e844f71e37786ef52fec6"
+    },
+    {
+      "path": "web/src/blocks/starters.ts",
+      "sha256": "a76bb0ffae4d4f24ee84f64c52f3899652a3d1d0d7f0f897d76fd4530c0ab4f7"
+    },
+    {
+      "path": "web/src/blocks/definitions.ts",
+      "sha256": "e93d78669f2874314a09a50f2e26d0febd796a63bde2a9bd3215a995d956d17f"
+    },
+    {
+      "path": "web/src/blocks/workspace.ts",
+      "sha256": "82bfda3a93d953aeb9dfc957c3672b29e4a5ee00af8a32eee42b9700b0d95ad3"
+    },
+    {
+      "path": "web/src/blocks/BlockWorkspace.tsx",
+      "sha256": "a6e96318195f9c62c461d70968968f0a7a11a2a2f9931149663afb752be6a754"
+    },
+    {
+      "path": "web/src/blocks/blocks.css",
+      "sha256": "f4b5b9f48e2dacf483115981e9298cf5be39208fdda90bf6b1d1bdf07908357e"
+    },
+    {
+      "path": "web/src/practice/session.ts",
+      "sha256": "5233eb27dbaab0b642600150cb891b4e95ff66f3fdd2c53ef9ae87aab9359626"
+    },
+    {
+      "path": "web/src/practice/react.tsx",
+      "sha256": "74a25783971f72a8be9cf360238b38a88eb60f099b27f09d874e9e4842c93675"
+    },
+    {
+      "path": "web/src/practice/block-location.ts",
+      "sha256": "92e8683658baee9190fe1b235cabc8f05f755aa70fe99aa59d50fbc0b3c75eec"
+    },
+    {
+      "path": "web/src/components/PracticeExecution.tsx",
+      "sha256": "46bda2cd4522039bf36fce4666eb37aec321cceb8f38113ef2fdbf23b9c242f4"
+    },
+    {
+      "path": "web/src/styles.css",
+      "sha256": "db6e6f6395637ed50b3febf25ece6b434d909b541c90db33fdacfc14134debd6"
+    },
+    {
+      "path": "web/src/blocks/interaction.ts",
+      "sha256": "3857310f28dda2a469264eb518df2c6822df502a5912c7aa0a1f41b43665bfa9"
+    },
+    {
+      "path": "web/src/blocks/block-interaction.css",
+      "sha256": "4915a50f0522420ff8d15238871be3ec550f141ba0b10e3c29942eadd6c5fec1"
+    }
+  ],
+  "evidence": {
+    "browser": {
+      "sha256": "c67b740fde70ade319851f51eee8320ee4f8419f27b4616079714212febd08ad",
+      "path": ".artifacts/P0.5-06/block-gate-results.json",
+      "retries": 0,
+      "passed": 45
+    },
+    "navigation": {
+      "sha256": "ac2e7c278c876b469ef69a2b608926dd5c3ef84673aacacf352f95f501ef3697",
+      "path": ".artifacts/P0.5-06/nav-gate-results.json",
+      "retries": 0,
+      "passed": 3
+    },
+    "interaction": {
+      "path": ".artifacts/P0.5-06/interaction-accepted-results.json",
+      "sha256": "a8adf04e428ce2a732195c09dbdb0a5c252304b0654df47145678e995969ee68",
+      "passed": 15,
+      "retries": 0
+    },
+    "frontend": {
+      "sha256": "29ac70a036c51b5ba600c3cee4d7cf84f1ae185801e10d2e47fb722df49735bc",
+      "path": ".artifacts/P0.5-06/unit-accepted.json",
+      "passed": 920
+    },
+    "generator": {
+      "sha256": "29ac70a036c51b5ba600c3cee4d7cf84f1ae185801e10d2e47fb722df49735bc",
+      "path": ".artifacts/P0.5-06/unit-accepted.json",
+      "passed": 920,
+      "includedSuite": "block-generator.test.ts"
+    },
+    "workspace": {
+      "sha256": "29ac70a036c51b5ba600c3cee4d7cf84f1ae185801e10d2e47fb722df49735bc",
+      "path": ".artifacts/P0.5-06/unit-accepted.json",
+      "passed": 920,
+      "includedSuite": "block-workspace.test.ts"
+    }
+  },
+  "fullContentPublication": false,
+  "reason": "P0.5-06 collapses the optional keyboard block editor by default and retains native disclosure/focus and the same mounted workspace. Scoped Blockly13.4 public Dragger/Strategy hooks normalize finite snap search to28 CSS pixels at all existing zoom levels, including flyout clones; original connection legality, insertion preview, undo groups and source generation remain native. Edge dwell pans only inside the real viewport, with actual clamped scroll compensation and cleanup. Short candidate feedback and undo/redo controls follow the six adopted themes. The14 registered files include the original12 plus interaction.ts and block-interaction.css. After their final edits, the genuine45 block/practice and3 named navigation gates, complete frontend checks and the new real-pointer interaction suite passed. No C, Step, judge, SAVE, dependency, reward, course/case identity or runtime budget changes.",
+  "priorRegistration": {
+    "sha256": "3bf06581c6b5db177e4a9e6da190cff083a0839ade10203ac4f6fcf010b89763",
+    "path": "content/c/p0/blockly-release-1.0.7.json"
+  }
+}

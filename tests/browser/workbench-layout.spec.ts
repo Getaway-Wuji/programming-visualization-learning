@@ -1,7 +1,7 @@
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test';
 import type { StorageSnapshot, ThemeId } from '../../web/src/storage/model';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import { blockWorkspace, correctStarter } from './block-ui';
+import { blockWorkspace, correctStarter, openBlockKeyboardEditor } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 const themes: readonly ThemeId[] = ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech'];
@@ -79,7 +79,7 @@ async function openPractice(page: Page) {
 async function openDisclosure(page: Page) {
   const details = blockWorkspace(page).locator('details');
   await expect(details).toBeVisible();
-  if ((await details.getAttribute('open')) === null) await details.locator('summary').click();
+  await openBlockKeyboardEditor(page);
 }
 
 async function saveTheme(page: Page, id: ThemeId) {

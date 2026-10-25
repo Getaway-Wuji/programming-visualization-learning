@@ -1,0 +1,70 @@
+.lesson-completion {
+  min-width: 0;
+  margin-block: 16px;
+  padding-block: 16px;
+  border-block: 1px solid var(--line);
+}
+
+.lesson-completion-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.lesson-completion-heading h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.lesson-completion-count {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.lesson-completion-list {
+  margin-block: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.lesson-completion-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  min-height: 36px;
+  padding-block: 6px;
+}
+
+.lesson-completion-list li > span {
+  flex: 1 1 160px;
+}
+
+.lesson-completion-list strong {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.lesson-completion-list [data-saved='yes'] strong {
+  color: var(--p05-accent);
+}
+
+.lesson-completion-outcome {
+  margin-block: 8px;
+  font-weight: 600;
+}
+
+.lesson-completion .button {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+}
+
+#lesson-study-confirmation {
+  scroll-margin-block-start: 80px;
+}

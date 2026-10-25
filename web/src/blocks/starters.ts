@@ -137,8 +137,26 @@ function lessonProgram(
   return { id: 'lesson.main', kind: 'main', body };
 }
 
-/** Editable, intentionally unfinished starting blocks; no reference answer button. */
+/** Independent practice starts with input declarations only, never answer logic. */
 export function starterProgram(
+  _exerciseId: string,
+  bindings: readonly InputBinding[],
+): BlockProgram {
+  return {
+    id: 'lesson.main',
+    kind: 'main',
+    body: bindings.map((binding, index) => ({
+      id: `lesson.block.${index + 1}`,
+      kind: 'input',
+      bindingKey: binding.bindingKey,
+      name: binding.targetName,
+      targetKind: binding.targetKind,
+    })),
+  };
+}
+
+/** The earlier unfinished solution is available only through explicit correction mode. */
+export function correctionProgram(
   exerciseId: string,
   bindings: readonly InputBinding[],
 ): BlockProgram {

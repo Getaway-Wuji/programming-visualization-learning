@@ -9,7 +9,7 @@ import {
   type ExecuteResult,
 } from '../../web/src/engine/protocol';
 import { observeCaseSetExecution } from './case-set-observation';
-import { blockWorkspace, correctStarter, wrongEcho } from './block-ui';
+import { blockWorkspace, correctStarter, wrongEcho, openCorrectionPractice } from './block-ui';
 
 const reviewed = JSON.parse(
   readFileSync(new URL('../../content/c/p0/course-1.0.1.json', import.meta.url), 'utf8'),
@@ -103,6 +103,7 @@ async function open(page: Page, id: string) {
   await page.goto(practicePath(id));
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await expect(blockWorkspace(page)).toBeVisible();
+  await openCorrectionPractice(page);
   await expect(submit(page)).toBeEnabled();
   await expect(
     page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),

@@ -2,6 +2,8 @@ import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import type { APIResponse, Page, Response } from '@playwright/test';
 import type { ContentPackage } from '../../web/src/content/types';
+import type { CaseExecutionCatalog } from '../../web/src/content/case-learning';
+import { openBlockKeyboardEditor } from './block-ui';
 
 const wasmPattern = /\/assets\/c_viz_wasm_bg-[^/]+\.wasm$/;
 const frozenBytes = readFileSync(
@@ -11,6 +13,9 @@ const frozen = JSON.parse(frozenBytes.toString('utf8')) as ContentPackage;
 const reviewedCourse = JSON.parse(
   readFileSync(new URL('../../content/c/p0/course-1.0.1.json', import.meta.url), 'utf8'),
 ) as ContentPackage;
+const reviewedCases = JSON.parse(
+  readFileSync(new URL('../../content/c/p0/case-view-1.0.1.json', import.meta.url), 'utf8'),
+) as { catalogs: CaseExecutionCatalog[] };
 
 interface IntegratedProbe {
   url: string;
@@ -148,7 +153,7 @@ async function readySample(page: Page, scope: 'fixture' | 'case-view' = 'case-vi
   if (scope === 'case-view') {
     await expect(sample).toHaveAttribute('data-content-scope', 'case-view');
     await expect(sample).toContainText('已审核案例 · 独立观看');
-    await expect(sample).toContainText('内容版本 1.0.1');
+    await expect(sample).toContainText(`内容版本 ${reviewedCases.catalogs[0].packageRef.version}`);
   } else {
     await expect(sample).toContainText('标准内容样例 · 尚未正式发布');
     await expect(sample).toContainText('内容版本 1.0.0');
@@ -284,10 +289,11 @@ test('continuous public learning navigation integrates reviewed reading, validat
   const lesson = reviewedCourse.lessons.find((item) => item.id === 'lesson.c.variables-output')!;
   const exercise = reviewedCourse.exercises.find((item) => item.id === 'exercise.c.echo')!;
   const example = frozen.programs.find((item) => item.id === 'program.c.echo')!;
-  const algorithm = reviewedCourse.cases.find((item) => item.id === 'case.c.bubble-sort')!;
-  const algorithmProgram = reviewedCourse.programs.find(
-    (item) => item.id === algorithm.programRef.id,
+  const algorithmCatalog = reviewedCases.catalogs.find(
+    (item) => item.subject.id === 'case.c.bubble-sort',
   )!;
+  const algorithm = algorithmCatalog.subject;
+  const algorithmProgram = algorithmCatalog.program;
 
   await page.goto('/');
   await routeReady('PAGE-01', '/');
@@ -351,6 +357,7 @@ test('continuous public learning navigation integrates reviewed reading, validat
   await expect(practiceSample).toContainText(exercise.prompt);
   const blocks = practiceSample.getByRole('region', { name: '积木工作区', exact: true });
   await expect(blocks).toBeVisible();
+  await openBlockKeyboardEditor(page);
   await expect(
     blocks.getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option'),
   ).toHaveCount(20);

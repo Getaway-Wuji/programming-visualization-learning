@@ -3,8 +3,28 @@ import { expect, type Page } from '@playwright/test';
 export const blockWorkspace = (page: Page) =>
   page.getByRole('region', { name: '积木工作区', exact: true });
 
+/** Historic regression scenarios explicitly opt into the separate correction exercise. */
+export async function openCorrectionPractice(page: Page) {
+  const button = page.getByTestId('practice-mode').getByRole('button', {
+    name: '改错练习',
+    exact: true,
+  });
+  await expect(button).toBeVisible();
+  if ((await button.getAttribute('aria-pressed')) !== 'true') await button.click();
+  await expect(button).toHaveAttribute('aria-pressed', 'true');
+  await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
+}
+
+/** Expand only when a test actually uses keyboard editing; preserve the product's closed default. */
+export async function openBlockKeyboardEditor(page: Page) {
+  const details = blockWorkspace(page).locator('details.block-accessible');
+  if ((await details.getAttribute('open')) === null) await details.locator('summary').click();
+  await expect(details).toHaveAttribute('open', '');
+}
+
 /** Read ordinary option labels/IDs, then operate the same accessible controls as a learner. */
 export async function blockOptions(page: Page, pattern: RegExp): Promise<string[]> {
+  await openBlockKeyboardEditor(page);
   const list = blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true });
   await expect(list).toBeVisible();
   const options = await list.locator('option').evaluateAll((entries) =>
@@ -19,6 +39,7 @@ export async function blockOptions(page: Page, pattern: RegExp): Promise<string[
 }
 
 export async function selectBlock(page: Page, id: string) {
+  await openBlockKeyboardEditor(page);
   const list = blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true });
   expect(
     await list
@@ -37,6 +58,7 @@ async function integerBlock(page: Page, value: string, occurrence = 0) {
 
 /** Independent fixes to the intentionally incomplete public starter, using native edits only. */
 export async function correctStarter(page: Page, exerciseId: string) {
+  await openCorrectionPractice(page);
   const workspace = blockWorkspace(page);
   if (exerciseId === 'exercise.c.echo') {
     const outputs = await blockOptions(page, /^\d+\. 输出 ·/);

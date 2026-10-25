@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { Breadcrumbs, MissingPage, PageHeading } from '../components/Ui';
-import { ReadingBoundary, ReadingText, lessonProgress } from '../components/CourseReading';
+import { ReadingBoundary, ReadingText } from '../components/CourseReading';
 import { Icon } from '../components/Icon';
 import { lessons, paths } from '../navigation';
 import { LearningSaveStatus, useLearning } from '../learning/react';
 import { useLocalLearningDate } from '../learning/goal-components';
 import { localDateAt } from '../storage/validation';
 import { isCompatibleLearningHistory } from '../learning/domain';
+import { LessonCompletion } from '../components/LessonCompletion';
+import { lessonCompletionDetails } from '../learning/completion';
 
 export default function LessonPage() {
   const { lessonId } = useParams();
@@ -21,10 +23,11 @@ export default function LessonPage() {
     return <MissingPage title="找不到这个小节" backTo="/courses" backLabel="返回课程目录" />;
   const chapter = reading?.chapters.find((item) => item.id === lesson?.chapterRef.id);
   const progress = state.projection?.lessons.find((item) => item.id === lessonId);
+  const savedCompletion = lessonId ? lessonCompletionDetails(state, lessonId) : null;
   const currentLesson = (state.practiceCatalog ?? state.reading?.catalog)?.lessons.find(
     (item) => item.ref.id === lessonId,
   );
-  const confirmedToday = progress?.history.some(
+  const confirmedToday = state.snapshot?.progress.some(
     (row) =>
       row.eventType === 'lesson.study-confirmed' &&
       !!currentLesson &&
@@ -74,7 +77,16 @@ export default function LessonPage() {
               description="先理解目标和示例，再主动确认学习，最后通过本节必修练习。"
             />
             <p className="notice" data-testid="lesson-progress">
-              {lessonProgress(state, lesson.id)}
+              {!savedCompletion
+                ? '学习记录尚未读取'
+                : savedCompletion.completed
+                  ? '小节已完成'
+                  : savedCompletion.confirmed
+                    ? '已确认学习，待通过必修练习'
+                    : savedCompletion.started
+                      ? '已开始'
+                      : '未开始'}
+              {state.temporary ? ' · 有操作尚未保存' : ''}
             </p>
             <div className="lesson-layout">
               <div className="lesson-main">
@@ -125,7 +137,7 @@ export default function LessonPage() {
                     ))}
                   </ul>
                 </section>
-                <section className="card section-card">
+                <section className="card section-card" id="lesson-study-confirmation" tabIndex={-1}>
                   <h2>记录本节学习</h2>
                   <p className="muted">
                     学习确认与必修练习通过共同决定小节完成。浏览、刷新和查看解析不会自动通过练习。
@@ -161,18 +173,19 @@ export default function LessonPage() {
                 </section>
               </div>
               <aside className="lesson-aside">
+                <LessonCompletion lessonId={lesson.id} />
                 {lesson.requiredExerciseRefs.map((ref) => {
                   const exercise = reading!.exercises.find(
                     (item) => item.id === ref.id && item.version === ref.version,
                   )!;
-                  const passed = state.projection?.exercises.find(
+                  const passed = savedCompletion?.exercises.find(
                     (item) => item.id === ref.id,
                   )?.passed;
                   return (
                     <section className="card section-card" key={ref.id}>
                       <span className="section-label">本节必修练习</span>
                       <h2>{exercise.title}</h2>
-                      <p>{passed ? '已有兼容的历史通过记录' : '尚未通过'}</p>
+                      <p>{passed ? '已有兼容的历史通过记录' : '尚无已保存的通过记录'}</p>
                       <p className="muted">
                         搭建本节积木程序，提交真实测试并逐步复盘；通过记录保存在当前浏览器。
                       </p>

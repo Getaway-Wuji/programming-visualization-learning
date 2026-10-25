@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { openBlockKeyboardEditor } from './block-ui';
 
 const practicePath = '/#/practice/exercise.c.echo';
 const visualPath = '/#/visualize/case.c.bubble-sort';
@@ -80,6 +81,7 @@ test('workspaces keep real blocks beside read-only code, review playback and emp
   const options = page.getByRole('region', { name: '积木工作区', exact: true });
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
   await expect(options).toBeVisible();
+  await openBlockKeyboardEditor(page);
   await expect(
     options.getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option'),
   ).toHaveCount(20);
@@ -88,7 +90,7 @@ test('workspaces keep real blocks beside read-only code, review playback and emp
   const practiceCode = page.getByTestId('code-panel');
   await expect(practiceCode).toBeVisible();
   await expect(page.getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
-  await expect(page.getByRole('button', { name: '运行程序', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '运行本组', exact: true })).toBeEnabled();
   const optionsBox = await options.boundingBox();
   const practiceBox = await practiceCode.boundingBox();
   expect(optionsBox).not.toBeNull();

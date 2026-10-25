@@ -8,6 +8,7 @@ import {
   type TeachingBlockKind,
 } from './definitions';
 import type { BlockProgram } from './model';
+import { blockInteractionPlugins, type BlockInteractionState } from './interaction';
 import {
   inputBlocks,
   loadBlockProgram,
@@ -20,6 +21,7 @@ import {
   type WorkspaceIssue,
 } from './workspace';
 import './blocks.css';
+import './block-interaction.css';
 
 export interface BlockWorkspaceProps {
   value: BlockProgram;
@@ -89,6 +91,7 @@ export function BlockWorkspace({
   const [slotName, setSlotName] = useState('');
   const [notice, setNotice] = useState('');
   const [issues, setIssues] = useState<WorkspaceIssue[]>([]);
+  const [interaction, setInteraction] = useState<BlockInteractionState>('idle');
   useEffect(() => {
     callback.current = onChange;
   }, [onChange]);
@@ -96,6 +99,7 @@ export function BlockWorkspace({
     const element = host.current;
     if (!element) return;
     registerTeachingBlocks();
+    let disposed = false;
     const editor = withoutWorkspaceAudio(() =>
       Blockly.inject(element, {
         toolbox: teachingToolbox(),
@@ -106,11 +110,13 @@ export function BlockWorkspace({
         sounds: false,
         move: { drag: true, scrollbars: true, wheel: true },
         zoom: { controls: true, wheel: false, startScale: 0.8, maxScale: 1.5, minScale: 0.35 },
+        plugins: blockInteractionPlugins((state) => {
+          if (!disposed) setInteraction(state);
+        }),
       }),
     );
     workspace.current = editor;
     setEditor(editor);
-    let disposed = false;
     let queued = false;
     if (initial.current.draft) loadBlockWorkspaceDraft(editor, initial.current.draft);
     else loadBlockProgram(editor, initial.current.value);
@@ -299,20 +305,55 @@ export function BlockWorkspace({
     setNotice('积木已连接。');
     notify.current();
   };
+  const undo = (redo: boolean) => {
+    if (!editor || disabled || editor.isDragging()) return;
+    editor.undo(redo);
+    notify.current();
+  };
 
   return (
     <section className="block-workspace" aria-label="积木工作区">
       <p className="block-help">
-        从左侧分类拖入积木，连接、修改或删除后，右侧显示同一程序生成的只读 C
-        代码。也可使用下方键盘编辑控件。
+        从左侧分类拖入积木，右侧同步显示生成的 C 代码。键盘操作可展开下方“逐块编辑与键盘连接”。
       </p>
+      <div className="block-workspace-tools">
+        <div role="group" aria-label="积木编辑操作" className="block-history-actions">
+          <button
+            type="button"
+            className="button button-small"
+            disabled={disabled || interaction !== 'idle' || !editor?.getUndoStack().length}
+            onClick={() => undo(false)}
+            title="撤销上一次编辑（Ctrl+Z）"
+          >
+            撤销
+          </button>
+          <button
+            type="button"
+            className="button button-small"
+            disabled={disabled || interaction !== 'idle' || !editor?.getRedoStack().length}
+            onClick={() => undo(true)}
+            title="重做上一次编辑（Ctrl+Shift+Z）"
+          >
+            重做
+          </button>
+        </div>
+        <p className="block-drag-feedback" role="status" aria-live="polite" aria-atomic="true">
+          {interaction === 'preview'
+            ? '已找到连接位置，松开即可拼接。'
+            : interaction === 'edge'
+              ? '正在移动画布，移回中间即可停止。'
+              : interaction === 'dragging'
+                ? '靠近匹配插槽，出现连接轮廓后松开。'
+                : '拖动到匹配的插槽即可拼接。'}
+        </p>
+      </div>
       <div
         className={`block-canvas${disabled ? ' block-canvas-disabled' : ''}`}
         inert={disabled}
         ref={host}
         aria-label="可拖拽积木画布"
       />
-      <details className="block-accessible" open>
+      <details className="block-accessible" data-testid="block-keyboard-editor">
         <summary>逐块编辑与键盘连接</summary>
         <div className="block-edit-grid">
           <label>

@@ -1,5 +1,11 @@
 import { expect, test, type Page } from '@playwright/test';
-import { blockOptions, blockWorkspace, selectBlock } from './block-ui';
+import {
+  blockOptions,
+  blockWorkspace,
+  openBlockKeyboardEditor,
+  openCorrectionPractice,
+  selectBlock,
+} from './block-ui';
 
 interface SilentAudioAudit {
   supported: boolean;
@@ -72,6 +78,7 @@ test('silent native Blockly mounts and remounts without constructing AudioContex
 
   await page.goto('/#/practice/exercise.c.echo');
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
+  await openCorrectionPractice(page);
   const initial = await audioState(page);
   expect(initial).toMatchObject({ supported: true, calls: 0, restored: true });
 
@@ -114,6 +121,7 @@ test('silent native Blockly mounts and remounts without constructing AudioContex
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   const afterExercise = await audioState(page);
   expect(afterExercise).toEqual(initial);
+  await openBlockKeyboardEditor(page);
   await expect(
     blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true }),
   ).toBeVisible();

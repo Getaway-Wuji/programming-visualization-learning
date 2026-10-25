@@ -2,7 +2,13 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import { blockOptions, blockWorkspace, correctStarter, selectBlock } from './block-ui';
+import {
+  blockOptions,
+  blockWorkspace,
+  correctStarter,
+  selectBlock,
+  openBlockKeyboardEditor,
+} from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 const panel = (page: Page) => page.getByTestId('practice-execution');
@@ -12,9 +18,7 @@ async function open(page: Page) {
   await page.goto(`/#/practice/${echo}`);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
-  await expect(
-    blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true }),
-  ).toBeVisible();
+  await openBlockKeyboardEditor(page);
 }
 test.beforeEach(async ({ page }) => {
   // The 10.1/10.3 integration gate cannot grant learning-write authority.

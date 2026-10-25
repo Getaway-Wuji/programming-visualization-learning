@@ -8,6 +8,8 @@ import { SourcePanel } from './SourcePanel';
 import { BasicTraceView } from './BasicTraceView';
 import { PlayerControls } from './PlayerControls';
 import { Workbench, WorkspaceContext } from '../workbench/Workbench';
+import { PracticeGuidance } from './PracticeGuidance';
+import { LessonCompletion } from './LessonCompletion';
 const BlockWorkspace = lazy(() =>
   import('../blocks/BlockWorkspace').then((module) => ({ default: module.BlockWorkspace })),
 );
@@ -95,17 +97,64 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
             <h2>{review ? '本次提交复盘' : '题目与答题区'}</h2>
             <p>{catalog.subject.prompt}</p>
             <p className="notice">教学目标：{catalog.judgeProfile.targetDescription}</p>
-            <p className="muted">
-              积木、代码、输入和轨迹只在本题临时保留，由当前浏览器的 Rust
-              解释器处理；网页资源需要网络。全部测试与教学目标通过后，仅保存最少通过记录。
-              首次通过和小节完成奖励由统一积分账本记录；未保存的操作不计入已入账积分。
-            </p>
+            <details className="practice-storage-note muted">
+              <summary>练习与保存说明</summary>
+              <p>
+                代码在当前浏览器中执行；网页资源需要网络。积木、代码和轨迹仅在本题临时保留。
+                全部测试与教学目标通过后，保存最少通过记录。首次通过和小节完成奖励统一入账，未保存的操作不计入积分。
+              </p>
+            </details>
           </WorkspaceContext>
         </>
       )}
       {!review && catalog && (
         <>
-          <div data-testid="practice-editor-layout">
+          <PracticeGuidance
+            key={id}
+            id={id}
+            lessonId={catalog.subject.lessonRef.id}
+            mode={state.mode}
+            onMode={(mode) => session.switchMode(mode)}
+          />
+          <div className="inline-actions practice-actions">
+            <button
+              className="button button-secondary"
+              onClick={() => void session.run()}
+              disabled={busy || !source || state.issues.length > 0}
+            >
+              运行本组
+            </button>
+            <button
+              className="button button-secondary"
+              onClick={() => void session.preview()}
+              disabled={busy || !state.program}
+            >
+              准备代码
+            </button>
+            <button
+              className="button button-primary"
+              onClick={() => void session.submit()}
+              disabled={busy || !source || state.issues.length > 0}
+            >
+              提交练习
+            </button>
+            <button
+              className="button button-secondary"
+              onClick={() => session.cancel()}
+              disabled={!busy}
+            >
+              {state.action === 'run' ? '取消运行' : '取消提交'}
+            </button>
+            <Link className="text-link" to={paths.review(id)}>
+              查看本次复盘
+            </Link>
+          </div>
+          <p className="muted">
+            运行本组只检查第一组输入，不记录通过或积分；提交练习才检查全部
+            {catalog.subject.tests.length} 组与教学目标。准备代码只生成源码。
+            修改积木会立即使旧判定和轨迹失效；已保存的历史通过仍保留。
+          </p>
+          <div id="practice-answer" tabIndex={-1} data-testid="practice-editor-layout">
             <Workbench
               kind="practice"
               firstLabel="积木"
@@ -115,7 +164,7 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
                   {state.initialProgram && (
                     <Suspense fallback={<p role="status">正在准备积木工作区……</p>}>
                       <BlockWorkspace
-                        key={id}
+                        key={`${id}:${state.modeRevision}`}
                         value={state.workspaceProgram ?? state.initialProgram}
                         draft={state.draft}
                         activeBlockIds={activeBlocks}
@@ -159,36 +208,6 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
               }
             />
           </div>
-          <div className="inline-actions">
-            <button
-              className="button button-secondary"
-              onClick={() => void session.preview()}
-              disabled={busy || !state.program}
-            >
-              准备代码
-            </button>
-            <button
-              className="button button-primary"
-              onClick={() => void session.submit()}
-              disabled={busy || !source || state.issues.length > 0}
-            >
-              提交练习
-            </button>
-            <button
-              className="button button-secondary"
-              onClick={() => session.cancel()}
-              disabled={!busy}
-            >
-              取消提交
-            </button>
-            <Link className="text-link" to={paths.review(id)}>
-              查看本次复盘
-            </Link>
-          </div>
-          <p className="muted">
-            首次准备课程输入后，积木修改会实时更新右侧只读 C 代码，再提交全部测试。
-            修改积木会立即使旧判定和轨迹失效；已保存的历史通过仍保留。
-          </p>
         </>
       )}
       {!catalog && (
@@ -210,14 +229,23 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
           <p>还没有可复盘的运行。返回练习工作区完成真实提交后再查看。</p>
         )}
         <h3>
-          {phase === 'met'
-            ? '本次提交通过全部测试与教学目标'
-            : phase === 'unmet'
-              ? '本次提交未通过'
-              : phase === 'running'
-                ? '正在逐组检查'
-                : '本次提交与反馈'}
+          {state.action === 'run'
+            ? busy
+              ? '正在运行本组'
+              : '本组运行结果'
+            : phase === 'met'
+              ? '本次提交通过全部测试与教学目标'
+              : phase === 'unmet'
+                ? '本次提交未通过'
+                : phase === 'running'
+                  ? '正在逐组检查'
+                  : '本次提交与反馈'}
         </h3>
+        {state.action === 'run' && result && (
+          <p className="practice-operation-note" data-testid="practice-run-only">
+            这是第一组输入的运行与局部检查，不代表全部测试通过。确认程序后，提交练习检查全部测试。
+          </p>
+        )}
         {state.message && active && (
           <p role={phase === 'failed' ? 'alert' : 'status'}>{state.message}</p>
         )}
@@ -320,6 +348,7 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
       {catalog && (
         <>
           <LearningSaveStatus />
+          <LessonCompletion lessonId={catalog.subject.lessonRef.id} currentExerciseId={id} />
           {learning.practiceStatus === 'failed' && (
             <p className="notice" data-testid="practice-learning-unavailable">
               本地通过记录暂不可用，可以继续临时练习。

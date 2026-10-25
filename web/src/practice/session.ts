@@ -9,13 +9,17 @@ import { PlayerController } from '../player/controller';
 import type { BlockProgram } from '../blocks/model';
 import type { BlockWorkspaceDraft, WorkspaceIssue } from '../blocks/workspace';
 import { generateBlockSource, BlockGenerationError } from '../blocks/generator';
-import { starterProgram } from '../blocks/starters';
+import { starterProgram, correctionProgram } from '../blocks/starters';
 import { createPracticePassAuthority } from '../learning/practice-authority';
 import type { VerifiedFact } from '../learning/authority';
 import type { LearningCatalog } from '../learning/types';
 import { exerciseRequest, caseSummary, submissionMet, type CaseSummary } from './submission';
 
+export type PracticeMode = 'independent' | 'correction';
 export interface PracticeSnapshot {
+  mode: PracticeMode;
+  modeRevision: number;
+  action: 'run' | 'submit' | null;
   exerciseId?: string;
   catalog?: ExerciseCatalog;
   initialProgram?: BlockProgram;
@@ -30,6 +34,7 @@ export interface PracticeSnapshot {
     | 'ready'
     | 'preparing'
     | 'running'
+    | 'ran'
     | 'met'
     | 'unmet'
     | 'failed'
@@ -40,6 +45,10 @@ export interface PracticeSnapshot {
   summaries: readonly CaseSummary[];
   message: string;
 }
+type PracticeDraft = Pick<
+  PracticeSnapshot,
+  'initialProgram' | 'workspaceProgram' | 'program' | 'draft' | 'issues' | 'source'
+>;
 export interface PracticeLearningPort {
   context(): { catalog: LearningCatalog | null; epoch: number };
   save(fact: VerifiedFact, epoch: number): Promise<unknown>;
@@ -67,6 +76,9 @@ function blockIssue(error: unknown): WorkspaceIssue {
 export class PracticeSession {
   readonly player = new PlayerController();
   private current: PracticeSnapshot = {
+    mode: 'independent',
+    modeRevision: 0,
+    action: null,
     issues: [],
     saveStatus: 'idle',
     phase: 'empty',
@@ -80,6 +92,7 @@ export class PracticeSession {
   private sourceRevision = 0;
   private base?: PreparedSource;
   private loading?: AbortController;
+  private drafts: Partial<Record<PracticeMode, PracticeDraft>> = {};
   constructor(
     private readonly client: Pick<
       ExecutionClient,
@@ -111,7 +124,17 @@ export class PracticeSession {
     this.base = undefined;
     this.contextId = crypto.randomUUID();
     this.sourceRevision = 0;
-    this.current = { issues: [], saveStatus: 'idle', phase: 'empty', summaries: [], message };
+    this.drafts = {};
+    this.current = {
+      mode: 'independent',
+      modeRevision: this.current.modeRevision + 1,
+      action: null,
+      issues: [],
+      saveStatus: 'idle',
+      phase: 'empty',
+      summaries: [],
+      message,
+    };
     for (const listener of this.listeners) listener();
   }
   enter(id: string | undefined, review = false) {
@@ -162,6 +185,64 @@ export class PracticeSession {
     this.close();
     this.enter(id);
   }
+  switchMode(mode: PracticeMode) {
+    const { catalog, exerciseId } = this.current;
+    if (
+      !catalog ||
+      !exerciseId ||
+      mode === this.current.mode ||
+      !['independent', 'correction'].includes(mode)
+    )
+      return;
+    const { initialProgram, workspaceProgram, program, draft, issues, source } = this.current;
+    this.drafts[this.current.mode] = structuredClone({
+      initialProgram,
+      workspaceProgram,
+      program,
+      draft,
+      issues,
+      source,
+    });
+    ++this.token;
+    ++this.revision;
+    this.client.invalidate();
+    this.player.invalidate();
+    let next = this.drafts[mode];
+    if (!next) {
+      const initial =
+        mode === 'independent'
+          ? starterProgram(exerciseId, catalog.program.bindings)
+          : correctionProgram(exerciseId, catalog.program.bindings);
+      next = {
+        initialProgram: initial,
+        workspaceProgram: initial,
+        program: initial,
+        draft: undefined,
+        issues: [],
+        source: undefined,
+      };
+    }
+    // A retained display may belong to the last submitted test, or be empty
+    // while preparing. Rebuild the valid draft against the first input rather
+    // than assigning the first caseKey to a different test's source.
+    const restoredSource =
+      this.base && next.program && next.issues.length === 0
+        ? generateBlockSource(next.program, this.base, catalog.program.bindings)
+        : undefined;
+    this.set({
+      ...next,
+      source: restoredSource,
+      mode,
+      modeRevision: this.current.modeRevision + 1,
+      action: null,
+      result: undefined,
+      summaries: [],
+      caseKey: restoredSource ? catalog.subject.tests[0].caseKey : undefined,
+      phase: 'ready',
+      saveStatus: 'idle',
+      message: '',
+    });
+  }
   editBlocks(
     program: BlockProgram | null,
     issues: readonly WorkspaceIssue[],
@@ -190,6 +271,7 @@ export class PracticeSession {
       workspaceProgram: program ?? this.current.workspaceProgram,
       draft,
       issues: currentIssues,
+      action: null,
       saveStatus: 'idle',
       source,
       result: undefined,
@@ -207,6 +289,7 @@ export class PracticeSession {
     this.player.invalidate();
     this.set({
       phase: 'preparing',
+      action: null,
       source: undefined,
       result: undefined,
       summaries: [],
@@ -256,8 +339,91 @@ export class PracticeSession {
       saveStatus: 'idle',
       caseKey: source ? this.current.catalog?.subject.tests[0].caseKey : undefined,
       phase: 'cancelled',
-      message: '已取消本次提交；没有有效判定或学习记录。',
+      message:
+        this.current.action === 'run'
+          ? '已取消本次运行；没有产生学习记录。'
+          : '已取消本次提交；没有有效判定或学习记录。',
     });
+  }
+  async run() {
+    const started = performance.now();
+    const { catalog, exerciseId, program } = this.current;
+    if (
+      !catalog ||
+      !exerciseId ||
+      !this.base ||
+      !this.current.source ||
+      !program ||
+      this.current.issues.length > 0 ||
+      ['running', 'preparing'].includes(this.current.phase)
+    )
+      return;
+    const selected = structuredClone(program);
+    const token = ++this.token;
+    const revision = this.revision;
+    const test = catalog.subject.tests[0];
+    this.player.invalidate();
+    this.set({
+      action: 'run',
+      phase: 'preparing',
+      source: undefined,
+      result: undefined,
+      summaries: [],
+      saveStatus: 'idle',
+      caseKey: test.caseKey,
+      message: '',
+    });
+    try {
+      const base = await this.client.prepare(catalog, test.input, started);
+      if (this.token !== token) return;
+      this.base = base;
+      const source = generateBlockSource(selected, base, catalog.program.bindings);
+      // The existing protocol accepts exercise inputs only as published test
+      // cases. Running one group never authorizes a submission or learning fact.
+      const request = exerciseRequest(
+        catalog,
+        source,
+        {
+          contextId: this.contextId,
+          contextRevision: revision,
+          sourceRevision: ++this.sourceRevision,
+        },
+        crypto.randomUUID(),
+        test,
+      );
+      this.present(() => this.set({ source, phase: 'running' }));
+      let playerToken = this.player.begin(request.identity);
+      let displayed: ExecuteResult | undefined;
+      const display = (result: ExecuteResult) => {
+        if (this.token !== token || displayed === result) return;
+        this.present(() => {
+          if (displayed) playerToken = this.player.begin(request.identity);
+          this.player.acceptValidated(playerToken, result);
+          displayed = result;
+          this.set({ source, result });
+        });
+      };
+      const result = await this.client.execute(request, catalog, display, started);
+      if (this.token !== token) return;
+      display(result);
+      const completed = result.producer === 'rust' && result.terminal.status === 'completed';
+      this.set({
+        phase: completed ? 'ran' : 'failed',
+        message: completed
+          ? '当前输入已运行结束；这不代表全部测试通过，也没有保存通过记录。'
+          : '本次运行未正常完成，请查看诊断后重试；没有保存通过记录。',
+      });
+    } catch {
+      if (this.token === token) {
+        this.player.invalidate();
+        this.set({
+          source: undefined,
+          result: undefined,
+          phase: 'failed',
+          message: '本次运行准备失败或超过时限，可以重试；没有保存通过记录。',
+        });
+      }
+    }
   }
   async submit() {
     const started = performance.now();
@@ -279,6 +445,7 @@ export class PracticeSession {
     let summaries: CaseSummary[] = [];
     this.player.invalidate();
     this.set({
+      action: 'submit',
       phase: 'running',
       summaries: [],
       result: undefined,

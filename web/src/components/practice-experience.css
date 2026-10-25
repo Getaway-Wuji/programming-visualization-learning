@@ -1,0 +1,61 @@
+.practice-guidance {
+  margin-block: 16px;
+}
+.practice-mode-row,
+.practice-modes,
+.practice-hints-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.practice-mode-row,
+.practice-hints-heading {
+  justify-content: space-between;
+}
+.practice-modes .button,
+.practice-hints .button,
+.practice-mode-row > .text-link {
+  min-height: 44px;
+}
+.practice-mode-row > .text-link {
+  display: inline-flex;
+  align-items: center;
+}
+.practice-modes [aria-pressed='true'] {
+  border-color: var(--green);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  font-weight: 700;
+}
+.practice-hints {
+  border-block: 1px solid var(--line);
+  padding-block: 12px;
+}
+.practice-hints ol {
+  padding-inline-start: 24px;
+  margin-bottom: 0;
+}
+.practice-hints li + li {
+  margin-top: 8px;
+}
+.practice-operation-note {
+  margin-block: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.practice-storage-note summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: list-item;
+  align-content: center;
+}
+#practice-answer {
+  scroll-margin-block-start: 80px;
+}
+[data-testid='practice-execution'] .practice-actions > .button,
+[data-testid='practice-execution'] .practice-actions > .text-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}

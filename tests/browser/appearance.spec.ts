@@ -1,6 +1,12 @@
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { StorageSnapshot, ThemeId } from '../../web/src/storage/model';
-import { blockOptions, blockWorkspace, correctStarter, selectBlock } from './block-ui';
+import {
+  blockOptions,
+  blockWorkspace,
+  correctStarter,
+  openCorrectionPractice,
+  selectBlock,
+} from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
 
@@ -241,6 +247,7 @@ test('an actual Blockly draft survives settings theme changes and browser back w
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
   await ready(page);
   const workspace = blockWorkspace(page);
+  await openCorrectionPractice(page);
   // Wait for the lazily mounted editor before reading the disclosure state.
   // A missing combobox during mount does not mean an open disclosure is closed.
   await expect(workspace.locator('details')).toBeVisible();

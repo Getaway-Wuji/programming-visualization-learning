@@ -1,7 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { PracticeSession, type PracticeLearningPort } from '../../web/src/practice/session';
-import { correctBlockProgram } from '../../web/src/blocks/starters';
+import {
+  correctBlockProgram,
+  correctionProgram,
+  starterProgram,
+} from '../../web/src/blocks/starters';
 import type { BlockProgram } from '../../web/src/blocks/model';
 import type { CoursePractice } from '../../web/src/content/practice';
 import type { CourseReading } from '../../web/src/content/reading';
@@ -64,15 +68,19 @@ function client(finalize?: Finalizer): Port {
     checkDeadline: vi.fn(),
   };
 }
-async function open(port: Port, learning?: PracticeLearningPort) {
+async function openEmpty(port: Port, learning?: PracticeLearningPort, id = 'exercise.c.echo') {
   const session = new PracticeSession(
     port,
     async () => content,
     (action) => action(),
     learning,
   );
-  session.enter('exercise.c.echo');
+  session.enter(id);
   await vi.waitFor(() => expect(session.getSnapshot().phase).toBe('ready'));
+  return session;
+}
+async function open(port: Port, learning?: PracticeLearningPort, id = 'exercise.c.echo') {
+  const session = await openEmpty(port, learning, id);
   const active = session.getSnapshot().catalog!;
   const program = correctBlockProgram(active.subject.id, active.program.bindings);
   session.editBlocks(program, [], {});
@@ -83,6 +91,204 @@ async function open(port: Port, learning?: PracticeLearningPort) {
 
 beforeAll(() => initSync({ module: readFileSync('web/src/generated/c_viz_wasm_bg.wasm') }));
 describe('Block session lifecycle using real Rust results and an explicit transport finalizer model', () => {
+  it.each(content.exercises.map((exercise) => exercise.id))(
+    'starts %s independently with inputs only and cannot pass an empty answer',
+    async (id) => {
+      const save = vi.fn();
+      const session = await openEmpty(
+        client(),
+        { context: () => ({ catalog, epoch: 0 }), save },
+        id,
+      );
+      const initial = session.getSnapshot();
+      expect(initial).toMatchObject({ mode: 'independent', action: null });
+      expect(initial.program!.body).toHaveLength(initial.catalog!.program.bindings.length);
+      expect(initial.program!.body.every((statement) => statement.kind === 'input')).toBe(true);
+      expect(initial.source!.text).not.toMatch(/printf\(|\bif\s*\(|\bwhile\s*\(|\bfor\s*\(/);
+      await session.submit();
+      expect(session.getSnapshot().phase).toBe('unmet');
+      expect(session.getSnapshot().result?.producer).toBe('rust');
+      expect(save).not.toHaveBeenCalled();
+    },
+  );
+  it.each(content.exercises.map((exercise) => exercise.id))(
+    'submits every real published test for an explicitly built independent answer: %s',
+    async (id) => {
+      const save = vi.fn(async () => ({ saved: true }));
+      const { session, active } = await open(
+        client(),
+        { context: () => ({ catalog, epoch: 0 }), save },
+        id,
+      );
+      await session.submit();
+      expect(session.getSnapshot()).toMatchObject({
+        mode: 'independent',
+        action: 'submit',
+        phase: 'met',
+        saveStatus: 'saved',
+      });
+      expect(session.getSnapshot().summaries).toHaveLength(active.subject.tests.length);
+      expect(save).toHaveBeenCalledTimes(1);
+    },
+  );
+  it('runs only the current first published input without minting any pass or all-test summaries', async () => {
+    const execute = vi.fn(client().execute);
+    const save = vi.fn();
+    const { session } = await open(
+      { ...client(), execute },
+      { context: () => ({ catalog, epoch: 0 }), save },
+    );
+    await session.run();
+    expect(session.getSnapshot()).toMatchObject({
+      action: 'run',
+      phase: 'ran',
+      saveStatus: 'idle',
+      summaries: [],
+      result: { producer: 'rust', terminal: { status: 'completed' } },
+    });
+    expect(session.getSnapshot().result?.judgeResult?.status).toBe('met');
+    expect(execute).toHaveBeenCalledTimes(1);
+    expect(save).not.toHaveBeenCalled();
+    await session.submit();
+    expect(session.getSnapshot().phase).toBe('met');
+    expect(execute).toHaveBeenCalledTimes(4);
+    expect(save).toHaveBeenCalledTimes(1);
+  });
+  it('withdraws provisional run success when the final deadline guard fails', async () => {
+    const save = vi.fn();
+    const { session } = await open(
+      client(async (request) => makeAdapterResult(request, 'resource-limit', 'E_DEADLINE')),
+      { context: () => ({ catalog, epoch: 0 }), save },
+    );
+    await session.run();
+    expect(session.getSnapshot()).toMatchObject({
+      action: 'run',
+      phase: 'failed',
+      summaries: [],
+      result: { terminal: { status: 'resource-limit' } },
+    });
+    expect(save).not.toHaveBeenCalled();
+  });
+  it('keeps both mode drafts including invalid connections and clears accepted execution on each switch', async () => {
+    const { session, program, active } = await open(client());
+    const invalidDraft = { blocks: { languageVersion: 0, blocks: [{ type: 'cv_print' }] } };
+    const issues = [{ code: 'BLOCK_SLOT', blockId: program.id, message: '输出表达式尚未连接' }];
+    session.editBlocks(null, issues, invalidDraft);
+    const revision = session.getSnapshot().modeRevision;
+    session.switchMode('correction');
+    expect(session.getSnapshot()).toMatchObject({
+      mode: 'correction',
+      modeRevision: revision + 1,
+      program: correctionProgram(active.subject.id, active.program.bindings),
+    });
+    session.editBlocks(program, [], { correction: 'custom draft' });
+    await session.run();
+    expect(session.getSnapshot().phase).toBe('ran');
+    session.switchMode('independent');
+    expect(session.getSnapshot()).toMatchObject({
+      mode: 'independent',
+      phase: 'ready',
+      action: null,
+      draft: invalidDraft,
+      issues,
+      summaries: [],
+    });
+    expect(session.getSnapshot().program).toBeUndefined();
+    expect(session.getSnapshot().source).toBeUndefined();
+    expect(session.getSnapshot().result).toBeUndefined();
+    expect(session.player.getSnapshot().view.cursor).toBeNull();
+    session.switchMode('correction');
+    expect(session.getSnapshot()).toMatchObject({
+      draft: { correction: 'custom draft' },
+      program,
+      phase: 'ready',
+    });
+    session.close();
+    session.enter(active.subject.id);
+    await vi.waitFor(() => expect(session.getSnapshot().phase).toBe('ready'));
+    expect(session.getSnapshot()).toMatchObject({
+      mode: 'independent',
+      program: starterProgram(active.subject.id, active.program.bindings),
+    });
+    expect(session.getSnapshot().draft).toBeUndefined();
+  });
+  it('restores source for the first test after a full submission retained the last input', async () => {
+    const { session, active } = await open(client());
+    const firstSource = structuredClone(session.getSnapshot().source);
+    await session.submit();
+    expect(session.getSnapshot().caseKey).toBe(active.subject.tests.at(-1)!.caseKey);
+    expect(session.getSnapshot().source!.text).not.toBe(firstSource!.text);
+    session.switchMode('correction');
+    session.switchMode('independent');
+    expect(session.getSnapshot().caseKey).toBe(active.subject.tests[0].caseKey);
+    expect(session.getSnapshot().source).toEqual(firstSource);
+    expect(session.getSnapshot().result).toBeUndefined();
+    await session.run();
+    expect(session.getSnapshot().phase).toBe('ran');
+    expect(session.getSnapshot().source).toEqual(firstSource);
+    expect(session.getSnapshot().result!.identity.testCaseKey).toBe(
+      active.subject.tests[0].caseKey,
+    );
+  });
+  it('rebuilds a valid retained draft after switching away while input preparation is pending', async () => {
+    const transport = client();
+    const { session } = await open(transport);
+    const firstSource = structuredClone(session.getSnapshot().source);
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const prepare = transport.prepare;
+    transport.prepare = async (...args) => {
+      await held;
+      return prepare(...args);
+    };
+    const pending = session.run();
+    expect(session.getSnapshot()).toMatchObject({ phase: 'preparing' });
+    expect(session.getSnapshot().source).toBeUndefined();
+    session.switchMode('correction');
+    session.switchMode('independent');
+    expect(session.getSnapshot().source).toEqual(firstSource);
+    const snapshot = session.getSnapshot();
+    release();
+    await pending;
+    expect(session.getSnapshot()).toBe(snapshot);
+    expect(session.getSnapshot().phase).toBe('ready');
+  });
+  it.each(['edit', 'cancel', 'mode'] as const)(
+    'rejects a late real run response after %s and never saves it',
+    async (action) => {
+      let release!: () => void;
+      let arrived!: () => void;
+      const received = new Promise<void>((resolve) => {
+        arrived = resolve;
+      });
+      const held = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const save = vi.fn();
+      const { session, program } = await open(
+        client(async (_request, result) => {
+          arrived();
+          await held;
+          return result;
+        }),
+        { context: () => ({ catalog, epoch: 0 }), save },
+      );
+      const pending = session.run();
+      await received;
+      if (action === 'edit') session.editBlocks(program, [], { changed: true });
+      else if (action === 'cancel') session.cancel();
+      else session.switchMode('correction');
+      const snapshot = session.getSnapshot();
+      release();
+      await pending;
+      expect(session.getSnapshot()).toBe(snapshot);
+      expect(session.getSnapshot().result).toBeUndefined();
+      expect(session.getSnapshot().summaries).toEqual([]);
+      expect(save).not.toHaveBeenCalled();
+    },
+  );
   it('authorizes one pass only after every final transport acceptance, never in provisional display', async () => {
     let finalAcceptances = 0;
     const save = vi.fn<PracticeLearningPort['save']>(async () => {

@@ -1,0 +1,54 @@
+.block-workspace-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 0 0 10px;
+}
+
+.block-history-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.block-workspace .block-history-actions button {
+  min-height: 36px;
+  padding: 6px 14px;
+}
+
+.block-drag-feedback {
+  margin: 0;
+  min-width: 0;
+  flex: 1 1 220px;
+  color: var(--p05-muted, var(--text-muted));
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.block-accessible > summary {
+  min-height: 44px;
+  padding: 10px 4px;
+  line-height: 24px;
+}
+
+.block-accessible:not([open]) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.block-accessible > summary:focus-visible {
+  outline-color: var(--p05-accent, currentColor);
+}
+
+/* Use the existing six-theme connection colour; never fill the Zelos selection clone. */
+[data-appearance] .block-canvas .blocklyHighlightedConnectionPathVisible {
+  stroke-width: 5px;
+  stroke-dasharray: 6 3;
+}
+
+@media (max-width: 600px) {
+  .block-workspace .block-history-actions button {
+    min-height: 44px;
+  }
+}

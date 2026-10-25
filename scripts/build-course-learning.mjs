@@ -5,10 +5,10 @@ import { format } from 'prettier';
 const root = new URL('../', import.meta.url);
 const read = (path) => readFile(new URL(path, root));
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
-const registrationPath = 'content/c/p0/blockly-release-1.0.7.json';
+const registrationPath = 'content/c/p0/blockly-release-1.0.10.json';
 // This reviewed source manifest is registered only after the 10.3 real-browser gate.
 const registration = JSON.parse(await read(registrationPath));
-assert.equal(registration.releaseVersion, '1.0.7');
+assert.equal(registration.releaseVersion, '1.0.10');
 assert.equal(registration.library, 'blockly');
 assert.equal(registration.libraryVersion, '13.4.0');
 assert.equal(registration.acceptanceGate, '10.3-real-blockly-rust-playback');
@@ -27,6 +27,14 @@ const expectedFiles = [
   'web/src/practice/block-location.ts',
   'web/src/components/PracticeExecution.tsx',
   'web/src/styles.css',
+  'web/src/blocks/interaction.ts',
+  'web/src/blocks/block-interaction.css',
+  'web/src/components/PracticeGuidance.tsx',
+  'web/src/components/practice-experience.css',
+  'web/src/components/LessonCompletion.tsx',
+  'web/src/components/practice-progress.css',
+  'web/src/learning/completion.ts',
+  'web/src/pages/LessonPage.tsx',
 ];
 assert.deepEqual(
   registration.files.map((entry) => entry.path),
@@ -68,7 +76,7 @@ const resource = {
 };
 const bytes = Buffer.from(JSON.stringify(resource, null, 2) + '\n');
 const manifest = {
-  file: 'content/learning/course-learning-1.0.7.json',
+  file: 'content/learning/course-learning-1.0.10.json',
   bytes: bytes.length,
   sha256: sha(bytes),
   readingSha256: resource.readingSha256,
