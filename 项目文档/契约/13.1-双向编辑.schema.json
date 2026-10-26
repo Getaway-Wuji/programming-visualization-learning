@@ -1,0 +1,2728 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:edit-ast-block-map-01:1.0.0",
+  "title": "EDIT-SYNC-01 / AST-MAP-01 / BLOCK-MAP-01 1.0.0 (design baseline)",
+  "$comment": "Structure only. exec_ definitions are byte-independent structural copies of frozen EXEC-01 definitions with local references, checked for equality. Normative graph, byte ranges, reserved names, int32 values, source/AST/mapping equivalence, binding protection, session snapshot ownership and current revision gates require the accompanying 13.1 contract. No runtime support is implied.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/analysisRequest"
+    },
+    {
+      "$ref": "#/$defs/analysisResult"
+    },
+    {
+      "$ref": "#/$defs/analysisFailure"
+    },
+    {
+      "$ref": "#/$defs/editDocument"
+    }
+  ],
+  "$defs": {
+    "id": {
+      "$ref": "#/$defs/exec_opaqueId"
+    },
+    "nodeId": {
+      "$ref": "#/$defs/exec_nodeId"
+    },
+    "range": {
+      "$ref": "#/$defs/exec_byteRange"
+    },
+    "entityRef": {
+      "$ref": "#/$defs/exec_ref"
+    },
+    "revision": {
+      "$ref": "#/$defs/exec_positiveInt"
+    },
+    "sourceText": {
+      "type": "string",
+      "maxLength": 32768
+    },
+    "decimal": {
+      "type": "string",
+      "maxLength": 10,
+      "pattern": "^(0|[1-9][0-9]*)$"
+    },
+    "positiveDecimal": {
+      "type": "string",
+      "maxLength": 10,
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "signedDecimal": {
+      "type": "string",
+      "maxLength": 11,
+      "pattern": "^(0|-?[1-9][0-9]*)$"
+    },
+    "blockName": {
+      "type": "string",
+      "maxLength": 32768,
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+    },
+    "astName": {
+      "type": "string",
+      "maxLength": 32768,
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+    },
+    "block_main": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "body"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "main"
+        },
+        "body": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/statement"
+          }
+        }
+      }
+    },
+    "block_integer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "integer"
+        },
+        "value": {
+          "$ref": "#/$defs/decimal"
+        }
+      }
+    },
+    "block_variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "variable"
+        },
+        "name": {
+          "$ref": "#/$defs/blockName"
+        }
+      }
+    },
+    "block_unary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "operator",
+        "operand"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "unary"
+        },
+        "operator": {
+          "enum": [
+            "+",
+            "-",
+            "!"
+          ]
+        },
+        "operand": {
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "block_arithmetic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "operator",
+        "left",
+        "right"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "arithmetic"
+        },
+        "operator": {
+          "enum": [
+            "+",
+            "-",
+            "*",
+            "/",
+            "%"
+          ]
+        },
+        "left": {
+          "$ref": "#/$defs/expression"
+        },
+        "right": {
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "block_compare": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "operator",
+        "left",
+        "right"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "compare"
+        },
+        "operator": {
+          "enum": [
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "==",
+            "!="
+          ]
+        },
+        "left": {
+          "$ref": "#/$defs/expression"
+        },
+        "right": {
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "block_logic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "operator",
+        "left",
+        "right"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "logic"
+        },
+        "operator": {
+          "enum": [
+            "&&",
+            "||"
+          ]
+        },
+        "left": {
+          "$ref": "#/$defs/expression"
+        },
+        "right": {
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "block_array_read": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "index"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "array_read"
+        },
+        "name": {
+          "$ref": "#/$defs/blockName"
+        },
+        "index": {
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "block_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "bindingKey",
+        "name",
+        "targetKind"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "input"
+        },
+        "bindingKey": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/blockName"
+        },
+        "targetKind": {
+          "enum": [
+            "scalar",
+            "array",
+            "logical-length"
+          ]
+        }
+      }
+    },
+    "block_declare": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "initial"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "declare"
+        },
+        "name": {
+          "$ref": "#/$defs/blockName"
+        },
+        "initial": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/expression"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "block_assign": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "value"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "assign"
+        },
+        "name": {
+          "$ref": "#/$defs/blockName"
+        },
+        "value": {
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "block_if": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "condition",
+        "then",
+        "else"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "if"
+        },
+        "condition": {
+          "$ref": "#/$defs/expression"
+        },
+        "then": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/statement"
+          }
+        },
+        "else": {
+          "oneOf": [
+            {
+              "type": "array",
+              "maxItems": 32768,
+              "items": {
+                "$ref": "#/$defs/statement"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "block_while": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "condition",
+        "body"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "while"
+        },
+        "condition": {
+          "$ref": "#/$defs/expression"
+        },
+        "body": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/statement"
+          }
+        }
+      }
+    },
+    "block_for": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "init",
+        "condition",
+        "update",
+        "body"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "for"
+        },
+        "init": {
+          "oneOf": [
+            {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/block_declare"
+                },
+                {
+                  "$ref": "#/$defs/block_assign"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "condition": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/expression"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "update": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/block_assign"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "body": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/statement"
+          }
+        }
+      }
+    },
+    "block_break": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "break"
+        }
+      }
+    },
+    "block_continue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "continue"
+        }
+      }
+    },
+    "block_array_declare": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "length",
+        "values"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "array_declare"
+        },
+        "name": {
+          "$ref": "#/$defs/blockName"
+        },
+        "length": {
+          "$ref": "#/$defs/positiveDecimal"
+        },
+        "values": {
+          "oneOf": [
+            {
+              "type": "array",
+              "maxItems": 32768,
+              "items": {
+                "$ref": "#/$defs/signedDecimal"
+              },
+              "minItems": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "block_array_write": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "index",
+        "value"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "array_write"
+        },
+        "name": {
+          "$ref": "#/$defs/blockName"
+        },
+        "index": {
+          "$ref": "#/$defs/expression"
+        },
+        "value": {
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "block_print": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "format",
+        "args"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "print"
+        },
+        "format": {
+          "type": "string",
+          "maxLength": 32768,
+          "pattern": "^[^\\u0000-\\u0009\\u000b-\\u001f\\u007f]*$"
+        },
+        "args": {
+          "type": "array",
+          "maxItems": 16384,
+          "items": {
+            "$ref": "#/$defs/expression"
+          }
+        }
+      }
+    },
+    "block_return": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "return"
+        },
+        "value": {
+          "$ref": "#/$defs/expression"
+        }
+      }
+    },
+    "block_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "body"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "scope"
+        },
+        "body": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/statement"
+          }
+        }
+      }
+    },
+    "expression": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/block_integer"
+        },
+        {
+          "$ref": "#/$defs/block_variable"
+        },
+        {
+          "$ref": "#/$defs/block_unary"
+        },
+        {
+          "$ref": "#/$defs/block_arithmetic"
+        },
+        {
+          "$ref": "#/$defs/block_compare"
+        },
+        {
+          "$ref": "#/$defs/block_logic"
+        },
+        {
+          "$ref": "#/$defs/block_array_read"
+        }
+      ]
+    },
+    "statement": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/block_input"
+        },
+        {
+          "$ref": "#/$defs/block_declare"
+        },
+        {
+          "$ref": "#/$defs/block_assign"
+        },
+        {
+          "$ref": "#/$defs/block_if"
+        },
+        {
+          "$ref": "#/$defs/block_while"
+        },
+        {
+          "$ref": "#/$defs/block_for"
+        },
+        {
+          "$ref": "#/$defs/block_break"
+        },
+        {
+          "$ref": "#/$defs/block_continue"
+        },
+        {
+          "$ref": "#/$defs/block_array_declare"
+        },
+        {
+          "$ref": "#/$defs/block_array_write"
+        },
+        {
+          "$ref": "#/$defs/block_print"
+        },
+        {
+          "$ref": "#/$defs/block_return"
+        },
+        {
+          "$ref": "#/$defs/block_scope"
+        }
+      ]
+    },
+    "blockProgram": {
+      "$ref": "#/$defs/block_main"
+    },
+    "initializer": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "none"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "expression"
+          ],
+          "properties": {
+            "kind": {
+              "const": "scalar"
+            },
+            "expression": {
+              "$ref": "#/$defs/nodeId"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "elements"
+          ],
+          "properties": {
+            "kind": {
+              "const": "array"
+            },
+            "elements": {
+              "type": "array",
+              "maxItems": 32768,
+              "items": {
+                "$ref": "#/$defs/nodeId"
+              },
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "ast_function": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "body"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "function"
+        },
+        "body": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "ast_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "statements"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "block"
+        },
+        "statements": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/nodeId"
+          }
+        }
+      }
+    },
+    "ast_declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "name",
+        "nameRange",
+        "arrayLength",
+        "initializer"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "declaration"
+        },
+        "name": {
+          "$ref": "#/$defs/astName"
+        },
+        "nameRange": {
+          "$ref": "#/$defs/range"
+        },
+        "arrayLength": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/positiveDecimal"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "initializer": {
+          "$ref": "#/$defs/initializer"
+        }
+      }
+    },
+    "ast_assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "target",
+        "value"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "assignment"
+        },
+        "target": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "value": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "ast_if": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "condition",
+        "thenBlock",
+        "elseBlock"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "if"
+        },
+        "condition": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "thenBlock": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "elseBlock": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ast_while": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "condition",
+        "body"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "while"
+        },
+        "condition": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "body": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "ast_for": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "init",
+        "condition",
+        "update",
+        "body"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "for"
+        },
+        "init": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "condition": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "update": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "body": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "ast_condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "expression"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "condition"
+        },
+        "expression": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "ast_output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "format",
+        "formatRange",
+        "arguments"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "output"
+        },
+        "format": {
+          "type": "string",
+          "maxLength": 32768
+        },
+        "formatRange": {
+          "$ref": "#/$defs/range"
+        },
+        "arguments": {
+          "type": "array",
+          "maxItems": 16384,
+          "items": {
+            "$ref": "#/$defs/nodeId"
+          }
+        }
+      }
+    },
+    "ast_return": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "return"
+        },
+        "value": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "ast_break": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "break"
+        }
+      }
+    },
+    "ast_continue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "continue"
+        }
+      }
+    },
+    "ast_empty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "empty"
+        }
+      }
+    },
+    "ast_integer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "integer"
+        },
+        "value": {
+          "$ref": "#/$defs/decimal"
+        }
+      }
+    },
+    "ast_name": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "name",
+        "resolvedDeclarationId"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "name"
+        },
+        "name": {
+          "$ref": "#/$defs/astName"
+        },
+        "resolvedDeclarationId": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "ast_index": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "array",
+        "index"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "index"
+        },
+        "array": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "index": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "ast_unary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "operator",
+        "operand"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "unary"
+        },
+        "operator": {
+          "enum": [
+            "+",
+            "-",
+            "!"
+          ]
+        },
+        "operand": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "ast_binary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "parentId",
+        "byteRange",
+        "kind",
+        "operator",
+        "left",
+        "right"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/range"
+        },
+        "kind": {
+          "const": "binary"
+        },
+        "operator": {
+          "enum": [
+            "+",
+            "-",
+            "*",
+            "/",
+            "%",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "==",
+            "!=",
+            "&&",
+            "||"
+          ]
+        },
+        "left": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "right": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "astNode": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ast_function"
+        },
+        {
+          "$ref": "#/$defs/ast_block"
+        },
+        {
+          "$ref": "#/$defs/ast_declaration"
+        },
+        {
+          "$ref": "#/$defs/ast_assignment"
+        },
+        {
+          "$ref": "#/$defs/ast_if"
+        },
+        {
+          "$ref": "#/$defs/ast_while"
+        },
+        {
+          "$ref": "#/$defs/ast_for"
+        },
+        {
+          "$ref": "#/$defs/ast_condition"
+        },
+        {
+          "$ref": "#/$defs/ast_output"
+        },
+        {
+          "$ref": "#/$defs/ast_return"
+        },
+        {
+          "$ref": "#/$defs/ast_break"
+        },
+        {
+          "$ref": "#/$defs/ast_continue"
+        },
+        {
+          "$ref": "#/$defs/ast_empty"
+        },
+        {
+          "$ref": "#/$defs/ast_integer"
+        },
+        {
+          "$ref": "#/$defs/ast_name"
+        },
+        {
+          "$ref": "#/$defs/ast_index"
+        },
+        {
+          "$ref": "#/$defs/ast_unary"
+        },
+        {
+          "$ref": "#/$defs/ast_binary"
+        }
+      ]
+    },
+    "checkedAst": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rootId",
+        "headerRange",
+        "nodes"
+      ],
+      "properties": {
+        "rootId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "headerRange": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/range"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nodes": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/astNode"
+          },
+          "minItems": 2
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contextId",
+        "contextRevision",
+        "documentRevision",
+        "editId",
+        "operationId"
+      ],
+      "properties": {
+        "contextId": {
+          "$ref": "#/$defs/id"
+        },
+        "contextRevision": {
+          "$ref": "#/$defs/revision"
+        },
+        "documentRevision": {
+          "$ref": "#/$defs/revision"
+        },
+        "editId": {
+          "$ref": "#/$defs/id"
+        },
+        "operationId": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    },
+    "refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageRef",
+        "programRef",
+        "subsetRef"
+      ],
+      "properties": {
+        "packageRef": {
+          "$ref": "#/$defs/entityRef"
+        },
+        "programRef": {
+          "$ref": "#/$defs/entityRef"
+        },
+        "subsetRef": {
+          "$ref": "#/$defs/entityRef"
+        }
+      }
+    },
+    "inputBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bindingKey",
+        "inputKey",
+        "targetName",
+        "targetKind",
+        "from",
+        "emptyStorage"
+      ],
+      "properties": {
+        "bindingKey": {
+          "$ref": "#/$defs/id"
+        },
+        "inputKey": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+          "maxLength": 96
+        },
+        "targetName": {
+          "$ref": "#/$defs/astName"
+        },
+        "targetKind": {
+          "enum": [
+            "scalar",
+            "array",
+            "logical-length"
+          ]
+        },
+        "from": {
+          "enum": [
+            "field",
+            "length-of"
+          ]
+        },
+        "emptyStorage": {
+          "oneOf": [
+            {
+              "const": "one-zero-placeholder"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "trivia": {
+      "type": "array",
+      "maxItems": 32768,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "byteRange"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "line-comment",
+              "block-comment",
+              "whitespace"
+            ]
+          },
+          "byteRange": {
+            "$ref": "#/$defs/range"
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "documentRevision",
+        "generationMode",
+        "trivia",
+        "syntheticSegments"
+      ],
+      "properties": {
+        "documentRevision": {
+          "$ref": "#/$defs/revision"
+        },
+        "generationMode": {
+          "enum": [
+            "preserve",
+            "canonical"
+          ]
+        },
+        "trivia": {
+          "$ref": "#/$defs/trivia"
+        },
+        "syntheticSegments": {
+          "type": "array",
+          "maxItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "nodeId",
+              "byteRange"
+            ],
+            "properties": {
+              "kind": {
+                "const": "synthetic-tail-return"
+              },
+              "nodeId": {
+                "$ref": "#/$defs/nodeId"
+              },
+              "byteRange": {
+                "$ref": "#/$defs/range"
+              }
+            }
+          }
+        }
+      }
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "documentRevision",
+        "sourceText",
+        "program",
+        "blockMap",
+        "bindingMap",
+        "provenance"
+      ],
+      "properties": {
+        "documentRevision": {
+          "$ref": "#/$defs/revision"
+        },
+        "sourceText": {
+          "$ref": "#/$defs/sourceText"
+        },
+        "program": {
+          "$ref": "#/$defs/blockProgram"
+        },
+        "blockMap": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/exec_blockMapping"
+          }
+        },
+        "bindingMap": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/exec_bindingMapping"
+          }
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason",
+        "nodeId",
+        "blockId",
+        "byteRange"
+      ],
+      "properties": {
+        "reason": {
+          "enum": [
+            "EMPTY_STATEMENT",
+            "FOR_ARRAY_TARGET",
+            "BLOCK_NAME",
+            "BLOCK_FORMAT",
+            "BLOCK_STRUCTURE",
+            "INPUT_BINDING",
+            "UNSUPPORTED_RANGE"
+          ]
+        },
+        "nodeId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nodeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "blockId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/range"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "analysisError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "enum": [
+            "module",
+            "transport",
+            "cancelled",
+            "budget",
+            "response",
+            "version"
+          ]
+        }
+      }
+    },
+    "analysisRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "analysisVersion",
+        "identity",
+        "refs",
+        "sourceText",
+        "input"
+      ],
+      "properties": {
+        "kind": {
+          "const": "analysisRequest"
+        },
+        "analysisVersion": {
+          "const": "1.0.0"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "sourceText": {
+          "$ref": "#/$defs/sourceText"
+        },
+        "input": {
+          "$ref": "#/$defs/exec_input"
+        }
+      }
+    },
+    "validResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "analysisVersion",
+        "identity",
+        "refs",
+        "status",
+        "checkedAst",
+        "bindingMap",
+        "nodeMap",
+        "blockMap",
+        "trivia",
+        "diagnostics"
+      ],
+      "properties": {
+        "kind": {
+          "const": "analysisResult"
+        },
+        "analysisVersion": {
+          "const": "1.0.0"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "status": {
+          "const": "valid"
+        },
+        "checkedAst": {
+          "$ref": "#/$defs/checkedAst"
+        },
+        "bindingMap": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/exec_bindingMapping"
+          }
+        },
+        "nodeMap": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/exec_node"
+          }
+        },
+        "blockMap": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/exec_blockMapping"
+          }
+        },
+        "trivia": {
+          "$ref": "#/$defs/trivia"
+        },
+        "diagnostics": {
+          "$ref": "#/$defs/exec_diagnostics",
+          "maxItems": 0
+        }
+      }
+    },
+    "invalidResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "analysisVersion",
+        "identity",
+        "refs",
+        "status",
+        "diagnostics"
+      ],
+      "properties": {
+        "kind": {
+          "const": "analysisResult"
+        },
+        "analysisVersion": {
+          "const": "1.0.0"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "status": {
+          "const": "invalid"
+        },
+        "diagnostics": {
+          "$ref": "#/$defs/exec_diagnostics",
+          "minItems": 1
+        }
+      }
+    },
+    "analysisResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/validResult"
+        },
+        {
+          "$ref": "#/$defs/invalidResult"
+        }
+      ]
+    },
+    "analysisFailure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "analysisVersion",
+        "identity",
+        "refs",
+        "error"
+      ],
+      "properties": {
+        "kind": {
+          "const": "analysisFailure"
+        },
+        "analysisVersion": {
+          "const": "1.0.0"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "error": {
+          "$ref": "#/$defs/analysisError"
+        }
+      }
+    },
+    "authoritativeDraft": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "text"
+          ],
+          "properties": {
+            "kind": {
+              "const": "code"
+            },
+            "text": {
+              "$ref": "#/$defs/sourceText"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "workspaceSnapshotId"
+          ],
+          "properties": {
+            "kind": {
+              "const": "blocks"
+            },
+            "workspaceSnapshotId": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        }
+      ]
+    },
+    "blockDraft": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workspaceSnapshotId",
+        "blocklyVersion",
+        "program"
+      ],
+      "properties": {
+        "workspaceSnapshotId": {
+          "$ref": "#/$defs/id"
+        },
+        "blocklyVersion": {
+          "const": "13.4.0"
+        },
+        "program": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/blockProgram"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "editDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "editVersion",
+        "identity",
+        "refs",
+        "origin",
+        "authoritativeDraft",
+        "codeDraft",
+        "blockDraft",
+        "input",
+        "inputBindings",
+        "syncStatus",
+        "analysisPending",
+        "analysisError",
+        "validatedDocumentRevision",
+        "diagnostics",
+        "issues",
+        "lastSynced"
+      ],
+      "properties": {
+        "kind": {
+          "const": "editDocument"
+        },
+        "editVersion": {
+          "const": "1.0.0"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "origin": {
+          "enum": [
+            "code",
+            "blocks",
+            "input"
+          ]
+        },
+        "authoritativeDraft": {
+          "$ref": "#/$defs/authoritativeDraft"
+        },
+        "codeDraft": {
+          "$ref": "#/$defs/sourceText"
+        },
+        "blockDraft": {
+          "$ref": "#/$defs/blockDraft"
+        },
+        "input": {
+          "$ref": "#/$defs/exec_input"
+        },
+        "inputBindings": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/inputBinding"
+          }
+        },
+        "syncStatus": {
+          "enum": [
+            "synced",
+            "invalid",
+            "unmapped"
+          ]
+        },
+        "analysisPending": {
+          "type": "boolean"
+        },
+        "analysisError": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/analysisError"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "validatedDocumentRevision": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/revision"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "diagnostics": {
+          "$ref": "#/$defs/exec_diagnostics"
+        },
+        "issues": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/issue"
+          }
+        },
+        "lastSynced": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/projection"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "exec_opaqueId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "exec_nodeId": {
+      "type": "string",
+      "pattern": "^n[1-9][0-9]*$",
+      "maxLength": 96
+    },
+    "exec_byteRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32768
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32768
+        }
+      }
+    },
+    "exec_entityId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$"
+    },
+    "exec_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/exec_entityId"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+        }
+      }
+    },
+    "exec_positiveInt": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "exec_blockMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "blockId",
+        "byteRange"
+      ],
+      "properties": {
+        "blockId": {
+          "$ref": "#/$defs/exec_opaqueId"
+        },
+        "byteRange": {
+          "$ref": "#/$defs/exec_byteRange"
+        }
+      }
+    },
+    "exec_bindingMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bindingKey",
+        "byteRange"
+      ],
+      "properties": {
+        "bindingKey": {
+          "$ref": "#/$defs/exec_opaqueId"
+        },
+        "byteRange": {
+          "$ref": "#/$defs/exec_byteRange"
+        }
+      }
+    },
+    "exec_nullableRef": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/exec_ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "exec_int32": {
+      "type": "integer",
+      "minimum": -2147483648,
+      "maximum": 2147483647
+    },
+    "exec_inputValues": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+        "maxLength": 96
+      },
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/exec_int32"
+          },
+          {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "$ref": "#/$defs/exec_int32"
+            }
+          }
+        ]
+      }
+    },
+    "exec_random": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generatorRef",
+        "seed"
+      ],
+      "properties": {
+        "generatorRef": {
+          "$ref": "#/$defs/exec_ref"
+        },
+        "seed": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "exec_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "specRef",
+        "values",
+        "random"
+      ],
+      "properties": {
+        "specRef": {
+          "$ref": "#/$defs/exec_nullableRef"
+        },
+        "values": {
+          "$ref": "#/$defs/exec_inputValues"
+        },
+        "random": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/exec_random"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "exec_nullableNodeId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/exec_nodeId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "exec_node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "kind",
+        "parentId",
+        "byteRange"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/exec_nodeId"
+        },
+        "kind": {
+          "enum": [
+            "function",
+            "block",
+            "declaration",
+            "assignment",
+            "expression",
+            "condition",
+            "output",
+            "return",
+            "break",
+            "continue",
+            "empty",
+            "if",
+            "while",
+            "for"
+          ]
+        },
+        "parentId": {
+          "$ref": "#/$defs/exec_nullableNodeId"
+        },
+        "byteRange": {
+          "$ref": "#/$defs/exec_byteRange"
+        }
+      }
+    },
+    "exec_diagnosticCode": {
+      "enum": [
+        "E_LEX_INVALID",
+        "E_PARSE_INVALID",
+        "E_UNSUPPORTED_SYNTAX",
+        "E_NAME_INVALID",
+        "E_TYPE_INVALID",
+        "E_FORMAT_INVALID",
+        "E_UNINITIALIZED",
+        "E_INDEX_BOUNDS",
+        "E_DIV_ZERO",
+        "E_INT_OVERFLOW",
+        "E_INPUT_INVALID",
+        "E_INPUT_ORDER",
+        "E_BINDING_INVALID",
+        "E_CONTENT_MISMATCH",
+        "E_PROTOCOL_VERSION",
+        "E_PROTOCOL_INVALID",
+        "E_TRACE_INVALID",
+        "E_SOURCE_LIMIT",
+        "E_REQUEST_LIMIT",
+        "E_DEPTH_LIMIT",
+        "E_FUEL_LIMIT",
+        "E_STEP_LIMIT",
+        "E_MEMORY_LIMIT",
+        "E_OUTPUT_LIMIT",
+        "E_RESULT_LIMIT",
+        "E_DEADLINE",
+        "E_CANCELLED",
+        "E_MODULE_LOAD",
+        "E_WORKER_FAILURE",
+        "E_WASM_TRAP",
+        "E_ENCODING_FAILURE",
+        "J_STDOUT_MISMATCH",
+        "J_EXIT_NONZERO",
+        "J_TEACHING_TARGET",
+        "J_BINDING_MISMATCH"
+      ]
+    },
+    "exec_sourceLocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "const": "source"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/exec_nodeId"
+        },
+        "edge": {
+          "enum": [
+            "start",
+            "whole",
+            "end"
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/exec_byteRange"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "nodeId",
+            "edge"
+          ]
+        },
+        {
+          "required": [
+            "byteRange"
+          ]
+        }
+      ],
+      "dependentRequired": {
+        "nodeId": [
+          "edge"
+        ],
+        "edge": [
+          "nodeId"
+        ]
+      }
+    },
+    "exec_syntheticLocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "reason"
+      ],
+      "properties": {
+        "kind": {
+          "const": "synthetic"
+        },
+        "reason": {
+          "enum": [
+            "initial-state",
+            "implicit-return",
+            "pre-execution",
+            "adapter-cancel",
+            "adapter-deadline",
+            "module-load",
+            "worker-failure",
+            "protocol-validation",
+            "encoding-failure"
+          ]
+        },
+        "anchorNodeId": {
+          "$ref": "#/$defs/exec_nodeId"
+        }
+      }
+    },
+    "exec_location": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/exec_sourceLocation"
+        },
+        {
+          "$ref": "#/$defs/exec_syntheticLocation"
+        }
+      ]
+    },
+    "exec_diagnosticValue": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "string",
+          "maxLength": 96
+        }
+      ]
+    },
+    "exec_uint": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "exec_diagnosticDetails": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected": {
+          "$ref": "#/$defs/exec_diagnosticValue"
+        },
+        "actual": {
+          "$ref": "#/$defs/exec_diagnosticValue"
+        },
+        "limit": {
+          "$ref": "#/$defs/exec_uint"
+        },
+        "used": {
+          "$ref": "#/$defs/exec_uint"
+        },
+        "attempted": {
+          "$ref": "#/$defs/exec_uint"
+        },
+        "dimension": {
+          "enum": [
+            "sourceBytes",
+            "requestBytes",
+            "inputDomain",
+            "inputLength",
+            "syntaxDepth",
+            "astDepth",
+            "fuel",
+            "steps",
+            "liveBytes",
+            "outputBytes",
+            "resultBytes",
+            "deadline",
+            "jsonDepth"
+          ]
+        },
+        "relatedNodeIds": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exec_nodeId"
+          }
+        }
+      }
+    },
+    "exec_diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "severity",
+        "origin",
+        "stage",
+        "location",
+        "details"
+      ],
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/exec_diagnosticCode"
+        },
+        "severity": {
+          "const": "error"
+        },
+        "origin": {
+          "enum": [
+            "rust",
+            "adapter",
+            "protocol",
+            "judge"
+          ]
+        },
+        "stage": {
+          "enum": [
+            "preflight",
+            "load",
+            "lex",
+            "parse",
+            "semantic",
+            "execute",
+            "encode",
+            "receive",
+            "judge"
+          ]
+        },
+        "location": {
+          "$ref": "#/$defs/exec_location"
+        },
+        "details": {
+          "$ref": "#/$defs/exec_diagnosticDetails"
+        }
+      }
+    },
+    "exec_diagnostics": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/exec_diagnostic"
+      }
+    }
+  }
+}

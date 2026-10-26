@@ -1,0 +1,4069 @@
+{
+  "fixtureVersion": "1.0.0",
+  "purpose": "design-fixture",
+  "limitation": "Schema samples and finite policy model only; standalone AST/IR kind examples do not claim a valid whole program. No new Rust analysis producer, reverse converter or browser behavior is implemented.",
+  "schemaCases": [
+    {
+      "id": "block-main",
+      "target": "block_main",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.16",
+        "kind": "main",
+        "body": []
+      }
+    },
+    {
+      "id": "block-integer",
+      "target": "block_integer",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.17",
+        "kind": "integer",
+        "value": "2147483647"
+      }
+    },
+    {
+      "id": "block-declare",
+      "target": "block_declare",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.18",
+        "kind": "declare",
+        "name": "x",
+        "initial": null
+      }
+    },
+    {
+      "id": "block-variable",
+      "target": "block_variable",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.19",
+        "kind": "variable",
+        "name": "x"
+      }
+    },
+    {
+      "id": "block-assign",
+      "target": "block_assign",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.20",
+        "kind": "assign",
+        "name": "x",
+        "value": {
+          "id": "fixture.1",
+          "kind": "integer",
+          "value": "1"
+        }
+      }
+    },
+    {
+      "id": "block-unary",
+      "target": "block_unary",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.21",
+        "kind": "unary",
+        "operator": "-",
+        "operand": {
+          "id": "fixture.2",
+          "kind": "integer",
+          "value": "1"
+        }
+      }
+    },
+    {
+      "id": "block-arithmetic",
+      "target": "block_arithmetic",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.22",
+        "kind": "arithmetic",
+        "operator": "%",
+        "left": {
+          "id": "fixture.3",
+          "kind": "integer",
+          "value": "7"
+        },
+        "right": {
+          "id": "fixture.4",
+          "kind": "integer",
+          "value": "2"
+        }
+      }
+    },
+    {
+      "id": "block-compare",
+      "target": "block_compare",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.23",
+        "kind": "compare",
+        "operator": "<=",
+        "left": {
+          "id": "fixture.5",
+          "kind": "integer",
+          "value": "1"
+        },
+        "right": {
+          "id": "fixture.6",
+          "kind": "integer",
+          "value": "2"
+        }
+      }
+    },
+    {
+      "id": "block-logic",
+      "target": "block_logic",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.24",
+        "kind": "logic",
+        "operator": "&&",
+        "left": {
+          "id": "fixture.7",
+          "kind": "integer",
+          "value": "1"
+        },
+        "right": {
+          "id": "fixture.8",
+          "kind": "integer",
+          "value": "0"
+        }
+      }
+    },
+    {
+      "id": "block-if",
+      "target": "block_if",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.25",
+        "kind": "if",
+        "condition": {
+          "id": "fixture.9",
+          "kind": "integer",
+          "value": "1"
+        },
+        "then": [],
+        "else": null
+      }
+    },
+    {
+      "id": "block-while",
+      "target": "block_while",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.26",
+        "kind": "while",
+        "condition": {
+          "id": "fixture.10",
+          "kind": "integer",
+          "value": "0"
+        },
+        "body": []
+      }
+    },
+    {
+      "id": "block-for",
+      "target": "block_for",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.27",
+        "kind": "for",
+        "init": null,
+        "condition": null,
+        "update": null,
+        "body": []
+      }
+    },
+    {
+      "id": "block-break",
+      "target": "block_break",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.28",
+        "kind": "break"
+      }
+    },
+    {
+      "id": "block-continue",
+      "target": "block_continue",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.29",
+        "kind": "continue"
+      }
+    },
+    {
+      "id": "block-array_declare",
+      "target": "block_array_declare",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.30",
+        "kind": "array_declare",
+        "name": "a",
+        "length": "3",
+        "values": [
+          "7",
+          "-2",
+          "0"
+        ]
+      }
+    },
+    {
+      "id": "block-array_read",
+      "target": "block_array_read",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.31",
+        "kind": "array_read",
+        "name": "a",
+        "index": {
+          "id": "fixture.11",
+          "kind": "integer",
+          "value": "0"
+        }
+      }
+    },
+    {
+      "id": "block-array_write",
+      "target": "block_array_write",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.32",
+        "kind": "array_write",
+        "name": "a",
+        "index": {
+          "id": "fixture.12",
+          "kind": "integer",
+          "value": "0"
+        },
+        "value": {
+          "id": "fixture.13",
+          "kind": "integer",
+          "value": "7"
+        }
+      }
+    },
+    {
+      "id": "block-print",
+      "target": "block_print",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.33",
+        "kind": "print",
+        "format": "中文😀 %d\n",
+        "args": [
+          {
+            "id": "fixture.14",
+            "kind": "variable",
+            "name": "x"
+          }
+        ]
+      }
+    },
+    {
+      "id": "block-return",
+      "target": "block_return",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.34",
+        "kind": "return",
+        "value": {
+          "id": "fixture.15",
+          "kind": "integer",
+          "value": "0"
+        }
+      }
+    },
+    {
+      "id": "block-scope",
+      "target": "block_scope",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.35",
+        "kind": "scope",
+        "body": []
+      }
+    },
+    {
+      "id": "block-input",
+      "target": "block_input",
+      "expectedValid": true,
+      "body": {
+        "id": "fixture.36",
+        "kind": "input",
+        "bindingKey": "fixture.x",
+        "name": "x",
+        "targetKind": "scalar"
+      }
+    },
+    {
+      "id": "ast-function",
+      "target": "ast_function",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "function",
+        "body": "n2"
+      }
+    },
+    {
+      "id": "ast-block",
+      "target": "ast_block",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "block",
+        "statements": []
+      }
+    },
+    {
+      "id": "ast-declaration",
+      "target": "ast_declaration",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "declaration",
+        "name": "x",
+        "nameRange": {
+          "start": 11,
+          "end": 12
+        },
+        "arrayLength": null,
+        "initializer": {
+          "kind": "none"
+        }
+      }
+    },
+    {
+      "id": "ast-assignment",
+      "target": "ast_assignment",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "assignment",
+        "target": "n4",
+        "value": "n5"
+      }
+    },
+    {
+      "id": "ast-if",
+      "target": "ast_if",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "if",
+        "condition": "n4",
+        "thenBlock": "n5",
+        "elseBlock": null
+      }
+    },
+    {
+      "id": "ast-while",
+      "target": "ast_while",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "while",
+        "condition": "n4",
+        "body": "n5"
+      }
+    },
+    {
+      "id": "ast-for",
+      "target": "ast_for",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "for",
+        "init": null,
+        "condition": null,
+        "update": null,
+        "body": "n4"
+      }
+    },
+    {
+      "id": "ast-condition",
+      "target": "ast_condition",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "condition",
+        "expression": "n4"
+      }
+    },
+    {
+      "id": "ast-output",
+      "target": "ast_output",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "output",
+        "format": "%d",
+        "formatRange": {
+          "start": 11,
+          "end": 12
+        },
+        "arguments": [
+          "n4"
+        ]
+      }
+    },
+    {
+      "id": "ast-return",
+      "target": "ast_return",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "return",
+        "value": "n4"
+      }
+    },
+    {
+      "id": "ast-break",
+      "target": "ast_break",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "break"
+      }
+    },
+    {
+      "id": "ast-continue",
+      "target": "ast_continue",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "continue"
+      }
+    },
+    {
+      "id": "ast-empty",
+      "target": "ast_empty",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "empty"
+      }
+    },
+    {
+      "id": "ast-integer",
+      "target": "ast_integer",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "integer",
+        "value": "0"
+      }
+    },
+    {
+      "id": "ast-name",
+      "target": "ast_name",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "name",
+        "name": "x",
+        "resolvedDeclarationId": "n1"
+      }
+    },
+    {
+      "id": "ast-index",
+      "target": "ast_index",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "index",
+        "array": "n4",
+        "index": "n5"
+      }
+    },
+    {
+      "id": "ast-unary",
+      "target": "ast_unary",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "unary",
+        "operator": "!",
+        "operand": "n4"
+      }
+    },
+    {
+      "id": "ast-binary",
+      "target": "ast_binary",
+      "expectedValid": true,
+      "body": {
+        "nodeId": "n3",
+        "parentId": "n2",
+        "byteRange": {
+          "start": 11,
+          "end": 12
+        },
+        "kind": "binary",
+        "operator": "||",
+        "left": "n4",
+        "right": "n5"
+      }
+    },
+    {
+      "id": "analysisRequest",
+      "target": "analysisRequest",
+      "expectedValid": true,
+      "body": {
+        "kind": "analysisRequest",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "sourceText": "int main(){}",
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        }
+      }
+    },
+    {
+      "id": "validResult",
+      "target": "validResult",
+      "expectedValid": true,
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "valid",
+        "checkedAst": {
+          "rootId": "n1",
+          "headerRange": null,
+          "nodes": [
+            {
+              "nodeId": "n1",
+              "parentId": null,
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "kind": "function",
+              "body": "n2"
+            },
+            {
+              "nodeId": "n2",
+              "parentId": "n1",
+              "byteRange": {
+                "start": 10,
+                "end": 12
+              },
+              "kind": "block",
+              "statements": []
+            }
+          ]
+        },
+        "bindingMap": [],
+        "blockMap": [
+          {
+            "blockId": "block.analysis.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        ],
+        "trivia": [
+          {
+            "kind": "whitespace",
+            "byteRange": {
+              "start": 3,
+              "end": 4
+            }
+          }
+        ],
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "invalidResult",
+      "target": "invalidResult",
+      "expectedValid": true,
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "invalid",
+        "diagnostics": [
+          {
+            "code": "E_PARSE_INVALID",
+            "severity": "error",
+            "origin": "rust",
+            "stage": "parse",
+            "location": {
+              "kind": "source",
+              "byteRange": {
+                "start": 10,
+                "end": 11
+              }
+            },
+            "details": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "analysisFailure",
+      "target": "analysisFailure",
+      "expectedValid": true,
+      "body": {
+        "kind": "analysisFailure",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "error": {
+          "code": "budget"
+        }
+      }
+    },
+    {
+      "id": "editDocument",
+      "target": "editDocument",
+      "expectedValid": true,
+      "body": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": null,
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      }
+    },
+    {
+      "id": "reject-unknown-version",
+      "target": "analysisRequest",
+      "expectedValid": false,
+      "body": {
+        "kind": "analysisRequest",
+        "analysisVersion": "2.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "sourceText": "int main(){}",
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        }
+      }
+    },
+    {
+      "id": "reject-source-inline-budget",
+      "target": "analysisRequest",
+      "expectedValid": false,
+      "body": {
+        "kind": "analysisRequest",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "sourceText": "int main(){}",
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "budget": {
+          "fuel": 99999999
+        }
+      }
+    },
+    {
+      "id": "reject-identity-missing-operation",
+      "target": "analysisRequest",
+      "expectedValid": false,
+      "body": {
+        "kind": "analysisRequest",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "sourceText": "int main(){}",
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        }
+      }
+    },
+    {
+      "id": "reject-unknown-ast-kind",
+      "target": "validResult",
+      "expectedValid": false,
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "valid",
+        "checkedAst": {
+          "rootId": "n1",
+          "headerRange": null,
+          "nodes": [
+            {
+              "nodeId": "n1",
+              "parentId": null,
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "kind": "function",
+              "body": "n2"
+            },
+            {
+              "nodeId": "n2",
+              "parentId": "n1",
+              "byteRange": {
+                "start": 10,
+                "end": 12
+              },
+              "kind": "raw-c",
+              "statements": []
+            }
+          ]
+        },
+        "bindingMap": [],
+        "blockMap": [
+          {
+            "blockId": "block.analysis.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        ],
+        "trivia": [
+          {
+            "kind": "whitespace",
+            "byteRange": {
+              "start": 3,
+              "end": 4
+            }
+          }
+        ],
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "reject-raw-source-in-node",
+      "target": "validResult",
+      "expectedValid": false,
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "valid",
+        "checkedAst": {
+          "rootId": "n1",
+          "headerRange": null,
+          "nodes": [
+            {
+              "nodeId": "n1",
+              "parentId": null,
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "kind": "function",
+              "body": "n2"
+            },
+            {
+              "nodeId": "n2",
+              "parentId": "n1",
+              "byteRange": {
+                "start": 10,
+                "end": 12
+              },
+              "kind": "block",
+              "statements": [],
+              "rawCode": "return 0;"
+            }
+          ]
+        },
+        "bindingMap": [],
+        "blockMap": [
+          {
+            "blockId": "block.analysis.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        ],
+        "trivia": [
+          {
+            "kind": "whitespace",
+            "byteRange": {
+              "start": 3,
+              "end": 4
+            }
+          }
+        ],
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "reject-partial-ast-on-invalid",
+      "target": "invalidResult",
+      "expectedValid": false,
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "invalid",
+        "diagnostics": [
+          {
+            "code": "E_PARSE_INVALID",
+            "severity": "error",
+            "origin": "rust",
+            "stage": "parse",
+            "location": {
+              "kind": "source",
+              "byteRange": {
+                "start": 10,
+                "end": 11
+              }
+            },
+            "details": {}
+          }
+        ],
+        "checkedAst": {
+          "rootId": "n1",
+          "headerRange": null,
+          "nodes": [
+            {
+              "nodeId": "n1",
+              "parentId": null,
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "kind": "function",
+              "body": "n2"
+            },
+            {
+              "nodeId": "n2",
+              "parentId": "n1",
+              "byteRange": {
+                "start": 10,
+                "end": 12
+              },
+              "kind": "block",
+              "statements": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "reject-quiet-invalid",
+      "target": "invalidResult",
+      "expectedValid": false,
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "invalid",
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "reject-semantic-diagnostics-on-valid",
+      "target": "validResult",
+      "expectedValid": false,
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "valid",
+        "checkedAst": {
+          "rootId": "n1",
+          "headerRange": null,
+          "nodes": [
+            {
+              "nodeId": "n1",
+              "parentId": null,
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "kind": "function",
+              "body": "n2"
+            },
+            {
+              "nodeId": "n2",
+              "parentId": "n1",
+              "byteRange": {
+                "start": 10,
+                "end": 12
+              },
+              "kind": "block",
+              "statements": []
+            }
+          ]
+        },
+        "bindingMap": [],
+        "blockMap": [
+          {
+            "blockId": "block.analysis.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        ],
+        "trivia": [
+          {
+            "kind": "whitespace",
+            "byteRange": {
+              "start": 3,
+              "end": 4
+            }
+          }
+        ],
+        "diagnostics": [
+          {
+            "code": "E_PARSE_INVALID",
+            "severity": "error",
+            "origin": "rust",
+            "stage": "parse",
+            "location": {
+              "kind": "source",
+              "byteRange": {
+                "start": 10,
+                "end": 11
+              }
+            },
+            "details": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "reject-generated-provenance-from-rust",
+      "target": "validResult",
+      "expectedValid": false,
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "valid",
+        "checkedAst": {
+          "rootId": "n1",
+          "headerRange": null,
+          "nodes": [
+            {
+              "nodeId": "n1",
+              "parentId": null,
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "kind": "function",
+              "body": "n2"
+            },
+            {
+              "nodeId": "n2",
+              "parentId": "n1",
+              "byteRange": {
+                "start": 10,
+                "end": 12
+              },
+              "kind": "block",
+              "statements": []
+            }
+          ]
+        },
+        "bindingMap": [],
+        "blockMap": [
+          {
+            "blockId": "block.analysis.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        ],
+        "trivia": [
+          {
+            "kind": "whitespace",
+            "byteRange": {
+              "start": 3,
+              "end": 4
+            }
+          }
+        ],
+        "diagnostics": [],
+        "provenance": {
+          "documentRevision": 1,
+          "generationMode": "preserve",
+          "trivia": [
+            {
+              "kind": "whitespace",
+              "byteRange": {
+                "start": 3,
+                "end": 4
+              }
+            }
+          ],
+          "syntheticSegments": []
+        }
+      }
+    },
+    {
+      "id": "reject-sourceRevision-as-document",
+      "target": "editDocument",
+      "expectedValid": false,
+      "body": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": null,
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        },
+        "sourceRevision": 1
+      }
+    },
+    {
+      "id": "reject-unknown-sync-state",
+      "target": "editDocument",
+      "expectedValid": false,
+      "body": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "probably-valid",
+        "analysisPending": false,
+        "analysisError": null,
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      }
+    },
+    {
+      "id": "reject-second-authority",
+      "target": "editDocument",
+      "expectedValid": false,
+      "body": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}",
+          "workspaceSnapshotId": "fixture.workspace.1"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": null,
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      }
+    },
+    {
+      "id": "reject-for-array-init",
+      "target": "block_for",
+      "expectedValid": false,
+      "body": {
+        "id": "fixture.27",
+        "kind": "for",
+        "init": {
+          "id": "fixture.37",
+          "kind": "array_write",
+          "name": "a",
+          "index": {
+            "id": "fixture.38",
+            "kind": "integer",
+            "value": "0"
+          },
+          "value": {
+            "id": "fixture.39",
+            "kind": "integer",
+            "value": "0"
+          }
+        },
+        "condition": null,
+        "update": null,
+        "body": []
+      }
+    },
+    {
+      "id": "reject-signed-integer-leaf",
+      "target": "block_integer",
+      "expectedValid": false,
+      "body": {
+        "id": "fixture.17",
+        "kind": "integer",
+        "value": "-1"
+      }
+    },
+    {
+      "id": "reject-empty-array-values",
+      "target": "block_array_declare",
+      "expectedValid": false,
+      "body": {
+        "id": "fixture.30",
+        "kind": "array_declare",
+        "name": "a",
+        "length": "3",
+        "values": []
+      }
+    },
+    {
+      "id": "reject-raw-tab-format",
+      "target": "block_print",
+      "expectedValid": false,
+      "body": {
+        "id": "fixture.33",
+        "kind": "print",
+        "format": "\t",
+        "args": [
+          {
+            "id": "fixture.14",
+            "kind": "variable",
+            "name": "x"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reject-unknown-operator",
+      "target": "block_arithmetic",
+      "expectedValid": false,
+      "body": {
+        "id": "fixture.22",
+        "kind": "arithmetic",
+        "operator": "**",
+        "left": {
+          "id": "fixture.3",
+          "kind": "integer",
+          "value": "7"
+        },
+        "right": {
+          "id": "fixture.4",
+          "kind": "integer",
+          "value": "2"
+        }
+      }
+    }
+  ],
+  "stateCases": [
+    {
+      "id": "current-synced",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": null,
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": true
+    },
+    {
+      "id": "pending-old-status",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){"
+        },
+        "codeDraft": "int main(){",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": true,
+        "analysisError": null,
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "invalid-keeps-last-synced",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){"
+        },
+        "codeDraft": "int main(){",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "invalid",
+        "analysisPending": false,
+        "analysisError": null,
+        "validatedDocumentRevision": 2,
+        "diagnostics": [
+          {
+            "code": "E_PARSE_INVALID",
+            "severity": "error",
+            "origin": "rust",
+            "stage": "parse",
+            "location": {
+              "kind": "source",
+              "byteRange": {
+                "start": 10,
+                "end": 11
+              }
+            },
+            "details": {}
+          }
+        ],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "unmapped-keeps-source",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){;}"
+        },
+        "codeDraft": "int main(){;}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "unmapped",
+        "analysisPending": false,
+        "analysisError": null,
+        "validatedDocumentRevision": 2,
+        "diagnostics": [],
+        "issues": [
+          {
+            "reason": "EMPTY_STATEMENT",
+            "nodeId": "n3",
+            "blockId": null,
+            "byteRange": {
+              "start": 11,
+              "end": 12
+            }
+          }
+        ],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "failure-module",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": {
+          "code": "module"
+        },
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "failure-transport",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": {
+          "code": "transport"
+        },
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "failure-cancelled",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": {
+          "code": "cancelled"
+        },
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "failure-budget",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": {
+          "code": "budget"
+        },
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "failure-response",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": {
+          "code": "response"
+        },
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "failure-version",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": {
+          "code": "version"
+        },
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "stale-validated-revision",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          }
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": false,
+        "analysisError": null,
+        "validatedDocumentRevision": 1,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "first-pending-no-history",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "code",
+        "authoritativeDraft": {
+          "kind": "code",
+          "text": "int main(){}"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.1",
+          "blocklyVersion": "13.4.0",
+          "program": null
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "synced",
+        "analysisPending": true,
+        "analysisError": null,
+        "validatedDocumentRevision": null,
+        "diagnostics": [],
+        "issues": [],
+        "lastSynced": null
+      },
+      "expectedRunnable": false
+    },
+    {
+      "id": "invalid-block-snapshot-preserved",
+      "document": {
+        "kind": "editDocument",
+        "editVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 2,
+          "editId": "fixture.edit.2",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "origin": "blocks",
+        "authoritativeDraft": {
+          "kind": "blocks",
+          "workspaceSnapshotId": "fixture.workspace.incomplete"
+        },
+        "codeDraft": "int main(){}",
+        "blockDraft": {
+          "workspaceSnapshotId": "fixture.workspace.incomplete",
+          "blocklyVersion": "13.4.0",
+          "program": null
+        },
+        "input": {
+          "specRef": null,
+          "values": {},
+          "random": null
+        },
+        "inputBindings": [],
+        "syncStatus": "invalid",
+        "analysisPending": false,
+        "analysisError": null,
+        "validatedDocumentRevision": 2,
+        "diagnostics": [],
+        "issues": [
+          {
+            "reason": "BLOCK_STRUCTURE",
+            "nodeId": null,
+            "blockId": "fixture.detached",
+            "byteRange": null
+          }
+        ],
+        "lastSynced": {
+          "documentRevision": 1,
+          "sourceText": "int main(){}",
+          "program": {
+            "id": "block.code.1",
+            "kind": "main",
+            "body": []
+          },
+          "blockMap": [
+            {
+              "blockId": "block.code.1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              }
+            }
+          ],
+          "bindingMap": [],
+          "provenance": {
+            "documentRevision": 1,
+            "generationMode": "preserve",
+            "trivia": [
+              {
+                "kind": "whitespace",
+                "byteRange": {
+                  "start": 3,
+                  "end": 4
+                }
+              }
+            ],
+            "syntheticSegments": []
+          }
+        }
+      },
+      "expectedRunnable": false
+    }
+  ],
+  "identityCases": [
+    {
+      "id": "stale-contextId",
+      "current": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "incoming": {
+        "contextId": "fixture.context.old",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "currentRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "incomingRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "expectedAccept": false
+    },
+    {
+      "id": "stale-contextRevision",
+      "current": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "incoming": {
+        "contextId": "fixture.context",
+        "contextRevision": 2,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "currentRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "incomingRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "expectedAccept": false
+    },
+    {
+      "id": "stale-documentRevision",
+      "current": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "incoming": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 2,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "currentRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "incomingRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "expectedAccept": false
+    },
+    {
+      "id": "stale-editId",
+      "current": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "incoming": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1.old",
+        "operationId": "fixture.analysis.1"
+      },
+      "currentRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "incomingRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "expectedAccept": false
+    },
+    {
+      "id": "stale-operationId",
+      "current": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "incoming": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1.old"
+      },
+      "currentRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "incomingRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "expectedAccept": false
+    },
+    {
+      "id": "current-analysis",
+      "current": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "incoming": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "currentRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "incomingRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "expectedAccept": true
+    },
+    {
+      "id": "changed-static-ref",
+      "current": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "incoming": {
+        "contextId": "fixture.context",
+        "contextRevision": 1,
+        "documentRevision": 1,
+        "editId": "fixture.edit.1",
+        "operationId": "fixture.analysis.1"
+      },
+      "currentRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.fixture",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "incomingRefs": {
+        "packageRef": {
+          "id": "content.fixture",
+          "version": "1.0.0"
+        },
+        "programRef": {
+          "id": "program.other",
+          "version": "1.0.0"
+        },
+        "subsetRef": {
+          "id": "subset.fixture",
+          "version": "1.0.0"
+        }
+      },
+      "expectedAccept": false
+    }
+  ],
+  "revisionCases": [
+    {
+      "event": "code-bytes",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "code-comment",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "code-whitespace",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "block-create",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "block-delete",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "block-field",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "block-reconnect",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "input-change",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "answer-mode-change",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "execution-context-change",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "explicit-restore",
+      "expectedDocumentDelta": 1,
+      "expectedInvalidate": true
+    },
+    {
+      "event": "projection-writeback",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "duplicate-editId",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "same-structure-event",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "block-coordinate",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "selection",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "code-selection",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "theme",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "layout",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "workspace-presentation",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "auxiliary-fold",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "zoom",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": false
+    },
+    {
+      "event": "cancel",
+      "expectedDocumentDelta": 0,
+      "expectedInvalidate": true
+    }
+  ],
+  "relationCases": [
+    {
+      "id": "current-projection",
+      "kind": "projection",
+      "body": {
+        "documentRevision": 1,
+        "sourceText": "int main(){}",
+        "program": {
+          "id": "block.code.1",
+          "kind": "main",
+          "body": []
+        },
+        "blockMap": [
+          {
+            "blockId": "block.code.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "bindingMap": [],
+        "provenance": {
+          "documentRevision": 1,
+          "generationMode": "preserve",
+          "trivia": [
+            {
+              "kind": "whitespace",
+              "byteRange": {
+                "start": 3,
+                "end": 4
+              }
+            }
+          ],
+          "syntheticSegments": []
+        }
+      },
+      "expectedValid": true
+    },
+    {
+      "id": "mismatched-provenance-revision",
+      "kind": "projection",
+      "body": {
+        "documentRevision": 1,
+        "sourceText": "int main(){}",
+        "program": {
+          "id": "block.code.1",
+          "kind": "main",
+          "body": []
+        },
+        "blockMap": [
+          {
+            "blockId": "block.code.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "bindingMap": [],
+        "provenance": {
+          "documentRevision": 2,
+          "generationMode": "preserve",
+          "trivia": [
+            {
+              "kind": "whitespace",
+              "byteRange": {
+                "start": 3,
+                "end": 4
+              }
+            }
+          ],
+          "syntheticSegments": []
+        }
+      },
+      "expectedValid": false
+    },
+    {
+      "id": "duplicate-ir-ids",
+      "kind": "program",
+      "body": {
+        "id": "block.code.1",
+        "kind": "main",
+        "body": [
+          {
+            "id": "block.code.1",
+            "kind": "return",
+            "value": {
+              "id": "fixture.40",
+              "kind": "integer",
+              "value": "0"
+            }
+          }
+        ]
+      },
+      "expectedValid": false
+    },
+    {
+      "id": "out-of-source-map",
+      "kind": "projection",
+      "body": {
+        "documentRevision": 1,
+        "sourceText": "int main(){}",
+        "program": {
+          "id": "block.code.1",
+          "kind": "main",
+          "body": []
+        },
+        "blockMap": [
+          {
+            "blockId": "block.code.1",
+            "byteRange": {
+              "start": 0,
+              "end": 13
+            }
+          }
+        ],
+        "bindingMap": [],
+        "provenance": {
+          "documentRevision": 1,
+          "generationMode": "preserve",
+          "trivia": [
+            {
+              "kind": "whitespace",
+              "byteRange": {
+                "start": 3,
+                "end": 4
+              }
+            }
+          ],
+          "syntheticSegments": []
+        }
+      },
+      "expectedValid": false
+    },
+    {
+      "id": "extra-map-id",
+      "kind": "projection",
+      "body": {
+        "documentRevision": 1,
+        "sourceText": "int main(){}",
+        "program": {
+          "id": "block.code.1",
+          "kind": "main",
+          "body": []
+        },
+        "blockMap": [
+          {
+            "blockId": "block.code.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          },
+          {
+            "blockId": "missing",
+            "byteRange": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        ],
+        "bindingMap": [],
+        "provenance": {
+          "documentRevision": 1,
+          "generationMode": "preserve",
+          "trivia": [
+            {
+              "kind": "whitespace",
+              "byteRange": {
+                "start": 3,
+                "end": 4
+              }
+            }
+          ],
+          "syntheticSegments": []
+        }
+      },
+      "expectedValid": false
+    },
+    {
+      "id": "valid-ast-graph",
+      "kind": "analysis",
+      "sourceText": "int main(){}",
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "valid",
+        "checkedAst": {
+          "rootId": "n1",
+          "headerRange": null,
+          "nodes": [
+            {
+              "nodeId": "n1",
+              "parentId": null,
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "kind": "function",
+              "body": "n2"
+            },
+            {
+              "nodeId": "n2",
+              "parentId": "n1",
+              "byteRange": {
+                "start": 10,
+                "end": 12
+              },
+              "kind": "block",
+              "statements": []
+            }
+          ]
+        },
+        "bindingMap": [],
+        "blockMap": [
+          {
+            "blockId": "block.analysis.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        ],
+        "trivia": [
+          {
+            "kind": "whitespace",
+            "byteRange": {
+              "start": 3,
+              "end": 4
+            }
+          }
+        ],
+        "diagnostics": []
+      },
+      "expectedValid": true
+    },
+    {
+      "id": "dangling-ast-child",
+      "kind": "analysis",
+      "sourceText": "int main(){}",
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "valid",
+        "checkedAst": {
+          "rootId": "n1",
+          "headerRange": null,
+          "nodes": [
+            {
+              "nodeId": "n1",
+              "parentId": null,
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "kind": "function",
+              "body": "n9"
+            },
+            {
+              "nodeId": "n2",
+              "parentId": "n1",
+              "byteRange": {
+                "start": 10,
+                "end": 12
+              },
+              "kind": "block",
+              "statements": []
+            }
+          ]
+        },
+        "bindingMap": [],
+        "blockMap": [
+          {
+            "blockId": "block.analysis.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        ],
+        "trivia": [
+          {
+            "kind": "whitespace",
+            "byteRange": {
+              "start": 3,
+              "end": 4
+            }
+          }
+        ],
+        "diagnostics": []
+      },
+      "expectedValid": false
+    },
+    {
+      "id": "wrong-ast-parent",
+      "kind": "analysis",
+      "sourceText": "int main(){}",
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "valid",
+        "checkedAst": {
+          "rootId": "n1",
+          "headerRange": null,
+          "nodes": [
+            {
+              "nodeId": "n1",
+              "parentId": null,
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "kind": "function",
+              "body": "n2"
+            },
+            {
+              "nodeId": "n2",
+              "parentId": null,
+              "byteRange": {
+                "start": 10,
+                "end": 12
+              },
+              "kind": "block",
+              "statements": []
+            }
+          ]
+        },
+        "bindingMap": [],
+        "blockMap": [
+          {
+            "blockId": "block.analysis.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        ],
+        "trivia": [
+          {
+            "kind": "whitespace",
+            "byteRange": {
+              "start": 3,
+              "end": 4
+            }
+          }
+        ],
+        "diagnostics": []
+      },
+      "expectedValid": false
+    },
+    {
+      "id": "stale-step-node-map",
+      "kind": "analysis",
+      "sourceText": "int main(){}",
+      "body": {
+        "kind": "analysisResult",
+        "analysisVersion": "1.0.0",
+        "identity": {
+          "contextId": "fixture.context",
+          "contextRevision": 1,
+          "documentRevision": 1,
+          "editId": "fixture.edit.1",
+          "operationId": "fixture.analysis.1"
+        },
+        "refs": {
+          "packageRef": {
+            "id": "content.fixture",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.fixture",
+            "version": "1.0.0"
+          },
+          "subsetRef": {
+            "id": "subset.fixture",
+            "version": "1.0.0"
+          }
+        },
+        "status": "valid",
+        "checkedAst": {
+          "rootId": "n1",
+          "headerRange": null,
+          "nodes": [
+            {
+              "nodeId": "n1",
+              "parentId": null,
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "kind": "function",
+              "body": "n2"
+            },
+            {
+              "nodeId": "n2",
+              "parentId": "n1",
+              "byteRange": {
+                "start": 10,
+                "end": 12
+              },
+              "kind": "block",
+              "statements": []
+            }
+          ]
+        },
+        "bindingMap": [],
+        "blockMap": [
+          {
+            "blockId": "block.analysis.1",
+            "byteRange": {
+              "start": 0,
+              "end": 12
+            }
+          }
+        ],
+        "nodeMap": [
+          {
+            "nodeId": "n1",
+            "kind": "function",
+            "parentId": null,
+            "byteRange": {
+              "start": 0,
+              "end": 11
+            }
+          },
+          {
+            "nodeId": "n2",
+            "kind": "block",
+            "parentId": "n1",
+            "byteRange": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        ],
+        "trivia": [
+          {
+            "kind": "whitespace",
+            "byteRange": {
+              "start": 3,
+              "end": 4
+            }
+          }
+        ],
+        "diagnostics": []
+      },
+      "expectedValid": false
+    }
+  ]
+}

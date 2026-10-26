@@ -1,0 +1,1351 @@
+{
+  "fixtureContractVersion": "1.0.0",
+  "purpose": "contract-fixture",
+  "evidenceLevel": "document-model",
+  "limitations": "Additive 13.1 design index; never a runtime result or amendment of the frozen 02.4 index.",
+  "contracts": [
+    {
+      "id": "EDIT-SYNC-01",
+      "version": "1.0.0",
+      "documentResource": "13.1-双向映射与编辑规则.md",
+      "schemaResource": "13.1-双向编辑.schema.json",
+      "ownerRole": "coordination"
+    },
+    {
+      "id": "AST-MAP-01",
+      "version": "1.0.0",
+      "documentResource": "13.1-双向映射与编辑规则.md",
+      "schemaResource": "13.1-双向编辑.schema.json",
+      "ownerRole": "coordination"
+    },
+    {
+      "id": "BLOCK-MAP-01",
+      "version": "1.0.0",
+      "documentResource": "13.1-双向映射与编辑规则.md",
+      "schemaResource": "13.1-双向编辑.schema.json",
+      "ownerRole": "coordination"
+    }
+  ],
+  "entries": [
+    {
+      "id": "fixture.13.1.cases.mapped-main-without-return",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/0",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-declare-uninitialized-and-assign",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/1",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-integer-boundaries",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/2",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-all-unary-operators",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/3",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-arithmetic-precedence-and-parentheses",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/4",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-all-comparison-operators",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/5",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-logic-short-circuit",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/6",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-if-without-else",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/7",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-if-explicit-empty-else",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/8",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-while-break-continue",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/9",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-for-declaration-init",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/10",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-for-all-header-slots-empty",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/11",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-for-assignment-init-empty-update",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/12",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-for-empty-condition",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/13",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-scope-shadowing",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/14",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-array-partial-signed-initializer",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/15",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-array-without-initializer",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/16",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-printf-unicode-and-escapes",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/17",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-comments-crlf-redundant-parentheses",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/18",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-empty-bodies",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/19",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-explicit-return-preservation",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/20",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.mapped-int32-minimum-expression",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/21",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.unmapped-empty-statement",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/22",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.unmapped-for-array-header-assignment",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/23",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.unmapped-underscore-identifier",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/24",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.unmapped-raw-tab-in-format",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/25",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-temporary-missing-expression",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/26",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-temporary-unclosed-block",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/27",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-undefined-reference",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/28",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-duplicate-declaration",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/29",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-array-as-scalar",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/30",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-break-outside-loop",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/31",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-zero-array-length",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/32",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-int32-minimum-literal",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/33",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-leading-zero-literal",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/34",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-printf-format",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/35",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-printf-arity",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/36",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-increment-operator",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/37",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-user-function",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/38",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-pointer-and-address",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/39",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-native-process-call",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/40",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-unbraced-control-body",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/41",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-array-expression-initializer",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/42",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.invalid-tab-escape",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/43",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.binding-correct-prefix",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/44",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.binding-changed-initial-value",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/45",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.binding-renamed-declaration",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/46",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.binding-deleted-declaration",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/47",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.binding-moved-out-of-prefix",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/48",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.binding-shadowed-input",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/49",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.binding-unused-shadow-allowed",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/50",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.cases.binding-runtime-scalar-assignment-allowed",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-源码样例.json",
+      "jsonPointer": "/cases/51",
+      "sha256": "81045a28446bc5619bd1525d7d5a1c82327cbd11b76f52989fb3cb2987095184",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-main",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/0",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-integer",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/1",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-declare",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/2",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-variable",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/3",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-assign",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/4",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-unary",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/5",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-arithmetic",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/6",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-compare",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/7",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-logic",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/8",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-if",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/9",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-while",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/10",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-for",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/11",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-break",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/12",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-continue",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/13",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-array_declare",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/14",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-array_read",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/15",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-array_write",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/16",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-print",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/17",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-return",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/18",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-scope",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/19",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.block-input",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/20",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-function",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/21",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-block",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/22",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-declaration",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/23",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-assignment",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/24",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-if",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/25",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-while",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/26",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-for",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/27",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-condition",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/28",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-output",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/29",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-return",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/30",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-break",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/31",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-continue",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/32",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-empty",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/33",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-integer",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/34",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-name",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/35",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-index",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/36",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-unary",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/37",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.ast-binary",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/38",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.analysisRequest",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/39",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.validResult",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/40",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.invalidResult",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/41",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.analysisFailure",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/42",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.editDocument",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/43",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-unknown-version",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/44",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-source-inline-budget",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/45",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-identity-missing-operation",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/46",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-unknown-ast-kind",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/47",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-raw-source-in-node",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/48",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-partial-ast-on-invalid",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/49",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-quiet-invalid",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/50",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-semantic-diagnostics-on-valid",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/51",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-generated-provenance-from-rust",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/52",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-sourceRevision-as-document",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/53",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-unknown-sync-state",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/54",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-second-authority",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/55",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-for-array-init",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/56",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-signed-integer-leaf",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/57",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-empty-array-values",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/58",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-raw-tab-format",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/59",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.schemaCases.reject-unknown-operator",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/schemaCases/60",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.current-synced",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/0",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.pending-old-status",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/1",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.invalid-keeps-last-synced",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/2",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.unmapped-keeps-source",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/3",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.failure-module",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/4",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.failure-transport",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/5",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.failure-cancelled",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/6",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.failure-budget",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/7",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.failure-response",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/8",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.failure-version",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/9",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.stale-validated-revision",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/10",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.first-pending-no-history",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/11",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.stateCases.invalid-block-snapshot-preserved",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/stateCases/12",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.identityCases.stale-contextId",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/identityCases/0",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.identityCases.stale-contextRevision",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/identityCases/1",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.identityCases.stale-documentRevision",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/identityCases/2",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.identityCases.stale-editId",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/identityCases/3",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.identityCases.stale-operationId",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/identityCases/4",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.identityCases.current-analysis",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/identityCases/5",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.identityCases.changed-static-ref",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/identityCases/6",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.code-bytes",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/0",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.code-comment",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/1",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.code-whitespace",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/2",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.block-create",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/3",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.block-delete",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/4",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.block-field",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/5",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.block-reconnect",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/6",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.input-change",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/7",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.answer-mode-change",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/8",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.execution-context-change",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/9",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.explicit-restore",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/10",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.projection-writeback",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/11",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.duplicate-editId",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/12",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.same-structure-event",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/13",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.block-coordinate",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/14",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.selection",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/15",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.code-selection",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/16",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.theme",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/17",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.layout",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/18",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.workspace-presentation",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/19",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.auxiliary-fold",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/20",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.zoom",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/21",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.revisionCases.cancel",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/revisionCases/22",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.relationCases.current-projection",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/relationCases/0",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.relationCases.mismatched-provenance-revision",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/relationCases/1",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.relationCases.duplicate-ir-ids",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/relationCases/2",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.relationCases.out-of-source-map",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/relationCases/3",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.relationCases.extra-map-id",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/relationCases/4",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.relationCases.valid-ast-graph",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/relationCases/5",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.relationCases.dangling-ast-child",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/relationCases/6",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.relationCases.wrong-ast-parent",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/relationCases/7",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    },
+    {
+      "id": "fixture.13.1.relationCases.stale-step-node-map",
+      "fixtureVersion": "1.0.0",
+      "resource": "13.1-结构与状态样例.json",
+      "jsonPointer": "/relationCases/8",
+      "sha256": "007a260e404c2163fd9aa43da63f800a2508d1d55ae74b60ec823b91f56a14b3",
+      "evidenceLevel": "design-fixture"
+    }
+  ]
+}
