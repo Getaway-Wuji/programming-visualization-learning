@@ -137,6 +137,7 @@ export function applyLearningEvent(
   snapshot: StorageSnapshot,
   command: LearningCommand,
   catalog: LearningCatalog,
+  approvedHistory?: (snapshot: StorageSnapshot) => readonly Progress[],
 ): StorageMutation[] {
   assertSnapshot(snapshot);
   createLearningCatalog(catalog);
@@ -194,6 +195,8 @@ export function applyLearningEvent(
   }
 
   const next = structuredClone(snapshot);
+  const learningView = (value: StorageSnapshot): StorageSnapshot =>
+    approvedHistory ? { ...value, progress: [...approvedHistory(value)] } : value;
   const operations: StorageMutation[] = [];
   const touched = new Set<string>();
   const stage = (operation: StorageMutation) => {
@@ -217,6 +220,10 @@ export function applyLearningEvent(
       stage({ store: 'progress', mode: 'add', value: progress });
       return;
     }
+    // A foreign-package row sharing the physical key cannot be silently
+    // relabeled or borrowed to authorize a new fact.
+    if (approvedHistory && !approvedHistory(next).includes(previous))
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
     const merged = {
       ...previous,
       firstAt: previous.firstAt < progress.firstAt ? previous.firstAt : progress.firstAt,
@@ -299,7 +306,7 @@ export function applyLearningEvent(
         ? receipt.subjectRef
         : catalog.exercises.find((value) => sameRef(value.ref, receipt.subjectRef))!.lessonRef;
     const lesson = catalog.lessons.find((value) => sameRef(value.ref, lessonRef))!;
-    if (lessonCompleted(next, catalog, lesson)) {
+    if (lessonCompleted(learningView(next), catalog, lesson)) {
       mergeProgress({
         eventType: 'lesson.completed',
         result: 'completed',
@@ -335,8 +342,12 @@ export function applyLearningEvent(
 export function projectLearning(
   snapshot: StorageSnapshot,
   catalog: LearningCatalog,
+  approvedHistory?: readonly Progress[],
 ): LearningProjection {
   assertSnapshot(snapshot);
+  // Validate the intact archive first. Filtering history for current course
+  // predicates must not break ledger/receipt relations or alter stored rows.
+  if (approvedHistory) snapshot = { ...snapshot, progress: [...approvedHistory] };
   createLearningCatalog(catalog);
   const historyFor = (entity: LearningCatalogEntity) => {
     const canonical = canonicalLearningId(snapshot.aliases, entity.ref.id);

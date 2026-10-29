@@ -33,6 +33,9 @@ export interface BlockWorkspaceProps {
   draft?: BlockWorkspaceDraft;
   activeBlockIds?: readonly string[];
   disabled?: boolean;
+  selectedBlockId?: string;
+  onSelect?(blockId: string | null): void;
+  onSnapshot?(draft: BlockWorkspaceDraft): void;
 }
 const FIELD_LABELS: Record<string, string> = {
   NAME: '变量名称',
@@ -74,15 +77,22 @@ export function BlockWorkspace({
   draft,
   activeBlockIds = [],
   disabled = false,
+  selectedBlockId,
+  onSelect,
+  onSnapshot,
 }: BlockWorkspaceProps) {
   const host = useRef<HTMLDivElement>(null);
   const workspace = useRef<Blockly.WorkspaceSvg | null>(null);
   const lastProgram = useRef(value);
   const initial = useRef({ value, draft });
   const callback = useRef(onChange);
+  const selectionCallback = useRef(onSelect);
+  const snapshotCallback = useRef(onSnapshot);
   const expectedInputs = useRef(inputBlocks(value));
   const notify = useRef<() => void>(() => {});
   const readSignature = useRef('');
+  const acceptedDraft = useRef<BlockWorkspaceDraft | null>(null);
+  const projectedSelection = useRef<string | null>(null);
   const [editor, setEditor] = useState<Blockly.WorkspaceSvg | null>(null);
   const [revision, setRevision] = useState(0);
   const [selectedId, setSelectedId] = useState('');
@@ -94,7 +104,9 @@ export function BlockWorkspace({
   const [interaction, setInteraction] = useState<BlockInteractionState>('idle');
   useEffect(() => {
     callback.current = onChange;
-  }, [onChange]);
+    selectionCallback.current = onSelect;
+    snapshotCallback.current = onSnapshot;
+  }, [onChange, onSelect, onSnapshot]);
   useEffect(() => {
     const element = host.current;
     if (!element) return;
@@ -121,18 +133,32 @@ export function BlockWorkspace({
     if (initial.current.draft) loadBlockWorkspaceDraft(editor, initial.current.draft);
     else loadBlockProgram(editor, initial.current.value);
     const initialRead = readBlockWorkspace(editor, expectedInputs.current);
+    acceptedDraft.current = saveBlockWorkspaceDraft(editor);
+    snapshotCallback.current?.(acceptedDraft.current);
     readSignature.current = JSON.stringify(initialRead);
     setIssues(initialRead.issues);
     notify.current = () => {
       if (disposed) return;
       const result = readBlockWorkspace(editor, expectedInputs.current);
+      const nextDraft = saveBlockWorkspaceDraft(editor);
+      if (
+        new TextEncoder().encode(JSON.stringify(nextDraft)).byteLength > 1048576 ||
+        editor.getAllBlocks(false).length > 32768 ||
+        result.issues.some((issue) => issue.code === 'BLOCK_LIMIT')
+      ) {
+        if (acceptedDraft.current) loadBlockWorkspaceDraft(editor, acceptedDraft.current);
+        setNotice('本次编辑超过工作区容量，已保留编辑前的完整草稿。请减少积木数量或嵌套。');
+        setRevision((previous) => previous + 1);
+        return;
+      }
+      acceptedDraft.current = nextDraft;
       const nextSignature = JSON.stringify(result);
       setRevision((previous) => previous + 1);
       if (nextSignature === readSignature.current) return;
       readSignature.current = nextSignature;
       if (result.program) lastProgram.current = result.program;
       setIssues(result.issues);
-      callback.current(result.program, result.issues, saveBlockWorkspaceDraft(editor));
+      callback.current(result.program, result.issues, nextDraft);
     };
     const listener = (event: Blockly.Events.Abstract) => {
       // Canvas blur must not discard the keyboard editor's existing target.
@@ -224,8 +250,13 @@ export function BlockWorkspace({
   }, [editor]);
   useEffect(() => {
     if (value === lastProgram.current || !workspace.current) return;
+    if (JSON.stringify(value) === JSON.stringify(lastProgram.current)) {
+      lastProgram.current = value;
+      return;
+    }
     expectedInputs.current = inputBlocks(value);
     loadBlockProgram(workspace.current, value);
+    acceptedDraft.current = saveBlockWorkspaceDraft(workspace.current);
     readSignature.current = JSON.stringify(
       readBlockWorkspace(workspace.current, expectedInputs.current),
     );
@@ -239,6 +270,25 @@ export function BlockWorkspace({
     for (const block of editor.getAllBlocks(false))
       block.setHighlighted(activeBlockIds.includes(protocolBlockId(block.id)));
   }, [activeBlockIds, revision]);
+  useEffect(() => {
+    if (!selectedBlockId || !editor) return;
+    const selected = editor
+      .getAllBlocks(false)
+      .find((block) => protocolBlockId(block.id) === selectedBlockId);
+    // React's previous projection must not override a new native/keyboard
+    // selection while the document callback is still publishing that choice.
+    if (selected && Blockly.common.getSelected()?.id !== selected.id) {
+      projectedSelection.current = selected.id;
+      selected.select();
+    }
+  }, [editor, selectedBlockId]);
+  useEffect(() => {
+    if (projectedSelection.current === selectedId) {
+      projectedSelection.current = null;
+      return;
+    }
+    selectionCallback.current?.(selectedId ? protocolBlockId(selectedId) : null);
+  }, [selectedId]);
 
   const blocks = editor?.getAllBlocks(true) ?? [];
   const selected = editor?.getBlockById(selectedId) ?? null;

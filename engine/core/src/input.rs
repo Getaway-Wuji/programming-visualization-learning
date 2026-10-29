@@ -284,9 +284,17 @@ impl<'a> Configuration<'a> {
         exact_ref(&program["inputRef"], text(spec, "id")?)?;
         exact_ref(&program["languageRef"], "lang.c")?;
         exact_ref(&program["subsetRef"], "subset.c.p0")?;
+        let no_input = matches!(
+            (text(program, "id")?, text(spec, "id")?),
+            ("program.c.practice-first-output", "input.c.first-output")
+                | (
+                    "program.c.practice-partial-array-init",
+                    "input.c.partial-array-init"
+                )
+        );
         let raw_fields = spec["fields"]
             .as_array()
-            .filter(|v| !v.is_empty())
+            .filter(|v| !v.is_empty() || no_input)
             .ok_or_else(content)?;
         let mut fields = Vec::new();
         let mut keys = BTreeSet::new();
@@ -392,7 +400,7 @@ impl<'a> Configuration<'a> {
         }
         let raw_bindings = program["bindings"]
             .as_array()
-            .filter(|v| !v.is_empty())
+            .filter(|v| !v.is_empty() || no_input)
             .ok_or_else(binding_error)?;
         let mut bindings = Vec::new();
         let mut binding_keys = BTreeSet::new();

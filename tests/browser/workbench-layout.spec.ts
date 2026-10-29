@@ -1,7 +1,12 @@
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test';
 import type { StorageSnapshot, ThemeId } from '../../web/src/storage/model';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import { blockWorkspace, correctStarter, openBlockKeyboardEditor } from './block-ui';
+import {
+  blockWorkspace,
+  correctStarter,
+  openBlockKeyboardEditor,
+  showPracticeBlocks,
+} from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 const themes: readonly ThemeId[] = ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech'];
@@ -73,6 +78,7 @@ async function openPractice(page: Page) {
   await ready(page);
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
   await expect(workbench(page, 'practice')).toBeVisible();
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
 }
 
@@ -657,7 +663,14 @@ test('native appearance write faults roll back atomically, retry visibly and can
   await page.bringToFront();
   await ready(page);
   await expect(warning).toHaveCount(0);
-  await expect(divider).toHaveAttribute('aria-valuenow', '50');
+  const clearedDivider = workbench(page, 'practice').getByRole('separator', {
+    name: '调整面板宽度',
+    exact: true,
+    includeHidden: true,
+  });
+  await expect(clearedDivider).toHaveAttribute('aria-valuenow', '50');
+  await expect(clearedDivider).toBeHidden();
+  await expect(workbench(page, 'practice')).toHaveAttribute('data-single-pane', 'true');
   await expect(page.getByRole('button', { name: '重试保存布局', exact: true })).toHaveCount(0);
   const cleared = await snapshot(page);
   expect(cleared.appearance.layout).toEqual({

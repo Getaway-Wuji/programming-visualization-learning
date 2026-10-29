@@ -10,6 +10,7 @@ import type { LearningCatalog, LearningProjection } from '../learning/types';
 import type { Alias } from '../storage/model';
 import { isCompatibleLearningHistory } from '../learning/domain';
 import { readingRelease } from './reading-release.generated';
+import { loadCourseBundle } from './course-bundle';
 
 export interface CourseReading {
   readonly readingVersion: '1.0.0';
@@ -47,6 +48,8 @@ export async function decodeReading(bytes: Uint8Array): Promise<CourseReading> {
   );
 }
 export async function loadCourseReading(fetcher: typeof fetch = fetch): Promise<CourseReading> {
+  const bundle = await loadCourseBundle(fetcher, true);
+  if (bundle) return bundle.reading;
   const controller = new AbortController();
   const target = new URL(`${import.meta.env.BASE_URL}${readingRelease.file}`, location.href);
   const root = new URL(`${import.meta.env.BASE_URL}content/`, location.href);

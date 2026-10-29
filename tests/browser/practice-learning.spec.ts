@@ -5,7 +5,7 @@ import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { ExerciseEntity, LessonEntity } from '../../web/src/content/types';
 import type { Receipt, StorageSnapshot } from '../../web/src/storage/model';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import { correctStarter, wrongEcho, blockWorkspace } from './block-ui';
+import { correctStarter, wrongEcho, blockWorkspace, showPracticeBlocks } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
 
 const reviewed = JSON.parse(
@@ -71,12 +71,13 @@ async function confirm(page: Page) {
 async function openPractice(page: Page, id: string) {
   await page.goto(practicePath(id));
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page)).toBeVisible();
   await localReady(page);
 }
 async function prepare(page: Page) {
   await panel(page).getByRole('button', { name: '准备代码', exact: true }).click();
-  await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+  await expect(panel(page)).toHaveAttribute('data-state', /^(ready|passed)$/);
   await expect(panel(page).getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
 }
 async function submit(page: Page, expected: 'passed' | 'unmet' = 'passed') {
@@ -246,6 +247,7 @@ test('a new local archive completes six lessons through native block edits, 24 r
     await expect(link).toHaveAttribute('href', `#/practice/${exercise.id}`);
     await link.click();
     await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+    await showPracticeBlocks(page);
     await expect(blockWorkspace(page)).toBeVisible();
     await correctStarter(page, exercise.id);
     await submit(page);
@@ -322,6 +324,7 @@ test('passing before study confirmation stays incomplete; later failures preserv
   await expect(page.getByTestId('lesson-progress')).toContainText('小节已完成');
   const complete = await snapshot(page);
   await page.getByRole('link', { name: '进入练习工作区', exact: true }).click();
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page)).toBeVisible();
   await submit(page, 'unmet');
   expect(await snapshot(page)).toEqual(complete);
@@ -385,6 +388,7 @@ test('a native quota abort saves no partial pass and retries the original accept
   await confirm(page);
   const before = await snapshot(page);
   await page.getByRole('link', { name: '进入练习工作区', exact: true }).click();
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page)).toBeVisible();
   await correctStarter(page, exercise.id);
   await armFault(page);
@@ -431,6 +435,7 @@ test('cross-page clear removes real saved history and a pending accepted retry w
   await openLesson(page, reviewed.lessons[0].id);
   await confirm(page);
   await page.getByRole('link', { name: '进入练习工作区', exact: true }).click();
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page)).toBeVisible();
   await correctStarter(page, exercise.id);
   await submit(page);

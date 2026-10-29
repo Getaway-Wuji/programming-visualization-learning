@@ -53,6 +53,19 @@ pub fn prepare_input(
         .map_err(|e| JsValue::from_str(e.0))
 }
 
+/// Independently checked, bounded editing projection; never executes C or
+/// issues a learning fact. The caller's remaining deadline can only shorten.
+#[wasm_bindgen]
+pub fn analyze_code_draft(
+    request_json: &str,
+    catalog_json: &str,
+    remaining_ms: u32,
+) -> Result<Vec<u8>, JsValue> {
+    let mut meter = meter(remaining_ms);
+    c_viz_core::edit_analysis::analyze_code_draft(request_json, catalog_json, &mut meter)
+        .map_err(|error| JsValue::from_str(error.0))
+}
+
 /// The inherited remaining time includes module loading in this Worker;
 /// parsing the request may only shorten it and never renews the deadline.
 #[wasm_bindgen]

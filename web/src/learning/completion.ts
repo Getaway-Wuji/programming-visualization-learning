@@ -1,6 +1,7 @@
 import { isCompatibleLearningHistory } from './domain';
 import type { LearningServiceState } from './service';
 import { sameRef } from './catalog';
+import { reviewedDurableSnapshot } from './reviewed-release';
 
 /** Completion comes from the durable snapshot, never the optimistic temporary projection. */
 export function lessonCompletionDetails(
@@ -11,7 +12,7 @@ export function lessonCompletionDetails(
   const catalog = state.practiceCatalog ?? reading?.catalog;
   const lesson = catalog?.lessons.find((item) => item.ref.id === lessonId);
   if (!snapshot || !reading || !catalog || !lesson) return null;
-  const history = snapshot.progress;
+  const history = reviewedDurableSnapshot(snapshot, catalog).progress;
   const confirmed = history.some(
     (row) =>
       row.eventType === 'lesson.study-confirmed' &&

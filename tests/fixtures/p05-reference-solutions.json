@@ -1,0 +1,390 @@
+{
+  "task": "P0.5-09",
+  "purpose": "developer-public-reference-programs",
+  "solutions": [
+    {
+      "order": "01.01",
+      "lessonRef": {
+        "id": "lesson.c.first-program",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.first-output",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"Hello, C!\\n\");\n    return 0;\n}\n"
+    },
+    {
+      "order": "01.02",
+      "lessonRef": {
+        "id": "lesson.c.variables-output",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.echo",
+        "version": "1.1.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n"
+    },
+    {
+      "order": "01.03",
+      "lessonRef": {
+        "id": "lesson.c.printf-layout",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.printf-layout",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int y = -2;\n    printf(\"x=%d,y=%d\\n100%%\\n\", x, y);\n    return 0;\n}\n"
+    },
+    {
+      "order": "01.04",
+      "lessonRef": {
+        "id": "lesson.c.statement-order",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.ordered-updates",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 4;\n    printf(\"%d\\n\", x);\n    x = x + 1;\n    printf(\"%d\\n\", x);\n    x = x + 2;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n"
+    },
+    {
+      "order": "02.01",
+      "lessonRef": {
+        "id": "lesson.c.initialization-assignment",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.reassign-value",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = -2;\n    int result = x;\n    printf(\"%d\\n\", result);\n    result = x + 3;\n    printf(\"%d\\n\", result);\n    return 0;\n}\n"
+    },
+    {
+      "order": "02.02",
+      "lessonRef": {
+        "id": "lesson.c.temporary-swap",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.swap-with-temp",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 3;\n    int y = -2;\n    int temp = x;\n    x = y;\n    y = temp;\n    printf(\"%d %d\\n\", x, y);\n    return 0;\n}\n"
+    },
+    {
+      "order": "02.03",
+      "lessonRef": {
+        "id": "lesson.c.scope-shadowing",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.shadowed-values",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int value = x;\n    {\n        int value = x + 1;\n        printf(\"%d\\n\", value);\n    }\n    printf(\"%d\\n\", value);\n    return 0;\n}\n"
+    },
+    {
+      "order": "02.04",
+      "lessonRef": {
+        "id": "lesson.c.integer-safety",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.wide-product",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int result = x * 1000000;\n    printf(\"%d\\n\", result);\n    return 0;\n}\n"
+    },
+    {
+      "order": "03.01",
+      "lessonRef": {
+        "id": "lesson.c.expressions",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.two-x-plus-three",
+        "version": "1.1.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int result = (2 * x) + 3;\n    printf(\"%d\\n\", result);\n    return 0;\n}\n"
+    },
+    {
+      "order": "03.02",
+      "lessonRef": {
+        "id": "lesson.c.quotient-remainder",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.quotient-remainder",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int a = -7;\n    int b = 3;\n    int quotient = a / b;\n    int remainder = a % b;\n    printf(\"%d %d\\n\", quotient, remainder);\n    return 0;\n}\n"
+    },
+    {
+      "order": "03.03",
+      "lessonRef": {
+        "id": "lesson.c.boolean-logic",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.boolean-flags",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 5;\n    int inRange = x >= 0 && x <= 10;\n    int nonzero = x != 0;\n    printf(\"%d %d\\n\", inRange, nonzero);\n    return 0;\n}\n"
+    },
+    {
+      "order": "03.04",
+      "lessonRef": {
+        "id": "lesson.c.short-circuit-safety",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.guarded-division",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 3;\n    int flag = x != 0 && 12 / x > 0;\n    printf(\"%d\\n\", flag);\n    return 0;\n}\n"
+    },
+    {
+      "order": "04.01",
+      "lessonRef": {
+        "id": "lesson.c.single-if",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.absolute-with-if",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = -7;\n    if (x < 0) {\n        x = -x;\n    }\n    printf(\"%d\\n\", x);\n    return 0;\n}\n"
+    },
+    {
+      "order": "04.02",
+      "lessonRef": {
+        "id": "lesson.c.conditions",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.nonnegative",
+        "version": "1.1.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = -3;\n    if (x >= 0) {\n        printf(\"1\\n\");\n    } else {\n        printf(\"0\\n\");\n    }\n    return 0;\n}\n"
+    },
+    {
+      "order": "04.03",
+      "lessonRef": {
+        "id": "lesson.c.nested-conditions",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.sign-classification",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 0;\n    if (x < 0) {\n        printf(\"-1\\n\");\n    } else {\n        if (x == 0) {\n            printf(\"0\\n\");\n        } else {\n            printf(\"1\\n\");\n        }\n    }\n    return 0;\n}\n"
+    },
+    {
+      "order": "04.04",
+      "lessonRef": {
+        "id": "lesson.c.interval-boundaries",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.in-closed-range",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = -3;\n    if (x >= -3 && x <= 7) {\n        printf(\"1\\n\");\n    } else {\n        printf(\"0\\n\");\n    }\n    return 0;\n}\n"
+    },
+    {
+      "order": "05.01",
+      "lessonRef": {
+        "id": "lesson.c.while-countdown",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.while-countdown",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int current = n;\n    while (current > 0) {\n        if (current < n) {\n            printf(\" \");\n        }\n        printf(\"%d\", current);\n        current = current - 1;\n    }\n    printf(\"\\n\");\n    return 0;\n}\n"
+    },
+    {
+      "order": "05.02",
+      "lessonRef": {
+        "id": "lesson.c.loops",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.two-loop-sums",
+        "version": "1.1.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int i = 1;\n    int sumWhile = 0;\n    while (i <= n) {\n        sumWhile = sumWhile + i;\n        i = i + 1;\n    }\n    int sumFor = 0;\n    for (int j = 1; j <= n; j = j + 1) {\n        sumFor = sumFor + j;\n    }\n    printf(\"%d\\n%d\\n\", sumWhile, sumFor);\n    return 0;\n}\n"
+    },
+    {
+      "order": "05.03",
+      "lessonRef": {
+        "id": "lesson.c.loop-control",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.odd-sum-until-stop",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 7;\n    int stop = 3;\n    int sum = 0;\n    for (int i = 1; i <= n; i = i + 1) {\n        if (i > stop) {\n            break;\n        }\n        if (i % 2 == 0) {\n            continue;\n        }\n        sum = sum + i;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n"
+    },
+    {
+      "order": "05.04",
+      "lessonRef": {
+        "id": "lesson.c.nested-loops",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.grid-count",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int rows = 3;\n    int cols = 4;\n    int count = 0;\n    for (int row = 0; row < rows; row = row + 1) {\n        for (int col = 0; col < cols; col = col + 1) {\n            count = count + 1;\n        }\n    }\n    printf(\"%d\\n\", count);\n    return 0;\n}\n"
+    },
+    {
+      "order": "06.01",
+      "lessonRef": {
+        "id": "lesson.c.array-initialization",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.partial-array-init",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int values[5] = {7, -2};\n    for (int i = 0; i < 5; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n"
+    },
+    {
+      "order": "06.02",
+      "lessonRef": {
+        "id": "lesson.c.array-update",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.1.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {4, 0, -2};\n    int k = 1;\n    values[k] = values[k] + 1;\n    printf(\"%d\\n\", values[k]);\n    return 0;\n}\n"
+    },
+    {
+      "order": "06.03",
+      "lessonRef": {
+        "id": "lesson.c.array-traversal-output",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.print-logical-array",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {3, 0, -2, 3};\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n"
+    },
+    {
+      "order": "06.04",
+      "lessonRef": {
+        "id": "lesson.c.logical-length-guards",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.safe-array-access",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 2;\n    int values[2] = {3, 8};\n    int k = 1;\n    if (k >= 0 && k < n) {\n        printf(\"%d\\n\", values[k]);\n    } else {\n        printf(\"invalid\\n\");\n    }\n    return 0;\n}\n"
+    },
+    {
+      "order": "07.01",
+      "lessonRef": {
+        "id": "lesson.c.array-sum",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.1.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, -1, 2};\n    int sum = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        sum = sum + values[i];\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n"
+    },
+    {
+      "order": "07.02",
+      "lessonRef": {
+        "id": "lesson.c.array-extrema",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.array-extrema",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {3, -2, 8, 0};\n    int minimum = values[0];\n    int maximum = values[0];\n    for (int i = 1; i < n; i = i + 1) {\n        if (values[i] < minimum) {\n            minimum = values[i];\n        }\n        if (values[i] > maximum) {\n            maximum = values[i];\n        }\n    }\n    printf(\"%d %d\\n\", minimum, maximum);\n    return 0;\n}\n"
+    },
+    {
+      "order": "07.03",
+      "lessonRef": {
+        "id": "lesson.c.array-counting",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.count-positive",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {-1, 0, 3, 3};\n    int count = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        if (values[i] > 0) {\n            count = count + 1;\n        }\n    }\n    printf(\"%d\\n\", count);\n    return 0;\n}\n"
+    },
+    {
+      "order": "07.04",
+      "lessonRef": {
+        "id": "lesson.c.linear-search-first",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.linear-search-first",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {4, 2, 2, 9};\n    int target = 2;\n    int answer = -1;\n    for (int i = 0; i < n; i = i + 1) {\n        if (values[i] == target) {\n            answer = i;\n            break;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n"
+    },
+    {
+      "order": "08.01",
+      "lessonRef": {
+        "id": "lesson.c.adjacent-order",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.check-nondecreasing",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {1, 3, 2, 4};\n    int ordered = 1;\n    for (int i = 0; i < n - 1; i = i + 1) {\n        if (values[i] > values[i + 1]) {\n            ordered = 0;\n            break;\n        }\n    }\n    printf(\"%d\\n\", ordered);\n    return 0;\n}\n"
+    },
+    {
+      "order": "08.02",
+      "lessonRef": {
+        "id": "lesson.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 7;\n    int values[7] = {7, -3, 0, 5, -3, 2, 9};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n"
+    },
+    {
+      "order": "08.03",
+      "lessonRef": {
+        "id": "lesson.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 7;\n    int values[7] = {7, -3, 0, 5, -3, 2, 9};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n"
+    },
+    {
+      "order": "08.04",
+      "lessonRef": {
+        "id": "lesson.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int values[5] = {-2, 0, 0, 4, 8};\n    int target = 0;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n"
+    }
+  ]
+}

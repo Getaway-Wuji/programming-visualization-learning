@@ -35,7 +35,12 @@ import { assertPracticePassFact } from './practice-authority';
 import { assertCaseViewFact } from './case-authority';
 import {
   hasReviewedCaseRelease,
+  hasReviewedCourseAssembly,
   reviewedCasePackage,
+  reviewedCoursePackage,
+  reviewedCourseHistory,
+  reviewedCourseSnapshot,
+  reviewedDurableSnapshot,
   reviewedHistory,
   reviewedSnapshot,
 } from './reviewed-release';
@@ -181,6 +186,7 @@ export class LearningService {
   private profileRequest = 0;
   private readonly goalsEnabled: boolean;
   private goalLoading: Promise<void> | undefined;
+  private goalConfigurationRequest = 0;
   private observedTime = 0;
   private readonly rewardsEnabled: boolean;
   private readingRequest = 0;
@@ -238,12 +244,42 @@ export class LearningService {
       this.state = { ...this.state, practiceCatalog: this.catalog, practiceStatus: 'ready' };
   }
   getState = (): LearningServiceState => this.state;
+  private caseCatalog(): LearningCatalog {
+    try {
+      return caseLearningCatalog(
+        sameRef(this.catalog.packageRef, reviewedCoursePackage)
+          ? reviewedCoursePackage
+          : reviewedCasePackage,
+      );
+    } catch {
+      // A withdrawn/unavailable course bundle cannot turn into a storage
+      // outage or borrow the independent old cases for a new package.
+      return createLearningCatalog({
+        purpose: 'case-view',
+        packageRef: this.catalog.packageRef,
+        lessons: [],
+        exercises: [],
+        cases: [],
+      });
+    }
+  }
+  private usesReviewedCourseRelease(): boolean {
+    return !this.options.catalog && hasReviewedCourseAssembly(this.catalog, this.caseCatalog());
+  }
   private usesReviewedCaseRelease(): boolean {
-    return !this.options.catalog && hasReviewedCaseRelease(caseLearningCatalog());
+    return (
+      !this.options.catalog &&
+      !sameRef(this.catalog.packageRef, reviewedCoursePackage) &&
+      hasReviewedCaseRelease(this.caseCatalog())
+    );
   }
   private learningSnapshot(snapshot: StorageSnapshot): StorageSnapshot {
+    if (this.usesReviewedCourseRelease())
+      return reviewedCourseSnapshot(snapshot, this.catalog, this.caseCatalog());
+    if (!this.options.catalog && sameRef(this.catalog.packageRef, reviewedCoursePackage))
+      return reviewedDurableSnapshot(snapshot, this.catalog);
     return this.usesReviewedCaseRelease()
-      ? reviewedSnapshot(snapshot, this.catalog, caseLearningCatalog())
+      ? reviewedSnapshot(snapshot, this.catalog, this.caseCatalog())
       : snapshot;
   }
   private pendingCount(): number {
@@ -255,16 +291,32 @@ export class LearningService {
     if (expected && !sameRef(snapshot.meta.activePackageRef, expected))
       throw new StorageError('S_GENERATION_STALE');
     if (
+      !this.options.catalog &&
+      sameRef(this.catalog.packageRef, reviewedCoursePackage) &&
+      (!this.usesReviewedCourseRelease() ||
+        !sameRef(snapshot.meta.activePackageRef, reviewedCoursePackage))
+    )
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    if (
       this.usesReviewedCaseRelease() &&
       !sameRef(snapshot.meta.activePackageRef, reviewedCasePackage)
     )
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
   }
   private async ensureReviewedCaseRelease(explicitRetry: boolean): Promise<void> {
-    if (!this.usesReviewedCaseRelease() || this.state.recovery?.writable === false) return;
+    if (this.state.recovery?.writable === false) return;
+    const expanded = this.usesReviewedCourseRelease();
+    if (
+      !this.options.catalog &&
+      sameRef(this.catalog.packageRef, reviewedCoursePackage) &&
+      !expanded
+    )
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    if (!expanded && !this.usesReviewedCaseRelease()) return;
+    const target = expanded ? reviewedCoursePackage : reviewedCasePackage;
     const snapshot = this.state.snapshot;
     if (!snapshot) return;
-    if (sameRef(snapshot.meta.activePackageRef, reviewedCasePackage)) {
+    if (sameRef(snapshot.meta.activePackageRef, target)) {
       const wasPending = !!this.reviewedSwitchFailure;
       this.reviewedSwitchFailure = null;
       if (wasPending) await this.readCurrent(false);
@@ -272,10 +324,16 @@ export class LearningService {
     }
     if (this.reviewedSwitchFailure && !explicitRetry) throw this.reviewedSwitchFailure;
     try {
-      await this.storage().switchReviewedCaseRelease(
-        snapshot.meta.generation,
-        snapshot.meta.revision,
-      );
+      if (expanded)
+        await this.storage().switchReviewedCourseRelease(
+          snapshot.meta.generation,
+          snapshot.meta.revision,
+        );
+      else
+        await this.storage().switchReviewedCaseRelease(
+          snapshot.meta.generation,
+          snapshot.meta.revision,
+        );
       this.reviewedSwitchFailure = null;
       await this.readCurrent(false);
     } catch (error) {
@@ -285,14 +343,15 @@ export class LearningService {
     }
   }
   private project(snapshot: StorageSnapshot): LearningProjection {
+    const fullSnapshot = snapshot;
     snapshot = this.learningSnapshot(snapshot);
     // Projection may include the independent case-view release. The command
     // catalog remains unchanged, so this never grants another fact issuer.
     const catalog =
       this.goalsEnabled && !this.options.catalog
-        ? createLearningCatalog({ ...this.catalog, cases: [...caseLearningCatalog().cases] })
+        ? createLearningCatalog({ ...this.catalog, cases: [...this.caseCatalog().cases] })
         : this.catalog;
-    const projection = projectLearning(snapshot, catalog);
+    const projection = projectLearning(fullSnapshot, catalog, snapshot.progress);
     if (!this.goalsEnabled) return projection;
     const courseAvailable = ['publishable', 'course-practice'].includes(this.catalog.purpose);
     const lessons = courseAvailable
@@ -316,7 +375,7 @@ export class LearningService {
       exercise: courseAvailable ? this.catalog.exercises : [],
       lesson: lessons,
       case: !this.options.catalog
-        ? caseLearningCatalog().cases
+        ? this.caseCatalog().cases
         : this.catalog.purpose === 'publishable' || this.catalog.purpose === 'case-view'
           ? this.catalog.cases
           : [],
@@ -407,7 +466,10 @@ export class LearningService {
       // resource failed. It never converts a fixture into a published package.
       const client = await (this.options.openStorage?.() ??
         openDatabase({
-          activePackageRef: this.usesReviewedCaseRelease() ? reviewedCasePackage : packageRef,
+          // Initialize a production archive with the last reviewed assembly.
+          // Even an unregistered/new reading candidate must not create a
+          // fixture marker that could later bypass the exact predecessor CAS.
+          activePackageRef: this.options.catalog ? packageRef : reviewedCasePackage,
           recovery: true,
         }));
       if (this.disposed) {
@@ -483,7 +545,14 @@ export class LearningService {
         practiceError = error instanceof Error ? error.message : 'COURSE_LEARNING_UNAVAILABLE';
       }
       if (this.disposed || request !== this.readingRequest) return;
-      this.catalog = practiceCatalog ?? createLearningCatalog(reading.catalog);
+      const catalog = practiceCatalog ?? createLearningCatalog(reading.catalog);
+      if (!this.options.loadGoalConfig && !sameRef(this.catalog.packageRef, catalog.packageRef)) {
+        this.goalConfigurationRequest++;
+        this.goalConfiguration = undefined;
+        this.goalLoading = undefined;
+        this.publish({ goalStatus: 'loading', goalConfiguration: null });
+      }
+      this.catalog = catalog;
       this.publish({
         reading,
         readingStatus: 'ready',
@@ -690,19 +759,32 @@ export class LearningService {
     });
   };
   private async loadGoals(): Promise<void> {
-    if (!this.goalsEnabled || this.goalConfiguration || this.disposed) return;
+    if (!this.goalsEnabled || this.disposed) return;
+    const expectedVersion =
+      !this.options.loadGoalConfig && sameRef(this.catalog.packageRef, reviewedCoursePackage)
+        ? '1.1.0'
+        : '1.0.0';
+    if (
+      this.goalConfiguration &&
+      (this.options.loadGoalConfig || this.goalConfiguration.configRef.version === expectedVersion)
+    )
+      return;
     if (this.goalLoading) return this.goalLoading;
-    this.publish({ goalStatus: 'loading', goalError: null });
+    const request = ++this.goalConfigurationRequest;
+    const packageRef = { ...this.catalog.packageRef };
+    this.goalConfiguration = undefined;
+    this.publish({ goalStatus: 'loading', goalError: null, goalConfiguration: null });
     const loading = (async () => {
       try {
         const configuration = decodeGoalConfiguration(
-          await (this.options.loadGoalConfig ?? loadGoalConfiguration)(),
+          await (this.options.loadGoalConfig ?? (() => loadGoalConfiguration(packageRef)))(),
         );
-        if (this.disposed) return;
+        if (this.disposed || request !== this.goalConfigurationRequest) return;
         this.goalConfiguration = configuration;
         this.publish({ goalStatus: 'ready', goalError: null, goalConfiguration: configuration });
       } catch {
-        this.publish({ goalStatus: 'failed', goalError: 'GOAL_CONFIGURATION_UNAVAILABLE' });
+        if (!this.disposed && request === this.goalConfigurationRequest)
+          this.publish({ goalStatus: 'failed', goalError: 'GOAL_CONFIGURATION_UNAVAILABLE' });
       }
     })();
     this.goalLoading = loading;
@@ -937,7 +1019,12 @@ export class LearningService {
             this.catalog.purpose === 'lesson-reading' ||
             this.catalog.purpose === 'course-practice') &&
           (!this.usesReviewedCaseRelease() ||
-            (!!snapshot && sameRef(snapshot.meta.activePackageRef, reviewedCasePackage))),
+            (!!snapshot && sameRef(snapshot.meta.activePackageRef, reviewedCasePackage))) &&
+          (this.options.catalog !== undefined ||
+            !sameRef(this.catalog.packageRef, reviewedCoursePackage) ||
+            (this.usesReviewedCourseRelease() &&
+              !!snapshot &&
+              sameRef(snapshot.meta.activePackageRef, reviewedCoursePackage))),
         goalsConfigurable:
           !readonly &&
           (this.goalsEnabled ? !!this.goalConfiguration : this.catalog.purpose === 'publishable'),
@@ -1127,6 +1214,8 @@ export class LearningService {
   };
   saveGoalTemplate = (targets: GoalTargets, expectedRevision: number): Promise<void> => {
     return this.edit((snapshot) => {
+      if (!this.options.catalog && sameRef(this.catalog.packageRef, reviewedCoursePackage))
+        this.assertCurrentPackage(snapshot);
       if (this.goalsEnabled) {
         if (!this.goalConfiguration) throw new StorageError('S_CONTENT_INCOMPATIBLE');
         try {
@@ -1274,9 +1363,10 @@ export class LearningService {
       });
     }
     for (const op of applyLearningEvent(
-      this.learningSnapshot(snapshot),
+      snapshot,
       command,
       this.commands.get(command)?.catalog ?? this.catalog,
+      (value) => this.learningSnapshot(value).progress,
     )) {
       if (op.store === 'settings' || op.store === 'avatar' || op.store === 'appearance') continue;
       const rows = snapshot[op.store] as unknown[];
@@ -1347,11 +1437,20 @@ export class LearningService {
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
     checkLearningEvent(verified.event, verified.catalog);
     if (
+      this.usesReviewedCourseRelease() &&
+      !reviewedCourseHistory(
+        { ...verified.event, firstAt: '', lastAt: '' } as Progress,
+        this.catalog,
+        this.caseCatalog(),
+      )
+    )
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    if (
       this.usesReviewedCaseRelease() &&
       !reviewedHistory(
         { ...verified.event, firstAt: '', lastAt: '' } as Progress,
         this.catalog,
-        caseLearningCatalog(),
+        this.caseCatalog(),
       )
     )
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
@@ -1514,7 +1613,12 @@ export class LearningService {
             throw new StorageError('S_CONTENT_INCOMPATIBLE');
           return postNewDailyGoalRewards(
             postNewRewards(
-              applyLearningEvent(this.learningSnapshot(snapshot), command, context.catalog),
+              applyLearningEvent(
+                snapshot,
+                command,
+                context.catalog,
+                (value) => this.learningSnapshot(value).progress,
+              ),
               this.rewardPolicy,
             ),
             this.dailyGoalPolicy,

@@ -1,0 +1,361 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--trace",
+      "off",
+      "--reporter=list,json",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-gate-experience-output",
+      "practice-experience.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/P0.5-09/receiver-gate-experience-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/P0.5-09/receiver-gate-experience-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/P0.5-09/receiver-gate-experience-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-gate-experience-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "off",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "practice-experience.spec.ts",
+      "file": "practice-experience.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "all six independent exercises start with only course inputs and reveal hints or correction drafts only by explicit choice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3954,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:04:20.962Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "six-empty-answers-and-active-help",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-gate-experience-output\\practice-experience-all-si-b2e35-fts-only-by-explicit-choice-chrome\\attachments\\six-empty-answers-and-active-help-7d72787ee381593e10cee4be494a727a18ea04f0.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-3516db19013f0a5f7076",
+          "file": "practice-experience.spec.ts",
+          "line": 217,
+          "column": 1
+        },
+        {
+          "title": "an answer built from empty native blocks runs one group without saving and submits all real tests before the saved completion checklist advances",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2762,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:04:25.869Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "from-empty-run-submit-complete",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-gate-experience-output\\practice-experience-an-ans-4550f-mpletion-checklist-advances-chrome\\attachments\\from-empty-run-submit-complete-52663809af1a55f04a8c79db77cbef82688bbe1d.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-348593a32181d151550e",
+          "file": "practice-experience.spec.ts",
+          "line": 262,
+          "column": 1
+        },
+        {
+          "title": "a real pass remains visibly unsaved after a native receipt fault; explicit retry reuses that event and repeated submission cannot repeat awards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2732,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:04:28.640Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-save-retry-and-repeat",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-gate-experience-output\\practice-experience-a-real-2cef4-ission-cannot-repeat-awards-chrome\\attachments\\native-save-retry-and-repeat-bc3667cc9b3ad22b964551e89e6fab086890b25b.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-1c970892bf57f9fb227f",
+          "file": "practice-experience.spec.ts",
+          "line": 344,
+          "column": 1
+        },
+        {
+          "title": "independent and correction answers keep separate native drafts while invalid edits and switching modes withdraw the current run",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2643,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:04:31.381Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "separate-drafts-and-invalidation",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-gate-experience-output\\practice-experience-indepe-e3b8b-es-withdraw-the-current-run-chrome\\attachments\\separate-drafts-and-invalidation-6426c8fa798bed8f2f003639f5a944c666b1c3ad.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-88e4b074e6319942bd1b",
+          "file": "practice-experience.spec.ts",
+          "line": 401,
+          "column": 1
+        },
+        {
+          "title": "cancelling one held genuine run rejects its late result and a fresh one-group run recovers without learning effects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1711,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:04:34.033Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "run-cancel-stale-recovery",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-gate-experience-output\\practice-experience-cancel-2260d-rs-without-learning-effects-chrome\\attachments\\run-cancel-stale-recovery-7ca87412f128ca144098963ffddcae1dc5825855.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-87dc42ecaa6dfea0d403",
+          "file": "practice-experience.spec.ts",
+          "line": 504,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-29T06:04:20.323Z",
+    "duration": 16692.422000000002,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -59,6 +59,32 @@ export function assertRewardSettlement(previous: LedgerEntry | undefined, next: 
     throw new StorageError('S_RECORD_INVALID');
 }
 
+/** Internal reviewed-package transition; no learning row or receipt is synthesized. */
+export function prepareReviewedCourseSwitch(
+  meta: Meta,
+  generation: string,
+  expectedRevision: number,
+): Meta {
+  assertRecord('meta', meta);
+  if (meta.generation !== generation) throw new StorageError('S_GENERATION_STALE');
+  if (meta.revision !== expectedRevision) throw new StorageError('S_REVISION_CONFLICT');
+  if (meta.activePackageRef.id === 'content.c.p05' && meta.activePackageRef.version === '1.0.0')
+    return meta;
+  if (
+    meta.activePackageRef.id !== 'content.c.p0' ||
+    !['1.0.1', '1.0.2'].includes(meta.activePackageRef.version)
+  )
+    throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  if (meta.revision === Number.MAX_SAFE_INTEGER) throw new StorageError('S_RECORD_INVALID');
+  const next: Meta = {
+    ...meta,
+    revision: meta.revision + 1,
+    activePackageRef: { id: 'content.c.p05', version: '1.0.0' },
+  };
+  assertRecord('meta', next);
+  return next;
+}
+
 export interface OpenStorageOptions {
   activePackageRef: Ref;
   signal?: AbortSignal;
@@ -520,6 +546,53 @@ export class StorageClient {
               };
               assertRecord('meta', next);
               tx.objectStore('meta').put(next, 'current');
+              saved = { saved: true, revision: next.revision, replayed: false };
+            } catch (error) {
+              fail(error);
+            }
+          },
+          fail,
+          this.factory,
+        );
+      });
+      const current = await this.read();
+      if (current.meta.generation !== generation) throw new StorageError('S_GENERATION_STALE');
+      if (result.revision !== expectedRevision) this.broadcast(current.meta);
+      return result;
+    } catch (error) {
+      throw storageError(error);
+    }
+  }
+  /** P0.5-09: CAS switch only after the complete new assembly is verified. */
+  async switchReviewedCourseRelease(
+    generation: string,
+    expectedRevision: number,
+  ): Promise<SaveResult> {
+    try {
+      const tx = transaction(this.connection(), 'readwrite');
+      const result = await new Promise<SaveResult>((resolve, reject) => {
+        let failure: unknown;
+        let saved: SaveResult | undefined;
+        const fail = (error: unknown) => {
+          failure ??= error;
+          try {
+            tx.abort();
+          } catch {
+            /* already ended */
+          }
+        };
+        tx.onabort = () =>
+          reject(storageError(failure ?? tx.error ?? new StorageError('S_ABORTED')));
+        tx.onerror = () => {
+          failure ??= tx.error;
+        };
+        tx.oncomplete = () => (saved ? resolve(saved) : reject(new StorageError('S_ABORTED')));
+        readTransaction(
+          tx,
+          (snapshot) => {
+            try {
+              const next = prepareReviewedCourseSwitch(snapshot.meta, generation, expectedRevision);
+              if (next !== snapshot.meta) tx.objectStore('meta').put(next, 'current');
               saved = { saved: true, revision: next.revision, replayed: false };
             } catch (error) {
               fail(error);

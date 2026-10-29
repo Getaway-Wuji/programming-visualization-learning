@@ -1,5 +1,6 @@
 import type { InputBinding } from '../content/types';
 import type { BlockExpression, BlockProgram, BlockStatement } from './model';
+import { currentCourseBundle } from '../content/course-bundle';
 
 function lessonProgram(
   exerciseId: string,
@@ -160,6 +161,10 @@ export function correctionProgram(
   exerciseId: string,
   bindings: readonly InputBinding[],
 ): BlockProgram {
+  const guide = currentCourseBundle()?.guidance.find(
+    (entry) => entry.exerciseRef.id === exerciseId,
+  );
+  if (guide) return structuredClone(guide.correctionProgram);
   return lessonProgram(exerciseId, bindings, false);
 }
 

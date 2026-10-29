@@ -8,6 +8,10 @@ import {
   validateResultSchema,
   validateTraceSchema,
 } from './execution-schema.generated';
+import {
+  validateRequestSchema as validateP05RequestSchema,
+  validateResultSchema as validateP05ResultSchema,
+} from './execution-p05-schema.generated';
 
 export interface Ref {
   id: string;
@@ -102,19 +106,13 @@ export interface Diagnostic {
     relatedNodeIds?: string[];
   };
 }
-export type JudgeRule =
-  | 'input-read-output'
-  | 'multiply-add-output'
-  | 'if-else-paths'
-  | 'while-for-accumulations'
-  | 'single-index-increment'
-  | 'logical-array-accumulation';
+export type JudgeRule = import('../content/types').JudgeRule;
 export interface ExecuteRequest {
   kind: 'execute';
-  protocolVersion: '1.0.0';
+  protocolVersion: '1.0.0' | '1.1.0';
   traceVersion: '1.0.0';
   diagnosticVersion: '1.0.0';
-  judgeVersion: '1.0.0';
+  judgeVersion: '1.0.0' | '1.1.0';
   encodingVersion: '1.0.0';
   identity: ExecutionIdentity;
   mode: 'case' | 'exercise-test' | 'contract-probe';
@@ -313,10 +311,10 @@ export interface JudgeResult {
 }
 export interface ExecuteResult {
   kind: 'result';
-  protocolVersion: '1.0.0';
+  protocolVersion: '1.0.0' | '1.1.0';
   traceVersion: '1.0.0';
   diagnosticVersion: '1.0.0';
-  judgeVersion: '1.0.0';
+  judgeVersion: '1.0.0' | '1.1.0';
   encodingVersion: '1.0.0';
   identity: ExecutionIdentity;
   producer: 'rust' | 'adapter';
@@ -495,10 +493,11 @@ export function sourceByteBoundaries(source: string): Set<number> {
   const points = new Set([0]);
   let offset = 0;
   for (let i = 0; i < source.length;) {
-    const character = String.fromCodePoint(source.codePointAt(i)!);
-    i += character.length;
-    offset += utf8.encode(character).length;
-    if (character === '\r' && source[i] === '\n') {
+    const point = source.codePointAt(i)!;
+    i += point > 0xffff ? 2 : 1;
+    // TextEncoder replaces an isolated surrogate with U+FFFD (three bytes).
+    offset += point <= 0x7f ? 1 : point <= 0x7ff ? 2 : point <= 0xffff ? 3 : 4;
+    if (point === 13 && source.charCodeAt(i) === 10) {
       i++;
       offset++;
     }
@@ -535,8 +534,17 @@ export function encodeRequest(request: ExecuteRequest): Uint8Array<ArrayBuffer> 
     protocolAssert(size <= REQUEST_BYTES_LIMIT, 'E_PROTOCOL_INVALID');
     text += chunk;
   }
-  for (const key of versions) protocolAssert(request[key] === '1.0.0', 'E_PROTOCOL_VERSION');
-  protocolAssert(validateRequestSchema(request as unknown as Json), 'E_PROTOCOL_INVALID');
+  const p05 = request.protocolVersion === '1.1.0' && request.judgeVersion === '1.1.0';
+  for (const key of versions)
+    protocolAssert(
+      request[key] ===
+        (p05 && ['protocolVersion', 'judgeVersion'].includes(key) ? '1.1.0' : '1.0.0'),
+      'E_PROTOCOL_VERSION',
+    );
+  protocolAssert(
+    (p05 ? validateP05RequestSchema : validateRequestSchema)(request as unknown as Json),
+    'E_PROTOCOL_INVALID',
+  );
   requestRelationships(request);
   return utf8.encode(text);
 }
@@ -546,6 +554,7 @@ export async function decodeResult(
   guard: () => void = () => {},
 ): Promise<ExecuteResult> {
   guard();
+  const p05 = request.protocolVersion === '1.1.0' && request.judgeVersion === '1.1.0';
   protocolAssert(
     buffer instanceof ArrayBuffer &&
       buffer.byteLength > 0 &&
@@ -555,13 +564,15 @@ export async function decodeResult(
   const bytes = new Uint8Array(buffer),
     decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
   let text = '';
+  let decodedSince = performance.now();
   try {
     for (let at = 0; at < bytes.length; at += 65536) {
       text += decoder.decode(bytes.subarray(at, at + 65536), { stream: true });
       guard();
-      if (at % 262144 === 0) {
+      if (p05 ? performance.now() - decodedSince >= 6 : at % 262144 === 0) {
         await yieldTask();
         guard();
+        decodedSince = performance.now();
       }
     }
     text += decoder.decode();
@@ -585,10 +596,18 @@ export async function decodeResult(
     'E_PROTOCOL_INVALID',
   );
   for (const key of versions)
-    protocolAssert(value[key] === '1.0.0' && request[key] === '1.0.0', 'E_PROTOCOL_VERSION');
+    protocolAssert(
+      value[key] === request[key] &&
+        request[key] ===
+          (p05 && ['protocolVersion', 'judgeVersion'].includes(key) ? '1.1.0' : '1.0.0'),
+      'E_PROTOCOL_VERSION',
+    );
   if (value.trace && typeof value.trace === 'object' && !Array.isArray(value.trace))
     protocolAssert(value.trace.dslVersion === '1.0.0', 'E_PROTOCOL_VERSION');
-  const schemaValid = await runAsync(validateResultSchema(value, guard), guard);
+  const schemaValid = await runAsync(
+    (p05 ? validateP05ResultSchema : validateResultSchema)(value, guard),
+    guard,
+  );
   if (
     !schemaValid &&
     value.producer === 'rust' &&
@@ -626,14 +645,16 @@ export async function decodeResult(
       await runAsync(sameJson(result[key], request[key]), guard),
       'E_PROTOCOL_INVALID',
     );
-  // Strict parsing already inserted ASCII keys in canonical order. Every
-  // accepted protocol/parameter key is nonnumeric, so native stringify retains
-  // that order. Integers, Unicode scalars and escapes were checked before this
-  // bounded full re-encoding. Equal scalar text means equal canonical UTF-8.
+  // The 1.1 path uses the strict lexical pass as its canonical proof: keys
+  // are unique sorted nonnumeric ASCII, integers and escapes are shortest,
+  // and the private native/chunked parser preserves those scalars exactly.
+  // Schema/identity and full trace checks still run. Keep the legacy 1.0
+  // re-encoding path unchanged; a second whole-tree pass is unnecessary for
+  // the reviewed 1.1 result and can exhaust a multi-group submission deadline.
   guard();
-  if (shape.containers <= NATIVE_CONTAINER_BATCH)
+  if (!p05 && shape.containers <= NATIVE_CONTAINER_BATCH)
     protocolAssert(JSON.stringify(result) === text, 'E_PROTOCOL_INVALID');
-  else
+  else if (!p05)
     await runAsync(
       (function* (): Work<void> {
         let at = 0;
@@ -676,10 +697,10 @@ export function makeAdapterResult(
   const location: ExecutionLocation = { kind: 'synthetic', reason };
   return {
     kind: 'result',
-    protocolVersion: '1.0.0',
+    protocolVersion: request.protocolVersion,
     traceVersion: '1.0.0',
     diagnosticVersion: '1.0.0',
-    judgeVersion: '1.0.0',
+    judgeVersion: request.judgeVersion,
     encodingVersion: '1.0.0',
     identity: { ...request.identity },
     producer: 'adapter',

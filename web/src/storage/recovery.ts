@@ -279,6 +279,54 @@ export function inspectRecoveryRows(
       issue(name, source.keys.length - source.values.length);
     Object.assign(valid, { [name]: accepted });
   }
+  const result = (projection: StorageSnapshot): Omit<RecoveryRead, 'guard'> => ({
+    snapshot: projection,
+    issues: [
+      ...issues(),
+      ...(appearanceReadOnly ? [{ store: 'appearance' as const, count: 1 }] : []),
+    ],
+    canClear: clearableMeta,
+    resettable,
+    ledgerUncertain,
+    writable: issueCounts.size === 0 && !ledgerUncertain,
+    errorCode,
+    appearanceReadOnly,
+    appearanceCanReset:
+      !revisionExhausted &&
+      validateRecord('settings', raw.settings.values[0]) &&
+      raw.settings.keys.length === 1 &&
+      raw.settings.keys[0] === 'current' &&
+      raw.settings.values.length === 1 &&
+      !hasUnknownRecoveryVersion(raw),
+  });
+  // A healthy archive needs one complete relation check. Row shapes and native
+  // keys have already been checked above; damaged archives still use the exact
+  // isolation path below, without changing or deleting their stored records.
+  if (issueCounts.size === 0 && !appearanceReadOnly && !ledgerUncertain) {
+    const complete = { ...snapshot, ...valid };
+    if (consistent(complete)) {
+      const dailyLedger = valid.ledger.filter(
+        (entry) => entry.sourceId === 'reward.daily-goal.once',
+      );
+      // Keep the established read projection order as well as every row. Native
+      // key order can place daily awards before the exercise/lesson awards.
+      return result({
+        ...complete,
+        dailyFacts: valid.goals.flatMap((goal) =>
+          valid.dailyFacts.filter((fact) => fact.localDate === goal.localDate),
+        ),
+        ledger: [
+          ...valid.ledger.filter((entry) => entry.sourceId !== 'reward.daily-goal.once'),
+          ...valid.goals.flatMap((goal) =>
+            dailyLedger.filter((entry) => entry.localDate === goal.localDate),
+          ),
+          ...dailyLedger.filter(
+            (entry) => !valid.goals.some((goal) => goal.localDate === entry.localDate),
+          ),
+        ],
+      });
+    }
+  }
   snapshot.progress = valid.progress;
   snapshot.aliases = valid.aliases;
   if (!consistent(snapshot)) {
@@ -365,24 +413,5 @@ export function inspectRecoveryRows(
     }
   }
   // Invalid meta/relationships are never repaired by dropping data in the DB.
-  return {
-    snapshot,
-    issues: [
-      ...issues(),
-      ...(appearanceReadOnly ? [{ store: 'appearance' as const, count: 1 }] : []),
-    ],
-    canClear: clearableMeta,
-    resettable,
-    ledgerUncertain,
-    writable: issueCounts.size === 0 && !ledgerUncertain,
-    errorCode,
-    appearanceReadOnly,
-    appearanceCanReset:
-      !revisionExhausted &&
-      validateRecord('settings', raw.settings.values[0]) &&
-      raw.settings.keys.length === 1 &&
-      raw.settings.keys[0] === 'current' &&
-      raw.settings.values.length === 1 &&
-      !hasUnknownRecoveryVersion(raw),
-  };
+  return result(snapshot);
 }

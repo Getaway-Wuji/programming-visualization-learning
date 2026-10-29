@@ -152,6 +152,7 @@ const protocolModules = [
   'trace-validation',
   'execution-json',
   'execution-schema.generated',
+  'execution-p05-schema.generated',
 ];
 type Protocol = typeof import('../web/src/engine/protocol');
 let protocolPromise: Promise<Protocol> | undefined;
@@ -165,14 +166,19 @@ function protocol(): Promise<Protocol> {
         name,
         source: readFileSync(join(workspace, 'web/src/engine', `${name}.ts`), 'utf8'),
       }));
+      const compilerOptions = { target: ts.ScriptTarget.ES2023, module: ts.ModuleKind.ESNext };
+      // Bind the complete validator dependency graph and compiler options to a
+      // new cache directory while keeping permanent capture archives read-only.
       const digest = sha256(
-        ts.version + modules.map((item) => item.name + '\0' + item.source).join('\0'),
+        ts.version +
+          JSON.stringify(compilerOptions) +
+          modules.map((item) => item.name + '\0' + item.source).join('\0'),
       );
       const directory = join(workspace, '.artifacts/07.3/verification-runtime', digest);
       mkdirSync(directory, { recursive: true });
       for (const item of modules) {
         let source = ts.transpileModule(item.source, {
-          compilerOptions: { target: ts.ScriptTarget.ES2023, module: ts.ModuleKind.ESNext },
+          compilerOptions,
           fileName: `${item.name}.ts`,
         }).outputText;
         for (const name of protocolModules)

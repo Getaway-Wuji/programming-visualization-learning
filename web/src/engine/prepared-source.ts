@@ -264,10 +264,17 @@ export async function tryPreparePublishedSource(
     if (error instanceof Error && /^E_[A-Z_]+$/.test(error.message)) throw error;
     return null;
   }
+  // All three digests operate on the private snapshots made before the first
+  // await. They are independent; keep every proof without serial task waits.
+  const [catalogHash, sourceHash, templateHash] = await Promise.all([
+    sha256(catalogText, guard),
+    sha256(snapshot.program.sourceExample, guard),
+    sha256(templateText, guard),
+  ]);
   if (
-    (await sha256(catalogText, guard)) !== entry.catalogSha256 ||
-    (await sha256(snapshot.program.sourceExample, guard)) !== entry.sourceSha256 ||
-    (await sha256(templateText, guard)) !== entry.templateSha256
+    catalogHash !== entry.catalogSha256 ||
+    sourceHash !== entry.sourceSha256 ||
+    templateHash !== entry.templateSha256
   )
     return null;
   guard();

@@ -7,6 +7,7 @@ import type {
 } from './types';
 import type { ExecutionCatalog } from '../engine/execution-client';
 import { practiceRelease } from './practice-release.generated';
+import { loadCourseBundle } from './course-bundle';
 export interface CoursePractice {
   readonly practiceVersion: '1.0.0';
   readonly sourceSha256: string;
@@ -40,6 +41,9 @@ export async function decodePractice(bytes: Uint8Array): Promise<CoursePractice>
   );
 }
 export async function loadCoursePractice(signal?: AbortSignal): Promise<CoursePractice> {
+  const bundle = await loadCourseBundle();
+  if (signal?.aborted) throw new Error('PRACTICE_ABORTED');
+  if (bundle) return bundle.practice;
   const controller = new AbortController();
   const abort = () => controller.abort();
   signal?.addEventListener('abort', abort, { once: true });

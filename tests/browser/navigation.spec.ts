@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { openBlockKeyboardEditor } from './block-ui';
+import { openBlockKeyboardEditor, showPracticeBlocks } from './block-ui';
 
 const practicePath = '/#/practice/exercise.c.echo';
 const visualPath = '/#/visualize/case.c.bubble-sort';
@@ -80,6 +80,7 @@ test('workspaces keep real blocks beside read-only code, review playback and emp
   await ready(page, 'PAGE-04');
   const options = page.getByRole('region', { name: '积木工作区', exact: true });
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page);
   await expect(options).toBeVisible();
   await openBlockKeyboardEditor(page);
   await expect(

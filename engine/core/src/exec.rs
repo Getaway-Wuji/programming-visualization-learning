@@ -145,7 +145,14 @@ fn request_shape(
     if !exact(request, &REQUEST_KEYS) || request["kind"] != "execute" {
         return protocol();
     }
-    if VERSIONS.iter().any(|key| request[*key] != VERSION) {
+    let p05 = request["protocolVersion"] == "1.1.0"
+        && request["judgeVersion"] == "1.1.0"
+        && ["traceVersion", "diagnosticVersion", "encodingVersion"]
+            .iter()
+            .all(|key| request[*key] == VERSION)
+        && request["mode"] == "exercise-test"
+        && request["packageRef"] == json!({"id":"content.c.p05","version":"1.0.0"});
+    if !p05 && VERSIONS.iter().any(|key| request[*key] != VERSION) {
         return Err(ExecFailure("E_PROTOCOL_VERSION"));
     }
     let id = &request["identity"];
@@ -207,16 +214,25 @@ fn request_shape(
             ];
             if !exact(judge, &keys[..if has_array { 5 } else { 4 }])
                 || !reference(&judge["profileRef"])
-                || ![
-                    "input-read-output",
-                    "multiply-add-output",
-                    "if-else-paths",
-                    "while-for-accumulations",
-                    "single-index-increment",
-                    "logical-array-accumulation",
-                ]
-                .iter()
-                .any(|r| judge["rule"] == *r)
+                || !(if p05 {
+                    judge["rule"]
+                        .as_str()
+                        .and_then(crate::judge::p05_profile_for_rule)
+                        .is_some_and(|profile| {
+                            judge["profileRef"] == json!({"id":profile,"version":"1.0.0"})
+                        })
+                } else {
+                    [
+                        "input-read-output",
+                        "multiply-add-output",
+                        "if-else-paths",
+                        "while-for-accumulations",
+                        "single-index-increment",
+                        "logical-array-accumulation",
+                    ]
+                    .iter()
+                    .any(|r| judge["rule"] == *r)
+                })
                 || !judge["expectedStdout"]
                     .as_str()
                     .is_some_and(|s| s.len() <= 16384)
@@ -272,9 +288,30 @@ fn request_shape(
     if !exact(input, &["specRef", "values", "random"]) || !reference(&input["specRef"]) {
         return protocol();
     }
+    let no_input = p05
+        && matches!(
+            request["judge"]["profileRef"]["id"].as_str(),
+            Some("judge.c.first-output" | "judge.c.partial-array-init")
+        );
+    if no_input {
+        let suffix = if request["judge"]["profileRef"]["id"] == "judge.c.first-output" {
+            "first-output"
+        } else {
+            "partial-array-init"
+        };
+        if request["programRef"]
+            != json!({"id":format!("program.c.practice-{suffix}"),"version":"1.0.0"})
+            || input["specRef"] != json!({"id":format!("input.c.{suffix}"),"version":"1.0.0"})
+            || input["values"] != json!({})
+            || !input["random"].is_null()
+            || source["bindingMap"] != json!([])
+        {
+            return protocol();
+        }
+    }
     let values = input["values"]
         .as_object()
-        .filter(|v| !v.is_empty())
+        .filter(|v| !v.is_empty() || no_input)
         .ok_or(ExecFailure("E_PROTOCOL_INVALID"))?;
     for (key, value) in values {
         let mut bytes = key.bytes();
@@ -524,7 +561,10 @@ fn execute_request_inner(
             );
         }
         for key in VERSIONS {
-            fields.insert(key, b"\"1.0.0\"".to_vec());
+            fields.insert(
+                key,
+                codec::encode(&request[key], meter, 64).map_err(codec_failure)?,
+            );
         }
         fields.insert("kind", b"\"result\"".to_vec());
         fields.insert("producer", b"\"rust\"".to_vec());

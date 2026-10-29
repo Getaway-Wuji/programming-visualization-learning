@@ -84,13 +84,41 @@ export interface ProgramEntity extends LanguageOwned {
   readonly blockRefs: readonly EntityRef[];
   readonly reference: SourceReference;
 }
-export type JudgeRule =
+export type LegacyJudgeRule =
   | 'input-read-output'
   | 'multiply-add-output'
   | 'if-else-paths'
   | 'while-for-accumulations'
   | 'single-index-increment'
   | 'logical-array-accumulation';
+export type P05JudgeRule =
+  | 'entry-output'
+  | 'printf-integer-layout'
+  | 'ordered-output-dependency'
+  | 'scalar-reassignment'
+  | 'temporary-swap'
+  | 'scope-shadow-output'
+  | 'safe-wide-product'
+  | 'integer-quotient-remainder'
+  | 'boolean-classification'
+  | 'short-circuit-guard'
+  | 'if-positive-normalize'
+  | 'nested-sign-branches'
+  | 'interval-membership'
+  | 'while-countdown'
+  | 'break-continue-odd-sum'
+  | 'nested-grid-count'
+  | 'partial-array-initialization'
+  | 'logical-array-print'
+  | 'guarded-array-access'
+  | 'array-extrema'
+  | 'array-positive-count'
+  | 'linear-first-index'
+  | 'adjacent-order-check'
+  | 'bubble-ascending'
+  | 'selection-ascending'
+  | 'binary-first-index';
+export type JudgeRule = LegacyJudgeRule | P05JudgeRule;
 export interface JudgeProfileEntity extends ContentEntity {
   readonly rule: JudgeRule;
   readonly targetDescription: string;
@@ -143,10 +171,10 @@ export interface RewardSourceEntity extends ContentEntity {
   readonly pointsOwner: '11.1';
 }
 export interface ContentPackage {
-  readonly contractVersion: '1.0.0';
-  readonly packageId: 'content.c.p0';
+  readonly contractVersion: '1.0.0' | '1.1.0';
+  readonly packageId: 'content.c.p0' | 'content.c.p05';
   readonly packageVersion: '1.0.0';
-  readonly purpose: 'contract-fixture';
+  readonly purpose: 'contract-fixture' | 'publishable';
   readonly phase: 'P0';
   readonly languages: readonly LanguageEntity[];
   readonly subsets: readonly SubsetEntity[];

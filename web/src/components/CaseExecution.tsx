@@ -147,6 +147,7 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
   }
 
   useEffect(() => {
+    if (learningState.readingStatus === 'loading') return;
     const current = session.current;
     const token = ++current.token;
     const controller = new AbortController();
@@ -219,7 +220,15 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
       executionClient.invalidate();
       player.invalidate();
     };
-  }, [id, attempt, service, player]);
+  }, [
+    id,
+    attempt,
+    service,
+    player,
+    learningState.readingStatus,
+    learningState.reading?.packageRef.id,
+    learningState.reading?.packageRef.version,
+  ]);
 
   function invalidateInput() {
     resetWatch();

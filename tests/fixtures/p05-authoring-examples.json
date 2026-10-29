@@ -1,0 +1,634 @@
+{
+  "task": "P0.5-09",
+  "purpose": "developer-content-review-only",
+  "entries": [
+    {
+      "order": "01.01",
+      "lessonRef": {
+        "id": "lesson.c.first-program",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.first-output",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "先找到main主体中的输出位置。",
+        "使用printf，文字放在双引号内，末尾需要换行。",
+        "输出语句是printf(\"Hello, C!\\n\");，随后正常返回0。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    printf(\"Hello, C!\\n\");\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "01.02",
+      "lessonRef": {
+        "id": "lesson.c.variables-output",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.echo",
+        "version": "1.1.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "找到输入x的声明与当前值。",
+        "将变量读取放进printf的%d参数。",
+        "输出x和一个换行，不能输出示例常量。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "01.03",
+      "lessonRef": {
+        "id": "lesson.c.printf-layout",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.printf-layout",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "列出固定文字与会变化的两处整数。",
+        "格式中放两个%d，参数顺序为x、y；文字百分号写%%。",
+        "可用printf(\"x=%d,y=%d\\n100%%\\n\", x, y);一次输出两行。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int y = -2;\n    printf(\"x=%d,y=%d\\n100%%\\n\", x, y);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "01.04",
+      "lessonRef": {
+        "id": "lesson.c.statement-order",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.ordered-updates",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "画三行状态表：第一次读、第一次写后、第二次写后。",
+        "同一个x声明保留不变，把两条赋值分别放在三次printf之间。",
+        "顺序为输出x；x=x+1；输出x；x=x+2；输出x，每次末尾换行。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 4;\n    printf(\"%d\\n\", x);\n    x = x + 1;\n    printf(\"%d\\n\", x);\n    x = x + 2;\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "02.01",
+      "lessonRef": {
+        "id": "lesson.c.initialization-assignment",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.reassign-value",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "为结果单独建立一个局部变量，并先给它输入的当前值。",
+        "第一次输出后，用不带int的赋值语句修改这个变量。",
+        "int result=x；先输出；result=x+3；再输出。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = -2;\n    int result = x;\n    printf(\"%d\\n\", result);\n    result = x + 3;\n    printf(\"%d\\n\", result);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "02.02",
+      "lessonRef": {
+        "id": "lesson.c.temporary-swap",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.swap-with-temp",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "先判断哪个旧值会在第一条写入时消失。",
+        "把它保存到temp，再进行两次赋值。",
+        "可依次写int temp=x；x=y；y=temp，最后按x y输出。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 3;\n    int y = -2;\n    int temp = x;\n    x = y;\n    y = temp;\n    printf(\"%d %d\\n\", x, y);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "02.03",
+      "lessonRef": {
+        "id": "lesson.c.scope-shadowing",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.shadowed-values",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "保留输入x，另建一个外层局部量保存x。",
+        "在内层花括号中声明同名局部量并设为x+1，输出后退出。",
+        "外层int value=x；内层int value=x+1并输出；块外再输出value。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int value = x;\n    {\n        int value = x + 1;\n        printf(\"%d\\n\", value);\n    }\n    printf(\"%d\\n\", value);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "02.04",
+      "lessonRef": {
+        "id": "lesson.c.integer-safety",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.wide-product",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "先用绝对值估计最大结果是否超过int32上界。",
+        "用一个局部变量接收x与1000000的乘积。",
+        "int result=x*1000000；再printf(\"%d\\n\", result)。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int result = x * 1000000;\n    printf(\"%d\\n\", result);\n    return 0;\n}\n",
+      "extraExamples": [
+        {
+          "label": "故意的溢出示例",
+          "code": "#include <stdio.h>\nint main(void) {\n    int value = 2147483647;\n    value = value + 1;\n    printf(\"%d\\n\", value);\n    return 0;\n}\n",
+          "diagnostic": "E_INT_OVERFLOW",
+          "explanation": "第一条声明合法，下一次加法超出int32上界；赋值不提交，不产生该输出。"
+        },
+        {
+          "label": "故意的未初始化示例",
+          "code": "#include <stdio.h>\nint main(void) {\n    int value;\n    printf(\"%d\\n\", value);\n    return 0;\n}\n",
+          "diagnostic": "E_UNINITIALIZED",
+          "explanation": "声明了名字不等于已经有可读取的值；读取在输出提交前失败。"
+        }
+      ]
+    },
+    {
+      "order": "03.01",
+      "lessonRef": {
+        "id": "lesson.c.expressions",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.two-x-plus-three",
+        "version": "1.1.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "先列出乘以2和加3的先后关系。",
+        "输入x必须真实参与两种运算并影响输出。",
+        "可令result=2*x+3，再输出result和换行。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int result = (2 * x) + 3;\n    printf(\"%d\\n\", result);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "03.02",
+      "lessonRef": {
+        "id": "lesson.c.quotient-remainder",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.quotient-remainder",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "先分别写出/和%两个运算，操作数都用a、b。",
+        "用两个局部变量保存商和余数，按单空格输出。",
+        "printf(\"%d %d\\n\", a/b, a%b)也可直接读取两个真实结果。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int a = -7;\n    int b = 3;\n    int quotient = a / b;\n    int remainder = a % b;\n    printf(\"%d %d\\n\", quotient, remainder);\n    return 0;\n}\n",
+      "extraExamples": [
+        {
+          "label": "负除数对照",
+          "code": "#include <stdio.h>\nint main(void) {\n    int a = 7;\n    int b = -3;\n    printf(\"%d %d\\n\", a / b, a % b);\n    return 0;\n}\n",
+          "stdout": "-2 1\n",
+          "explanation": "余数跟随被除数7的符号，7=(-2)*(-3)+1。"
+        }
+      ]
+    },
+    {
+      "order": "03.03",
+      "lessonRef": {
+        "id": "lesson.c.boolean-logic",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.boolean-flags",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "第一标志拆成下界和上界两问，第二标志单独问是否等于0。",
+        "用&&连接范围比较；用x!=0或!(x==0)规范化非零结果。",
+        "可保存inRange=x>=0&&x<=10与nonzero=x!=0，再按两个%d输出。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 5;\n    int inRange = x >= 0 && x <= 10;\n    int nonzero = x != 0;\n    printf(\"%d %d\\n\", inRange, nonzero);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "03.04",
+      "lessonRef": {
+        "id": "lesson.c.short-circuit-safety",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.guarded-division",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "将“除数非0”写在&&左侧。",
+        "右侧放12/x>0，别提前保存在另一个变量里。",
+        "int flag=x!=0&&12/x>0；然后按%d和换行输出flag。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 3;\n    int flag = x != 0 && 12 / x > 0;\n    printf(\"%d\\n\", flag);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "04.01",
+      "lessonRef": {
+        "id": "lesson.c.single-if",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.absolute-with-if",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "从“负数才需要改”提炼条件。",
+        "if的块只做一次取反赋值，输出放在块后。",
+        "if(x<0){x=-x;}之后printf(\"%d\\n\",x)。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = -7;\n    if (x < 0) {\n        x = -x;\n    }\n    printf(\"%d\\n\", x);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "04.02",
+      "lessonRef": {
+        "id": "lesson.c.conditions",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.nonnegative",
+        "version": "1.1.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "非负包括0，分界条件是x>=0。",
+        "使用同一个if/else在不同输入下覆盖两路。",
+        "then输出1，else输出0，每条结果都换行。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = -3;\n    if (x >= 0) {\n        printf(\"1\\n\");\n    } else {\n        printf(\"0\\n\");\n    }\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "04.03",
+      "lessonRef": {
+        "id": "lesson.c.nested-conditions",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.sign-classification",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "先把输入分为负数和非负数。",
+        "在非负的else内部再区分0与正数。",
+        "外层if(x<0)输出-1；else内if(x==0)输出0，否则输出1。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = 0;\n    if (x < 0) {\n        printf(\"-1\\n\");\n    } else {\n        if (x == 0) {\n            printf(\"0\\n\");\n        } else {\n            printf(\"1\\n\");\n        }\n    }\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "04.04",
+      "lessonRef": {
+        "id": "lesson.c.interval-boundaries",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.in-closed-range",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "分别写“至少-3”和“至多7”。",
+        "区间内用&&，区间外用||，不要混淆它们。",
+        "if(x>=-3&&x<=7)输出1，否则输出0。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int x = -3;\n    if (x >= -3 && x <= 7) {\n        printf(\"1\\n\");\n    } else {\n        printf(\"0\\n\");\n    }\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "05.01",
+      "lessonRef": {
+        "id": "lesson.c.while-countdown",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.while-countdown",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "复制n到一个可变的current，想清输出在减1之前还是之后。",
+        "while(current>0)中先处理分隔符和输出，再current=current-1。",
+        "非首项可用current<n判断，循环外printf(\"\\n\")统一收尾。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int current = n;\n    while (current > 0) {\n        if (current < n) {\n            printf(\" \");\n        }\n        printf(\"%d\", current);\n        current = current - 1;\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "05.02",
+      "lessonRef": {
+        "id": "lesson.c.loops",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.two-loop-sums",
+        "version": "1.1.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "建立两个独立从0开始的累加器。",
+        "一个while、一个for各遍历1..n，输出两行。",
+        "每轮把当前计数+1系数累入对应和；n=0时两个和都保持0。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int i = 1;\n    int sumWhile = 0;\n    while (i <= n) {\n        sumWhile = sumWhile + i;\n        i = i + 1;\n    }\n    int sumFor = 0;\n    for (int j = 1; j <= n; j = j + 1) {\n        sumFor = sumFor + j;\n    }\n    printf(\"%d\\n%d\\n\", sumWhile, sumFor);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "05.03",
+      "lessonRef": {
+        "id": "lesson.c.loop-control",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.odd-sum-until-stop",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "先处理超过停止位置，再处理不需要的偶数。",
+        "两种转移都应发生在sum=sum+i之前。",
+        "循环1..n，if(i>stop)break；if(i%2==0)continue；剩余路径累加i。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 7;\n    int stop = 3;\n    int sum = 0;\n    for (int i = 1; i <= n; i = i + 1) {\n        if (i > stop) {\n            break;\n        }\n        if (i % 2 == 0) {\n            continue;\n        }\n        sum = sum + i;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "05.04",
+      "lessonRef": {
+        "id": "lesson.c.nested-loops",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.grid-count",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "先写一行的cols次计数，再用rows次外循环包住它。",
+        "count在两层外初始化，列计数在每行开始处初始化。",
+        "两层循环主体最深处只做count=count+1，最后统一输出count。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int rows = 3;\n    int cols = 4;\n    int count = 0;\n    for (int row = 0; row < rows; row = row + 1) {\n        for (int col = 0; col < cols; col = col + 1) {\n            count = count + 1;\n        }\n    }\n    printf(\"%d\\n\", count);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "06.01",
+      "lessonRef": {
+        "id": "lesson.c.array-initialization",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.partial-array-init",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "code",
+      "hints": [
+        "把容量写在方括号里，两个显式初值写在花括号里。",
+        "循环读取五项，别把后三个0手工加进初始化列表。",
+        "int values[5]={7,-2}；i从0到4逐项printf，最后换行。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int values[5] = {7, -2};\n    for (int i = 0; i < 5; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "06.02",
+      "lessonRef": {
+        "id": "lesson.c.array-update",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.1.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "只允许修改源数组的第k项。",
+        "读取values[k]，加1，再写回同一位置。",
+        "其余元素保持，输出更新后的values[k]并换行。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {4, 0, -2};\n    int k = 1;\n    values[k] = values[k] + 1;\n    printf(\"%d\\n\", values[k]);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "06.03",
+      "lessonRef": {
+        "id": "lesson.c.array-traversal-output",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.print-logical-array",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "先从i=0建立循环，继续条件是i<n。",
+        "每轮只读取当前values[i]，不要改数组。",
+        "i>0先输出空格，再输出当前整数，循环结束统一输出换行。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {3, 0, -2, 3};\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "06.04",
+      "lessonRef": {
+        "id": "lesson.c.logical-length-guards",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.safe-array-access",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "把两个必须同时满足的条件列出来。",
+        "只有守卫成立的分支才出现values[k]。",
+        "if(k>=0&&k<n)输出values[k]；else输出invalid和换行。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 2;\n    int values[2] = {3, 8};\n    int k = 1;\n    if (k >= 0 && k < n) {\n        printf(\"%d\\n\", values[k]);\n    } else {\n        printf(\"invalid\\n\");\n    }\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "07.01",
+      "lessonRef": {
+        "id": "lesson.c.array-sum",
+        "version": "1.1.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.1.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "从0开始累加所有逻辑元素。",
+        "下标0..n-1逐项读取，空输入不读占位。",
+        "循环中sum=sum+values[i]，最后输出sum和换行。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, -1, 2};\n    int sum = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        sum = sum + values[i];\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "07.02",
+      "lessonRef": {
+        "id": "lesson.c.array-extrema",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.array-extrema",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "先取values[0]作为两个候选，之后从下标1扫描。",
+        "每个新值分别与两个候选比较，只更新需要变化的那一个。",
+        "if(values[i]<minimum)minimum=values[i]；最大值相反，最后按min max输出。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {3, -2, 8, 0};\n    int minimum = values[0];\n    int maximum = values[0];\n    for (int i = 1; i < n; i = i + 1) {\n        if (values[i] < minimum) {\n            minimum = values[i];\n        }\n        if (values[i] > maximum) {\n            maximum = values[i];\n        }\n    }\n    printf(\"%d %d\\n\", minimum, maximum);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "07.03",
+      "lessonRef": {
+        "id": "lesson.c.array-counting",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.count-positive",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "定义count表示已经看过的元素中正数的个数。",
+        "循环每项，只有values[i]>0时才count加1。",
+        "count在循环外初始化0；主体if(values[i]>0){count=count+1;}，最后输出。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {-1, 0, 3, 3};\n    int count = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        if (values[i] > 0) {\n            count = count + 1;\n        }\n    }\n    printf(\"%d\\n\", count);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "07.04",
+      "lessonRef": {
+        "id": "lesson.c.linear-search-first",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.linear-search-first",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "答案先设为一个不合法的下标-1。",
+        "从0递增比较，第一次相等时保存当前i并退出。",
+        "if(values[i]==target){answer=i;break;}，循环后输出answer。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {4, 2, 2, 9};\n    int target = 2;\n    int answer = -1;\n    for (int i = 0; i < n; i = i + 1) {\n        if (values[i] == target) {\n            answer = i;\n            break;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "08.01",
+      "lessonRef": {
+        "id": "lesson.c.adjacent-order",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.check-nondecreasing",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "把ordered先设为1，只在找到反例时改0。",
+        "相邻比较使用values[i]和values[i+1]，i必须小于n-1。",
+        "发现values[i]>values[i+1]时ordered=0，可break；最后输出标志。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 4;\n    int values[4] = {1, 3, 2, 4};\n    int ordered = 1;\n    for (int i = 0; i < n - 1; i = i + 1) {\n        if (values[i] > values[i + 1]) {\n            ordered = 0;\n            break;\n        }\n    }\n    printf(\"%d\\n\", ordered);\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "08.02",
+      "lessonRef": {
+        "id": "lesson.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.bubble-sort",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "先写一次相邻交换，确认临时变量保护两个旧值。",
+        "外层end从n-1减到1，内层j从0走到end-1。",
+        "仅当values[j]>values[j+1]时用temp交换，完成所有轮次后遍历输出。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 7;\n    int values[7] = {7, -3, 0, 5, -3, 2, 9};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "08.03",
+      "lessonRef": {
+        "id": "lesson.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.selection-sort",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "每轮从i开始设minIndex=i，再扫描i+1..n-1。",
+        "只在新元素严格小于当前候选时更新minIndex。",
+        "扫描后if(minIndex!=i)用temp交换values[i]与values[minIndex]，再进入下一轮。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 7;\n    int values[7] = {7, -3, 0, 5, -3, 2, 9};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+      "extraExamples": []
+    },
+    {
+      "order": "08.04",
+      "lessonRef": {
+        "id": "lesson.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "exerciseRef": {
+        "id": "exercise.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "preferredEditor": "blocks",
+      "hints": [
+        "使用闭区间[0,n-1]和answer=-1。",
+        "当values[mid]>=target时向左缩；若相等先保存mid。",
+        "命中后right=mid-1；较小时left=mid+1；循环条件left<=right，最后输出answer。"
+      ],
+      "source": "#include <stdio.h>\nint main(void) {\n    int n = 5;\n    int values[5] = {-2, 0, 0, 4, 8};\n    int target = 0;\n    int left = 0;\n    int right = n - 1;\n    int answer = -1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (values[mid] >= target) {\n            if (values[mid] == target) {\n                answer = mid;\n            }\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n",
+      "extraExamples": []
+    }
+  ]
+}

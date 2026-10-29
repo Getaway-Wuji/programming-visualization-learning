@@ -1,4 +1,5 @@
 import goalJson from '../../../content/goals/p0-1.0.0.json?raw';
+import expandedGoalJson from '../../../content/goals/p0-1.1.0.json?raw';
 import policyJson from '../../../content/rewards/daily-goal-p0-1.0.0.json?raw';
 import type { StorageMutation } from '../storage/client';
 import type { GoalTargets, LedgerEntry, Ref, StorageSnapshot } from '../storage/model';
@@ -40,19 +41,20 @@ export function decodeGoalConfiguration(value: unknown): GoalConfiguration {
   row(value.limits, ['exercise', 'lesson', 'case']);
   if (
     value.configRef.id !== 'goal.config.p0' ||
-    value.configRef.version !== '1.0.0' ||
+    !['1.0.0', '1.1.0'].includes(value.configRef.version as string) ||
     value.recommended.exercise !== 1 ||
     value.recommended.lesson !== 1 ||
     value.recommended.case !== 0 ||
-    value.limits.exercise !== 6 ||
-    value.limits.lesson !== 6 ||
+    value.limits.exercise !== (value.configRef.version === '1.1.0' ? 32 : 6) ||
+    value.limits.lesson !== (value.configRef.version === '1.1.0' ? 32 : 6) ||
     value.limits.case !== 7
   )
     throw new Error('GOAL_CONFIGURATION_INVALID');
   return frozen(structuredClone(value) as unknown as GoalConfiguration);
 }
-export async function loadGoalConfiguration(): Promise<GoalConfiguration> {
-  return decodeGoalConfiguration(JSON.parse(goalJson));
+export async function loadGoalConfiguration(packageRef?: Ref): Promise<GoalConfiguration> {
+  const expanded = packageRef?.id === 'content.c.p05' && packageRef.version === '1.0.0';
+  return decodeGoalConfiguration(JSON.parse(expanded ? expandedGoalJson : goalJson));
 }
 export function assertConfiguredTargets(targets: GoalTargets, config: GoalConfiguration): void {
   assertGoalTargets(targets);

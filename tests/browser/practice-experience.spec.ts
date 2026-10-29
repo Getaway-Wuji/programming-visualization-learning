@@ -5,7 +5,7 @@ import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { ExerciseEntity, LessonEntity, ProgramEntity } from '../../web/src/content/types';
 import type { Receipt, StorageSnapshot } from '../../web/src/storage/model';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import { blockOptions, blockWorkspace, selectBlock } from './block-ui';
+import { blockOptions, blockWorkspace, selectBlock, showPracticeBlocks } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
 
 const reviewed = JSON.parse(
@@ -62,6 +62,7 @@ function unchangedFacts(before: StorageSnapshot, after: StorageSnapshot) {
 async function ready(page: Page, id = echo) {
   await page.goto(`/#/practice/${id}`);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   await expect(saved(page)).toHaveAttribute('data-save-status', 'ready');
   await expect(
@@ -73,6 +74,7 @@ async function mode(page: Page, name: '独立练习' | '改错练习') {
   const button = page.getByTestId('practice-mode').getByRole('button', { name, exact: true });
   await button.click();
   await expect(button).toHaveAttribute('aria-pressed', 'true');
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
 }
 
@@ -134,6 +136,7 @@ async function confirmLesson(page: Page) {
   await expect(page.getByTestId('lesson-confirmation-check')).toHaveAttribute('data-saved', 'yes');
   await page.getByRole('link', { name: '进入练习工作区', exact: true }).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
 }
 

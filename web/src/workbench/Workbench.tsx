@@ -22,6 +22,7 @@ export function Workbench({
   first,
   second,
   onSecondVisibility,
+  firstAvailable = true,
 }: {
   kind: WorkbenchKind;
   firstLabel: string;
@@ -29,6 +30,7 @@ export function Workbench({
   first: ReactNode;
   second: ReactNode;
   onSecondVisibility?: (visible: boolean) => void;
+  firstAvailable?: boolean;
 }) {
   const { layout, change, capture, disabled } = useWorkbench();
   const configuration = useAppearance().loaded?.configuration?.layout;
@@ -55,8 +57,8 @@ export function Workbench({
     observer.observe(element);
     return () => observer.disconnect();
   }, [minimumWidth]);
-  const firstHidden = narrow ? active !== 'first' : expanded === 'second';
-  const secondHidden = narrow ? active !== 'second' : expanded === 'first';
+  const firstHidden = !firstAvailable || (narrow ? active !== 'first' : expanded === 'second');
+  const secondHidden = firstAvailable && (narrow ? active !== 'second' : expanded === 'first');
   useEffect(() => onSecondVisibility?.(!secondHidden), [secondHidden, onSecondVisibility]);
   const clamp = (value: number) => Math.max(30, Math.min(70, Math.round(value)));
   const save = (value: number, guard?: LayoutGuard) => {
@@ -83,17 +85,17 @@ export function Workbench({
         className="workbench-region"
         data-testid={`workbench-${name}`}
         id={`${id}-${name}`}
-        role={narrow ? 'tabpanel' : 'region'}
+        role={narrow && firstAvailable ? 'tabpanel' : 'region'}
         aria-label={label}
         hidden={hidden}
-        aria-labelledby={narrow ? `${id}-${name}-tab` : undefined}
+        aria-labelledby={narrow && firstAvailable ? `${id}-${name}-tab` : undefined}
       >
         <div className="workbench-region-heading">
           <span>{label}</span>
           <button
             type="button"
             className="button button-small pane-expand"
-            hidden={narrow}
+            hidden={narrow || !firstAvailable}
             aria-label={expanded === name ? '还原分栏' : `展开${label}`}
             aria-expanded={expanded === name}
             onClick={() => setExpanded(expanded === name ? 'none' : name)}
@@ -115,8 +117,9 @@ export function Workbench({
       data-narrow={narrow}
       data-active-pane={active}
       data-expanded={expanded}
+      data-single-pane={!firstAvailable}
     >
-      <div className="workbench-tools">
+      <div className="workbench-tools" hidden={!firstAvailable}>
         <div className="workbench-tabs" role="tablist" aria-label="工作区域" hidden={!narrow}>
           {(['first', 'second'] as const).map((name) => (
             <button
@@ -179,7 +182,7 @@ export function Workbench({
           role="separator"
           className="workbench-divider"
           tabIndex={0}
-          hidden={narrow || expanded !== 'none'}
+          hidden={narrow || expanded !== 'none' || !firstAvailable}
           aria-label="调整面板宽度"
           aria-orientation="vertical"
           aria-valuemin={30}

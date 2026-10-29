@@ -21,6 +21,7 @@ import { encodeRequest } from '../../web/src/engine/protocol';
 import { preparedSourceManifest } from '../../web/src/generated/prepared-sources';
 import { initSync, prepare_input } from '../../web/src/generated/c_viz_wasm';
 import { caseSetSamples } from '../fixtures/case-set';
+import { exerciseRequest } from '../../web/src/practice/submission';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder('utf-8', { fatal: true });
@@ -49,6 +50,32 @@ const catalogs = [
 ];
 const byId = (id: string) => catalogs.find((entry) => entry.subject.id === id)!;
 const entityRef = ({ id, version }: { id: string; version: string }) => ({ id, version });
+const expanded = readJson('../../content/c/p05/course-1.0.0.json') as ContentPackage;
+const expandedPractice: CoursePractice = {
+  practiceVersion: '1.0.0',
+  sourceSha256: '',
+  packageRef: { id: expanded.packageId, version: expanded.packageVersion },
+  exercises: expanded.exercises,
+  programs: expanded.programs,
+  inputSpecs: expanded.inputSpecs,
+  judgeProfiles: expanded.judgeProfiles,
+};
+const expandedCatalogs: ExecutionCatalog[] = [
+  ...expanded.cases.map((subject) => {
+    const program = expanded.programs.find(
+      (entry) => entry.id === subject.programRef.id && entry.version === subject.programRef.version,
+    )!;
+    return {
+      packageRef: expandedPractice.packageRef,
+      subject,
+      program,
+      inputSpec: expanded.inputSpecs.find(
+        (entry) => entry.id === program.inputRef.id && entry.version === program.inputRef.version,
+      )!,
+    };
+  }),
+  ...expanded.exercises.map((subject) => exerciseCatalog(expandedPractice, subject.id)),
+];
 
 function rustPrepare(catalog: ExecutionCatalog, values: InputValues): PreparedSource {
   const bytes = prepare_input(JSON.stringify(catalog), encoder.encode(canonical(values)), 1000);
@@ -102,12 +129,15 @@ beforeAll(() => {
   });
 });
 
-test('the generated registry contains exactly the 13 published catalogs and no contract fixtures', () => {
-  expect(preparedSourceManifest.entries).toHaveLength(13);
-  expect(new Set(preparedSourceManifest.entries.map((entry) => entry.catalogSha256))).toEqual(
+test('the generated registry preserves exactly the 13 legacy published catalogs and no contract fixtures', () => {
+  const legacy = preparedSourceManifest.entries.filter(
+    (entry) => entry.packageRef.id === 'content.c.p0',
+  );
+  expect(legacy).toHaveLength(13);
+  expect(new Set(legacy.map((entry) => entry.catalogSha256))).toEqual(
     new Set(catalogs.map((catalog) => sha(canonical(catalog)))),
   );
-  expect(new Set(preparedSourceManifest.entries.map((entry) => entry.programRef.id)).size).toBe(10);
+  expect(new Set(legacy.map((entry) => entry.programRef.id)).size).toBe(10);
   for (const catalog of catalogs) {
     const entry = preparedSourceManifest.entries.find(
       (item) => item.catalogSha256 === sha(canonical(catalog)),
@@ -408,3 +438,155 @@ test('catalog and actual input arrays are snapshotted before the first asynchron
     spy.mockRestore();
   }
 });
+
+test('the expanded registry adds exactly 39 precise catalogs while retaining all 13 legacy entries', () => {
+  const entries = preparedSourceManifest.entries.filter(
+    (entry) => entry.packageRef.id === 'content.c.p05',
+  );
+  expect(entries).toHaveLength(39);
+  expect(expandedCatalogs).toHaveLength(39);
+  expect(preparedSourceManifest.entries).toHaveLength(52);
+  expect(new Set(preparedSourceManifest.entries.map((entry) => entry.programRef.id)).size).toBe(36);
+  expect(new Set(entries.map((entry) => entry.catalogSha256))).toEqual(
+    new Set(expandedCatalogs.map((catalog) => sha(canonical(catalog)))),
+  );
+  expect(expandedCatalogs.filter((entry) => entry.subject.id.startsWith('case.'))).toHaveLength(7);
+  expect(expanded.exercises.reduce((sum, entry) => sum + entry.tests.length, 0)).toBe(140);
+});
+
+test.each(expandedCatalogs.map((catalog) => [catalog.subject.id, catalog] as const))(
+  'expanded %s declarations, fixed inputs and boundaries match the real Rust producer',
+  async (_id, catalog) => {
+    const entry = preparedSourceManifest.entries.find(
+      (item) => item.catalogSha256 === sha(canonical(catalog)),
+    );
+    expect(entry).toEqual(entryFor(catalog));
+    const inputs: InputValues[] = [catalog.program.exampleInput];
+    if ('tests' in catalog.subject) inputs.push(...catalog.subject.tests.map((test) => test.input));
+    const sequence = catalog.inputSpec.fields.find((field) => field.kind === 'sequence');
+    if (sequence) {
+      for (const length of [0, 1, 30]) {
+        if (length < (sequence.minItems ?? 0) || length > (sequence.maxItems ?? 30)) continue;
+        inputs.push(generateInput(catalog.inputSpec, 'P05声明范围🌱', length).values);
+      }
+    } else {
+      for (const field of catalog.inputSpec.fields) {
+        inputs.push({ ...catalog.program.exampleInput, [field.key]: field.min });
+        inputs.push({ ...catalog.program.exampleInput, [field.key]: field.max });
+      }
+    }
+    for (const values of inputs) {
+      expect(validateInputValues(catalog.inputSpec, values).ok).toBe(true);
+      const result = await tryPreparePublishedSource(catalog, values);
+      const expected = rustPrepare(catalog, values);
+      expect(result).not.toBeNull();
+      expect(result).toEqual(expected);
+      expect(encoder.encode(canonical(result))).toEqual(encoder.encode(canonical(expected)));
+      expect(withoutDeclarations(result!)).toBe(withoutDeclarations(entry!.template));
+    }
+    if ('tests' in catalog.subject) {
+      const exercise = exerciseCatalog(expandedPractice, catalog.subject.id);
+      const source = await tryPreparePublishedSource(catalog, catalog.subject.tests[0].input);
+      const request = exerciseRequest(
+        exercise,
+        source!,
+        {
+          contextId: 'prepared.p05',
+          contextRevision: 1,
+          sourceRevision: 1,
+        },
+        'prepared.p05.submission',
+        catalog.subject.tests[0],
+      );
+      expect(() => encodeRequest(request)).not.toThrow();
+    }
+  },
+);
+
+test.each(['first-output', 'partial-array-init'])(
+  'expanded %s declarations remain genuinely empty and reject undeclared input',
+  async (suffix) => {
+    const catalog = exerciseCatalog(expandedPractice, `exercise.c.${suffix}`);
+    expect(catalog.inputSpec.fields).toEqual([]);
+    expect(catalog.inputSpec.relations).toEqual([]);
+    expect(catalog.program.bindings).toEqual([]);
+    const prepared = await tryPreparePublishedSource(catalog, {});
+    expect(prepared).toEqual(rustPrepare(catalog, {}));
+    expect(prepared!.bindingMap).toEqual([]);
+    expect(prepared!.text).toBe(catalog.program.sourceExample);
+    await expect(tryPreparePublishedSource(catalog, { x: 1 })).rejects.toThrow('E_INPUT_INVALID');
+  },
+);
+
+test('all 39 expanded static preparations leave the product execution Module and workers cold', async () => {
+  const fetcher = vi.fn<typeof fetch>(() => {
+    throw new Error('No execution fetch for static preparation');
+  });
+  const compile = vi.fn<typeof WebAssembly.compile>(() => {
+    throw new Error('No execution compile for static preparation');
+  });
+  const createWorker = vi.fn(() => {
+    throw new Error('No preparation worker');
+  });
+  const client = new ExecutionClient({ fetcher, compile, createWorker });
+  try {
+    for (const catalog of expandedCatalogs) {
+      const prepared = await client
+        .prepare(catalog, catalog.program.exampleInput)
+        .catch((error: unknown) => {
+          throw new Error(`${catalog.subject.id}: product preparation failed`, { cause: error });
+        });
+      expect(prepared).toEqual(rustPrepare(catalog, catalog.program.exampleInput));
+    }
+    expect(client.inspect()).toEqual({ state: 'idle', activeWorkers: 0, cachedModules: 0 });
+    expect(fetcher).not.toHaveBeenCalled();
+    expect(compile).not.toHaveBeenCalled();
+    expect(createWorker).not.toHaveBeenCalled();
+  } finally {
+    client.invalidate();
+  }
+});
+
+test.each(['first-output', 'partial-array-init'])(
+  'ExecutionClient prepares reviewed zero-input %s without a Module or worker',
+  async (suffix) => {
+    const catalog = exerciseCatalog(expandedPractice, `exercise.c.${suffix}`);
+    const fetcher = vi.fn<typeof fetch>(() => {
+      throw new Error('No execution fetch');
+    });
+    const compile = vi.fn<typeof WebAssembly.compile>(() => {
+      throw new Error('No execution compile');
+    });
+    const createWorker = vi.fn(() => {
+      throw new Error('No preparation worker');
+    });
+    const client = new ExecutionClient({ fetcher, compile, createWorker });
+    try {
+      const prepared = await client.prepare(catalog, {});
+      expect(prepared).toEqual(rustPrepare(catalog, {}));
+      expect(prepared.bindingMap).toEqual([]);
+      expect(client.inspect()).toEqual({ state: 'idle', activeWorkers: 0, cachedModules: 0 });
+      await expect(client.prepare(catalog, { x: 1 })).rejects.toThrow('E_INPUT_INVALID');
+      expect(fetcher).not.toHaveBeenCalled();
+      expect(compile).not.toHaveBeenCalled();
+      expect(createWorker).not.toHaveBeenCalled();
+      for (const mutate of [
+        (value: ExecutionCatalog) => {
+          value.program = { ...value.program, id: 'program.c.practice-other' };
+        },
+        (value: ExecutionCatalog) => {
+          value.judgeProfile = { ...value.judgeProfile!, id: 'judge.c.other' };
+        },
+        (value: ExecutionCatalog) => {
+          value.inputSpec = { ...value.inputSpec, id: 'input.c.other' };
+        },
+      ]) {
+        const forged = structuredClone(catalog);
+        mutate(forged);
+        expect(await tryPreparePublishedSource(forged, {})).toBeNull();
+      }
+    } finally {
+      client.invalidate();
+    }
+  },
+);

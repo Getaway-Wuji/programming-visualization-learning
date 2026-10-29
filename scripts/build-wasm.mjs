@@ -69,6 +69,8 @@ writeFileSync(
       evidenceLevel: 'engineering-build',
       interpreterReady: true,
       executionProtocol: 'EXEC-01 1.0.0',
+      supportedExecutionProtocols: ['EXEC-01 1.0.0', 'EXEC-01 1.1.0'],
+      supportedVersionVectors: ['1.0.0/1.0.0/1.0.0/1.0.0/1.0.0', '1.1.0/1.0.0/1.0.0/1.1.0/1.0.0'],
       environment,
       ...inspection,
       bytes: bytes.length,

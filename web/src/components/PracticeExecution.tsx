@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { lazy, Suspense, useRef, useCallback } from 'react';
+import { lazy, Suspense, useRef, useCallback, useEffect, useState } from 'react';
 import { usePractice } from '../practice/react';
 import { blocksAtLocation } from '../practice/block-location';
 import { LearningSaveStatus, useLearning } from '../learning/react';
@@ -10,8 +10,21 @@ import { PlayerControls } from './PlayerControls';
 import { Workbench, WorkspaceContext } from '../workbench/Workbench';
 import { PracticeGuidance } from './PracticeGuidance';
 import { LessonCompletion } from './LessonCompletion';
+import { reviewedDurableSnapshot } from '../learning/reviewed-release';
+import {
+  BlockWorkspacePreference,
+  useBlockWorkspacePreference,
+} from '../appearance/BlockWorkspacePreference';
+import {
+  loadTeachingPresentation,
+  resolvePreferredEditor,
+  type TeachingPresentationLoad,
+} from '../content/teaching-presentation';
 const BlockWorkspace = lazy(() =>
   import('../blocks/BlockWorkspace').then((module) => ({ default: module.BlockWorkspace })),
+);
+const DraftCodeEditor = lazy(() =>
+  import('./DraftCodeEditor').then((module) => ({ default: module.DraftCodeEditor })),
 );
 const checkLabels: Record<string, string> = {
   'input-bindings': '输入声明与实际输入一致',
@@ -50,17 +63,77 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
     [session],
   );
   const { state: learning, service } = useLearning();
+  const preference = useBlockWorkspacePreference();
+  const [presentation, setPresentation] = useState<TeachingPresentationLoad | null>(null);
   const active = state.exerciseId === id;
   const catalog = active ? state.catalog : undefined;
   const result = active ? state.result : undefined;
   const source = active ? state.source : undefined;
   const phase = active ? state.phase : 'empty';
   const busy = ['running', 'preparing'].includes(phase);
+  const edit = active ? state.editDocument : undefined;
+  const recommendation = resolvePreferredEditor(
+    presentation?.configuration ?? null,
+    catalog?.packageRef,
+    catalog?.subject.lessonRef,
+  );
+  const blocksVisible =
+    preference.value === 'show' || (preference.value === 'auto' && recommendation === 'blocks');
+  // Once mounted, retain the native canvas and undo history while hidden.
+  const [canvasOwner, setCanvasOwner] = useState('');
+  const canvasKey = `${id}:${state.modeRevision}`;
+  const mountCanvas = blocksVisible || canvasOwner === canvasKey;
+  if (blocksVisible && canvasOwner !== canvasKey) setCanvasOwner(canvasKey);
+  useEffect(() => {
+    let current = true;
+    void loadTeachingPresentation().then((value) => {
+      if (current) setPresentation(value);
+    });
+    return () => {
+      current = false;
+    };
+  }, []);
+  useEffect(() => {
+    if (
+      presentation &&
+      learning.status !== 'loading' &&
+      active &&
+      !review &&
+      (!edit || (!blocksVisible && !state.codeEditing)) &&
+      (edit || state.source) &&
+      !busy
+    )
+      void session.enableCodeEditing(!blocksVisible || state.codeEditing === true);
+  }, [
+    presentation,
+    learning.status,
+    active,
+    review,
+    blocksVisible,
+    state.codeEditing,
+    state.source,
+    edit,
+    busy,
+    session,
+  ]);
+  const syncBlocked =
+    (!review && !!catalog && !edit) ||
+    (!!edit &&
+      (edit.analysisPending ||
+        !!edit.analysisError ||
+        edit.syncStatus !== 'synced' ||
+        edit.validatedDocumentRevision !== edit.identity.documentRevision));
   const retrySavedHistory =
     state.saveStatus === 'unsaved' &&
     learning.lastSaved &&
     learning.pendingCount === 0 &&
-    learning.snapshot?.progress.some(
+    (learning.snapshot && (learning.practiceCatalog ?? learning.reading?.catalog)
+      ? reviewedDurableSnapshot(
+          learning.snapshot,
+          (learning.practiceCatalog ?? learning.reading?.catalog)!,
+        )
+      : learning.snapshot
+    )?.progress.some(
       (row) =>
         row.eventType === 'exercise.passed' &&
         row.subjectRef.id === id &&
@@ -76,6 +149,7 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
     ...new Set([
       ...blockLocation,
       ...state.issues.flatMap((issue) => (issue.blockId ? [issue.blockId] : [])),
+      ...(state.selectedBlockId ? [state.selectedBlockId] : []),
     ]),
   ];
   const retainedTest = catalog?.subject.tests.find((test) => test.caseKey === state.caseKey);
@@ -120,59 +194,104 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
             <button
               className="button button-secondary"
               onClick={() => void session.run()}
-              disabled={busy || !source || state.issues.length > 0}
+              disabled={busy || syncBlocked || !source || state.issues.length > 0}
             >
               运行本组
             </button>
             <button
               className="button button-secondary"
               onClick={() => void session.preview()}
-              disabled={busy || !state.program}
+              disabled={busy || syncBlocked || !state.program}
             >
               准备代码
             </button>
             <button
               className="button button-primary"
               onClick={() => void session.submit()}
-              disabled={busy || !source || state.issues.length > 0}
+              disabled={busy || syncBlocked || !source || state.issues.length > 0}
             >
               提交练习
             </button>
             <button
               className="button button-secondary"
               onClick={() => session.cancel()}
-              disabled={!busy}
+              disabled={!busy && !edit?.analysisPending}
             >
               {state.action === 'run' ? '取消运行' : '取消提交'}
             </button>
             <Link className="text-link" to={paths.review(id)}>
               查看本次复盘
             </Link>
+            {!state.codeEditing ? (
+              <button
+                className="button button-secondary"
+                disabled={busy || (!edit && (!source || !state.program || state.issues.length > 0))}
+                onClick={() => void session.enableCodeEditing()}
+              >
+                编辑 C 并同步积木
+              </button>
+            ) : blocksVisible ? (
+              <button
+                className="button button-secondary"
+                onClick={() => session.setCodeEditing(false)}
+              >
+                收起代码编辑
+              </button>
+            ) : null}
+            {edit && !state.codeEditing && (
+              <span role="status">
+                {syncBlocked ? '当前草稿尚未同步，无法运行。' : '当前代码与积木已同步。'}
+              </span>
+            )}
           </div>
           <p className="muted">
             运行本组只检查第一组输入，不记录通过或积分；提交练习才检查全部
             {catalog.subject.tests.length} 组与教学目标。准备代码只生成源码。
-            修改积木会立即使旧判定和轨迹失效；已保存的历史通过仍保留。
+            修改积木或代码会立即使旧判定和轨迹失效；已保存的历史通过仍保留。
           </p>
-          <div id="practice-answer" tabIndex={-1} data-testid="practice-editor-layout">
+          <BlockWorkspacePreference control={preference} recommendation={recommendation} />
+          {!edit && <p role="status">正在准备本题代码与积木，请稍候……</p>}
+          {presentation?.status === 'fallback' && (
+            <p className="notice" role="status">
+              课程展示推荐暂不可用，自动模式已使用代码作答。你仍可选择显示积木。
+            </p>
+          )}
+          <div
+            id="practice-answer"
+            tabIndex={-1}
+            data-testid="practice-editor-layout"
+            data-blocks-visible={blocksVisible ? 'yes' : 'no'}
+          >
             <Workbench
               kind="practice"
+              firstAvailable={blocksVisible}
               firstLabel="积木"
-              secondLabel="生成代码"
+              secondLabel={state.codeEditing ? '编辑代码' : '生成代码'}
               first={
                 <div>
-                  {state.initialProgram && (
+                  {state.initialProgram && mountCanvas && (
                     <Suspense fallback={<p role="status">正在准备积木工作区……</p>}>
                       <BlockWorkspace
                         key={`${id}:${state.modeRevision}`}
                         value={state.workspaceProgram ?? state.initialProgram}
                         draft={state.draft}
                         activeBlockIds={activeBlocks}
+                        selectedBlockId={state.selectedBlockId}
+                        onSelect={(blockId) => session.selectBlock(blockId)}
+                        onSnapshot={(draft) => session.recordWorkspaceDraft(draft)}
+                        disabled={!edit || (edit.authoritativeDraft.kind === 'code' && syncBlocked)}
                         onChange={(program, issues, draft) =>
                           session.editBlocks(program, issues, draft)
                         }
                       />
                     </Suspense>
+                  )}
+                  {edit && syncBlocked && (
+                    <p className="notice" data-testid="historical-blocks-notice">
+                      {edit.authoritativeDraft.kind === 'code'
+                        ? '积木区保留上次有效结构，仅供对照。当前草稿完成同步后才能继续使用这些积木。'
+                        : '积木尚未同步，当前不能运行或提交，请继续修复连接。'}
+                    </p>
                   )}
                   {state.issues.length > 0 && (
                     <ul role="alert" data-testid="block-issues">
@@ -187,8 +306,21 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
                 </div>
               }
               second={
-                <aside className="practice-generated-code" aria-label="积木生成的只读代码">
-                  {source ? (
+                <aside className="practice-generated-code" aria-label="代码与积木联动">
+                  {state.codeEditing && edit ? (
+                    <Suspense fallback={<p role="status">正在准备代码编辑区…</p>}>
+                      <DraftCodeEditor
+                        document={edit}
+                        selection={state.selectedCodeRange}
+                        selectionRevision={state.selectionRevision}
+                        commentsMoved={state.commentsMoved}
+                        editRejection={state.editRejection}
+                        onChange={(text, range) => session.editCode(text, range)}
+                        onSelect={(range) => session.selectCode(range)}
+                        onRetry={() => void session.retryAnalysis()}
+                      />
+                    </Suspense>
+                  ) : source ? (
                     <SourcePanel
                       source={source.text}
                       nodes={result?.nodeMap ?? []}
@@ -374,6 +506,12 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
             <p data-testid="practice-input">
               本组输入：<code>{JSON.stringify(retainedTest.input)}</code>
             </p>
+          )}
+          {!review && state.codeEditing && result && (
+            <details className="practice-executed-source" data-testid="executed-source-details">
+              <summary>查看本组实际执行的 C 代码</summary>
+              <SourcePanel source={source.text} nodes={result.nodeMap} view={player.view} />
+            </details>
           )}
           <div
             className={review ? 'player-workspace' : 'player-workspace practice-inline-player'}

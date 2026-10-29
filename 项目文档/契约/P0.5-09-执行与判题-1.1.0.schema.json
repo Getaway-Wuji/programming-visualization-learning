@@ -1,0 +1,4977 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://programming-visualization.local/contracts/execution-1.1.0.schema.json",
+  "title": "EXEC-01 1.1.0 / JUDGE-OBS-01 1.1.0, unchanged STEP/DIAG/INT 1.0.0",
+  "$comment": "Contract fixtures are accepted for offline document validation only. Product consumers must reject producer=fixture. Referential integrity, source ranges, canonical bytes, reversible transitions, checkpoints, budgets and judge evidence also require the normative relationship checks.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/request"
+    },
+    {
+      "$ref": "#/$defs/result"
+    }
+  ],
+  "$defs": {
+    "version": {
+      "const": "1.0.0"
+    },
+    "entityId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$"
+    },
+    "opaqueId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "nodeId": {
+      "type": "string",
+      "pattern": "^n[1-9][0-9]*$",
+      "maxLength": 96
+    },
+    "nullableNodeId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nodeId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "objectId": {
+      "type": "string",
+      "pattern": "^o[1-9][0-9]*$",
+      "maxLength": 96
+    },
+    "scopeId": {
+      "type": "string",
+      "pattern": "^s[1-9][0-9]*$",
+      "maxLength": 96
+    },
+    "frameId": {
+      "type": "string",
+      "pattern": "^f[1-9][0-9]*$",
+      "maxLength": 96
+    },
+    "uint": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "positiveInt": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "int32": {
+      "type": "integer",
+      "minimum": -2147483648,
+      "maximum": 2147483647
+    },
+    "nullableInt32": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/int32"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "cursor": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 20000
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20000
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/entityId"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+        }
+      }
+    },
+    "nullableRef": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "engineRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "buildId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/entityId"
+        },
+        "version": {
+          "const": "1.0.0"
+        },
+        "buildId": {
+          "$ref": "#/$defs/opaqueId"
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contextId",
+        "contextRevision",
+        "submissionId",
+        "runId",
+        "sourceRevision",
+        "testCaseKey"
+      ],
+      "properties": {
+        "contextId": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "contextRevision": {
+          "$ref": "#/$defs/positiveInt"
+        },
+        "submissionId": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "runId": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "sourceRevision": {
+          "$ref": "#/$defs/positiveInt"
+        },
+        "testCaseKey": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/opaqueId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "byteRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32768
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32768
+        }
+      }
+    },
+    "sourceLocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "const": "source"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "edge": {
+          "enum": [
+            "start",
+            "whole",
+            "end"
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/byteRange"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "nodeId",
+            "edge"
+          ]
+        },
+        {
+          "required": [
+            "byteRange"
+          ]
+        }
+      ],
+      "dependentRequired": {
+        "nodeId": [
+          "edge"
+        ],
+        "edge": [
+          "nodeId"
+        ]
+      }
+    },
+    "syntheticLocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "reason"
+      ],
+      "properties": {
+        "kind": {
+          "const": "synthetic"
+        },
+        "reason": {
+          "enum": [
+            "initial-state",
+            "implicit-return",
+            "pre-execution",
+            "adapter-cancel",
+            "adapter-deadline",
+            "module-load",
+            "worker-failure",
+            "protocol-validation",
+            "encoding-failure"
+          ]
+        },
+        "anchorNodeId": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "location": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sourceLocation"
+        },
+        {
+          "$ref": "#/$defs/syntheticLocation"
+        }
+      ]
+    },
+    "stepLocation": {
+      "oneOf": [
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/sourceLocation"
+            }
+          ],
+          "required": [
+            "nodeId",
+            "edge"
+          ]
+        },
+        {
+          "$ref": "#/$defs/syntheticLocation"
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "blockMap",
+        "bindingMap"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 32768
+        },
+        "blockMap": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/blockMapping"
+          }
+        },
+        "bindingMap": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/bindingMapping"
+          }
+        }
+      }
+    },
+    "blockMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "blockId",
+        "byteRange"
+      ],
+      "properties": {
+        "blockId": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "byteRange": {
+          "$ref": "#/$defs/byteRange"
+        }
+      }
+    },
+    "bindingMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bindingKey",
+        "byteRange"
+      ],
+      "properties": {
+        "bindingKey": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "byteRange": {
+          "$ref": "#/$defs/byteRange"
+        }
+      }
+    },
+    "inputValues": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+        "maxLength": 96
+      },
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/int32"
+          },
+          {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "$ref": "#/$defs/int32"
+            }
+          }
+        ]
+      }
+    },
+    "random": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generatorRef",
+        "seed"
+      ],
+      "properties": {
+        "generatorRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "seed": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "specRef",
+        "values",
+        "random"
+      ],
+      "properties": {
+        "specRef": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "values": {
+          "$ref": "#/$defs/inputValues"
+        },
+        "random": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/random"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "judgeRule": {
+      "enum": [
+        "entry-output",
+        "printf-integer-layout",
+        "ordered-output-dependency",
+        "scalar-reassignment",
+        "temporary-swap",
+        "scope-shadow-output",
+        "safe-wide-product",
+        "integer-quotient-remainder",
+        "boolean-classification",
+        "short-circuit-guard",
+        "if-positive-normalize",
+        "nested-sign-branches",
+        "interval-membership",
+        "while-countdown",
+        "break-continue-odd-sum",
+        "nested-grid-count",
+        "partial-array-initialization",
+        "logical-array-print",
+        "guarded-array-access",
+        "array-extrema",
+        "array-positive-count",
+        "linear-first-index",
+        "adjacent-order-check",
+        "bubble-ascending",
+        "selection-ascending",
+        "binary-first-index"
+      ]
+    },
+    "judge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profileRef",
+        "rule",
+        "expectedStdout",
+        "expectedExitCode"
+      ],
+      "properties": {
+        "profileRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "rule": {
+          "$ref": "#/$defs/judgeRule"
+        },
+        "expectedStdout": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "expectedExitCode": {
+          "const": 0
+        },
+        "expectedArray": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "$ref": "#/$defs/int32"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "entry-output"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.first-output"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "printf-integer-layout"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.printf-layout"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "ordered-output-dependency"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.ordered-updates"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "scalar-reassignment"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.reassign-value"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "temporary-swap"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.swap-with-temp"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "scope-shadow-output"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.shadowed-values"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "safe-wide-product"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.wide-product"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "integer-quotient-remainder"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.quotient-remainder"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "boolean-classification"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.boolean-flags"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "short-circuit-guard"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.guarded-division"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "if-positive-normalize"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.absolute-with-if"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "nested-sign-branches"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.sign-classification"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "interval-membership"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.in-closed-range"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "while-countdown"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.while-countdown"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "break-continue-odd-sum"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.odd-sum-until-stop"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "nested-grid-count"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.grid-count"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "partial-array-initialization"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.partial-array-init"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "logical-array-print"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.print-logical-array"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "guarded-array-access"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.safe-array-access"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "array-extrema"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.array-extrema"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "array-positive-count"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.count-positive"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "linear-first-index"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.linear-search-first"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "adjacent-order-check"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.check-nondecreasing"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "bubble-ascending"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.bubble-sort"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "selection-ascending"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.selection-sort"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rule": {
+                "const": "binary-first-index"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profileRef": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "properties": {
+                  "id": {
+                    "const": "judge.c.binary-search-first"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "protocolVersion",
+        "traceVersion",
+        "diagnosticVersion",
+        "judgeVersion",
+        "encodingVersion",
+        "identity",
+        "mode",
+        "packageRef",
+        "languageRef",
+        "subsetRef",
+        "programRef",
+        "subjectRef",
+        "learningRevision",
+        "engineRef",
+        "source",
+        "input",
+        "judge",
+        "budgetRef",
+        "remainingMs"
+      ],
+      "properties": {
+        "kind": {
+          "const": "execute"
+        },
+        "protocolVersion": {
+          "const": "1.1.0"
+        },
+        "traceVersion": {
+          "$ref": "#/$defs/version"
+        },
+        "diagnosticVersion": {
+          "$ref": "#/$defs/version"
+        },
+        "judgeVersion": {
+          "const": "1.1.0"
+        },
+        "encodingVersion": {
+          "$ref": "#/$defs/version"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "mode": {
+          "const": "exercise-test"
+        },
+        "packageRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "content.c.p05"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        "languageRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "lang.c"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        "subsetRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "subset.c.p0"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        "programRef": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "subjectRef": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "learningRevision": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/positiveInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "engineRef": {
+          "$ref": "#/$defs/engineRef"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "input": {
+          "$ref": "#/$defs/input"
+        },
+        "judge": {
+          "$ref": "#/$defs/judge"
+        },
+        "budgetRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "budget.p0"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        "remainingMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "contract-probe"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "type": "null"
+              },
+              "subjectRef": {
+                "type": "null"
+              },
+              "learningRevision": {
+                "type": "null"
+              },
+              "judge": {
+                "type": "null"
+              },
+              "identity": {
+                "properties": {
+                  "testCaseKey": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "enum": [
+                  "case",
+                  "exercise-test"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "$ref": "#/$defs/ref"
+              },
+              "subjectRef": {
+                "$ref": "#/$defs/ref"
+              },
+              "learningRevision": {
+                "$ref": "#/$defs/positiveInt"
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "$ref": "#/$defs/ref"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "case"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "judge": {
+                "type": "null"
+              },
+              "identity": {
+                "properties": {
+                  "testCaseKey": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "exercise-test"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "judge": {
+                "$ref": "#/$defs/judge"
+              },
+              "identity": {
+                "properties": {
+                  "testCaseKey": {
+                    "$ref": "#/$defs/opaqueId"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "entry-output"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-first-output"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.first-output"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.first-output"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "printf-integer-layout"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-printf-layout"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.printf-layout"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.printf-layout"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "ordered-output-dependency"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-ordered-updates"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.ordered-updates"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.ordered-updates"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "scalar-reassignment"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-reassign-value"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.reassign-value"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.reassign-value"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "temporary-swap"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-swap-with-temp"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.swap-with-temp"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.swap-with-temp"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "scope-shadow-output"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-shadowed-values"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.shadowed-values"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.shadowed-values"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "safe-wide-product"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-wide-product"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.wide-product"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.wide-product"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "integer-quotient-remainder"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-quotient-remainder"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.quotient-remainder"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.quotient-remainder"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "boolean-classification"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-boolean-flags"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.boolean-flags"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.boolean-flags"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "short-circuit-guard"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-guarded-division"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.guarded-division"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.guarded-division"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "if-positive-normalize"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-absolute-with-if"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.absolute-with-if"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.absolute-with-if"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "nested-sign-branches"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-sign-classification"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.sign-classification"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.sign-classification"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "interval-membership"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-in-closed-range"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.in-closed-range"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.in-closed-range"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "while-countdown"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-while-countdown"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.while-countdown"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.while-countdown"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "break-continue-odd-sum"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-odd-sum-until-stop"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.odd-sum-until-stop"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.odd-sum-until-stop"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "nested-grid-count"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-grid-count"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.grid-count"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.grid-count"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "partial-array-initialization"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-partial-array-init"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.partial-array-init"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.partial-array-init"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "logical-array-print"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-print-logical-array"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.print-logical-array"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.print-logical-array"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "guarded-array-access"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-safe-array-access"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.safe-array-access"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.safe-array-access"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "array-extrema"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-array-extrema"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.array-extrema"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.array-extrema"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "array-positive-count"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-count-positive"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.count-positive"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.count-positive"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "linear-first-index"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-linear-search-first"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.linear-search-first"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.linear-search-first"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "adjacent-order-check"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-check-nondecreasing"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.check-nondecreasing"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.check-nondecreasing"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "bubble-ascending"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-bubble-sort"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.bubble-sort"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.bubble-sort"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "selection-ascending"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-selection-sort"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.selection-sort"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.selection-sort"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "properties": {
+                  "rule": {
+                    "const": "binary-first-index"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "programRef": {
+                "properties": {
+                  "id": {
+                    "const": "program.c.practice-binary-search-first"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "subjectRef": {
+                "properties": {
+                  "id": {
+                    "const": "exercise.c.binary-search-first"
+                  },
+                  "version": {
+                    "const": "1.0.0"
+                  }
+                }
+              },
+              "input": {
+                "properties": {
+                  "specRef": {
+                    "properties": {
+                      "id": {
+                        "const": "input.c.binary-search-first"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "judge": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "rule": {
+                        "const": "entry-output"
+                      },
+                      "profileRef": {
+                        "properties": {
+                          "id": {
+                            "const": "judge.c.first-output"
+                          },
+                          "version": {
+                            "const": "1.0.0"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "rule": {
+                        "const": "partial-array-initialization"
+                      },
+                      "profileRef": {
+                        "properties": {
+                          "id": {
+                            "const": "judge.c.partial-array-init"
+                          },
+                          "version": {
+                            "const": "1.0.0"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "properties": {
+                  "values": {
+                    "maxProperties": 0
+                  },
+                  "random": {
+                    "type": "null"
+                  }
+                }
+              },
+              "source": {
+                "properties": {
+                  "bindingMap": {
+                    "maxItems": 0
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "input": {
+                "properties": {
+                  "values": {
+                    "minProperties": 1
+                  }
+                }
+              },
+              "source": {
+                "properties": {
+                  "bindingMap": {
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "functionNodeId",
+        "parentFrameId",
+        "scopeIds"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/frameId"
+        },
+        "functionNodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "parentFrameId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/frameId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scopeIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/scopeId"
+          }
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "frameId",
+        "parentScopeId",
+        "nodeId",
+        "kind",
+        "objectIds"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/scopeId"
+        },
+        "frameId": {
+          "$ref": "#/$defs/frameId"
+        },
+        "parentScopeId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/scopeId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "kind": {
+          "enum": [
+            "main",
+            "block",
+            "for"
+          ]
+        },
+        "objectIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/objectId"
+          }
+        }
+      }
+    },
+    "cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "value"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 262143
+        },
+        "value": {
+          "$ref": "#/$defs/int32"
+        }
+      }
+    },
+    "object": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "declarationNodeId",
+        "frameId",
+        "scopeId",
+        "name",
+        "kind",
+        "length",
+        "baseAddress",
+        "defaultValue",
+        "cells"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/objectId"
+        },
+        "declarationNodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "frameId": {
+          "$ref": "#/$defs/frameId"
+        },
+        "scopeId": {
+          "$ref": "#/$defs/scopeId"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+          "minLength": 1,
+          "maxLength": 32768
+        },
+        "kind": {
+          "enum": [
+            "int",
+            "int-array"
+          ]
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 262144
+        },
+        "baseAddress": {
+          "type": "integer",
+          "minimum": 4096,
+          "maximum": 9007199254740991,
+          "multipleOf": 4
+        },
+        "defaultValue": {
+          "$ref": "#/$defs/nullableInt32"
+        },
+        "cells": {
+          "type": "array",
+          "maxItems": 262144,
+          "items": {
+            "$ref": "#/$defs/cell"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "int"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "length": {
+                "const": 1
+              },
+              "cells": {
+                "maxItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "flow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "stage",
+        "iteration"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "stage": {
+          "enum": [
+            "block",
+            "init",
+            "condition",
+            "body",
+            "update"
+          ]
+        },
+        "iteration": {
+          "$ref": "#/$defs/uint"
+        }
+      }
+    },
+    "control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase",
+        "nextNodeId",
+        "activeFrameId",
+        "returnValue",
+        "flowStack"
+      ],
+      "properties": {
+        "phase": {
+          "enum": [
+            "ready",
+            "running",
+            "returned"
+          ]
+        },
+        "nextNodeId": {
+          "$ref": "#/$defs/nullableNodeId"
+        },
+        "activeFrameId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/frameId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "returnValue": {
+          "$ref": "#/$defs/nullableInt32"
+        },
+        "flowStack": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/flow"
+          }
+        }
+      }
+    },
+    "allocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nextAddress",
+        "liveBytes",
+        "nextObject",
+        "nextScope",
+        "nextFrame"
+      ],
+      "properties": {
+        "nextAddress": {
+          "type": "integer",
+          "minimum": 4096,
+          "maximum": 9007199254740991,
+          "multipleOf": 4
+        },
+        "liveBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1048576,
+          "multipleOf": 4
+        },
+        "nextObject": {
+          "$ref": "#/$defs/positiveInt"
+        },
+        "nextScope": {
+          "$ref": "#/$defs/positiveInt"
+        },
+        "nextFrame": {
+          "$ref": "#/$defs/positiveInt"
+        }
+      }
+    },
+    "counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "comparisons",
+        "scalarWrites",
+        "arrayWrites",
+        "swaps"
+      ],
+      "properties": {
+        "comparisons": {
+          "$ref": "#/$defs/uint"
+        },
+        "scalarWrites": {
+          "$ref": "#/$defs/uint"
+        },
+        "arrayWrites": {
+          "$ref": "#/$defs/uint"
+        },
+        "swaps": {
+          "$ref": "#/$defs/uint"
+        }
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frames",
+        "scopes",
+        "objects",
+        "control",
+        "allocator",
+        "output",
+        "counters"
+      ],
+      "properties": {
+        "frames": {
+          "type": "array",
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/frame"
+          }
+        },
+        "scopes": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/scope"
+          }
+        },
+        "objects": {
+          "type": "array",
+          "maxItems": 262144,
+          "items": {
+            "$ref": "#/$defs/object"
+          }
+        },
+        "control": {
+          "$ref": "#/$defs/control"
+        },
+        "allocator": {
+          "$ref": "#/$defs/allocator"
+        },
+        "output": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "counters": {
+          "$ref": "#/$defs/counters"
+        }
+      }
+    },
+    "recordChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "op",
+        "table",
+        "id",
+        "index",
+        "before",
+        "after"
+      ],
+      "properties": {
+        "op": {
+          "const": "record"
+        },
+        "table": {
+          "enum": [
+            "frames",
+            "scopes",
+            "objects"
+          ]
+        },
+        "id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/frameId"
+            },
+            {
+              "$ref": "#/$defs/scopeId"
+            },
+            {
+              "$ref": "#/$defs/objectId"
+            }
+          ]
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 262143
+        },
+        "before": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/frame"
+            },
+            {
+              "$ref": "#/$defs/scope"
+            },
+            {
+              "$ref": "#/$defs/object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "after": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/frame"
+            },
+            {
+              "$ref": "#/$defs/scope"
+            },
+            {
+              "$ref": "#/$defs/object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "not": {
+        "properties": {
+          "before": {
+            "type": "null"
+          },
+          "after": {
+            "type": "null"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "table": {
+                "const": "frames"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/frameId"
+              },
+              "before": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/frame"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "after": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/frame"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "index": {
+                "const": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "table": {
+                "const": "scopes"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/scopeId"
+              },
+              "before": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/scope"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "after": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/scope"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "index": {
+                "maximum": 63
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "table": {
+                "const": "objects"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/objectId"
+              },
+              "before": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "after": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "cellChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "op",
+        "objectId",
+        "index",
+        "before",
+        "after"
+      ],
+      "properties": {
+        "op": {
+          "const": "cell"
+        },
+        "objectId": {
+          "$ref": "#/$defs/objectId"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 262143
+        },
+        "before": {
+          "$ref": "#/$defs/nullableInt32"
+        },
+        "after": {
+          "$ref": "#/$defs/nullableInt32"
+        }
+      }
+    },
+    "controlChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "op",
+        "before",
+        "after"
+      ],
+      "properties": {
+        "op": {
+          "const": "control"
+        },
+        "before": {
+          "$ref": "#/$defs/control"
+        },
+        "after": {
+          "$ref": "#/$defs/control"
+        }
+      }
+    },
+    "allocatorChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "op",
+        "before",
+        "after"
+      ],
+      "properties": {
+        "op": {
+          "const": "allocator"
+        },
+        "before": {
+          "$ref": "#/$defs/allocator"
+        },
+        "after": {
+          "$ref": "#/$defs/allocator"
+        }
+      }
+    },
+    "countersChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "op",
+        "before",
+        "after"
+      ],
+      "properties": {
+        "op": {
+          "const": "counters"
+        },
+        "before": {
+          "$ref": "#/$defs/counters"
+        },
+        "after": {
+          "$ref": "#/$defs/counters"
+        }
+      }
+    },
+    "outputChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "op",
+        "beforeBytes",
+        "afterBytes",
+        "append"
+      ],
+      "properties": {
+        "op": {
+          "const": "output"
+        },
+        "beforeBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16384
+        },
+        "afterBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16384
+        },
+        "append": {
+          "type": "string",
+          "maxLength": 16384
+        }
+      }
+    },
+    "change": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/recordChange"
+        },
+        {
+          "$ref": "#/$defs/cellChange"
+        },
+        {
+          "$ref": "#/$defs/controlChange"
+        },
+        {
+          "$ref": "#/$defs/allocatorChange"
+        },
+        {
+          "$ref": "#/$defs/countersChange"
+        },
+        {
+          "$ref": "#/$defs/outputChange"
+        }
+      ]
+    },
+    "diagnosticCode": {
+      "enum": [
+        "E_LEX_INVALID",
+        "E_PARSE_INVALID",
+        "E_UNSUPPORTED_SYNTAX",
+        "E_NAME_INVALID",
+        "E_TYPE_INVALID",
+        "E_FORMAT_INVALID",
+        "E_UNINITIALIZED",
+        "E_INDEX_BOUNDS",
+        "E_DIV_ZERO",
+        "E_INT_OVERFLOW",
+        "E_INPUT_INVALID",
+        "E_INPUT_ORDER",
+        "E_BINDING_INVALID",
+        "E_CONTENT_MISMATCH",
+        "E_PROTOCOL_VERSION",
+        "E_PROTOCOL_INVALID",
+        "E_TRACE_INVALID",
+        "E_SOURCE_LIMIT",
+        "E_REQUEST_LIMIT",
+        "E_DEPTH_LIMIT",
+        "E_FUEL_LIMIT",
+        "E_STEP_LIMIT",
+        "E_MEMORY_LIMIT",
+        "E_OUTPUT_LIMIT",
+        "E_RESULT_LIMIT",
+        "E_DEADLINE",
+        "E_CANCELLED",
+        "E_MODULE_LOAD",
+        "E_WORKER_FAILURE",
+        "E_WASM_TRAP",
+        "E_ENCODING_FAILURE",
+        "J_STDOUT_MISMATCH",
+        "J_EXIT_NONZERO",
+        "J_TEACHING_TARGET",
+        "J_BINDING_MISMATCH"
+      ]
+    },
+    "diagnosticValue": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "string",
+          "maxLength": 96
+        }
+      ]
+    },
+    "diagnosticDetails": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected": {
+          "$ref": "#/$defs/diagnosticValue"
+        },
+        "actual": {
+          "$ref": "#/$defs/diagnosticValue"
+        },
+        "limit": {
+          "$ref": "#/$defs/uint"
+        },
+        "used": {
+          "$ref": "#/$defs/uint"
+        },
+        "attempted": {
+          "$ref": "#/$defs/uint"
+        },
+        "dimension": {
+          "enum": [
+            "sourceBytes",
+            "requestBytes",
+            "inputDomain",
+            "inputLength",
+            "syntaxDepth",
+            "astDepth",
+            "fuel",
+            "steps",
+            "liveBytes",
+            "outputBytes",
+            "resultBytes",
+            "deadline",
+            "jsonDepth"
+          ]
+        },
+        "relatedNodeIds": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nodeId"
+          }
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "severity",
+        "origin",
+        "stage",
+        "location",
+        "details"
+      ],
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/diagnosticCode"
+        },
+        "severity": {
+          "const": "error"
+        },
+        "origin": {
+          "enum": [
+            "rust",
+            "adapter",
+            "protocol",
+            "judge"
+          ]
+        },
+        "stage": {
+          "enum": [
+            "preflight",
+            "load",
+            "lex",
+            "parse",
+            "semantic",
+            "execute",
+            "encode",
+            "receive",
+            "judge"
+          ]
+        },
+        "location": {
+          "$ref": "#/$defs/location"
+        },
+        "details": {
+          "$ref": "#/$defs/diagnosticDetails"
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/diagnostic"
+      }
+    },
+    "judgeCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "status",
+        "nodeIds",
+        "stepSeqs",
+        "diagnosticCodes"
+      ],
+      "properties": {
+        "key": {
+          "enum": [
+            "input-bindings",
+            "stdout-exact",
+            "exit-zero",
+            "teaching-target",
+            "while-accumulation",
+            "for-accumulation"
+          ]
+        },
+        "status": {
+          "enum": [
+            "met",
+            "unmet",
+            "not-evaluated"
+          ]
+        },
+        "nodeIds": {
+          "type": "array",
+          "maxItems": 32768,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nodeId"
+          }
+        },
+        "stepSeqs": {
+          "type": "array",
+          "maxItems": 20000,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/seq"
+          }
+        },
+        "diagnosticCodes": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "J_STDOUT_MISMATCH",
+              "J_EXIT_NONZERO",
+              "J_TEACHING_TARGET",
+              "J_BINDING_MISMATCH"
+            ]
+          }
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "siteKey",
+        "nodeId",
+        "branch",
+        "visits"
+      ],
+      "properties": {
+        "siteKey": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "branch": {
+          "enum": [
+            "then",
+            "else",
+            "while",
+            "for"
+          ]
+        },
+        "visits": {
+          "$ref": "#/$defs/uint"
+        }
+      }
+    },
+    "arrayBeforeDestroy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "bindingKey",
+        "objectId",
+        "declarationNodeId",
+        "beforeCursor",
+        "location",
+        "values"
+      ],
+      "properties": {
+        "kind": {
+          "const": "array-before-destroy"
+        },
+        "bindingKey": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "objectId": {
+          "$ref": "#/$defs/objectId"
+        },
+        "declarationNodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "beforeCursor": {
+          "$ref": "#/$defs/cursor"
+        },
+        "location": {
+          "$ref": "#/$defs/stepLocation"
+        },
+        "values": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "$ref": "#/$defs/int32"
+          }
+        }
+      }
+    },
+    "judgeResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profileRef",
+        "caseKey",
+        "status",
+        "checks",
+        "coverage",
+        "observations"
+      ],
+      "properties": {
+        "profileRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "caseKey": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "status": {
+          "enum": [
+            "met",
+            "unmet",
+            "not-evaluated"
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 6,
+          "items": {
+            "$ref": "#/$defs/judgeCheck"
+          }
+        },
+        "coverage": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/coverage"
+          }
+        },
+        "observations": {
+          "type": "array",
+          "maxItems": 20000,
+          "items": {
+            "$ref": "#/$defs/arrayBeforeDestroy"
+          }
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodeId",
+        "kind",
+        "parentId",
+        "byteRange"
+      ],
+      "properties": {
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "kind": {
+          "enum": [
+            "function",
+            "block",
+            "declaration",
+            "assignment",
+            "expression",
+            "condition",
+            "output",
+            "return",
+            "break",
+            "continue",
+            "empty",
+            "if",
+            "while",
+            "for"
+          ]
+        },
+        "parentId": {
+          "$ref": "#/$defs/nullableNodeId"
+        },
+        "byteRange": {
+          "$ref": "#/$defs/byteRange"
+        }
+      }
+    },
+    "resolvedBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bindingKey",
+        "declarationNodeId"
+      ],
+      "properties": {
+        "bindingKey": {
+          "$ref": "#/$defs/opaqueId"
+        },
+        "declarationNodeId": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "readObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "nodeId",
+        "objectId",
+        "index",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "read"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "objectId": {
+          "$ref": "#/$defs/objectId"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 262143
+        },
+        "value": {
+          "$ref": "#/$defs/int32"
+        }
+      }
+    },
+    "evaluateObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "nodeId",
+        "operator",
+        "operands",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "evaluate"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "operator": {
+          "enum": [
+            "+",
+            "-",
+            "!",
+            "*",
+            "/",
+            "%",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "==",
+            "!=",
+            "&&",
+            "||"
+          ]
+        },
+        "operands": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/int32"
+          }
+        },
+        "value": {
+          "$ref": "#/$defs/int32"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "operator": {
+                "const": "!"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "operands": {
+                "maxItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operator": {
+                "enum": [
+                  "*",
+                  "/",
+                  "%",
+                  "<",
+                  "<=",
+                  ">",
+                  ">=",
+                  "==",
+                  "!="
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "operands": {
+                "minItems": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    "decisionObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "nodeId",
+        "value",
+        "branch"
+      ],
+      "properties": {
+        "kind": {
+          "const": "decision"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "value": {
+          "$ref": "#/$defs/int32"
+        },
+        "branch": {
+          "enum": [
+            "true",
+            "false"
+          ]
+        }
+      }
+    },
+    "shortCircuitObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "nodeId",
+        "skippedNodeId"
+      ],
+      "properties": {
+        "kind": {
+          "const": "short-circuit"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "skippedNodeId": {
+          "$ref": "#/$defs/nodeId"
+        }
+      }
+    },
+    "swapObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "nodeId",
+        "objectId",
+        "indices",
+        "beforeValues",
+        "writeSeqs"
+      ],
+      "properties": {
+        "kind": {
+          "const": "swap"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/nodeId"
+        },
+        "objectId": {
+          "$ref": "#/$defs/objectId"
+        },
+        "indices": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 262143
+          }
+        },
+        "beforeValues": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/int32"
+          }
+        },
+        "writeSeqs": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/seq"
+          }
+        }
+      }
+    },
+    "observation": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/readObservation"
+        },
+        {
+          "$ref": "#/$defs/evaluateObservation"
+        },
+        {
+          "$ref": "#/$defs/decisionObservation"
+        },
+        {
+          "$ref": "#/$defs/shortCircuitObservation"
+        },
+        {
+          "$ref": "#/$defs/swapObservation"
+        }
+      ]
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seq",
+        "kind",
+        "location",
+        "changes",
+        "observations"
+      ],
+      "properties": {
+        "seq": {
+          "$ref": "#/$defs/seq"
+        },
+        "kind": {
+          "enum": [
+            "program.enter",
+            "object.declare",
+            "value.initialize",
+            "value.write",
+            "condition",
+            "scope.enter",
+            "scope.exit",
+            "output.append",
+            "control.jump",
+            "program.return",
+            "nop"
+          ]
+        },
+        "location": {
+          "$ref": "#/$defs/stepLocation"
+        },
+        "changes": {
+          "type": "array",
+          "maxItems": 1000000,
+          "items": {
+            "$ref": "#/$defs/change"
+          }
+        },
+        "observations": {
+          "type": "array",
+          "maxItems": 1000000,
+          "items": {
+            "$ref": "#/$defs/observation"
+          }
+        }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cursor",
+        "state"
+      ],
+      "properties": {
+        "cursor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 19968,
+          "multipleOf": 128
+        },
+        "state": {
+          "$ref": "#/$defs/state"
+        }
+      }
+    },
+    "initialState": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/state"
+        }
+      ],
+      "properties": {
+        "frames": {
+          "maxItems": 0
+        },
+        "scopes": {
+          "maxItems": 0
+        },
+        "objects": {
+          "maxItems": 0
+        },
+        "output": {
+          "const": ""
+        },
+        "control": {
+          "properties": {
+            "phase": {
+              "const": "ready"
+            },
+            "nextNodeId": {
+              "$ref": "#/$defs/nodeId"
+            },
+            "activeFrameId": {
+              "type": "null"
+            },
+            "returnValue": {
+              "type": "null"
+            },
+            "flowStack": {
+              "maxItems": 0
+            }
+          }
+        },
+        "allocator": {
+          "properties": {
+            "nextAddress": {
+              "const": 4096
+            },
+            "liveBytes": {
+              "const": 0
+            },
+            "nextObject": {
+              "const": 1
+            },
+            "nextScope": {
+              "const": 1
+            },
+            "nextFrame": {
+              "const": 1
+            }
+          }
+        },
+        "counters": {
+          "properties": {
+            "comparisons": {
+              "const": 0
+            },
+            "scalarWrites": {
+              "const": 0
+            },
+            "arrayWrites": {
+              "const": 0
+            },
+            "swaps": {
+              "const": 0
+            }
+          }
+        }
+      }
+    },
+    "trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dslVersion",
+        "completeness",
+        "initialState",
+        "steps",
+        "checkpoints"
+      ],
+      "properties": {
+        "dslVersion": {
+          "$ref": "#/$defs/version"
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "prefix"
+          ]
+        },
+        "initialState": {
+          "$ref": "#/$defs/initialState"
+        },
+        "steps": {
+          "type": "array",
+          "maxItems": 20000,
+          "items": {
+            "$ref": "#/$defs/step"
+          }
+        },
+        "checkpoints": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 157,
+          "items": {
+            "$ref": "#/$defs/checkpoint"
+          }
+        }
+      }
+    },
+    "terminal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "exitCode",
+        "cursor",
+        "location",
+        "diagnostics"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "completed",
+            "program-error",
+            "rejected",
+            "resource-limit",
+            "cancelled",
+            "infrastructure-failure"
+          ]
+        },
+        "exitCode": {
+          "$ref": "#/$defs/nullableInt32"
+        },
+        "cursor": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/cursor"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "location": {
+          "$ref": "#/$defs/location"
+        },
+        "diagnostics": {
+          "$ref": "#/$defs/diagnostics"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "exitCode": {
+                "$ref": "#/$defs/int32"
+              },
+              "cursor": {
+                "$ref": "#/$defs/cursor"
+              },
+              "diagnostics": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "program-error",
+                  "rejected",
+                  "resource-limit",
+                  "cancelled",
+                  "infrastructure-failure"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "exitCode": {
+                "type": "null"
+              },
+              "diagnostics": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fuelUsed",
+        "peakVirtualBytes",
+        "maxSyntaxDepth",
+        "maxAstDepth",
+        "rustMicros"
+      ],
+      "properties": {
+        "fuelUsed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "peakVirtualBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1048576,
+          "multipleOf": 4
+        },
+        "maxSyntaxDepth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "maxAstDepth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "rustMicros": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/uint"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "protocolVersion",
+        "traceVersion",
+        "diagnosticVersion",
+        "judgeVersion",
+        "encodingVersion",
+        "identity",
+        "producer",
+        "engineRef",
+        "packageRef",
+        "languageRef",
+        "subsetRef",
+        "programRef",
+        "subjectRef",
+        "learningRevision",
+        "budgetRef",
+        "nodeMap",
+        "resolvedBindings",
+        "trace",
+        "terminal",
+        "judgeResult",
+        "stats"
+      ],
+      "properties": {
+        "kind": {
+          "const": "result"
+        },
+        "protocolVersion": {
+          "const": "1.1.0"
+        },
+        "traceVersion": {
+          "$ref": "#/$defs/version"
+        },
+        "diagnosticVersion": {
+          "$ref": "#/$defs/version"
+        },
+        "judgeVersion": {
+          "const": "1.1.0"
+        },
+        "encodingVersion": {
+          "$ref": "#/$defs/version"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "producer": {
+          "enum": [
+            "rust",
+            "adapter",
+            "fixture"
+          ]
+        },
+        "engineRef": {
+          "$ref": "#/$defs/engineRef"
+        },
+        "packageRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "content.c.p05"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        "languageRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "subsetRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "programRef": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "subjectRef": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "learningRevision": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/positiveInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "budgetRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "nodeMap": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "resolvedBindings": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "$ref": "#/$defs/resolvedBinding"
+          }
+        },
+        "trace": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/trace"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "terminal": {
+          "$ref": "#/$defs/terminal"
+        },
+        "judgeResult": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/judgeResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stats": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/stats"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "producer": {
+                "const": "fixture"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "stats": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "producer": {
+                "const": "adapter"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "trace": {
+                "type": "null"
+              },
+              "stats": {
+                "type": "null"
+              },
+              "judgeResult": {
+                "type": "null"
+              },
+              "terminal": {
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "rejected",
+                      "resource-limit",
+                      "cancelled",
+                      "infrastructure-failure"
+                    ]
+                  },
+                  "cursor": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "producer": {
+                "const": "rust"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "stats": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/stats"
+                  }
+                ],
+                "properties": {
+                  "rustMicros": {
+                    "$ref": "#/$defs/uint"
+                  }
+                }
+              },
+              "terminal": {
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "completed",
+                      "program-error",
+                      "rejected",
+                      "resource-limit"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "terminal": {
+                "properties": {
+                  "status": {
+                    "const": "completed"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "trace": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/trace"
+                  }
+                ],
+                "properties": {
+                  "completeness": {
+                    "const": "complete"
+                  },
+                  "steps": {
+                    "minItems": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "terminal": {
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "program-error",
+                      "resource-limit"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "trace": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/$defs/trace"
+                      }
+                    ],
+                    "properties": {
+                      "completeness": {
+                        "const": "prefix"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "terminal": {
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "rejected",
+                      "cancelled",
+                      "infrastructure-failure"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "trace": {
+                "type": "null"
+              },
+              "terminal": {
+                "properties": {
+                  "cursor": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "trace": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "terminal": {
+                "properties": {
+                  "cursor": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "terminal": {
+                "properties": {
+                  "cursor": {
+                    "$ref": "#/$defs/cursor"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "terminal": {
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "program-error",
+                      "rejected",
+                      "resource-limit",
+                      "cancelled",
+                      "infrastructure-failure"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "judgeResult": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "enum": [
+                          "unmet",
+                          "not-evaluated"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

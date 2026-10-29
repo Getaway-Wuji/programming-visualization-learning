@@ -5,6 +5,7 @@ import {
   openBlockKeyboardEditor,
   openCorrectionPractice,
   selectBlock,
+  showPracticeBlocks,
 } from './block-ui';
 
 interface SilentAudioAudit {
@@ -77,6 +78,7 @@ test('silent native Blockly mounts and remounts without constructing AudioContex
   });
 
   await page.goto('/#/practice/exercise.c.echo');
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   await openCorrectionPractice(page);
   const initial = await audioState(page);

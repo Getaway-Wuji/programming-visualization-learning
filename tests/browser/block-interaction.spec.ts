@@ -1,6 +1,11 @@
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import { blockWorkspace, correctStarter, openCorrectionPractice } from './block-ui';
+import {
+  blockWorkspace,
+  correctStarter,
+  openCorrectionPractice,
+  showPracticeBlocks,
+} from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 type Point = { x: number; y: number };
@@ -25,6 +30,7 @@ async function open(page: Page) {
   await page.goto(`/#/practice/${exercise}`);
   await ready(page);
   await expect(practice(page)).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page);
   await expect(canvas(page).locator('.blocklySvg')).toBeVisible();
   await openCorrectionPractice(page);
   await canvas(page).scrollIntoViewIfNeeded();

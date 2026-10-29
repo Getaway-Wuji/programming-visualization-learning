@@ -6,7 +6,7 @@ import { expect, test, type Page } from '@playwright/test';
 import type { ExerciseEntity, LessonEntity } from '../../web/src/content/types';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
 import type { StorageSnapshot } from '../../web/src/storage/model';
-import { blockWorkspace, correctStarter } from './block-ui';
+import { blockWorkspace, correctStarter, showPracticeBlocks } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
 
 // Expectations come from the reviewed source. The browser receives only the
@@ -257,6 +257,7 @@ async function captureRuns(page: Page, directory: string, label: string, offset:
 
 async function preparePractice(page: Page) {
   await expect(practice(page)).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page)).toBeVisible();
   await localReady(page);
   await practice(page).getByRole('button', { name: '准备代码', exact: true }).click();
@@ -292,7 +293,7 @@ test('P0 delivery: a fresh browser archive completes six lessons, 24 real groups
   test.setTimeout(180_000);
   expect(testInfo.retry).toBe(0);
   const task = process.env.TASK_EVIDENCE_TASK ?? '11.5';
-  expect(task).toBe('11.5');
+  expect(['11.5', 'P0.5-08']).toContain(task);
   const label = process.env.TASK_EVIDENCE_LABEL ?? `delivery-${Date.now()}`;
   expect(label).toMatch(/^[A-Za-z0-9_.-]+$/);
   const directory = join('.artifacts', task, label, testInfo.project.name);
@@ -593,7 +594,8 @@ test('P0 delivery: a fresh browser archive completes six lessons, 24 real groups
     expect(resources.some((entry) => /\.wasm$/.test(entry.url))).toBe(true);
     expect(resources.some((entry) => entry.url.endsWith('/course-1.0.1.json'))).toBe(false);
     await saveJson(directory, 'native-ui', {
-      task: '11.5',
+      task,
+      regressionOf: '11.5',
       browser: testInfo.project.name,
       browserVersion: browser.version(),
       userAgent: await page.evaluate(() => navigator.userAgent),

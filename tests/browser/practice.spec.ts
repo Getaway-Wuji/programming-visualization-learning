@@ -9,7 +9,13 @@ import {
   type ExecuteResult,
 } from '../../web/src/engine/protocol';
 import { observeCaseSetExecution } from './case-set-observation';
-import { blockWorkspace, correctStarter, wrongEcho, openCorrectionPractice } from './block-ui';
+import {
+  blockWorkspace,
+  correctStarter,
+  wrongEcho,
+  openCorrectionPractice,
+  showPracticeBlocks,
+} from './block-ui';
 
 const reviewed = JSON.parse(
   readFileSync(new URL('../../content/c/p0/course-1.0.1.json', import.meta.url), 'utf8'),
@@ -80,6 +86,15 @@ async function initialized(page: Page) {
     'data-save-status',
     'ready',
   );
+  // Configure the explicit canvas preference before taking the no-write baseline.
+  const preference = page.getByRole('combobox', { name: '积木显示', exact: true });
+  await expect(preference).toBeEnabled();
+  if ((await preference.inputValue()) !== 'show') await preference.selectOption('show');
+  await expect(preference).toBeEnabled();
+  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+    'data-save-status',
+    'ready',
+  );
   const initial = await archive(page);
   expect(Object.keys(initial.stores).sort()).toEqual([
     'aliases',
@@ -102,6 +117,7 @@ async function initialized(page: Page) {
 async function open(page: Page, id: string) {
   await page.goto(practicePath(id));
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page)).toBeVisible();
   await openCorrectionPractice(page);
   await expect(submit(page)).toBeEnabled();

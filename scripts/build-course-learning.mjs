@@ -5,10 +5,10 @@ import { format } from 'prettier';
 const root = new URL('../', import.meta.url);
 const read = (path) => readFile(new URL(path, root));
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
-const registrationPath = 'content/c/p0/blockly-release-1.0.10.json';
+const registrationPath = 'content/c/p0/blockly-release-1.0.13.json';
 // This reviewed source manifest is registered only after the 10.3 real-browser gate.
 const registration = JSON.parse(await read(registrationPath));
-assert.equal(registration.releaseVersion, '1.0.10');
+assert.equal(registration.releaseVersion, '1.0.13');
 assert.equal(registration.library, 'blockly');
 assert.equal(registration.libraryVersion, '13.4.0');
 assert.equal(registration.acceptanceGate, '10.3-real-blockly-rust-playback');
@@ -35,6 +35,22 @@ const expectedFiles = [
   'web/src/components/practice-progress.css',
   'web/src/learning/completion.ts',
   'web/src/pages/LessonPage.tsx',
+  'web/src/blocks/analysis-types.ts',
+  'web/src/blocks/reverse.ts',
+  'web/src/blocks/source-patch.ts',
+  'web/src/engine/analysis-client.ts',
+  'web/src/engine/analysis-protocol.ts',
+  'web/src/engine/analysis.worker.ts',
+  'web/src/practice/edit-document.ts',
+  'web/src/components/DraftCodeEditor.tsx',
+  'web/src/components/draft-code-editor.css',
+  'web/src/appearance/BlockWorkspacePreference.tsx',
+  'web/src/appearance/block-workspace-preference.css',
+  'web/src/content/teaching-presentation.ts',
+  'content/c/presentation/teaching-presentation-1.0.0.json',
+  'web/src/workbench/Workbench.tsx',
+  'web/src/workbench/workbench.css',
+  'web/src/pages/SettingsPage.tsx',
 ];
 assert.deepEqual(
   registration.files.map((entry) => entry.path),
@@ -76,7 +92,7 @@ const resource = {
 };
 const bytes = Buffer.from(JSON.stringify(resource, null, 2) + '\n');
 const manifest = {
-  file: 'content/learning/course-learning-1.0.10.json',
+  file: 'content/learning/course-learning-1.0.13.json',
   bytes: bytes.length,
   sha256: sha(bytes),
   readingSha256: resource.readingSha256,

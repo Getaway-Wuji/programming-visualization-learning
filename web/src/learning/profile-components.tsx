@@ -5,6 +5,7 @@ import { projectLearning } from './domain';
 import { deriveLearningLevel, type ProfileConfiguration } from './profile';
 import { useLearning } from './react';
 import './profile.css';
+import { reviewedDurableSnapshot } from './reviewed-release';
 
 const defaultDescriptor = { presetId: 'avatar.basic.01', label: '嫩叶', shapeId: 'leaf' as const };
 
@@ -89,7 +90,11 @@ export function savedCourseProjection(state: LearningServiceState) {
       exercises: [],
       cases: [],
     };
-  return projectLearning(state.snapshot, catalog);
+  return projectLearning(
+    state.snapshot,
+    catalog,
+    reviewedDurableSnapshot(state.snapshot, catalog).progress,
+  );
 }
 
 export function ProfileSummary() {

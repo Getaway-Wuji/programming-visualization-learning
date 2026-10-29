@@ -15,9 +15,16 @@ export interface CaseSetWorkerTiming {
   responseCopyMs: number | null;
 }
 
+export interface CaseSetWorkerTechnical {
+  wholeWasmCallMs: number;
+  rust: number[];
+  wasmPages: number;
+}
+
 interface EncodedCapture {
   captureEncoded: () => { requestBase64: string | null; responseBase64: string | null };
   timing?: CaseSetWorkerTiming;
+  technical?: CaseSetWorkerTechnical | null;
 }
 
 /** Snapshot public developer bytes without allocating a boxed byte array in
@@ -37,7 +44,7 @@ export async function observeCaseSetExecution(page: Page) {
     window.__verticalObservation = observation;
     const NativeWorker = window.Worker;
     window.Worker = class extends NativeWorker {
-      private readonly record: ObservedWorker;
+      private readonly record: ObservedWorker & { technical: CaseSetWorkerTechnical | null };
       private requestCopy: ArrayBuffer | null = null;
       private responseCopy: ArrayBuffer | null = null;
       private readonly timing: CaseSetWorkerTiming = {
@@ -94,6 +101,7 @@ export async function observeCaseSetExecution(page: Page) {
           responseOk: null,
           moduleSeen: false,
           terminated: false,
+          technical: null,
         };
         // Technical timing only; preserve the established capture interface.
         Object.assign(this.record, { timing: this.timing });
@@ -112,6 +120,20 @@ export async function observeCaseSetExecution(page: Page) {
           this.record.responseOperationId =
             typeof data.operationId === 'string' ? data.operationId : null;
           this.record.responseOk = typeof data.ok === 'boolean' ? data.ok : null;
+          const technical = data.technical as Partial<CaseSetWorkerTechnical> | undefined;
+          if (
+            technical &&
+            typeof technical.wholeWasmCallMs === 'number' &&
+            Number.isFinite(technical.wholeWasmCallMs) &&
+            Array.isArray(technical.rust) &&
+            technical.rust.length === 27 &&
+            technical.rust.every(Number.isFinite) &&
+            typeof technical.wasmPages === 'number' &&
+            Number.isFinite(technical.wasmPages)
+          )
+            // The message already owns this tiny numeric observation. Retain
+            // its reference; metadata extraction happens after the real run.
+            this.record.technical = technical as CaseSetWorkerTechnical;
           if (data.buffer instanceof ArrayBuffer) {
             const startedAt = performance.now();
             this.responseCopy = data.buffer.slice(0);
@@ -152,9 +174,12 @@ export async function observeCaseSetExecution(page: Page) {
 /** Call after the UI has accepted or rejected the real result. Return the same
  * byte-array interface without sending millions of JSON number tokens through
  * browser automation. Explicit metadata access never invokes legacy getters. */
-export async function observedCaseSetExecute(
-  page: Page,
-): Promise<ObservedWorker & { timing?: CaseSetWorkerTiming }> {
+export async function observedCaseSetExecute(page: Page): Promise<
+  ObservedWorker & {
+    timing?: CaseSetWorkerTiming;
+    technical?: CaseSetWorkerTechnical | null;
+  }
+> {
   const captured = await page.evaluate(() => {
     const worker = window.__verticalObservation.workers.findLast(
       (record) => record.kind === 'execute',
@@ -172,6 +197,7 @@ export async function observedCaseSetExecute(
       moduleSeen: worker.moduleSeen,
       terminated: worker.terminated,
       timing: worker.timing,
+      technical: worker.technical,
       requestBase64: encoded.requestBase64,
       responseBase64: encoded.responseBase64,
     };

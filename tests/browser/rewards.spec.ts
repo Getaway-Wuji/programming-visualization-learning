@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { ExecuteRequest, ExecuteResult } from '../../web/src/engine/protocol';
 import type { LedgerEntry, StorageSnapshot } from '../../web/src/storage/model';
-import { blockWorkspace, correctStarter, wrongEcho } from './block-ui';
+import { blockWorkspace, correctStarter, wrongEcho, showPracticeBlocks } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 const caseId = 'case.c.assignment';
@@ -252,6 +252,7 @@ async function saveCase(page: Page) {
 async function openPractice(page: Page) {
   await page.goto(`/#/practice/${exerciseId}`);
   await expect(practicePanel(page)).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page)).toBeVisible();
   await localReady(page);
 }

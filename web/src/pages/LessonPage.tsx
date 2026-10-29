@@ -10,6 +10,7 @@ import { localDateAt } from '../storage/validation';
 import { isCompatibleLearningHistory } from '../learning/domain';
 import { LessonCompletion } from '../components/LessonCompletion';
 import { lessonCompletionDetails } from '../learning/completion';
+import { reviewedDurableSnapshot } from '../learning/reviewed-release';
 
 export default function LessonPage() {
   const { lessonId } = useParams();
@@ -27,7 +28,11 @@ export default function LessonPage() {
   const currentLesson = (state.practiceCatalog ?? state.reading?.catalog)?.lessons.find(
     (item) => item.ref.id === lessonId,
   );
-  const confirmedToday = state.snapshot?.progress.some(
+  const savedSnapshot =
+    state.snapshot && (state.practiceCatalog ?? reading?.catalog)
+      ? reviewedDurableSnapshot(state.snapshot, (state.practiceCatalog ?? reading?.catalog)!)
+      : state.snapshot;
+  const confirmedToday = savedSnapshot?.progress.some(
     (row) =>
       row.eventType === 'lesson.study-confirmed' &&
       !!currentLesson &&

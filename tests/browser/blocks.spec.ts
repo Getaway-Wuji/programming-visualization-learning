@@ -8,6 +8,7 @@ import {
   correctStarter,
   selectBlock,
   openBlockKeyboardEditor,
+  showPracticeBlocks,
 } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
@@ -17,6 +18,7 @@ const echo = 'exercise.c.echo';
 async function open(page: Page) {
   await page.goto(`/#/practice/${echo}`);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   await openBlockKeyboardEditor(page);
 }

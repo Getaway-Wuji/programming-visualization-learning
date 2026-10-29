@@ -8,6 +8,7 @@ pub mod ast;
 pub mod budget;
 pub mod codec;
 pub mod diagnostic;
+pub mod edit_analysis;
 pub mod exec;
 pub mod format;
 pub mod input;

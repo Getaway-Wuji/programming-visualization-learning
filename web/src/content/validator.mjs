@@ -1,5 +1,7 @@
 import { schema } from './schema.mjs';
 import { baseline } from './baseline.mjs';
+import { schema as p05Schema } from './schema-p05.mjs';
+import { validateP05Semantics } from './validator-p05.mjs';
 
 export const MAX_CONTENT_BYTES = 2 * 1024 * 1024;
 const collections = [
@@ -169,7 +171,7 @@ function readJson(bytes) {
 
 // Implements precisely the keyword vocabulary of the frozen 2020-12 Schema.
 // allOf/$ref annotations propagate to unevaluatedProperties; failed alternatives do not.
-function evaluate(rule, value, path) {
+function evaluate(rule, value, path, rootSchema = schema) {
   if (rule === true) return { errors: [], evaluated: new Set() };
   if (rule === false) return { errors: [{ path, keyword: 'false' }], evaluated: new Set() };
   const errors = [];
@@ -180,28 +182,28 @@ function evaluate(rule, value, path) {
     for (const key of result.evaluated) evaluated.add(key);
   };
   if (rule.$ref) {
-    let reference = schema;
+    let reference = rootSchema;
     for (const key of rule.$ref.slice(2).split('/'))
       reference = reference[key.replace(/~1/g, '/').replace(/~0/g, '~')];
-    merge(evaluate(reference, value, path));
+    merge(evaluate(reference, value, path, rootSchema));
   }
-  if (rule.allOf) for (const branch of rule.allOf) merge(evaluate(branch, value, path));
+  if (rule.allOf) for (const branch of rule.allOf) merge(evaluate(branch, value, path, rootSchema));
   for (const keyword of ['anyOf', 'oneOf']) {
     if (rule[keyword]) {
       const matches = rule[keyword]
-        .map((branch) => evaluate(branch, value, path))
+        .map((branch) => evaluate(branch, value, path, rootSchema))
         .filter((result) => !result.errors.length);
       if (!matches.length || (keyword === 'oneOf' && matches.length !== 1)) error(keyword);
       else for (const match of matches) merge(match);
     }
   }
-  if (rule.not && !evaluate(rule.not, value, path).errors.length) error('not');
+  if (rule.not && !evaluate(rule.not, value, path, rootSchema).errors.length) error('not');
   if (rule.if) {
-    const condition = evaluate(rule.if, value, path);
+    const condition = evaluate(rule.if, value, path, rootSchema);
     if (!condition.errors.length) {
       merge(condition);
-      if (rule.then) merge(evaluate(rule.then, value, path));
-    } else if (rule.else) merge(evaluate(rule.else, value, path));
+      if (rule.then) merge(evaluate(rule.then, value, path, rootSchema));
+    } else if (rule.else) merge(evaluate(rule.else, value, path, rootSchema));
   }
   if (rule.type) {
     const valid =
@@ -239,7 +241,7 @@ function evaluate(rule, value, path) {
     }
     if (rule.items)
       value.forEach((item, index) =>
-        errors.push(...evaluate(rule.items, item, `${path}/${index}`).errors),
+        errors.push(...evaluate(rule.items, item, `${path}/${index}`, rootSchema).errors),
       );
   }
   if (isObject(value)) {
@@ -250,7 +252,7 @@ function evaluate(rule, value, path) {
     for (const [key, child] of Object.entries(rule.properties ?? {})) {
       if (has(value, key)) {
         evaluated.add(key);
-        errors.push(...evaluate(child, value[key], `${path}/${pointer(key)}`).errors);
+        errors.push(...evaluate(child, value[key], `${path}/${pointer(key)}`, rootSchema).errors);
       }
     }
     if (has(rule, 'additionalProperties')) {
@@ -258,7 +260,12 @@ function evaluate(rule, value, path) {
         if (!has(rule.properties ?? {}, key)) {
           evaluated.add(key);
           errors.push(
-            ...evaluate(rule.additionalProperties, value[key], `${path}/${pointer(key)}`).errors,
+            ...evaluate(
+              rule.additionalProperties,
+              value[key],
+              `${path}/${pointer(key)}`,
+              rootSchema,
+            ).errors,
           );
         }
       }
@@ -267,7 +274,12 @@ function evaluate(rule, value, path) {
       for (const key of Object.keys(value)) {
         if (!evaluated.has(key)) {
           errors.push(
-            ...evaluate(rule.unevaluatedProperties, value[key], `${path}/${pointer(key)}`).errors,
+            ...evaluate(
+              rule.unevaluatedProperties,
+              value[key],
+              `${path}/${pointer(key)}`,
+              rootSchema,
+            ).errors,
           );
           evaluated.add(key);
         }
@@ -277,8 +289,8 @@ function evaluate(rule, value, path) {
   return { errors, evaluated };
 }
 
-function schemaDiagnostics(value) {
-  const failures = evaluate(schema, value, '').errors;
+function schemaDiagnostics(value, activeSchema = schema) {
+  const failures = evaluate(activeSchema, value, '', activeSchema).errors;
   return failures.map(({ path, keyword }) => {
     const code =
       path === '/contractVersion'
@@ -730,11 +742,15 @@ export function inspectContentDraft(bytes) {
 
 function parseCheckedContent(bytes, authoring) {
   const content = readJson(bytes);
-  const structureErrors = schemaDiagnostics(content);
+  const p05 = content?.contractVersion === '1.1.0';
+  const structureErrors = schemaDiagnostics(content, p05 ? p05Schema : schema);
   // Dedicated structure failures precede the generic schema failure.
   const dedicated = structureErrors.filter((entry) => entry.code !== 'CONTENT_SCHEMA_INVALID');
   if (dedicated.length) reject(dedicated);
   reject(structureErrors);
-  validateSemantics(content, authoring);
+  if (p05) {
+    reject(validateP05Semantics(content));
+    if (!authoring) throw new ContentError('CONTENT_PUBLICATION_UNVERIFIED');
+  } else validateSemantics(content, authoring);
   return freeze(content);
 }

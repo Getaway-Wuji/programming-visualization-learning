@@ -4,6 +4,7 @@ import type { CourseReading } from './reading';
 import { readingRelease } from './reading-release.generated';
 import { practiceRelease } from './practice-release.generated';
 import { courseLearningRelease } from './course-learning-release.generated';
+import { loadCourseBundle } from './course-bundle';
 
 interface CourseLearning {
   learningVersion: '1.0.0';
@@ -58,6 +59,17 @@ export async function loadCourseLearning(
   reading: CourseReading,
   fetcher: typeof fetch = fetch,
 ): Promise<LearningCatalog> {
+  const bundle = await loadCourseBundle(fetcher);
+  if (reading.packageRef.id === 'content.c.p05') {
+    if (
+      !bundle?.registered ||
+      !bundle.learning ||
+      bundle.sourceSha256 !== reading.sourceSha256 ||
+      JSON.stringify(bundle.reading.catalog) !== JSON.stringify(reading.catalog)
+    )
+      throw new Error('COURSE_LEARNING_UNREGISTERED');
+    return createLearningCatalog(bundle.learning);
+  }
   const target = new URL(`${import.meta.env.BASE_URL}${courseLearningRelease.file}`, location.href);
   const root = new URL(`${import.meta.env.BASE_URL}content/`, location.href);
   if (target.origin !== location.origin || !target.pathname.startsWith(root.pathname))

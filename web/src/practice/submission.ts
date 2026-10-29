@@ -25,6 +25,19 @@ export function exerciseRequest(
 ): ExecuteRequest {
   const request = caseRequest(catalog, source, context, { values: test.input, random: null });
   request.mode = 'exercise-test';
+  if (
+    ![
+      'input-read-output',
+      'multiply-add-output',
+      'if-else-paths',
+      'while-for-accumulations',
+      'single-index-increment',
+      'logical-array-accumulation',
+    ].includes(catalog.judgeProfile.rule)
+  ) {
+    request.protocolVersion = '1.1.0';
+    request.judgeVersion = '1.1.0';
+  }
   request.identity.submissionId = submissionId;
   request.identity.testCaseKey = test.caseKey;
   request.judge = {
@@ -105,7 +118,15 @@ export function submissionMet(
     revision = id.sourceRevision;
     runs.add(id.runId);
   }
-  if (catalog.judgeProfile.rule !== 'if-else-paths') return true;
+  const requiredSites: Partial<Record<import('../content/types').JudgeRule, number>> = {
+    'if-else-paths': 1,
+    'if-positive-normalize': 1,
+    'nested-sign-branches': 2,
+    'interval-membership': 1,
+    'break-continue-odd-sum': 2,
+  };
+  const required = requiredSites[catalog.judgeProfile.rule];
+  if (!required) return true;
   const sites = new Map<string, Set<string>>();
   for (const summary of summaries)
     for (const entry of summary.coverage)
@@ -114,5 +135,8 @@ export function submissionMet(
         branches.add(entry.branch);
         sites.set(entry.siteKey, branches);
       }
-  return [...sites.values()].some((branches) => branches.has('then') && branches.has('else'));
+  return (
+    [...sites.values()].filter((branches) => branches.has('then') && branches.has('else')).length >=
+    required
+  );
 }

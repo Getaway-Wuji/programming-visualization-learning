@@ -1,6 +1,7 @@
 // Public navigation labels/relationships from the frozen P0 plan. This is not
 // a publishable CONTENT-01 package, a progress record, or an execution template.
-export const chapters = [
+import type { CourseReading } from './content/reading';
+const legacyChapters = [
   {
     id: 'chapter.c.values',
     title: '变量与表达式',
@@ -21,7 +22,7 @@ export const chapters = [
   },
 ] as const;
 
-export const lessons = [
+const legacyLessons = [
   {
     id: 'lesson.c.variables-output',
     title: '变量和输出',
@@ -76,6 +77,46 @@ export const lessons = [
     ],
   },
 ] as const;
+
+export interface ChapterNavigation {
+  id: string;
+  title: string;
+  description: string;
+  number: string;
+}
+export interface LessonNavigation {
+  id: string;
+  title: string;
+  chapterId: string;
+  exerciseId: string;
+  exerciseTitle: string;
+  caseIds: readonly string[];
+}
+export let chapters: readonly ChapterNavigation[] = legacyChapters;
+export let lessons: readonly LessonNavigation[] = legacyLessons;
+/** Updated together only after the entire reading/practice/case bundle passes its fixed hash. */
+export function activateCourseNavigation(reading: CourseReading | null) {
+  chapters = reading
+    ? reading.chapters.map((entry) => ({
+        id: entry.id,
+        title: entry.title,
+        description: `按推荐顺序学习本章的 ${entry.lessonRefs.length} 个小节。`,
+        number: String(entry.order).padStart(2, '0'),
+      }))
+    : legacyChapters;
+  lessons = reading
+    ? reading.lessons.map((entry) => ({
+        id: entry.id,
+        title: entry.title,
+        chapterId: entry.chapterRef.id,
+        exerciseId: entry.requiredExerciseRefs[0]!.id,
+        exerciseTitle:
+          reading.exercises.find((exercise) => exercise.id === entry.requiredExerciseRefs[0]!.id)
+            ?.title ?? '必修练习',
+        caseIds: entry.caseRefs.map((ref) => ref.id),
+      }))
+    : legacyLessons;
+}
 
 export const cases = [
   {

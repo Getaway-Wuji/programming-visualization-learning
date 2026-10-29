@@ -40,6 +40,16 @@ const contentSecurityPolicy = [
 ].join('; ');
 createServer((request, response) => {
   const url = new URL(request.url ?? '/', 'http://127.0.0.1');
+  // Explicit QA fault injection exercises the complete immutable old release.
+  if (
+    process.env.P05_HIDE_COURSE_BUNDLE === '1' &&
+    /^\/content\/(?:course|review)\//.test(url.pathname)
+  ) {
+    response
+      .writeHead(404, { 'Cache-Control': 'no-store' })
+      .end('Course bundle intentionally unavailable in legacy regression');
+    return;
+  }
   const isCheck = url.pathname.startsWith('/checks/');
   const root = resolve(workspaceDir, isCheck ? '.artifacts/browser-dist' : 'web/dist');
   let pathname;

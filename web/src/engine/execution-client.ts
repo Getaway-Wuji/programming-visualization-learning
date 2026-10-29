@@ -355,18 +355,47 @@ export class ExecutionClient {
         )
           throw new ExecutionFailure('E_PROTOCOL_INVALID');
         // The ordinary request validator checks every prepared range and field.
-        encodeRequest(
-          caseRequest(
-            snapshot,
-            value.source,
-            {
-              contextId: 'prepare',
-              contextRevision: 1,
-              sourceRevision: 1,
-            },
-            { values: selected, random: null },
-          ),
+        const preparedRequest = caseRequest(
+          snapshot,
+          value.source,
+          {
+            contextId: 'prepare',
+            contextRevision: 1,
+            sourceRevision: 1,
+          },
+          { values: selected, random: null },
         );
+        // Preparation validates source ranges without executing a test. The
+        // reviewed zero-input exercises need the same closed 1.1 branch used
+        // for their actual submission; legacy case validation requires input.
+        if (
+          snapshot.packageRef.id === 'content.c.p05' &&
+          snapshot.packageRef.version === '1.0.0' &&
+          snapshot.judgeProfile &&
+          ![
+            'input-read-output',
+            'multiply-add-output',
+            'if-else-paths',
+            'while-for-accumulations',
+            'single-index-increment',
+            'logical-array-accumulation',
+          ].includes(snapshot.judgeProfile.rule)
+        ) {
+          const test = (snapshot.subject as ExerciseEntity).tests[0];
+          if (!test) throw new ExecutionFailure('E_CONTENT_MISMATCH');
+          preparedRequest.protocolVersion = '1.1.0';
+          preparedRequest.judgeVersion = '1.1.0';
+          preparedRequest.mode = 'exercise-test';
+          preparedRequest.identity.testCaseKey = test.caseKey;
+          preparedRequest.judge = {
+            profileRef: { id: snapshot.judgeProfile.id, version: snapshot.judgeProfile.version },
+            rule: snapshot.judgeProfile.rule,
+            expectedStdout: test.expectedStdout,
+            expectedExitCode: test.expectedExitCode,
+            ...(test.expectedArray ? { expectedArray: [...test.expectedArray] } : {}),
+          };
+        }
+        encodeRequest(preparedRequest);
         guard();
         return value.source;
       },

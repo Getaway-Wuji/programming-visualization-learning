@@ -6,6 +6,7 @@ import { LearningSaveStatus, useLearning } from '../learning/react';
 import type { Avatar, Settings } from '../storage/model';
 import { AvatarPicture } from '../learning/profile-components';
 import { AppearanceSettings } from '../appearance/AppearanceSettings';
+import { SavedBlockWorkspacePreference } from '../appearance/BlockWorkspacePreference';
 
 const tabs = [
   { id: 'appearance', label: '外观与主题' },
@@ -421,6 +422,7 @@ function SettingsContent() {
           {selected === 'display' && (
             <>
               <h2>显示设置</h2>
+              <SavedBlockWorkspacePreference />
               {resettable.includes('settings') && (
                 <p className="notice">
                   显示设置记录损坏，当前使用临时默认设置，尚未覆盖原记录。请在本地数据中确认重置。

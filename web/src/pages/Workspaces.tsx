@@ -64,7 +64,7 @@ export function PracticePage() {
       <PageHeading
         kicker="动手练习 · 程序与输入"
         title={lesson.exerciseTitle}
-        description="搭建积木、查看生成的只读 C 代码，提交后逐步复盘真实执行。"
+        description="用 C 代码或积木解答，提交后逐步复盘真实执行。"
       />
       <WorkspaceContext>
         <SubjectLearningStatus kind="exercise" id={lesson.exerciseId} />

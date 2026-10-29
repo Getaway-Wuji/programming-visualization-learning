@@ -3,8 +3,23 @@ import { expect, type Page } from '@playwright/test';
 export const blockWorkspace = (page: Page) =>
   page.getByRole('region', { name: '积木工作区', exact: true });
 
+/** Opt older canvas regressions into visible blocks without changing their answer mode. */
+export async function showPracticeBlocks(page: Page, { readOnly = true } = {}) {
+  const preference = page.getByRole('combobox', { name: '积木显示', exact: true });
+  await expect(preference).toBeEnabled();
+  if ((await preference.inputValue()) !== 'show') await preference.selectOption('show');
+  await expect(preference).toHaveValue('show');
+  await expect(preference).toBeEnabled();
+  await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
+  if (readOnly) {
+    const collapseCode = page.getByRole('button', { name: '收起代码编辑', exact: true });
+    if (await collapseCode.isVisible()) await collapseCode.click();
+  }
+}
+
 /** Historic regression scenarios explicitly opt into the separate correction exercise. */
 export async function openCorrectionPractice(page: Page) {
+  await showPracticeBlocks(page);
   const button = page.getByTestId('practice-mode').getByRole('button', {
     name: '改错练习',
     exact: true,
@@ -13,6 +28,7 @@ export async function openCorrectionPractice(page: Page) {
   if ((await button.getAttribute('aria-pressed')) !== 'true') await button.click();
   await expect(button).toHaveAttribute('aria-pressed', 'true');
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
+  await showPracticeBlocks(page);
 }
 
 /** Expand only when a test actually uses keyboard editing; preserve the product's closed default. */

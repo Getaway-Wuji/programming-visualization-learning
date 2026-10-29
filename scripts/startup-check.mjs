@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:net';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from '@playwright/test';
@@ -14,7 +15,7 @@ const environment = checkEnvironment({ bindgen: true });
 const records = [];
 // A recurring QA run must not overwrite archived 03.4/09.x evidence.
 const evidenceTask = process.env.TASK_EVIDENCE_TASK ?? 'current';
-assert.match(evidenceTask, /^(?:[0-9]{2}\.[0-9]+|current)$/);
+assert.match(evidenceTask, /^(?:[0-9]{2}\.[0-9]+|P0\.5-(?:0[1-9]|10)|current)$/);
 const qaPrefix = process.env.STARTUP_QA_PREFIX ?? `.artifacts/${evidenceTask}/startup-current`;
 
 async function available(port) {
@@ -142,6 +143,8 @@ try {
             }
             postMessage(message, options = []) {
               this.record.nonce = message.nonce;
+              this.record.kinds ??= [];
+              this.record.kinds.push(message.kind);
               super.postMessage(message, options);
             }
             terminate() {
@@ -182,14 +185,10 @@ try {
       );
       await page.getByRole('link', { name: '进入练习工作区' }).click();
       await page.locator('[data-testid="practice-execution"][data-state="ready"]').waitFor();
-      assert.match(
-        await page.getByTestId('code-panel').locator('textarea').inputValue(),
-        /int main\(void\)/,
-      );
-      assert.equal(
-        await page.getByTestId('code-panel').locator('textarea').getAttribute('readonly'),
-        '',
-      );
+      await page.locator('[data-testid="draft-code-editor"][data-sync="synced"]').waitFor();
+      const answerCode = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      assert.match(await answerCode.inputValue(), /int main\(void\)/);
+      assert.equal(await answerCode.getAttribute('readonly'), null);
       assert.equal(
         await page.getByRole('button', { name: '提交练习', exact: true }).isEnabled(),
         true,
@@ -203,11 +202,15 @@ try {
       assert.equal(await page.getByTestId('practice-stdout').count(), 0);
       assert.equal(await page.getByTestId('step-output').count(), 0);
       const passivePractice = await page.evaluate(() => globalThis.startupAudit);
-      assert.equal(passivePractice.workers.length, 0);
+      assert.equal(passivePractice.workers.length, 1);
+      assert.deepEqual(passivePractice.workers[0].kinds, ['analyze-code']);
+      assert.equal(passivePractice.workers[0].build.kind, 'analysisResult');
+      assert.equal(passivePractice.workers[0].build.status, 'valid');
+      assert.equal(passivePractice.workers[0].build.analysisVersion, '1.0.0');
       assert.equal(passivePractice.writes, 0);
-      assert.equal(passivePractice.wasmFetches, 0);
-      assert.equal(passivePractice.compiles, 0);
-      assert.deepEqual(passivePractice.moduleHashes, []);
+      assert.equal(passivePractice.wasmFetches, 1);
+      assert.equal(passivePractice.compiles, 1);
+      assert.deepEqual(passivePractice.moduleHashes, [engineBuild.wasmSha256]);
       await page
         .getByRole('navigation', { name: '主导航' })
         .getByRole('link', { name: '算法与演示', exact: true })
@@ -223,7 +226,11 @@ try {
         await page.getByTestId('content-sample').getAttribute('data-content-scope'),
         'case-view',
       );
-      assert.match(await page.getByTestId('content-sample').innerText(), /内容版本 1\.0\.1/);
+      assert.ok(
+        (await page.getByTestId('content-sample').innerText()).includes(
+          `内容版本 ${existsSync(join(workspaceDir, 'content/c/p0/blockly-release-1.0.14.json')) ? '1.0.0' : '1.0.2'}`,
+        ),
+      );
       await page.locator('[data-testid="case-execution"][data-state="ready"]').waitFor();
       assert.match(
         await page.getByTestId('code-panel').locator('textarea').inputValue(),
@@ -237,19 +244,21 @@ try {
       assert.equal(await page.getByTestId('execution-output').count(), 0);
       assert.equal(await page.getByTestId('step-output').count(), 0);
       const passiveCase = await page.evaluate(() => globalThis.startupAudit);
-      assert.equal(passiveCase.workers.length, 0);
-      assert.equal(passiveCase.wasmFetches, 0);
-      assert.equal(passiveCase.compiles, 0);
-      assert.deepEqual(passiveCase.moduleHashes, []);
+      assert.equal(passiveCase.workers.length, 1);
+      assert.equal(passiveCase.workers[0].terminated, true);
+      assert.deepEqual(passiveCase.workers[0].kinds, ['analyze-code']);
+      assert.equal(passiveCase.wasmFetches, 1);
+      assert.equal(passiveCase.compiles, 1);
+      assert.deepEqual(passiveCase.moduleHashes, [engineBuild.wasmSha256]);
       await page.getByRole('button', { name: '检查执行模块' }).click();
       await page.locator('[data-testid="engine-connection"][data-state="ready"]').waitFor();
       const audit = await page.evaluate(() => globalThis.startupAudit);
-      assert.equal(audit.workers.length, 1);
-      assert.equal(audit.workers[0].terminated, true);
-      assert.deepEqual(audit.workers[0].build, {
+      assert.equal(audit.workers.length, 2);
+      assert.equal(audit.workers[1].terminated, true);
+      assert.deepEqual(audit.workers[1].build, {
         kind: 'build-probe',
         probeVersion: '1.0.0',
-        nonce: audit.workers[0].nonce,
+        nonce: audit.workers[1].nonce,
         engineVersion: '0.1.0',
         interpreterReady: false,
       });

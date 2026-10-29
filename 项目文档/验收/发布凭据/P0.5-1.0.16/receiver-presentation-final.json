@@ -1,0 +1,841 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--trace",
+      "off",
+      "--reporter=list,json",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output",
+      "editor-presentation.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/P0.5-09/receiver-presentation-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/P0.5-09/receiver-presentation-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/P0.5-09/receiver-presentation-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "off",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "editor-presentation.spec.ts",
+      "file": "editor-presentation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.echo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1319,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:02.932Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.echo",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-hidden-277fd-s-all-tests-exercise-c-echo-chrome\\attachments\\exercise-c-echo-48cf1bcb69ef3f0e1e8e9334fe2ae9803ff51787.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-76a408d658aef7fa62d2",
+          "file": "editor-presentation.spec.ts",
+          "line": 229,
+          "column": 3
+        },
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.two-x-plus-three",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1122,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:05.148Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-x-plus-three",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-hidden-2ccd9-exercise-c-two-x-plus-three-chrome\\attachments\\exercise-c-two-x-plus-three-da2253a73e87b295855c54b2a116dff5d175ce6e.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-a62567a04e1f3e7b644b",
+          "file": "editor-presentation.spec.ts",
+          "line": 229,
+          "column": 3
+        },
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.nonnegative",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1223,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:06.278Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.nonnegative",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-hidden-ffe55-ests-exercise-c-nonnegative-chrome\\attachments\\exercise-c-nonnegative-eab7ca3a9cf4def5231aeead4490c53b8106db03.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-c8e965341c3ece6b2ba2",
+          "file": "editor-presentation.spec.ts",
+          "line": 229,
+          "column": 3
+        },
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.two-loop-sums",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1256,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:07.509Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-loop-sums",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-hidden-261f1-ts-exercise-c-two-loop-sums-chrome\\attachments\\exercise-c-two-loop-sums-d6596517e91c57144114e25b3f7e5b644df47158.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-291459cde294aa355f35",
+          "file": "editor-presentation.spec.ts",
+          "line": 229,
+          "column": 3
+        },
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.increment-at-index",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1231,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:08.773Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.increment-at-index",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-hidden-97fe5-ercise-c-increment-at-index-chrome\\attachments\\exercise-c-increment-at-index-01ec3a0f15ccfc5459519a6eaaceac8ca5ea4c27.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-7c76530671439223ecdf",
+          "file": "editor-presentation.spec.ts",
+          "line": 229,
+          "column": 3
+        },
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.array-sum",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1419,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:10.011Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.array-sum",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-hidden-1fabb--tests-exercise-c-array-sum-chrome\\attachments\\exercise-c-array-sum-3aa46283ce4931c6966fa9e59ed164784fad576c.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-d2d24eb7bb98c8bb778c",
+          "file": "editor-presentation.spec.ts",
+          "line": 229,
+          "column": 3
+        },
+        {
+          "title": "automatic presentation follows each lesson recommendation and explicit preferences override only visibility",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1251,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:11.437Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "automatic-six-lessons",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-automa-07202-es-override-only-visibility-chrome\\attachments\\automatic-six-lessons-12287e9fef284e71562673a0b0ac77eeb8c33218.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-c61bd7c1bdd7049c7bb3",
+          "file": "editor-presentation.spec.ts",
+          "line": 294,
+          "column": 1
+        },
+        {
+          "title": "invalid and unmapped code survives hide-show, settings return and mode switching without executing historical blocks",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2331,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:12.696Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "invalid-unmapped-presentation-recovery",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-invali-7839c-executing-historical-blocks-chrome\\attachments\\invalid-unmapped-presentation-recovery-98e78a1f32b8363142dc7d2d49f8b65601de3612.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-a738375ed5006804730e",
+          "file": "editor-presentation.spec.ts",
+          "line": 324,
+          "column": 1
+        },
+        {
+          "title": "presentation changes preserve the accepted run, cursor, document bytes and saved awards; logical edits invalidate them",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1389,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:15.034Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "accepted-run-preserved-until-edit",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-presen-794af-gical-edits-invalidate-them-chrome\\attachments\\accepted-run-preserved-until-edit-68004aa070e3bb04a3abaa79500d15832d9e4a9c.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-3a2958d7ad5a8cfe1fe9",
+          "file": "editor-presentation.spec.ts",
+          "line": 385,
+          "column": 1
+        },
+        {
+          "title": "native block edits keep comments, coordinates and undo-redo across hide-show while sharing the same code draft",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1200,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:16.430Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-undo-redo-through-presentation",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-native-f86b7-sharing-the-same-code-draft-chrome\\attachments\\native-undo-redo-through-presentation-addd29724f79f1ba676e8cb737c6af08b1aab4a8.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-3db6ef84a45e20555f72",
+          "file": "editor-presentation.spec.ts",
+          "line": 422,
+          "column": 1
+        },
+        {
+          "title": "display settings save only the block preference, preserve an unfinished answer and restore the preference after refresh",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1234,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:17.638Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "settings-persistence-and-ephemeral-draft-boundary",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-displa-ba3e0-he-preference-after-refresh-chrome\\attachments\\settings-persistence-and-ephemeral-draft-boundary-28bb2607818ba96e61251ebf83b840661210aaaf.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-f245cb1a3e9eeb3a5159",
+          "file": "editor-presentation.spec.ts",
+          "line": 467,
+          "column": 1
+        },
+        {
+          "title": "native appearance quota and transaction abort retain an honest temporary choice and explicit sparse retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1044,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:18.878Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-preference-faults-and-explicit-retry",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-native-76b3f-e-and-explicit-sparse-retry-chrome\\attachments\\native-preference-faults-and-explicit-retry-37b8c847a0a994766427cd3a6fdf0492db428cb8.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-919df8ddfa20b08d0859",
+          "file": "editor-presentation.spec.ts",
+          "line": 536,
+          "column": 1
+        },
+        {
+          "title": "a stale failed preference cannot overwrite peer settings and explicit retry preserves the peer changes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1297,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:19.929Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "peer-appearance-save-and-sparse-preference-retry",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-a-stal-38dec--preserves-the-peer-changes-chrome\\attachments\\peer-appearance-save-and-sparse-preference-retry-acca3a4bae4b7ddd5b5cdd2c2d4b1840c4175985.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-46919b150275ca978248",
+          "file": "editor-presentation.spec.ts",
+          "line": 567,
+          "column": 1
+        },
+        {
+          "title": "a peer clear discards a failed preference and unfinished answer instead of reviving the previous generation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1230,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:21.233Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "generation-clear-discards-temporary-choice",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-a-peer-41250-ing-the-previous-generation-chrome\\attachments\\generation-clear-discards-temporary-choice-8374d084dc49d22fafef7cd3ce4ba33042e1ae21.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-0c17a7f9d1802775ba0f",
+          "file": "editor-presentation.spec.ts",
+          "line": 606,
+          "column": 1
+        },
+        {
+          "title": "hidden blocks do not bypass the same teaching checks or accepted source identity",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1032,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:22.473Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "same-teaching-rejection-hidden-and-visible",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-hidden-444a2-or-accepted-source-identity-chrome\\attachments\\same-teaching-rejection-hidden-and-visible-ced35ef074c8540203db03578d832b36440831b7.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-1e035a8adf623457258f",
+          "file": "editor-presentation.spec.ts",
+          "line": 646,
+          "column": 1
+        },
+        {
+          "title": "narrow-screen keyboard preference controls keep the current code editable and every action reachable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1011,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:23.514Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "narrow-keyboard-code-only",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-narrow-14283--and-every-action-reachable-chrome\\attachments\\narrow-keyboard-code-only-1ce7e055ab9a7e1eee8203d97cd6daccf4ef087e.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-978c97937ddfe9f976e7",
+          "file": "editor-presentation.spec.ts",
+          "line": 672,
+          "column": 1
+        },
+        {
+          "title": "a blocks-first lesson retains an incomplete block draft when hiding before the first code edit",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1530,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T06:05:24.534Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "blocks-first-incomplete-hide-code-repair",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\P0.5-09\\receiver-presentation-final-output\\editor-presentation-a-bloc-f59ad--before-the-first-code-edit-chrome\\attachments\\blocks-first-incomplete-hide-code-repair-2b6c5ca2e91dd6c21bafa3cb89cb3605b3fce529.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-dc0f1d81d35d33050582",
+          "file": "editor-presentation.spec.ts",
+          "line": 706,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-29T06:05:02.264Z",
+    "duration": 25132.375,
+    "expected": 17,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

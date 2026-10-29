@@ -12,6 +12,11 @@ use crate::semantic::CheckedProgram;
 use crate::trace::{Step, Trace};
 use serde_json::{Value, json};
 
+#[path = "judge_p05.rs"]
+mod p05;
+
+pub(crate) use p05::profile_for_rule as p05_profile_for_rule;
+
 type Result<T> = std::result::Result<T, Diagnostic>;
 
 fn charge(meter: &mut Meter, units: usize) -> Result<()> {
@@ -1264,6 +1269,9 @@ pub(crate) fn evaluate(
     exit: Option<i32>,
     meter: &mut Meter,
 ) -> Result<Value> {
+    if p05::profile_for_rule(request["judge"]["rule"].as_str().unwrap()).is_some() {
+        return p05::evaluate(request, checked, trace, exit, meter);
+    }
     let mut model = Model::new(request, checked, meter)?;
     for step in &trace.steps {
         model.step(step)?;

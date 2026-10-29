@@ -79,14 +79,21 @@ function effective(object: TraceObject, index: number): number | null {
   }
   return object.cells[low]?.index === index ? object.cells[low].value : object.defaultValue;
 }
-function checkState(state: TraceState, nodes: Nodes): void {
-  const frames = new Set<string>(),
-    scopes = new Map<string, TraceState['scopes'][number]>();
+interface StateScratch {
+  frames: Set<string>;
+  scopes: Map<string, TraceState['scopes'][number]>;
+  objectIds: Set<string>;
+  scopeObjects: Map<string, number>;
+}
+function checkState(state: TraceState, nodes: Nodes, scratch: StateScratch): void {
+  const { frames, scopes, objectIds, scopeObjects } = scratch;
+  frames.clear();
+  scopes.clear();
+  objectIds.clear();
+  scopeObjects.clear();
   for (const frame of state.frames) frames.add(frame.id);
   for (const scope of state.scopes) scopes.set(scope.id, scope);
   ensure(frames.size === state.frames.length && scopes.size === state.scopes.length);
-  const objectIds = new Set<string>(),
-    scopeObjects = new Map<string, number>();
   let live = 0,
     previousEnd = 4096;
   for (const frame of state.frames) {
@@ -470,23 +477,21 @@ function observations(
   let comparisons = 0,
     swaps = 0,
     decisions = 0;
-  const short = new Map<
-      string,
-      Extract<TraceStep['observations'][number], { kind: 'short-circuit' }>[]
-    >(),
-    evaluates = new Map<
-      string,
-      Extract<TraceStep['observations'][number], { kind: 'evaluate' }>[]
-    >();
-  for (const observation of step.observations) {
-    if (observation.kind === 'short-circuit') {
-      const list = short.get(observation.nodeId) ?? [];
-      list.push(observation);
-      short.set(observation.nodeId, list);
-    } else if (observation.kind === 'evaluate') {
-      const list = evaluates.get(observation.nodeId) ?? [];
-      list.push(observation);
-      evaluates.set(observation.nodeId, list);
+  // Only short-circuit pairing needs an index. Most steps have none; retain
+  // the exact occurrence counts without allocating per-node observation lists.
+  let short: Map<string, number> | undefined, evaluates: Map<string, number> | undefined;
+  if (step.observations.some((observation) => observation.kind === 'short-circuit')) {
+    short = new Map();
+    evaluates = new Map();
+    for (const observation of step.observations) {
+      if (observation.kind === 'short-circuit')
+        short.set(observation.nodeId, (short.get(observation.nodeId) ?? 0) + 1);
+      else if (
+        observation.kind === 'evaluate' &&
+        (observation.operator === '&&' || observation.operator === '||') &&
+        observation.operands.length === 1
+      )
+        evaluates.set(observation.nodeId, (evaluates.get(observation.nodeId) ?? 0) + 1);
     }
   }
   for (const observation of step.observations) {
@@ -505,28 +510,21 @@ function observations(
       if (observation.operator === '&&' || observation.operator === '||') {
         if (observation.operands.length === 1)
           ensure(
-            short.get(observation.nodeId)?.length === 1 &&
+            short?.get(observation.nodeId) === 1 &&
               (observation.operator === '&&'
                 ? observation.operands[0] === 0
                 : observation.operands[0] !== 0),
           );
-        else ensure(!short.has(observation.nodeId));
+        else ensure(!short?.has(observation.nodeId));
       }
     } else if (observation.kind === 'short-circuit') {
       ensure(
         nodes.has(observation.skippedNodeId) &&
           observation.skippedNodeId !== observation.nodeId &&
           descendant(observation.skippedNodeId, observation.nodeId, nodes) &&
-          short.get(observation.nodeId)?.length === 1,
+          short?.get(observation.nodeId) === 1,
       );
-      ensure(
-        evaluates
-          .get(observation.nodeId)
-          ?.filter(
-            (other) =>
-              (other.operator === '&&' || other.operator === '||') && other.operands.length === 1,
-          ).length === 1,
-      );
+      ensure(evaluates?.get(observation.nodeId) === 1);
       for (const other of step.observations) {
         ensure(!descendant(other.nodeId, observation.skippedNodeId, nodes));
       }
@@ -652,15 +650,29 @@ function judgeResult(
   const coverageKeys = new Set<string>(),
     siteNodes = new Map<string, string>(),
     nodeSites = new Map<string, string>();
+  const structuralIfs =
+    request.protocolVersion === '1.1.0'
+      ? [...nodes.values()].filter((node) => node.kind === 'if')
+      : [];
   for (const item of judge.coverage) {
     const node = nodes.get(item.nodeId),
       mapping = request.source.blockMap.find((mapping) => mapping.blockId === item.siteKey);
-    ensure(
-      node &&
-        mapping &&
-        node.kind === (item.branch === 'then' || item.branch === 'else' ? 'if' : item.branch),
-    );
-    equal(node.byteRange, mapping.byteRange);
+    if (request.protocolVersion === '1.1.0') {
+      const ordinal = structuralIfs.findIndex((entry) => entry.nodeId === item.nodeId);
+      ensure(
+        node &&
+          ordinal >= 0 &&
+          item.siteKey === `if.${ordinal}` &&
+          ['then', 'else'].includes(item.branch),
+      );
+    } else {
+      ensure(
+        node &&
+          mapping &&
+          node.kind === (item.branch === 'then' || item.branch === 'else' ? 'if' : item.branch),
+      );
+      equal(node.byteRange, mapping.byteRange);
+    }
     const key = `${item.siteKey}:${item.branch}`;
     ensure(!coverageKeys.has(key));
     coverageKeys.add(key);
@@ -743,7 +755,15 @@ export function* validateTraceRelationships(
     result.producer === 'rust' &&
       nodes.get(trace.initialState.control.nextNodeId!)?.kind === 'function',
   );
-  checkState(trace.initialState, nodes);
+  // Each validation owns its scratch tables, including interleaved generators.
+  // They retain no accepted state and are cleared before every complete check.
+  const scratch: StateScratch = {
+    frames: new Set(),
+    scopes: new Map(),
+    objectIds: new Set(),
+    scopeObjects: new Map(),
+  };
+  checkState(trace.initialState, nodes, scratch);
   ensure(trace.checkpoints.length === Math.floor(trace.steps.length / 128) + 1);
   for (let i = 0; i < trace.checkpoints.length; i++) {
     yield;
@@ -766,7 +786,7 @@ export function* validateTraceRelationships(
     state = { ...state };
     judgeBeforeStep(result, request, step, before, nodes, points);
     for (const change of step.changes) state = apply(state, change);
-    checkState(state, nodes);
+    checkState(state, nodes, scratch);
     const writeCounts = transition(step, before, state, writes),
       observationCounts = observations(step, before, nodes, writes, swapWrites);
     ensure(state.counters.scalarWrites === before.counters.scalarWrites + writeCounts.scalarWrites);
@@ -802,12 +822,12 @@ export function* validateTraceRelationships(
   judgeResult(result, request, state, nodes, points);
   // Verify the complete inverse sequence against checkpoints and initial state.
   // Each inverse checks its own exact preconditions before restoring records.
+  state = { ...state };
   for (let at = trace.steps.length - 1; at >= 0; at--) {
     yield;
     const step = trace.steps[at];
-    state = { ...state };
     for (let i = step.changes.length - 1; i >= 0; i--) state = apply(state, step.changes[i], true);
-    checkState(state, nodes);
+    checkState(state, nodes, scratch);
     if (at % 128 === 0) equal(state, trace.checkpoints[at / 128].state);
   }
   equal(state, trace.initialState);

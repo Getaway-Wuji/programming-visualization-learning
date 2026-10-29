@@ -22,6 +22,9 @@ export type ParsedJson =
   null | boolean | number | string | ParsedJson[] | { [key: string]: ParsedJson };
 export function* precheckJson(text: string): Generator<void, JsonShape, unknown> {
   const stack: Frame[] = [];
+  // At most 32 containers are active. Reuse one private frame per depth rather
+  // than allocating a frame for every container in a multi-megabyte trace.
+  const frames: Frame[] = [];
   const checkedKeys = new Set<string>();
   let containers = 0;
   let at = 0,
@@ -89,12 +92,14 @@ export function* precheckJson(text: string): Generator<void, JsonShape, unknown>
     if (character === 123 || character === 91) {
       ensure(stack.length < 32, 'E_PROTOCOL_INVALID');
       containers++;
-      stack.push({
-        object: character === 123,
-        phase: character === 123 ? 'key-or-end' : 'value-or-end',
-        previous: '',
-        count: 0,
-      });
+      const next =
+        frames[stack.length] ??
+        (frames[stack.length] = { object: false, phase: 'value', previous: '', count: 0 });
+      next.object = character === 123;
+      next.phase = next.object ? 'key-or-end' : 'value-or-end';
+      next.previous = '';
+      next.count = 0;
+      stack.push(next);
       at++;
       continue;
     }

@@ -1,12 +1,21 @@
 import type { ReactNode } from 'react';
 import { useLearning } from '../learning/react';
 import { StatePanel } from './Ui';
+import { courseBundleFailure } from '../content/course-bundle';
 
 export function ReadingBoundary({ children }: { children: ReactNode }) {
   const { state, service } = useLearning();
   const status = state.readingStatus ?? 'loading';
   return (
     <div data-testid="course-reading" data-state={status}>
+      {status === 'ready' && courseBundleFailure() && (
+        <p className="notice" role="status" data-testid="course-fallback">
+          扩充课程暂未能完整读取，当前显示原六节已验证课程。已有学习记录保留。
+          <button className="button button-secondary" onClick={() => void service.reloadReading()}>
+            重试扩充课程
+          </button>
+        </p>
+      )}
       {status === 'loading' && (
         <StatePanel
           kind="loading"

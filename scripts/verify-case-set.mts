@@ -113,7 +113,13 @@ export interface CasePacket {
   ui: CaseUi;
 }
 const workspace = fileURLToPath(new URL('../', import.meta.url));
-const modules = ['protocol', 'trace-validation', 'execution-json', 'execution-schema.generated'];
+const modules = [
+  'protocol',
+  'trace-validation',
+  'execution-json',
+  'execution-schema.generated',
+  'execution-p05-schema.generated',
+];
 type Protocol = typeof import('../web/src/engine/protocol');
 let protocolPromise: Promise<Protocol> | undefined;
 function protocol(): Promise<Protocol> {
@@ -124,14 +130,19 @@ function protocol(): Promise<Protocol> {
         name,
         text: readFileSync(join(workspace, 'web/src/engine', `${name}.ts`), 'utf8'),
       }));
+      const compilerOptions = { target: ts.ScriptTarget.ES2023, module: ts.ModuleKind.ESNext };
+      // Every runtime dependency and compiler option belongs to the cache key;
+      // the added 1.1 dependency must never modify a historical cache directory.
       const digest = sha256(
-        ts.version + sources.map((item) => item.name + '\0' + item.text).join('\0'),
+        ts.version +
+          JSON.stringify(compilerOptions) +
+          sources.map((item) => item.name + '\0' + item.text).join('\0'),
       );
       const directory = join(workspace, '.artifacts/08.4/verification-runtime', digest);
       mkdirSync(directory, { recursive: true });
       for (const item of sources) {
         let source = ts.transpileModule(item.text, {
-          compilerOptions: { target: ts.ScriptTarget.ES2023, module: ts.ModuleKind.ESNext },
+          compilerOptions,
           fileName: `${item.name}.ts`,
         }).outputText;
         for (const name of modules)

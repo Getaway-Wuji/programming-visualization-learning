@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
 import type { Avatar, StorageSnapshot } from '../../web/src/storage/model';
-import { blockWorkspace, correctStarter } from './block-ui';
+import { blockWorkspace, correctStarter, showPracticeBlocks } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 const firstDay = new Date('2026-10-20T12:00:00.000Z');
@@ -160,6 +160,7 @@ async function completeFirstLesson(page: Page, testInfo: TestInfo, label: string
   await page.goto(`/#/practice/${exerciseId}`);
   const practice = page.getByTestId('practice-execution');
   await expect(practice).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page);
   await expect(blockWorkspace(page)).toBeVisible();
   await ready(page);
   await correctStarter(page, exerciseId);

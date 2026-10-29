@@ -20,6 +20,20 @@ export interface WorkspaceRead {
   issues: WorkspaceIssue[];
 }
 
+/** Serialize a checked IR without depending on a mounted canvas. */
+export function draftFromBlockProgram(program: BlockProgram): BlockWorkspaceDraft {
+  const workspace = new Blockly.Workspace();
+  try {
+    loadBlockProgram(workspace, program);
+    const draft = saveBlockWorkspaceDraft(workspace);
+    if (new TextEncoder().encode(JSON.stringify(draft)).byteLength > 1048576)
+      throw new Error('BLOCK_LIMIT');
+    return draft;
+  } finally {
+    workspace.dispose();
+  }
+}
+
 /** Blockly 13.4 creates AudioContext even with sounds:false, including in its
  * trashcan workspace. A silent editor must not open an audio device. Injection
  * is synchronous, so hide that feature only for this call and restore the exact

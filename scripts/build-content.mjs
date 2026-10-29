@@ -173,4 +173,5 @@ console.log(
 await import('./build-reading.mjs');
 await import('./build-practice.mjs');
 await import('./build-block-assets.mjs');
-await import('./build-course-learning.mjs');
+if (process.env.P05_COURSE_BUILD === '1') await import('./build-p05-predecessor.mjs');
+else await import('./build-course-learning.mjs');

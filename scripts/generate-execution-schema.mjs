@@ -5,13 +5,24 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const p05 = process.argv.includes('--p05');
 const original = fs.readFileSync(
-  path.join(root, '项目文档/契约/02.2-执行与轨迹.schema.json'),
+  path.join(
+    root,
+    p05
+      ? '项目文档/契约/P0.5-09-执行与判题-1.1.0.schema.json'
+      : '项目文档/契约/02.2-执行与轨迹.schema.json',
+  ),
   'utf8',
 );
 const schema = JSON.parse(original),
   definitions = schema.$defs;
-const output = path.join(root, 'web/src/engine/execution-schema.generated.ts');
+const output = path.join(
+  root,
+  p05
+    ? 'web/src/engine/execution-p05-schema.generated.ts'
+    : 'web/src/engine/execution-schema.generated.ts',
+);
 const functions = [],
   named = new Map(),
   compiled = new Map(),
@@ -122,6 +133,7 @@ function compile(rule, location = '') {
       rule.propertyNames ||
       rule.additionalProperties !== undefined ||
       rule.minProperties !== undefined ||
+      rule.maxProperties !== undefined ||
       rule.dependentRequired
     ) {
       const lines = [];
@@ -131,6 +143,8 @@ function compile(rule, location = '') {
         );
       if (rule.minProperties !== undefined)
         lines.push(`if(Object.keys(value).length<${rule.minProperties})return false;`);
+      if (rule.maxProperties !== undefined)
+        lines.push(`if(Object.keys(value).length>${rule.maxProperties})return false;`);
       if (rule.properties || rule.propertyNames || rule.additionalProperties !== undefined) {
         const propertyKeys = Object.keys(rule.properties ?? {});
         const exactRequired =

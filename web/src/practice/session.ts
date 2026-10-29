@@ -14,9 +14,22 @@ import { createPracticePassAuthority } from '../learning/practice-authority';
 import type { VerifiedFact } from '../learning/authority';
 import type { LearningCatalog } from '../learning/types';
 import { exerciseRequest, caseSummary, submissionMet, type CaseSummary } from './submission';
+import {
+  EditDocumentController,
+  type AnalysisPort,
+  type EditDocumentSnapshot,
+} from './edit-document';
+import type { ByteRange } from '../engine/protocol';
 
 export type PracticeMode = 'independent' | 'correction';
 export interface PracticeSnapshot {
+  editDocument?: EditDocumentSnapshot;
+  codeEditing?: boolean;
+  selectedBlockId?: string;
+  selectedCodeRange?: ByteRange;
+  selectionRevision?: number;
+  commentsMoved?: boolean;
+  editRejection?: string;
   mode: PracticeMode;
   modeRevision: number;
   action: 'run' | 'submit' | null;
@@ -47,7 +60,7 @@ export interface PracticeSnapshot {
 }
 type PracticeDraft = Pick<
   PracticeSnapshot,
-  'initialProgram' | 'workspaceProgram' | 'program' | 'draft' | 'issues' | 'source'
+  'initialProgram' | 'workspaceProgram' | 'program' | 'draft' | 'issues' | 'source' | 'codeEditing'
 >;
 export interface PracticeLearningPort {
   context(): { catalog: LearningCatalog | null; epoch: number };
@@ -93,6 +106,7 @@ export class PracticeSession {
   private base?: PreparedSource;
   private loading?: AbortController;
   private drafts: Partial<Record<PracticeMode, PracticeDraft>> = {};
+  private documents: Partial<Record<PracticeMode, EditDocumentController>> = {};
   constructor(
     private readonly client: Pick<
       ExecutionClient,
@@ -101,6 +115,7 @@ export class PracticeSession {
     private readonly load = loadCoursePractice,
     private readonly present: (action: () => void) => void = (action) => action(),
     private readonly learning?: PracticeLearningPort,
+    private readonly analyzer?: AnalysisPort,
   ) {}
   readonly getSnapshot = () => this.current;
   readonly subscribe = (listener: () => void) => {
@@ -125,6 +140,8 @@ export class PracticeSession {
     this.contextId = crypto.randomUUID();
     this.sourceRevision = 0;
     this.drafts = {};
+    for (const document of Object.values(this.documents)) document.dispose();
+    this.documents = {};
     this.current = {
       mode: 'independent',
       modeRevision: this.current.modeRevision + 1,
@@ -194,7 +211,8 @@ export class PracticeSession {
       !['independent', 'correction'].includes(mode)
     )
       return;
-    const { initialProgram, workspaceProgram, program, draft, issues, source } = this.current;
+    const { initialProgram, workspaceProgram, program, draft, issues, source, codeEditing } =
+      this.current;
     this.drafts[this.current.mode] = structuredClone({
       initialProgram,
       workspaceProgram,
@@ -202,9 +220,11 @@ export class PracticeSession {
       draft,
       issues,
       source,
+      codeEditing,
     });
     ++this.token;
     ++this.revision;
+    this.documents[this.current.mode]?.cancel();
     this.client.invalidate();
     this.player.invalidate();
     let next = this.drafts[mode];
@@ -241,7 +261,149 @@ export class PracticeSession {
       phase: 'ready',
       saveStatus: 'idle',
       message: '',
+      editDocument: undefined,
+      codeEditing: next.codeEditing ?? false,
+      editRejection: undefined,
+      selectedBlockId: undefined,
+      selectedCodeRange: undefined,
     });
+    if (this.documents[mode]) {
+      this.documents[mode].resume();
+    }
+  }
+  private documentChanged = (document: EditDocumentController) => {
+    if (this.documents[this.current.mode] !== document) return;
+    const editDocument = document.getSnapshot();
+    const projection = document.getProjection();
+    const ready = document.ready();
+    this.set({
+      editDocument,
+      ...(!this.current.result
+        ? {
+            source: ready ? projection?.source : undefined,
+            caseKey: ready ? this.current.catalog?.subject.tests[0].caseKey : undefined,
+          }
+        : {}),
+      program: ready ? projection?.program : undefined,
+      ...(ready
+        ? { workspaceProgram: projection?.program, draft: document.getDraft(), issues: [] }
+        : {}),
+      commentsMoved: document.commentsMoved,
+    });
+  };
+  recordWorkspaceDraft(draft: BlockWorkspaceDraft) {
+    if (!this.current.draft && !this.current.editDocument) this.set({ draft });
+  }
+  async enableCodeEditing(visible = true) {
+    const { catalog, program, source, mode } = this.current;
+    if (this.documents[mode]) {
+      if (visible) this.set({ codeEditing: true });
+      return;
+    }
+    if (!catalog || !program || !source || this.current.issues.length) return;
+    // A code-first lesson has no mounted SVG canvas. Serialize its checked IR
+    // through the same Blockly adapter, then reject a late import after editing/leaving.
+    let draft = this.current.draft;
+    if (!draft) {
+      const token = this.token;
+      const { draftFromBlockProgram } = await import('../blocks/workspace');
+      if (this.token !== token || this.current.mode !== mode || this.current.program !== program)
+        return;
+      if (this.documents[mode]) {
+        if (visible) this.set({ codeEditing: true });
+        return;
+      }
+      draft = draftFromBlockProgram(program);
+      this.set({ draft });
+    }
+    this.documents[mode] = new EditDocumentController(
+      catalog,
+      () => ({ contextId: this.contextId, contextRevision: this.revision }),
+      program,
+      generateBlockSource(program, this.base!, catalog.program.bindings),
+      draft,
+      this.documentChanged,
+      this.analyzer,
+    );
+    this.set({ codeEditing: visible || this.current.codeEditing === true });
+    this.documentChanged(this.documents[mode]);
+    await this.documents[mode].wait();
+  }
+  setCodeEditing(visible: boolean) {
+    this.set({ codeEditing: visible });
+  }
+  editCode(text: string, changedRange?: ByteRange) {
+    const document = this.documents[this.current.mode];
+    if (!document || text === document.getSnapshot().codeDraft) return;
+    const bytes = new TextEncoder().encode(text);
+    if (
+      bytes.byteLength > 32768 ||
+      new TextDecoder('utf-8', { fatal: true }).decode(bytes) !== text
+    ) {
+      this.set({
+        editRejection:
+          bytes.byteLength > 32768
+            ? '本次输入超过 32 KiB，未接受这次修改；修改前的完整草稿已保留。'
+            : '本次输入含不完整的 Unicode 字符，未接受这次修改；修改前的完整草稿已保留。',
+      });
+      return;
+    }
+    ++this.token;
+    ++this.revision;
+    this.client.invalidate();
+    this.player.invalidate();
+    this.set({
+      action: null,
+      phase: 'ready',
+      result: undefined,
+      summaries: [],
+      saveStatus: 'idle',
+      selectedBlockId: undefined,
+      selectedCodeRange: undefined,
+      message: '',
+      editRejection: undefined,
+    });
+    document.editCode(text, changedRange);
+  }
+  retryAnalysis() {
+    return this.documents[this.current.mode]?.retry();
+  }
+  selectBlock(blockId: string | null) {
+    const document = this.documents[this.current.mode];
+    if (!document?.ready()) return;
+    const selected = document
+      .getProjection()
+      ?.source.blockMap.find((entry) => entry.blockId === blockId);
+    this.set({
+      selectedBlockId: selected?.blockId,
+      selectedCodeRange: selected?.byteRange,
+      selectionRevision: (this.current.selectionRevision ?? 0) + 1,
+    });
+  }
+  selectCode(range: ByteRange) {
+    const document = this.documents[this.current.mode];
+    if (!document?.ready()) return;
+    const projection = document.getProjection()!;
+    // Whitespace/comment-only selections do not select their enclosing control.
+    let covered = range.start;
+    const triviaOnly = projection.analysis.trivia.some(({ byteRange }) => {
+      if (range.start === range.end)
+        return byteRange.start <= range.start && range.start < byteRange.end;
+      if (byteRange.start <= covered && byteRange.end > covered) covered = byteRange.end;
+      return covered >= range.end;
+    });
+    const matches = triviaOnly
+      ? []
+      : projection.source.blockMap.filter(
+          (entry) =>
+            entry.byteRange.start <= range.start &&
+            entry.byteRange.end >= range.end &&
+            (range.start !== range.end || range.start < entry.byteRange.end),
+        );
+    matches.sort(
+      (a, b) => a.byteRange.end - a.byteRange.start - (b.byteRange.end - b.byteRange.start),
+    );
+    this.set({ selectedBlockId: matches[0]?.blockId, selectedCodeRange: undefined });
   }
   editBlocks(
     program: BlockProgram | null,
@@ -280,8 +442,17 @@ export class PracticeSession {
       phase: 'ready',
       message,
     });
+    this.documents[this.current.mode]?.editBlocks(program, source, draft);
   }
   async preview() {
+    const document = this.documents[this.current.mode];
+    if (document) {
+      const token = this.token;
+      await document.retry();
+      if (this.token === token && document.ready() && this.current.phase !== 'met')
+        this.set({ phase: 'ready' });
+      return;
+    }
     const { catalog, exerciseId, program } = this.current;
     if (!catalog || !exerciseId || !program) return;
     const token = ++this.token;
@@ -315,13 +486,21 @@ export class PracticeSession {
     }
   }
   cancel() {
-    if (!['running', 'preparing'].includes(this.current.phase)) return;
+    const document = this.documents[this.current.mode];
+    if (
+      !['running', 'preparing'].includes(this.current.phase) &&
+      !document?.getSnapshot().analysisPending
+    )
+      return;
     ++this.token;
     ++this.revision;
     this.client.cancel();
+    document?.cancel(true);
     this.player.invalidate();
-    let source: PreparedSource | undefined;
-    if (this.base && this.current.program && this.current.catalog) {
+    let source: PreparedSource | undefined = document?.ready()
+      ? document.getProjection()?.source
+      : undefined;
+    if (!document && this.base && this.current.program && this.current.catalog) {
       try {
         source = generateBlockSource(
           this.current.program,
@@ -355,7 +534,8 @@ export class PracticeSession {
       !this.current.source ||
       !program ||
       this.current.issues.length > 0 ||
-      ['running', 'preparing'].includes(this.current.phase)
+      ['running', 'preparing'].includes(this.current.phase) ||
+      (this.documents[this.current.mode] && !this.documents[this.current.mode]?.ready())
     )
       return;
     const selected = structuredClone(program);
@@ -377,7 +557,10 @@ export class PracticeSession {
       const base = await this.client.prepare(catalog, test.input, started);
       if (this.token !== token) return;
       this.base = base;
-      const source = generateBlockSource(selected, base, catalog.program.bindings);
+      const source = this.documents[this.current.mode]
+        ? await this.documents[this.current.mode]!.prepareForTest(base, test.input, started)
+        : generateBlockSource(selected, base, catalog.program.bindings);
+      if (this.token !== token) return;
       // The existing protocol accepts exercise inputs only as published test
       // cases. Running one group never authorizes a submission or learning fact.
       const request = exerciseRequest(
@@ -435,7 +618,8 @@ export class PracticeSession {
       !this.current.source ||
       !program ||
       this.current.issues.length > 0 ||
-      ['running', 'preparing'].includes(this.current.phase)
+      ['running', 'preparing'].includes(this.current.phase) ||
+      (this.documents[this.current.mode] && !this.documents[this.current.mode]?.ready())
     )
       return;
     const selected = structuredClone(program);
@@ -455,12 +639,15 @@ export class PracticeSession {
     try {
       for (let index = 0; index < catalog.subject.tests.length; index++) {
         const test = catalog.subject.tests[index];
-        this.player.invalidate();
+        if (index > 0) this.player.invalidate(); // Already invalidated before the first group.
         this.set({ source: undefined, result: undefined, caseKey: test.caseKey });
         const base =
           index === 0 ? this.base : await this.client.prepare(catalog, test.input, started);
         if (this.token !== token) return;
-        const source = generateBlockSource(selected, base, catalog.program.bindings);
+        const source = this.documents[this.current.mode]
+          ? await this.documents[this.current.mode]!.prepareForTest(base, test.input, started)
+          : generateBlockSource(selected, base, catalog.program.bindings);
+        if (this.token !== token) return;
         const request = exerciseRequest(
           catalog,
           source,

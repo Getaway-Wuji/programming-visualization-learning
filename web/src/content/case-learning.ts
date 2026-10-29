@@ -4,6 +4,8 @@ import type { ByteRange } from '../engine/protocol';
 import type { CaseEntity } from './types';
 import { createLearningCatalog } from '../learning/catalog';
 import type { LearningCatalog } from '../learning/types';
+import type { EntityRef } from './types';
+import { currentCourseBundle } from './course-bundle';
 
 export interface CaseExecutionCatalog extends ExecutionCatalog {
   readonly subject: CaseEntity;
@@ -43,7 +45,11 @@ if (
   throw new Error('CASE_VIEW_RELEASE');
 
 export function caseExecutionCatalog(id: string): CaseExecutionCatalog | null {
-  return caseViewRelease.catalogs.find((entry) => entry.subject.id === id) ?? null;
+  return (
+    (currentCourseBundle()?.cases ?? caseViewRelease.catalogs).find(
+      (entry) => entry.subject.id === id,
+    ) ?? null
+  );
 }
 export function caseTemplateBindings(id: string): readonly TemplateBinding[] {
   return caseViewRelease.templateBindings[id] ?? [];
@@ -59,6 +65,22 @@ const learningCatalog = createLearningCatalog({
     acceptedPriorVersions: [...subject.acceptedPriorVersions],
   })),
 });
-export function caseLearningCatalog(): LearningCatalog {
+export function caseLearningCatalog(expectedPackageRef?: EntityRef): LearningCatalog {
+  const bundle = currentCourseBundle();
+  if (expectedPackageRef?.id === 'content.c.p05' || (!expectedPackageRef && bundle)) {
+    if (!bundle || (expectedPackageRef && expectedPackageRef.version !== '1.0.0'))
+      throw new Error('COURSE_CASES_UNAVAILABLE');
+    return createLearningCatalog({
+      purpose: 'case-view',
+      packageRef: bundle.reading.packageRef,
+      lessons: [],
+      exercises: [],
+      cases: bundle.cases.map(({ subject }) => ({
+        ref: { id: subject.id, version: subject.version },
+        learningRevision: subject.learningRevision,
+        acceptedPriorVersions: subject.acceptedPriorVersions,
+      })),
+    });
+  }
   return learningCatalog;
 }

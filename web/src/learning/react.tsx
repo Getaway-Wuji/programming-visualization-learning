@@ -97,6 +97,12 @@ function savingMessage(state: LearningServiceState, dirty: boolean) {
       title: '本地档案已变化',
       description: '其他页面已清除或替换档案。旧的临时内容和待保存操作已失效，请重新读取后继续。',
     };
+  if (state.errorCode === 'S_CONTENT_INCOMPATIBLE')
+    return {
+      title: '课程更新尚未就绪',
+      description:
+        '当前课程版本尚未完成发布，暂不能保存新的学习结果。原学习档案已保留，无需清除数据或修改存储权限；更新可用后重新读取即可继续。',
+    };
   if (state.errorCode === 'S_VERSION_UNKNOWN' || state.errorCode === 'S_MIGRATION_UNSUPPORTED')
     return {
       title: '存档版本暂不支持',
@@ -210,7 +216,9 @@ export function LearningSaveStatus({
         <p className="notice" data-testid="learning-temporary-status">
           {state.temporary ? '当前处于临时模式。' : ''}
           {state.pendingCount > 0 ? `有 ${state.pendingCount} 条操作尚未保存。` : ''}
-          关闭或刷新页面会丢失未保存的内容；恢复存储后可重试。
+          {state.errorCode === 'S_CONTENT_INCOMPATIBLE'
+            ? '已保存的档案仍保留。请等待课程版本更新后再重试。'
+            : '关闭或刷新页面会丢失未保存的内容；恢复存储后可重试。'}
         </p>
       )}
       {state.timeZoneFallback && (

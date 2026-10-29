@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { paths } from '../navigation';
 import type { PracticeSnapshot } from '../practice/session';
 import './practice-experience.css';
+import { currentCourseBundle } from '../content/course-bundle';
 
 const hints: Record<string, readonly string[]> = {
   'exercise.c.echo': [
@@ -49,7 +50,10 @@ export function PracticeGuidance({
   onMode: (mode: PracticeSnapshot['mode']) => void;
 }) {
   const [shown, setShown] = useState(0);
-  const layers = hints[id] ?? [];
+  const layers =
+    currentCourseBundle()?.guidance.find((entry) => entry.exerciseRef.id === id)?.hints ??
+    hints[id] ??
+    [];
   return (
     <div className="practice-guidance">
       <div className="practice-mode-row">
