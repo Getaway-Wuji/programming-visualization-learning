@@ -15,4 +15,4 @@
 
 ## Git交付
 
-验收与交接已齐备；接下来按既有授权核对开工HEAD fd28e145、远端main、全部待推送链、归属清单与暂存字节。只使用本仓库身份Getaway-Wuji <146464204+Getaway-Wuji@users.noreply.github.com>，作者/提交者一致，无机器人共同署名。备注固定“完成14部分”，推送现有私有Getaway-Wuji/programming-visualization-learning/main，不改写历史。产品SHA、推送与GitHub归属核对将在实际成功后补记；此段不是已推送声明。
+第14部分Git交付（2026-10-31）：14.1—14.4全部验收、质量与交接齐备；产品提交[6bf763e](https://github.com/Getaway-Wuji/programming-visualization-learning/commit/6bf763e923f93b66ad02777959eb2024bbc729e2)，备注“完成14部分”，387份必要文件已成功推送私有仓库Getaway-Wuji/programming-visualization-learning的main。推前fd28e145且待推送链0/0；四项独立归属及387暂存blob字节核对通过，无删除或其他窗口未完成内容。作者/提交者均Getaway-Wuji <146464204+Getaway-Wuji@users.noreply.github.com>，GitHub均归属Getaway-Wuji；远端产品SHA一致、同步0/0、仓库private。源文件空白检查通过；归档终端报告的原生行尾空格原样保留，不清洗实证。14.4基线1576中1551原样、25授权更新、239新增、0删除，三份前置索引和旧发布凭据保持。产品推送[核对原件](./第14部分-Git产品推送核对.json)与本机.artifacts/14.4/github-product-proof.json、git-stage-manifest.json齐备；后继同备注记录提交只回写实际结果，最终远端/工作区核对存本机github-final-proof.json。不冒称远端CI通过，下一15.1未领取。
