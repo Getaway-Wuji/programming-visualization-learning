@@ -1,0 +1,296 @@
+{
+  "id": "CHANGE-12.1",
+  "status": "accepted",
+  "purpose": "C function/recursion increment and genuine minimal algorithm C++20 execution, isolated from the reviewed P0 engine.",
+  "fromVersions": {
+    "exec": [
+      "1.0.0",
+      "1.1.0"
+    ],
+    "step": "1.0.0",
+    "diagnostic": "1.0.0",
+    "integer": "1.0.0"
+  },
+  "toVersions": {
+    "exec": "1.2.0",
+    "step": "1.1.0",
+    "diagnostic": "1.1.0",
+    "integer": "1.0.0"
+  },
+  "changedFields": [
+    {
+      "contractId": "EXEC-01",
+      "path": "/$defs/request",
+      "change": "Independent closed language, engine, run and unchanged-source request; new execute_algorithm boundary."
+    },
+    {
+      "contractId": "EXEC-01",
+      "path": "/$defs/result",
+      "change": "Explicit language and trusted engine build; no judging or learning authority."
+    },
+    {
+      "contractId": "STEP-01",
+      "path": "/trace/initialState/frames",
+      "change": "User function frames, call location, parent, parameter objects and bounded array aliases."
+    },
+    {
+      "contractId": "STEP-01",
+      "path": "/trace/steps",
+      "change": "Function enter/return and actual stream input events with reversible state deltas."
+    },
+    {
+      "contractId": "DIAG-01",
+      "path": "/terminal",
+      "change": "Closed new diagnostics for calls, return types, stack depth and input exhaustion."
+    },
+    {
+      "contractId": "DEC-P1-001",
+      "path": "functions-recursion-cpp20",
+      "change": "Separate genuine C/C++ grammars; stack32/functions32/parameters8; combined execution depth256; u64 virtual addresses bounded to JSON safe integers; existing resource ceilings unchanged."
+    }
+  ],
+  "compatibility": {
+    "classification": "explicit-new-protocol-branch",
+    "oldConsumer": "Reject new versions/events. Existing EXEC1.0/1.1 and STEP/DIAG1.0 stay untouched.",
+    "newConsumer": "Accept only exact new vector, engine build, language and current identity; do not reinterpret C++ as C.",
+    "content": "CONTENT1.0/1.1, old C programs and all immutable releases unchanged; future C++ content requires its own registered version.",
+    "mapping": "AST-MAP/EDIT/BLOCK-MAP1.0 stay C-only. New algorithm source map is internal to EXEC1.2.",
+    "storage": "SAVE2/DB2/11 stores, learning events and rewards unchanged; no migration or new reward."
+  },
+  "impactGroups": [
+    "execution",
+    "budget-semantics"
+  ],
+  "affectedTasks": [
+    "03.1",
+    "03.3",
+    "05.1",
+    "05.2",
+    "05.3",
+    "06.1",
+    "06.2",
+    "06.3",
+    "06.4",
+    "07.1",
+    "07.2",
+    "07.3",
+    "08.1",
+    "08.2",
+    "08.3",
+    "08.4",
+    "09.3",
+    "09.4",
+    "10.2",
+    "10.3",
+    "11.4",
+    "11.5",
+    "12.1",
+    "12.2",
+    "12.3",
+    "12.4",
+    "12.5",
+    "13.1",
+    "13.2",
+    "13.4",
+    "14.1",
+    "14.2",
+    "16.1",
+    "16.2",
+    "16.3",
+    "16.4",
+    "16.5",
+    "16.6",
+    "16.7",
+    "16.8",
+    "16.9",
+    "16.10",
+    "17.1",
+    "17.2",
+    "17.3",
+    "17.4",
+    "18.2",
+    "18.3",
+    "18.4",
+    "18.5",
+    "19.2",
+    "19.4",
+    "19.5",
+    "20.1",
+    "20.2",
+    "20.3",
+    "20.4",
+    "21.1",
+    "21.2",
+    "21.4"
+  ],
+  "requiredOwnerRoles": [
+    "budget",
+    "content",
+    "diagnostics",
+    "encoding",
+    "execution",
+    "fixtures",
+    "judge",
+    "learning",
+    "migration",
+    "save",
+    "semantics",
+    "trace"
+  ],
+  "owners": {
+    "budget": "root",
+    "content": "root",
+    "diagnostics": "root",
+    "encoding": "root",
+    "execution": "root",
+    "fixtures": "root",
+    "judge": "root",
+    "learning": "root",
+    "migration": "root",
+    "save": "root",
+    "semantics": "root",
+    "trace": "root"
+  },
+  "fixtureIndex": "12.1-共享样例索引.json",
+  "fixtureIds": [
+    "p1.functions.c",
+    "p1.hanoi.cpp",
+    "p1.quicksort.cpp",
+    "p1.invalid-and-budget",
+    "p1.restore-and-legacy"
+  ],
+  "oldData": "Invalidate transient run before source/input/language changes. Retain all accepted learning history and original reward keys.",
+  "migration": "None: no persistence or learning schema changes.",
+  "rollback": "Restore matched default P0 source/engine pair or disable algorithm API; retain all archives and learning data. Never downgrade DB or clear storage.",
+  "requiredEvidence": [
+    "Rust execution under original budgets",
+    "strict browser consumer and real Worker cancellation",
+    "all-state reverse/checkpoint recovery",
+    "old immutable files and P0 WASM SHA unchanged",
+    "production build and legacy behavior regression"
+  ],
+  "approvals": [
+    {
+      "role": "budget",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "content",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "diagnostics",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "encoding",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "execution",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "fixtures",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "judge",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "learning",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "migration",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "save",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "semantics",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    },
+    {
+      "role": "trace",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-30",
+      "evidence": ".artifacts/12.1/evidence-final.json"
+    }
+  ],
+  "actualEvidence": [
+    {
+      "scope": "native execution / parser / original workspace regression",
+      "path": ".artifacts/12.1/rust-release.log",
+      "passed": 475,
+      "failed": 0,
+      "originalIgnored": 1
+    },
+    {
+      "scope": "full frontend unit",
+      "path": ".artifacts/12.1/frontend-current.json",
+      "passed": 1298
+    },
+    {
+      "scope": "real Chrome Worker/WASM and all-state reverse",
+      "path": ".artifacts/12.1/algorithm-browser-address.json",
+      "passed": 8
+    },
+    {
+      "scope": "legacy Chrome production behavior, explicitly cross-batch",
+      "path": ".artifacts/P0.5-10/browser-p1-legacy-release.json",
+      "passed": 10
+    },
+    {
+      "scope": "real WASM public examples",
+      "path": ".artifacts/12.1/public-samples-address.json",
+      "passed": 9
+    },
+    {
+      "scope": "closed schema validation of actual packets",
+      "path": ".artifacts/12.1/schema-address.json",
+      "passed": 18
+    },
+    {
+      "scope": "old immutable sources and old/new engine identity",
+      "path": ".artifacts/12.1/evidence-final.json"
+    }
+  ]
+}

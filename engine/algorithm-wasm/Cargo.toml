@@ -1,0 +1,13 @@
+[package]
+name = "c-viz-algorithm-wasm"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+c-viz-algorithm = { path = "../algorithm" }
+wasm-bindgen.workspace = true

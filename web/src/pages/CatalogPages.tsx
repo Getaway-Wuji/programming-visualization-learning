@@ -102,6 +102,18 @@ export function CasesPage() {
         description="选择案例、输入数据，运行真实 C 程序并逐步查看变化。完整观看后主动确认，可获得首次观看奖励。"
       />
       <CatalogSample kind="case" />
+      <p>
+        <Link className="button" to="/memory?example=hanoi&view=stack">
+          打开递归与调用栈
+        </Link>{' '}
+        用汉诺塔与快速排序观察函数进入、返回及局部状态，点击源码行号设置断点。
+      </p>
+      <p>
+        <Link className="button" to="/memory">
+          打开内存观察
+        </Link>{' '}
+        逐步查看指针、对象与教学地址。
+      </p>
       {(['demo', 'algorithm'] as const).map((kind) => (
         <section key={kind}>
           <div className="section-heading">

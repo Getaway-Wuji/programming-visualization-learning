@@ -64,6 +64,19 @@ async function ready(page: Page, id = echo) {
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await showPracticeBlocks(page);
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
+  // Initial archive setup can win the display preference's captured revision.
+  // Complete the existing explicit recovery before testing execution effects.
+  if ((await saved(page).getAttribute('data-save-status')) === 'conflict') {
+    await expect(page.getByTestId('block-preference-save-status')).toHaveAttribute(
+      'data-save-state',
+      'temporary',
+    );
+    await page.getByRole('button', { name: '重新读取并保存选择', exact: true }).click();
+    await expect(page.getByTestId('block-preference-save-status')).toHaveAttribute(
+      'data-save-state',
+      'saved',
+    );
+  }
   await expect(saved(page)).toHaveAttribute('data-save-status', 'ready');
   await expect(
     page.getByTestId('practice-mode').getByRole('button', { name: '独立练习', exact: true }),

@@ -69,7 +69,7 @@ export function Layout({ children }: { children: ReactNode }) {
     return () => observer.disconnect();
   }, [location.pathname]);
   const courseRoute = /^\/(lessons|practice)\//.test(location.pathname);
-  const caseRoute = location.pathname.startsWith('/visualize/');
+  const caseRoute = location.pathname.startsWith('/visualize/') || location.pathname === '/memory';
   const toolRoute = caseRoute || location.pathname.startsWith('/practice/');
   const focused = toolRoute && workbench.layout.workbenchMode === 'focus';
   const collapsed = focused || workbench.layout.sidebar === 'collapsed';

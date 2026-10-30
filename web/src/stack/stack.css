@@ -1,0 +1,110 @@
+.stack-current h3 {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+.stack-current p,
+.stack-location,
+.stack-help {
+  color: var(--muted);
+}
+.stack-transition {
+  padding: 10px 12px;
+  background: var(--lime);
+  border-left: 3px solid var(--focus);
+  overflow-wrap: anywhere;
+}
+.stack-layout {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(0, 2fr);
+  gap: 16px;
+  align-items: start;
+}
+.stack-frames {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 470px;
+  overflow: auto;
+}
+.stack-frames li {
+  margin-bottom: 8px;
+}
+.stack-frame {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  background: var(--p05-surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.stack-frame span {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.stack-frame[aria-pressed='true'] {
+  background: var(--lime);
+  border-color: var(--focus);
+}
+.stack-frame[data-active='true'] {
+  border-left: 3px solid var(--focus);
+}
+.stack-details {
+  min-width: 0;
+}
+.stack-details > h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+.stack-location {
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+.stack-binding-group h4 {
+  margin: 16px 0 8px;
+}
+.stack-table-scroll {
+  max-width: 100%;
+  overflow: auto;
+}
+.stack-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.stack-table th,
+.stack-table td {
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  min-width: 75px;
+  overflow-wrap: anywhere;
+}
+.stack-table thead th {
+  font-weight: 500;
+  color: var(--muted);
+}
+.stack-table small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.stack-help {
+  margin: 16px 0 0;
+  font-size: 13px;
+}
+@media (max-width: 650px) {
+  .stack-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .stack-frames {
+    max-height: 220px;
+  }
+  .stack-frame {
+    min-height: 44px;
+  }
+}
