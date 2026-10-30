@@ -15,6 +15,8 @@
 
 ## Git交付
 
-质量、独立验收和交接齐备；提交前按守则§8.1核对四项开工/结束清单、旧凭据、所有文件归属、暂存blob及整个待推送链。目标现有私有仓库Getaway-Wuji/programming-visualization-learning的main，备注“完成15部分”，作者及提交者均Getaway-Wuji <146464204+Getaway-Wuji@users.noreply.github.com>，只设本仓库身份。产品推送和GitHub账号/私有状态/远端SHA实际结果将在操作后回写，不预先宣称成功。
+质量、独立验收和交接齐备；提交前按守则§8.1核对四项开工/结束清单、旧凭据、所有文件归属、暂存blob及整个待推送链。目标现有私有仓库Getaway-Wuji/programming-visualization-learning的main，备注“完成15部分”，作者及提交者均Getaway-Wuji <146464204+Getaway-Wuji@users.noreply.github.com>，只设本仓库身份。操作后实际结果如下。
 
-提交前实核：开工1816份与HEAD逐字节一致，其中1769原样、47必要授权修改，755新增、0删除；另加入本份[归属核对](./第15部分-提交前归属核对.json)，计划803份必要文件。15.4开工2250份中2212原样、38授权更新、321新增（含其301份归档原件及索引），未删除；整块记录独立追加。15.1/15.2/15.3冻结归档索引和逐件SHA保持，696处文档本地链接可达。main已安全fetch核对5ed4e789，整个待推送链0/0；暂存前为空。最终暂存blob仍须逐件与工作区核对后才提交，原件终端空白按字节保留，不清洗历史实证。
+提交前实核：开工1816份与HEAD逐字节一致，其中1769原样、47必要授权修改，755新增、0删除；另加入本份[归属核对](./第15部分-提交前归属核对.json)，计划803份必要文件。15.4开工2250份中2212原样、38授权更新、321新增（含其301份归档原件及索引），未删除；整块记录独立追加。15.1/15.2/15.3冻结归档索引和逐件SHA保持，696处文档本地链接可达。main已安全fetch核对5ed4e789，整个待推送链0/0；暂存前为空。最终803暂存blob已逐件与工作区核对通过后提交，原件终端空白按字节保留，不清洗历史实证。
+
+第15部分Git交付（2026-10-31）：15.1—15.4全部验收、质量与交接齐备；产品提交[6d950a7](https://github.com/Getaway-Wuji/programming-visualization-learning/commit/6d950a7a75ba90ecacae48bd0c38a4b4b9ab8a56)，备注“完成15部分”，803份必要文件已推送现有私有仓库Getaway-Wuji/programming-visualization-learning的main。开工5ed4e789、推前完整提交链0/0；1816原件中1769原样、47授权修改、756新增、0删除，803暂存blob逐SHA等于工作区，无其他任务内容。作者/提交者均Getaway-Wuji <146464204+Getaway-Wuji@users.noreply.github.com>，GitHub两者归属均Getaway-Wuji，远端产品SHA一致、同步0/0且仓库仍private。原生CRLF及冻结终端报告空白按字节保留，非原件源文件空白检查通过。15.1—15.3索引/旧发布保持；[产品推送核对](./第15部分-Git产品推送核对.json)与本机git-stage-manifest/verified齐备。同备注后继记录提交仅回写本次真实结果，最终远端/工作区核对存本机.artifacts/15.4/github-final-proof.json；不冒称远端CI通过，下一16.1未领取。
