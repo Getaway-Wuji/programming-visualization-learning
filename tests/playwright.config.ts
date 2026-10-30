@@ -4,8 +4,14 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './browser',
   testMatch: '**/*.spec.ts',
-  // Independent interpreter harnesses use their own runners on 4181 / 4182.
-  testIgnore: ['**/algorithm-engine.spec.ts', '**/memory-engine.spec.ts'],
+  // Independent interpreter/migration harnesses use their own runners on 4181 / 4182 / 4188.
+  testIgnore: [
+    '**/algorithm-engine.spec.ts',
+    '**/memory-engine.spec.ts',
+    '**/notebook-migration.spec.ts',
+    '**/scheduler-migration.spec.ts',
+    '**/achievement-migration.spec.ts',
+  ],
   fullyParallel: false,
   workers: 1,
   retries: 0,

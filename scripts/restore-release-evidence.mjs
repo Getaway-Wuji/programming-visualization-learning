@@ -63,21 +63,38 @@ for (const release of [
   '1.0.22',
   '1.0.23',
   '1.0.24',
+  '1.0.25',
+  '1.0.26',
+  '1.0.27',
+  '1.0.28',
+  '1.0.29',
+  '1.0.30',
+  '1.0.31',
+  '1.0.32',
+  '1.0.33',
+  '1.0.34',
 ]) {
   const successor = `content/c/p0/blockly-release-${release}.json`;
   if (!existsSync(resolve(root, successor))) continue;
-  const task =
-    release === '1.0.24'
-      ? '14.4'
-      : ['1.0.22', '1.0.23'].includes(release)
-        ? '14.3'
-        : release === '1.0.21'
-          ? '14.1'
-          : release === '1.0.20'
-            ? '13.5'
-            : release === '1.0.19'
-              ? '13.4'
-              : '13.3';
+  const task = ['1.0.30', '1.0.31', '1.0.32', '1.0.33', '1.0.34'].includes(release)
+    ? '15.4'
+    : ['1.0.28', '1.0.29'].includes(release)
+      ? '15.3'
+      : ['1.0.26', '1.0.27'].includes(release)
+        ? '15.2'
+        : release === '1.0.25'
+          ? '15.1'
+          : release === '1.0.24'
+            ? '14.4'
+            : ['1.0.22', '1.0.23'].includes(release)
+              ? '14.3'
+              : release === '1.0.21'
+                ? '14.1'
+                : release === '1.0.20'
+                  ? '13.5'
+                  : release === '1.0.19'
+                    ? '13.4'
+                    : '13.3';
   const nextArchive = `项目文档/验收/发布凭据/${task}-${release}`;
   const nextIndex = json(`${nextArchive}/index.json`);
   assert.equal(nextIndex.registration.path, successor);
@@ -88,13 +105,20 @@ for (const release of [
     Object.values(nextRegistration.evidence).map(({ path, sha256 }) => ({ path, sha256 })),
   );
   const nextFiles = nextIndex.files.map((entry) => {
+    // The immutable 33 UI-lint receipt is JSON with a .log suffix.
+    const jsonLog =
+      ['1.0.33', '1.0.34'].includes(release) &&
+      entry.path === '.artifacts/15.4/ui-lint-vector-final.log';
     assert.match(
       entry.path,
-      new RegExp(`^\\.artifacts/${task.replace('.', '\\.')}\\/[A-Za-z0-9_.-]+\\.json$`),
+      new RegExp(
+        `^\\.artifacts/${task.replace('.', '\\.')}\\/[A-Za-z0-9_.-]+\\.${jsonLog ? 'log' : 'json'}$`,
+      ),
     );
-    assert.match(entry.file, /^[A-Za-z0-9_.-]+\.json$/);
+    assert.match(entry.file, jsonLog ? /^ui-lint-vector-final\.log$/ : /^[A-Za-z0-9_.-]+\.json$/);
     const bytes = read(`${nextArchive}/${entry.file}`);
     assert.equal(sha(bytes), entry.sha256);
+    if (jsonLog) JSON.parse(bytes.toString('utf8'));
     const target = resolve(root, entry.path);
     if (existsSync(target)) assert.equal(sha(readFileSync(target)), entry.sha256);
     return { target, bytes };

@@ -529,6 +529,20 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
                       : '正在完成本次提交的最终接收检查。'}
           </p>
         )}
+        {active && phase === 'unmet' && state.action === 'submit' && (
+          <p data-testid="practice-attempt-save" data-save-state={state.saveStatus}>
+            {state.saveStatus === 'saved'
+              ? '本次有效错误已保存到错题记录。'
+              : state.saveStatus === 'saving'
+                ? '正在保存本次错误摘要……'
+                : state.saveStatus === 'unsaved'
+                  ? '错误摘要尚未保存，请重试未保存操作。'
+                  : '本次尚无已保存的错误记录。'}{' '}
+            <Link className="text-link" to="/notebook">
+              查看错题与陌生点
+            </Link>
+          </p>
+        )}
         {state.summaries.length > 0 && active && (
           <>
             {result?.judgeResult?.checks.some(

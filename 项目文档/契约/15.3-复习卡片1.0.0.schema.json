@@ -1,0 +1,274 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cardVersion",
+    "algorithm",
+    "generation",
+    "cardId",
+    "kind",
+    "packageRef",
+    "subjectRef",
+    "lessonRef",
+    "learningRevision",
+    "sourceVersion",
+    "sourceAt",
+    "revision",
+    "createdAt",
+    "updatedAt",
+    "state",
+    "level",
+    "reviewCount",
+    "dueDate",
+    "lastReview",
+    "lastCommand"
+  ],
+  "properties": {
+    "cardVersion": {
+      "const": "1.0.0"
+    },
+    "algorithm": {
+      "const": "calendar-box-1"
+    },
+    "generation": {
+      "$ref": "#/$defs/uuid"
+    },
+    "cardId": {
+      "type": "string",
+      "maxLength": 1024
+    },
+    "kind": {
+      "enum": [
+        "exercise",
+        "knowledge"
+      ]
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ref"
+    },
+    "subjectRef": {
+      "$ref": "#/$defs/ref"
+    },
+    "lessonRef": {
+      "$ref": "#/$defs/ref"
+    },
+    "learningRevision": {
+      "$ref": "#/$defs/safePositiveInt"
+    },
+    "sourceVersion": {
+      "$ref": "#/$defs/safePositiveInt"
+    },
+    "sourceAt": {
+      "$ref": "#/$defs/utcTime"
+    },
+    "revision": {
+      "$ref": "#/$defs/safePositiveInt"
+    },
+    "createdAt": {
+      "$ref": "#/$defs/utcTime"
+    },
+    "updatedAt": {
+      "$ref": "#/$defs/utcTime"
+    },
+    "state": {
+      "enum": [
+        "active",
+        "repaired",
+        "familiar",
+        "unavailable"
+      ]
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 6
+    },
+    "reviewCount": {
+      "$ref": "#/$defs/safeUint"
+    },
+    "dueDate": {
+      "$ref": "#/$defs/localDate"
+    },
+    "lastReview": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "reviewId",
+            "at",
+            "localDate",
+            "rating",
+            "baseLevel",
+            "baseDueDate",
+            "baseCount"
+          ],
+          "properties": {
+            "reviewId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "at": {
+              "$ref": "#/$defs/utcTime"
+            },
+            "localDate": {
+              "$ref": "#/$defs/localDate"
+            },
+            "rating": {
+              "enum": [
+                "again",
+                "hard",
+                "good",
+                "easy"
+              ]
+            },
+            "baseLevel": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "baseDueDate": {
+              "$ref": "#/$defs/localDate"
+            },
+            "baseCount": {
+              "$ref": "#/$defs/safeUint"
+            }
+          }
+        }
+      ]
+    },
+    "lastCommand": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "commandId",
+            "cardId",
+            "expectedVersion",
+            "sourceVersion",
+            "mode",
+            "rating",
+            "targetReviewId",
+            "at",
+            "localDate"
+          ],
+          "properties": {
+            "commandId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "cardId": {
+              "type": "string",
+              "maxLength": 1024
+            },
+            "expectedVersion": {
+              "$ref": "#/$defs/safePositiveInt"
+            },
+            "sourceVersion": {
+              "$ref": "#/$defs/safePositiveInt"
+            },
+            "mode": {
+              "enum": [
+                "rate",
+                "correct",
+                "restart"
+              ]
+            },
+            "rating": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "enum": [
+                    "again",
+                    "hard",
+                    "good",
+                    "easy"
+                  ]
+                }
+              ]
+            },
+            "targetReviewId": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/$defs/uuid"
+                }
+              ]
+            },
+            "at": {
+              "$ref": "#/$defs/utcTime"
+            },
+            "localDate": {
+              "$ref": "#/$defs/localDate"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:c-viz:review-card:1.0.0",
+  "title": "REVIEW-SCHEDULE-01 typed row",
+  "$defs": {
+    "entityId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "uuid": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "safeUint": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "safePositiveInt": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/entityId"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        }
+      }
+    },
+    "utcTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}Z$"
+    },
+    "localDate": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+    }
+  }
+}

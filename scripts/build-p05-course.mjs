@@ -15,6 +15,10 @@ import { reconstructionPaths } from './reconstruction-release-inputs.mjs';
 import { diagnosticsPaths } from './diagnostics-release-inputs.mjs';
 import { bugPaths } from './bug-release-inputs.mjs';
 import { memoryBugPaths } from './memory-bug-release-inputs.mjs';
+import { knowledgePaths } from './knowledge-release-inputs.mjs';
+import { notebookPaths } from './notebook-release-inputs.mjs';
+import { achievementPaths } from './achievement-release-inputs.mjs';
+import { schedulerPaths } from './scheduler-release-inputs.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const read = (path) => readFileSync(new URL(path, new URL('../', import.meta.url)));
@@ -225,6 +229,11 @@ try {
     '/web/src/memory-bugs/content.ts',
   );
   catalog.exercises.push(...memoryBugLearningExercises());
+  const { createKnowledgeMap } = await server.ssrLoadModule('/web/src/knowledge/model.ts');
+  const graph = createKnowledgeMap(reading);
+  assert.equal(graph.nodes.length, 10);
+  assert.equal(graph.edges.length, 11);
+  createKnowledgeMap(json('web/public/content/reading/course-reading-1.0.0.json'));
 } finally {
   await server.close();
 }
@@ -232,23 +241,43 @@ const predecessor = json('content/learning/p05-predecessors-1.0.0.json');
 for (const item of predecessor.sources)
   assert.equal(sha(read(item.path)), item.sha256, `Predecessor changed: ${item.path}`);
 const permissionRelease = existsSync('content/c/p0/blockly-release-1.0.17.json');
-const releaseVersion = existsSync('content/c/p0/blockly-release-1.0.24.json')
-  ? '1.0.24'
-  : existsSync('content/c/p0/blockly-release-1.0.23.json')
-    ? '1.0.23'
-    : existsSync('content/c/p0/blockly-release-1.0.22.json')
-      ? '1.0.22'
-      : existsSync('content/c/p0/blockly-release-1.0.21.json')
-        ? '1.0.21'
-        : existsSync('content/c/p0/blockly-release-1.0.20.json')
-          ? '1.0.20'
-          : existsSync('content/c/p0/blockly-release-1.0.19.json')
-            ? '1.0.19'
-            : existsSync('content/c/p0/blockly-release-1.0.18.json')
-              ? '1.0.18'
-              : permissionRelease
-                ? '1.0.17'
-                : '1.0.16';
+const releaseVersion = existsSync('content/c/p0/blockly-release-1.0.34.json')
+  ? '1.0.34'
+  : existsSync('content/c/p0/blockly-release-1.0.33.json')
+    ? '1.0.33'
+    : existsSync('content/c/p0/blockly-release-1.0.32.json')
+      ? '1.0.32'
+      : existsSync('content/c/p0/blockly-release-1.0.31.json')
+        ? '1.0.31'
+        : existsSync('content/c/p0/blockly-release-1.0.30.json')
+          ? '1.0.30'
+          : existsSync('content/c/p0/blockly-release-1.0.29.json')
+            ? '1.0.29'
+            : existsSync('content/c/p0/blockly-release-1.0.28.json')
+              ? '1.0.28'
+              : existsSync('content/c/p0/blockly-release-1.0.27.json')
+                ? '1.0.27'
+                : existsSync('content/c/p0/blockly-release-1.0.26.json')
+                  ? '1.0.26'
+                  : existsSync('content/c/p0/blockly-release-1.0.25.json')
+                    ? '1.0.25'
+                    : existsSync('content/c/p0/blockly-release-1.0.24.json')
+                      ? '1.0.24'
+                      : existsSync('content/c/p0/blockly-release-1.0.23.json')
+                        ? '1.0.23'
+                        : existsSync('content/c/p0/blockly-release-1.0.22.json')
+                          ? '1.0.22'
+                          : existsSync('content/c/p0/blockly-release-1.0.21.json')
+                            ? '1.0.21'
+                            : existsSync('content/c/p0/blockly-release-1.0.20.json')
+                              ? '1.0.20'
+                              : existsSync('content/c/p0/blockly-release-1.0.19.json')
+                                ? '1.0.19'
+                                : existsSync('content/c/p0/blockly-release-1.0.18.json')
+                                  ? '1.0.18'
+                                  : permissionRelease
+                                    ? '1.0.17'
+                                    : '1.0.16';
 const registrationPath = `content/c/p0/blockly-release-${releaseVersion}.json`;
 const candidate = process.env.P05_REVIEW_CANDIDATE === '1';
 let registered = false;
@@ -257,24 +286,46 @@ if (existsSync(registrationPath) && !candidate) {
   assert.equal(registration.releaseVersion, releaseVersion);
   assert.deepEqual(
     registration.files.map((entry) => entry.path),
-    releaseVersion === '1.0.24'
-      ? memoryBugPaths
-      : ['1.0.22', '1.0.23'].includes(releaseVersion)
-        ? bugPaths
-        : releaseVersion === '1.0.21'
-          ? diagnosticsPaths
-          : releaseVersion === '1.0.20'
-            ? reconstructionPaths
-            : releaseVersion === '1.0.19'
-              ? editorHistoryPaths
-              : permissionRelease
-                ? blockPermissionPaths
-                : reviewedP05Paths,
+    ['1.0.30', '1.0.31', '1.0.32', '1.0.33', '1.0.34'].includes(releaseVersion)
+      ? achievementPaths
+      : ['1.0.28', '1.0.29'].includes(releaseVersion)
+        ? schedulerPaths
+        : ['1.0.26', '1.0.27'].includes(releaseVersion)
+          ? notebookPaths
+          : releaseVersion === '1.0.25'
+            ? knowledgePaths
+            : releaseVersion === '1.0.24'
+              ? memoryBugPaths
+              : ['1.0.22', '1.0.23'].includes(releaseVersion)
+                ? bugPaths
+                : releaseVersion === '1.0.21'
+                  ? diagnosticsPaths
+                  : releaseVersion === '1.0.20'
+                    ? reconstructionPaths
+                    : releaseVersion === '1.0.19'
+                      ? editorHistoryPaths
+                      : permissionRelease
+                        ? blockPermissionPaths
+                        : reviewedP05Paths,
   );
   for (const entry of registration.files)
     assert.equal(sha(read(entry.path)), entry.sha256, `Unreviewed source: ${entry.path}`);
   assert.equal(registration.engine.wasmSha256, sha(wasmBytes));
-  if (releaseVersion === '1.0.24')
+  if (
+    [
+      '1.0.24',
+      '1.0.25',
+      '1.0.26',
+      '1.0.27',
+      '1.0.28',
+      '1.0.29',
+      '1.0.30',
+      '1.0.31',
+      '1.0.32',
+      '1.0.33',
+      '1.0.34',
+    ].includes(releaseVersion)
+  )
     assert.equal(
       registration.memoryEngine.wasmSha256,
       sha(read('web/src/generated/memory/c_viz_memory_bg.wasm')),

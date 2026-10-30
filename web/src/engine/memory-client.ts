@@ -25,6 +25,12 @@ interface Operation {
   responded: boolean;
   reject: (reason: Error) => void;
 }
+const acceptedRequests = new WeakMap<MemoryResult, MemoryRequest>();
+/** In-memory receipt from the final production acceptance boundary; injected clients cannot mint it. */
+export function acceptedMemoryRequest(result: MemoryResult): MemoryRequest | null {
+  const request = acceptedRequests.get(result);
+  return request ? structuredClone(request) : null;
+}
 export function memoryRequest(
   source: string,
   language: MemoryRequest['language'],
@@ -208,6 +214,8 @@ export class MemoryExecutionClient {
                 guard();
                 this.state = 'accepted';
                 this.release(operation);
+                if (Object.keys(this.dependencies).length === 0)
+                  acceptedRequests.set(value, snapshot);
                 resolve(value);
               } catch (error) {
                 this.fail(

@@ -25,6 +25,14 @@ import { StorageError, storageError } from './errors';
 import { upgradeV1Snapshot } from './v1-migration';
 import { usableBackground } from './appearance-assets';
 import { upgradeV2Meta } from './v2-migration';
+import { upgradeV3Meta } from './v3-migration';
+import { upgradeV4Meta } from './v4-migration';
+import { upgradeV5Meta } from './v5-migration';
+import { achievementsTransaction, type AchievementSourceReader } from './achievements';
+import type { AchievementEvidence } from '../achievements/model';
+import { reviewCardsTransaction, type ReviewSourceReader } from './review-cards';
+import type { ReviewCommand } from '../review-scheduler/model';
+import { knowledgeMarksTransaction, type KnowledgeMarkCommand } from './knowledge-marks';
 import { editorHistoryTransaction } from './editor-history';
 import type {
   EditorHistoryContext,
@@ -243,6 +251,46 @@ export class StorageClient {
   }
   readEditorHistory(context: EditorHistoryContext): Promise<EditorSnapshot[]> {
     return editorHistoryTransaction(this.connection(), context) as Promise<EditorSnapshot[]>;
+  }
+  async syncAchievements(
+    context: EditorHistoryContext,
+    derive: AchievementSourceReader,
+    observation?: AchievementEvidence,
+  ) {
+    const result = await achievementsTransaction(
+      this.connection(),
+      this.factory,
+      context,
+      derive,
+      observation,
+    );
+    if (result.changed) this.broadcast(result.meta);
+    return result;
+  }
+  async syncReviewCards(
+    context: EditorHistoryContext,
+    derive: ReviewSourceReader,
+    at: string,
+    command?: ReviewCommand,
+  ) {
+    const result = await reviewCardsTransaction(
+      this.connection(),
+      this.factory,
+      context,
+      derive,
+      at,
+      command,
+    );
+    if (result.changed) this.broadcast(result.meta);
+    return result;
+  }
+  async readKnowledgeMarks(context: EditorHistoryContext) {
+    return (await knowledgeMarksTransaction(this.connection(), context)).rows;
+  }
+  async saveKnowledgeMark(context: EditorHistoryContext, command: KnowledgeMarkCommand) {
+    const result = await knowledgeMarksTransaction(this.connection(), context, command);
+    this.broadcast(result.meta);
+    return result.rows;
   }
   saveEditorHistory(
     context: EditorHistoryContext,
@@ -921,6 +969,9 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                 db.createObjectStore('appearance');
                 db.createObjectStore('appearanceAssets');
                 db.createObjectStore('editHistory');
+                db.createObjectStore('knowledgeMarks');
+                db.createObjectStore('reviewCards');
+                db.createObjectStore('achievements');
                 tx.objectStore('appearance').add(upgraded.appearance, 'current');
                 tx.objectStore('meta').put(upgraded.meta, 'current');
               } catch (error) {
@@ -971,6 +1022,129 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                         ? upgradeV2Meta(values.result[0])
                         : null;
                     db.createObjectStore('editHistory');
+                    db.createObjectStore('knowledgeMarks');
+                    db.createObjectStore('reviewCards');
+                    db.createObjectStore('achievements');
+                    if (next) tx.objectStore('meta').put(next, 'current');
+                  } catch (error) {
+                    failure = error;
+                    tx.abort();
+                  }
+                };
+              } catch (error) {
+                failure = error;
+                tx.abort();
+              }
+            };
+            return;
+          }
+          if (event.oldVersion === 3) {
+            const db = request.result,
+              tx = request.transaction!;
+            const prior = [...STORE_NAMES, 'editHistory'];
+            if (
+              db.objectStoreNames.length !== prior.length ||
+              prior.some((name) => !db.objectStoreNames.contains(name))
+            )
+              throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            for (const name of prior) {
+              const store = tx.objectStore(name);
+              if (store.keyPath !== null || store.autoIncrement || store.indexNames.length)
+                throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            }
+            const values = tx.objectStore('meta').getAll();
+            values.onsuccess = () => {
+              try {
+                for (const value of values.result) upgradeV3Meta(value);
+                const keys = tx.objectStore('meta').getAllKeys();
+                keys.onsuccess = () => {
+                  try {
+                    const next =
+                      values.result.length === 1 && keys.result[0] === 'current'
+                        ? upgradeV3Meta(values.result[0])
+                        : null;
+                    db.createObjectStore('knowledgeMarks');
+                    db.createObjectStore('reviewCards');
+                    db.createObjectStore('achievements');
+                    if (next) tx.objectStore('meta').put(next, 'current');
+                  } catch (error) {
+                    failure = error;
+                    tx.abort();
+                  }
+                };
+              } catch (error) {
+                failure = error;
+                tx.abort();
+              }
+            };
+            return;
+          }
+          if (event.oldVersion === 4) {
+            const db = request.result,
+              tx = request.transaction!;
+            const prior = [...STORE_NAMES, 'editHistory', 'knowledgeMarks'];
+            if (
+              db.objectStoreNames.length !== prior.length ||
+              prior.some((name) => !db.objectStoreNames.contains(name))
+            )
+              throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            for (const name of prior) {
+              const store = tx.objectStore(name);
+              if (store.keyPath !== null || store.autoIncrement || store.indexNames.length)
+                throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            }
+            const values = tx.objectStore('meta').getAll();
+            values.onsuccess = () => {
+              try {
+                for (const value of values.result) upgradeV4Meta(value);
+                const keys = tx.objectStore('meta').getAllKeys();
+                keys.onsuccess = () => {
+                  try {
+                    const next =
+                      values.result.length === 1 && keys.result[0] === 'current'
+                        ? upgradeV4Meta(values.result[0])
+                        : null;
+                    db.createObjectStore('reviewCards');
+                    db.createObjectStore('achievements');
+                    if (next) tx.objectStore('meta').put(next, 'current');
+                  } catch (error) {
+                    failure = error;
+                    tx.abort();
+                  }
+                };
+              } catch (error) {
+                failure = error;
+                tx.abort();
+              }
+            };
+            return;
+          }
+          if (event.oldVersion === 5) {
+            const db = request.result,
+              tx = request.transaction!;
+            const prior = [...STORE_NAMES, 'editHistory', 'knowledgeMarks', 'reviewCards'];
+            if (
+              db.objectStoreNames.length !== prior.length ||
+              prior.some((name) => !db.objectStoreNames.contains(name))
+            )
+              throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            for (const name of prior) {
+              const store = tx.objectStore(name);
+              if (store.keyPath !== null || store.autoIncrement || store.indexNames.length)
+                throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            }
+            const values = tx.objectStore('meta').getAll();
+            values.onsuccess = () => {
+              try {
+                for (const value of values.result) upgradeV5Meta(value);
+                const keys = tx.objectStore('meta').getAllKeys();
+                keys.onsuccess = () => {
+                  try {
+                    const next =
+                      values.result.length === 1 && keys.result[0] === 'current'
+                        ? upgradeV5Meta(values.result[0])
+                        : null;
+                    db.createObjectStore('achievements');
                     if (next) tx.objectStore('meta').put(next, 'current');
                   } catch (error) {
                     failure = error;

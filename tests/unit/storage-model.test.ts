@@ -90,9 +90,15 @@ const renamed: Alias = {
 };
 
 describe('SAVE-01 model and store keys', () => {
-  it('fixes eleven projected stores and a separate twelfth physical history store with independent defaults', () => {
-    expect(ALL_STORE_NAMES).toEqual([...STORE_NAMES, 'editHistory']);
-    expect([DB_NAME, DB_VERSION, SCHEMA_VERSION]).toEqual(['c-viz-learning', 3, '3.0.0']);
+  it('fixes eleven projected stores and four separate physical auxiliary stores with independent defaults', () => {
+    expect(ALL_STORE_NAMES).toEqual([
+      ...STORE_NAMES,
+      'editHistory',
+      'knowledgeMarks',
+      'reviewCards',
+      'achievements',
+    ]);
+    expect([DB_NAME, DB_VERSION, SCHEMA_VERSION]).toEqual(['c-viz-learning', 6, '6.0.0']);
     expect(STORE_NAMES).toEqual([
       'meta',
       'settings',
@@ -186,8 +192,8 @@ describe('closed storage validation', () => {
       assertLegacySnapshot(before);
       expect(upgraded.meta).toEqual({
         ...before.meta,
-        dbVersion: 3,
-        schemaVersion: '3.0.0',
+        dbVersion: 6,
+        schemaVersion: '6.0.0',
         revision: before.meta.revision + 1,
       });
       for (const store of CORE_STORE_NAMES)
@@ -215,7 +221,7 @@ describe('closed storage validation', () => {
     it(`rejects frozen invalid snapshot ${scenario.id} with its dedicated code`, () => {
       const value: unknown = snapshot();
       if (scenario.path)
-        set(value, scenario.path, scenario.id === 'unknown-version' ? '4.0.0' : scenario.value);
+        set(value, scenario.path, scenario.id === 'unknown-version' ? '9.0.0' : scenario.value);
       else {
         const target = pointer(value, scenario.appendTo!);
         const source = pointer(value, scenario.copyFrom!);
@@ -538,8 +544,8 @@ describe('strict production SAVE1 to SAVE3 recipe', () => {
       expect(next.settings.theme).toBe(theme);
       expect(next.meta).toEqual({
         ...before.meta,
-        schemaVersion: '3.0.0',
-        dbVersion: 3,
+        schemaVersion: '6.0.0',
+        dbVersion: 6,
         revision: before.meta.revision + 1,
       });
       for (const store of CORE_STORE_NAMES)

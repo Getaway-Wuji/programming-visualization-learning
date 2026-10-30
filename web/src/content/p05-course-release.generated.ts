@@ -31,9 +31,9 @@ export const p05CourseRelease = {
       sha256: 'a389fea06289ffa3da40ff9f0f28296e498d6d5be54dc0d206885bec8d57d3be',
     },
     learning: {
-      file: 'content/learning/course-learning-1.0.24.json',
+      file: 'content/learning/course-learning-1.0.34.json',
       bytes: 29635,
-      sha256: '5a5fd8cf622e5103a3b3b96e877146aee7223d7e63e5580447ef0114c3519f8b',
+      sha256: 'b3fbd01d40445f6d13a9d68f8a967ed1e81eff35cf6f99803f7f4461c2d69a4d',
     },
   },
 } as const;

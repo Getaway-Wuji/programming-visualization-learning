@@ -201,6 +201,9 @@ test('native flyout drag creates a new block, keyboard controls nest native-id b
   page.on('request', (request) => urls.push(request.url()));
   await open(page);
   await correctStarter(page, echo);
+  // The current reverse-parsed correction contains an explicit final return.
+  // Remove it through the editor before inserting a new statement stack there.
+  for (const id of await blockOptions(page, /^\d+\. 返回$/)) await remove(page, id);
   const print = await unique(page, /^\d+\. 输出 ·/);
   const before = new Set(await allIds(page));
   await blockWorkspace(page).getByRole('treeitem', { name: '程序与作用域', exact: true }).click();
@@ -277,6 +280,7 @@ test('type rejection, missing-slot drafts and deleted input sources visibly refu
   await observeCaseSetExecution(page);
   await open(page);
   await correctStarter(page, echo);
+  for (const id of await blockOptions(page, /^\d+\. 返回$/)) await remove(page, id);
   const print = await unique(page, /^\d+\. 输出 ·/);
   const input = await unique(page, /^\d+\. 声明整数 · x$/);
   const scope = await add(page, 'scope');

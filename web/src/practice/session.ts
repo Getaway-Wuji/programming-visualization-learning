@@ -11,6 +11,7 @@ import type { BlockWorkspaceDraft, WorkspaceIssue } from '../blocks/workspace';
 import { generateBlockSource, BlockGenerationError } from '../blocks/generator';
 import { starterProgram, correctionProgram } from '../blocks/starters';
 import { createPracticePassAuthority } from '../learning/practice-authority';
+import { createPracticeAttemptFact, classifyAttempt } from '../learning/attempt-authority';
 import type { VerifiedFact } from '../learning/authority';
 import type { LearningCatalog } from '../learning/types';
 import { exerciseRequest, caseSummary, submissionMet, type CaseSummary } from './submission';
@@ -72,6 +73,7 @@ type PracticeDraft = Pick<
 export interface PracticeLearningPort {
   context(): { catalog: LearningCatalog | null; epoch: number };
   save(fact: VerifiedFact, epoch: number): Promise<unknown>;
+  saveAttempt?(fact: VerifiedFact, epoch: number): Promise<unknown>;
   access?(catalog: ExerciseCatalog): BlockAccess;
 }
 const blockMessages: Record<string, string> = {
@@ -857,12 +859,57 @@ export class PracticeSession {
         const result = await this.client.execute(request, catalog, display, started);
         display(result);
         if (this.token !== token) return;
-        if (!summary?.met) return;
+        if (!summary?.met) {
+          const context = this.learning?.context();
+          if (context?.catalog && this.learning?.saveAttempt && classifyAttempt(result)) {
+            try {
+              const fact = createPracticeAttemptFact(
+                context.catalog,
+                catalog,
+                request,
+                result,
+                () =>
+                  this.token === token &&
+                  this.revision === revision &&
+                  this.current.phase === 'unmet',
+              );
+              this.set({ saveStatus: 'saving' });
+              await this.learning.saveAttempt(fact, context.epoch);
+              if (this.token === token) this.set({ saveStatus: 'saved' });
+            } catch {
+              if (this.token === token) this.set({ saveStatus: 'unsaved' });
+            }
+          }
+          return;
+        }
         if (index === catalog.subject.tests.length - 1) {
           // display runs before ExecutionClient's final render/deadline guard.
           // Only its final returned result may authorize a durable learning fact.
           if (this.current.phase === 'met' && submissionMet(catalog, this.current.summaries))
             await this.saveAccepted(token, revision, catalog);
+          else if (this.current.phase === 'unmet') {
+            const context = this.learning?.context();
+            if (context?.catalog && this.learning?.saveAttempt) {
+              try {
+                const fact = createPracticeAttemptFact(
+                  context.catalog,
+                  catalog,
+                  request,
+                  result,
+                  () =>
+                    this.token === token &&
+                    this.revision === revision &&
+                    this.current.phase === 'unmet',
+                  this.current.summaries,
+                );
+                this.set({ saveStatus: 'saving' });
+                await this.learning.saveAttempt(fact, context.epoch);
+                if (this.token === token) this.set({ saveStatus: 'saved' });
+              } catch {
+                if (this.token === token) this.set({ saveStatus: 'unsaved' });
+              }
+            }
+          }
           return;
         }
         summaries = this.current.summaries.slice();

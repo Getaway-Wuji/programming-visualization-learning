@@ -22,7 +22,9 @@ const practice = (page: Page) => page.getByTestId('practice-execution');
 const disclosure = (page: Page) => page.getByTestId('block-keyboard-editor');
 const canvas = (page: Page) => blockWorkspace(page).locator('.block-canvas');
 const mainCanvas = (page: Page) =>
-  canvas(page).locator('.blocklyBlockCanvas:has(> [data-id="lesson.main"])');
+  canvas(page).locator(
+    '.blocklyBlockCanvas:not(.blocklyFlyout .blocklyBlockCanvas):has(> [data-id])',
+  );
 const controls = (page: Page) => page.getByTestId('player-controls');
 const feedback = (page: Page) => blockWorkspace(page).locator('.block-drag-feedback');
 const block = (page: Page, id: string) =>
@@ -52,6 +54,31 @@ async function nativeIds(page: Page) {
         .map((element) => element.getAttribute('data-id')!)
         .filter(Boolean),
     );
+}
+/** Reverse parsing may legitimately replace the original lesson IDs. Read the
+ * same current option labels a learner uses; never rewrite the workspace. */
+async function echoBlocks(page: Page) {
+  const details = disclosure(page),
+    wasOpen = (await details.getAttribute('open')) !== null;
+  if (!wasOpen) await details.locator('summary').click();
+  const options = await blockWorkspace(page)
+    .getByRole('combobox', { name: '积木列表', exact: true })
+    .locator('option')
+    .evaluateAll((es) =>
+      es.map((e) => ({ id: (e as HTMLOptionElement).value, label: e.textContent ?? '' })),
+    );
+  const find = (pattern: RegExp) => {
+    const matches = options.filter((o) => pattern.test(o.label));
+    expect(matches).toHaveLength(1);
+    return matches[0].id;
+  };
+  const ids = {
+    declaration: find(/^\d+\. 声明整数 · x$/),
+    output: find(/^\d+\. 输出 ·/),
+    read: find(/^\d+\. 读取变量 · x$/),
+  };
+  if (!wasOpen) await details.locator('summary').click();
+  return ids;
 }
 async function parent(page: Page, id: string) {
   return block(page, id).evaluate(
@@ -270,9 +297,10 @@ test('native value connections expose a visible preview and accept the same twen
     await page.goto('about:blank');
     await open(page);
     await chooseScale(page, targetScale);
-    const id = 'lesson.block.3';
+    const ids = await echoBlocks(page),
+      id = ids.read;
     await detach(page, id);
-    const destination = await port(page, 'lesson.block.2', 'value');
+    const destination = await port(page, ids.output, 'value');
     const pointer = await drag(page, id, destination, 20, true);
     await attach(info, `held-geometry-${targetScale}`, {
       targetScale,
@@ -290,14 +318,14 @@ test('native value connections expose a visible preview and accept the same twen
     });
     await expect(feedback(page)).toHaveText('已找到连接位置，松开即可拼接。');
     await page.mouse.up();
-    await expect.poll(() => parent(page, id)).toBe('lesson.block.2');
+    await expect.poll(() => parent(page, id)).toBe(ids.output);
     await detach(page, id);
-    const outside = await drag(page, id, await port(page, 'lesson.block.2', 'value'), 50, true);
+    const outside = await drag(page, id, await port(page, ids.output, 'value'), 50, true);
     await expect(feedback(page)).not.toHaveText('已找到连接位置，松开即可拼接。');
     await page.mouse.up();
     await expect.poll(() => parent(page, id)).toBeNull();
-    await drag(page, id, await port(page, 'lesson.block.2', 'value'));
-    await expect.poll(() => parent(page, id)).toBe('lesson.block.2');
+    await drag(page, id, await port(page, ids.output, 'value'));
+    await expect.poll(() => parent(page, id)).toBe(ids.output);
     records.push({
       scale: await scale(page),
       pointer,
@@ -318,18 +346,19 @@ test('native flyout dragging builds nested arithmetic and rejects wrong connecti
   if ((await disclosure(page).getAttribute('open')) !== null)
     await disclosure(page).locator('summary').click();
   await canvas(page).scrollIntoViewIfNeeded();
-  const old = 'lesson.block.3';
+  const ids = await echoBlocks(page),
+    old = ids.read;
   const detached = await detach(page, old);
   const arithmetic = await flyout(page, '运算与判断', 1);
-  await drag(page, arithmetic.id, await port(page, 'lesson.block.2', 'value'));
-  await expect.poll(() => parent(page, arithmetic.id)).toBe('lesson.block.2');
+  await drag(page, arithmetic.id, await port(page, ids.output, 'value'));
+  await expect.poll(() => parent(page, arithmetic.id)).toBe(ids.output);
   await drag(page, old, await port(page, arithmetic.id, 'value', 0));
   await expect.poll(() => parent(page, old)).toBe(arithmetic.id);
   const integer = await flyout(page, '整数与变量', 0);
   await drag(page, integer.id, await port(page, arithmetic.id, 'value', 1));
   await expect.poll(() => parent(page, integer.id)).toBe(arithmetic.id);
   const invalid = await flyout(page, '整数与变量', 0);
-  await drag(page, invalid.id, await port(page, 'lesson.block.2', 'statement', 1), 0, true);
+  await drag(page, invalid.id, await port(page, ids.output, 'statement', 1), 0, true);
   await expect(feedback(page)).not.toHaveText('已找到连接位置，松开即可拼接。');
   await page.mouse.up();
   await expect.poll(() => parent(page, invalid.id)).toBeNull();
@@ -368,7 +397,7 @@ test('holding a native dragged block near the canvas edge scrolls progressively 
   test.setTimeout(60000);
   await open(page);
   await canvas(page).scrollIntoViewIfNeeded();
-  const id = 'lesson.block.3';
+  const id = (await echoBlocks(page)).read;
   await detach(page, id);
   const area = await canvas(page).boundingBox();
   if (!area) throw new Error('Canvas missing');
@@ -432,9 +461,10 @@ test('a statement stack reconnects by native pointer with its child retained and
   });
   const before = await source.inputValue();
   await canvas(page).scrollIntoViewIfNeeded();
-  const id = 'lesson.block.2';
+  const ids = await echoBlocks(page),
+    id = ids.output;
   const beforeParent = await parent(page, id);
-  const child = 'lesson.block.3';
+  const child = ids.read;
   const start = await pointAtBlock(page, id);
   const area = await canvas(page).boundingBox();
   if (!area) throw new Error('Canvas missing');
@@ -447,7 +477,7 @@ test('a statement stack reconnects by native pointer with its child retained and
   await expect.poll(() => parent(page, child)).toBe(id);
   const grab = await pointAtBlock(page, id);
   const previous = await port(page, id, 'statement', 0);
-  const target = await port(page, 'lesson.block.1', 'statement', 1);
+  const target = await port(page, ids.declaration, 'statement', 1);
   const end = { x: grab.x + target.x - previous.x + 16, y: grab.y + target.y - previous.y };
   await page.mouse.move(grab.x, grab.y);
   await page.mouse.down();

@@ -25,8 +25,8 @@ function unsaved(answer: HarnessResult<unknown>, code?: string) {
 }
 function initial(snapshot: StorageSnapshot, production = false) {
   expect(snapshot.meta).toMatchObject({
-    schemaVersion: '3.0.0',
-    dbVersion: 3,
+    schemaVersion: '6.0.0',
+    dbVersion: 6,
     revision: production ? 1 : 0,
   });
   expect(snapshot.settings).toEqual({
@@ -146,7 +146,7 @@ test('known eleven-store archives with invalid or missing meta can be explicitly
     expect(cleared.cleared).toBe(true);
     expect(cleared.snapshot!.meta.generation).not.toBe(old.snapshot!.meta.generation);
     initial(cleared.snapshot!);
-    expect((await page.evaluate(() => window.recoveryHarness.rawDump())).version).toBe(3);
+    expect((await page.evaluate(() => window.recoveryHarness.rawDump())).version).toBe(6);
   }
 });
 

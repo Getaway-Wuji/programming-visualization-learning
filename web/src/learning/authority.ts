@@ -41,7 +41,12 @@ export function checkLearningEvent(event: LearningEvent, catalog: LearningCatalo
     ) &&
     !(
       catalog.purpose === 'course-practice' &&
-      ['lesson.started', 'lesson.study-confirmed', 'exercise.passed'].includes(event?.eventType)
+      [
+        'lesson.started',
+        'lesson.study-confirmed',
+        'exercise.passed',
+        'exercise.attempt-evaluated',
+      ].includes(event?.eventType)
     ) &&
     !(catalog.purpose === 'case-view' && event?.eventType === 'case.view-confirmed')
   )
@@ -124,7 +129,8 @@ export function createLearningAuthority(
         retainable:
           retainAccepted &&
           (captured.eventType === 'exercise.passed' ||
-            captured.eventType === 'case.view-confirmed'),
+            captured.eventType === 'case.view-confirmed' ||
+            captured.eventType === 'exercise.attempt-evaluated'),
         retained: false,
       });
       return token;

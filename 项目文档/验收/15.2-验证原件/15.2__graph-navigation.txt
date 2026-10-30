@@ -1,0 +1,85 @@
+[WebServer] (node:27356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:43916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   1 [chrome] › tests\browser\knowledge-map.spec.ts:131:1 › 15.1 common: empty graph, every exact lesson destination and selection are read-only (2.9s)
+(node:51936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [chrome] › tests\browser\knowledge-map.spec.ts:172:1 › 15.1 common: keyboard selection, three widths and refresh preserve empty state (1.5s)
+  ok  3 [chrome] › tests\browser\knowledge-map.spec.ts:203:1 › 15.1 formal: real completion lights only related nodes and both-end edges, refresh/repeat/clear restore correctly (6.6s)
+  ok  4 [chrome] › tests\browser\knowledge-map.spec.ts:265:1 › 15.1 formal: failed native transaction keeps graph unlearned until original event retry is acknowledged (1.9s)
+  ok  5 [chrome] › tests\browser\knowledge-map.spec.ts:316:1 › 15.1 formal: real original-course completion survives the reviewed 32-lesson upgrade without rewriting history (1.6s)
+  ok  6 [chrome] › tests\browser\knowledge-map.spec.ts:344:1 › 15.1 common: unavailable storage is pending confirmation and recovers without a fake completion (529ms)
+  ok  7 [chrome] › tests\browser\knowledge-map.spec.ts:378:1 › 15.1 common: unavailable reading fails locally and normal course retry restores the map (528ms)
+  ok  8 [chrome] › tests\browser\navigation.spec.ts:21:1 › public routes preserve content relationships, refresh and browser history (3.6s)
+  ok  9 [chrome] › tests\browser\navigation.spec.ts:85:1 › workspaces keep real blocks beside read-only code, review playback and empty-review boundaries (2.1s)
+  ok 10 [chrome] › tests\browser\navigation.spec.ts:158:1 › keyboard navigation, native dialogs and settings tabs remain usable (1.7s)
+  ok 11 [chrome] › tests\browser\navigation.spec.ts:231:1 › unknown addresses and real lazy module failures provide recovery (3.8s)
+  ok 12 [chrome] › tests\browser\navigation.spec.ts:277:1 › desktop and narrower layouts avoid horizontal page overflow (3.5s)
+
+
+  1) [chrome] › tests\browser\knowledge-map.spec.ts:131:1 › 15.1 common: empty graph, every exact lesson destination and selection are read-only 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 9
+
+    @@ -56,18 +56,25 @@
+            "version": "1.0.0",
+          },
+          "createdAt": "2026-10-30T19:43:21.352Z",
+          "dbVersion": 4,
+          "generation": "64b27eb6-5556-4d30-9658-108ae97c0fc7",
+    -     "revision": 1,
+    +     "revision": 2,
+          "schemaVersion": "4.0.0",
+          "timeZone": "Asia/Shanghai",
+        },
+        "progress": Array [],
+        "receipts": Array [],
+        "settings": Object {
+    -     "goalTemplate": null,
+    +     "goalTemplate": Object {
+    +       "revision": 1,
+    +       "targets": Object {
+    +         "case": 0,
+    +         "exercise": 1,
+    +         "lesson": 1,
+    +       },
+    +     },
+          "playbackRate": 1,
+          "reducedMotion": "system",
+          "theme": "light",
+        },
+      }
+
+      161 |     await expect(graph(page)).toHaveAttribute('data-state', 'ready');
+      162 |   }
+    > 163 |   expect(await archive(page)).toEqual(before);
+          |                               ^
+      164 |   expect(await page.evaluate(() => window.__verticalObservation.workers.length)).toBe(0);
+      165 |   await mkdir(folder, { recursive: true });
+      166 |   await writeFile(
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\knowledge-map.spec.ts:163:31
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.2\graph-navigation-output\knowledge-map-15-1-common--d64fd-and-selection-are-read-only-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.2\graph-navigation-output\knowledge-map-15-1-common--d64fd-and-selection-are-read-only-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.2\graph-navigation-output\knowledge-map-15-1-common--d64fd-and-selection-are-read-only-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.2\graph-navigation-output\knowledge-map-15-1-common--d64fd-and-selection-are-read-only-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chrome] › tests\browser\knowledge-map.spec.ts:131:1 › 15.1 common: empty graph, every exact lesson destination and selection are read-only 
+  11 passed (37.7s)

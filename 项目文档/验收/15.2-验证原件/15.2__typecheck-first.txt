@@ -1,0 +1,11 @@
+
+> c-viz-learning@0.1.0 typecheck
+> tsc --build
+
+web/src/review-notebook/model.ts(83,47): error TS2339: Property 'resultCategory' does not exist on type '(ReceiptBase & { eventType: "lesson.completed"; result: "completed"; subjectRef: PublicRef; packageRef: PublicRef; learningRevision: number; } & object) | (ReceiptBase & ... 1 more ... & object) | (ReceiptBase & ... 1 more ... & object) | (ReceiptBase & ... 1 more ... & object) | (ReceiptBase & ... 1 more ... & Atte...'.
+  Property 'resultCategory' does not exist on type 'ReceiptBase & { eventType: "lesson.completed"; result: "completed"; subjectRef: PublicRef; packageRef: PublicRef; learningRevision: number; } & object'.
+web/src/review-notebook/model.ts(85,29): error TS2339: Property 'resultCategory' does not exist on type '(ReceiptBase & { eventType: "lesson.completed"; result: "completed"; subjectRef: PublicRef; packageRef: PublicRef; learningRevision: number; } & object) | (ReceiptBase & ... 1 more ... & object) | (ReceiptBase & ... 1 more ... & object) | (ReceiptBase & ... 1 more ... & object) | (ReceiptBase & ... 1 more ... & Atte...'.
+  Property 'resultCategory' does not exist on type 'ReceiptBase & { eventType: "lesson.completed"; result: "completed"; subjectRef: PublicRef; packageRef: PublicRef; learningRevision: number; } & object'.
+web/src/review-notebook/model.ts(86,30): error TS2339: Property 'failedCaseKey' does not exist on type '(ReceiptBase & { eventType: "lesson.completed"; result: "completed"; subjectRef: PublicRef; packageRef: PublicRef; learningRevision: number; } & object) | (ReceiptBase & ... 1 more ... & object) | (ReceiptBase & ... 1 more ... & object) | (ReceiptBase & ... 1 more ... & object) | (ReceiptBase & ... 1 more ... & Atte...'.
+  Property 'failedCaseKey' does not exist on type 'ReceiptBase & { eventType: "lesson.completed"; result: "completed"; subjectRef: PublicRef; packageRef: PublicRef; learningRevision: number; } & object'.
+web/src/review-notebook/NotebookPage.tsx(32,8): error TS2741: Property 'kicker' is missing in type '{ title: string; description: string; }' but required in type '{ kicker: string; title: string; description?: string | undefined; children?: ReactNode; }'.

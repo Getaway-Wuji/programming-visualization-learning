@@ -1,0 +1,15 @@
+
+> c-viz-learning@0.1.0 test:browser
+> playwright test --config tests/playwright.config.ts tests/browser/notebook.spec.ts --project=chrome --grep common --reporter=list,json --output=.artifacts/15.2/candidate-successor-output
+
+[WebServer] (node:51580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:14688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chrome] › tests\browser\notebook.spec.ts:118:1 › 15.2 common empty notebook is honest, navigation and refresh never write learning or marks (1.2s)
+  ok 2 [chrome] › tests\browser\notebook.spec.ts:134:1 › 15.2 common three widths keep notebook navigation and meaningful empty actions usable (582ms)
+
+  2 passed (5.9s)

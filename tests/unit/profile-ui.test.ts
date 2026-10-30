@@ -22,6 +22,10 @@ import {
 } from '../../web/src/storage/model';
 import { validateSnapshot } from '../../web/src/storage/validation';
 
+// This suite isolates profile/points UI; real review context is covered by its own native tests.
+vi.mock('../../web/src/achievements/react', () => ({ AchievementSummary: () => null }));
+vi.mock('../../web/src/review-scheduler/react', () => ({ ReviewDueSummary: () => null }));
+
 const learning = vi.hoisted(() => ({
   state: null as LearningServiceState | null,
   service: {

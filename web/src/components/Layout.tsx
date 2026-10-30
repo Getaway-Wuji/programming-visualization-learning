@@ -6,12 +6,17 @@ import { useLearning } from '../learning/react';
 import { useAppearance } from '../appearance/react';
 import { ThemeModeToggle } from '../appearance/ThemeModeToggle';
 import { useWorkbench } from '../workbench/react';
+import { useAchievements } from '../achievements/react';
+import { useReviews } from '../review-scheduler/react';
 
 const navigation = [
   { to: '/', label: '学习首页', icon: 'home' },
   { to: '/courses', label: 'C 语言课程', icon: 'book' },
   { to: '/cases', label: '算法与演示', icon: 'chart' },
   { to: '/compilation', label: '编译流程', icon: 'code' },
+  { to: '/notebook', label: '错题与陌生点', icon: 'book' },
+  { to: '/reviews', label: '今日复习', icon: 'book' },
+  { to: '/achievements', label: '学习成就', icon: 'book' },
   { to: '/settings', label: '本地设置', icon: 'settings' },
 ] as const;
 
@@ -20,6 +25,8 @@ export function Layout({ children }: { children: ReactNode }) {
   const { state: learning } = useLearning();
   const appearance = useAppearance();
   const workbench = useWorkbench();
+  const achievementState = useAchievements().state;
+  const reviewState = useReviews().state;
   const [menu, setMenu] = useState({ path: '', open: false });
   const [narrow, setNarrow] = useState(() => matchMedia('(max-width: 1100px)').matches);
   const menuOpen = narrow && menu.path === location.pathname && menu.open;
@@ -82,6 +89,8 @@ export function Layout({ children }: { children: ReactNode }) {
       data-sidebar={collapsed ? 'collapsed' : 'expanded'}
       data-workbench-mode={focused ? 'focus' : 'standard'}
       data-learning-storage-status={learning.status}
+      data-review-storage-status={reviewState.status}
+      data-achievement-storage-status={achievementState.status}
       data-learning-reading-status={learning.readingStatus ?? 'unavailable'}
       data-learning-practice-status={learning.practiceStatus ?? 'unavailable'}
       data-learning-reward-status={learning.rewardStatus ?? 'unavailable'}

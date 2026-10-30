@@ -275,7 +275,7 @@ describe('09.4 narrow reviewed resource and practice authority', () => {
       expect(() => value.issue()).toThrow('S_CONTENT_INCOMPATIBLE');
     }
   });
-  it('keeps case, failed-attempt and explicit completion issuers outside this course capability', () => {
+  it('keeps case and arbitrary failed-attempt issuers outside the course adapter capability', async () => {
     const authority = createLearningAuthority(catalog, () => true);
     expect(() =>
       authority.issue({
@@ -287,18 +287,22 @@ describe('09.4 narrow reviewed resource and practice authority', () => {
         learningRevision: 1,
       }),
     ).toThrow('S_CONTENT_INCOMPATIBLE');
-    expect(() =>
-      authority.issue({
-        eventContractVersion: '1.0.0',
-        eventType: 'exercise.attempt-evaluated',
-        result: 'failed',
-        resultCategory: 'wrong-answer',
-        failedCaseKey: null,
-        packageRef: catalog.packageRef,
-        subjectRef: catalog.exercises[0].ref,
-        learningRevision: 1,
-      }),
-    ).toThrow('S_CONTENT_INCOMPATIBLE');
+    const genericAttempt = authority.issue({
+      eventContractVersion: '1.0.0',
+      eventType: 'exercise.attempt-evaluated',
+      result: 'failed',
+      resultCategory: 'wrong-answer',
+      failedCaseKey: null,
+      packageRef: catalog.packageRef,
+      subjectRef: catalog.exercises[0].ref,
+      learningRevision: 1,
+    });
+    const { model, service } = await setup();
+    await expect(service.recordPracticeAttempt(genericAttempt, 0)).rejects.toThrow(
+      'S_CONTENT_INCOMPATIBLE',
+    );
+    expect(model.fake.commitOnce).not.toHaveBeenCalled();
+    service.dispose();
   });
 });
 

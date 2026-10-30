@@ -1,0 +1,29 @@
+{
+  "reason": "33 stores a JSON UI-lint receipt with its original .log suffix. Restore now permits exactly that path for 33/34, verifies its frozen SHA and parses JSON. No widening for other logs. 34 changes only restore and release selection; all runtime sources are byte-identical to33.",
+  "changed": [
+    {
+      "path": "scripts/build-p05-course.mjs",
+      "sha256": "f2ab500a5f4544648da0907c9319651c3251279b15210954cca78341d79522ca"
+    },
+    {
+      "path": "scripts/restore-release-evidence.mjs",
+      "sha256": "ccc274e59ebd2380f746ca2d8d6adc6f65993bbab6c1f7a48f5b96d43fe57b9a"
+    }
+  ],
+  "candidate": {
+    "path": ".artifacts/15.4/candidate-restoration.json",
+    "sha256": "880455886c1564ce4581d88ba7dc37e79e3d35c99903a36fd3c9ad17dae4b021"
+  },
+  "build": {
+    "path": ".artifacts/15.4/build-candidate-restoration.log",
+    "sha256": "90a1ff5594ecff01441593b78e1083b6e32b033057548e88d0fde5b2679bd8f2"
+  },
+  "originalFailure": {
+    "path": ".artifacts/15.4/build-formal-vector.log",
+    "sha256": "4562b7ecb7af22d30426efbd6a3f988c75532e10cf5cd7ac3cd16416a617f8fc"
+  },
+  "hashGuardFailure": {
+    "path": ".artifacts/15.4/build-formal-vector-accepted.log",
+    "sha256": "aff60c24b9eaad01c9a700adab68d22df584a9f2281205a7128846ccd5164954"
+  }
+}

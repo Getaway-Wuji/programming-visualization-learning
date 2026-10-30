@@ -1,0 +1,104 @@
+[WebServer] (node:45572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 11 tests using 1 worker
+
+(node:39816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chrome] › tests\browser\notebook.spec.ts:19:1 › 15.2 formal stale mark retry cannot overwrite a peer command and re-reading enables a fresh explicit action (1.3s)
+  ok  2 [chrome] › tests\browser\notebook.spec.ts:58:1 › 15.2 formal actual C++ pointer errors collect while loop resource or deadline termination is excluded (2.5s)
+  ok  3 [chrome] › tests\browser\notebook.spec.ts:118:1 › 15.2 common empty notebook is honest, navigation and refresh never write learning or marks (636ms)
+  ok  4 [chrome] › tests\browser\notebook.spec.ts:134:1 › 15.2 common three widths keep notebook navigation and meaningful empty actions usable (586ms)
+  x   5 [chrome] › tests\browser\notebook.spec.ts:149:1 › 15.2 formal three genuine error categories merge, repair and reopen without read rewards (3.9s)
+(node:18132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  6 [chrome] › tests\browser\notebook.spec.ts:202:1 › 15.2 formal failed attempt transaction retries its original event once and preserves rewards (2.5s)
+  ok  7 [chrome] › tests\browser\notebook.spec.ts:257:1 › 15.2 formal double mark, refresh, source review and familiar tombstone have no learning side effects (1.7s)
+  ok  8 [chrome] › tests\browser\notebook.spec.ts:298:1 › 15.2 formal native mark rollback and exact retry preserve the original command identity (954ms)
+  ok  9 [chrome] › tests\browser\notebook.spec.ts:335:1 › 15.2 formal peer clear discards pending marks and stored error summaries without resurrection (1.5s)
+  ok 10 [chrome] › tests\browser\notebook.spec.ts:381:1 › 15.2 formal corrupt mark partition stays preserved and visibly unavailable until an explicit full clear (793ms)
+  ok 11 [chrome] › tests\browser\notebook.spec.ts:415:1 › 15.2 formal damaged core attempt receipts show unknown instead of a false empty notebook (1.9s)
+
+
+  1) [chrome] › tests\browser\notebook.spec.ts:149:1 › 15.2 formal three genuine error categories merge, repair and reopen without read rewards 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 37
+
+    @@ -418,10 +418,47 @@
+            "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.14\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.9\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"result\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.8\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.6\",\"fields\":{\"OP\":\"*\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.4\",\"fields\":{\"VALUE\":\"2\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.5\",\"fields\":{\"NAME\":\"x\"}}}}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.7\",\"fields\":{\"VALUE\":\"3\"}}}}}}},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.11\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.10\",\"fields\":{\"NAME\":\"result\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.13\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.12\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}}}]}}",
+            "writerId": "336f156e-f6ed-4245-8ff1-943cc412c908",
+          },
+          Object {
+            "authority": "blocks",
+    +       "captureVersion": 0,
+    +       "codeText": "#include <stdio.h>
+    + int main(void) {
+    +     int x = 7;
+    +     return 0;
+    + }
+    + ",
+    +       "createdAt": "2026-10-30T19:42:12.149Z",
+    +       "documentRevision": 1,
+    +       "entryId": "aad75632-6e5d-479a-a696-9c4ef6405b8d",
+    +       "generation": "e82e0da5-eb2f-4f4c-9c90-20cb3ca9ecd7",
+    +       "historyVersion": "1.0.0",
+    +       "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+    +       "reason": "initial",
+    +       "restoredFrom": null,
+    +       "scope": Object {
+    +         "exerciseRef": Object {
+    +           "id": "exercise.c.echo",
+    +           "version": "1.1.0",
+    +         },
+    +         "mode": "independent",
+    +         "packageRef": Object {
+    +           "id": "content.c.p05",
+    +           "version": "1.0.0",
+    +         },
+    +         "programRef": Object {
+    +           "id": "program.c.echo",
+    +           "version": "1.0.0",
+    +         },
+    +       },
+    +       "sequence": 14,
+    +       "state": "pending",
+    +       "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+    +       "writerId": "2831a71d-2a8a-4c4c-932c-63f25be62cad",
+    +     },
+    +     Object {
+    +       "authority": "blocks",
+            "captureVersion": 1,
+            "codeText": "#include <stdio.h>
+      int main(void) {
+          int x = 7;
+          return 0;
+
+      190 |     .click();
+      191 |   await ready(page);
+    > 192 |   expect(await archive(page)).toEqual(repaired);
+          |                               ^
+      193 |   await changePrint(page, 'x + 1');
+      194 |   await failed(page);
+      195 |   await notebook(page);
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook.spec.ts:192:31
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.2\formal-accepted-output\notebook-15-2-formal-three-a0143-reopen-without-read-rewards-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.2\formal-accepted-output\notebook-15-2-formal-three-a0143-reopen-without-read-rewards-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.2\formal-accepted-output\notebook-15-2-formal-three-a0143-reopen-without-read-rewards-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.2\formal-accepted-output\notebook-15-2-formal-three-a0143-reopen-without-read-rewards-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chrome] › tests\browser\notebook.spec.ts:149:1 › 15.2 formal three genuine error categories merge, repair and reopen without read rewards 
+  10 passed (23.5s)

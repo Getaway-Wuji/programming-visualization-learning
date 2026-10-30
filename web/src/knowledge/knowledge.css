@@ -1,0 +1,204 @@
+.knowledge-map {
+  grid-column: 1 / -1;
+}
+.knowledge-map .module-title {
+  gap: 16px;
+}
+.knowledge-map .module-title > span {
+  color: var(--p05-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.knowledge-intro {
+  margin: 8px 0 20px;
+  color: var(--p05-muted);
+}
+/* At 1440: canvas 1160 - padding 52 = 1108; (1108 - gap24 - detail300) = graph784. */
+.knowledge-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+  align-items: start;
+}
+.knowledge-overview {
+  min-width: 0;
+}
+.knowledge-mobile-picker {
+  display: none;
+}
+.knowledge-scroll {
+  overflow-x: auto;
+  padding: 4px;
+  margin: -4px;
+}
+.knowledge-canvas {
+  position: relative;
+  min-width: 708px;
+  height: 360px;
+}
+.knowledge-canvas > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.knowledge-edge {
+  fill: none;
+  stroke: var(--p05-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+  opacity: 0.6;
+}
+.knowledge-edge[data-lit='yes'] {
+  stroke: var(--p05-accent);
+  stroke-width: 2;
+  stroke-dasharray: none;
+  opacity: 1;
+}
+.knowledge-node {
+  position: absolute;
+  left: var(--node-x);
+  top: var(--node-y);
+  transform: translate(-50%, -50%);
+  width: 136px;
+  min-height: 64px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--p05-ink);
+  background: var(--p05-raised);
+  border: 1px solid var(--p05-border);
+  border-radius: 8px;
+}
+.knowledge-node strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+.knowledge-node > span {
+  font-size: 12px;
+  color: var(--p05-muted);
+  font-variant-numeric: tabular-nums;
+}
+.knowledge-node[data-state='lit'] {
+  border-color: var(--p05-accent);
+}
+.knowledge-node[data-state='lit'] strong {
+  color: var(--p05-accent);
+}
+.knowledge-node[aria-pressed='true'] {
+  outline: 2px solid var(--p05-ink);
+  outline-offset: 2px;
+}
+.knowledge-node:hover {
+  border-color: var(--p05-ink);
+}
+.knowledge-node:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.knowledge-node:active {
+  opacity: 0.8;
+}
+.knowledge-key {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--p05-muted);
+  margin: 8px 0;
+}
+.knowledge-key span::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  border-top: 1.5px dashed var(--p05-muted);
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.knowledge-key .knowledge-key-lit::before {
+  border-top: 2px solid var(--p05-accent);
+}
+.knowledge-rule {
+  font-size: 12px;
+  margin-bottom: 0;
+}
+.knowledge-detail {
+  min-width: 0;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--p05-raised);
+}
+.knowledge-detail h3 {
+  font-size: 16px;
+  margin: 0;
+}
+.knowledge-detail h4 {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 20px 0 8px;
+}
+.knowledge-detail p {
+  margin: 10px 0;
+  font-size: 14px;
+}
+.knowledge-lessons {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.knowledge-lessons a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 0;
+  font-size: 13px;
+}
+.knowledge-lessons a > span:last-child {
+  flex: none;
+  color: var(--p05-accent);
+}
+.knowledge-lessons a:hover > span:first-child {
+  text-decoration: underline;
+}
+@media (max-width: 1350px) {
+  .knowledge-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .knowledge-detail {
+    max-width: none;
+  }
+}
+@media (max-width: 600px) {
+  .knowledge-mobile-picker {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  .knowledge-mobile-picker select {
+    min-height: 44px;
+    padding: 8px;
+    width: 100%;
+    color: var(--p05-ink);
+    background: var(--p05-surface);
+    border: 1px solid var(--p05-border);
+    border-radius: 8px;
+  }
+  .knowledge-map .module-title {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+  .knowledge-intro {
+    font-size: 14px;
+  }
+  .knowledge-detail {
+    padding: 12px;
+  }
+}

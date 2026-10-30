@@ -1,0 +1,49 @@
+.notebook-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.notebook-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.notebook-list > li {
+  padding: 20px 0;
+  border-top: 1px solid var(--p05-border);
+}
+.notebook-list h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.notebook-list p {
+  font-size: 14px;
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
+}
+.notebook-list > li > a {
+  display: block;
+  min-height: 44px;
+  padding: 8px 0;
+}
+.notebook-list .module-title > span {
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--p05-muted);
+}
+.lesson-knowledge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: center;
+  margin: 10px 0;
+}
+.lesson-knowledge-row button {
+  min-height: 44px;
+}
+@media (max-width: 1000px) {
+  .notebook-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

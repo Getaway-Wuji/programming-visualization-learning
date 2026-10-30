@@ -323,7 +323,7 @@ export const recoveryHarness = {
                 ? { accentColor: 'broken' }
                 : store === 'meta'
                   ? kind === 'future'
-                    ? { schemaVersion: '4.0.0' }
+                    ? { schemaVersion: '9.0.0' }
                     : { generation: '' }
                   : store === 'ledger'
                     ? { points: -1 }
@@ -339,7 +339,7 @@ export const recoveryHarness = {
     }
   },
   async futurePhysical() {
-    const db = await rawOpen(databaseName, 4);
+    const db = await rawOpen(databaseName, 9);
     db.close();
   },
   async hold() {

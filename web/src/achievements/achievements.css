@@ -1,0 +1,139 @@
+.achievement-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.4rem 0;
+}
+.achievement-summary h2,
+.achievement-summary p {
+  margin: 0 0 0.4rem;
+}
+.achievement-overview {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.5rem 0 0.75rem;
+}
+.achievement-overview strong {
+  font-size: 2.2rem;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+}
+.achievement-overview p {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--p05-muted);
+}
+.achievement-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.achievement-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--p05-border);
+}
+.achievement-emblem {
+  display: grid;
+  place-items: center;
+  flex: 0 0 3.25rem;
+  height: 3.25rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: var(--p05-muted);
+  font-size: 1.25rem;
+}
+.achievement-item[data-unlocked='true'] .achievement-emblem {
+  color: var(--p05-accent);
+  border-width: 2px;
+}
+.achievement-body {
+  min-width: 0;
+  flex: 1;
+}
+.achievement-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.achievement-title h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+.achievement-state,
+.achievement-source-state,
+.achievement-date,
+.achievement-note {
+  color: var(--p05-muted);
+}
+.achievement-body > p {
+  margin: 0.75rem 0 1rem;
+  line-height: 1.7;
+}
+.achievement-requirements {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+.achievement-requirements li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.9rem;
+}
+.achievement-source-state {
+  font-size: 0.85rem;
+  flex: 0 0 3.5rem;
+}
+.achievement-requirements a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.achievement-requirements time {
+  font-size: 0.85rem;
+  color: var(--p05-muted);
+}
+.achievement-note {
+  max-width: 65ch;
+  line-height: 1.7;
+}
+.observation-confirm {
+  margin: 1.25rem 0;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--p05-border);
+}
+.observation-confirm h2 {
+  font-size: 1.2rem;
+  margin: 0 0 0.65rem;
+}
+@media (max-width: 600px) {
+  .achievement-item {
+    gap: 0.9rem;
+    padding: 1.5rem 0;
+  }
+  .achievement-emblem {
+    flex-basis: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+  }
+  .achievement-title {
+    display: block;
+  }
+  .achievement-state {
+    display: block;
+    margin-top: 0.5rem;
+  }
+  .achievement-summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

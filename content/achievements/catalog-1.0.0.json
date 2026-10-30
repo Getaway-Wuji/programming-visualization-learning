@@ -1,0 +1,35 @@
+{
+  "ref": { "id": "achievement.catalog.local", "version": "1.0.0" },
+  "packageRef": { "id": "content.c.p05", "version": "1.0.0" },
+  "badges": [
+    {
+      "id": "badge.c.bubble-pass",
+      "version": "1.0.0",
+      "title": "冒泡排序通关",
+      "description": "通过冒泡排序练习的全部测试与教学目标。",
+      "requirements": [
+        { "kind": "exercise", "id": "exercise.c.bubble-sort", "version": "1.0.0", "learningRevision": 1, "label": "冒泡排序与逐轮缩尾", "to": "/practice/exercise.c.bubble-sort" }
+      ]
+    },
+    {
+      "id": "badge.recursion.observer",
+      "version": "1.0.0",
+      "title": "递归观察者",
+      "description": "完整查看两例真实调用栈并主动确认。记录观察经历，不代表独立解题或掌握。",
+      "requirements": [
+        { "kind": "observation", "id": "observation.stack.functions", "version": "1.0.0", "learningRevision": 1, "label": "阶乘的递归调用栈 · C", "to": "/memory?example=functions&view=stack" },
+        { "kind": "observation", "id": "observation.stack.hanoi", "version": "1.0.0", "learningRevision": 1, "label": "汉诺塔的递归调用栈 · C++，2—5盘", "to": "/memory?example=hanoi&view=stack" }
+      ]
+    },
+    {
+      "id": "badge.cpp.pointer-repair",
+      "version": "1.0.0",
+      "title": "指针修复完成",
+      "description": "修复两道指针关卡并通过各自全部测试。允许在尝试中出错。",
+      "requirements": [
+        { "kind": "exercise", "id": "exercise.cpp.bug-uninitialized-pointer", "version": "1.0.0", "learningRevision": 1, "label": "未初始化指针 · C++", "to": "/bugs/memory/exercise.cpp.bug-uninitialized-pointer" },
+        { "kind": "exercise", "id": "exercise.cpp.bug-dangling-pointer", "version": "1.0.0", "learningRevision": 1, "label": "悬空指针 · C++", "to": "/bugs/memory/exercise.cpp.bug-dangling-pointer" }
+      ]
+    }
+  ]
+}

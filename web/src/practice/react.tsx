@@ -28,6 +28,7 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
             epoch: service.getState().sessionEpoch,
           }),
           save: (fact, epoch) => service.recordPracticePass(fact, epoch),
+          saveAttempt: (fact, epoch) => service.recordPracticeAttempt(fact, epoch),
           access: (catalog) =>
             resolveBlockAccess(
               catalog.packageRef,

@@ -2,6 +2,7 @@ import { MemoryExecutionClient, memoryRequest } from '../engine/memory-client';
 import { MemoryPlayer } from '../engine/memory-player';
 import type { MemoryRequest, MemoryResult } from '../engine/memory-protocol';
 import { sourceLines, stepVisits } from '../debug/breakpoints';
+import { createObservationWatch } from '../achievements/observation';
 
 export class MemoryWorkspaceController {
   private readonly player = new MemoryPlayer();
@@ -22,6 +23,7 @@ export class MemoryWorkspaceController {
   private error = '';
   private rate = 1;
   private runs = 0;
+  private observation: ReturnType<typeof createObservationWatch> = null;
   private current: ReturnType<MemoryWorkspaceController['snapshot']>;
   constructor(private readonly client = new MemoryExecutionClient()) {
     this.current = this.snapshot();
@@ -38,6 +40,7 @@ export class MemoryWorkspaceController {
       visitedLines: this.visitedLines,
       hit: this.hit,
       breakpointNotice: this.breakpointNotice,
+      observation: this.observation?.snapshot() ?? null,
     };
   }
   readonly getSnapshot = () => this.current;
@@ -62,6 +65,7 @@ export class MemoryWorkspaceController {
     this.client.invalidate();
     this.player.invalidate();
     this.result = null;
+    this.observation = null;
     this.visits = [];
     this.visitedLines = [];
     this.hit = null;
@@ -80,6 +84,10 @@ export class MemoryWorkspaceController {
       const result = await this.client.execute(memoryRequest(source, language, input));
       if (generation !== this.generation) return;
       this.result = result;
+      this.observation = createObservationWatch(
+        result,
+        () => generation === this.generation && this.result === result,
+      );
       this.visits = stepVisits(source, result);
       this.visitedLines = [
         ...new Set(
@@ -100,6 +108,15 @@ export class MemoryWorkspaceController {
   }
   cancel() {
     this.client.cancel();
+  }
+  presentObservation(view: ReturnType<MemoryPlayer['snapshot']>) {
+    if (view === this.current.view && this.observation?.present(view)) this.publish();
+  }
+  interruptObservation() {
+    this.observation?.interrupt();
+  }
+  observationFact() {
+    return this.observation?.confirm() ?? null;
   }
   /** View-only attachment from another verified memory execution owner. */
   showResult(source: string, result: MemoryResult) {

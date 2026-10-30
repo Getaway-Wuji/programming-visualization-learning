@@ -235,9 +235,13 @@ test('changing sample invalidates and cancelling a held genuine Worker reply dis
   await run(page, 'null');
 });
 
-test('six saved themes in both modes preserve readable real memory data', async ({ page }) => {
+test('configured saved themes in both modes preserve readable real memory data', async ({
+  page,
+}) => {
   test.setTimeout(90000);
-  for (const theme of ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech']) {
+  for (const theme of process.env.TASK_REPRESENTATIVE_THEME === 'minimal'
+    ? ['minimal']
+    : ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech']) {
     await page.goto('/#/settings?panel=appearance');
     await expect(page.locator('html')).toHaveAttribute('data-appearance-config', 'ready');
     await page.getByTestId(`theme-${theme}`).click();

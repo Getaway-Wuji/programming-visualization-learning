@@ -115,7 +115,7 @@ test('six complete themes save and refresh with the header mode while removed ap
     await expect(modeToggle(page)).toHaveAccessibleName('切换为浅色');
   }
   const after = await snapshot(page);
-  expect(after.meta).toMatchObject({ dbVersion: 3, schemaVersion: '3.0.0' });
+  expect(after.meta).toMatchObject({ dbVersion: 6, schemaVersion: '6.0.0' });
   expect(after.appearance.preset).toBe('tech');
   expect(after.settings.theme).toBe('dark');
   expect(after.appearance.themeOverrides).toEqual(before.appearance.themeOverrides);

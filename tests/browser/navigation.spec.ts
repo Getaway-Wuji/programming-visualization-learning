@@ -298,6 +298,9 @@ test('desktop and narrower layouts avoid horizontal page overflow', async ({ pag
         'C 语言课程',
         '算法与演示',
         '编译流程',
+        '错题与陌生点',
+        '今日复习',
+        '学习成就',
         '本地设置',
       ]);
       await noHorizontalOverflow(page);

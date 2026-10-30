@@ -1,0 +1,685 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\playwright\\cli.js",
+      "test",
+      "tests/browser/practice.spec.ts",
+      "tests/browser/editor-presentation.spec.ts",
+      "--config=tests/playwright.config.ts",
+      "--project=chrome",
+      "--grep=hidden blocks do not bypass|real Rust rejects an incorrect answer|same exercise review and return|another page clearing local data destroys|cancel drops a held real result|a withheld real result expires|a missing practice release fails closed",
+      "--reporter=json",
+      "--output=.artifacts/15.4/browser-output/legacy-scope-final"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/15.4/browser-output/legacy-scope-final",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/15.4/browser-output/legacy-scope-final",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/15.4/browser-output/legacy-scope-final",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "editor-presentation.spec.ts",
+      "file": "editor-presentation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "hidden blocks do not bypass the same teaching checks or accepted source identity",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1465,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:13.152Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "same-teaching-rejection-hidden-and-visible",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\editor-presentation-hidden-444a2-or-accepted-source-identity-chrome\\attachments\\same-teaching-rejection-hidden-and-visible-f521e0ac135c095d781cb01b9a1473d41e2665ac.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-1e035a8adf623457258f",
+          "file": "editor-presentation.spec.ts",
+          "line": 703,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "practice.spec.ts",
+      "file": "practice.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "exercise.c.echo: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2574,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:15.527Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.echo-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-echo-r-ae6ec-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-echo-incorrect-e699b1241ad2a133c43e2e9c56d390d2657e3d92.json"
+                    },
+                    {
+                      "name": "exercise.c.echo-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-echo-r-ae6ec-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-echo-correct-0f1b96ef18eca9a43d550c75340600456a79f59d.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-d3d0fcee81f3d2ac5c64",
+          "file": "practice.spec.ts",
+          "line": 324,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.two-x-plus-three: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2654,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:18.108Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-x-plus-three-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-two-x--6240c-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-two-x-plus-three-incorrect-46d13405e08293404b50c270a8a633e4402aea0a.json"
+                    },
+                    {
+                      "name": "exercise.c.two-x-plus-three-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-two-x--6240c-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-two-x-plus-three-correct-39f49103eedcd82923f20181a2c6774e8f078c08.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-8aca30d5056559118898",
+          "file": "practice.spec.ts",
+          "line": 324,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.nonnegative: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2814,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:20.769Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.nonnegative-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-nonneg-d06e6-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-nonnegative-incorrect-69c5514d952d34568f60724ea7f1900d9adb2683.json"
+                    },
+                    {
+                      "name": "exercise.c.nonnegative-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-nonneg-d06e6-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-nonnegative-correct-766886d93d01ecafde1124f4e6f7fe14c97da6af.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-379dceaab6c97f831254",
+          "file": "practice.spec.ts",
+          "line": 324,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.two-loop-sums: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3053,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:23.589Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-loop-sums-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-two-lo-6a1a1-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-two-loop-sums-incorrect-248134897276ad3043742d2722d1d69e3a294f5e.json"
+                    },
+                    {
+                      "name": "exercise.c.two-loop-sums-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-two-lo-6a1a1-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-two-loop-sums-correct-1c05a5f61cb965ea9fd4e06b9785e5b806a4fd85.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-c6e5a2584597e61945ae",
+          "file": "practice.spec.ts",
+          "line": 324,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.increment-at-index: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2789,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:26.648Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.increment-at-index-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-increm-af166-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-increment-at-index-incorrect-f27e828ccaa6c6becbbd11af717db8c7e959defa.json"
+                    },
+                    {
+                      "name": "exercise.c.increment-at-index-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-increm-af166-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-increment-at-index-correct-ff2df0249ef9322eb43a0f76b50be209a6b5d6af.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-69398d3853773341965e",
+          "file": "practice.spec.ts",
+          "line": 324,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.array-sum: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2876,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:29.444Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.array-sum-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-array--637c3-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-array-sum-incorrect-f33b6bd3de9ee8702ad97a2d3e904142df1b607b.json"
+                    },
+                    {
+                      "name": "exercise.c.array-sum-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\legacy-scope-final\\practice-exercise-c-array--637c3-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-array-sum-correct-bce3d5b0abed12531ac5e8cd1579560b6a13af8e.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-f3d54ce41bb746cbb9a0",
+          "file": "practice.spec.ts",
+          "line": 324,
+          "column": 3
+        },
+        {
+          "title": "same exercise review and return preserve one accepted trace and cursor; edit, leaving and refresh destroy it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5441,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:32.326Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-6aea0e5e4afe266b3f77",
+          "file": "practice.spec.ts",
+          "line": 398,
+          "column": 1
+        },
+        {
+          "title": "another page clearing local data destroys the accepted practice session and never restores it passively",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3056,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:37.773Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-5ebf9783c8afb0b3e604",
+          "file": "practice.spec.ts",
+          "line": 450,
+          "column": 1
+        },
+        {
+          "title": "cancel drops a held real result and a fresh visible submission recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2702,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:40.836Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "cancel-fault-scope",
+                      "contentType": "text/plain",
+                      "body": "SGVsZCBvbmUgdW5jaGFuZ2VkIHJlYWwgUnVzdCBXb3JrZXIgcmVzcG9uc2UgYmVmb3JlIGl0cyBwcm9kdWN0aW9uIGhhbmRsZXIsIGNhbmNlbGxlZCB0aHJvdWdoIHRoZSBVSSwgdGhlbiByZWxlYXNlZCB0aGF0IHN0YWxlIHJlc3BvbnNlLiBObyBmYWJyaWNhdGVkIHJlc3VsdCBvciBsZWFybmluZyBoaXN0b3J5IHdhcyBpbmplY3RlZC4="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-acc8b0961115736b2563",
+          "file": "practice.spec.ts",
+          "line": 528,
+          "column": 1
+        },
+        {
+          "title": "a withheld real result expires under the original submission deadline and retry receives a new identity",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3860,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:43.547Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "deadline-fault-scope",
+                      "contentType": "text/plain",
+                      "body": "QSByZWFsIHJlc3BvbnNlIHdhcyB3aXRoaGVsZCBwYXN0IHRoZSB1bmNoYW5nZWQgcHJvZHVjdGlvbiBzdWJtaXNzaW9uIGRlYWRsaW5lLiBJdHMgYnl0ZXMgd2VyZSByZWxlYXNlZCBvbmx5IGFmdGVyIHZpc2libGUgZXhwaXJ5OyByZWNvdmVyeSB1c2VkIGEgZnJlc2ggcHVibGljIFVJIHN1Ym1pc3Npb24u"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-7df7fa37555a633741ce",
+          "file": "practice.spec.ts",
+          "line": 557,
+          "column": 1
+        },
+        {
+          "title": "a missing practice release fails closed and its visible retry loads only the approved projection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1376,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:11:47.414Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "projection-fault-scope",
+                      "contentType": "text/plain",
+                      "body": "VGhpcyBpc29sYXRlZDA5LjMgbGVnYWN5IGZhbGxiYWNrIHJlcGxhY2VkIG9ubHkgaXRzIHByYWN0aWNlIHByb2plY3Rpb24gR0VUIHdpdGggSFRUUDQwNDsgdmlzaWJsZSByZXRyeSB1c2VkIHRoZSBub3JtYWwgYXBwcm92ZWQgYnl0ZXMuIFRoZSBzZXBhcmF0ZSBjdXJyZW50LWNvdXJzZSBzdWl0ZSBjb3ZlcnMgYWxsMzIgbGVzc29ucy4gTm8gY29udGVudCBvciBsZWFybmluZyBmYWN0IHdhcyBzeW50aGVzaXplZC4="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-8c21db0371840d73f74a",
+          "file": "practice.spec.ts",
+          "line": 596,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T22:11:12.162Z",
+    "duration": 38544.557,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

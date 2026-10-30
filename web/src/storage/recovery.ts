@@ -132,7 +132,10 @@ export function hasUnknownRecoveryVersion(raw: RawStorageRows): boolean {
       'value' in descriptor &&
       typeof descriptor.value === 'string' &&
       descriptor.value !== SCHEMA_VERSION &&
-      descriptor.value !== '2.0.0'
+      descriptor.value !== '2.0.0' &&
+      descriptor.value !== '3.0.0' &&
+      descriptor.value !== '4.0.0' &&
+      descriptor.value !== '5.0.0'
     );
   });
 }

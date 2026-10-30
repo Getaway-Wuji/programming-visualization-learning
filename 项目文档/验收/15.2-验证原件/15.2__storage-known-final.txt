@@ -1,0 +1,14 @@
+
+> c-viz-learning@0.1.0 test:browser
+> playwright test --config tests/playwright.config.ts tests/browser/recovery.spec.ts --project=chrome --grep known.eleven --reporter=list,json --output=.artifacts/15.2/storage-known-final-output
+
+[WebServer] (node:11992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:26856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chrome] › tests\browser\recovery.spec.ts:133:1 › known eleven-store archives with invalid or missing meta can be explicitly cleared into a fresh generation (726ms)
+
+  1 passed (4.3s)

@@ -1,0 +1,85 @@
+{
+  "mapVersion": "1.0.0",
+  "sources": [
+    {
+      "packageRef": { "id": "content.c.p05", "version": "1.0.0" },
+      "sha256": "85fd3d38faf4f677e50c860d30a0390b84f2d092a77fdcd08036a4d4e5a57948"
+    },
+    {
+      "packageRef": { "id": "content.c.p0", "version": "1.0.1" },
+      "sha256": "713133313e65ba9ea000daa18d5feaea84beeb65f296b8102edc5de114fa2611"
+    }
+  ],
+  "nodes": [
+    {
+      "knowledgeRef": { "id": "knowledge.c.entry", "version": "1.0.0" },
+      "label": "程序入口",
+      "description": "从 main 开始，按语句顺序观察程序，并区分输出与正常结束。",
+      "x": 72,
+      "y": 60
+    },
+    {
+      "knowledgeRef": { "id": "knowledge.c.variables", "version": "1.0.0" },
+      "label": "变量与作用域",
+      "description": "跟踪声明、初值和再次赋值；同名变量在不同作用域中可以是不同对象。",
+      "x": 260,
+      "y": 60
+    },
+    {
+      "knowledgeRef": { "id": "knowledge.c.output", "version": "1.0.0" },
+      "label": "printf 输出",
+      "description": "用受支持的 printf 格式输出整数，留意空格、换行和输出时的当前值。",
+      "x": 448,
+      "y": 60
+    },
+    {
+      "knowledgeRef": { "id": "knowledge.c.input", "version": "1.0.0" },
+      "label": "输入绑定",
+      "description": "页面输入绑定到实际执行的声明；修改输入后，需要重新运行当前程序。",
+      "x": 636,
+      "y": 60
+    },
+    {
+      "knowledgeRef": { "id": "knowledge.c.expressions", "version": "1.0.0" },
+      "label": "整数表达式",
+      "description": "观察整数运算、比较和逻辑短路，注意运算顺序、除零与 int32 范围。",
+      "x": 260,
+      "y": 180
+    },
+    {
+      "knowledgeRef": { "id": "knowledge.c.conditions", "version": "1.0.0" },
+      "label": "条件与分支",
+      "description": "判断条件的真假，观察 if / else 选择的实际路径及边界输入。",
+      "x": 448,
+      "y": 180
+    },
+    {
+      "knowledgeRef": { "id": "knowledge.c.loops", "version": "1.0.0" },
+      "label": "循环与跳转",
+      "description": "跟踪循环条件、循环体和更新，理解零轮循环、break 与 continue。",
+      "x": 636,
+      "y": 180
+    },
+    {
+      "knowledgeRef": { "id": "knowledge.c.arrays", "version": "1.0.0" },
+      "label": "数组与下标",
+      "description": "区分数组容量与逻辑长度，观察每次下标读取、写入和遍历范围。",
+      "x": 260,
+      "y": 300
+    },
+    {
+      "knowledgeRef": { "id": "knowledge.c.sorting", "version": "1.0.0" },
+      "label": "排序",
+      "description": "结合数组和循环，观察真实比较与交换，复习已有的 C 冒泡与选择排序。",
+      "x": 448,
+      "y": 300
+    },
+    {
+      "knowledgeRef": { "id": "knowledge.c.binary-search", "version": "1.0.0" },
+      "label": "二分搜索",
+      "description": "先确认数组有序，再跟踪查找区间和中点；重复值需要继续寻找首次匹配。",
+      "x": 636,
+      "y": 300
+    }
+  ]
+}

@@ -122,8 +122,8 @@ test('new native IndexedDB has twelve out-of-line stores, one saved default set 
 }) => {
   const { name, snapshot } = await opened(page);
   expect(snapshot.meta).toMatchObject({
-    schemaVersion: '3.0.0',
-    dbVersion: 3,
+    schemaVersion: '6.0.0',
+    dbVersion: 6,
     revision: 0,
     timeZone: 'Asia/Shanghai',
     activePackageRef: { id: 'content.c.p0', version: '1.0.0' },
@@ -143,9 +143,9 @@ test('new native IndexedDB has twelve out-of-line stores, one saved default set 
   for (const store of ['progress', 'dailyFacts', 'goals', 'ledger', 'receipts', 'aliases'] as const)
     expect(snapshot[store]).toEqual([]);
   const before = await page.evaluate(() => window.storageHarness.rawDump());
-  expect(before.version).toBe(3);
+  expect(before.version).toBe(6);
   expect(before.stores.map((store) => store.name).toSorted()).toEqual(
-    [...storeNames, 'editHistory'].toSorted(),
+    [...storeNames, 'editHistory', 'knowledgeMarks', 'reviewCards', 'achievements'].toSorted(),
   );
   for (const store of before.stores) {
     expect(store.keyPath).toBeNull();
@@ -335,12 +335,12 @@ test('unknown semantic versions, invalid meta and missing meta preserve the nati
   const { name } = await opened(page);
   value(await page.evaluate((id) => window.storageHarness.commitEvent(id), randomUUID()));
   const original = value(await page.evaluate(() => window.storageHarness.read()));
-  for (const patch of [{ schemaVersion: '4.0.0' }, { schemaVersion: '3.0.0', generation: '' }]) {
+  for (const patch of [{ schemaVersion: '9.0.0' }, { schemaVersion: '6.0.0', generation: '' }]) {
     await page.evaluate((patch) => window.storageHarness.patchMeta(patch), patch);
     const before = await page.evaluate(() => window.storageHarness.rawDump());
     failure(
       await page.evaluate((name) => window.storageHarness.open(name), name),
-      patch.schemaVersion === '4.0.0' ? 'S_VERSION_UNKNOWN' : 'S_RECORD_INVALID',
+      patch.schemaVersion === '9.0.0' ? 'S_VERSION_UNKNOWN' : 'S_RECORD_INVALID',
     );
     expect(await page.evaluate(() => window.storageHarness.rawDump())).toEqual(before);
     expect(rows(before, 'ledger')).toHaveLength(1);
@@ -364,7 +364,7 @@ test('versionchange closes the current connection, and future physical versions 
   // The raw future-version open would stay blocked if the product adapter kept its connection alive.
   await page.evaluate(() => window.storageHarness.futureVersion());
   const future = await page.evaluate(() => window.storageHarness.rawDump());
-  expect(future).toEqual({ ...before, version: 4 });
+  expect(future).toEqual({ ...before, version: 9 });
   const closed = await page.evaluate(() => window.storageHarness.read());
   expect(closed.ok).toBe(false);
   if (!closed.ok) expect(closed.error.saved).toBe(false);

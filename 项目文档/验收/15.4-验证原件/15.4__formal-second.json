@@ -1,0 +1,708 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\playwright\\cli.js",
+      "test",
+      "tests/browser/achievements.spec.ts",
+      "--config=tests/playwright.config.ts",
+      "--project=chrome",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "achievements.spec.ts",
+      "file": "achievements.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "15.4 common empty or unreviewed achievements stay honest without learning facts",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 839,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:04.003Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-3df500d1f7866086ad86",
+          "file": "achievements.spec.ts",
+          "line": 23,
+          "column": 1
+        },
+        {
+          "title": "15.4 common three widths expose fixed conditions and next actions",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 654,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:05.766Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-74f56abf9c95aa407fe3",
+          "file": "achievements.spec.ts",
+          "line": 50,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal genuine bubble pass unlocks once, refresh and repeat preserve original evidence and rewards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5390,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:06.427Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-0099efc1f450da625b7e",
+          "file": "achievements.spec.ts",
+          "line": 61,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal both pointer repairs require real full-group passes and show partial progress",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1618,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:11.826Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-bff96348b48dde523d46",
+          "file": "achievements.spec.ts",
+          "line": 91,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal two complete visible recursion observations require explicit confirmation and grant no points",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 150000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 20063,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:13.452Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-e167b92b2870245db031",
+          "file": "achievements.spec.ts",
+          "line": 118,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal terminal seeking, wrong view and input changes never confirm an unobserved run",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 711,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:33.523Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-5a105e77ab1f840a3097",
+          "file": "achievements.spec.ts",
+          "line": 164,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal fewer than two disks is outside the fixed condition and limited recursion cannot mint a fact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 682,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:34.244Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-38bfaa578d86d4d369ce",
+          "file": "achievements.spec.ts",
+          "line": 185,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal observation quota preserves original confirmation payload on retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 100000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7317,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:34.932Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-4975d7fa338e76d8e22b",
+          "file": "achievements.spec.ts",
+          "line": 200,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal automatic badge quota cannot erase a saved practice pass",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2931,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:42.259Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-adc33ef64a30b747ced2",
+          "file": "achievements.spec.ts",
+          "line": 225,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal clear from a peer removes a pending confirmation and every achievement",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 100000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 13067,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.app-shell')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"failed\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.app-shell')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"failed\" data-learning-reward-status=\"ready\" data-learning-storage-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-achievement-storage-status=\"failed\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"failed\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.app-shell')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"failed\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.app-shell')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"failed\" data-learning-reward-status=\"ready\" data-learning-storage-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-achievement-storage-status=\"failed\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"failed\"\u001b[22m\n\n    at achievementReady (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievement-helpers.ts:18:41)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievements.spec.ts:264:3",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievement-helpers.ts",
+                      "column": 41,
+                      "line": 18
+                    },
+                    "snippet": "\u001b[90m   at \u001b[39machievement-helpers.ts:18\n\n  16 | export async function achievementReady(p: Page) {\n  17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');\n> 18 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-achievement-storage-status', 'ready');\n     |                                         ^\n  19 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();\n  20 | }\n  21 | export async function badges(p: Page) {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievement-helpers.ts",
+                        "column": 41,
+                        "line": 18
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.app-shell')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"failed\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.app-shell')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"failed\" data-learning-reward-status=\"ready\" data-learning-storage-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-achievement-storage-status=\"failed\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"failed\"\u001b[22m\n\n\n   at achievement-helpers.ts:18\n\n  16 | export async function achievementReady(p: Page) {\n  17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');\n> 18 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-achievement-storage-status', 'ready');\n     |                                         ^\n  19 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();\n  20 | }\n  21 | export async function badges(p: Page) {\n    at achievementReady (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievement-helpers.ts:18:41)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievements.spec.ts:264:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:45.201Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\achievements-15-4-formal-c-38c63-ation-and-every-achievement-chrome\\test-failed-2.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\achievements-15-4-formal-c-38c63-ation-and-every-achievement-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\achievements-15-4-formal-c-38c63-ation-and-every-achievement-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\achievements-15-4-formal-c-38c63-ation-and-every-achievement-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievement-helpers.ts",
+                    "column": 41,
+                    "line": 18
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-131fce3c40465335ff49",
+          "file": "achievements.spec.ts",
+          "line": 251,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal unknown achievement row is preserved and displayed as uncertain",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 794,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:16:59.621Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-749389d7f837a434016f",
+          "file": "achievements.spec.ts",
+          "line": 272,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal two pages merge different real observation sources without overwriting either",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 150000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 14966,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:17:01.403Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-99ffbaaed5f341d68c08",
+          "file": "achievements.spec.ts",
+          "line": 297,
+          "column": 1
+        },
+        {
+          "title": "15.4 formal delayed real transaction completion cannot resurrect an achievement after peer clear",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 100000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 13129,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.app-shell')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"failed\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.app-shell')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"failed\" data-learning-reward-status=\"ready\" data-learning-storage-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-achievement-storage-status=\"failed\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"failed\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.app-shell')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"failed\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.app-shell')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"failed\" data-learning-reward-status=\"ready\" data-learning-storage-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-achievement-storage-status=\"failed\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"failed\"\u001b[22m\n\n    at achievementReady (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievement-helpers.ts:18:41)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievements.spec.ts:378:3",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievement-helpers.ts",
+                      "column": 41,
+                      "line": 18
+                    },
+                    "snippet": "\u001b[90m   at \u001b[39machievement-helpers.ts:18\n\n  16 | export async function achievementReady(p: Page) {\n  17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');\n> 18 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-achievement-storage-status', 'ready');\n     |                                         ^\n  19 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();\n  20 | }\n  21 | export async function badges(p: Page) {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievement-helpers.ts",
+                        "column": 41,
+                        "line": 18
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.app-shell')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"failed\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.app-shell')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"failed\" data-learning-reward-status=\"ready\" data-learning-storage-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-achievement-storage-status=\"failed\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"failed\"\u001b[22m\n\n\n   at achievement-helpers.ts:18\n\n  16 | export async function achievementReady(p: Page) {\n  17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');\n> 18 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-achievement-storage-status', 'ready');\n     |                                         ^\n  19 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();\n  20 | }\n  21 | export async function badges(p: Page) {\n    at achievementReady (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievement-helpers.ts:18:41)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievements.spec.ts:378:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:17:16.377Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\achievements-15-4-formal-d-60f17-chievement-after-peer-clear-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\achievements-15-4-formal-d-60f17-chievement-after-peer-clear-chrome\\test-failed-2.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\achievements-15-4-formal-d-60f17-chievement-after-peer-clear-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\achievements-15-4-formal-d-60f17-chievement-after-peer-clear-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\achievement-helpers.ts",
+                    "column": 41,
+                    "line": 18
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "5167dd48d323e6a3a4b2-3f5a9e0ad251ebd25366",
+          "file": "achievements.spec.ts",
+          "line": 324,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T21:16:03.388Z",
+    "duration": 88158.546,
+    "expected": 11,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

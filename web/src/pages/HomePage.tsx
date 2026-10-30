@@ -16,6 +16,9 @@ import {
 } from '../learning/profile-components';
 import '../learning/rewards.css';
 import { bugQuestions } from '../bugs/content';
+import { KnowledgeMap } from '../knowledge/KnowledgeMap';
+import { AchievementSummary } from '../achievements/react';
+import { ReviewDueSummary } from '../review-scheduler/react';
 
 const panels = {
   points: {
@@ -194,6 +197,9 @@ export function HomePage() {
       </div>
       <LearningSaveStatus />
       <div className="home-composition">
+        <ReviewDueSummary />
+        <AchievementSummary />
+        <KnowledgeMap />
         <section className="study-feature">
           <div className="feature-copy">
             <span className="eyeline">

@@ -1,0 +1,183 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/scheduler-migration.config.ts",
+      "--reporter=list,json",
+      "--output=.artifacts/15.3/migration-first-output"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\scheduler-migration.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/15.3/migration-first-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "scheduler-migration.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.3\\migration-first-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [],
+        "testMatch": "scheduler-migration.spec.ts",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4189",
+          "channel": "chrome",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-scheduler-migration.mjs",
+      "cwd": "..",
+      "port": 4189,
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "scheduler-migration.spec.ts",
+      "file": "scheduler-migration.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "15.3 actual27 DB4 real pass, wrong submission, knowledge mark and history upgrade with all13 old physical partitions intact",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6578,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('practice-execution')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"passed\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('practice-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('practice-execution')\u001b[22m\n\u001b[2m    14 × locator resolved to <section data-state=\"passed\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"passed\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('practice-execution')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"passed\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('practice-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('practice-execution')\u001b[22m\n\u001b[2m    14 × locator resolved to <section data-state=\"passed\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"passed\"\u001b[22m\n\n    at openAnswer (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\notebook-helpers.ts:98:29)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\scheduler-migration.spec.ts:61:3",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\notebook-helpers.ts",
+                      "column": 29,
+                      "line": 98
+                    },
+                    "snippet": "\u001b[90m   at \u001b[39mnotebook-helpers.ts:98\n\n   96 |   ) as { source: { text: string } };\n   97 |   await page.goto(`/#/practice/${exerciseId}`);\n>  98 |   await expect(panel(page)).toHaveAttribute('data-state', 'ready');\n      |                             ^\n   99 |   await ready(page);\n  100 |   await expect(code(page)).toBeEditable();\n  101 |   await code(page).fill(source.source.text);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\notebook-helpers.ts",
+                        "column": 29,
+                        "line": 98
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('practice-execution')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"passed\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('practice-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('practice-execution')\u001b[22m\n\u001b[2m    14 × locator resolved to <section data-state=\"passed\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"passed\"\u001b[22m\n\n\n   at notebook-helpers.ts:98\n\n   96 |   ) as { source: { text: string } };\n   97 |   await page.goto(`/#/practice/${exerciseId}`);\n>  98 |   await expect(panel(page)).toHaveAttribute('data-state', 'ready');\n      |                             ^\n   99 |   await ready(page);\n  100 |   await expect(code(page)).toBeEditable();\n  101 |   await code(page).fill(source.source.text);\n    at openAnswer (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\notebook-helpers.ts:98:29)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\scheduler-migration.spec.ts:61:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T20:17:46.376Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.3\\migration-first-output\\scheduler-migration-15-3-a-55060--physical-partitions-intact\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\notebook-helpers.ts",
+                    "column": 29,
+                    "line": 98
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "fd4607deca56817b67fa-c8526415df1d8062d160",
+          "file": "scheduler-migration.spec.ts",
+          "line": 43,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T20:17:45.570Z",
+    "duration": 9784.684,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

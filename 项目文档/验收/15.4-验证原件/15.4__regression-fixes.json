@@ -1,0 +1,1662 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\playwright\\cli.js",
+      "test",
+      "tests/browser/blocks.spec.ts",
+      "tests/browser/editor-presentation.spec.ts",
+      "tests/browser/navigation.spec.ts",
+      "tests/browser/notebook.spec.ts",
+      "tests/browser/p05-course.spec.ts",
+      "tests/browser/practice-experience.spec.ts",
+      "tests/browser/practice.spec.ts",
+      "tests/browser/scheduler.spec.ts",
+      "tests/browser/memory-view.spec.ts",
+      "--config=tests/playwright.config.ts",
+      "--project=chrome",
+      "--grep=native flyout drag creates|type rejection, missing-slot|automatic presentation|hidden blocks do not bypass|blocks-first lesson retains|desktop and narrower layouts|15.2 formal three genuine error categories|15.2 formal failed attempt transaction|15.2 formal damaged core|P05 fresh archive|an answer built from empty|real Rust rejects an incorrect answer|same exercise review and return|another page clearing local data destroys|cancel drops a held real result|a withheld real result expires|a missing practice release fails closed|15.3 formal real Rust failure|15.3 formal corrupt reviewCards|configured saved themes",
+      "--reporter=json",
+      "--output=.artifacts/15.4/browser-output/regression-fixes"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/15.4/browser-output/regression-fixes",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/15.4/browser-output/regression-fixes",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/15.4/browser-output/regression-fixes",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "blocks.spec.ts",
+      "file": "blocks.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "native flyout drag creates a new block, keyboard controls nest native-id blocks, and real Rust runs that same source",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6532,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:24.994Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-drag-nested",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\blocks-native-flyout-drag--889eb--Rust-runs-that-same-source-chrome\\attachments\\native-drag-nested-10ad8c3c6a38e0b7d637e8b659142cdb06616d35.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b449fa68d84da6f7ebdf-d58ee28800c5f0dfe73b",
+          "file": "blocks.spec.ts",
+          "line": 196,
+          "column": 1
+        },
+        {
+          "title": "type rejection, missing-slot drafts and deleted input sources visibly refuse execution and survive review navigation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5473,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:32.359Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b449fa68d84da6f7ebdf-292c35020e493896b338",
+          "file": "blocks.spec.ts",
+          "line": 277,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "editor-presentation.spec.ts",
+      "file": "editor-presentation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "automatic presentation follows each lesson recommendation and explicit preferences override only visibility",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 214,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected length: \u001b[32m32\u001b[39m\nReceived length: \u001b[31m6\u001b[39m\nReceived array:  \u001b[31m[{\"acceptedPriorVersions\": [], \"id\": \"exercise.c.echo\", \"judgeRef\": {\"id\": \"judge.c.echo\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.variables\", \"version\": \"1.0.0\"}, {\"id\": \"knowledge.c.output\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.variables-output\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.echo\", \"version\": \"1.0.0\"}, \"prompt\": \"保留输入源变量x（-999到999），用输出积木读取x，输出它的十进制整数和一个换行，不要加提示文字。例：x=7输出7并换行，x=0输出0，x=-9输出-9。必须实际声明、读取输入变量，不能打印固定答案。所有测试正常结束且main返回0。思路：先找到输入声明，再把变量读取放进printf的%d参数。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"positive\", \"expectedExitCode\": 0, \"expectedStdout\": \"7\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 7}}, {\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 0}}, {\"caseKey\": \"negative\", \"expectedExitCode\": 0, \"expectedStdout\": \"-9\u001b[39m\n\u001b[31m\", \"input\": {\"x\": -9}}], \"title\": \"输出输入变量\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.two-x-plus-three\", \"judgeRef\": {\"id\": \"judge.c.two-x-plus-three\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.expressions\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.expressions\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.two-x-plus-three\", \"version\": \"1.0.0\"}, \"prompt\": \"保留输入源x，计算它的两倍加三并输出一行整数。例：7→17，0→3，-9→-15（每个结果后均有换行）。必须实际执行与x有关的乘法和加法，可用临时变量或等价顺序；不要写2*(x+3)，也不要打印常量。输入域-999到999，结果不按输入域截断。所有测试正常结束且返回0。思路：先乘2，再加3，最后输出。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"positive\", \"expectedExitCode\": 0, \"expectedStdout\": \"17\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 7}}, {\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"3\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 0}}, {\"caseKey\": \"negative\", \"expectedExitCode\": 0, \"expectedStdout\": \"-15\u001b[39m\n\u001b[31m\", \"input\": {\"x\": -9}}], \"title\": \"两倍加三\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.nonnegative\", \"judgeRef\": {\"id\": \"judge.c.nonnegative\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.conditions\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.conditions\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.nonnegative\", \"version\": \"1.0.0\"}, \"prompt\": \"保留输入源x，用if/else判断非负。x>=0时输出1和换行，否则输出0和换行。测试5、0、-3，两条路径都必须真实走到；不能只打印比较表达式来跳过if/else目标。所有测试正常结束且返回0。思路：先判断是否大于或等于0，把两个输出分别放在两个分支内。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"positive\", \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 5}}, {\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 0}}, {\"caseKey\": \"negative\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"x\": -3}}], \"title\": \"非负判定\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.two-loop-sums\", \"judgeRef\": {\"id\": \"judge.c.two-loop-sums\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.loops\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.loops\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.two-loop-sums\", \"version\": \"1.0.0\"}, \"prompt\": \"输入n为0到30，保留输入源且不重新赋值n。分别用while与for从1累加到n，第一行输出while结果，第二行输出for结果，每行末尾换行。n=0两行均为0；1为1/1；5为15/15；30为465/465。两个循环使用独立累加器，正n时都实际迭代并把累加结果用于对应输出。无关循环配合公式直接输出不满足目标。所有测试正常结束且返回0。思路：初始化、判断、累加、更新；再用另一种循环重新完成一次。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m0\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 0}}, {\"caseKey\": \"one\", \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m1\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 1}}, {\"caseKey\": \"normal\", \"expectedExitCode\": 0, \"expectedStdout\": \"15\u001b[39m\n\u001b[31m15\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 5}}, {\"caseKey\": \"maximum\", \"expectedExitCode\": 0, \"expectedStdout\": \"465\u001b[39m\n\u001b[31m465\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 30}}], \"title\": \"两种循环求和\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.increment-at-index\", \"judgeRef\": {\"id\": \"judge.c.increment-at-index\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.arrays\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.array-update\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.increment-at-index\", \"version\": \"1.0.0\"}, \"prompt\": \"输入数组values长度1到30、元素-999到999，指定下标k满足0<=k<n。保留输入绑定和逻辑长度，只把原指定位置values[k]加1，其他逻辑元素不变；输出改后元素和换行。必须实际读取并写回数组，不能只打印加1后的表达式。例如[4,0,-2]在k=1时变成[4,1,-2]并输出1；[999]在k=0时输出1000。判定核对退出前的数组与输出，全部测试正常结束且返回0。思路：读指定格子、加1、写回同一格子，再输出。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"first\", \"expectedArray\": [5, 0, -2], \"expectedExitCode\": 0, \"expectedStdout\": \"5\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 0, \"values\": [4, 0, -2]}}, {\"caseKey\": \"middle\", \"expectedArray\": [4, 1, -2], \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 1, \"values\": [4, 0, -2]}}, {\"caseKey\": \"last\", \"expectedArray\": [4, 0, -1], \"expectedExitCode\": 0, \"expectedStdout\": \"-1\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 2, \"values\": [4, 0, -2]}}, {\"caseKey\": \"upper\", \"expectedArray\": [1000], \"expectedExitCode\": 0, \"expectedStdout\": \"1000\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 0, \"values\": [999]}}, {\"caseKey\": \"lower\", \"expectedArray\": [-998], \"expectedExitCode\": 0, \"expectedStdout\": \"-998\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 0, \"values\": [-999]}}], \"title\": \"指定元素加一\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.array-sum\", \"judgeRef\": {\"id\": \"judge.c.array-sum\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.arrays\", \"version\": \"1.0.0\"}, {\"id\": \"knowledge.c.loops\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.array-sum\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.array-sum\", \"version\": \"1.0.0\"}, \"prompt\": \"输入values长度0到30、元素-999到999，保留输入绑定且不改变逻辑长度n。循环遍历[0,n)的元素，真实累加并输出总和及换行。[]的和为0，不能读取占位元素；[3,-1,2]为4，[7]为7，[0,0]为0，30个999为29970，30个-999为-29970。非空必须实际遍历并将读取贡献到输出，不接受装饰循环加固定答案。所有测试正常结束且返回0。思路：sum从0开始，逐项加，循环结束后输出。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"normal\", \"expectedExitCode\": 0, \"expectedStdout\": \"4\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [3, -1, 2]}}, {\"caseKey\": \"empty\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"values\": []}}, {\"caseKey\": \"one\", \"expectedExitCode\": 0, \"expectedStdout\": \"7\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [7]}}, {\"caseKey\": \"zeros\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [0, 0]}}, {\"caseKey\": \"upper-maximum\", \"expectedExitCode\": 0, \"expectedStdout\": \"29970\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [999, 999, 999, 999, 999, 999, 999, 999, 999, 999, …]}}, {\"caseKey\": \"lower-maximum\", \"expectedExitCode\": 0, \"expectedStdout\": \"-29970\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [-999, -999, -999, -999, -999, -999, -999, -999, -999, -999, …]}}], \"title\": \"数组求和\", \"version\": \"1.0.1\"}]\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected length: \u001b[32m32\u001b[39m\nReceived length: \u001b[31m6\u001b[39m\nReceived array:  \u001b[31m[{\"acceptedPriorVersions\": [], \"id\": \"exercise.c.echo\", \"judgeRef\": {\"id\": \"judge.c.echo\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.variables\", \"version\": \"1.0.0\"}, {\"id\": \"knowledge.c.output\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.variables-output\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.echo\", \"version\": \"1.0.0\"}, \"prompt\": \"保留输入源变量x（-999到999），用输出积木读取x，输出它的十进制整数和一个换行，不要加提示文字。例：x=7输出7并换行，x=0输出0，x=-9输出-9。必须实际声明、读取输入变量，不能打印固定答案。所有测试正常结束且main返回0。思路：先找到输入声明，再把变量读取放进printf的%d参数。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"positive\", \"expectedExitCode\": 0, \"expectedStdout\": \"7\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 7}}, {\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 0}}, {\"caseKey\": \"negative\", \"expectedExitCode\": 0, \"expectedStdout\": \"-9\u001b[39m\n\u001b[31m\", \"input\": {\"x\": -9}}], \"title\": \"输出输入变量\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.two-x-plus-three\", \"judgeRef\": {\"id\": \"judge.c.two-x-plus-three\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.expressions\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.expressions\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.two-x-plus-three\", \"version\": \"1.0.0\"}, \"prompt\": \"保留输入源x，计算它的两倍加三并输出一行整数。例：7→17，0→3，-9→-15（每个结果后均有换行）。必须实际执行与x有关的乘法和加法，可用临时变量或等价顺序；不要写2*(x+3)，也不要打印常量。输入域-999到999，结果不按输入域截断。所有测试正常结束且返回0。思路：先乘2，再加3，最后输出。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"positive\", \"expectedExitCode\": 0, \"expectedStdout\": \"17\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 7}}, {\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"3\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 0}}, {\"caseKey\": \"negative\", \"expectedExitCode\": 0, \"expectedStdout\": \"-15\u001b[39m\n\u001b[31m\", \"input\": {\"x\": -9}}], \"title\": \"两倍加三\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.nonnegative\", \"judgeRef\": {\"id\": \"judge.c.nonnegative\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.conditions\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.conditions\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.nonnegative\", \"version\": \"1.0.0\"}, \"prompt\": \"保留输入源x，用if/else判断非负。x>=0时输出1和换行，否则输出0和换行。测试5、0、-3，两条路径都必须真实走到；不能只打印比较表达式来跳过if/else目标。所有测试正常结束且返回0。思路：先判断是否大于或等于0，把两个输出分别放在两个分支内。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"positive\", \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 5}}, {\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 0}}, {\"caseKey\": \"negative\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"x\": -3}}], \"title\": \"非负判定\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.two-loop-sums\", \"judgeRef\": {\"id\": \"judge.c.two-loop-sums\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.loops\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.loops\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.two-loop-sums\", \"version\": \"1.0.0\"}, \"prompt\": \"输入n为0到30，保留输入源且不重新赋值n。分别用while与for从1累加到n，第一行输出while结果，第二行输出for结果，每行末尾换行。n=0两行均为0；1为1/1；5为15/15；30为465/465。两个循环使用独立累加器，正n时都实际迭代并把累加结果用于对应输出。无关循环配合公式直接输出不满足目标。所有测试正常结束且返回0。思路：初始化、判断、累加、更新；再用另一种循环重新完成一次。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m0\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 0}}, {\"caseKey\": \"one\", \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m1\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 1}}, {\"caseKey\": \"normal\", \"expectedExitCode\": 0, \"expectedStdout\": \"15\u001b[39m\n\u001b[31m15\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 5}}, {\"caseKey\": \"maximum\", \"expectedExitCode\": 0, \"expectedStdout\": \"465\u001b[39m\n\u001b[31m465\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 30}}], \"title\": \"两种循环求和\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.increment-at-index\", \"judgeRef\": {\"id\": \"judge.c.increment-at-index\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.arrays\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.array-update\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.increment-at-index\", \"version\": \"1.0.0\"}, \"prompt\": \"输入数组values长度1到30、元素-999到999，指定下标k满足0<=k<n。保留输入绑定和逻辑长度，只把原指定位置values[k]加1，其他逻辑元素不变；输出改后元素和换行。必须实际读取并写回数组，不能只打印加1后的表达式。例如[4,0,-2]在k=1时变成[4,1,-2]并输出1；[999]在k=0时输出1000。判定核对退出前的数组与输出，全部测试正常结束且返回0。思路：读指定格子、加1、写回同一格子，再输出。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"first\", \"expectedArray\": [5, 0, -2], \"expectedExitCode\": 0, \"expectedStdout\": \"5\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 0, \"values\": [4, 0, -2]}}, {\"caseKey\": \"middle\", \"expectedArray\": [4, 1, -2], \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 1, \"values\": [4, 0, -2]}}, {\"caseKey\": \"last\", \"expectedArray\": [4, 0, -1], \"expectedExitCode\": 0, \"expectedStdout\": \"-1\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 2, \"values\": [4, 0, -2]}}, {\"caseKey\": \"upper\", \"expectedArray\": [1000], \"expectedExitCode\": 0, \"expectedStdout\": \"1000\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 0, \"values\": [999]}}, {\"caseKey\": \"lower\", \"expectedArray\": [-998], \"expectedExitCode\": 0, \"expectedStdout\": \"-998\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 0, \"values\": [-999]}}], \"title\": \"指定元素加一\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.array-sum\", \"judgeRef\": {\"id\": \"judge.c.array-sum\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.arrays\", \"version\": \"1.0.0\"}, {\"id\": \"knowledge.c.loops\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.array-sum\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.array-sum\", \"version\": \"1.0.0\"}, \"prompt\": \"输入values长度0到30、元素-999到999，保留输入绑定且不改变逻辑长度n。循环遍历[0,n)的元素，真实累加并输出总和及换行。[]的和为0，不能读取占位元素；[3,-1,2]为4，[7]为7，[0,0]为0，30个999为29970，30个-999为-29970。非空必须实际遍历并将读取贡献到输出，不接受装饰循环加固定答案。所有测试正常结束且返回0。思路：sum从0开始，逐项加，循环结束后输出。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"normal\", \"expectedExitCode\": 0, \"expectedStdout\": \"4\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [3, -1, 2]}}, {\"caseKey\": \"empty\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"values\": []}}, {\"caseKey\": \"one\", \"expectedExitCode\": 0, \"expectedStdout\": \"7\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [7]}}, {\"caseKey\": \"zeros\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [0, 0]}}, {\"caseKey\": \"upper-maximum\", \"expectedExitCode\": 0, \"expectedStdout\": \"29970\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [999, 999, 999, 999, 999, 999, 999, 999, 999, 999, …]}}, {\"caseKey\": \"lower-maximum\", \"expectedExitCode\": 0, \"expectedStdout\": \"-29970\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [-999, -999, -999, -999, -999, -999, -999, -999, -999, -999, …]}}], \"title\": \"数组求和\", \"version\": \"1.0.1\"}]\u001b[39m\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts:338:20",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts",
+                      "column": 20,
+                      "line": 338
+                    },
+                    "snippet": "  336 |     ),\n  337 |   );\n> 338 |   expect(required).toHaveLength(32);\n      |                    ^\n  339 |   for (const exercise of required) {\n  340 |     await page.goto(`/#/practice/${exercise.id}`);\n  341 |     await expect(panel(page)).toHaveAttribute('data-state', 'ready');"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts",
+                        "column": 20,
+                        "line": 338
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected length: \u001b[32m32\u001b[39m\nReceived length: \u001b[31m6\u001b[39m\nReceived array:  \u001b[31m[{\"acceptedPriorVersions\": [], \"id\": \"exercise.c.echo\", \"judgeRef\": {\"id\": \"judge.c.echo\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.variables\", \"version\": \"1.0.0\"}, {\"id\": \"knowledge.c.output\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.variables-output\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.echo\", \"version\": \"1.0.0\"}, \"prompt\": \"保留输入源变量x（-999到999），用输出积木读取x，输出它的十进制整数和一个换行，不要加提示文字。例：x=7输出7并换行，x=0输出0，x=-9输出-9。必须实际声明、读取输入变量，不能打印固定答案。所有测试正常结束且main返回0。思路：先找到输入声明，再把变量读取放进printf的%d参数。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"positive\", \"expectedExitCode\": 0, \"expectedStdout\": \"7\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 7}}, {\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 0}}, {\"caseKey\": \"negative\", \"expectedExitCode\": 0, \"expectedStdout\": \"-9\u001b[39m\n\u001b[31m\", \"input\": {\"x\": -9}}], \"title\": \"输出输入变量\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.two-x-plus-three\", \"judgeRef\": {\"id\": \"judge.c.two-x-plus-three\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.expressions\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.expressions\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.two-x-plus-three\", \"version\": \"1.0.0\"}, \"prompt\": \"保留输入源x，计算它的两倍加三并输出一行整数。例：7→17，0→3，-9→-15（每个结果后均有换行）。必须实际执行与x有关的乘法和加法，可用临时变量或等价顺序；不要写2*(x+3)，也不要打印常量。输入域-999到999，结果不按输入域截断。所有测试正常结束且返回0。思路：先乘2，再加3，最后输出。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"positive\", \"expectedExitCode\": 0, \"expectedStdout\": \"17\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 7}}, {\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"3\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 0}}, {\"caseKey\": \"negative\", \"expectedExitCode\": 0, \"expectedStdout\": \"-15\u001b[39m\n\u001b[31m\", \"input\": {\"x\": -9}}], \"title\": \"两倍加三\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.nonnegative\", \"judgeRef\": {\"id\": \"judge.c.nonnegative\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.conditions\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.conditions\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.nonnegative\", \"version\": \"1.0.0\"}, \"prompt\": \"保留输入源x，用if/else判断非负。x>=0时输出1和换行，否则输出0和换行。测试5、0、-3，两条路径都必须真实走到；不能只打印比较表达式来跳过if/else目标。所有测试正常结束且返回0。思路：先判断是否大于或等于0，把两个输出分别放在两个分支内。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"positive\", \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 5}}, {\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m\", \"input\": {\"x\": 0}}, {\"caseKey\": \"negative\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"x\": -3}}], \"title\": \"非负判定\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.two-loop-sums\", \"judgeRef\": {\"id\": \"judge.c.two-loop-sums\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.loops\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.loops\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.two-loop-sums\", \"version\": \"1.0.0\"}, \"prompt\": \"输入n为0到30，保留输入源且不重新赋值n。分别用while与for从1累加到n，第一行输出while结果，第二行输出for结果，每行末尾换行。n=0两行均为0；1为1/1；5为15/15；30为465/465。两个循环使用独立累加器，正n时都实际迭代并把累加结果用于对应输出。无关循环配合公式直接输出不满足目标。所有测试正常结束且返回0。思路：初始化、判断、累加、更新；再用另一种循环重新完成一次。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"zero\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m0\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 0}}, {\"caseKey\": \"one\", \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m1\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 1}}, {\"caseKey\": \"normal\", \"expectedExitCode\": 0, \"expectedStdout\": \"15\u001b[39m\n\u001b[31m15\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 5}}, {\"caseKey\": \"maximum\", \"expectedExitCode\": 0, \"expectedStdout\": \"465\u001b[39m\n\u001b[31m465\u001b[39m\n\u001b[31m\", \"input\": {\"n\": 30}}], \"title\": \"两种循环求和\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.increment-at-index\", \"judgeRef\": {\"id\": \"judge.c.increment-at-index\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.arrays\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.array-update\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.increment-at-index\", \"version\": \"1.0.0\"}, \"prompt\": \"输入数组values长度1到30、元素-999到999，指定下标k满足0<=k<n。保留输入绑定和逻辑长度，只把原指定位置values[k]加1，其他逻辑元素不变；输出改后元素和换行。必须实际读取并写回数组，不能只打印加1后的表达式。例如[4,0,-2]在k=1时变成[4,1,-2]并输出1；[999]在k=0时输出1000。判定核对退出前的数组与输出，全部测试正常结束且返回0。思路：读指定格子、加1、写回同一格子，再输出。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"first\", \"expectedArray\": [5, 0, -2], \"expectedExitCode\": 0, \"expectedStdout\": \"5\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 0, \"values\": [4, 0, -2]}}, {\"caseKey\": \"middle\", \"expectedArray\": [4, 1, -2], \"expectedExitCode\": 0, \"expectedStdout\": \"1\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 1, \"values\": [4, 0, -2]}}, {\"caseKey\": \"last\", \"expectedArray\": [4, 0, -1], \"expectedExitCode\": 0, \"expectedStdout\": \"-1\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 2, \"values\": [4, 0, -2]}}, {\"caseKey\": \"upper\", \"expectedArray\": [1000], \"expectedExitCode\": 0, \"expectedStdout\": \"1000\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 0, \"values\": [999]}}, {\"caseKey\": \"lower\", \"expectedArray\": [-998], \"expectedExitCode\": 0, \"expectedStdout\": \"-998\u001b[39m\n\u001b[31m\", \"input\": {\"k\": 0, \"values\": [-999]}}], \"title\": \"指定元素加一\", \"version\": \"1.0.1\"}, {\"acceptedPriorVersions\": [], \"id\": \"exercise.c.array-sum\", \"judgeRef\": {\"id\": \"judge.c.array-sum\", \"version\": \"1.0.0\"}, \"knowledgeRefs\": [{\"id\": \"knowledge.c.arrays\", \"version\": \"1.0.0\"}, {\"id\": \"knowledge.c.loops\", \"version\": \"1.0.0\"}], \"languageRef\": {\"id\": \"lang.c\", \"version\": \"1.0.0\"}, \"learningRevision\": 1, \"lessonRef\": {\"id\": \"lesson.c.array-sum\", \"version\": \"1.0.1\"}, \"programRef\": {\"id\": \"program.c.array-sum\", \"version\": \"1.0.0\"}, \"prompt\": \"输入values长度0到30、元素-999到999，保留输入绑定且不改变逻辑长度n。循环遍历[0,n)的元素，真实累加并输出总和及换行。[]的和为0，不能读取占位元素；[3,-1,2]为4，[7]为7，[0,0]为0，30个999为29970，30个-999为-29970。非空必须实际遍历并将读取贡献到输出，不接受装饰循环加固定答案。所有测试正常结束且返回0。思路：sum从0开始，逐项加，循环结束后输出。\", \"rewardRef\": {\"id\": \"reward.exercise.first-pass\", \"version\": \"1.0.0\"}, \"tests\": [{\"caseKey\": \"normal\", \"expectedExitCode\": 0, \"expectedStdout\": \"4\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [3, -1, 2]}}, {\"caseKey\": \"empty\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"values\": []}}, {\"caseKey\": \"one\", \"expectedExitCode\": 0, \"expectedStdout\": \"7\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [7]}}, {\"caseKey\": \"zeros\", \"expectedExitCode\": 0, \"expectedStdout\": \"0\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [0, 0]}}, {\"caseKey\": \"upper-maximum\", \"expectedExitCode\": 0, \"expectedStdout\": \"29970\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [999, 999, 999, 999, 999, 999, 999, 999, 999, 999, …]}}, {\"caseKey\": \"lower-maximum\", \"expectedExitCode\": 0, \"expectedStdout\": \"-29970\u001b[39m\n\u001b[31m\", \"input\": {\"values\": [-999, -999, -999, -999, -999, -999, -999, -999, -999, -999, …]}}], \"title\": \"数组求和\", \"version\": \"1.0.1\"}]\u001b[39m\n\n  336 |     ),\n  337 |   );\n> 338 |   expect(required).toHaveLength(32);\n      |                    ^\n  339 |   for (const exercise of required) {\n  340 |     await page.goto(`/#/practice/${exercise.id}`);\n  341 |     await expect(panel(page)).toHaveAttribute('data-state', 'ready');\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts:338:20"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:37.851Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\editor-presentation-automa-07202-es-override-only-visibility-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\editor-presentation-automa-07202-es-override-only-visibility-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\editor-presentation-automa-07202-es-override-only-visibility-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts",
+                    "column": 20,
+                    "line": 338
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-c61bd7c1bdd7049c7bb3",
+          "file": "editor-presentation.spec.ts",
+          "line": 329,
+          "column": 1
+        },
+        {
+          "title": "hidden blocks do not bypass the same teaching checks or accepted source identity",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1135,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 12\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"achievedAt\": null,\u001b[39m\n\u001b[31m+     \"goalVersion\": 1,\u001b[39m\n\u001b[31m+     \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+     \"targets\": Object {\u001b[39m\n\u001b[31m+       \"case\": 0,\u001b[39m\n\u001b[31m+       \"exercise\": 1,\u001b[39m\n\u001b[31m+       \"lesson\": 1,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 12\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"achievedAt\": null,\u001b[39m\n\u001b[31m+     \"goalVersion\": 1,\u001b[39m\n\u001b[31m+     \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+     \"targets\": Object {\u001b[39m\n\u001b[31m+       \"case\": 0,\u001b[39m\n\u001b[31m+       \"exercise\": 1,\u001b[39m\n\u001b[31m+       \"lesson\": 1,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at sameLearning (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts:121:24)\n    at onlyTeachingFailure (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts:132:3)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts:705:3",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts",
+                      "column": 24,
+                      "line": 121
+                    },
+                    "snippet": "  119 | function sameLearning(before: StorageSnapshot, after: StorageSnapshot) {\n  120 |   for (const key of ['progress', 'ledger', 'dailyFacts', 'receipts', 'goals', 'aliases'] as const)\n> 121 |     expect(after[key]).toEqual(before[key]);\n      |                        ^\n  122 | }\n  123 | function onlyTeachingFailure(before: StorageSnapshot, after: StorageSnapshot, count: number) {\n  124 |   const attempts = after.receipts.filter((r) => r.eventType === 'exercise.attempt-evaluated');"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts",
+                        "column": 24,
+                        "line": 121
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 12\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"achievedAt\": null,\u001b[39m\n\u001b[31m+     \"goalVersion\": 1,\u001b[39m\n\u001b[31m+     \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+     \"targets\": Object {\u001b[39m\n\u001b[31m+       \"case\": 0,\u001b[39m\n\u001b[31m+       \"exercise\": 1,\u001b[39m\n\u001b[31m+       \"lesson\": 1,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  119 | function sameLearning(before: StorageSnapshot, after: StorageSnapshot) {\n  120 |   for (const key of ['progress', 'ledger', 'dailyFacts', 'receipts', 'goals', 'aliases'] as const)\n> 121 |     expect(after[key]).toEqual(before[key]);\n      |                        ^\n  122 | }\n  123 | function onlyTeachingFailure(before: StorageSnapshot, after: StorageSnapshot, count: number) {\n  124 |   const attempts = after.receipts.filter((r) => r.eventType === 'exercise.attempt-evaluated');\n    at sameLearning (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts:121:24)\n    at onlyTeachingFailure (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts:132:3)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts:705:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:39.041Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\editor-presentation-hidden-444a2-or-accepted-source-identity-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\editor-presentation-hidden-444a2-or-accepted-source-identity-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\editor-presentation-hidden-444a2-or-accepted-source-identity-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\editor-presentation.spec.ts",
+                    "column": 24,
+                    "line": 121
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-1e035a8adf623457258f",
+          "file": "editor-presentation.spec.ts",
+          "line": 690,
+          "column": 1
+        },
+        {
+          "title": "a blocks-first lesson retains an incomplete block draft when hiding before the first code edit",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2142,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:42.172Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "blocks-first-incomplete-hide-code-repair",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\editor-presentation-a-bloc-f59ad--before-the-first-code-edit-chrome\\attachments\\blocks-first-incomplete-hide-code-repair-48764fab6a360a30dfe7c8403374929d5f149a15.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-dc0f1d81d35d33050582",
+          "file": "editor-presentation.spec.ts",
+          "line": 758,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "memory-view.spec.ts",
+      "file": "memory-view.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "configured saved themes in both modes preserve readable real memory data",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1405,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:45.229Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5d3105664bc4bf8f2ad1-b852f31e4add8bdf6dfa",
+          "file": "memory-view.spec.ts",
+          "line": 238,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "navigation.spec.ts",
+      "file": "navigation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "desktop and narrower layouts avoid horizontal page overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3581,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:46.662Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5d2868f7d23420c27cca-acc41bee0652429c95a9",
+          "file": "navigation.spec.ts",
+          "line": 277,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "notebook.spec.ts",
+      "file": "notebook.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "15.2 formal three genuine error categories merge, repair and reopen without read rewards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4189,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:50.258Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-c902ef2d64c76c271d3d",
+          "file": "notebook.spec.ts",
+          "line": 149,
+          "column": 1
+        },
+        {
+          "title": "15.2 formal failed attempt transaction retries its original event once and preserves rewards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2384,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:54.460Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-fd9146e4a41b46ed7fd8",
+          "file": "notebook.spec.ts",
+          "line": 206,
+          "column": 1
+        },
+        {
+          "title": "15.2 formal damaged core attempt receipts show unknown instead of a false empty notebook",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1851,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:56.850Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-f39ed8e26318f05c4730",
+          "file": "notebook.spec.ts",
+          "line": 419,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "p05-course.spec.ts",
+      "file": "p05-course.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "P05 fresh archive: 32 real code answers and 140 groups produce 32 confirmed completions and durable deduplicated rewards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 55113,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:58:58.733Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3cb0eb3f39e31e1f8cda-422b9c2aa8966425740d",
+          "file": "p05-course.spec.ts",
+          "line": 615,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "practice-experience.spec.ts",
+      "file": "practice-experience.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "an answer built from empty native blocks runs one group without saving and submits all real tests before the saved completion checklist advances",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7552,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('lesson-completion').locator('a[href=\"#/lessons/lesson.c.expressions\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByTestId('lesson-completion').locator('a[href=\"#/lessons/lesson.c.expressions\"]') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('lesson-completion').locator('a[href=\"#/lessons/lesson.c.expressions\"]')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('lesson-completion').locator('a[href=\"#/lessons/lesson.c.expressions\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByTestId('lesson-completion').locator('a[href=\"#/lessons/lesson.c.expressions\"]') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('lesson-completion').locator('a[href=\"#/lessons/lesson.c.expressions\"]')\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice-experience.spec.ts:316:5",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice-experience.spec.ts",
+                      "column": 5,
+                      "line": 316
+                    },
+                    "snippet": "  314 |       `a[href=\"#/lessons/${currentReading.lessons[currentReading.lessons.findIndex((l) => l.id === 'lesson.c.variables-output') + 1].id}\"]`,\n  315 |     ),\n> 316 |   ).toBeVisible();\n      |     ^\n  317 |   expect(await executes(page)).toBe(4);\n  318 |   const finished = await snapshot(page);\n  319 |   expect(finished.progress.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(1);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice-experience.spec.ts",
+                        "column": 5,
+                        "line": 316
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('lesson-completion').locator('a[href=\"#/lessons/lesson.c.expressions\"]')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByTestId('lesson-completion').locator('a[href=\"#/lessons/lesson.c.expressions\"]') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('lesson-completion').locator('a[href=\"#/lessons/lesson.c.expressions\"]')\u001b[22m\n\n\n  314 |       `a[href=\"#/lessons/${currentReading.lessons[currentReading.lessons.findIndex((l) => l.id === 'lesson.c.variables-output') + 1].id}\"]`,\n  315 |     ),\n> 316 |   ).toBeVisible();\n      |     ^\n  317 |   expect(await executes(page)).toBe(4);\n  318 |   const finished = await snapshot(page);\n  319 |   expect(finished.progress.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(1);\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice-experience.spec.ts:316:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T21:59:53.875Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-experience-an-ans-4550f-mpletion-checklist-advances-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-experience-an-ans-4550f-mpletion-checklist-advances-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-experience-an-ans-4550f-mpletion-checklist-advances-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice-experience.spec.ts",
+                    "column": 5,
+                    "line": 316
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-348593a32181d151550e",
+          "file": "practice-experience.spec.ts",
+          "line": 281,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "practice.spec.ts",
+      "file": "practice.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "exercise.c.echo: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1829,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.echo\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.echo\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                      "column": 32,
+                      "line": 292
+                    },
+                    "snippet": "  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                        "column": 32,
+                        "line": 292
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.echo\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n\n  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:02.840Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.echo-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-echo-r-ae6ec-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-echo-incorrect-e699b1241ad2a133c43e2e9c56d390d2657e3d92.json"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-echo-r-ae6ec-tion-and-no-learning-writes-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-echo-r-ae6ec-tion-and-no-learning-writes-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-echo-r-ae6ec-tion-and-no-learning-writes-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                    "column": 32,
+                    "line": 292
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-d3d0fcee81f3d2ac5c64",
+          "file": "practice.spec.ts",
+          "line": 319,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.two-x-plus-three: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1871,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.two-x-plus-three\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.two-x-plus-three\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                      "column": 32,
+                      "line": 292
+                    },
+                    "snippet": "  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                        "column": 32,
+                        "line": 292
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.two-x-plus-three\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n\n  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:06.664Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-x-plus-three-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-two-x--6240c-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-two-x-plus-three-incorrect-46d13405e08293404b50c270a8a633e4402aea0a.json"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-two-x--6240c-tion-and-no-learning-writes-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-two-x--6240c-tion-and-no-learning-writes-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-two-x--6240c-tion-and-no-learning-writes-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                    "column": 32,
+                    "line": 292
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-8aca30d5056559118898",
+          "file": "practice.spec.ts",
+          "line": 319,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.nonnegative: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1939,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.nonnegative\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.nonnegative\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                      "column": 32,
+                      "line": 292
+                    },
+                    "snippet": "  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                        "column": 32,
+                        "line": 292
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.nonnegative\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n\n  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:10.718Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.nonnegative-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-nonneg-d06e6-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-nonnegative-incorrect-69c5514d952d34568f60724ea7f1900d9adb2683.json"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-nonneg-d06e6-tion-and-no-learning-writes-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-nonneg-d06e6-tion-and-no-learning-writes-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-nonneg-d06e6-tion-and-no-learning-writes-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                    "column": 32,
+                    "line": 292
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-379dceaab6c97f831254",
+          "file": "practice.spec.ts",
+          "line": 319,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.two-loop-sums: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2012,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.two-loop-sums\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.two-loop-sums\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                      "column": 32,
+                      "line": 292
+                    },
+                    "snippet": "  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                        "column": 32,
+                        "line": 292
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.two-loop-sums\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n\n  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:14.706Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-loop-sums-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-two-lo-6a1a1-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-two-loop-sums-incorrect-248134897276ad3043742d2722d1d69e3a294f5e.json"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-two-lo-6a1a1-tion-and-no-learning-writes-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-two-lo-6a1a1-tion-and-no-learning-writes-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-two-lo-6a1a1-tion-and-no-learning-writes-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                    "column": 32,
+                    "line": 292
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-c6e5a2584597e61945ae",
+          "file": "practice.spec.ts",
+          "line": 319,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.increment-at-index: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1897,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.increment-at-index\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.increment-at-index\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                      "column": 32,
+                      "line": 292
+                    },
+                    "snippet": "  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                        "column": 32,
+                        "line": 292
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.increment-at-index\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n\n  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:18.716Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.increment-at-index-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-increm-af166-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-increment-at-index-incorrect-f27e828ccaa6c6becbbd11af717db8c7e959defa.json"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-increm-af166-tion-and-no-learning-writes-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-increm-af166-tion-and-no-learning-writes-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-increm-af166-tion-and-no-learning-writes-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                    "column": 32,
+                    "line": 292
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-69398d3853773341965e",
+          "file": "practice.spec.ts",
+          "line": 319,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.array-sum: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1921,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.array-sum\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.array-sum\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                      "column": 32,
+                      "line": 292
+                    },
+                    "snippet": "  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                        "column": 32,
+                        "line": 292
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"id\": \"exercise.c.array-sum\",\u001b[22m\n\u001b[32m-   \"version\": \"1.0.1\",\u001b[39m\n\u001b[31m+   \"version\": \"1.1.0\",\u001b[39m\n\u001b[2m  }\u001b[22m\n\n  290 |     const expected = exercise.tests[index];\n  291 |     expect(request.mode).toBe('exercise-test');\n> 292 |     expect(request.subjectRef).toEqual({ id: exercise.id, version: exercise.version });\n      |                                ^\n  293 |     expect(request.input.values).toEqual(expected.input);\n  294 |     expect(request.judge?.expectedStdout).toBe(expected.expectedStdout);\n  295 |     expect(request.remainingMs).toBeGreaterThan(0);\n    at validSubmission (D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:292:32)\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:332:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:22.593Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.array-sum-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-array--637c3-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-array-sum-incorrect-f33b6bd3de9ee8702ad97a2d3e904142df1b607b.json"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-array--637c3-tion-and-no-learning-writes-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-array--637c3-tion-and-no-learning-writes-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-exercise-c-array--637c3-tion-and-no-learning-writes-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                    "column": 32,
+                    "line": 292
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-f3d54ce41bb746cbb9a0",
+          "file": "practice.spec.ts",
+          "line": 319,
+          "column": 3
+        },
+        {
+          "title": "same exercise review and return preserve one accepted trace and cursor; edit, leaving and refresh destroy it",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5686,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -   6\u001b[39m\n\u001b[31m+ Received  + 112\u001b[39m\n\n\u001b[33m@@ -51,30 +51,136 @@\u001b[39m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"accentColor\": \"#168A72\",\u001b[22m\n\u001b[2m          \"presetId\": \"avatar.basic.01\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"dailyFacts\": Array [],\u001b[39m\n\u001b[32m-     \"goals\": Array [],\u001b[39m\n\u001b[31m+     \"dailyFacts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"canonicalSubjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"goals\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"achievedAt\": null,\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"targets\": Object {\u001b[39m\n\u001b[31m+           \"case\": 0,\u001b[39m\n\u001b[31m+           \"exercise\": 1,\u001b[39m\n\u001b[31m+           \"lesson\": 1,\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"knowledgeMarks\": Array [],\u001b[22m\n\u001b[32m-     \"ledger\": Array [],\u001b[39m\n\u001b[31m+     \"ledger\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"points\": 10,\u001b[39m\n\u001b[31m+         \"policyRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"reward.policy.p0\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"sourceId\": \"reward.exercise.first-pass\",\u001b[39m\n\u001b[31m+         \"status\": \"posted\",\u001b[39m\n\u001b[31m+         \"subjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"meta\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"activePackageRef\": Object {\u001b[22m\n\u001b[2m            \"id\": \"content.c.p05\",\u001b[22m\n\u001b[2m            \"version\": \"1.0.0\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m          \"createdAt\": \"2026-10-30T22:00:27.823Z\",\u001b[22m\n\u001b[2m          \"dbVersion\": 6,\u001b[22m\n\u001b[2m          \"generation\": \"1a9eecbd-9705-4fe5-8b84-302758beee88\",\u001b[22m\n\u001b[32m-         \"revision\": 3,\u001b[39m\n\u001b[31m+         \"revision\": 7,\u001b[39m\n\u001b[2m          \"schemaVersion\": \"6.0.0\",\u001b[22m\n\u001b[2m          \"timeZone\": \"Asia/Shanghai\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"progress\": Array [],\u001b[39m\n\u001b[32m-     \"receipts\": Array [],\u001b[39m\n\u001b[31m+     \"progress\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"firstAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"lastAt\": \"2026-10-30T22:00:32.039Z\",\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"receipts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 6,\u001b[39m\n\u001b[31m+         \"eventId\": \"6d29fdfb-9cf1-4f9b-81ec-e251534b9ac3\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:30.811Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 7,\u001b[39m\n\u001b[31m+         \"eventId\": \"8e2ff01b-4640-4d47-b676-fdcdb1c62fac\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:32.039Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 5,\u001b[39m\n\u001b[31m+         \"eventId\": \"dfd46cea-fbe0-4502-93ac-396af62fbd64\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"reviewCards\": Array [],\u001b[22m\n\u001b[2m      \"settings\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"goalTemplate\": Object {\u001b[22m\n\u001b[2m            \"revision\": 1,\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -   6\u001b[39m\n\u001b[31m+ Received  + 112\u001b[39m\n\n\u001b[33m@@ -51,30 +51,136 @@\u001b[39m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"accentColor\": \"#168A72\",\u001b[22m\n\u001b[2m          \"presetId\": \"avatar.basic.01\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"dailyFacts\": Array [],\u001b[39m\n\u001b[32m-     \"goals\": Array [],\u001b[39m\n\u001b[31m+     \"dailyFacts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"canonicalSubjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"goals\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"achievedAt\": null,\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"targets\": Object {\u001b[39m\n\u001b[31m+           \"case\": 0,\u001b[39m\n\u001b[31m+           \"exercise\": 1,\u001b[39m\n\u001b[31m+           \"lesson\": 1,\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"knowledgeMarks\": Array [],\u001b[22m\n\u001b[32m-     \"ledger\": Array [],\u001b[39m\n\u001b[31m+     \"ledger\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"points\": 10,\u001b[39m\n\u001b[31m+         \"policyRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"reward.policy.p0\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"sourceId\": \"reward.exercise.first-pass\",\u001b[39m\n\u001b[31m+         \"status\": \"posted\",\u001b[39m\n\u001b[31m+         \"subjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"meta\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"activePackageRef\": Object {\u001b[22m\n\u001b[2m            \"id\": \"content.c.p05\",\u001b[22m\n\u001b[2m            \"version\": \"1.0.0\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m          \"createdAt\": \"2026-10-30T22:00:27.823Z\",\u001b[22m\n\u001b[2m          \"dbVersion\": 6,\u001b[22m\n\u001b[2m          \"generation\": \"1a9eecbd-9705-4fe5-8b84-302758beee88\",\u001b[22m\n\u001b[32m-         \"revision\": 3,\u001b[39m\n\u001b[31m+         \"revision\": 7,\u001b[39m\n\u001b[2m          \"schemaVersion\": \"6.0.0\",\u001b[22m\n\u001b[2m          \"timeZone\": \"Asia/Shanghai\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"progress\": Array [],\u001b[39m\n\u001b[32m-     \"receipts\": Array [],\u001b[39m\n\u001b[31m+     \"progress\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"firstAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"lastAt\": \"2026-10-30T22:00:32.039Z\",\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"receipts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 6,\u001b[39m\n\u001b[31m+         \"eventId\": \"6d29fdfb-9cf1-4f9b-81ec-e251534b9ac3\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:30.811Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 7,\u001b[39m\n\u001b[31m+         \"eventId\": \"8e2ff01b-4640-4d47-b676-fdcdb1c62fac\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:32.039Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 5,\u001b[39m\n\u001b[31m+         \"eventId\": \"dfd46cea-fbe0-4502-93ac-396af62fbd64\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"reviewCards\": Array [],\u001b[22m\n\u001b[2m      \"settings\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"goalTemplate\": Object {\u001b[22m\n\u001b[2m            \"revision\": 1,\u001b[22m\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:442:31",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                      "column": 31,
+                      "line": 442
+                    },
+                    "snippet": "  440 |   await noAcceptedResult(page);\n  441 |   await expect(page.getByText(/还没有可复盘的运行/)).toBeVisible();\n> 442 |   expect(await archive(page)).toEqual(before);\n      |                               ^\n  443 | });\n  444 |\n  445 | test('another page clearing local data destroys the accepted practice session and never restores it passively', async ({"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                        "column": 31,
+                        "line": 442
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -   6\u001b[39m\n\u001b[31m+ Received  + 112\u001b[39m\n\n\u001b[33m@@ -51,30 +51,136 @@\u001b[39m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"accentColor\": \"#168A72\",\u001b[22m\n\u001b[2m          \"presetId\": \"avatar.basic.01\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"dailyFacts\": Array [],\u001b[39m\n\u001b[32m-     \"goals\": Array [],\u001b[39m\n\u001b[31m+     \"dailyFacts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"canonicalSubjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"goals\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"achievedAt\": null,\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"targets\": Object {\u001b[39m\n\u001b[31m+           \"case\": 0,\u001b[39m\n\u001b[31m+           \"exercise\": 1,\u001b[39m\n\u001b[31m+           \"lesson\": 1,\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"knowledgeMarks\": Array [],\u001b[22m\n\u001b[32m-     \"ledger\": Array [],\u001b[39m\n\u001b[31m+     \"ledger\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"points\": 10,\u001b[39m\n\u001b[31m+         \"policyRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"reward.policy.p0\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"sourceId\": \"reward.exercise.first-pass\",\u001b[39m\n\u001b[31m+         \"status\": \"posted\",\u001b[39m\n\u001b[31m+         \"subjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"meta\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"activePackageRef\": Object {\u001b[22m\n\u001b[2m            \"id\": \"content.c.p05\",\u001b[22m\n\u001b[2m            \"version\": \"1.0.0\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m          \"createdAt\": \"2026-10-30T22:00:27.823Z\",\u001b[22m\n\u001b[2m          \"dbVersion\": 6,\u001b[22m\n\u001b[2m          \"generation\": \"1a9eecbd-9705-4fe5-8b84-302758beee88\",\u001b[22m\n\u001b[32m-         \"revision\": 3,\u001b[39m\n\u001b[31m+         \"revision\": 7,\u001b[39m\n\u001b[2m          \"schemaVersion\": \"6.0.0\",\u001b[22m\n\u001b[2m          \"timeZone\": \"Asia/Shanghai\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"progress\": Array [],\u001b[39m\n\u001b[32m-     \"receipts\": Array [],\u001b[39m\n\u001b[31m+     \"progress\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"firstAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"lastAt\": \"2026-10-30T22:00:32.039Z\",\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"receipts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 6,\u001b[39m\n\u001b[31m+         \"eventId\": \"6d29fdfb-9cf1-4f9b-81ec-e251534b9ac3\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:30.811Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 7,\u001b[39m\n\u001b[31m+         \"eventId\": \"8e2ff01b-4640-4d47-b676-fdcdb1c62fac\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:32.039Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 5,\u001b[39m\n\u001b[31m+         \"eventId\": \"dfd46cea-fbe0-4502-93ac-396af62fbd64\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:29.406Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"reviewCards\": Array [],\u001b[22m\n\u001b[2m      \"settings\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"goalTemplate\": Object {\u001b[22m\n\u001b[2m            \"revision\": 1,\u001b[22m\n\n  440 |   await noAcceptedResult(page);\n  441 |   await expect(page.getByText(/还没有可复盘的运行/)).toBeVisible();\n> 442 |   expect(await archive(page)).toEqual(before);\n      |                               ^\n  443 | });\n  444 |\n  445 | test('another page clearing local data destroys the accepted practice session and never restores it passively', async ({\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:442:31"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:26.492Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-same-exercise-rev-77e1d-ving-and-refresh-destroy-it-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-same-exercise-rev-77e1d-ving-and-refresh-destroy-it-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-same-exercise-rev-77e1d-ving-and-refresh-destroy-it-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                    "column": 31,
+                    "line": 442
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-6aea0e5e4afe266b3f77",
+          "file": "practice.spec.ts",
+          "line": 393,
+          "column": 1
+        },
+        {
+          "title": "another page clearing local data destroys the accepted practice session and never restores it passively",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3058,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:34.239Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-5ebf9783c8afb0b3e604",
+          "file": "practice.spec.ts",
+          "line": 445,
+          "column": 1
+        },
+        {
+          "title": "cancel drops a held real result and a fresh visible submission recovers",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2503,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  6\u001b[39m\n\u001b[31m+ Received  + 76\u001b[39m\n\n\u001b[33m@@ -51,30 +51,100 @@\u001b[39m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"accentColor\": \"#168A72\",\u001b[22m\n\u001b[2m          \"presetId\": \"avatar.basic.01\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"dailyFacts\": Array [],\u001b[39m\n\u001b[32m-     \"goals\": Array [],\u001b[39m\n\u001b[31m+     \"dailyFacts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"canonicalSubjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"goals\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"achievedAt\": null,\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"targets\": Object {\u001b[39m\n\u001b[31m+           \"case\": 0,\u001b[39m\n\u001b[31m+           \"exercise\": 1,\u001b[39m\n\u001b[31m+           \"lesson\": 1,\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"knowledgeMarks\": Array [],\u001b[22m\n\u001b[32m-     \"ledger\": Array [],\u001b[39m\n\u001b[31m+     \"ledger\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"points\": 10,\u001b[39m\n\u001b[31m+         \"policyRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"reward.policy.p0\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"sourceId\": \"reward.exercise.first-pass\",\u001b[39m\n\u001b[31m+         \"status\": \"posted\",\u001b[39m\n\u001b[31m+         \"subjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"meta\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"activePackageRef\": Object {\u001b[22m\n\u001b[2m            \"id\": \"content.c.p05\",\u001b[22m\n\u001b[2m            \"version\": \"1.0.0\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m          \"createdAt\": \"2026-10-30T22:00:38.612Z\",\u001b[22m\n\u001b[2m          \"dbVersion\": 6,\u001b[22m\n\u001b[2m          \"generation\": \"c4ba49a2-da3d-412f-b3cc-7a3bfb12a9a2\",\u001b[22m\n\u001b[32m-         \"revision\": 3,\u001b[39m\n\u001b[31m+         \"revision\": 5,\u001b[39m\n\u001b[2m          \"schemaVersion\": \"6.0.0\",\u001b[22m\n\u001b[2m          \"timeZone\": \"Asia/Shanghai\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"progress\": Array [],\u001b[39m\n\u001b[32m-     \"receipts\": Array [],\u001b[39m\n\u001b[31m+     \"progress\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"firstAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"lastAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"receipts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 5,\u001b[39m\n\u001b[31m+         \"eventId\": \"13b8b937-9f25-42a4-b175-2a3aea314f93\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"reviewCards\": Array [],\u001b[22m\n\u001b[2m      \"settings\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"goalTemplate\": Object {\u001b[22m\n\u001b[2m            \"revision\": 1,\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  6\u001b[39m\n\u001b[31m+ Received  + 76\u001b[39m\n\n\u001b[33m@@ -51,30 +51,100 @@\u001b[39m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"accentColor\": \"#168A72\",\u001b[22m\n\u001b[2m          \"presetId\": \"avatar.basic.01\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"dailyFacts\": Array [],\u001b[39m\n\u001b[32m-     \"goals\": Array [],\u001b[39m\n\u001b[31m+     \"dailyFacts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"canonicalSubjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"goals\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"achievedAt\": null,\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"targets\": Object {\u001b[39m\n\u001b[31m+           \"case\": 0,\u001b[39m\n\u001b[31m+           \"exercise\": 1,\u001b[39m\n\u001b[31m+           \"lesson\": 1,\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"knowledgeMarks\": Array [],\u001b[22m\n\u001b[32m-     \"ledger\": Array [],\u001b[39m\n\u001b[31m+     \"ledger\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"points\": 10,\u001b[39m\n\u001b[31m+         \"policyRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"reward.policy.p0\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"sourceId\": \"reward.exercise.first-pass\",\u001b[39m\n\u001b[31m+         \"status\": \"posted\",\u001b[39m\n\u001b[31m+         \"subjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"meta\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"activePackageRef\": Object {\u001b[22m\n\u001b[2m            \"id\": \"content.c.p05\",\u001b[22m\n\u001b[2m            \"version\": \"1.0.0\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m          \"createdAt\": \"2026-10-30T22:00:38.612Z\",\u001b[22m\n\u001b[2m          \"dbVersion\": 6,\u001b[22m\n\u001b[2m          \"generation\": \"c4ba49a2-da3d-412f-b3cc-7a3bfb12a9a2\",\u001b[22m\n\u001b[32m-         \"revision\": 3,\u001b[39m\n\u001b[31m+         \"revision\": 5,\u001b[39m\n\u001b[2m          \"schemaVersion\": \"6.0.0\",\u001b[22m\n\u001b[2m          \"timeZone\": \"Asia/Shanghai\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"progress\": Array [],\u001b[39m\n\u001b[32m-     \"receipts\": Array [],\u001b[39m\n\u001b[31m+     \"progress\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"firstAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"lastAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"receipts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 5,\u001b[39m\n\u001b[31m+         \"eventId\": \"13b8b937-9f25-42a4-b175-2a3aea314f93\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"reviewCards\": Array [],\u001b[22m\n\u001b[2m      \"settings\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"goalTemplate\": Object {\u001b[22m\n\u001b[2m            \"revision\": 1,\u001b[22m\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:545:31",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                      "column": 31,
+                      "line": 545
+                    },
+                    "snippet": "  543 |   expect(await executeCount(page)).toBe(count);\n  544 |   await complete(page, 'passed');\n> 545 |   expect(await archive(page)).toEqual(before);\n      |                               ^\n  546 |   await testInfo.attach('cancel-fault-scope', {\n  547 |     body: 'Held one unchanged real Rust Worker response before its production handler, cancelled through the UI, then released that stale response. No fabricated result or learning history was injected.',\n  548 |     contentType: 'text/plain',"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                        "column": 31,
+                        "line": 545
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  6\u001b[39m\n\u001b[31m+ Received  + 76\u001b[39m\n\n\u001b[33m@@ -51,30 +51,100 @@\u001b[39m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"accentColor\": \"#168A72\",\u001b[22m\n\u001b[2m          \"presetId\": \"avatar.basic.01\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"dailyFacts\": Array [],\u001b[39m\n\u001b[32m-     \"goals\": Array [],\u001b[39m\n\u001b[31m+     \"dailyFacts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"canonicalSubjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"goals\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"achievedAt\": null,\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"targets\": Object {\u001b[39m\n\u001b[31m+           \"case\": 0,\u001b[39m\n\u001b[31m+           \"exercise\": 1,\u001b[39m\n\u001b[31m+           \"lesson\": 1,\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"knowledgeMarks\": Array [],\u001b[22m\n\u001b[32m-     \"ledger\": Array [],\u001b[39m\n\u001b[31m+     \"ledger\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"points\": 10,\u001b[39m\n\u001b[31m+         \"policyRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"reward.policy.p0\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"sourceId\": \"reward.exercise.first-pass\",\u001b[39m\n\u001b[31m+         \"status\": \"posted\",\u001b[39m\n\u001b[31m+         \"subjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"meta\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"activePackageRef\": Object {\u001b[22m\n\u001b[2m            \"id\": \"content.c.p05\",\u001b[22m\n\u001b[2m            \"version\": \"1.0.0\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m          \"createdAt\": \"2026-10-30T22:00:38.612Z\",\u001b[22m\n\u001b[2m          \"dbVersion\": 6,\u001b[22m\n\u001b[2m          \"generation\": \"c4ba49a2-da3d-412f-b3cc-7a3bfb12a9a2\",\u001b[22m\n\u001b[32m-         \"revision\": 3,\u001b[39m\n\u001b[31m+         \"revision\": 5,\u001b[39m\n\u001b[2m          \"schemaVersion\": \"6.0.0\",\u001b[22m\n\u001b[2m          \"timeZone\": \"Asia/Shanghai\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"progress\": Array [],\u001b[39m\n\u001b[32m-     \"receipts\": Array [],\u001b[39m\n\u001b[31m+     \"progress\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"firstAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"lastAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"receipts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 5,\u001b[39m\n\u001b[31m+         \"eventId\": \"13b8b937-9f25-42a4-b175-2a3aea314f93\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:40.475Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"reviewCards\": Array [],\u001b[22m\n\u001b[2m      \"settings\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"goalTemplate\": Object {\u001b[22m\n\u001b[2m            \"revision\": 1,\u001b[22m\n\n  543 |   expect(await executeCount(page)).toBe(count);\n  544 |   await complete(page, 'passed');\n> 545 |   expect(await archive(page)).toEqual(before);\n      |                               ^\n  546 |   await testInfo.attach('cancel-fault-scope', {\n  547 |     body: 'Held one unchanged real Rust Worker response before its production handler, cancelled through the UI, then released that stale response. No fabricated result or learning history was injected.',\n  548 |     contentType: 'text/plain',\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:545:31"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:38.313Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-cancel-drops-a-he-4da81-visible-submission-recovers-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-cancel-drops-a-he-4da81-visible-submission-recovers-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-cancel-drops-a-he-4da81-visible-submission-recovers-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                    "column": 31,
+                    "line": 545
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-acc8b0961115736b2563",
+          "file": "practice.spec.ts",
+          "line": 523,
+          "column": 1
+        },
+        {
+          "title": "a withheld real result expires under the original submission deadline and retry receives a new identity",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3993,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  6\u001b[39m\n\u001b[31m+ Received  + 76\u001b[39m\n\n\u001b[33m@@ -51,30 +51,100 @@\u001b[39m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"accentColor\": \"#168A72\",\u001b[22m\n\u001b[2m          \"presetId\": \"avatar.basic.01\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"dailyFacts\": Array [],\u001b[39m\n\u001b[32m-     \"goals\": Array [],\u001b[39m\n\u001b[31m+     \"dailyFacts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"canonicalSubjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"goals\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"achievedAt\": null,\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"targets\": Object {\u001b[39m\n\u001b[31m+           \"case\": 0,\u001b[39m\n\u001b[31m+           \"exercise\": 1,\u001b[39m\n\u001b[31m+           \"lesson\": 1,\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"knowledgeMarks\": Array [],\u001b[22m\n\u001b[32m-     \"ledger\": Array [],\u001b[39m\n\u001b[31m+     \"ledger\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"points\": 10,\u001b[39m\n\u001b[31m+         \"policyRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"reward.policy.p0\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"sourceId\": \"reward.exercise.first-pass\",\u001b[39m\n\u001b[31m+         \"status\": \"posted\",\u001b[39m\n\u001b[31m+         \"subjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"meta\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"activePackageRef\": Object {\u001b[22m\n\u001b[2m            \"id\": \"content.c.p05\",\u001b[22m\n\u001b[2m            \"version\": \"1.0.0\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m          \"createdAt\": \"2026-10-30T22:00:43.359Z\",\u001b[22m\n\u001b[2m          \"dbVersion\": 6,\u001b[22m\n\u001b[2m          \"generation\": \"9e9a9726-c0ee-4bc3-ad04-c0a38ccfa557\",\u001b[22m\n\u001b[32m-         \"revision\": 3,\u001b[39m\n\u001b[31m+         \"revision\": 5,\u001b[39m\n\u001b[2m          \"schemaVersion\": \"6.0.0\",\u001b[22m\n\u001b[2m          \"timeZone\": \"Asia/Shanghai\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"progress\": Array [],\u001b[39m\n\u001b[32m-     \"receipts\": Array [],\u001b[39m\n\u001b[31m+     \"progress\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"firstAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"lastAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"receipts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 5,\u001b[39m\n\u001b[31m+         \"eventId\": \"700c97e6-7eb3-4511-94e9-5c6d6903e0c0\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"reviewCards\": Array [],\u001b[22m\n\u001b[2m      \"settings\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"goalTemplate\": Object {\u001b[22m\n\u001b[2m            \"revision\": 1,\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  6\u001b[39m\n\u001b[31m+ Received  + 76\u001b[39m\n\n\u001b[33m@@ -51,30 +51,100 @@\u001b[39m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"accentColor\": \"#168A72\",\u001b[22m\n\u001b[2m          \"presetId\": \"avatar.basic.01\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"dailyFacts\": Array [],\u001b[39m\n\u001b[32m-     \"goals\": Array [],\u001b[39m\n\u001b[31m+     \"dailyFacts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"canonicalSubjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"goals\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"achievedAt\": null,\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"targets\": Object {\u001b[39m\n\u001b[31m+           \"case\": 0,\u001b[39m\n\u001b[31m+           \"exercise\": 1,\u001b[39m\n\u001b[31m+           \"lesson\": 1,\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"knowledgeMarks\": Array [],\u001b[22m\n\u001b[32m-     \"ledger\": Array [],\u001b[39m\n\u001b[31m+     \"ledger\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"points\": 10,\u001b[39m\n\u001b[31m+         \"policyRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"reward.policy.p0\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"sourceId\": \"reward.exercise.first-pass\",\u001b[39m\n\u001b[31m+         \"status\": \"posted\",\u001b[39m\n\u001b[31m+         \"subjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"meta\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"activePackageRef\": Object {\u001b[22m\n\u001b[2m            \"id\": \"content.c.p05\",\u001b[22m\n\u001b[2m            \"version\": \"1.0.0\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m          \"createdAt\": \"2026-10-30T22:00:43.359Z\",\u001b[22m\n\u001b[2m          \"dbVersion\": 6,\u001b[22m\n\u001b[2m          \"generation\": \"9e9a9726-c0ee-4bc3-ad04-c0a38ccfa557\",\u001b[22m\n\u001b[32m-         \"revision\": 3,\u001b[39m\n\u001b[31m+         \"revision\": 5,\u001b[39m\n\u001b[2m          \"schemaVersion\": \"6.0.0\",\u001b[22m\n\u001b[2m          \"timeZone\": \"Asia/Shanghai\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"progress\": Array [],\u001b[39m\n\u001b[32m-     \"receipts\": Array [],\u001b[39m\n\u001b[31m+     \"progress\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"firstAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"lastAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"receipts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 5,\u001b[39m\n\u001b[31m+         \"eventId\": \"700c97e6-7eb3-4511-94e9-5c6d6903e0c0\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"reviewCards\": Array [],\u001b[22m\n\u001b[2m      \"settings\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"goalTemplate\": Object {\u001b[22m\n\u001b[2m            \"revision\": 1,\u001b[22m\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:584:31",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                      "column": 31,
+                      "line": 584
+                    },
+                    "snippet": "  582 |   expect(recovered.submissionId).not.toBe(stale.submissionId);\n  583 |   expect(recovered.runId).not.toBe(stale.runId);\n> 584 |   expect(await archive(page)).toEqual(before);\n      |                               ^\n  585 |   await testInfo.attach('deadline-fault-scope', {\n  586 |     body: 'A real response was withheld past the unchanged production submission deadline. Its bytes were released only after visible expiry; recovery used a fresh public UI submission.',\n  587 |     contentType: 'text/plain',"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                        "column": 31,
+                        "line": 584
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  6\u001b[39m\n\u001b[31m+ Received  + 76\u001b[39m\n\n\u001b[33m@@ -51,30 +51,100 @@\u001b[39m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"accentColor\": \"#168A72\",\u001b[22m\n\u001b[2m          \"presetId\": \"avatar.basic.01\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"dailyFacts\": Array [],\u001b[39m\n\u001b[32m-     \"goals\": Array [],\u001b[39m\n\u001b[31m+     \"dailyFacts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"canonicalSubjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"goals\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"achievedAt\": null,\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"targets\": Object {\u001b[39m\n\u001b[31m+           \"case\": 0,\u001b[39m\n\u001b[31m+           \"exercise\": 1,\u001b[39m\n\u001b[31m+           \"lesson\": 1,\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"knowledgeMarks\": Array [],\u001b[22m\n\u001b[32m-     \"ledger\": Array [],\u001b[39m\n\u001b[31m+     \"ledger\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"points\": 10,\u001b[39m\n\u001b[31m+         \"policyRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"reward.policy.p0\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"sourceId\": \"reward.exercise.first-pass\",\u001b[39m\n\u001b[31m+         \"status\": \"posted\",\u001b[39m\n\u001b[31m+         \"subjectId\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"meta\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"activePackageRef\": Object {\u001b[22m\n\u001b[2m            \"id\": \"content.c.p05\",\u001b[22m\n\u001b[2m            \"version\": \"1.0.0\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m          \"createdAt\": \"2026-10-30T22:00:43.359Z\",\u001b[22m\n\u001b[2m          \"dbVersion\": 6,\u001b[22m\n\u001b[2m          \"generation\": \"9e9a9726-c0ee-4bc3-ad04-c0a38ccfa557\",\u001b[22m\n\u001b[32m-         \"revision\": 3,\u001b[39m\n\u001b[31m+         \"revision\": 5,\u001b[39m\n\u001b[2m          \"schemaVersion\": \"6.0.0\",\u001b[22m\n\u001b[2m          \"timeZone\": \"Asia/Shanghai\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[32m-     \"progress\": Array [],\u001b[39m\n\u001b[32m-     \"receipts\": Array [],\u001b[39m\n\u001b[31m+     \"progress\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"firstAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"lastAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[31m+     \"receipts\": Array [\u001b[39m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"committedRevision\": 5,\u001b[39m\n\u001b[31m+         \"eventId\": \"700c97e6-7eb3-4511-94e9-5c6d6903e0c0\",\u001b[39m\n\u001b[31m+         \"eventType\": \"exercise.passed\",\u001b[39m\n\u001b[31m+         \"goalVersion\": 1,\u001b[39m\n\u001b[31m+         \"learningRevision\": 1,\u001b[39m\n\u001b[31m+         \"localDate\": \"2026-10-31\",\u001b[39m\n\u001b[31m+         \"occurredAt\": \"2026-10-30T22:00:46.591Z\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"result\": \"passed\",\u001b[39m\n\u001b[31m+         \"subjectRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+     ],\u001b[39m\n\u001b[2m      \"reviewCards\": Array [],\u001b[22m\n\u001b[2m      \"settings\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"goalTemplate\": Object {\u001b[22m\n\u001b[2m            \"revision\": 1,\u001b[22m\n\n  582 |   expect(recovered.submissionId).not.toBe(stale.submissionId);\n  583 |   expect(recovered.runId).not.toBe(stale.runId);\n> 584 |   expect(await archive(page)).toEqual(before);\n      |                               ^\n  585 |   await testInfo.attach('deadline-fault-scope', {\n  586 |     body: 'A real response was withheld past the unchanged production submission deadline. Its bytes were released only after visible expiry; recovery used a fresh public UI submission.',\n  587 |     contentType: 'text/plain',\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:584:31"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:42.007Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-a-withheld-real-r-1c9e6-try-receives-a-new-identity-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-a-withheld-real-r-1c9e6-try-receives-a-new-identity-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-a-withheld-real-r-1c9e6-try-receives-a-new-identity-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                    "column": 31,
+                    "line": 584
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-7df7fa37555a633741ce",
+          "file": "practice.spec.ts",
+          "line": 552,
+          "column": 1
+        },
+        {
+          "title": "a missing practice release fails closed and its visible retry loads only the approved projection",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5962,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('practice-execution')\nExpected: \u001b[32m\"failed\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('practice-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('practice-execution')\u001b[22m\n\u001b[2m    12 × locator resolved to <section data-state=\"ready\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('practice-execution')\nExpected: \u001b[32m\"failed\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('practice-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('practice-execution')\u001b[22m\n\u001b[2m    12 × locator resolved to <section data-state=\"ready\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:598:29",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                      "column": 29,
+                      "line": 598
+                    },
+                    "snippet": "  596 |   await page.goto(practicePath(exercises[0].id));\n  597 |   await page.reload();\n> 598 |   await expect(panel(page)).toHaveAttribute('data-state', 'failed');\n      |                             ^\n  599 |   await expect(submit(page)).toHaveCount(0);\n  600 |   expect(await archive(page)).toEqual(before);\n  601 |   await page.unroute(resource);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                        "column": 29,
+                        "line": 598
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('practice-execution')\nExpected: \u001b[32m\"failed\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('practice-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('practice-execution')\u001b[22m\n\u001b[2m    12 × locator resolved to <section data-state=\"ready\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n\n\n  596 |   await page.goto(practicePath(exercises[0].id));\n  597 |   await page.reload();\n> 598 |   await expect(panel(page)).toHaveAttribute('data-state', 'failed');\n      |                             ^\n  599 |   await expect(submit(page)).toHaveCount(0);\n  600 |   expect(await archive(page)).toEqual(before);\n  601 |   await page.unroute(resource);\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts:598:29"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:48.161Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-a-missing-practic-cd146-nly-the-approved-projection-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-a-missing-practic-cd146-nly-the-approved-projection-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.4\\browser-output\\regression-fixes\\practice-a-missing-practic-cd146-nly-the-approved-projection-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\practice.spec.ts",
+                    "column": 29,
+                    "line": 598
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-8c21db0371840d73f74a",
+          "file": "practice.spec.ts",
+          "line": 591,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "scheduler.spec.ts",
+      "file": "scheduler.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "15.3 formal real Rust failure creates one card, run-one does not, pass pauses and new failure reopens",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2366,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:56.354Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eb2914db6cfca014f332-310894289cd2e1ec104a",
+          "file": "scheduler.spec.ts",
+          "line": 127,
+          "column": 1
+        },
+        {
+          "title": "15.3 formal corrupt reviewCards preserves raw rows and shows unknown rather than an empty queue",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1653,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T22:00:59.785Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eb2914db6cfca014f332-23a50d92020df96a079c",
+          "file": "scheduler.spec.ts",
+          "line": 269,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T21:58:24.052Z",
+    "duration": 159035.583,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 13,
+    "flaky": 0
+  }
+}

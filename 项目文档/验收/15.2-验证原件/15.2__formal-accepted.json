@@ -1,0 +1,587 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "tests/browser/notebook.spec.ts",
+      "--project=chrome",
+      "--reporter=list,json",
+      "--output=.artifacts/15.2/formal-accepted-output"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/15.2/formal-accepted-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/15.2/formal-accepted-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/15.2/formal-accepted-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.2\\formal-accepted-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "notebook.spec.ts",
+      "file": "notebook.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "15.2 formal stale mark retry cannot overwrite a peer command and re-reading enables a fresh explicit action",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1332,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:02.574Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-50976eec15bb8ba633b0",
+          "file": "notebook.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "15.2 formal actual C++ pointer errors collect while loop resource or deadline termination is excluded",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2467,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:04.828Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-77287011ff534baca518",
+          "file": "notebook.spec.ts",
+          "line": 58,
+          "column": 1
+        },
+        {
+          "title": "15.2 common empty notebook is honest, navigation and refresh never write learning or marks",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 636,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:07.305Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-6d33ea7842860442296a",
+          "file": "notebook.spec.ts",
+          "line": 118,
+          "column": 1
+        },
+        {
+          "title": "15.2 common three widths keep notebook navigation and meaningful empty actions usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 586,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:07.949Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-ac71ec0a52606dd98c13",
+          "file": "notebook.spec.ts",
+          "line": 134,
+          "column": 1
+        },
+        {
+          "title": "15.2 formal three genuine error categories merge, repair and reopen without read rewards",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3941,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  0\u001b[39m\n\u001b[31m+ Received  + 37\u001b[39m\n\n\u001b[33m@@ -418,10 +418,47 @@\u001b[39m\n\u001b[2m        \"workspaceJson\": \"{\\\"blocks\\\":{\\\"languageVersion\\\":0,\\\"blocks\\\":[{\\\"type\\\":\\\"cv_main\\\",\\\"id\\\":\\\"block.code.14\\\",\\\"x\\\":0,\\\"y\\\":0,\\\"inputs\\\":{\\\"BODY\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_declare\\\",\\\"id\\\":\\\"lesson.block.1\\\",\\\"editable\\\":false,\\\"extraState\\\":{\\\"binding\\\":{\\\"bindingKey\\\":\\\"param.x\\\",\\\"name\\\":\\\"x\\\",\\\"targetKind\\\":\\\"scalar\\\"}},\\\"fields\\\":{\\\"NAME\\\":\\\"x\\\",\\\"INITIALIZE\\\":false},\\\"next\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_declare\\\",\\\"id\\\":\\\"block.code.9\\\",\\\"extraState\\\":{\\\"hasInitial\\\":true},\\\"fields\\\":{\\\"NAME\\\":\\\"result\\\",\\\"INITIALIZE\\\":true},\\\"inputs\\\":{\\\"INITIAL\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_arithmetic\\\",\\\"id\\\":\\\"block.code.8\\\",\\\"fields\\\":{\\\"OP\\\":\\\"+\\\"},\\\"inputs\\\":{\\\"LEFT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_arithmetic\\\",\\\"id\\\":\\\"block.code.6\\\",\\\"fields\\\":{\\\"OP\\\":\\\"*\\\"},\\\"inputs\\\":{\\\"LEFT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_integer\\\",\\\"id\\\":\\\"block.code.4\\\",\\\"fields\\\":{\\\"VALUE\\\":\\\"2\\\"}}},\\\"RIGHT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_variable\\\",\\\"id\\\":\\\"block.code.5\\\",\\\"fields\\\":{\\\"NAME\\\":\\\"x\\\"}}}}}},\\\"RIGHT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_integer\\\",\\\"id\\\":\\\"block.code.7\\\",\\\"fields\\\":{\\\"VALUE\\\":\\\"3\\\"}}}}}}},\\\"next\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_print\\\",\\\"id\\\":\\\"block.code.11\\\",\\\"extraState\\\":{\\\"arguments\\\":1},\\\"fields\\\":{\\\"FORMAT\\\":\\\"%d\\\\\\\\n\\\"},\\\"inputs\\\":{\\\"ARG0\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_variable\\\",\\\"id\\\":\\\"block.code.10\\\",\\\"fields\\\":{\\\"NAME\\\":\\\"result\\\"}}}},\\\"next\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_return\\\",\\\"id\\\":\\\"block.code.13\\\",\\\"inputs\\\":{\\\"VALUE\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_integer\\\",\\\"id\\\":\\\"block.code.12\\\",\\\"fields\\\":{\\\"VALUE\\\":\\\"0\\\"}}}}}}}}}}}}}}]}}\",\u001b[22m\n\u001b[2m        \"writerId\": \"336f156e-f6ed-4245-8ff1-943cc412c908\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m      Object {\u001b[22m\n\u001b[2m        \"authority\": \"blocks\",\u001b[22m\n\u001b[31m+       \"captureVersion\": 0,\u001b[39m\n\u001b[31m+       \"codeText\": \"#include <stdio.h>\u001b[39m\n\u001b[31m+ int main(void) {\u001b[39m\n\u001b[31m+     int x = 7;\u001b[39m\n\u001b[31m+     return 0;\u001b[39m\n\u001b[31m+ }\u001b[39m\n\u001b[31m+ \",\u001b[39m\n\u001b[31m+       \"createdAt\": \"2026-10-30T19:42:12.149Z\",\u001b[39m\n\u001b[31m+       \"documentRevision\": 1,\u001b[39m\n\u001b[31m+       \"entryId\": \"aad75632-6e5d-479a-a696-9c4ef6405b8d\",\u001b[39m\n\u001b[31m+       \"generation\": \"e82e0da5-eb2f-4f4c-9c90-20cb3ca9ecd7\",\u001b[39m\n\u001b[31m+       \"historyVersion\": \"1.0.0\",\u001b[39m\n\u001b[31m+       \"inputJson\": \"{\\\"random\\\":null,\\\"specRef\\\":{\\\"id\\\":\\\"input.c.scalar-x\\\",\\\"version\\\":\\\"1.0.0\\\"},\\\"values\\\":{\\\"x\\\":7}}\",\u001b[39m\n\u001b[31m+       \"reason\": \"initial\",\u001b[39m\n\u001b[31m+       \"restoredFrom\": null,\u001b[39m\n\u001b[31m+       \"scope\": Object {\u001b[39m\n\u001b[31m+         \"exerciseRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"mode\": \"independent\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"programRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"program.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       \"sequence\": 14,\u001b[39m\n\u001b[31m+       \"state\": \"pending\",\u001b[39m\n\u001b[31m+       \"workspaceJson\": \"{\\\"blocks\\\":{\\\"languageVersion\\\":0,\\\"blocks\\\":[{\\\"type\\\":\\\"cv_main\\\",\\\"id\\\":\\\"lesson.main\\\",\\\"x\\\":0,\\\"y\\\":0,\\\"inputs\\\":{\\\"BODY\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_declare\\\",\\\"id\\\":\\\"lesson.block.1\\\",\\\"editable\\\":false,\\\"extraState\\\":{\\\"binding\\\":{\\\"bindingKey\\\":\\\"param.x\\\",\\\"name\\\":\\\"x\\\",\\\"targetKind\\\":\\\"scalar\\\"}},\\\"fields\\\":{\\\"NAME\\\":\\\"x\\\",\\\"INITIALIZE\\\":false}}}}}]}}\",\u001b[39m\n\u001b[31m+       \"writerId\": \"2831a71d-2a8a-4c4c-932c-63f25be62cad\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     Object {\u001b[39m\n\u001b[31m+       \"authority\": \"blocks\",\u001b[39m\n\u001b[2m        \"captureVersion\": 1,\u001b[22m\n\u001b[2m        \"codeText\": \"#include <stdio.h>\u001b[22m\n\u001b[2m  int main(void) {\u001b[22m\n\u001b[2m      int x = 7;\u001b[22m\n\u001b[2m      return 0;\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  0\u001b[39m\n\u001b[31m+ Received  + 37\u001b[39m\n\n\u001b[33m@@ -418,10 +418,47 @@\u001b[39m\n\u001b[2m        \"workspaceJson\": \"{\\\"blocks\\\":{\\\"languageVersion\\\":0,\\\"blocks\\\":[{\\\"type\\\":\\\"cv_main\\\",\\\"id\\\":\\\"block.code.14\\\",\\\"x\\\":0,\\\"y\\\":0,\\\"inputs\\\":{\\\"BODY\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_declare\\\",\\\"id\\\":\\\"lesson.block.1\\\",\\\"editable\\\":false,\\\"extraState\\\":{\\\"binding\\\":{\\\"bindingKey\\\":\\\"param.x\\\",\\\"name\\\":\\\"x\\\",\\\"targetKind\\\":\\\"scalar\\\"}},\\\"fields\\\":{\\\"NAME\\\":\\\"x\\\",\\\"INITIALIZE\\\":false},\\\"next\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_declare\\\",\\\"id\\\":\\\"block.code.9\\\",\\\"extraState\\\":{\\\"hasInitial\\\":true},\\\"fields\\\":{\\\"NAME\\\":\\\"result\\\",\\\"INITIALIZE\\\":true},\\\"inputs\\\":{\\\"INITIAL\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_arithmetic\\\",\\\"id\\\":\\\"block.code.8\\\",\\\"fields\\\":{\\\"OP\\\":\\\"+\\\"},\\\"inputs\\\":{\\\"LEFT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_arithmetic\\\",\\\"id\\\":\\\"block.code.6\\\",\\\"fields\\\":{\\\"OP\\\":\\\"*\\\"},\\\"inputs\\\":{\\\"LEFT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_integer\\\",\\\"id\\\":\\\"block.code.4\\\",\\\"fields\\\":{\\\"VALUE\\\":\\\"2\\\"}}},\\\"RIGHT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_variable\\\",\\\"id\\\":\\\"block.code.5\\\",\\\"fields\\\":{\\\"NAME\\\":\\\"x\\\"}}}}}},\\\"RIGHT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_integer\\\",\\\"id\\\":\\\"block.code.7\\\",\\\"fields\\\":{\\\"VALUE\\\":\\\"3\\\"}}}}}}},\\\"next\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_print\\\",\\\"id\\\":\\\"block.code.11\\\",\\\"extraState\\\":{\\\"arguments\\\":1},\\\"fields\\\":{\\\"FORMAT\\\":\\\"%d\\\\\\\\n\\\"},\\\"inputs\\\":{\\\"ARG0\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_variable\\\",\\\"id\\\":\\\"block.code.10\\\",\\\"fields\\\":{\\\"NAME\\\":\\\"result\\\"}}}},\\\"next\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_return\\\",\\\"id\\\":\\\"block.code.13\\\",\\\"inputs\\\":{\\\"VALUE\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_integer\\\",\\\"id\\\":\\\"block.code.12\\\",\\\"fields\\\":{\\\"VALUE\\\":\\\"0\\\"}}}}}}}}}}}}}}]}}\",\u001b[22m\n\u001b[2m        \"writerId\": \"336f156e-f6ed-4245-8ff1-943cc412c908\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m      Object {\u001b[22m\n\u001b[2m        \"authority\": \"blocks\",\u001b[22m\n\u001b[31m+       \"captureVersion\": 0,\u001b[39m\n\u001b[31m+       \"codeText\": \"#include <stdio.h>\u001b[39m\n\u001b[31m+ int main(void) {\u001b[39m\n\u001b[31m+     int x = 7;\u001b[39m\n\u001b[31m+     return 0;\u001b[39m\n\u001b[31m+ }\u001b[39m\n\u001b[31m+ \",\u001b[39m\n\u001b[31m+       \"createdAt\": \"2026-10-30T19:42:12.149Z\",\u001b[39m\n\u001b[31m+       \"documentRevision\": 1,\u001b[39m\n\u001b[31m+       \"entryId\": \"aad75632-6e5d-479a-a696-9c4ef6405b8d\",\u001b[39m\n\u001b[31m+       \"generation\": \"e82e0da5-eb2f-4f4c-9c90-20cb3ca9ecd7\",\u001b[39m\n\u001b[31m+       \"historyVersion\": \"1.0.0\",\u001b[39m\n\u001b[31m+       \"inputJson\": \"{\\\"random\\\":null,\\\"specRef\\\":{\\\"id\\\":\\\"input.c.scalar-x\\\",\\\"version\\\":\\\"1.0.0\\\"},\\\"values\\\":{\\\"x\\\":7}}\",\u001b[39m\n\u001b[31m+       \"reason\": \"initial\",\u001b[39m\n\u001b[31m+       \"restoredFrom\": null,\u001b[39m\n\u001b[31m+       \"scope\": Object {\u001b[39m\n\u001b[31m+         \"exerciseRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"mode\": \"independent\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"programRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"program.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       \"sequence\": 14,\u001b[39m\n\u001b[31m+       \"state\": \"pending\",\u001b[39m\n\u001b[31m+       \"workspaceJson\": \"{\\\"blocks\\\":{\\\"languageVersion\\\":0,\\\"blocks\\\":[{\\\"type\\\":\\\"cv_main\\\",\\\"id\\\":\\\"lesson.main\\\",\\\"x\\\":0,\\\"y\\\":0,\\\"inputs\\\":{\\\"BODY\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_declare\\\",\\\"id\\\":\\\"lesson.block.1\\\",\\\"editable\\\":false,\\\"extraState\\\":{\\\"binding\\\":{\\\"bindingKey\\\":\\\"param.x\\\",\\\"name\\\":\\\"x\\\",\\\"targetKind\\\":\\\"scalar\\\"}},\\\"fields\\\":{\\\"NAME\\\":\\\"x\\\",\\\"INITIALIZE\\\":false}}}}}]}}\",\u001b[39m\n\u001b[31m+       \"writerId\": \"2831a71d-2a8a-4c4c-932c-63f25be62cad\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     Object {\u001b[39m\n\u001b[31m+       \"authority\": \"blocks\",\u001b[39m\n\u001b[2m        \"captureVersion\": 1,\u001b[22m\n\u001b[2m        \"codeText\": \"#include <stdio.h>\u001b[22m\n\u001b[2m  int main(void) {\u001b[22m\n\u001b[2m      int x = 7;\u001b[22m\n\u001b[2m      return 0;\u001b[22m\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\notebook.spec.ts:192:31",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\notebook.spec.ts",
+                      "column": 31,
+                      "line": 192
+                    },
+                    "snippet": "  190 |     .click();\n  191 |   await ready(page);\n> 192 |   expect(await archive(page)).toEqual(repaired);\n      |                               ^\n  193 |   await changePrint(page, 'x + 1');\n  194 |   await failed(page);\n  195 |   await notebook(page);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\notebook.spec.ts",
+                        "column": 31,
+                        "line": 192
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  0\u001b[39m\n\u001b[31m+ Received  + 37\u001b[39m\n\n\u001b[33m@@ -418,10 +418,47 @@\u001b[39m\n\u001b[2m        \"workspaceJson\": \"{\\\"blocks\\\":{\\\"languageVersion\\\":0,\\\"blocks\\\":[{\\\"type\\\":\\\"cv_main\\\",\\\"id\\\":\\\"block.code.14\\\",\\\"x\\\":0,\\\"y\\\":0,\\\"inputs\\\":{\\\"BODY\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_declare\\\",\\\"id\\\":\\\"lesson.block.1\\\",\\\"editable\\\":false,\\\"extraState\\\":{\\\"binding\\\":{\\\"bindingKey\\\":\\\"param.x\\\",\\\"name\\\":\\\"x\\\",\\\"targetKind\\\":\\\"scalar\\\"}},\\\"fields\\\":{\\\"NAME\\\":\\\"x\\\",\\\"INITIALIZE\\\":false},\\\"next\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_declare\\\",\\\"id\\\":\\\"block.code.9\\\",\\\"extraState\\\":{\\\"hasInitial\\\":true},\\\"fields\\\":{\\\"NAME\\\":\\\"result\\\",\\\"INITIALIZE\\\":true},\\\"inputs\\\":{\\\"INITIAL\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_arithmetic\\\",\\\"id\\\":\\\"block.code.8\\\",\\\"fields\\\":{\\\"OP\\\":\\\"+\\\"},\\\"inputs\\\":{\\\"LEFT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_arithmetic\\\",\\\"id\\\":\\\"block.code.6\\\",\\\"fields\\\":{\\\"OP\\\":\\\"*\\\"},\\\"inputs\\\":{\\\"LEFT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_integer\\\",\\\"id\\\":\\\"block.code.4\\\",\\\"fields\\\":{\\\"VALUE\\\":\\\"2\\\"}}},\\\"RIGHT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_variable\\\",\\\"id\\\":\\\"block.code.5\\\",\\\"fields\\\":{\\\"NAME\\\":\\\"x\\\"}}}}}},\\\"RIGHT\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_integer\\\",\\\"id\\\":\\\"block.code.7\\\",\\\"fields\\\":{\\\"VALUE\\\":\\\"3\\\"}}}}}}},\\\"next\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_print\\\",\\\"id\\\":\\\"block.code.11\\\",\\\"extraState\\\":{\\\"arguments\\\":1},\\\"fields\\\":{\\\"FORMAT\\\":\\\"%d\\\\\\\\n\\\"},\\\"inputs\\\":{\\\"ARG0\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_variable\\\",\\\"id\\\":\\\"block.code.10\\\",\\\"fields\\\":{\\\"NAME\\\":\\\"result\\\"}}}},\\\"next\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_return\\\",\\\"id\\\":\\\"block.code.13\\\",\\\"inputs\\\":{\\\"VALUE\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_integer\\\",\\\"id\\\":\\\"block.code.12\\\",\\\"fields\\\":{\\\"VALUE\\\":\\\"0\\\"}}}}}}}}}}}}}}]}}\",\u001b[22m\n\u001b[2m        \"writerId\": \"336f156e-f6ed-4245-8ff1-943cc412c908\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m      Object {\u001b[22m\n\u001b[2m        \"authority\": \"blocks\",\u001b[22m\n\u001b[31m+       \"captureVersion\": 0,\u001b[39m\n\u001b[31m+       \"codeText\": \"#include <stdio.h>\u001b[39m\n\u001b[31m+ int main(void) {\u001b[39m\n\u001b[31m+     int x = 7;\u001b[39m\n\u001b[31m+     return 0;\u001b[39m\n\u001b[31m+ }\u001b[39m\n\u001b[31m+ \",\u001b[39m\n\u001b[31m+       \"createdAt\": \"2026-10-30T19:42:12.149Z\",\u001b[39m\n\u001b[31m+       \"documentRevision\": 1,\u001b[39m\n\u001b[31m+       \"entryId\": \"aad75632-6e5d-479a-a696-9c4ef6405b8d\",\u001b[39m\n\u001b[31m+       \"generation\": \"e82e0da5-eb2f-4f4c-9c90-20cb3ca9ecd7\",\u001b[39m\n\u001b[31m+       \"historyVersion\": \"1.0.0\",\u001b[39m\n\u001b[31m+       \"inputJson\": \"{\\\"random\\\":null,\\\"specRef\\\":{\\\"id\\\":\\\"input.c.scalar-x\\\",\\\"version\\\":\\\"1.0.0\\\"},\\\"values\\\":{\\\"x\\\":7}}\",\u001b[39m\n\u001b[31m+       \"reason\": \"initial\",\u001b[39m\n\u001b[31m+       \"restoredFrom\": null,\u001b[39m\n\u001b[31m+       \"scope\": Object {\u001b[39m\n\u001b[31m+         \"exerciseRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"exercise.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.1.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"mode\": \"independent\",\u001b[39m\n\u001b[31m+         \"packageRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"content.c.p05\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+         \"programRef\": Object {\u001b[39m\n\u001b[31m+           \"id\": \"program.c.echo\",\u001b[39m\n\u001b[31m+           \"version\": \"1.0.0\",\u001b[39m\n\u001b[31m+         },\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[31m+       \"sequence\": 14,\u001b[39m\n\u001b[31m+       \"state\": \"pending\",\u001b[39m\n\u001b[31m+       \"workspaceJson\": \"{\\\"blocks\\\":{\\\"languageVersion\\\":0,\\\"blocks\\\":[{\\\"type\\\":\\\"cv_main\\\",\\\"id\\\":\\\"lesson.main\\\",\\\"x\\\":0,\\\"y\\\":0,\\\"inputs\\\":{\\\"BODY\\\":{\\\"block\\\":{\\\"type\\\":\\\"cv_declare\\\",\\\"id\\\":\\\"lesson.block.1\\\",\\\"editable\\\":false,\\\"extraState\\\":{\\\"binding\\\":{\\\"bindingKey\\\":\\\"param.x\\\",\\\"name\\\":\\\"x\\\",\\\"targetKind\\\":\\\"scalar\\\"}},\\\"fields\\\":{\\\"NAME\\\":\\\"x\\\",\\\"INITIALIZE\\\":false}}}}}]}}\",\u001b[39m\n\u001b[31m+       \"writerId\": \"2831a71d-2a8a-4c4c-932c-63f25be62cad\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     Object {\u001b[39m\n\u001b[31m+       \"authority\": \"blocks\",\u001b[39m\n\u001b[2m        \"captureVersion\": 1,\u001b[22m\n\u001b[2m        \"codeText\": \"#include <stdio.h>\u001b[22m\n\u001b[2m  int main(void) {\u001b[22m\n\u001b[2m      int x = 7;\u001b[22m\n\u001b[2m      return 0;\u001b[22m\n\n  190 |     .click();\n  191 |   await ready(page);\n> 192 |   expect(await archive(page)).toEqual(repaired);\n      |                               ^\n  193 |   await changePrint(page, 'x + 1');\n  194 |   await failed(page);\n  195 |   await notebook(page);\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\notebook.spec.ts:192:31"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:08.542Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.2\\formal-accepted-output\\notebook-15-2-formal-three-a0143-reopen-without-read-rewards-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.2\\formal-accepted-output\\notebook-15-2-formal-three-a0143-reopen-without-read-rewards-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\15.2\\formal-accepted-output\\notebook-15-2-formal-three-a0143-reopen-without-read-rewards-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\notebook.spec.ts",
+                    "column": 31,
+                    "line": 192
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-c902ef2d64c76c271d3d",
+          "file": "notebook.spec.ts",
+          "line": 149,
+          "column": 1
+        },
+        {
+          "title": "15.2 formal failed attempt transaction retries its original event once and preserves rewards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2515,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:13.740Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-fd9146e4a41b46ed7fd8",
+          "file": "notebook.spec.ts",
+          "line": 202,
+          "column": 1
+        },
+        {
+          "title": "15.2 formal double mark, refresh, source review and familiar tombstone have no learning side effects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1674,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:17.209Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-fce47f5be0320b767b73",
+          "file": "notebook.spec.ts",
+          "line": 257,
+          "column": 1
+        },
+        {
+          "title": "15.2 formal native mark rollback and exact retry preserve the original command identity",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 954,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:18.889Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-ae9333e3541e888c04f7",
+          "file": "notebook.spec.ts",
+          "line": 298,
+          "column": 1
+        },
+        {
+          "title": "15.2 formal peer clear discards pending marks and stored error summaries without resurrection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1515,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:19.850Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-ce8ad95fea3907d13be2",
+          "file": "notebook.spec.ts",
+          "line": 335,
+          "column": 1
+        },
+        {
+          "title": "15.2 formal corrupt mark partition stays preserved and visibly unavailable until an explicit full clear",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 793,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:21.371Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-b27aec23b22218284efa",
+          "file": "notebook.spec.ts",
+          "line": 381,
+          "column": 1
+        },
+        {
+          "title": "15.2 formal damaged core attempt receipts show unknown instead of a false empty notebook",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1885,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T19:42:22.170Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1f73cefbff9118457938-f39ed8e26318f05c4730",
+          "file": "notebook.spec.ts",
+          "line": 415,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T19:42:01.954Z",
+    "duration": 23470.237,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

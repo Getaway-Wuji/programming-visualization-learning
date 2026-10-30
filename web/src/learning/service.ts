@@ -1,3 +1,5 @@
+import { achievementPassSources, type AchievementEvidence } from '../achievements/model';
+import { observationSubject, type ObservationFact } from '../achievements/observation';
 import { loadCourseReading, type CourseReading } from '../content/reading';
 import { loadCourseLearning } from '../content/course-learning';
 import { caseLearningCatalog } from '../content/case-learning';
@@ -14,6 +16,10 @@ import type {
   StorageSnapshot,
 } from '../storage/model';
 import { createMeta, emptySnapshot, recordKey } from '../storage/model';
+import { assertAttemptFact } from './attempt-authority';
+import type { KnowledgeMarkCommand } from '../storage/knowledge-marks';
+import type { ReviewCommand } from '../review-scheduler/model';
+import { reviewSources } from '../review-scheduler/sources';
 import type { RecoveryRead } from '../storage/recovery';
 import { StorageError, storageError } from '../storage/errors';
 import { assertGoalTargets, assertRecord, isUtcTime, localDateAt } from '../storage/validation';
@@ -245,7 +251,114 @@ export class LearningService {
     if (this.catalog.purpose === 'course-practice')
       this.state = { ...this.state, practiceCatalog: this.catalog, practiceStatus: 'ready' };
   }
+  private achievementObservations = new WeakMap<
+    ObservationFact,
+    { context: EditorHistoryContext; evidence: AchievementEvidence }
+  >();
   getState = (): LearningServiceState => this.state;
+  syncAchievements = async (context: EditorHistoryContext, fact?: ObservationFact) => {
+    this.checkEditorHistory(context);
+    const catalog = this.state.practiceCatalog;
+    if (!catalog || !this.state.capabilities.learning)
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    let observation: AchievementEvidence | undefined;
+    if (fact) {
+      const subjectRef = observationSubject(fact);
+      if (!subjectRef) throw new StorageError('S_RECORD_INVALID');
+      let captured = this.achievementObservations.get(fact);
+      if (!captured) {
+        if (this.state.clockStatus === 'rollback') throw new StorageError('S_DATE_INVALID');
+        captured = {
+          context: structuredClone(context),
+          evidence: {
+            kind: 'observation',
+            eventId: crypto.randomUUID(),
+            subjectRef,
+            learningRevision: 1,
+            occurredAt: (this.options.clock ?? (() => new Date().toISOString()))(),
+          },
+        };
+        this.achievementObservations.set(fact, captured);
+      }
+      this.checkEditorHistory(captured.context);
+      if (
+        captured.context.generation !== context.generation ||
+        captured.context.epoch !== context.epoch
+      )
+        throw new StorageError('S_GENERATION_STALE');
+      observation = captured.evidence;
+    }
+    const result = await this.storage().syncAchievements(
+      context,
+      (snapshot) => achievementPassSources(snapshot, catalog),
+      observation,
+    );
+    this.checkEditorHistory(context);
+    if (result.changed) await this.refresh({ preserveOutcome: true });
+    this.checkEditorHistory(context);
+    return result.rows;
+  };
+  syncReviewCards = async (context: EditorHistoryContext, command?: ReviewCommand) => {
+    this.checkEditorHistory(context);
+    const reading = this.state.reading,
+      catalog = this.state.practiceCatalog;
+    if (!reading || !catalog || !this.state.capabilities.learning)
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    if (command && this.state.clockStatus === 'rollback') throw new StorageError('S_DATE_INVALID');
+    const at = (this.options.clock ?? (() => new Date().toISOString()))();
+    const result = await this.storage().syncReviewCards(
+      context,
+      (snapshot, marks) => reviewSources(snapshot, marks, catalog, reading),
+      at,
+      command,
+    );
+    this.checkEditorHistory(context);
+    if (result.changed) await this.refresh({ preserveOutcome: true });
+    this.checkEditorHistory(context);
+    return result.rows;
+  };
+  readKnowledgeMarks = async (context: EditorHistoryContext) => {
+    if (context.epoch !== this.state.sessionEpoch) throw new StorageError('S_GENERATION_STALE');
+    return this.storage().readKnowledgeMarks(context);
+  };
+  saveKnowledgeMark = async (context: EditorHistoryContext, command: KnowledgeMarkCommand) => {
+    if (context.epoch !== this.state.sessionEpoch || this.disposed)
+      throw new StorageError('S_GENERATION_STALE');
+    const reading = this.state.reading,
+      lesson = reading?.lessons.find(
+        (l) => l.id === command.lessonRef.id && l.version === command.lessonRef.version,
+      );
+    if (
+      !this.state.capabilities.learning ||
+      !reading ||
+      !lesson ||
+      command.packageRef.id !== reading.packageRef.id ||
+      command.packageRef.version !== reading.packageRef.version ||
+      !lesson.knowledgeRefs.some(
+        (k) => k.id === command.knowledgeRef.id && k.version === command.knowledgeRef.version,
+      )
+    )
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    const rows = await this.storage().saveKnowledgeMark(context, command);
+    if (context.epoch !== this.state.sessionEpoch) throw new StorageError('S_GENERATION_STALE');
+    await this.refresh({ preserveOutcome: true });
+    if (
+      context.epoch !== this.state.sessionEpoch ||
+      this.state.snapshot?.meta.generation !== context.generation
+    )
+      throw new StorageError('S_GENERATION_STALE');
+    return rows;
+  };
+  recordPracticeAttempt = (fact: VerifiedFact, expectedEpoch: number): Promise<SaveResult> => {
+    try {
+      if (this.disposed || expectedEpoch !== this.state.sessionEpoch)
+        throw new StorageError('S_GENERATION_STALE');
+      assertAttemptFact(fact);
+      return this.capture(fact).then((command) => this.commitCommand(command));
+    } catch (error) {
+      return Promise.reject(storageError(error));
+    }
+  };
   editorHistoryContext = (): EditorHistoryContext | null => {
     const meta = this.state.snapshot?.meta;
     return meta && this.client && !this.disposed && this.state.status !== 'readonly'
@@ -1299,6 +1412,9 @@ export class LearningService {
         this.observedTime = 0;
         await this.readCurrent(false, cleared.meta.generation);
         if (epoch !== this.state.sessionEpoch) throw new StorageError('S_GENERATION_STALE');
+        // Clear rebuilds the initial local package. Reapply the same reviewed
+        // package transition used by bootstrap before offering learning again.
+        await this.ensureReviewedCaseRelease(true);
         await this.prepareGoals();
         this.publish({ cleared: true, lastSaved: false, temporary: false, pendingCount: 0 });
       } catch (error) {
@@ -1709,6 +1825,11 @@ export function createLearningService() {
     editorHistoryContext: service.editorHistoryContext,
     readEditorHistory: service.readEditorHistory,
     saveEditorHistory: service.saveEditorHistory,
+    readKnowledgeMarks: service.readKnowledgeMarks,
+    syncReviewCards: service.syncReviewCards,
+    syncAchievements: service.syncAchievements,
+    saveKnowledgeMark: service.saveKnowledgeMark,
+    recordPracticeAttempt: service.recordPracticeAttempt,
     recordLesson: service.recordLesson,
     recordPracticePass: service.recordPracticePass,
     recordCaseView: service.recordCaseView,

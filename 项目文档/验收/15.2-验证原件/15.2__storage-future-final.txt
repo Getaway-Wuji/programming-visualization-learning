@@ -1,0 +1,14 @@
+
+> c-viz-learning@0.1.0 test:browser
+> playwright test --config tests/playwright.config.ts tests/browser/storage.spec.ts --project=chrome --grep versionchange --reporter=list,json --output=.artifacts/15.2/storage-future-final-output
+
+[WebServer] (node:23228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:52956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chrome] › tests\browser\storage.spec.ts:358:1 › versionchange closes the current connection, and future physical versions remain intact and reject the old client (489ms)
+
+  1 passed (3.6s)

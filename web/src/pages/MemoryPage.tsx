@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { Link, useLocation } from 'react-router';
 import { Breadcrumbs, PageHeading } from '../components/Ui';
 import { Workbench } from '../workbench/Workbench';
@@ -12,11 +20,17 @@ import { StackPanel } from '../stack/StackPanel';
 import { parseStackInput, stackExamples } from '../stack/examples';
 import { DebugSource } from '../debug/DebugSource';
 import '../memory/memory.css';
+import { useLearning } from '../learning/react';
+import { AchievementStatus, useAchievements } from '../achievements/react';
 
 const observations = [...memoryExamples, ...stackExamples];
 
 export default function MemoryPage() {
   const sourcePanel = useRef<HTMLElement>(null);
+  const tracePanel = useRef<HTMLElement>(null);
+  const traceVisible = useRef(true);
+  const { service } = useLearning();
+  const achievements = useAchievements();
   const [controller] = useState(() => new MemoryWorkspaceController());
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot);
   const query = new URLSearchParams(useLocation().search);
@@ -60,13 +74,20 @@ export default function MemoryPage() {
         input.every((value) => Number.isInteger(value) && value >= -999 && value <= 999));
   const stop = useCallback(
     (visible: boolean) => {
-      if (!visible) controller.pause();
+      traceVisible.current = visible;
+      if (!visible) {
+        controller.interruptObservation();
+        controller.pause();
+      }
     },
     [controller],
   );
   useEffect(() => {
     const visibility = () => {
-      if (document.visibilityState !== 'visible') controller.pause();
+      if (document.visibilityState !== 'visible') {
+        controller.interruptObservation();
+        controller.pause();
+      }
     };
     document.addEventListener('visibilitychange', visibility);
     return () => {
@@ -74,6 +95,56 @@ export default function MemoryPage() {
       controller.invalidate();
     };
   }, [controller]);
+  useEffect(
+    () => service.subscribeSessionInvalidation(() => controller.invalidate()),
+    [service, controller],
+  );
+  useLayoutEffect(() => {
+    let frame = 0,
+      cancelled = false;
+    const present = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        frame = requestAnimationFrame(() => {
+          if (cancelled || controller.getSnapshot().view !== view) return;
+          const panel = tracePanel.current?.querySelector<HTMLElement>(
+            '[data-testid="stack-panel"]',
+          );
+          const r = panel?.getBoundingClientRect();
+          const height = r ? Math.min(160, r.height) : 0;
+          const visible = Boolean(
+            mode === 'stack' &&
+            traceVisible.current &&
+            document.visibilityState === 'visible' &&
+            r &&
+            r.width > 0 &&
+            height > 0 &&
+            Math.max(0, Math.min(innerWidth, r.right) - Math.max(0, r.left)) >=
+              Math.min(240, r.width) * 0.75 &&
+            Math.max(0, Math.min(innerHeight, r.top + height) - Math.max(0, r.top)) >=
+              height * 0.75,
+          );
+          if (visible) controller.presentObservation(view);
+          else controller.interruptObservation();
+        });
+      });
+    };
+    if (mode !== 'stack') controller.interruptObservation();
+    present();
+    window.addEventListener('scroll', present, true);
+    window.addEventListener('resize', present);
+    document.addEventListener('visibilitychange', present);
+    const observer = new ResizeObserver(present);
+    if (tracePanel.current) observer.observe(tracePanel.current);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener('scroll', present, true);
+      window.removeEventListener('resize', present);
+      document.removeEventListener('visibilitychange', present);
+    };
+  }, [controller, view, mode]);
   const atEnd = Boolean(result && (!result.trace || view.cursor === view.length));
   const diagnostic = snapshot.error || (atEnd ? result?.terminal.code : null);
   const byteRange =
@@ -241,6 +312,7 @@ export default function MemoryPage() {
         }
         second={
           <section
+            ref={tracePanel}
             className="workbench-panel memory-stage"
             aria-label="执行观察"
             tabIndex={0}
@@ -439,6 +511,50 @@ export default function MemoryPage() {
           </section>
         }
       />
+      {['functions', 'hanoi'].includes(exampleId) && (
+        <section
+          className="observation-confirm"
+          aria-label="递归观察确认"
+          data-testid="observation-confirm"
+          data-seen={snapshot.observation?.seen ?? 0}
+          data-total={snapshot.observation?.total ?? 0}
+          data-complete={snapshot.observation?.complete ?? false}
+        >
+          <h2>留下本次递归观察记录</h2>
+          <p>
+            在调用栈视图从头逐步看完，再主动确认。汉诺塔需运行2—5盘。此记录只表示观察经历，不计积分，也不代表独立解题或掌握。
+          </p>
+          <p>
+            {snapshot.observation
+              ? `已实际呈现 ${snapshot.observation.seen} / ${snapshot.observation.total} 个状态。`
+              : '运行符合条件的样例后开始记录；直接拖到末步不会完成条件。'}
+          </p>
+          <button
+            type="button"
+            className="button button-secondary"
+            disabled={
+              !snapshot.observation?.complete ||
+              achievements.state.status !== 'ready' ||
+              achievements.state.rows.some((r) =>
+                r.evidence.some((e) => e.subjectRef.id === snapshot.observation?.subjectRef.id),
+              )
+            }
+            onClick={() => {
+              const fact = controller.observationFact();
+              if (fact) void achievements.controller.confirm(fact);
+            }}
+          >
+            确认本次递归观察
+          </button>
+          {achievements.state.rows.some((r) =>
+            r.evidence.some((e) => e.subjectRef.id === `observation.stack.${exampleId}`),
+          ) && <p>这项观察已保存；再次观看不会重复解锁。</p>}
+          <AchievementStatus />
+          <Link className="text-link" to="/achievements">
+            查看学习成就 →
+          </Link>
+        </section>
+      )}
       <Link className="text-link" to="/cases">
         返回算法与演示
       </Link>

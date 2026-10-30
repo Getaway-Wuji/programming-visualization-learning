@@ -80,6 +80,7 @@ function MemoryBugWorkspace({ question }: { question: MemoryBugQuestion }) {
             };
           },
           save: (fact, epoch) => service.recordPracticePass(fact, epoch),
+          saveAttempt: (fact, epoch) => service.recordPracticeAttempt(fact, epoch),
         },
         {
           context: () => service.editorHistoryContext(),
@@ -450,6 +451,16 @@ function MemoryBugWorkspace({ question }: { question: MemoryBugQuestion }) {
             : saveState === 'unsaved'
               ? '尚未保存，请使用上方重试未保存操作。'
               : '本次未保存学习结果。'}
+        </p>
+      )}
+      {state.phase === 'unmet' && state.save !== 'idle' && (
+        <p data-testid="memory-attempt-save">
+          {saveState === 'saved'
+            ? '本次有效错误摘要已保存。'
+            : '错误摘要尚未保存，请重试未保存操作。'}{' '}
+          <Link className="text-link" to="/notebook">
+            查看错题与陌生点
+          </Link>
         </p>
       )}
       <Link className="text-link" to="/bugs">

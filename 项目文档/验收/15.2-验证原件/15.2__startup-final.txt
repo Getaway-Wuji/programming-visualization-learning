@@ -1,0 +1,53 @@
+
+> c-viz-learning@0.1.0 test:startup
+> node scripts/startup-check.mjs
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
+    'aliases',
+    'appearance',
+    'appearanceAssets',
+    'avatar',
+    'dailyFacts',
+    'editHistory',
++   'goals',
+    'knowledgeMarks',
+-   'goals',
+    'ledger',
+    'meta',
+    'progress',
+    'receipts',
+    'settings'
+
+    at file:///D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/scripts/startup-check.mjs:294:14 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [
+    'aliases',          'appearance',
+    'appearanceAssets', 'avatar',
+    'dailyFacts',       'editHistory',
+    'goals',            'knowledgeMarks',
+    'ledger',           'meta',
+    'progress',         'receipts',
+    'settings'
+  ],
+  expected: [
+    'aliases',          'appearance',
+    'appearanceAssets', 'avatar',
+    'dailyFacts',       'editHistory',
+    'knowledgeMarks',   'goals',
+    'ledger',           'meta',
+    'progress',         'receipts',
+    'settings'
+  ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

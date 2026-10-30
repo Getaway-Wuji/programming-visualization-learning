@@ -11,6 +11,9 @@ import { observeCaseSetExecution } from './case-set-observation';
 const reviewed = JSON.parse(
   readFileSync(new URL('../../content/c/p0/course-1.0.1.json', import.meta.url), 'utf8'),
 ) as { lessons: LessonEntity[]; exercises: ExerciseEntity[]; programs: ProgramEntity[] };
+const currentReading = JSON.parse(
+  readFileSync('web/public/content/reading/course-reading-1.1.0.json', 'utf8'),
+) as { lessons: { id: string }[] };
 const echo = 'exercise.c.echo';
 const panel = (page: Page) => page.getByTestId('practice-execution');
 const source = (page: Page) =>
@@ -307,7 +310,9 @@ test('an answer built from empty native blocks runs one group without saving and
   await expect(page.getByTestId('lesson-exercise-check')).toHaveAttribute('data-saved', 'yes');
   await expect(page.getByTestId('lesson-next-step')).toBeVisible();
   await expect(
-    completion(page).locator(`a[href="#/lessons/${reviewed.lessons[1].id}"]`),
+    completion(page).locator(
+      `a[href="#/lessons/${currentReading.lessons[currentReading.lessons.findIndex((l) => l.id === 'lesson.c.variables-output') + 1].id}"]`,
+    ),
   ).toBeVisible();
   expect(await executes(page)).toBe(4);
   const finished = await snapshot(page);

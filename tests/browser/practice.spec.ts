@@ -27,9 +27,13 @@ const panel = (page: Page) => page.getByTestId('practice-execution');
 const feedback = (page: Page) => page.getByTestId('practice-feedback');
 const submit = (page: Page) => panel(page).getByRole('button', { name: '提交练习', exact: true });
 
-// The existing temporary-judgement regressions stay explicitly outside 09.4
-// authorization. Native nine-store equality remains meaningful for this scope.
+// Frozen 09.3 temporary-judgement regressions explicitly use the approved legacy
+// fallback and keep learning authorization unavailable. Current32-course behavior
+// has its separate genuine P05 suite; do not mix the two package scopes here.
 test.beforeEach(async ({ context }) => {
+  await context.route('**/content/course/course-bundle-*.json', (route) =>
+    route.fulfill({ status: 404, body: 'isolated approved legacy fallback' }),
+  );
   await context.route('**/content/learning/course-learning-*.json', (route) =>
     route.fulfill({ status: 503, body: 'isolated learning authorization unavailable' }),
   );
@@ -95,18 +99,22 @@ async function initialized(page: Page) {
     'data-save-status',
     'ready',
   );
+  await page.waitForLoadState('networkidle');
   const initial = await archive(page);
   expect(Object.keys(initial.stores).sort()).toEqual([
+    'achievements',
     'aliases',
     'appearance',
     'appearanceAssets',
     'avatar',
     'dailyFacts',
     'goals',
+    'knowledgeMarks',
     'ledger',
     'meta',
     'progress',
     'receipts',
+    'reviewCards',
     'settings',
   ]);
   expect(initial.stores.appearanceAssets).toEqual([]);
@@ -600,7 +608,7 @@ test('a missing practice release fails closed and its visible retry loads only t
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   expect(await archive(page)).toEqual(before);
   await testInfo.attach('projection-fault-scope', {
-    body: 'Only the practice projection GET was replaced with an isolated HTTP 404; visible retry used its normal approved bytes.',
+    body: 'This isolated09.3 legacy fallback replaced only its practice projection GET with HTTP404; visible retry used the normal approved bytes. The separate current-course suite covers all32 lessons. No content or learning fact was synthesized.',
     contentType: 'text/plain',
   });
 });

@@ -1,0 +1,523 @@
+[WebServer] (node:5536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:49916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   1 [chrome] › tests\browser\scheduler.spec.ts:25:1 › 15.3 common empty or unreviewed queue states are honest and never create a learning fact (5.6s)
+(node:34348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [chrome] › tests\browser\scheduler.spec.ts:48:1 › 15.3 common queue entry and three widths stay usable without fabricated cards (757ms)
+  x   3 [chrome] › tests\browser\scheduler.spec.ts:63:1 › 15.3 formal genuine manual source, duplicate evaluation, refresh and local midnight preserve an actual schedule (6.0s)
+(node:51340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   4 [chrome] › tests\browser\scheduler.spec.ts:98:1 › 15.3 formal correcting the last rating uses its original date and base, and explicit relearning resets only the plan (6.2s)
+(node:45424) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   5 [chrome] › tests\browser\scheduler.spec.ts:126:1 › 15.3 formal real Rust failure creates one card, run-one does not, pass pauses and new failure reopens (6.1s)
+(node:32888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   6 [chrome] › tests\browser\scheduler.spec.ts:178:1 › 15.3 formal familiar and re-marking pause then reopen the same card without copying learning facts (6.1s)
+(node:46296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   7 [chrome] › tests\browser\scheduler.spec.ts:198:1 › 15.3 formal native quota rollback and original-command retry save exactly one evaluation (6.1s)
+(node:24864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   8 [chrome] › tests\browser\scheduler.spec.ts:219:1 › 15.3 formal stale peer retry cannot overwrite the newer evaluation, and re-reading exposes it (6.2s)
+(node:32212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   9 [chrome] › tests\browser\scheduler.spec.ts:244:1 › 15.3 formal peer clear discards a pending review and never resurrects its source or schedule (6.1s)
+(node:8896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  10 [chrome] › tests\browser\scheduler.spec.ts:268:3 › 15.3 formal corrupt reviewCards preserves raw rows and shows unknown rather than an empty queue (6.2s)
+(node:48664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  11 [chrome] › tests\browser\scheduler.spec.ts:268:3 › 15.3 formal corrupt knowledgeMarks preserves raw rows and shows unknown rather than an empty queue (6.2s)
+(node:18236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  12 [chrome] › tests\browser\scheduler.spec.ts:300:1 › 15.3 formal source details, keyboard actions and mobile list-detail navigation remain usable (6.2s)
+
+
+  1) [chrome] › tests\browser\scheduler.spec.ts:25:1 › 15.3 common empty or unreviewed queue states are honest and never create a learning fact 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+
+
+       at notebook-helpers.ts:21
+
+      19 | const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      20 | const ready = (page: Page) =>
+    > 21 |   expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+         |                                                    ^
+      22 |     'data-save-status',
+      23 |     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
+      24 |   );
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook-helpers.ts:21:52)
+        at reviewReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:27:9)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:37:9
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-common-empt-20f49-ever-create-a-learning-fact-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-common-empt-20f49-ever-create-a-learning-fact-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-common-empt-20f49-ever-create-a-learning-fact-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-common-empt-20f49-ever-create-a-learning-fact-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › tests\browser\scheduler.spec.ts:63:1 › 15.3 formal genuine manual source, duplicate evaluation, refresh and local midnight preserve an actual schedule 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+
+
+       at notebook-helpers.ts:21
+
+      19 | const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      20 | const ready = (page: Page) =>
+    > 21 |   expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+         |                                                    ^
+      22 |     'data-save-status',
+      23 |     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
+      24 |   );
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook-helpers.ts:21:52)
+        at reviewReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:27:9)
+        at reviews (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:34:9)
+        at mark (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:46:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:67:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-genu-0c6e0-preserve-an-actual-schedule-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-formal-genu-0c6e0-preserve-an-actual-schedule-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-genu-0c6e0-preserve-an-actual-schedule-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-formal-genu-0c6e0-preserve-an-actual-schedule-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chrome] › tests\browser\scheduler.spec.ts:98:1 › 15.3 formal correcting the last rating uses its original date and base, and explicit relearning resets only the plan 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+
+
+       at notebook-helpers.ts:21
+
+      19 | const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      20 | const ready = (page: Page) =>
+    > 21 |   expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+         |                                                    ^
+      22 |     'data-save-status',
+      23 |     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
+      24 |   );
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook-helpers.ts:21:52)
+        at reviewReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:27:9)
+        at reviews (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:34:9)
+        at mark (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:46:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:102:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-a9b04-arning-resets-only-the-plan-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-a9b04-arning-resets-only-the-plan-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-a9b04-arning-resets-only-the-plan-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-a9b04-arning-resets-only-the-plan-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chrome] › tests\browser\scheduler.spec.ts:126:1 › 15.3 formal real Rust failure creates one card, run-one does not, pass pauses and new failure reopens 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByTestId('practice-execution')
+    Expected: "unmet"
+    Received: "ran"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('practice-execution') with timeout 5000ms
+      - waiting for getByTestId('practice-execution')
+        - locator resolved to <section data-state="running" class="card section-card" data-testid="practice-execution">…</section>
+        - unexpected value "running"
+        13 × locator resolved to <section data-state="ran" class="card section-card" data-testid="practice-execution">…</section>
+           - unexpected value "ran"
+
+
+      132 |   await changePrint(page, '0');
+      133 |   await panel(page).getByRole('button', { name: '运行本组', exact: true }).click();
+    > 134 |   await expect(panel(page)).toHaveAttribute('data-state', 'unmet');
+          |                             ^
+      135 |   await reviewReady(page);
+      136 |   expect((await native(page)).reviewCards).toEqual([]);
+      137 |   await fail(page);
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:134:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-real-0429d-ses-and-new-failure-reopens-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-formal-real-0429d-ses-and-new-failure-reopens-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-real-0429d-ses-and-new-failure-reopens-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-formal-real-0429d-ses-and-new-failure-reopens-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [chrome] › tests\browser\scheduler.spec.ts:178:1 › 15.3 formal familiar and re-marking pause then reopen the same card without copying learning facts 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+
+
+       at notebook-helpers.ts:21
+
+      19 | const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      20 | const ready = (page: Page) =>
+    > 21 |   expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+         |                                                    ^
+      22 |     'data-save-status',
+      23 |     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
+      24 |   );
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook-helpers.ts:21:52)
+        at reviewReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:27:9)
+        at reviews (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:34:9)
+        at mark (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:46:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:181:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-fami-c803e-hout-copying-learning-facts-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-formal-fami-c803e-hout-copying-learning-facts-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-fami-c803e-hout-copying-learning-facts-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-formal-fami-c803e-hout-copying-learning-facts-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [chrome] › tests\browser\scheduler.spec.ts:198:1 › 15.3 formal native quota rollback and original-command retry save exactly one evaluation 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+
+
+       at notebook-helpers.ts:21
+
+      19 | const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      20 | const ready = (page: Page) =>
+    > 21 |   expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+         |                                                    ^
+      22 |     'data-save-status',
+      23 |     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
+      24 |   );
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook-helpers.ts:21:52)
+        at reviewReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:27:9)
+        at reviews (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:34:9)
+        at mark (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:46:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:202:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-nati-77988-save-exactly-one-evaluation-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-formal-nati-77988-save-exactly-one-evaluation-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-nati-77988-save-exactly-one-evaluation-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-formal-nati-77988-save-exactly-one-evaluation-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [chrome] › tests\browser\scheduler.spec.ts:219:1 › 15.3 formal stale peer retry cannot overwrite the newer evaluation, and re-reading exposes it 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+
+
+       at notebook-helpers.ts:21
+
+      19 | const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      20 | const ready = (page: Page) =>
+    > 21 |   expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+         |                                                    ^
+      22 |     'data-save-status',
+      23 |     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
+      24 |   );
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook-helpers.ts:21:52)
+        at reviewReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:27:9)
+        at reviews (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:34:9)
+        at mark (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:46:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:224:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-stal-7d461-n-and-re-reading-exposes-it-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-formal-stal-7d461-n-and-re-reading-exposes-it-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-stal-7d461-n-and-re-reading-exposes-it-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-formal-stal-7d461-n-and-re-reading-exposes-it-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [chrome] › tests\browser\scheduler.spec.ts:244:1 › 15.3 formal peer clear discards a pending review and never resurrects its source or schedule 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+
+
+       at notebook-helpers.ts:21
+
+      19 | const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      20 | const ready = (page: Page) =>
+    > 21 |   expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+         |                                                    ^
+      22 |     'data-save-status',
+      23 |     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
+      24 |   );
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook-helpers.ts:21:52)
+        at reviewReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:27:9)
+        at reviews (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:34:9)
+        at mark (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:46:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:249:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-peer-5728a-ects-its-source-or-schedule-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-formal-peer-5728a-ects-its-source-or-schedule-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-peer-5728a-ects-its-source-or-schedule-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-formal-peer-5728a-ects-its-source-or-schedule-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [chrome] › tests\browser\scheduler.spec.ts:268:3 › 15.3 formal corrupt reviewCards preserves raw rows and shows unknown rather than an empty queue 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+
+
+       at notebook-helpers.ts:21
+
+      19 | const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      20 | const ready = (page: Page) =>
+    > 21 |   expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+         |                                                    ^
+      22 |     'data-save-status',
+      23 |     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
+      24 |   );
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook-helpers.ts:21:52)
+        at reviewReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:27:9)
+        at reviews (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:34:9)
+        at mark (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:46:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:271:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-1fdc0--rather-than-an-empty-queue-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-1fdc0--rather-than-an-empty-queue-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-1fdc0--rather-than-an-empty-queue-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-1fdc0--rather-than-an-empty-queue-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [chrome] › tests\browser\scheduler.spec.ts:268:3 › 15.3 formal corrupt knowledgeMarks preserves raw rows and shows unknown rather than an empty queue 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+
+
+       at notebook-helpers.ts:21
+
+      19 | const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      20 | const ready = (page: Page) =>
+    > 21 |   expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+         |                                                    ^
+      22 |     'data-save-status',
+      23 |     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
+      24 |   );
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook-helpers.ts:21:52)
+        at reviewReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:27:9)
+        at reviews (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:34:9)
+        at mark (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:46:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:271:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-6fd50--rather-than-an-empty-queue-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-6fd50--rather-than-an-empty-queue-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-6fd50--rather-than-an-empty-queue-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-formal-corr-6fd50--rather-than-an-empty-queue-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [chrome] › tests\browser\scheduler.spec.ts:300:1 › 15.3 formal source details, keyboard actions and mobile list-detail navigation remain usable 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+
+
+       at notebook-helpers.ts:21
+
+      19 | const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+      20 | const ready = (page: Page) =>
+    > 21 |   expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+         |                                                    ^
+      22 |     'data-save-status',
+      23 |     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
+      24 |   );
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\notebook-helpers.ts:21:52)
+        at reviewReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:27:9)
+        at reviews (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:34:9)
+        at mark (D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler-helpers.ts:46:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\scheduler.spec.ts:303:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-sour-46989-il-navigation-remain-usable-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\15.3\formal-first-output\scheduler-15-3-formal-sour-46989-il-navigation-remain-usable-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\15.3\formal-first-output\scheduler-15-3-formal-sour-46989-il-navigation-remain-usable-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\15.3\formal-first-output\scheduler-15-3-formal-sour-46989-il-navigation-remain-usable-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11 failed
+    [chrome] › tests\browser\scheduler.spec.ts:25:1 › 15.3 common empty or unreviewed queue states are honest and never create a learning fact 
+    [chrome] › tests\browser\scheduler.spec.ts:63:1 › 15.3 formal genuine manual source, duplicate evaluation, refresh and local midnight preserve an actual schedule 
+    [chrome] › tests\browser\scheduler.spec.ts:98:1 › 15.3 formal correcting the last rating uses its original date and base, and explicit relearning resets only the plan 
+    [chrome] › tests\browser\scheduler.spec.ts:126:1 › 15.3 formal real Rust failure creates one card, run-one does not, pass pauses and new failure reopens 
+    [chrome] › tests\browser\scheduler.spec.ts:178:1 › 15.3 formal familiar and re-marking pause then reopen the same card without copying learning facts 
+    [chrome] › tests\browser\scheduler.spec.ts:198:1 › 15.3 formal native quota rollback and original-command retry save exactly one evaluation 
+    [chrome] › tests\browser\scheduler.spec.ts:219:1 › 15.3 formal stale peer retry cannot overwrite the newer evaluation, and re-reading exposes it 
+    [chrome] › tests\browser\scheduler.spec.ts:244:1 › 15.3 formal peer clear discards a pending review and never resurrects its source or schedule 
+    [chrome] › tests\browser\scheduler.spec.ts:268:3 › 15.3 formal corrupt reviewCards preserves raw rows and shows unknown rather than an empty queue 
+    [chrome] › tests\browser\scheduler.spec.ts:268:3 › 15.3 formal corrupt knowledgeMarks preserves raw rows and shows unknown rather than an empty queue 
+    [chrome] › tests\browser\scheduler.spec.ts:300:1 › 15.3 formal source details, keyboard actions and mobile list-detail navigation remain usable 
+  1 passed (1.5m)

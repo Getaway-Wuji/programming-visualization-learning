@@ -8,6 +8,12 @@ import { LearningProvider, useLearning } from './learning/react';
 import { PracticeProvider } from './practice/react';
 import { AppearanceProvider } from './appearance/react';
 import { WorkbenchProvider } from './workbench/react';
+import { KnowledgeMarksProvider } from './review-notebook/marks';
+import { AchievementProvider } from './achievements/react';
+const AchievementsPage = lazy(() => import('./achievements/AchievementsPage'));
+import { ReviewProvider } from './review-scheduler/react';
+const ReviewsPage = lazy(() => import('./review-scheduler/ReviewsPage'));
+const NotebookPage = lazy(() => import('./review-notebook/NotebookPage'));
 
 const CoursePage = lazy(() =>
   import('./pages/CatalogPages').then((module) => ({ default: module.CoursePage })),
@@ -82,6 +88,9 @@ function AppRoutes() {
             <Route path="/bugs/memory/:exerciseId" element={<MemoryBugPage />} />
             <Route path="/visualize/:caseId" element={<VisualizePage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/notebook" element={<NotebookPage />} />
+            <Route path="/reviews" element={<ReviewsPage />} />
+            <Route path="/achievements" element={<AchievementsPage />} />
             <Route path="*" element={<MissingPage />} />
           </Routes>
         </Suspense>
@@ -93,15 +102,21 @@ function AppRoutes() {
 export function App() {
   return (
     <LearningProvider>
-      <AppearanceProvider>
-        <WorkbenchProvider>
-          <HashRouter>
-            <PracticeProvider>
-              <AppRoutes />
-            </PracticeProvider>
-          </HashRouter>
-        </WorkbenchProvider>
-      </AppearanceProvider>
+      <KnowledgeMarksProvider>
+        <ReviewProvider>
+          <AchievementProvider>
+            <AppearanceProvider>
+              <WorkbenchProvider>
+                <HashRouter>
+                  <PracticeProvider>
+                    <AppRoutes />
+                  </PracticeProvider>
+                </HashRouter>
+              </WorkbenchProvider>
+            </AppearanceProvider>
+          </AchievementProvider>
+        </ReviewProvider>
+      </KnowledgeMarksProvider>
     </LearningProvider>
   );
 }

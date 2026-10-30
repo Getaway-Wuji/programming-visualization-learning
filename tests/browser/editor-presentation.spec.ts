@@ -15,8 +15,20 @@ import { blockOptions, blockWorkspace, selectBlock } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
 
 const content = JSON.parse(
-  readFileSync('web/public/content/practice/course-practice-1.0.0.json', 'utf8'),
+  readFileSync('web/public/content/practice/course-practice-1.2.0.json', 'utf8'),
 ) as CoursePractice;
+const reading = JSON.parse(
+  readFileSync('web/public/content/reading/course-reading-1.1.0.json', 'utf8'),
+) as {
+  lessons: {
+    id: string;
+    version: string;
+    requiredExerciseRefs: { id: string; version: string }[];
+  }[];
+};
+const guidance = JSON.parse(readFileSync('content/c/p05/practice-guidance-1.0.0.json', 'utf8')) as {
+  entries: { exerciseRef: { id: string; version: string }; preferredEditor: 'code' | 'blocks' }[];
+};
 const echo = 'exercise.c.echo';
 const panel = (page: Page) => page.getByTestId('practice-execution');
 const layout = (page: Page) => page.getByTestId('practice-editor-layout');
@@ -108,6 +120,32 @@ function sameLearning(before: StorageSnapshot, after: StorageSnapshot) {
   for (const key of ['progress', 'ledger', 'dailyFacts', 'receipts', 'goals', 'aliases'] as const)
     expect(after[key]).toEqual(before[key]);
 }
+function onlyTeachingFailure(before: StorageSnapshot, after: StorageSnapshot, count: number) {
+  const attempts = after.receipts.filter((r) => r.eventType === 'exercise.attempt-evaluated');
+  expect(attempts).toHaveLength(count);
+  for (const r of attempts)
+    expect(r).toMatchObject({
+      subjectRef: { id: 'exercise.c.nonnegative' },
+      result: 'failed',
+      resultCategory: 'teaching-goal-unmet',
+    });
+  if (before.goals.length === 0) {
+    expect(after.goals).toHaveLength(1);
+    expect(after.goals[0]).toEqual({
+      localDate: attempts[0].localDate,
+      goalVersion: before.settings.goalTemplate!.revision,
+      targets: before.settings.goalTemplate!.targets,
+      achievedAt: null,
+    });
+  }
+  expect(after.settings).toEqual(before.settings);
+  sameLearning(before, {
+    ...after,
+    goals: before.goals.length === 0 ? [] : after.goals,
+    progress: after.progress.filter((r) => r.eventType !== 'exercise.attempt-evaluated'),
+    receipts: after.receipts.filter((r) => r.eventType !== 'exercise.attempt-evaluated'),
+  });
+}
 function sparsePreference(before: StorageSnapshot, after: StorageSnapshot, value: Preference) {
   expect(after.appearance).toEqual({ ...before.appearance, blockWorkspace: value });
   expect(after.settings).toEqual(before.settings);
@@ -151,6 +189,7 @@ async function open(page: Page, id = echo, mode: Preference = 'hide') {
     await action(page, '编辑 C 并同步积木').click();
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
   await expect(code(page)).toBeEditable();
+  await expect.poll(async () => (await snapshot(page)).settings.goalTemplate).not.toBeNull();
 }
 async function fillSynced(page: Page, text: string) {
   await code(page).fill(text);
@@ -240,6 +279,7 @@ for (const exercise of content.exercises)
     await open(page, exercise.id);
     await expect(layout(page)).toHaveAttribute('data-blocks-visible', 'no');
     await expect(blockWorkspace(page)).toBeHidden();
+    await expect.poll(async () => (await snapshot(page)).settings.goalTemplate).not.toBeNull();
     const before = await snapshot(page);
     const answer = withBody(exercise.id, answers[exercise.id]);
     await fillSynced(page, answer);
@@ -303,7 +343,13 @@ test('automatic presentation follows each lesson recommendation and explicit pre
   page,
 }, info) => {
   const samples = [];
-  for (const [index, exercise] of content.exercises.entries()) {
+  const required = content.exercises.filter((e) =>
+    reading.lessons.some((l) =>
+      l.requiredExerciseRefs.some((r) => r.id === e.id && r.version === e.version),
+    ),
+  );
+  expect(required).toHaveLength(32);
+  for (const exercise of required) {
     await page.goto(`/#/practice/${exercise.id}`);
     await expect(panel(page)).toHaveAttribute('data-state', 'ready');
     await expect(page.locator('.app-shell')).toHaveAttribute(
@@ -311,7 +357,10 @@ test('automatic presentation follows each lesson recommendation and explicit pre
       'ready',
     );
     await choose(page, 'auto');
-    const visible = index >= 2;
+    const visible =
+      guidance.entries.find(
+        (g) => g.exerciseRef.id === exercise.id && g.exerciseRef.version === exercise.version,
+      )!.preferredEditor === 'blocks';
     await expect(layout(page)).toHaveAttribute('data-blocks-visible', visible ? 'yes' : 'no');
     if (visible) await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
     else await expect(code(page)).toBeEditable();
@@ -326,7 +375,7 @@ test('automatic presentation follows each lesson recommendation and explicit pre
   if (!(await code(page).isVisible())) await action(page, '编辑 C 并同步积木').click();
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
   expect(await counts(page)).toMatchObject({ execute: 0 });
-  await evidence(page, info, 'automatic-six-lessons', samples);
+  await evidence(page, info, 'automatic-reviewed-32-lessons', samples);
 });
 
 test('invalid and unmapped code survives hide-show, settings return and mode switching without executing historical blocks', async ({
@@ -662,7 +711,11 @@ test('hidden blocks do not bypass the same teaching checks or accepted source id
   await action(page, '提交练习').click();
   await expect(panel(page)).toHaveAttribute('data-state', 'unmet');
   await expect(page.getByTestId('practice-pass-save')).toHaveCount(0);
-  sameLearning(before, await snapshot(page));
+  await expect(page.getByTestId('practice-attempt-save')).toHaveAttribute(
+    'data-save-state',
+    'saved',
+  );
+  onlyTeachingFailure(before, await snapshot(page), 1);
   const hidden = await counts(page);
   await choose(page, 'show');
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
@@ -671,7 +724,11 @@ test('hidden blocks do not bypass the same teaching checks or accepted source id
   expect(await counts(page)).toEqual(hidden);
   await action(page, '提交练习').click();
   await expect(panel(page)).toHaveAttribute('data-state', 'unmet');
-  sameLearning(before, await snapshot(page));
+  await expect(page.getByTestId('practice-attempt-save')).toHaveAttribute(
+    'data-save-state',
+    'saved',
+  );
+  onlyTeachingFailure(before, await snapshot(page), 2);
   const runs = await evidence(page, info, 'same-teaching-rejection-hidden-and-visible');
   expect(runs.length).toBeGreaterThanOrEqual(2);
   expect(runs.every((run) => run.result.judgeResult?.status === 'unmet')).toBe(true);
@@ -714,7 +771,7 @@ test('narrow-screen keyboard preference controls keep the current code editable 
 test('a blocks-first lesson retains an incomplete block draft when hiding before the first code edit', async ({
   page,
 }, info) => {
-  const id = 'exercise.c.nonnegative';
+  const id = 'exercise.c.two-loop-sums';
   await page.goto(`/#/practice/${id}`);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');

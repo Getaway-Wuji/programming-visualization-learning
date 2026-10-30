@@ -1,0 +1,347 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://programming-visualization.local/contracts/achievement-1.0.0.schema.json",
+  "title": "ACHIEVEMENT-01 closed native row; physical key, generation, source uniqueness and unlock predicate also require native validation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "achievementVersion",
+    "generation",
+    "revision",
+    "catalogRef",
+    "badgeRef",
+    "packageRef",
+    "unlockedAt",
+    "evidence"
+  ],
+  "properties": {
+    "achievementVersion": {
+      "const": "1.0.0"
+    },
+    "generation": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "catalogRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "const": "achievement.catalog.local"
+        },
+        "version": {
+          "const": "1.0.0"
+        }
+      }
+    },
+    "badgeRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        }
+      }
+    },
+    "packageRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "const": "content.c.p05"
+        },
+        "version": {
+          "const": "1.0.0"
+        }
+      }
+    },
+    "unlockedAt": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "eventId",
+          "subjectRef",
+          "learningRevision",
+          "occurredAt"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "exercise",
+              "observation"
+            ]
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subjectRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "version"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$"
+              }
+            }
+          },
+          "learningRevision": {
+            "const": 1
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          }
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "badgeRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "badge.c.bubble-pass"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        "evidence": {
+          "maxItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "properties": {
+                  "kind": {
+                    "const": "exercise"
+                  },
+                  "subjectRef": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "version"
+                    ],
+                    "properties": {
+                      "id": {
+                        "const": "exercise.c.bubble-sort"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "badgeRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "badge.recursion.observer"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        "evidence": {
+          "maxItems": 2,
+          "items": {
+            "oneOf": [
+              {
+                "properties": {
+                  "kind": {
+                    "const": "observation"
+                  },
+                  "subjectRef": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "version"
+                    ],
+                    "properties": {
+                      "id": {
+                        "const": "observation.stack.functions"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "kind": {
+                    "const": "observation"
+                  },
+                  "subjectRef": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "version"
+                    ],
+                    "properties": {
+                      "id": {
+                        "const": "observation.stack.hanoi"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "badgeRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "badge.cpp.pointer-repair"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        "evidence": {
+          "maxItems": 2,
+          "items": {
+            "oneOf": [
+              {
+                "properties": {
+                  "kind": {
+                    "const": "exercise"
+                  },
+                  "subjectRef": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "version"
+                    ],
+                    "properties": {
+                      "id": {
+                        "const": "exercise.cpp.bug-uninitialized-pointer"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "kind": {
+                    "const": "exercise"
+                  },
+                  "subjectRef": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "version"
+                    ],
+                    "properties": {
+                      "id": {
+                        "const": "exercise.cpp.bug-dangling-pointer"
+                      },
+                      "version": {
+                        "const": "1.0.0"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

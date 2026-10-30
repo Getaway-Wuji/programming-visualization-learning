@@ -11,6 +11,8 @@ import { isCompatibleLearningHistory } from '../learning/domain';
 import { LessonCompletion } from '../components/LessonCompletion';
 import { lessonCompletionDetails } from '../learning/completion';
 import { reviewedDurableSnapshot } from '../learning/reviewed-release';
+import { KnowledgeMarkButton, KnowledgeMarksStatus } from '../review-notebook/marks';
+import '../review-notebook/notebook.css';
 
 export default function LessonPage() {
   const { lessonId } = useParams();
@@ -136,11 +138,16 @@ export default function LessonPage() {
                   <h2>本节知识点</h2>
                   <ul>
                     {lesson.knowledgeRefs.map((ref) => (
-                      <li key={ref.id}>
+                      <li key={ref.id} className="lesson-knowledge-row">
                         {reading!.knowledgePoints.find((item) => item.id === ref.id)?.title}
+                        <KnowledgeMarkButton lessonId={lesson.id} knowledgeId={ref.id} />
                       </li>
                     ))}
                   </ul>
+                  <KnowledgeMarksStatus />
+                  <Link className="text-link" to="/notebook">
+                    查看错题与陌生点 →
+                  </Link>
                 </section>
                 <section className="card section-card" id="lesson-study-confirmation" tabIndex={-1}>
                   <h2>记录本节学习</h2>

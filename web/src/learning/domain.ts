@@ -169,9 +169,12 @@ export function applyLearningEvent(
     (catalog.purpose === 'lesson-reading' &&
       !['lesson.started', 'lesson.study-confirmed'].includes(receipt.eventType)) ||
     (catalog.purpose === 'course-practice' &&
-      !['lesson.started', 'lesson.study-confirmed', 'exercise.passed'].includes(
-        receipt.eventType,
-      )) ||
+      ![
+        'lesson.started',
+        'lesson.study-confirmed',
+        'exercise.passed',
+        'exercise.attempt-evaluated',
+      ].includes(receipt.eventType)) ||
     (catalog.purpose === 'case-view' && receipt.eventType !== 'case.view-confirmed')
   )
     throw new StorageError('S_CONTENT_INCOMPATIBLE');

@@ -269,7 +269,7 @@ try {
       assert.ok(audit.databaseOpens >= 1);
       const learningRows = await page.evaluate(async () => {
         const db = await new Promise((resolve, reject) => {
-          const req = globalThis.indexedDB.open('c-viz-learning', 3);
+          const req = globalThis.indexedDB.open('c-viz-learning', 6);
           req.onsuccess = () => resolve(req.result);
           req.onerror = () => reject(req.error);
         });
@@ -292,6 +292,7 @@ try {
         }
       });
       assert.deepEqual(learningRows.storeNames, [
+        'achievements',
         'aliases',
         'appearance',
         'appearanceAssets',
@@ -299,10 +300,12 @@ try {
         'dailyFacts',
         'editHistory',
         'goals',
+        'knowledgeMarks',
         'ledger',
         'meta',
         'progress',
         'receipts',
+        'reviewCards',
         'settings',
       ]);
       assert.deepEqual(learningRows.businessCounts, [0, 0, 0, 0, 0, 0]);

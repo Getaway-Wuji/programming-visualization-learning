@@ -130,7 +130,7 @@ const historyHarness = {
     });
     const before = structuredClone(snapshot);
     Object.assign(before.meta, {
-      schemaVersion: kind === 'future' ? '4.0.0' : '2.0.0',
+      schemaVersion: kind === 'future' ? '9.0.0' : '2.0.0',
       dbVersion: 2,
       revision: 7,
       ...(kind === 'damaged' ? { generation: '' } : {}),

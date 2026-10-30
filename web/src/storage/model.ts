@@ -1,7 +1,7 @@
-/** SAVE-01 3.0.0. Learning/appearance projection; editHistory is a separate bounded partition. */
+/** SAVE-01 6.0.0. Learning/appearance projection; history, marks and schedules are separate partitions. */
 export const DB_NAME = 'c-viz-learning';
-export const DB_VERSION = 3;
-export const SCHEMA_VERSION = '3.0.0';
+export const DB_VERSION = 6;
+export const SCHEMA_VERSION = '6.0.0';
 export const CORE_STORE_NAMES = [
   'meta',
   'settings',
@@ -14,7 +14,13 @@ export const CORE_STORE_NAMES = [
   'aliases',
 ] as const;
 export const STORE_NAMES = [...CORE_STORE_NAMES, 'appearance', 'appearanceAssets'] as const;
-export const ALL_STORE_NAMES = [...STORE_NAMES, 'editHistory'] as const;
+export const ALL_STORE_NAMES = [
+  ...STORE_NAMES,
+  'editHistory',
+  'knowledgeMarks',
+  'reviewCards',
+  'achievements',
+] as const;
 export type StoreName = (typeof STORE_NAMES)[number];
 export const COLLECTION_STORES = [
   'progress',

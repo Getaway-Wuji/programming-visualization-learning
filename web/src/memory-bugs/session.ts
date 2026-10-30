@@ -17,6 +17,7 @@ interface MemoryBugSummary {
 export interface MemoryBugLearningPort {
   context(): { catalog: LearningCatalog | null; epoch: number };
   save(fact: VerifiedFact, epoch: number): Promise<unknown>;
+  saveAttempt?(fact: VerifiedFact, epoch: number): Promise<unknown>;
 }
 export class MemoryBugSession {
   readonly view = new MemoryWorkspaceController();
@@ -149,6 +150,22 @@ export class MemoryBugSession {
         this.set({ summaries: [...summaries], elapsedMs: performance.now() - started });
         if (verdict.status !== 'met') {
           this.set({ phase: 'unmet', message: '本组尚未满足；可查看实际诊断，有轨迹时可复盘。' });
+          if (submit && context.catalog && this.learning.saveAttempt) {
+            const fact = createMemoryAttemptFact(
+              context.catalog,
+              this.question.exerciseRef.id,
+              result,
+              () => this.token === token && this.current.phase === 'unmet',
+            );
+            if (fact) {
+              try {
+                await this.learning.saveAttempt(fact, context.epoch);
+                if (this.token === token) this.set({ save: 'saved' });
+              } catch {
+                if (this.token === token) this.set({ save: 'unsaved' });
+              }
+            }
+          }
           return;
         }
       }
@@ -192,3 +209,4 @@ export class MemoryBugSession {
     this.set({ message: '已取消，未接收残余运行。' });
   }
 }
+import { createMemoryAttemptFact } from '../learning/attempt-authority';
