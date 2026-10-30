@@ -1,0 +1,44 @@
+.bug-category {
+  margin-block: 32px;
+}
+.bug-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.bug-list article {
+  min-width: 0;
+  padding: 24px;
+  background: var(--p05-surface);
+}
+.bug-list h3 {
+  margin-top: 0;
+}
+.bug-guidance {
+  margin-block: 24px;
+}
+.bug-guidance details {
+  margin-block: 16px;
+}
+.bug-guidance summary {
+  cursor: pointer;
+  min-height: 44px;
+}
+.bug-guidance pre {
+  padding: 16px;
+  background: var(--p05-ground);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.bug-list .button,
+.bug-guidance .button {
+  min-height: 44px;
+}
+.bug-catalog-entry {
+  margin-block: 24px;
+}
+@media (max-width: 800px) {
+  .bug-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -24,6 +24,8 @@ import { lockedProgramKinds, type BlockAccess } from '../blocks/permissions';
 import { EditorHistoryController, editorHistoryInput, type EditorHistoryPort } from './history';
 import { sameEditorScope, type EditorScope } from '../storage/editor-history';
 import { reconstructionQuestion, reconstructionReference } from './reconstruction';
+import { bugQuestion } from '../bugs/content';
+import { bugSource } from '../bugs/source';
 
 export type PracticeMode = 'independent' | 'correction' | 'reconstruction';
 export interface PracticeSnapshot {
@@ -220,8 +222,9 @@ export class PracticeSession {
         const source = generateBlockSource(program, base, catalog.program.bindings);
         this.base = base;
         const question = reconstructionQuestion(catalog);
+        const bug = bugQuestion(catalog);
         this.set({
-          mode: mode === 'reconstruction' && question ? mode : 'independent',
+          mode: bug ? 'correction' : mode === 'reconstruction' && question ? mode : 'independent',
           reconstructionSource: question ? reconstructionReference(catalog, base).text : undefined,
         });
         this.history.activate(this.editorScope(catalog, this.current.mode));
@@ -235,6 +238,13 @@ export class PracticeSession {
           issues: [],
           phase: 'ready',
         });
+        if (bug) {
+          await this.enableCodeEditing();
+          if (this.token !== token) return;
+          // A background canvas may have initialized the same document invisibly.
+          this.set({ codeEditing: true });
+          this.editCode(bugSource(catalog, base, bug.brokenBody));
+        }
       })
       .catch(() => {
         if (this.token === token)
@@ -251,6 +261,7 @@ export class PracticeSession {
     const { catalog, exerciseId } = this.current;
     if (
       !catalog ||
+      !!bugQuestion(catalog) ||
       !exerciseId ||
       mode === this.current.mode ||
       !['independent', 'correction', 'reconstruction'].includes(mode) ||

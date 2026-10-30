@@ -101,6 +101,17 @@ export class MemoryWorkspaceController {
   cancel() {
     this.client.cancel();
   }
+  /** View-only attachment from another verified memory execution owner. */
+  showResult(source: string, result: MemoryResult) {
+    this.setSource(source, result.language);
+    this.invalidate();
+    this.result = result;
+    this.visits = stepVisits(source, result);
+    this.visitedLines = [...new Set(this.visits.map((visit) => visit.line))];
+    this.player.accept(result);
+    this.status = result.trace ? 'ready' : 'rejected';
+    this.publish();
+  }
   pause() {
     this.clearTimer();
     this.player.pause();

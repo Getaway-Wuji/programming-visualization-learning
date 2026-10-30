@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { Link, useLocation } from 'react-router';
 import { Breadcrumbs, PageHeading } from '../components/Ui';
 import { Workbench } from '../workbench/Workbench';
 import { MemoryWorkspaceController } from '../memory/controller';
 import { memoryExamples } from '../memory/examples';
 import { MemoryBasicView, MemoryPanel } from '../memory/MemoryPanel';
-import { memoryDiagnostics, memoryStepLabels } from '../memory/presentation';
+import { memoryStepLabels } from '../memory/presentation';
+import { DiagnosticPanel } from '../diagnostics/DiagnosticPanel';
 import { projectMemoryStep } from '../engine/memory-protocol';
 import { StackPanel } from '../stack/StackPanel';
 import { parseStackInput, stackExamples } from '../stack/examples';
@@ -15,6 +16,7 @@ import '../memory/memory.css';
 const observations = [...memoryExamples, ...stackExamples];
 
 export default function MemoryPage() {
+  const sourcePanel = useRef<HTMLElement>(null);
   const [controller] = useState(() => new MemoryWorkspaceController());
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot);
   const query = new URLSearchParams(useLocation().search);
@@ -195,7 +197,11 @@ export default function MemoryPage() {
         secondLabel="执行观察"
         onSecondVisibility={stop}
         first={
-          <section className="workbench-panel memory-source" aria-label="示例源码">
+          <section
+            ref={sourcePanel}
+            className="workbench-panel memory-source"
+            aria-label="示例源码"
+          >
             <header className="panel-heading">
               <h2>{example.language === 'cpp' ? 'C++' : 'C'} 源码</h2>
               <span>只读</span>
@@ -322,14 +328,33 @@ export default function MemoryPage() {
                 </p>
               )}
               {diagnostic && (
-                <p className="memory-diagnostic" role="alert" data-testid="memory-diagnostic">
-                  <strong>{diagnostic}</strong> ·{' '}
-                  {memoryDiagnostics[diagnostic] ??
-                    (diagnostic === 'E_STACK_LIMIT'
-                      ? '已达到32个活动调用帧的安全上限。可后退查看保留的参数和局部状态。'
-                      : '本次执行已停止。可以检查输入后重新运行。')}
-                  {result?.trace && ' 已保留停止前的状态，后退可恢复。'}
-                </p>
+                <div data-testid="memory-diagnostic">
+                  <DiagnosticPanel
+                    diagnostics={[
+                      {
+                        code: diagnostic,
+                        location:
+                          !snapshot.error && result?.terminal.byteRange
+                            ? { kind: 'source', byteRange: result.terminal.byteRange }
+                            : undefined,
+                      },
+                    ]}
+                    source={{
+                      text: example.source,
+                      language: example.language,
+                      nodes: result?.nodeMap,
+                    }}
+                    onLocateSource={() => {
+                      sourcePanel.current
+                        ?.querySelector<HTMLElement>('pre')
+                        ?.focus({ preventScroll: true });
+                      sourcePanel.current
+                        ?.querySelector('mark')
+                        ?.scrollIntoView({ block: 'center', inline: 'nearest' });
+                    }}
+                  />
+                  {result?.trace && <p>已保留停止前的状态，后退可恢复。</p>}
+                </div>
               )}
               {atEnd && result?.terminal.status === 'completed' && (
                 <p role="status">程序正常结束。可以后退查看对象结束前的值。</p>

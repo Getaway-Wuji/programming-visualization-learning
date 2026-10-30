@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, type ReactNode } from 'react';
-import type { ExecutionNode } from '../engine/protocol';
+import type { ByteRange, ExecutionNode } from '../engine/protocol';
 import type { PlayerSnapshot } from '../player/model';
 import { createSourceIndex, mapSourceLocation, type SourceRange } from '../player/source-location';
 
@@ -58,10 +58,14 @@ export function SourcePanel({
   source,
   nodes,
   view,
+  diagnosticFocus,
+  draft = false,
 }: {
   source: string;
   nodes: readonly ExecutionNode[];
   view: PlayerSnapshot;
+  diagnosticFocus?: { range: ByteRange; request: number };
+  draft?: boolean;
 }) {
   const index = useMemo(() => createSourceIndex(source), [source]);
   const current = mapSourceLocation(source, nodes, view.location, index);
@@ -71,13 +75,28 @@ export function SourcePanel({
     (view.cursor === null || view.cursor === view.length)
       ? view.terminal
       : null;
-  const terminal = tailFailure
-    ? mapSourceLocation(source, nodes, tailFailure.location, index)
-    : null;
+  const focused = useMemo(
+    () => (diagnosticFocus ? index.range(diagnosticFocus.range) : null),
+    [diagnosticFocus, index],
+  );
+  const terminal = focused
+    ? {
+        range: focused,
+        description: `诊断定位：第 ${focused.start.line} 行，第 ${focused.start.column} 列（保持当前播放步骤）`,
+      }
+    : tailFailure
+      ? mapSourceLocation(source, nodes, tailFailure.location, index)
+      : null;
   const copyarea = useRef<HTMLTextAreaElement>(null);
   const overlay = useRef<HTMLElement>(null);
   const revealKind = terminal?.range ? 'terminal' : 'step';
   const revealStart = (terminal?.range ?? current.range)?.utf16Range.start ?? null;
+  useEffect(() => {
+    if (!focused || !copyarea.current) return;
+    copyarea.current.focus({ preventScroll: true });
+    copyarea.current.setSelectionRange(focused.utf16Range.start, focused.utf16Range.end);
+    copyarea.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }, [focused, diagnosticFocus?.request]);
   useEffect(() => {
     const area = copyarea.current;
     const code = overlay.current;
@@ -107,7 +126,14 @@ export function SourcePanel({
     resize.observe(area);
     reveal();
     return () => resize.disconnect();
-  }, [source, view.cursor, view.identity?.runId, revealKind, revealStart]);
+  }, [
+    source,
+    view.cursor,
+    view.identity?.runId,
+    revealKind,
+    revealStart,
+    diagnosticFocus?.request,
+  ]);
   const highlights: Highlight[] = [];
   if (current.range) highlights.push({ kind: 'step', range: current.range });
   if (terminal?.range) highlights.push({ kind: 'terminal', range: terminal.range });
@@ -118,7 +144,7 @@ export function SourcePanel({
       aria-label="执行代码区域"
     >
       <header className="panel-heading">
-        <h3>本次执行的 C 代码</h3>
+        <h3>{draft ? '当前错误稿的 C 代码' : '本次执行的 C 代码'}</h3>
         <span className="badge badge-muted">只读</span>
       </header>
       <p className="source-position source-location" data-testid="source-location">
@@ -130,7 +156,8 @@ export function SourcePanel({
           className="source-position source-terminal-location"
           data-testid="source-terminal-location"
         >
-          末尾终止位置（失败动作未提交为步骤）：{terminal.description}。
+          {focused ? '' : '末尾终止位置（失败动作未提交为步骤）：'}
+          {terminal.description}。
         </p>
       )}
       <div className="source-view">
@@ -142,7 +169,7 @@ export function SourcePanel({
         <textarea
           ref={copyarea}
           className="source-copyarea"
-          aria-label="当前执行的 C 代码"
+          aria-label={draft ? '当前错误稿的 C 代码' : '当前执行的 C 代码'}
           value={source}
           readOnly
           spellCheck={false}

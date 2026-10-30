@@ -8,6 +8,7 @@ import { continueLesson } from '../content/reading';
 import { LearningSaveStatus } from '../learning/react';
 import { subjectLearningText, useLearning } from '../learning/react';
 import { ReconstructionCatalog } from '../practice/ReconstructionPanel';
+import { BugCatalogLink } from '../bugs/BugPanel';
 
 export function CoursePage() {
   const { chapterId } = useParams();
@@ -50,6 +51,7 @@ export function CoursePage() {
               </div>
             )}
             {!selected && <ReconstructionCatalog />}
+            {!selected && <BugCatalogLink />}
             <div className="course-grid">
               {visible.map((chapter) => (
                 <section className="card chapter-card" key={chapter.id}>

@@ -1,0 +1,284 @@
+
+Running 21 tests using 1 worker
+
+  ok  1 [chrome] › tests\browser\bugs.spec.ts:72:3 › real repair and independent durable pass: exercise.c.bug-semicolon (1.4s)
+  ok  2 [chrome] › tests\browser\bugs.spec.ts:72:3 › real repair and independent durable pass: exercise.c.bug-parenthesis (1.4s)
+  ok  3 [chrome] › tests\browser\bugs.spec.ts:72:3 › real repair and independent durable pass: exercise.c.bug-zero-branch (1.8s)
+  ok  4 [chrome] › tests\browser\bugs.spec.ts:72:3 › real repair and independent durable pass: exercise.c.bug-sum-initial (1.7s)
+  ok  5 [chrome] › tests\browser\bugs.spec.ts:132:1 › saved broken and repaired drafts restore exactly after refresh without restoring execution (1.5s)
+  ok  6 [chrome] › tests\browser\bugs.spec.ts:172:1 › catalog and editor remain operable at three widths and reveal the authored explanation explicitly (2.1s)
+  ok  7 [chrome] › tests\browser\bugs.spec.ts:199:1 › missing composite content does not authorize supplementary levels (392ms)
+  x   8 [chrome] › tests\browser\compilation.spec.ts:48:1 › four stage simulation preserves inputs, progression, review and local records without executing code (5.3s)
+  x   9 [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated header failure stops only at its stage and a reset repairs the flow (5.6s)
+  x  10 [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated semicolon failure stops only at its stage and a reset repairs the flow (5.6s)
+  x  11 [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated instruction failure stops only at its stage and a reset repairs the flow (5.6s)
+  x  12 [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated symbol failure stops only at its stage and a reset repairs the flow (5.5s)
+  x  13 [chrome] › tests\browser\compilation.spec.ts:136:1 › keyboard, three widths, refresh and history keep the simulated state honest (5.5s)
+  x  14 [chrome] › tests\browser\compilation.spec.ts:169:1 › the explanation links to the existing real Rust path and lazy page failure can recover (5.5s)
+  ok 15 [chrome] › tests\browser\diagnostics.spec.ts:77:3 › real lex diagnostic agrees with Rust and locates without editing (909ms)
+  ok 16 [chrome] › tests\browser\diagnostics.spec.ts:77:3 › real parse diagnostic agrees with Rust and locates without editing (1.3s)
+  ok 17 [chrome] › tests\browser\diagnostics.spec.ts:77:3 › real semantic diagnostic agrees with Rust and locates without editing (1.0s)
+  ok 18 [chrome] › tests\browser\diagnostics.spec.ts:138:1 › runtime error locates the frozen executed source and native block, then clears on repair (1.3s)
+  ok 19 [chrome] › tests\browser\diagnostics.spec.ts:214:1 › incomplete native blocks can be located without losing the broken draft (901ms)
+  ok 20 [chrome] › tests\browser\diagnostics.spec.ts:240:1 › invalid draft survives history save, refresh and explicit restoration (1.8s)
+  ok 21 [chrome] › tests\browser\diagnostics.spec.ts:266:1 › memory errors use main.cpp and retain the reversible prefix (639ms)
+
+
+  1) [chrome] › tests\browser\compilation.spec.ts:48:1 › four stage simulation preserves inputs, progression, review and local records without executing code 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      55 |   await observeCaseSetExecution(page);
+      56 |   await page.goto('/');
+    > 57 |   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                            ^
+      58 |   await page
+      59 |     .getByRole('navigation', { name: '主导航' })
+      60 |     .getByRole('link', { name: '编译流程', exact: true })
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:57:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\14.4\14-4-teaching-final-output\compilation-four-stage-sim-50a7b-ords-without-executing-code-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\14.4\14-4-teaching-final-output\compilation-four-stage-sim-50a7b-ords-without-executing-code-chrome\error-context.md
+
+  2) [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated header failure stops only at its stage and a reset repairs the flow 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        14 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+       9 | async function ready(page: Page) {
+      10 |   await expect(panel(page)).toBeVisible();
+    > 11 |   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                            ^
+      12 | }
+      13 | async function record(page: Page) {
+      14 |   return page.evaluate(async () => {
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:11:44)
+        at open (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:39:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:109:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\14.4\14-4-teaching-final-output\compilation-illustrated-he-d75b6-nd-a-reset-repairs-the-flow-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\14.4\14-4-teaching-final-output\compilation-illustrated-he-d75b6-nd-a-reset-repairs-the-flow-chrome\error-context.md
+
+  3) [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated semicolon failure stops only at its stage and a reset repairs the flow 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        14 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+       9 | async function ready(page: Page) {
+      10 |   await expect(panel(page)).toBeVisible();
+    > 11 |   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                            ^
+      12 | }
+      13 | async function record(page: Page) {
+      14 |   return page.evaluate(async () => {
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:11:44)
+        at open (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:39:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:109:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\14.4\14-4-teaching-final-output\compilation-illustrated-se-6e27a-nd-a-reset-repairs-the-flow-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\14.4\14-4-teaching-final-output\compilation-illustrated-se-6e27a-nd-a-reset-repairs-the-flow-chrome\error-context.md
+
+  4) [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated instruction failure stops only at its stage and a reset repairs the flow 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        14 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+       9 | async function ready(page: Page) {
+      10 |   await expect(panel(page)).toBeVisible();
+    > 11 |   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                            ^
+      12 | }
+      13 | async function record(page: Page) {
+      14 |   return page.evaluate(async () => {
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:11:44)
+        at open (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:39:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:109:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\14.4\14-4-teaching-final-output\compilation-illustrated-in-4a438-nd-a-reset-repairs-the-flow-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\14.4\14-4-teaching-final-output\compilation-illustrated-in-4a438-nd-a-reset-repairs-the-flow-chrome\error-context.md
+
+  5) [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated symbol failure stops only at its stage and a reset repairs the flow 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        14 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+       9 | async function ready(page: Page) {
+      10 |   await expect(panel(page)).toBeVisible();
+    > 11 |   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                            ^
+      12 | }
+      13 | async function record(page: Page) {
+      14 |   return page.evaluate(async () => {
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:11:44)
+        at open (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:39:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:109:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\14.4\14-4-teaching-final-output\compilation-illustrated-sy-74f97-nd-a-reset-repairs-the-flow-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\14.4\14-4-teaching-final-output\compilation-illustrated-sy-74f97-nd-a-reset-repairs-the-flow-chrome\error-context.md
+
+  6) [chrome] › tests\browser\compilation.spec.ts:136:1 › keyboard, three widths, refresh and history keep the simulated state honest 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        14 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+       9 | async function ready(page: Page) {
+      10 |   await expect(panel(page)).toBeVisible();
+    > 11 |   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                            ^
+      12 | }
+      13 | async function record(page: Page) {
+      14 |   return page.evaluate(async () => {
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:11:44)
+        at open (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:39:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:139:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\14.4\14-4-teaching-final-output\compilation-keyboard-three-1a61c--the-simulated-state-honest-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\14.4\14-4-teaching-final-output\compilation-keyboard-three-1a61c--the-simulated-state-honest-chrome\error-context.md
+
+  7) [chrome] › tests\browser\compilation.spec.ts:169:1 › the explanation links to the existing real Rust path and lazy page failure can recover 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        14 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+       9 | async function ready(page: Page) {
+      10 |   await expect(panel(page)).toBeVisible();
+    > 11 |   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                            ^
+      12 | }
+      13 | async function record(page: Page) {
+      14 |   return page.evaluate(async () => {
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:11:44)
+        at open (D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:39:3)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\compilation.spec.ts:173:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\14.4\14-4-teaching-final-output\compilation-the-explanatio-51ecb-zy-page-failure-can-recover-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\14.4\14-4-teaching-final-output\compilation-the-explanatio-51ecb-zy-page-failure-can-recover-chrome\error-context.md
+
+  7 failed
+    [chrome] › tests\browser\compilation.spec.ts:48:1 › four stage simulation preserves inputs, progression, review and local records without executing code 
+    [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated header failure stops only at its stage and a reset repairs the flow 
+    [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated semicolon failure stops only at its stage and a reset repairs the flow 
+    [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated instruction failure stops only at its stage and a reset repairs the flow 
+    [chrome] › tests\browser\compilation.spec.ts:106:3 › illustrated symbol failure stops only at its stage and a reset repairs the flow 
+    [chrome] › tests\browser\compilation.spec.ts:136:1 › keyboard, three widths, refresh and history keep the simulated state honest 
+    [chrome] › tests\browser\compilation.spec.ts:169:1 › the explanation links to the existing real Rust path and lazy page failure can recover 
+  14 passed (1.2m)
+[WebServer] (node:50852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:11300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:52240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23832) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:52524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:48556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

@@ -1,0 +1,59 @@
+.memory-bug-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-block: 16px;
+}
+.memory-bug-actions .button,
+.memory-bug-help .button {
+  min-height: 44px;
+}
+.memory-bug-help {
+  margin-block: 24px;
+}
+.memory-bug-help summary {
+  min-height: 44px;
+  cursor: pointer;
+  margin-block: 12px;
+}
+.memory-bug-help pre {
+  padding: 16px;
+  background: var(--p05-surface);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.memory-bug-editor,
+.memory-bug-replay {
+  min-width: 0;
+  padding: 24px;
+}
+.memory-bug-editor textarea {
+  display: block;
+  width: 100%;
+  min-height: 480px;
+  resize: vertical;
+  font:
+    14px/1.7 Consolas,
+    monospace;
+  background: var(--p05-ground);
+  color: var(--p05-text);
+  padding: 16px;
+  border: 1px solid var(--p05-border);
+}
+.memory-bug-replay input[type='range'] {
+  max-width: 100%;
+}
+.memory-bug-replay output {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 800px) {
+  .memory-bug-editor,
+  .memory-bug-replay {
+    padding: 16px;
+  }
+  .memory-bug-editor textarea {
+    min-height: 400px;
+  }
+}

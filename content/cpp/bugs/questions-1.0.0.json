@@ -1,0 +1,245 @@
+{
+  "registryVersion": "1.0.0",
+  "registryRef": {
+    "id": "bug-catalog.cpp.memory-loop",
+    "version": "1.0.0"
+  },
+  "packageRef": {
+    "id": "content.c.p05",
+    "version": "1.0.0"
+  },
+  "questions": [
+    {
+      "exerciseRef": {
+        "id": "exercise.cpp.bug-uninitialized-pointer",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.cpp.bug-uninitialized-pointer",
+        "version": "1.0.0"
+      },
+      "lessonRef": {
+        "id": "lesson.c.scope-shadowing",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "category": "pointer",
+      "title": "指针还没有目标",
+      "prompt": "让指针指向仍存活的输入变量，再实际解引用并输出输入及换行。",
+      "goal": "indirect-read",
+      "brokenSource": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+      "solutionSource": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p = &x;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+      "alternativeSource": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p = nullptr;\n  p = &x;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+      "hints": [
+        "先运行并走到真实错误位置，观察p的值。",
+        "尚未初始化与已经初始化为空不同；现在p还没有有效引用。",
+        "x仍在main内存活，可以让p保存x的地址。"
+      ],
+      "explanation": "声明int *p并没有让它指向对象。用目标变量的地址初始化p（这里是&x），再访问*p。nullptr只是已初始化的空指针，仍不能解引用；另一正确写法先设nullptr再赋&x。原错误位置来自Rust实际读取，而非预设行号。",
+      "tests": [
+        {
+          "caseKey": "negative",
+          "input": [
+            -9
+          ],
+          "expectedStdout": "-9\n"
+        },
+        {
+          "caseKey": "zero",
+          "input": [
+            0
+          ],
+          "expectedStdout": "0\n"
+        },
+        {
+          "caseKey": "positive",
+          "input": [
+            7
+          ],
+          "expectedStdout": "7\n"
+        },
+        {
+          "caseKey": "boundary",
+          "input": [
+            999
+          ],
+          "expectedStdout": "999\n"
+        }
+      ]
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.cpp.bug-dangling-pointer",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.cpp.bug-dangling-pointer",
+        "version": "1.0.0"
+      },
+      "lessonRef": {
+        "id": "lesson.c.scope-shadowing",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "category": "pointer",
+      "title": "离开作用域后还可访问吗",
+      "prompt": "让目标对象的生命期覆盖指针访问，实际解引用后输出输入及换行。",
+      "goal": "indirect-read",
+      "brokenSource": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p;\n  {\n    int value = x;\n    p = &value;\n  }\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+      "solutionSource": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+      "alternativeSource": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p = &x;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+      "hints": [
+        "在内存视图前进到右花括号，观察value是否仍存活。",
+        "指针保存引用不会延长局部变量的生命期。",
+        "把value放到覆盖访问的作用域，或直接引用仍存活的x。"
+      ],
+      "explanation": "value离开内部块后成为死亡对象；p仍指向旧对象ID，不能被后来的对象替代。将value的声明移动到main作用域，或引用x，可保证访问时对象仍存活。后退可以恢复对象及旧值，但不会修复当前源码。",
+      "tests": [
+        {
+          "caseKey": "negative",
+          "input": [
+            -9
+          ],
+          "expectedStdout": "-9\n"
+        },
+        {
+          "caseKey": "zero",
+          "input": [
+            0
+          ],
+          "expectedStdout": "0\n"
+        },
+        {
+          "caseKey": "positive",
+          "input": [
+            7
+          ],
+          "expectedStdout": "7\n"
+        },
+        {
+          "caseKey": "boundary",
+          "input": [
+            999
+          ],
+          "expectedStdout": "999\n"
+        }
+      ]
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.cpp.bug-missing-update",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.cpp.bug-missing-update",
+        "version": "1.0.0"
+      },
+      "lessonRef": {
+        "id": "lesson.c.while-countdown",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "category": "loop",
+      "title": "计数器停在原地",
+      "prompt": "通过真实循环累计0到n-1并输出总和及换行，n=0时不迭代。",
+      "goal": "loop-iterations",
+      "brokenSource": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+      "solutionSource": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+      "alternativeSource": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int sum = 0;\n  for (int i = 0; i < n; i = i + 1) {\n    sum = sum + i;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+      "hints": [
+        "先运行n=3，观察连续几轮中i是否变化。",
+        "sum改变不代表控制循环的i改变；检查继续条件。",
+        "每轮应让i增加1，使它最终达到n。"
+      ],
+      "explanation": "原稿的i一直为0，n>0时条件一直成立。Rust按原20,000步上限终止并保留真实前缀；这是预算终止，不是程序正常完成。加入i=i+1，或用for更新部分，可使循环实际累计并结束。n=0本来就是合法零轮组。",
+      "tests": [
+        {
+          "caseKey": "three",
+          "input": [
+            3
+          ],
+          "expectedStdout": "3\n"
+        },
+        {
+          "caseKey": "empty",
+          "input": [
+            0
+          ],
+          "expectedStdout": "0\n"
+        },
+        {
+          "caseKey": "single",
+          "input": [
+            1
+          ],
+          "expectedStdout": "0\n"
+        },
+        {
+          "caseKey": "seven",
+          "input": [
+            7
+          ],
+          "expectedStdout": "21\n"
+        }
+      ]
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.cpp.bug-wrong-direction",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.cpp.bug-wrong-direction",
+        "version": "1.0.0"
+      },
+      "lessonRef": {
+        "id": "lesson.c.while-countdown",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "category": "loop",
+      "title": "计数器走反了",
+      "prompt": "通过真实循环累计1到n并输出总和及换行，n=0输出0。",
+      "goal": "loop-iterations",
+      "brokenSource": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = n;\n  int sum = 0;\n  while (i > 0) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+      "solutionSource": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = n;\n  int sum = 0;\n  while (i > 0) {\n    sum = sum + i;\n    i = i - 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+      "alternativeSource": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int sum = 0;\n  for (int i = 1; i <= n; i = i + 1) {\n    sum = sum + i;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+      "hints": [
+        "前进几轮，对照i>0和i的变化方向。",
+        "i虽然变化，却越来越远离让条件为假的边界。",
+        "倒数循环每轮应减1；也可改为合法正向for累计。"
+      ],
+      "explanation": "从n向0倒数需要i=i-1。原稿增加i，在既定输入下先耗尽真实步骤预算；前缀可查看实际增长与累加。修复可以倒数或正向for，只要实际循环、读取输入、正常结束且每组输出正确，不比较参考源码文本。",
+      "tests": [
+        {
+          "caseKey": "three",
+          "input": [
+            3
+          ],
+          "expectedStdout": "6\n"
+        },
+        {
+          "caseKey": "empty",
+          "input": [
+            0
+          ],
+          "expectedStdout": "0\n"
+        },
+        {
+          "caseKey": "single",
+          "input": [
+            1
+          ],
+          "expectedStdout": "1\n"
+        },
+        {
+          "caseKey": "seven",
+          "input": [
+            7
+          ],
+          "expectedStdout": "28\n"
+        }
+      ]
+    }
+  ]
+}

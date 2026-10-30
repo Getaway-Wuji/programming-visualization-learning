@@ -51,9 +51,10 @@ writeFileSync(
   new URL('engine-build.ts', folder),
   `// Generated from the locked P1 memory build.\nexport const engineBuild = ${JSON.stringify(metadata)} as const;\n`,
 );
-mkdirSync(new URL('../.artifacts/12.2/', import.meta.url), { recursive: true });
+const evidenceTask = process.env.TASK_EVIDENCE_TASK ?? 'current';
+mkdirSync(new URL(`../.artifacts/${evidenceTask}/`, import.meta.url), { recursive: true });
 writeFileSync(
-  new URL('../.artifacts/12.2/wasm-build.json', import.meta.url),
+  new URL(`../.artifacts/${evidenceTask}/memory-wasm-build.json`, import.meta.url),
   JSON.stringify(
     {
       environment,

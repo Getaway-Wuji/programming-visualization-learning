@@ -1,11 +1,13 @@
 import {
   useEffect,
   useId,
+  useImperativeHandle,
   useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
   type CSSProperties,
+  type Ref,
 } from 'react';
 import { Icon } from '../components/Icon';
 import { useAppearance } from '../appearance/react';
@@ -13,9 +15,11 @@ import { useWorkbench, type WorkbenchKind, type LayoutGuard } from './react';
 
 const defaults = { practice: 50, visualize: 35, review: 35 } as const;
 type Pane = 'first' | 'second';
+export type WorkbenchHandle = { reveal: (pane: Pane) => void };
 
 /** Pane children keep their positions and identities when resized or hidden. */
 export function Workbench({
+  ref,
   kind,
   firstLabel,
   secondLabel,
@@ -24,6 +28,7 @@ export function Workbench({
   onSecondVisibility,
   firstAvailable = true,
 }: {
+  ref?: Ref<WorkbenchHandle>;
   kind: WorkbenchKind;
   firstLabel: string;
   secondLabel: string;
@@ -43,6 +48,16 @@ export function Workbench({
   const [narrow, setNarrow] = useState(false);
   const [active, setActive] = useState<Pane>(kind === 'practice' ? 'first' : 'second');
   const [expanded, setExpanded] = useState<Pane | 'none'>('none');
+  useImperativeHandle(
+    ref,
+    () => ({
+      reveal(pane) {
+        setActive(pane);
+        setExpanded('none');
+      },
+    }),
+    [],
+  );
   const root = useRef<HTMLDivElement>(null);
   const grid = useRef<HTMLDivElement>(null);
   const drag = useRef<{ pointer: number; ratio: number; guard: LayoutGuard } | null>(null);

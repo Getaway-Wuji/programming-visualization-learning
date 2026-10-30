@@ -13,6 +13,7 @@ export interface MemoryDependencies extends ModuleDependencies {
   now?: () => number;
   createWorker?: () => Worker;
   decode?: typeof decodeMemoryResult;
+  encode?: typeof encodeMemoryRequest;
 }
 interface Operation {
   id: string;
@@ -28,7 +29,7 @@ export function memoryRequest(
   source: string,
   language: MemoryRequest['language'],
   input: number[] = [],
-  sourceRevision = crypto.randomUUID(),
+  sourceRevision: string = crypto.randomUUID(),
 ): MemoryRequest {
   return {
     execVersion: '1.3.0',
@@ -111,13 +112,15 @@ export class MemoryExecutionClient {
       }
     }
   }
-  execute(request: MemoryRequest): Promise<MemoryResult> {
+  execute(request: MemoryRequest, options: { started?: number } = {}): Promise<MemoryResult> {
     this.cancel();
     const snapshot = structuredClone(request);
-    const start = this.now();
+    const start = options.started ?? this.now();
     let bytes: Uint8Array<ArrayBuffer>;
     try {
-      bytes = encodeMemoryRequest(snapshot);
+      if (!Number.isFinite(start) || start > this.now()) throw new Error('E_PROTOCOL_INVALID');
+      bytes = (this.dependencies.encode ?? encodeMemoryRequest)(snapshot);
+      if (this.now() - start >= 1000) throw new Error('E_DEADLINE');
     } catch (error) {
       this.state = 'failed';
       return Promise.reject(error);
@@ -133,7 +136,10 @@ export class MemoryExecutionClient {
       };
       this.active = operation;
       operation.releaseSlot = claimEngineSlot(() => this.fail(operation, 'E_CANCELLED'));
-      operation.timer = setTimeout(() => this.fail(operation, 'E_DEADLINE'), 1000);
+      operation.timer = setTimeout(
+        () => this.fail(operation, 'E_DEADLINE'),
+        Math.max(0, 1000 - (this.now() - start)),
+      );
       const guard = () => this.guard(operation);
       void (async () => {
         try {

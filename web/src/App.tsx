@@ -27,6 +27,9 @@ const ReviewPage = lazy(() =>
 );
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const MemoryPage = lazy(() => import('./pages/MemoryPage'));
+const CompilationPage = lazy(() => import('./compilation/CompilationPage'));
+const BugPage = lazy(() => import('./bugs/BugPanel'));
+const MemoryBugPage = lazy(() => import('./memory-bugs/MemoryBugPage'));
 
 class PageBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -74,6 +77,9 @@ function AppRoutes() {
             <Route path="/practice/:exerciseId/review" element={<ReviewPage />} />
             <Route path="/cases" element={<CasesPage />} />
             <Route path="/memory" element={<MemoryPage />} />
+            <Route path="/compilation" element={<CompilationPage />} />
+            <Route path="/bugs" element={<BugPage />} />
+            <Route path="/bugs/memory/:exerciseId" element={<MemoryBugPage />} />
             <Route path="/visualize/:caseId" element={<VisualizePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="*" element={<MissingPage />} />

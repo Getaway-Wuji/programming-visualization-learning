@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { openBlockKeyboardEditor, showPracticeBlocks } from './block-ui';
+import { p05CourseRelease } from '../../web/src/content/p05-course-release.generated';
 
 const practicePath = '/#/practice/exercise.c.echo';
 const visualPath = '/#/visualize/case.c.bubble-sort';
@@ -12,9 +13,9 @@ async function ready(page: Page, id: string) {
 }
 
 async function noHorizontalOverflow(page: Page) {
-  expect(
-    await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),
-  ).toBe(true);
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1))
+    .toBe(true);
 }
 
 test('public routes preserve content relationships, refresh and browser history', async ({
@@ -40,7 +41,13 @@ test('public routes preserve content relationships, refresh and browser history'
   await expect(page.locator('main h1')).toBeFocused();
   await expect(page.getByRole('button', { name: '确认已学习' })).toBeEnabled();
   await expect(
-    page.getByRole('navigation', { name: '当前位置' }).getByRole('link', { name: '变量与表达式' }),
+    page.getByRole('navigation', { name: '当前位置' }).getByRole('link', {
+      name:
+        p05CourseRelease.enabled && process.env.P05_HIDE_COURSE_BUNDLE !== '1'
+          ? '程序入门与输出'
+          : '变量与表达式',
+      exact: true,
+    }),
   ).toHaveAttribute('href', '#/courses/chapter.c.values');
   expect(wasmRequests).toEqual([]);
   await page.getByRole('link', { name: '进入练习工作区' }).click();
@@ -286,9 +293,13 @@ test('desktop and narrower layouts avoid horizontal page overflow', async ({ pag
       // from the accessible tree until navigation is closed.
       await expect(page.locator('.nav-toggle')).toHaveAttribute('aria-expanded', 'true');
       await expect(page.getByRole('navigation', { name: '主导航' })).toBeVisible();
-      await expect(page.getByRole('navigation', { name: '主导航' }).getByRole('link')).toHaveCount(
-        4,
-      );
+      await expect(page.getByRole('navigation', { name: '主导航' }).getByRole('link')).toHaveText([
+        '学习首页',
+        'C 语言课程',
+        '算法与演示',
+        '编译流程',
+        '本地设置',
+      ]);
       await noHorizontalOverflow(page);
     }
   }

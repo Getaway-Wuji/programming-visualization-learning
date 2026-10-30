@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import * as Blockly from 'blockly/core';
 import {
   BLOCK_LABELS,
@@ -35,6 +35,7 @@ export interface BlockWorkspaceProps {
   disabled?: boolean;
   allowedKinds?: readonly TeachingBlockKind[];
   selectedBlockId?: string;
+  diagnosticFocus?: { blockId: string; request: number };
   onSelect?(blockId: string | null): void;
   onSnapshot?(draft: BlockWorkspaceDraft, logicalMove?: boolean): void;
 }
@@ -80,6 +81,7 @@ export function BlockWorkspace({
   disabled = false,
   allowedKinds = BLOCK_TYPES,
   selectedBlockId,
+  diagnosticFocus,
   onSelect,
   onSnapshot,
 }: BlockWorkspaceProps) {
@@ -104,6 +106,19 @@ export function BlockWorkspace({
   const [slotName, setSlotName] = useState('');
   const [notice, setNotice] = useState('');
   const [issues, setIssues] = useState<WorkspaceIssue[]>([]);
+  const locateBlock = useCallback((blockId: string) => {
+    const current = workspace.current;
+    const block = current?.getAllBlocks(false).find((item) => protocolBlockId(item.id) === blockId);
+    if (!current || !block) return;
+    block.select();
+    current.centerOnBlock(block.id);
+    setSelectedId(block.id);
+    host.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    host.current?.focus({ preventScroll: true });
+  }, []);
+  useEffect(() => {
+    if (diagnosticFocus) locateBlock(diagnosticFocus.blockId);
+  }, [diagnosticFocus, locateBlock]);
   const [interaction, setInteraction] = useState<BlockInteractionState>('idle');
   useEffect(() => {
     callback.current = onChange;
@@ -422,6 +437,7 @@ export function BlockWorkspace({
         className={`block-canvas${disabled ? ' block-canvas-disabled' : ''}`}
         inert={disabled}
         ref={host}
+        tabIndex={-1}
         aria-label="可拖拽积木画布"
       />
       <details className="block-accessible" data-testid="block-keyboard-editor">
@@ -613,7 +629,18 @@ export function BlockWorkspace({
           <p>当前积木尚不能生成程序：</p>
           <ul>
             {issues.map((issue, index) => (
-              <li key={`${issue.blockId}-${issue.code}-${index}`}>{issue.message}</li>
+              <li key={`${issue.blockId}-${issue.code}-${index}`}>
+                {issue.message} <code>{issue.code}</code>
+                {issue.blockId && (
+                  <button
+                    type="button"
+                    className="button button-small"
+                    onClick={() => locateBlock(issue.blockId!)}
+                  >
+                    定位积木 {issue.blockId}
+                  </button>
+                )}
+              </li>
             ))}
           </ul>
         </div>

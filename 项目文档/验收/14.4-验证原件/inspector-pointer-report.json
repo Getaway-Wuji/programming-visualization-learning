@@ -1,0 +1,1516 @@
+{
+ "url": "http://127.0.0.1:4178/#/bugs/memory/exercise.cpp.bug-uninitialized-pointer",
+ "at": "2026-10-30T18:17:06.533Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.58,
+    0.61
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 1719,
+     "screens": 1.9,
+     "words": 82,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 16,
+     "sections": 3,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "指针还没有目标",
+     "words": 1,
+     "chars": 7,
+     "lines": 1,
+     "size": 29,
+     "vw": 2,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 167,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "指针还没有目标",
+     "words": 1,
+     "lines": 1,
+     "size": 29,
+     "font": "Microsoft YaHei UI"
+    },
+    "headings": [
+     {
+      "text": "指针还没有目标",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 29,
+      "vw": 2,
+      "font": "Microsoft YaHei UI",
+      "weight": 500,
+      "tracking": -0.035,
+      "leading": 1.45,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 167,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Microsoft YaHei UI",
+       "share": 0.8,
+       "mono": false
+      },
+      {
+       "family": "monospace",
+       "share": 0.1,
+       "mono": false
+      },
+      {
+       "family": "Consolas",
+       "share": 0.1,
+       "mono": true
+      },
+      {
+       "family": "ui-monospace",
+       "share": 0,
+       "mono": false
+      }
+     ],
+     "familyCount": 4,
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      17,
+      19,
+      23,
+      29
+     ],
+     "sizeCount": 9,
+     "notLoaded": [],
+     "body": {
+      "font": "Microsoft YaHei UI",
+      "size": 15,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 14.9
+     },
+     "measureChars": 155,
+     "max": {
+      "size": 29,
+      "vw": 2,
+      "font": "Microsoft YaHei UI",
+      "text": "指针还没有目标"
+     },
+     "monoShare": 0.2,
+     "monoProseShare": 0,
+     "monoFamilies": [
+      "ui-monospace",
+      "monospace",
+      "Consolas"
+     ],
+     "monoSamples": [
+      "{ }"
+     ],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.05,
+     "smallText": 4
+    },
+    "eyebrows": [
+     {
+      "text": "受限 C++ · 真实内存关卡",
+      "above": "指针还没有目标",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 11,
+      "top": 142
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f3f5f7",
+     "bodyBgHsl": {
+      "h": 210,
+      "s": 0.2,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [],
+     "textColors": [
+      {
+       "color": "#18212b",
+       "share": 0.75
+      },
+      {
+       "color": "#566170",
+       "share": 0.22
+      },
+      {
+       "color": "#1d5fbf",
+       "share": 0.03
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#18212b"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 15,
+     "inHero": 12,
+     "radius": 13,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "跳到主要内容",
+      "收起侧栏",
+      "学习首页",
+      "C 语言课程",
+      "算法与演示"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 1,
+     "hairlineSamples": [
+      "aside.sidebar 216px"
+     ],
+     "outlinedBoxes": 3,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 3,
+     "boxRadius": 12,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 900,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 1719,
+    "margins": {
+     "left": 25,
+     "right": 32
+    },
+    "sections": [
+     {
+      "sel": "div",
+      "tag": "div",
+      "top": 354,
+      "height": 251,
+      "words": 7,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "课程更新尚未就绪",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 266,
+      "right": 423,
+      "textLeft": 266,
+      "textRight": 423,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.adaptive-workbench",
+      "tag": "div",
+      "top": 905,
+      "height": 750,
+      "words": 13,
+      "media": 0,
+      "middle": 85,
+      "heading": {
+       "text": "编辑本关 C++ 代码",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 248,
+      "right": 32,
+      "textLeft": 248,
+      "textRight": 32,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "指针还没有目标",
+      "size": 29,
+      "top": 167,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 248,
+      "n": 4
+     },
+     {
+      "x": 273,
+      "n": 1
+     },
+     {
+      "x": 328,
+      "n": 1
+     },
+     {
+      "x": 861,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 7,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.14,
+    "voidBox": {
+     "x": 1140,
+     "y": 120,
+     "w": 300,
+     "h": 600
+    }
+   },
+   "app": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "dark": false,
+    "ground": "#f3f5f7",
+    "sidebar": {
+     "w": 216,
+     "tag": "aside",
+     "links": 9,
+     "share": 0.15
+    },
+    "topbar": {
+     "h": 76
+    },
+    "canvas": {
+     "left": 32,
+     "right": 32
+    },
+    "hero": {
+     "text": "指针还没有目标",
+     "words": 1,
+     "chars": 7,
+     "lines": 1,
+     "size": 29,
+     "vw": 2,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 167,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 5,
+     "firstScreen": 3,
+     "ragged": [
+      {
+       "diff": 126,
+       "top": 1009
+      }
+     ],
+     "voids": [
+      {
+       "gap": 398,
+       "at": 1106,
+       "panel": "本次执行与复盘"
+      }
+     ]
+    },
+    "tiles": 1,
+    "panels": {
+     "count": 5,
+     "radii": [
+      [
+       0,
+       2
+      ],
+      [
+       12,
+       2
+      ],
+      [
+       14,
+       1
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.15,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      17,
+      19,
+      23,
+      29
+     ]
+    },
+    "title": {
+     "text": "指针还没有目标",
+     "size": 29,
+     "top": 167
+    },
+    "colourShare": 0.004
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.63,
+    0.37
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 1643,
+     "screens": 1.6,
+     "words": 63,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 16,
+     "sections": 3,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "指针还没有目标",
+     "words": 1,
+     "chars": 7,
+     "lines": 1,
+     "size": 29,
+     "vw": 3.8,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 159,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "指针还没有目标",
+     "words": 1,
+     "lines": 1,
+     "size": 29,
+     "font": "Microsoft YaHei UI"
+    },
+    "headings": [
+     {
+      "text": "指针还没有目标",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 29,
+      "vw": 3.8,
+      "font": "Microsoft YaHei UI",
+      "weight": 500,
+      "tracking": -0.035,
+      "leading": 1.45,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 159,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Microsoft YaHei UI",
+       "share": 0.78,
+       "mono": false
+      },
+      {
+       "family": "monospace",
+       "share": 0.11,
+       "mono": false
+      },
+      {
+       "family": "Consolas",
+       "share": 0.11,
+       "mono": true
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      23,
+      29
+     ],
+     "sizeCount": 7,
+     "notLoaded": [],
+     "body": {
+      "font": "Microsoft YaHei UI",
+      "size": 15,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 14.9
+     },
+     "measureChars": 94,
+     "max": {
+      "size": 29,
+      "vw": 3.8,
+      "font": "Microsoft YaHei UI",
+      "text": "指针还没有目标"
+     },
+     "monoShare": 0.22,
+     "monoProseShare": 0,
+     "monoFamilies": [
+      "monospace",
+      "Consolas"
+     ],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.05,
+     "smallText": 3
+    },
+    "eyebrows": [
+     {
+      "text": "受限 C++ · 真实内存关卡",
+      "above": "指针还没有目标",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 11,
+      "top": 134
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f3f5f7",
+     "bodyBgHsl": {
+      "h": 210,
+      "s": 0.2,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 1053,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#f3f5f7",
+       "top": 1122,
+       "hsl": {
+        "h": 210,
+        "s": 0.2,
+        "l": 0.96
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#18212b",
+       "share": 0.81
+      },
+      {
+       "color": "#566170",
+       "share": 0.16
+      },
+      {
+       "color": "#1d5fbf",
+       "share": 0.02
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#18212b"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 8,
+     "inHero": 8,
+     "radius": 13,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "跳到主要内容",
+      "重新读取档案",
+      "查看第 1 层提示",
+      "运行本组",
+      "提交全部4组"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 2,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 2,
+     "boxRadius": 14,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 1643,
+    "margins": {
+     "left": 32,
+     "right": 32
+    },
+    "sections": [
+     {
+      "sel": "div",
+      "tag": "div",
+      "top": 365,
+      "height": 251,
+      "words": 7,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "课程更新尚未就绪",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 50,
+      "right": 58,
+      "textLeft": 50,
+      "textRight": 58,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.adaptive-workbench",
+      "tag": "div",
+      "top": 941,
+      "height": 637,
+      "words": 9,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "编辑本关 C++ 代码",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 32,
+      "right": 36,
+      "textLeft": 32,
+      "textRight": 170,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "指针还没有目标",
+      "size": 29,
+      "top": 159,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 32,
+      "n": 4
+     },
+     {
+      "x": 49,
+      "n": 1
+     },
+     {
+      "x": 112,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 6,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "dark": false,
+    "ground": "#f3f5f7",
+    "sidebar": null,
+    "topbar": {
+     "h": 68
+    },
+    "canvas": {
+     "left": 32,
+     "right": 32
+    },
+    "hero": {
+     "text": "指针还没有目标",
+     "words": 1,
+     "chars": 7,
+     "lines": 1,
+     "size": 29,
+     "vw": 3.8,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 159,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 2,
+     "firstScreen": 1,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 1,
+    "panels": {
+     "count": 2,
+     "radii": [
+      [
+       14,
+       1
+      ],
+      [
+       12,
+       1
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.13,
+     "tiny": 1,
+     "tinySamples": [
+      "按自己的节奏学习 10px"
+     ],
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      17,
+      19,
+      23,
+      29
+     ]
+    },
+    "title": {
+     "text": "指针还没有目标",
+     "size": 29,
+     "top": 159
+    },
+    "colourShare": 0.007
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.55,
+    0.39,
+    0.38
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 1813,
+     "screens": 2.1,
+     "words": 62,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 16,
+     "sections": 3,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "指针还没有目标",
+     "words": 1,
+     "chars": 7,
+     "lines": 1,
+     "size": 24,
+     "vw": 6.2,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 153,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "指针还没有目标",
+     "words": 1,
+     "lines": 1,
+     "size": 24,
+     "font": "Microsoft YaHei UI"
+    },
+    "headings": [
+     {
+      "text": "指针还没有目标",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Microsoft YaHei UI",
+      "weight": 500,
+      "tracking": -0.035,
+      "leading": 1.45,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 153,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "编辑本关 C++ 代码",
+      "words": 3,
+      "chars": 11,
+      "lines": 1,
+      "size": 22.5,
+      "vw": 5.8,
+      "font": "Microsoft YaHei UI",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.45,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 1223,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 2,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Microsoft YaHei UI",
+       "share": 0.77,
+       "mono": false
+      },
+      {
+       "family": "monospace",
+       "share": 0.12,
+       "mono": false
+      },
+      {
+       "family": "Consolas",
+       "share": 0.11,
+       "mono": true
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      23,
+      24
+     ],
+     "sizeCount": 7,
+     "notLoaded": [],
+     "body": {
+      "font": "Microsoft YaHei UI",
+      "size": 15,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 14.9
+     },
+     "measureChars": 47,
+     "max": {
+      "size": 24,
+      "vw": 6.2,
+      "font": "Microsoft YaHei UI",
+      "text": "指针还没有目标"
+     },
+     "monoShare": 0.23,
+     "monoProseShare": 0,
+     "monoFamilies": [
+      "monospace",
+      "Consolas"
+     ],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.05,
+     "smallText": 3
+    },
+    "eyebrows": [
+     {
+      "text": "受限 C++ · 真实内存关卡",
+      "above": "指针还没有目标",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 11,
+      "top": 128
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f3f5f7",
+     "bodyBgHsl": {
+      "h": 210,
+      "s": 0.2,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 1206,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#f3f5f7",
+       "top": 1274,
+       "hsl": {
+        "h": 210,
+        "s": 0.2,
+        "l": 0.96
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#18212b",
+       "share": 0.81
+      },
+      {
+       "color": "#566170",
+       "share": 0.16
+      },
+      {
+       "color": "#1d5fbf",
+       "share": 0.02
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#18212b"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 8,
+     "inHero": 3,
+     "radius": 13,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "跳到主要内容",
+      "重新读取档案",
+      "查看第 1 层提示"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 2,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 2,
+     "boxRadius": 14,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 1813,
+    "margins": {
+     "left": 18,
+     "right": 21
+    },
+    "sections": [
+     {
+      "sel": "div",
+      "tag": "div",
+      "top": 399,
+      "height": 289,
+      "words": 7,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "课程更新尚未就绪",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 36,
+      "right": 38,
+      "textLeft": 36,
+      "textRight": 38,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.adaptive-workbench",
+      "tag": "div",
+      "top": 1094,
+      "height": 662,
+      "words": 9,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "编辑本关 C++ 代码",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 18,
+      "right": 22,
+      "textLeft": 18,
+      "textRight": 35,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "指针还没有目标",
+      "size": 24,
+      "top": 153,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 18,
+      "n": 4
+     },
+     {
+      "x": 35,
+      "n": 1
+     },
+     {
+      "x": 79,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 6,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "dark": false,
+    "ground": "#f3f5f7",
+    "sidebar": null,
+    "topbar": {
+     "h": 68
+    },
+    "canvas": {
+     "left": 18,
+     "right": 21
+    },
+    "hero": {
+     "text": "指针还没有目标",
+     "words": 1,
+     "chars": 7,
+     "lines": 1,
+     "size": 24,
+     "vw": 6.2,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 153,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 3,
+     "firstScreen": 2,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 1,
+    "panels": {
+     "count": 3,
+     "radii": [
+      [
+       14,
+       1
+      ],
+      [
+       8,
+       1
+      ],
+      [
+       12,
+       1
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.12,
+     "tiny": 1,
+     "tinySamples": [
+      "按自己的节奏学习 10px"
+     ],
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      17,
+      19,
+      23,
+      24
+     ]
+    },
+    "title": {
+     "text": "指针还没有目标",
+     "size": 24,
+     "top": 153
+    },
+    "colourShare": 0
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "font-count",
+   "width": 1440,
+   "message": "3 typefaces in use (Microsoft YaHei UI, monospace, Consolas).",
+   "fix": "Two at most.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "ragged-row",
+   "width": 1440,
+   "message": "1 pair(s) of cards in one row end at different heights (by 126px).",
+   "fix": "Cards that share a row share a bottom edge: balance them by their content (the same number of rows, a block of similar height beside it), or stack them. In testing, ragged rows were marked down every time."
+  },
+  {
+   "level": "WARN",
+   "id": "panel-void",
+   "width": 1440,
+   "message": "1 card(s) hold a blank band inside: 398px in \"本次执行与复盘\".",
+   "fix": "A card stretches to its neighbour only when it has content to fill. Keep a legend or a note directly under its chart (only an action or a total may sit at a stretched card's foot), let a short card keep its own height (align-items: start), and let a filtered block shrink to its rows."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.4\\inspector-pointer\\desktop-fold.jpg",
+   "pages": [
+    "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.4\\inspector-pointer\\desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.4\\inspector-pointer\\tablet-fold.jpg",
+   "pages": [
+    "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.4\\inspector-pointer\\tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.4\\inspector-pointer\\mobile-fold.jpg",
+   "pages": [
+    "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.4\\inspector-pointer\\mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

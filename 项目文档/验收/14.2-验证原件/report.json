@@ -1,0 +1,1532 @@
+{
+ "url": "http://127.0.0.1:4178/#/compilation",
+ "at": "2026-10-30T15:18:51.781Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.65,
+    0.57
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 1527,
+     "screens": 1.7,
+     "words": 115,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 12,
+     "sections": 4,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "编译流程，分四步看。",
+     "words": 1,
+     "chars": 10,
+     "lines": 1,
+     "size": 29,
+     "vw": 2,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 167,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "编译流程，分四步看。",
+     "words": 1,
+     "lines": 1,
+     "size": 29,
+     "font": "Microsoft YaHei UI"
+    },
+    "headings": [
+     {
+      "text": "编译流程，分四步看。",
+      "words": 1,
+      "chars": 10,
+      "lines": 1,
+      "size": 29,
+      "vw": 2,
+      "font": "Microsoft YaHei UI",
+      "weight": 500,
+      "tracking": -0.035,
+      "leading": 1.45,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.81,
+      "top": 167,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Microsoft YaHei UI",
+       "share": 0.9,
+       "mono": false
+      },
+      {
+       "family": "ui-monospace",
+       "share": 0.1,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      23,
+      29
+     ],
+     "sizeCount": 10,
+     "notLoaded": [],
+     "body": {
+      "font": "Microsoft YaHei UI",
+      "size": 15,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 14.9
+     },
+     "measureChars": 100,
+     "max": {
+      "size": 29,
+      "vw": 2,
+      "font": "Microsoft YaHei UI",
+      "text": "编译流程，分四步看。"
+     },
+     "monoShare": 0.1,
+     "monoProseShare": 0,
+     "monoFamilies": [
+      "ui-monospace"
+     ],
+     "monoSamples": [
+      "{ }"
+     ],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.08,
+     "centerShare": 0.04,
+     "smallText": 1
+    },
+    "eyebrows": [
+     {
+      "text": "从源码到程序文件",
+      "above": "编译流程，分四步看。",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 11,
+      "top": 142
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f3f5f7",
+     "bodyBgHsl": {
+      "h": 210,
+      "s": 0.2,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 568,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#18212b",
+       "share": 0.68
+      },
+      {
+       "color": "#566170",
+       "share": 0.3
+      },
+      {
+       "color": "#1d5fbf",
+       "share": 0.01
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#18212b"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 13,
+     "inHero": 8,
+     "radius": 13,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "跳到主要内容",
+      "收起侧栏",
+      "学习首页",
+      "C 语言课程",
+      "算法与演示"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 5,
+     "hairlineSamples": [
+      "aside.sidebar 216px",
+      "button 278px",
+      "button 278px",
+      "button 278px",
+      "button 278px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 900,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 1527,
+    "margins": {
+     "left": 25,
+     "right": 32
+    },
+    "sections": [
+     {
+      "sel": "ol.compilation-chain",
+      "tag": "ol",
+      "top": 418,
+      "height": 126,
+      "words": 12,
+      "media": 0,
+      "middle": 16,
+      "heading": null,
+      "left": 248,
+      "right": 32,
+      "textLeft": 265,
+      "textRight": 158,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.compilation-detail",
+      "tag": "section",
+      "top": 568,
+      "height": 563,
+      "words": 42,
+      "media": 0,
+      "middle": 166,
+      "heading": {
+       "text": "步 ·",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 272,
+      "right": 56,
+      "textLeft": 272,
+      "textRight": 56,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.compilation-comparison",
+      "tag": "section",
+      "top": 1163,
+      "height": 248,
+      "words": 16,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "本站怎样运行你的程序？",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 248,
+      "right": 457,
+      "textLeft": 248,
+      "textRight": 457,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "编译流程，分四步看。",
+      "size": 29,
+      "top": 167,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 248,
+      "n": 4
+     },
+     {
+      "x": 315,
+      "n": 2
+     },
+     {
+      "x": 272,
+      "n": 1
+     },
+     {
+      "x": 368,
+      "n": 1
+     },
+     {
+      "x": 840,
+      "n": 1
+     },
+     {
+      "x": 889,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 10,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.09,
+    "voidBox": {
+     "x": 480,
+     "y": 780,
+     "w": 960,
+     "h": 120
+    }
+   },
+   "app": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "dark": false,
+    "ground": "#f3f5f7",
+    "sidebar": {
+     "w": 216,
+     "tag": "aside",
+     "links": 9,
+     "share": 0.15
+    },
+    "topbar": {
+     "h": 76
+    },
+    "canvas": {
+     "left": 32,
+     "right": 32
+    },
+    "hero": {
+     "text": "编译流程，分四步看。",
+     "words": 1,
+     "chars": 10,
+     "lines": 1,
+     "size": 29,
+     "vw": 2,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 167,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 7,
+     "firstScreen": 7,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 9,
+     "radii": [
+      [
+       0,
+       9
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.1,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      23,
+      29
+     ]
+    },
+    "title": {
+     "text": "编译流程，分四步看。",
+     "size": 29,
+     "top": 167
+    },
+    "colourShare": 0.001
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.59,
+    0.6
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 1823,
+     "screens": 1.8,
+     "words": 100,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 12,
+     "sections": 4,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "编译流程，分四步看。",
+     "words": 1,
+     "chars": 10,
+     "lines": 1,
+     "size": 29,
+     "vw": 3.8,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 159,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "编译流程，分四步看。",
+     "words": 1,
+     "lines": 1,
+     "size": 29,
+     "font": "Microsoft YaHei UI"
+    },
+    "headings": [
+     {
+      "text": "编译流程，分四步看。",
+      "words": 1,
+      "chars": 10,
+      "lines": 1,
+      "size": 29,
+      "vw": 3.8,
+      "font": "Microsoft YaHei UI",
+      "weight": 500,
+      "tracking": -0.035,
+      "leading": 1.45,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 159,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Microsoft YaHei UI",
+       "share": 0.9,
+       "mono": false
+      },
+      {
+       "family": "ui-monospace",
+       "share": 0.1,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      23,
+      29
+     ],
+     "sizeCount": 9,
+     "notLoaded": [],
+     "body": {
+      "font": "Microsoft YaHei UI",
+      "size": 15,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 14.9
+     },
+     "measureChars": 94,
+     "max": {
+      "size": 29,
+      "vw": 3.8,
+      "font": "Microsoft YaHei UI",
+      "text": "编译流程，分四步看。"
+     },
+     "monoShare": 0.1,
+     "monoProseShare": 0,
+     "monoFamilies": [
+      "ui-monospace"
+     ],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.08,
+     "centerShare": 0.04,
+     "smallText": 0
+    },
+    "eyebrows": [
+     {
+      "text": "从源码到程序文件",
+      "above": "编译流程，分四步看。",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 11,
+      "top": 134
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f3f5f7",
+     "bodyBgHsl": {
+      "h": 210,
+      "s": 0.2,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 722,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#18212b",
+       "share": 0.74
+      },
+      {
+       "color": "#566170",
+       "share": 0.24
+      },
+      {
+       "color": "#1d5fbf",
+       "share": 0.01
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#18212b"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 7,
+     "inHero": 2,
+     "radius": 13,
+     "height": 40,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "跳到主要内容",
+      "重新开始"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 4,
+     "hairlineSamples": [
+      "button 344px",
+      "button 344px",
+      "button 344px",
+      "button 344px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 1823,
+    "margins": {
+     "left": 32,
+     "right": 32
+    },
+    "sections": [
+     {
+      "sel": "ol.compilation-chain",
+      "tag": "ol",
+      "top": 430,
+      "height": 268,
+      "words": 12,
+      "media": 0,
+      "middle": 16,
+      "heading": null,
+      "left": 32,
+      "right": 32,
+      "textLeft": 49,
+      "textRight": 224,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.compilation-detail",
+      "tag": "section",
+      "top": 722,
+      "height": 705,
+      "words": 42,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "步 ·",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 48,
+      "right": 48,
+      "textLeft": 48,
+      "textRight": 48,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.compilation-comparison",
+      "tag": "section",
+      "top": 1459,
+      "height": 248,
+      "words": 16,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "本站怎样运行你的程序？",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 32,
+      "right": 46,
+      "textLeft": 32,
+      "textRight": 46,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "编译流程，分四步看。",
+      "size": 29,
+      "top": 159,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 32,
+      "n": 4
+     },
+     {
+      "x": 91,
+      "n": 3
+     },
+     {
+      "x": 48,
+      "n": 2
+     },
+     {
+      "x": 144,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 10,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "dark": false,
+    "ground": "#f3f5f7",
+    "sidebar": null,
+    "topbar": {
+     "h": 68
+    },
+    "canvas": {
+     "left": 32,
+     "right": 32
+    },
+    "hero": {
+     "text": "编译流程，分四步看。",
+     "words": 1,
+     "chars": 10,
+     "lines": 1,
+     "size": 29,
+     "vw": 3.8,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 159,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 6,
+     "firstScreen": 6,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 8,
+     "radii": [
+      [
+       0,
+       8
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.1,
+     "tiny": 1,
+     "tinySamples": [
+      "按自己的节奏学习 10px"
+     ],
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      23,
+      29
+     ]
+    },
+    "title": {
+     "text": "编译流程，分四步看。",
+     "size": 29,
+     "top": 159
+    },
+    "colourShare": 0.002
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.63,
+    0.63,
+    0.71
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 2076,
+     "screens": 2.5,
+     "words": 99,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 12,
+     "sections": 4,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "编译流程，分四步看。",
+     "words": 1,
+     "chars": 10,
+     "lines": 1,
+     "size": 24,
+     "vw": 6.2,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 153,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "编译流程，分四步看。",
+     "words": 1,
+     "lines": 1,
+     "size": 24,
+     "font": "Microsoft YaHei UI"
+    },
+    "headings": [
+     {
+      "text": "编译流程，分四步看。",
+      "words": 1,
+      "chars": 10,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Microsoft YaHei UI",
+      "weight": 500,
+      "tracking": -0.035,
+      "leading": 1.45,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 153,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "第 1 步 · 预处理",
+      "words": 5,
+      "chars": 11,
+      "lines": 1,
+      "size": 22.5,
+      "vw": 5.8,
+      "font": "Microsoft YaHei UI",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.45,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.42,
+      "top": 804,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "本站怎样运行你的程序？",
+      "words": 1,
+      "chars": 11,
+      "lines": 1,
+      "size": 22.5,
+      "vw": 5.8,
+      "font": "Microsoft YaHei UI",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.45,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 1622,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 3,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 5,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Microsoft YaHei UI",
+       "share": 0.9,
+       "mono": false
+      },
+      {
+       "family": "ui-monospace",
+       "share": 0.1,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      11,
+      12,
+      13,
+      15,
+      16,
+      17,
+      23,
+      24
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Microsoft YaHei UI",
+      "size": 15,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 14.9
+     },
+     "measureChars": 47,
+     "max": {
+      "size": 24,
+      "vw": 6.2,
+      "font": "Microsoft YaHei UI",
+      "text": "编译流程，分四步看。"
+     },
+     "monoShare": 0.1,
+     "monoProseShare": 0,
+     "monoFamilies": [
+      "ui-monospace"
+     ],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.08,
+     "centerShare": 0.04,
+     "smallText": 0
+    },
+    "eyebrows": [
+     {
+      "text": "从源码到程序文件",
+      "above": "编译流程，分四步看。",
+      "upper": false,
+      "tracked": true,
+      "mono": false,
+      "pill": false,
+      "size": 11,
+      "top": 128
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f3f5f7",
+     "bodyBgHsl": {
+      "h": 210,
+      "s": 0.2,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 788,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#18212b",
+       "share": 0.75
+      },
+      {
+       "color": "#566170",
+       "share": 0.24
+      },
+      {
+       "color": "#1d5fbf",
+       "share": 0.01
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#18212b"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 7,
+     "inHero": 2,
+     "radius": 13,
+     "height": 40,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "跳到主要内容",
+      "重新开始"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 2076,
+    "margins": {
+     "left": 18,
+     "right": 18
+    },
+    "sections": [
+     {
+      "sel": "ol.compilation-chain",
+      "tag": "ol",
+      "top": 495,
+      "height": 268,
+      "words": 12,
+      "media": 0,
+      "middle": 16,
+      "heading": null,
+      "left": 18,
+      "right": 18,
+      "textLeft": 35,
+      "textRight": 35,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.compilation-detail",
+      "tag": "section",
+      "top": 788,
+      "height": 802,
+      "words": 42,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "步 ·",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 34,
+      "right": 34,
+      "textLeft": 34,
+      "textRight": 34,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.compilation-comparison",
+      "tag": "section",
+      "top": 1622,
+      "height": 345,
+      "words": 16,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "本站怎样运行你的程序？",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 18,
+      "right": 21,
+      "textLeft": 18,
+      "textRight": 21,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "编译流程，分四步看。",
+      "size": 24,
+      "top": 153,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 18,
+      "n": 4
+     },
+     {
+      "x": 77,
+      "n": 3
+     },
+     {
+      "x": 34,
+      "n": 2
+     },
+     {
+      "x": 130,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 10,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "dark": false,
+    "ground": "#f3f5f7",
+    "sidebar": null,
+    "topbar": {
+     "h": 68
+    },
+    "canvas": {
+     "left": 18,
+     "right": 18
+    },
+    "hero": {
+     "text": "编译流程，分四步看。",
+     "words": 1,
+     "chars": 10,
+     "lines": 1,
+     "size": 24,
+     "vw": 6.2,
+     "font": "Microsoft YaHei UI",
+     "weight": 500,
+     "tracking": -0.03,
+     "leading": 1.45,
+     "top": 153,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 6,
+     "firstScreen": 6,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 8,
+     "radii": [
+      [
+       0,
+       8
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.09,
+     "tiny": 1,
+     "tinySamples": [
+      "按自己的节奏学习 10px"
+     ],
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      15,
+      16,
+      17,
+      19,
+      23,
+      24
+     ]
+    },
+    "title": {
+     "text": "编译流程，分四步看。",
+     "size": 24,
+     "top": 153
+    },
+    "colourShare": 0.003
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.2\\inspector-final\\desktop-fold.jpg",
+   "pages": [
+    "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.2\\inspector-final\\desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.2\\inspector-final\\tablet-fold.jpg",
+   "pages": [
+    "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.2\\inspector-final\\tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.2\\inspector-final\\mobile-fold.jpg",
+   "pages": [
+    "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.2\\inspector-final\\mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

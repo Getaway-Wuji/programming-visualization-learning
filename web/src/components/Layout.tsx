@@ -11,6 +11,7 @@ const navigation = [
   { to: '/', label: '学习首页', icon: 'home' },
   { to: '/courses', label: 'C 语言课程', icon: 'book' },
   { to: '/cases', label: '算法与演示', icon: 'chart' },
+  { to: '/compilation', label: '编译流程', icon: 'code' },
   { to: '/settings', label: '本地设置', icon: 'settings' },
 ] as const;
 
@@ -68,7 +69,8 @@ export function Layout({ children }: { children: ReactNode }) {
     if (main) observer.observe(main, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, [location.pathname]);
-  const courseRoute = /^\/(lessons|practice)\//.test(location.pathname);
+  const courseRoute =
+    /^\/(lessons|practice)\//.test(location.pathname) || location.pathname.startsWith('/bugs');
   const caseRoute = location.pathname.startsWith('/visualize/') || location.pathname === '/memory';
   const toolRoute = caseRoute || location.pathname.startsWith('/practice/');
   const focused = toolRoute && workbench.layout.workbenchMode === 'focus';
@@ -193,7 +195,11 @@ export function Layout({ children }: { children: ReactNode }) {
           >
             <Icon name="menu" />
           </button>
-          <span className="topbar-title">C 语言 · 从零开始</span>
+          <span className="topbar-title">
+            {location.pathname.startsWith('/bugs/memory/')
+              ? '受限 C++ · Bug 闯关'
+              : 'C 语言 · 从零开始'}
+          </span>
           <div className="local-note">
             {toolRoute && (
               <button

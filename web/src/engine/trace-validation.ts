@@ -745,9 +745,30 @@ export function* validateTraceRelationships(
     ensure(
       result.terminal.cursor === null &&
         result.terminal.exitCode === null &&
-        result.terminal.status !== 'completed' &&
-        result.judgeResult === null,
+        result.terminal.status !== 'completed',
     );
+    // Rust reports a bounded, wholly unevaluated exercise judgment when parsing
+    // stops before execution. It is not evidence of any completed teaching work.
+    const judge = result.judgeResult;
+    if (judge) {
+      ensure(result.producer === 'rust' && request.mode === 'exercise-test' && request.judge);
+      equal(judge.profileRef, request.judge.profileRef);
+      ensure(judge.caseKey === request.identity.testCaseKey && judge.status === 'not-evaluated');
+      const keys = ['input-bindings', 'stdout-exact', 'exit-zero', 'teaching-target'];
+      if (request.judge.rule === 'while-for-accumulations')
+        keys.push('while-accumulation', 'for-accumulation');
+      equal(judge.checks.map((check) => check.key).sort(), keys.sort());
+      ensure(judge.coverage.length === 0 && judge.observations.length === 0);
+      for (const check of judge.checks) {
+        yield;
+        ensure(
+          check.status === 'not-evaluated' &&
+            check.nodeIds.length === 0 &&
+            check.stepSeqs.length === 0 &&
+            check.diagnosticCodes.length === 0,
+        );
+      }
+    }
     return;
   }
   ensure(trace.dslVersion === '1.0.0', 'E_PROTOCOL_VERSION');

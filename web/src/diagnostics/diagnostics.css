@@ -1,0 +1,89 @@
+.diagnostic-panel {
+  min-width: 0;
+  margin-block: 16px;
+  text-align: left;
+}
+.diagnostic-panel h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+.diagnostic-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.diagnostic-list > li {
+  padding: 16px 0;
+  border-top: 1px solid var(--p05-border);
+}
+.diagnostic-panel p {
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+.diagnostic-heading {
+  font-weight: 600;
+}
+.diagnostic-heading code {
+  white-space: pre-wrap;
+  font: inherit;
+}
+.diagnostic-caption {
+  color: var(--p05-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.diagnostic-excerpt {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 12px;
+  margin: 12px 0;
+  background: var(--p05-surface);
+  line-height: 1.7;
+  tab-size: 4;
+}
+.diagnostic-excerpt code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.diagnostic-excerpt mark {
+  color: var(--p05-text);
+  background: var(--p05-active);
+  text-decoration: underline wavy;
+  text-underline-offset: 4px;
+}
+.diagnostic-line-number {
+  color: var(--p05-muted);
+  font-variant-numeric: tabular-nums;
+}
+.diagnostic-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.diagnostic-actions:empty {
+  display: none;
+}
+.diagnostic-details {
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+.diagnostic-details summary {
+  cursor: pointer;
+  min-height: 32px;
+}
+.diagnostic-details dl {
+  margin: 8px 0;
+}
+.diagnostic-details dl > div {
+  display: grid;
+  grid-template-columns: minmax(70px, 100px) minmax(0, 1fr);
+  gap: 12px;
+}
+.diagnostic-details dd {
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .diagnostic-actions button {
+    min-height: 44px;
+  }
+}

@@ -12,6 +12,9 @@ import { reviewedP05Paths } from './p05-09-release-inputs.mjs';
 import { blockPermissionPaths } from './block-permission-release-inputs.mjs';
 import { editorHistoryPaths } from './editor-history-release-inputs.mjs';
 import { reconstructionPaths } from './reconstruction-release-inputs.mjs';
+import { diagnosticsPaths } from './diagnostics-release-inputs.mjs';
+import { bugPaths } from './bug-release-inputs.mjs';
+import { memoryBugPaths } from './memory-bug-release-inputs.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const read = (path) => readFileSync(new URL(path, new URL('../', import.meta.url)));
@@ -120,7 +123,7 @@ const reading = {
     prompt,
   })),
   cases: source.cases.map(({ id, version, title }) => ({ id, version, title })),
-  catalog,
+  catalog: globalThis.structuredClone(catalog),
 };
 const programs = source.exercises.map((entry) => find('programs', entry.programRef));
 const practice = {
@@ -148,7 +151,7 @@ wasm.initSync({ module: new WebAssembly.Module(wasmBytes) });
 const server = await createServer({
   configFile: false,
   root,
-  server: { middlewareMode: true, hmr: false },
+  server: { middlewareMode: true, hmr: false, watch: null },
   optimizeDeps: { noDiscovery: true, include: [] },
   appType: 'custom',
 });
@@ -207,6 +210,21 @@ try {
       blocks: result.blockMap.length,
     });
   }
+  const { extendBugPractice } = await server.ssrLoadModule('/web/src/bugs/content.ts');
+  const extended = extendBugPractice(practice);
+  const additions = extended.exercises.slice(practice.exercises.length);
+  practice.exercises = extended.exercises;
+  catalog.exercises.push(
+    ...additions.map((entry) => ({
+      ...base(entry),
+      lessonRef: entry.lessonRef,
+      caseKeys: entry.tests.map((t) => t.caseKey),
+    })),
+  );
+  const { memoryBugLearningExercises } = await server.ssrLoadModule(
+    '/web/src/memory-bugs/content.ts',
+  );
+  catalog.exercises.push(...memoryBugLearningExercises());
 } finally {
   await server.close();
 }
@@ -214,15 +232,23 @@ const predecessor = json('content/learning/p05-predecessors-1.0.0.json');
 for (const item of predecessor.sources)
   assert.equal(sha(read(item.path)), item.sha256, `Predecessor changed: ${item.path}`);
 const permissionRelease = existsSync('content/c/p0/blockly-release-1.0.17.json');
-const releaseVersion = existsSync('content/c/p0/blockly-release-1.0.20.json')
-  ? '1.0.20'
-  : existsSync('content/c/p0/blockly-release-1.0.19.json')
-    ? '1.0.19'
-    : existsSync('content/c/p0/blockly-release-1.0.18.json')
-      ? '1.0.18'
-      : permissionRelease
-        ? '1.0.17'
-        : '1.0.16';
+const releaseVersion = existsSync('content/c/p0/blockly-release-1.0.24.json')
+  ? '1.0.24'
+  : existsSync('content/c/p0/blockly-release-1.0.23.json')
+    ? '1.0.23'
+    : existsSync('content/c/p0/blockly-release-1.0.22.json')
+      ? '1.0.22'
+      : existsSync('content/c/p0/blockly-release-1.0.21.json')
+        ? '1.0.21'
+        : existsSync('content/c/p0/blockly-release-1.0.20.json')
+          ? '1.0.20'
+          : existsSync('content/c/p0/blockly-release-1.0.19.json')
+            ? '1.0.19'
+            : existsSync('content/c/p0/blockly-release-1.0.18.json')
+              ? '1.0.18'
+              : permissionRelease
+                ? '1.0.17'
+                : '1.0.16';
 const registrationPath = `content/c/p0/blockly-release-${releaseVersion}.json`;
 const candidate = process.env.P05_REVIEW_CANDIDATE === '1';
 let registered = false;
@@ -231,17 +257,28 @@ if (existsSync(registrationPath) && !candidate) {
   assert.equal(registration.releaseVersion, releaseVersion);
   assert.deepEqual(
     registration.files.map((entry) => entry.path),
-    releaseVersion === '1.0.20'
-      ? reconstructionPaths
-      : releaseVersion === '1.0.19'
-        ? editorHistoryPaths
-        : permissionRelease
-          ? blockPermissionPaths
-          : reviewedP05Paths,
+    releaseVersion === '1.0.24'
+      ? memoryBugPaths
+      : ['1.0.22', '1.0.23'].includes(releaseVersion)
+        ? bugPaths
+        : releaseVersion === '1.0.21'
+          ? diagnosticsPaths
+          : releaseVersion === '1.0.20'
+            ? reconstructionPaths
+            : releaseVersion === '1.0.19'
+              ? editorHistoryPaths
+              : permissionRelease
+                ? blockPermissionPaths
+                : reviewedP05Paths,
   );
   for (const entry of registration.files)
     assert.equal(sha(read(entry.path)), entry.sha256, `Unreviewed source: ${entry.path}`);
   assert.equal(registration.engine.wasmSha256, sha(wasmBytes));
+  if (releaseVersion === '1.0.24')
+    assert.equal(
+      registration.memoryEngine.wasmSha256,
+      sha(read('web/src/generated/memory/c_viz_memory_bg.wasm')),
+    );
   for (const proof of Object.values(registration.evidence))
     if (proof.path && proof.sha256) assert.equal(sha(read(proof.path)), proof.sha256);
   registered = true;
@@ -251,7 +288,16 @@ if (existsSync(registrationPath) && !candidate) {
   );
 const learning = registered ? { ...catalog, purpose: 'course-practice' } : null;
 const bundle = {
-  bundleVersion: '1.0.0',
+  bundleVersion: '1.2.0',
+  bugSupplement: {
+    registryRef: json('content/c/bugs/questions-1.0.0.json').registryRef,
+    sourceSha256: sha(read('content/c/bugs/questions-1.0.0.json')),
+  },
+  memoryBugSupplement: {
+    registryRef: json('content/cpp/bugs/questions-1.0.0.json').registryRef,
+    sourceSha256: sha(read('content/cpp/bugs/questions-1.0.0.json')),
+    questions: json('content/cpp/bugs/questions-1.0.0.json').questions,
+  },
   registered,
   sourceSha256,
   reading,
@@ -261,9 +307,19 @@ const bundle = {
   guidance,
 };
 const output = registered
-  ? 'web/public/content/course/course-bundle-1.0.0.json'
+  ? 'web/public/content/course/course-bundle-1.2.0.json'
   : 'web/public/content/review/p05-course-candidate.json';
-const manifest = { enabled: true, ...save(output, bundle, registered), registered, sourceSha256 };
+const manifest = {
+  enabled: true,
+  ...save(output, bundle, registered),
+  registered,
+  sourceSha256,
+  bugSupplement: bundle.bugSupplement,
+  memoryBugSupplement: {
+    registryRef: bundle.memoryBugSupplement.registryRef,
+    sourceSha256: bundle.memoryBugSupplement.sourceSha256,
+  },
+};
 if (registered) {
   const readingProjection = save(
     'web/public/content/reading/course-reading-1.1.0.json',
@@ -271,7 +327,7 @@ if (registered) {
     true,
   );
   const practiceProjection = save(
-    'web/public/content/practice/course-practice-1.1.0.json',
+    'web/public/content/practice/course-practice-1.2.0.json',
     practice,
     true,
   );
@@ -318,20 +374,24 @@ writeFileSync(
     { parser: 'typescript', singleQuote: true, printWidth: 100 },
   ),
 );
-save('.artifacts/P0.5-09/course-build.json', {
+save(`.artifacts/${process.env.TASK_EVIDENCE_TASK ?? 'current'}/course-build.json`, {
   candidate: !registered,
   source: { path: sourcePath, sha256: sourceSha256 },
   producerWasmSha256: sha(wasmBytes),
   counts: {
     chapters: 8,
     lessons: 32,
-    exercises: 32,
-    groups: practice.exercises.reduce((sum, entry) => sum + entry.tests.length, 0),
+    exercises: catalog.exercises.length,
+    practiceExercises: practice.exercises.length,
+    memoryBugExercises: 4,
+    groups: practice.exercises.reduce((sum, entry) => sum + entry.tests.length, 0) + 16,
+    practiceGroups: practice.exercises.reduce((sum, entry) => sum + entry.tests.length, 0),
+    memoryBugGroups: 16,
     cases: 7,
   },
   manifest,
   correctionAnalysis: analysisEvidence,
 });
 console.log(
-  `P0.5 course: 8 chapters / 32 lessons / 32 exercises; 32 correction drafts analyzed by real Rust; ${registered ? 'registered' : 'review-only, no learning authority'}.`,
+  `Course: 8 chapters / 32 lessons / 32 required + 4 C Bug + 4 C++ memory Bug exercises; 32 correction drafts analyzed by real Rust; ${registered ? 'registered' : 'review-only, no learning authority'}.`,
 );

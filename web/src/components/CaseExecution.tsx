@@ -18,7 +18,8 @@ import {
   type PreparedSource,
   type CaseInput,
 } from '../engine/execution-client';
-import type { ExecuteResult } from '../engine/protocol';
+import type { ByteRange, ExecuteResult } from '../engine/protocol';
+import { DiagnosticPanel } from '../diagnostics/DiagnosticPanel';
 import {
   defaultDraft,
   generateInput,
@@ -31,7 +32,7 @@ import { PlayerController } from '../player/controller';
 import { PlayerControls } from './PlayerControls';
 import { SourcePanel } from './SourcePanel';
 import { BasicTraceView } from './BasicTraceView';
-import { Workbench } from '../workbench/Workbench';
+import { Workbench, type WorkbenchHandle } from '../workbench/Workbench';
 import { createCaseViewSession } from '../learning/case-authority';
 import type { VerifiedFact } from '../learning/authority';
 import '../learning/rewards.css';
@@ -64,6 +65,12 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
   const [catalog, setCatalog] = useState<ExecutionCatalog>();
   const [source, setSource] = useState<PreparedSource>();
   const [result, setResult] = useState<ExecuteResult>();
+  const [diagnosticFocus, setDiagnosticFocus] = useState<{
+    runId: string;
+    range: ByteRange;
+    request: number;
+  }>();
+  const workbench = useRef<WorkbenchHandle>(null);
   const [failure, setFailure] = useState('');
   const [draft, setDraft] = useState<Record<string, string>>();
   const [seed, setSeed] = useState<string>(() => crypto.randomUUID());
@@ -539,12 +546,16 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
           }}
         >
           <Workbench
+            ref={workbench}
             kind="visualize"
             firstLabel="代码"
             secondLabel="运行画面"
             onSecondVisibility={traceVisibility}
             first={
               <SourcePanel
+                diagnosticFocus={
+                  diagnosticFocus?.runId === result?.identity.runId ? diagnosticFocus : undefined
+                }
                 source={source.text}
                 nodes={result?.nodeMap ?? []}
                 view={playerSnapshot.view}
@@ -595,11 +606,20 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
                       {result.terminal.exitCode !== null && (
                         <p>返回值：{result.terminal.exitCode}</p>
                       )}
-                      {result.terminal.diagnostics.map((diagnostic, index) => (
-                        <p key={index}>
-                          {diagnostic.code} · 阶段：{diagnostic.stage}
-                        </p>
-                      ))}
+                      {source && (
+                        <DiagnosticPanel
+                          diagnostics={result.terminal.diagnostics}
+                          source={{ text: source.text, nodes: result.nodeMap }}
+                          onLocateSource={(range) => {
+                            workbench.current?.reveal('first');
+                            setDiagnosticFocus({
+                              runId: result.identity.runId,
+                              range,
+                              request: (diagnosticFocus?.request ?? 0) + 1,
+                            });
+                          }}
+                        />
+                      )}
                       <pre
                         className="sample-source"
                         data-testid="execution-output"

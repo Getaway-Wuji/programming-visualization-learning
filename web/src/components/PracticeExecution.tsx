@@ -7,7 +7,7 @@ import { paths } from '../navigation';
 import { SourcePanel } from './SourcePanel';
 import { BasicTraceView } from './BasicTraceView';
 import { PlayerControls } from './PlayerControls';
-import { Workbench, WorkspaceContext } from '../workbench/Workbench';
+import { Workbench, WorkspaceContext, type WorkbenchHandle } from '../workbench/Workbench';
 import { PracticeGuidance } from './PracticeGuidance';
 import { LessonCompletion } from './LessonCompletion';
 import { reviewedDurableSnapshot } from '../learning/reviewed-release';
@@ -17,6 +17,10 @@ import { BLOCK_LABELS } from '../blocks/block-kinds';
 import { EditorHistory } from '../practice/EditorHistory';
 import { reconstructionQuestion } from '../practice/reconstruction';
 import { ReconstructionReference } from '../practice/ReconstructionPanel';
+import { DiagnosticPanel } from '../diagnostics/DiagnosticPanel';
+import { bugQuestion } from '../bugs/content';
+import { BugGuidance } from '../bugs/BugPanel';
+import type { ByteRange } from '../engine/protocol';
 import {
   BlockWorkspacePreference,
   useBlockWorkspacePreference,
@@ -42,7 +46,7 @@ const checkLabels: Record<string, string> = {
 };
 const terminalLabels: Record<string, string> = {
   completed: '程序正常结束',
-  'program-error': '程序运行错误',
+  'program-error': '程序发生错误',
   rejected: '输入或程序未通过检查',
   'resource-limit': '本次提交超过运行限制',
   cancelled: '本次提交已取消',
@@ -74,9 +78,36 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
   const active = state.exerciseId === id;
   const catalog = active ? state.catalog : undefined;
   const question = catalog ? reconstructionQuestion(catalog) : undefined;
+  const bug = catalog ? bugQuestion(catalog) : undefined;
   const reconstructing = state.mode === 'reconstruction';
   const result = active ? state.result : undefined;
   const source = active ? state.source : undefined;
+  const [diagnosticFocus, setDiagnosticFocus] = useState<{
+    runId: string;
+    range: ByteRange;
+    request: number;
+  }>();
+  const [blockFocus, setBlockFocus] = useState<{ blockId: string; request: number }>();
+  const [draftFocus, setDraftFocus] = useState<{
+    text: string;
+    range: ByteRange;
+    request: number;
+  }>();
+  const executedDetails = useRef<HTMLDetailsElement>(null);
+  const editorWorkbench = useRef<WorkbenchHandle>(null);
+  const reviewWorkbench = useRef<WorkbenchHandle>(null);
+  const focus = diagnosticFocus?.runId === result?.identity.runId ? diagnosticFocus : undefined;
+  const locateExecutedSource = (range: ByteRange) => {
+    if (!result) return;
+    if (executedDetails.current) executedDetails.current.open = true;
+    if (review) reviewWorkbench.current?.reveal('first');
+    else if (!state.codeEditing) editorWorkbench.current?.reveal('second');
+    setDiagnosticFocus({
+      runId: result.identity.runId,
+      range,
+      request: (diagnosticFocus?.request ?? 0) + 1,
+    });
+  };
   const phase = active ? state.phase : 'empty';
   const busy = ['running', 'preparing'].includes(phase);
   const edit = active ? state.editDocument : undefined;
@@ -205,14 +236,18 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
       )}
       {!review && catalog && (
         <>
-          <PracticeGuidance
-            key={id}
-            id={id}
-            lessonId={catalog.subject.lessonRef.id}
-            mode={state.mode}
-            reconstruction={!!question}
-            onMode={(mode) => session.switchMode(mode)}
-          />
+          {bug ? (
+            <BugGuidance key={id} question={bug} />
+          ) : (
+            <PracticeGuidance
+              key={id}
+              id={id}
+              lessonId={catalog.subject.lessonRef.id}
+              mode={state.mode}
+              reconstruction={!!question}
+              onMode={(mode) => session.switchMode(mode)}
+            />
+          )}
           {reconstructing && question && state.reconstructionSource && (
             <ReconstructionReference question={question} source={state.reconstructionSource} />
           )}
@@ -314,6 +349,7 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
             data-blocks-visible={blocksVisible ? 'yes' : 'no'}
           >
             <Workbench
+              ref={editorWorkbench}
               kind="practice"
               firstAvailable={blocksVisible}
               firstLabel="积木"
@@ -329,6 +365,7 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
                         draft={state.draft}
                         activeBlockIds={activeBlocks}
                         selectedBlockId={state.selectedBlockId}
+                        diagnosticFocus={blockFocus}
                         onSelect={(blockId) => session.selectBlock(blockId)}
                         onSnapshot={(draft, logicalMove) =>
                           session.recordWorkspaceDraft(draft, logicalMove)
@@ -353,6 +390,20 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
                         <li key={`${issue.code}:${issue.blockId}:${index}`}>
                           {issue.message}
                           {issue.blockId ? `（积木 ${issue.blockId}）` : ''}
+                          {issue.blockId && (
+                            <button
+                              type="button"
+                              className="button button-small"
+                              onClick={() =>
+                                setBlockFocus({
+                                  blockId: issue.blockId!,
+                                  request: (blockFocus?.request ?? 0) + 1,
+                                })
+                              }
+                            >
+                              定位积木 {issue.blockId}
+                            </button>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -379,6 +430,18 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
                       source={source.text}
                       nodes={result?.nodeMap ?? []}
                       view={player.view}
+                      diagnosticFocus={focus}
+                    />
+                  ) : edit &&
+                    !edit.analysisPending &&
+                    !edit.analysisError &&
+                    edit.diagnostics.length > 0 ? (
+                    <SourcePanel
+                      draft
+                      source={edit.codeDraft}
+                      nodes={[]}
+                      view={player.view}
+                      diagnosticFocus={draftFocus?.text === edit.codeDraft ? draftFocus : undefined}
                     />
                   ) : (
                     <section className="workbench-panel practice-code-empty">
@@ -389,6 +452,19 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
                           : '正在准备本题输入声明，准备后积木修改会实时更新这里的只读代码。'}
                       </p>
                     </section>
+                  )}
+                  {!state.codeEditing && edit && !edit.analysisPending && !edit.analysisError && (
+                    <DiagnosticPanel
+                      diagnostics={edit.diagnostics}
+                      source={{ text: edit.codeDraft }}
+                      onLocateSource={(range) =>
+                        setDraftFocus({
+                          text: edit.codeDraft,
+                          range,
+                          request: (draftFocus?.request ?? 0) + 1,
+                        })
+                      }
+                    />
                   )}
                 </aside>
               }
@@ -490,11 +566,21 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
                 ? '程序能够结束，但本题要求尚未全部满足。'
                 : ''}
             </p>
-            {result.terminal.diagnostics.map((diagnostic, index) => (
-              <p key={index}>
-                {diagnostic.code}：请结合源码定位与已提交步骤检查；本组未作通过判定。
-              </p>
-            ))}
+            {source && (
+              <DiagnosticPanel
+                diagnostics={result.terminal.diagnostics}
+                source={{ text: source.text, nodes: result.nodeMap, blockMap: source.blockMap }}
+                onLocateSource={locateExecutedSource}
+                onLocateBlock={
+                  !review && blocksVisible
+                    ? (blockId) => {
+                        editorWorkbench.current?.reveal('first');
+                        setBlockFocus({ blockId, request: (blockFocus?.request ?? 0) + 1 });
+                      }
+                    : undefined
+                }
+              />
+            )}
             <ul>
               {result.judgeResult?.checks.map((check) => (
                 <li key={check.key}>
@@ -562,9 +648,18 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
             </p>
           )}
           {!review && state.codeEditing && result && (
-            <details className="practice-executed-source" data-testid="executed-source-details">
+            <details
+              ref={executedDetails}
+              className="practice-executed-source"
+              data-testid="executed-source-details"
+            >
               <summary>查看本组实际执行的 C 代码</summary>
-              <SourcePanel source={source.text} nodes={result.nodeMap} view={player.view} />
+              <SourcePanel
+                source={source.text}
+                nodes={result.nodeMap}
+                view={player.view}
+                diagnosticFocus={focus}
+              />
             </details>
           )}
           <div
@@ -578,6 +673,7 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
           >
             {review ? (
               <Workbench
+                ref={reviewWorkbench}
                 kind="review"
                 firstLabel="代码"
                 secondLabel="运行画面"
@@ -586,6 +682,7 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
                     source={source.text}
                     nodes={result?.nodeMap ?? []}
                     view={player.view}
+                    diagnosticFocus={focus}
                   />
                 }
                 onSecondVisibility={traceVisibility}

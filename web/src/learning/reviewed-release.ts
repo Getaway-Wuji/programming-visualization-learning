@@ -3,6 +3,8 @@ import type { LearningCatalog, LearningCatalogEntity } from './types';
 import { createLearningCatalog, sameRef } from './catalog';
 import predecessorJson from '../../../content/learning/p05-predecessors-1.0.0.json?raw';
 import { isCompatibleLearningHistory } from './domain';
+import { hasBugLearningSupplement } from '../bugs/content';
+import { hasMemoryBugLearningSupplement } from '../memory-bugs/content';
 
 export const reviewedCasePackage: Ref = { id: 'content.c.p0', version: '1.0.2' };
 const coursePackage: Ref = { id: 'content.c.p0', version: '1.0.1' };
@@ -48,7 +50,9 @@ export function hasReviewedCourseAssembly(
     !sameRef(course.packageRef, reviewedCoursePackage) ||
     !sameRef(cases.packageRef, reviewedCoursePackage) ||
     course.lessons.length !== 32 ||
-    course.exercises.length !== 32 ||
+    (course.exercises.length !== 32 &&
+      !hasBugLearningSupplement(course.exercises) &&
+      !hasMemoryBugLearningSupplement(course.exercises)) ||
     cases.cases.length !== 7
   )
     return false;

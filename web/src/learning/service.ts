@@ -33,6 +33,7 @@ import {
 } from './authority';
 import type { VerifiedFact } from './authority';
 import { assertPracticePassFact } from './practice-authority';
+import { isMemoryBugPassFact } from '../memory-bugs/authority';
 import { assertCaseViewFact } from './case-authority';
 import {
   hasReviewedCaseRelease,
@@ -625,7 +626,7 @@ export class LearningService {
     try {
       if (this.disposed || expectedEpoch !== this.state.sessionEpoch)
         throw new StorageError('S_GENERATION_STALE');
-      assertPracticePassFact(fact);
+      if (!isMemoryBugPassFact(fact)) assertPracticePassFact(fact);
       const command = this.capture(fact);
       return command.then((value) => this.commitCommand(value));
     } catch (error) {

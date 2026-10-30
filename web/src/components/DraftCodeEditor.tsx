@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef } from 'react';
 import type { ByteRange } from '../engine/protocol';
 import type { EditDocumentSnapshot } from '../practice/edit-document';
 import { createSourceIndex } from '../player/source-location';
+import { DiagnosticPanel } from '../diagnostics/DiagnosticPanel';
 import './draft-code-editor.css';
 
 const reasons: Record<string, string> = {
@@ -197,31 +198,12 @@ export function DraftCodeEditor({
           {editRejection}
         </p>
       )}
-      {!pending && document.diagnostics.length > 0 && (
-        <ul className="draft-code-notice" role="alert">
-          {document.diagnostics.map((diagnostic, index) => (
-            <li key={index}>
-              {diagnostic.code}：当前代码或输入声明未通过检查，请修复后继续。
-              {diagnostic.location.kind === 'source' &&
-                diagnostic.location.byteRange &&
-                issueLocation(diagnostic.location.byteRange) && (
-                  <button
-                    className="button button-small"
-                    onClick={() =>
-                      locateIssue(
-                        diagnostic.location.kind === 'source'
-                          ? diagnostic.location.byteRange!
-                          : { start: 0, end: 0 },
-                      )
-                    }
-                  >
-                    定位问题：第 {issueLocation(diagnostic.location.byteRange)!.start.line} 行，第{' '}
-                    {issueLocation(diagnostic.location.byteRange)!.start.column} 列
-                  </button>
-                )}
-            </li>
-          ))}
-        </ul>
+      {!pending && !document.analysisError && (
+        <DiagnosticPanel
+          diagnostics={document.diagnostics}
+          source={{ text }}
+          onLocateSource={locateIssue}
+        />
       )}
       {!pending && document.issues.length > 0 && (
         <ul className="draft-code-notice" role="alert">

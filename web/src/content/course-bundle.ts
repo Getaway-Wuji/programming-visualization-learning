@@ -6,6 +6,12 @@ import type { LearningCatalog } from '../learning/types';
 import type { BlockProgram } from '../blocks/model';
 import type { EntityRef } from './types';
 import { activateCourseNavigation } from '../navigation';
+import { bugRegistryRef, hasBugLearningSupplement } from '../bugs/content';
+import {
+  memoryBugRegistry,
+  hasMemoryBugLearningSupplement,
+  type MemoryBugQuestion,
+} from '../memory-bugs/content';
 
 export interface PracticeGuide {
   exerciseRef: EntityRef;
@@ -15,7 +21,13 @@ export interface PracticeGuide {
   preferredEditor: 'code' | 'blocks';
 }
 export interface CourseBundle {
-  bundleVersion: '1.0.0';
+  bundleVersion: '1.0.0' | '1.1.0' | '1.2.0';
+  memoryBugSupplement?: {
+    registryRef: EntityRef;
+    sourceSha256: string;
+    questions: readonly MemoryBugQuestion[];
+  };
+  bugSupplement?: { registryRef: EntityRef; sourceSha256: string };
   registered: boolean;
   reading: CourseReading;
   practice: CoursePractice;
@@ -50,13 +62,28 @@ export async function decodeCourseBundle(bytes: Uint8Array): Promise<CourseBundl
   const ref = { id: 'content.c.p05', version: '1.0.0' };
   const matches = (value: EntityRef) => value?.id === ref.id && value.version === ref.version;
   if (
-    bundle.bundleVersion !== '1.0.0' ||
+    !['1.0.0', '1.1.0', '1.2.0'].includes(bundle.bundleVersion) ||
     bundle.registered !== p05CourseRelease.registered ||
     !matches(bundle.reading?.packageRef) ||
     !matches(bundle.practice?.packageRef) ||
     bundle.reading.lessons.length !== 32 ||
     bundle.reading.chapters.length !== 8 ||
-    bundle.practice.exercises.length !== 32 ||
+    (['1.1.0', '1.2.0'].includes(bundle.bundleVersion)
+      ? !bundle.bugSupplement ||
+        bundle.bugSupplement.registryRef.id !== bugRegistryRef.id ||
+        bundle.bugSupplement.registryRef.version !== bugRegistryRef.version ||
+        !/^[a-f0-9]{64}$/.test(bundle.bugSupplement.sourceSha256) ||
+        bundle.bugSupplement.sourceSha256 !== p05CourseRelease.bugSupplement.sourceSha256 ||
+        !hasBugLearningSupplement(
+          bundle.practice.exercises.map((e) => ({
+            ref: { id: e.id, version: e.version },
+            learningRevision: e.learningRevision,
+            acceptedPriorVersions: e.acceptedPriorVersions,
+            lessonRef: e.lessonRef,
+            caseKeys: e.tests.map((t) => t.caseKey),
+          })),
+        )
+      : bundle.practice.exercises.length !== 32 || !!bundle.bugSupplement) ||
     bundle.cases.length !== 7 ||
     !bundle.cases.every((entry) => matches(entry.packageRef)) ||
     bundle.guidance.length !== 32 ||
@@ -67,6 +94,19 @@ export async function decodeCourseBundle(bytes: Uint8Array): Promise<CourseBundl
       : bundle.learning !== null)
   )
     throw new Error('COURSE_BUNDLE_CONTENT');
+  if (bundle.bundleVersion === '1.2.0') {
+    const supplement = bundle.memoryBugSupplement;
+    if (
+      !supplement ||
+      supplement.registryRef.id !== memoryBugRegistry.registryRef.id ||
+      supplement.registryRef.version !== memoryBugRegistry.registryRef.version ||
+      supplement.sourceSha256 !== p05CourseRelease.memoryBugSupplement.sourceSha256 ||
+      JSON.stringify(supplement.questions) !== JSON.stringify(memoryBugRegistry.questions) ||
+      (bundle.registered &&
+        (!bundle.learning || !hasMemoryBugLearningSupplement(bundle.learning.exercises)))
+    )
+      throw new Error('COURSE_BUNDLE_CONTENT');
+  } else if (bundle.memoryBugSupplement) throw new Error('COURSE_BUNDLE_CONTENT');
   return freeze(bundle);
 }
 /** One verified atomic resource. A failed candidate selects the entire known old release. */

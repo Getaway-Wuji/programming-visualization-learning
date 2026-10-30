@@ -1,0 +1,411 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--reporter=list,json",
+      "--trace",
+      "off",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.3\\14-3-candidate-final-output",
+      "tests/browser/bugs.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/14.3/14-3-candidate-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/14.3/14-3-candidate-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/14.3/14-3-candidate-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.3\\14-3-candidate-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "off",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "bugs.spec.ts",
+      "file": "bugs.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "real repair and independent durable pass: exercise.c.bug-semicolon",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1849,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T15:57:36.545Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7fb76f817d1538e01129-ef8527ef5f9cadec35e6",
+          "file": "bugs.spec.ts",
+          "line": 72,
+          "column": 3
+        },
+        {
+          "title": "real repair and independent durable pass: exercise.c.bug-parenthesis",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1487,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T15:57:39.380Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7fb76f817d1538e01129-f212e6a978ca6af8c826",
+          "file": "bugs.spec.ts",
+          "line": 72,
+          "column": 3
+        },
+        {
+          "title": "real repair and independent durable pass: exercise.c.bug-zero-branch",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1780,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T15:57:40.876Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7fb76f817d1538e01129-e88c736353d6bd513566",
+          "file": "bugs.spec.ts",
+          "line": 72,
+          "column": 3
+        },
+        {
+          "title": "real repair and independent durable pass: exercise.c.bug-sum-initial",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2711,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T15:57:42.665Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7fb76f817d1538e01129-1794275707f965b0f740",
+          "file": "bugs.spec.ts",
+          "line": 72,
+          "column": 3
+        },
+        {
+          "title": "saved broken and repaired drafts restore exactly after refresh without restoring execution",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1962,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T15:57:45.388Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7fb76f817d1538e01129-ad292f0ed85a4b4c9531",
+          "file": "bugs.spec.ts",
+          "line": 132,
+          "column": 1
+        },
+        {
+          "title": "catalog and editor remain operable at three widths and reveal the authored explanation explicitly",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2204,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T15:57:47.362Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7fb76f817d1538e01129-b950a9a3c5fed90be626",
+          "file": "bugs.spec.ts",
+          "line": 172,
+          "column": 1
+        },
+        {
+          "title": "missing composite content does not authorize supplementary levels",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 670,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T15:57:49.576Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7fb76f817d1538e01129-7af29f235511e38162b3",
+          "file": "bugs.spec.ts",
+          "line": 199,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T15:57:35.979Z",
+    "duration": 16291.893,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

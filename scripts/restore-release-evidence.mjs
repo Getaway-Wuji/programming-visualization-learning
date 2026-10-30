@@ -54,10 +54,30 @@ console.log(
 );
 
 // A successor carries its own immutable archive; never rewrite the predecessor.
-for (const release of ['1.0.17', '1.0.18', '1.0.19', '1.0.20']) {
+for (const release of [
+  '1.0.17',
+  '1.0.18',
+  '1.0.19',
+  '1.0.20',
+  '1.0.21',
+  '1.0.22',
+  '1.0.23',
+  '1.0.24',
+]) {
   const successor = `content/c/p0/blockly-release-${release}.json`;
   if (!existsSync(resolve(root, successor))) continue;
-  const task = release === '1.0.20' ? '13.5' : release === '1.0.19' ? '13.4' : '13.3';
+  const task =
+    release === '1.0.24'
+      ? '14.4'
+      : ['1.0.22', '1.0.23'].includes(release)
+        ? '14.3'
+        : release === '1.0.21'
+          ? '14.1'
+          : release === '1.0.20'
+            ? '13.5'
+            : release === '1.0.19'
+              ? '13.4'
+              : '13.3';
   const nextArchive = `项目文档/验收/发布凭据/${task}-${release}`;
   const nextIndex = json(`${nextArchive}/index.json`);
   assert.equal(nextIndex.registration.path, successor);

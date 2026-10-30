@@ -248,7 +248,15 @@ test('13.5 isolated drafts and native history survive refresh while display pref
 }) => {
   test.setTimeout(60000);
   await page.goto('/#/practice/exercise.c.echo');
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+  await expect(history(page)).toHaveAttribute('data-save-state', 'ready');
   await page.getByRole('combobox', { name: '积木显示', exact: true }).selectOption('hide');
+  const preference = page.getByTestId('block-preference-save-status');
+  await expect(preference).not.toHaveAttribute('data-save-state', 'saving');
+  if ((await preference.getAttribute('data-save-state')) === 'temporary') {
+    await page.getByRole('button', { name: '重新读取并保存选择', exact: true }).click();
+  }
+  await expect(preference).toHaveAttribute('data-save-state', 'saved');
   const code = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
   await expect(code).toBeEditable();
   const invalid = (await code.inputValue()) + '\nint';

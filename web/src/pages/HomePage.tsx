@@ -6,6 +6,7 @@ import { PageHeading, StatePanel } from '../components/Ui';
 import { chapters, lessons, paths } from '../navigation';
 import { cases } from '../navigation';
 import { LearningSaveStatus, useLearning } from '../learning/react';
+import { memoryBugQuestions } from '../memory-bugs/content';
 import type { LedgerEntry } from '../storage/model';
 import { DailyGoalSettings, DailyGoalSummary, GoalHistory } from '../learning/goal-components';
 import {
@@ -14,6 +15,7 @@ import {
   savedCourseProjection,
 } from '../learning/profile-components';
 import '../learning/rewards.css';
+import { bugQuestions } from '../bugs/content';
 
 const panels = {
   points: {
@@ -32,6 +34,8 @@ function contentTitle(id: string) {
     lessons.find((item) => item.id === id)?.title ??
     lessons.find((item) => item.exerciseId === id)?.exerciseTitle ??
     cases.find((item) => item.id === id)?.title ??
+    bugQuestions.find((item) => item.exerciseRef.id === id)?.title ??
+    memoryBugQuestions.find((item) => item.exerciseRef.id === id)?.title ??
     (id.startsWith('local-goal.') ? `${id.slice('local-goal.'.length)} 每日目标` : '旧版本学习内容')
   );
 }

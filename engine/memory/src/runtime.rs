@@ -1283,6 +1283,7 @@ struct Runtime<'a, 'm> {
     active_heap: usize,
     state: State,
     record: Recording,
+    bug_observations: Option<crate::bug::Observations>,
 }
 impl Runtime<'_, '_> {
     fn guarded<T>(
@@ -1660,7 +1661,12 @@ impl Runtime<'_, '_> {
                 }
                 "*" => {
                     let place = self.locate(id, false)?;
-                    self.value(&place, id)
+                    let value = self.value(&place, id)?;
+                    if self.bug_observations.is_some() {
+                        self.tick(id, 1)?;
+                        self.bug_observations.as_mut().unwrap().indirect_reads += 1;
+                    }
+                    Ok(value)
                 }
                 "!" => Ok(Val::Int(i32::from(!self.eval(arg)?.truth()))),
                 "+" => {
@@ -2166,6 +2172,10 @@ impl Runtime<'_, '_> {
                 if !v.truth() {
                     break;
                 }
+                if self.bug_observations.is_some() {
+                    self.tick(id, 1)?;
+                    self.bug_observations.as_mut().unwrap().loop_iterations += 1;
+                }
                 match self.stmt(body)? {
                     Flow::Return(v, n) => return Ok(Flow::Return(v, n)),
                     Flow::Break => break,
@@ -2191,6 +2201,10 @@ impl Runtime<'_, '_> {
                     self.emit(condition.unwrap_or(id), "condition")?;
                     if !value.truth() {
                         break;
+                    }
+                    if self.bug_observations.is_some() {
+                        self.tick(id, 1)?;
+                        self.bug_observations.as_mut().unwrap().loop_iterations += 1;
                     }
                     match self.stmt(body)? {
                         Flow::Return(v, n) => {
@@ -2336,6 +2350,22 @@ fn exact(value: &Value, keys: &[&str]) -> bool {
 }
 /// Closed canonical EXEC-01 1.3.0 boundary. Protocol errors never execute code.
 pub fn execute(bytes: &[u8], build_id: &str, meter: &mut Meter) -> Result<Vec<u8>, &'static str> {
+    execute_inner(bytes, build_id, meter, false)
+}
+/// Explicit BUG-MEMORY-01 companion; the old closed entry rejects this request.
+pub fn execute_bug(
+    bytes: &[u8],
+    build_id: &str,
+    meter: &mut Meter,
+) -> Result<Vec<u8>, &'static str> {
+    execute_inner(bytes, build_id, meter, true)
+}
+fn execute_inner(
+    bytes: &[u8],
+    build_id: &str,
+    meter: &mut Meter,
+    bug_mode: bool,
+) -> Result<Vec<u8>, &'static str> {
     if build_id.len() != 64
         || !build_id
             .bytes()
@@ -2351,21 +2381,22 @@ pub fn execute(bytes: &[u8], build_id: &str, meter: &mut Meter) -> Result<Vec<u8
             codec::CodecError::Limit { .. } => "E_REQUEST_LIMIT",
             _ => "E_PROTOCOL_INVALID",
         })?;
-    if !exact(
-        &request,
-        &[
-            "execVersion",
-            "dslVersion",
-            "diagnosticVersion",
-            "integerEncoding",
-            "language",
-            "engineId",
-            "runId",
-            "sourceRevision",
-            "source",
-            "input",
-        ],
-    ) {
+    let mut fields = vec![
+        "execVersion",
+        "dslVersion",
+        "diagnosticVersion",
+        "integerEncoding",
+        "language",
+        "engineId",
+        "runId",
+        "sourceRevision",
+        "source",
+        "input",
+    ];
+    if bug_mode {
+        fields.push("bug");
+    }
+    if !exact(&request, &fields) {
         return Err("E_PROTOCOL_INVALID");
     }
     if request["execVersion"] != EXEC_VERSION
@@ -2396,6 +2427,12 @@ pub fn execute(bytes: &[u8], build_id: &str, meter: &mut Meter) -> Result<Vec<u8
                 .ok_or("E_INPUT_INVALID")
         })
         .collect::<Result<_, _>>()?;
+    let bug = if bug_mode {
+        Some(crate::bug::context(&request, meter)?)
+    } else {
+        None
+    };
+    let mut judgement = None;
     let mut node_map = vec![];
     let mut types = vec![];
     let mut trace = None;
@@ -2444,10 +2481,23 @@ pub fn execute(bytes: &[u8], build_id: &str, meter: &mut Meter) -> Result<Vec<u8
                         depth: 0,
                         state,
                         record,
+                        bug_observations: bug.as_ref().map(|_| crate::bug::Observations::default()),
                     };
                     match runtime.call("main", &[], None) {
                         Ok(value) => returned = value,
                         Err(e) => error = Some(e),
+                    }
+                    if let Some(context) = &bug {
+                        judgement =
+                            Some(context.judge(
+                                error.is_none(),
+                                returned.as_ref().and_then(|v| {
+                                    if let Val::Int(n) = v { Some(*n) } else { None }
+                                }),
+                                &runtime.state.output,
+                                runtime.state.control.input_cursor,
+                                runtime.bug_observations.as_ref().unwrap(),
+                            ));
                     }
                     trace = Some(runtime.record);
                 }
@@ -2467,6 +2517,11 @@ pub fn execute(bytes: &[u8], build_id: &str, meter: &mut Meter) -> Result<Vec<u8
         trace = None;
     }
     let cursor = trace.as_ref().map_or(0, |t| t.steps.len());
+    if let Some(context) = &bug {
+        judgement.get_or_insert_with(|| {
+            context.judge(false, None, "", 0, &crate::bug::Observations::default())
+        });
+    }
     // Reserved terminal encoding remains possible after fuel exhaustion. A hard
     // cancellation/deadline is returned out-of-band, with no retained trace.
     if let Err(e) = meter.begin_finalization() {
@@ -2476,7 +2531,10 @@ pub fn execute(bytes: &[u8], build_id: &str, meter: &mut Meter) -> Result<Vec<u8
             _ => "E_FUEL_LIMIT",
         });
     }
-    let result = json!({"execVersion":EXEC_VERSION,"dslVersion":DSL_VERSION,"diagnosticVersion":"1.2.0","integerEncoding":"1.0.0","language":request["language"],"engine":{"id":ENGINE_ID,"version":"0.1.0","buildId":build_id},"identity":{"runId":request["runId"],"sourceRevision":request["sourceRevision"]},"nodeMap":node_map,"terminal":{"status":status,"code":error.as_ref().map(|e|e.code),"byteRange":error.as_ref().map(|e|e.byte_range),"cursor":cursor,"returnValue":returned},"stats":{"fuelUsed":meter.used()}});
+    let mut result = json!({"execVersion":EXEC_VERSION,"dslVersion":DSL_VERSION,"diagnosticVersion":"1.2.0","integerEncoding":"1.0.0","language":request["language"],"engine":{"id":ENGINE_ID,"version":"0.1.0","buildId":build_id},"identity":{"runId":request["runId"],"sourceRevision":request["sourceRevision"]},"nodeMap":node_map,"terminal":{"status":status,"code":error.as_ref().map(|e|e.code),"byteRange":error.as_ref().map(|e|e.byte_range),"cursor":cursor,"returnValue":returned},"stats":{"fuelUsed":meter.used()}});
+    if let Some(judgement) = judgement {
+        result["bugJudgement"] = judgement;
+    }
     let assembled = (|| -> Result<Vec<u8>, codec::CodecError> {
         let metadata = codec::encode(&result, meter, meter.limits().result_bytes)?;
         let mut output = codec::Assembly::new(meter.limits().result_bytes);

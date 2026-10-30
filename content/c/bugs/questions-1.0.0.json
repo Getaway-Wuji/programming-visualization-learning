@@ -1,0 +1,250 @@
+{
+  "registryVersion": "1.0.0",
+  "registryRef": {
+    "id": "bug-catalog.c.syntax-logic",
+    "version": "1.0.0"
+  },
+  "packageRef": {
+    "id": "content.c.p05",
+    "version": "1.0.0"
+  },
+  "questions": [
+    {
+      "exerciseRef": {
+        "id": "exercise.c.bug-semicolon",
+        "version": "1.0.0"
+      },
+      "baseExerciseRef": {
+        "id": "exercise.c.echo",
+        "version": "1.1.0"
+      },
+      "category": "syntax",
+      "title": "输出语句少了什么？",
+      "prompt": "修复这份输出程序的语法错误。保留输入声明，让任意合法x都被原样输出，末尾换行；不要打印固定答案。",
+      "tests": [
+        {
+          "caseKey": "negative",
+          "input": {
+            "x": -9
+          },
+          "expectedStdout": "-9\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "zero",
+          "input": {
+            "x": 0
+          },
+          "expectedStdout": "0\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "positive",
+          "input": {
+            "x": 7
+          },
+          "expectedStdout": "7\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "upper",
+          "input": {
+            "x": 999
+          },
+          "expectedStdout": "999\n",
+          "expectedExitCode": 0
+        }
+      ],
+      "brokenBody": "printf(\"%d\\n\", x)\nreturn 0;",
+      "solutionBody": "printf(\"%d\\n\", x);\nreturn 0;",
+      "alternativeBody": "int copy = x;\nprintf(\"%d\\n\", copy);\nreturn 0;",
+      "hints": [
+        "先读真实语法诊断，发现位置可能在问题后面。",
+        "检查printf语句是否完整结束。",
+        "调用右括号后需要分号；同时保留换行输出。"
+      ],
+      "explanation": "缺分号让解析器在下一条语句附近停止。补齐后还要真正输出输入x；四组测试和输入依赖目标共同判定，不比较答案文本。"
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.c.bug-parenthesis",
+        "version": "1.0.0"
+      },
+      "baseExerciseRef": {
+        "id": "exercise.c.two-x-plus-three",
+        "version": "1.1.0"
+      },
+      "category": "syntax",
+      "title": "输出调用没有闭合",
+      "prompt": "补齐语法错误，并计算x的两倍加三，输出整数及换行。保留输入绑定，真实使用乘法和加法；合法等价顺序或临时变量均可。",
+      "tests": [
+        {
+          "caseKey": "negative",
+          "input": {
+            "x": -4
+          },
+          "expectedStdout": "-5\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "zero",
+          "input": {
+            "x": 0
+          },
+          "expectedStdout": "3\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "positive",
+          "input": {
+            "x": 5
+          },
+          "expectedStdout": "13\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "upper",
+          "input": {
+            "x": 999
+          },
+          "expectedStdout": "2001\n",
+          "expectedExitCode": 0
+        }
+      ],
+      "brokenBody": "printf(\"%d\\n\", x * 2 + 3;\nreturn 0;",
+      "solutionBody": "printf(\"%d\\n\", x * 2 + 3);\nreturn 0;",
+      "alternativeBody": "int doubled = x * 2;\nint answer = 3 + doubled;\nprintf(\"%d\\n\", answer);\nreturn 0;",
+      "hints": [
+        "分清算式和包住整个调用的括号。",
+        "检查printf从左括号开始的参数列表。",
+        "在分号前补齐右括号；算式仍须先乘二再加三。"
+      ],
+      "explanation": "参数表达式完成后，printf调用还需要右括号。结构修复与数学目标是两件事：错误的2*(x+3)即使可执行仍不能通过。"
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.c.bug-zero-branch",
+        "version": "1.0.0"
+      },
+      "baseExerciseRef": {
+        "id": "exercise.c.nonnegative",
+        "version": "1.1.0"
+      },
+      "category": "logic",
+      "title": "零走错了分支",
+      "prompt": "修复边界判断：x非负时输出1，否则输出0，末尾换行。必须保留真实if/else及输入依赖，两条路径都要在测试中执行。",
+      "tests": [
+        {
+          "caseKey": "negative",
+          "input": {
+            "x": -3
+          },
+          "expectedStdout": "0\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "zero",
+          "input": {
+            "x": 0
+          },
+          "expectedStdout": "1\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "positive",
+          "input": {
+            "x": 4
+          },
+          "expectedStdout": "1\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "upper",
+          "input": {
+            "x": 999
+          },
+          "expectedStdout": "1\n",
+          "expectedExitCode": 0
+        }
+      ],
+      "brokenBody": "if (x > 0) { printf(\"1\\n\"); } else { printf(\"0\\n\"); }\nreturn 0;",
+      "solutionBody": "if (x >= 0) { printf(\"1\\n\"); } else { printf(\"0\\n\"); }\nreturn 0;",
+      "alternativeBody": "if (x < 0) { printf(\"0\\n\"); } else { printf(\"1\\n\"); }\nreturn 0;",
+      "hints": [
+        "程序可以正常结束，但输出不一定符合题意。",
+        "比较负数、零、正数分别经过哪条路径。",
+        "零属于非负数；也可以反过来先判断是否为负。"
+      ],
+      "explanation": "严格大于零遗漏了零。修复可以采用x>=0，也可以用x<0调换分支；真实判题同时核对输出和if/else覆盖，不要求固定写法。"
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.c.bug-sum-initial",
+        "version": "1.0.0"
+      },
+      "baseExerciseRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.1.0"
+      },
+      "category": "logic",
+      "title": "总和为什么总多一？",
+      "prompt": "修复数组累加程序，真实遍历逻辑范围[0,n)，输出总和及换行。空数组的和为0；保留输入和n，不读取空数组占位元素。",
+      "tests": [
+        {
+          "caseKey": "empty",
+          "input": {
+            "values": []
+          },
+          "expectedStdout": "0\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "single",
+          "input": {
+            "values": [
+              4
+            ]
+          },
+          "expectedStdout": "4\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "mixed",
+          "input": {
+            "values": [
+              -2,
+              5
+            ]
+          },
+          "expectedStdout": "3\n",
+          "expectedExitCode": 0
+        },
+        {
+          "caseKey": "seven",
+          "input": {
+            "values": [
+              7,
+              -3,
+              0,
+              5,
+              -3,
+              2,
+              9
+            ]
+          },
+          "expectedStdout": "17\n",
+          "expectedExitCode": 0
+        }
+      ],
+      "brokenBody": "int sum = 1;\nfor (int i = 0; i < n; i = i + 1) { sum = sum + values[i]; }\nprintf(\"%d\\n\", sum);\nreturn 0;",
+      "solutionBody": "int sum = 0;\nfor (int i = 0; i < n; i = i + 1) { sum = sum + values[i]; }\nprintf(\"%d\\n\", sum);\nreturn 0;",
+      "alternativeBody": "int total = 0;\nfor (int i = n - 1; i >= 0; i = i - 1) { total = total + values[i]; }\nprintf(\"%d\\n\", total);\nreturn 0;",
+      "hints": [
+        "比较期望输出和实际输出的差，再观察变量初始值。",
+        "空数组不进入循环，此时输出应是多少？",
+        "加法累计从0开始；前向或后向遍历都要覆盖全部逻辑元素。"
+      ],
+      "explanation": "初值1在任何输入上都会多加一。初值改为0后，空数组无需特殊读取；合法反向遍历也能通过实际求和与遍历目标。"
+    }
+  ]
+}

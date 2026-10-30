@@ -9,7 +9,10 @@ import {
 } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
-const themes: readonly ThemeId[] = ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech'];
+const themes: readonly ThemeId[] =
+  process.env.TASK_REPRESENTATIVE_THEME === 'minimal'
+    ? ['minimal']
+    : ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech'];
 const shell = (page: Page) => page.locator('.app-shell');
 const workbench = (page: Page, kind: string) =>
   page.locator(`[data-testid="workbench"][data-kind="${kind}"]`);
@@ -170,7 +173,7 @@ async function presentVariableFrame(page: Page) {
   );
 }
 
-test('all six themes use the available workbench width and keep the collapsible navigation on the left', async ({
+test('selected themes use the available workbench width and keep the collapsible navigation on the left', async ({
   page,
 }, info) => {
   test.setTimeout(120000);
@@ -200,8 +203,14 @@ test('all six themes use the available workbench width and keep the collapsible 
       expect(collapsed.sidebar.width).toBeCloseTo(60, 0);
       expect(collapsed.bench.width).toBeGreaterThan(expanded.bench.width + 140);
       const links = page.getByRole('navigation', { name: '主导航', exact: true }).getByRole('link');
-      await expect(links).toHaveCount(4);
-      for (const name of ['学习首页', 'C 语言课程', '算法与演示', '本地设置'])
+      await expect(links).toHaveText([
+        '学习首页',
+        'C 语言课程',
+        '算法与演示',
+        '编译流程',
+        '本地设置',
+      ]);
+      for (const name of ['学习首页', 'C 语言课程', '算法与演示', '编译流程', '本地设置'])
         await expect(
           page
             .getByRole('navigation', { name: '主导航', exact: true })

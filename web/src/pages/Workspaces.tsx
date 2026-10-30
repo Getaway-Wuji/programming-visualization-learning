@@ -8,6 +8,17 @@ import { PracticeExecution } from '../components/PracticeExecution';
 import { EngineConnection } from '../components/EngineConnection';
 import { CaseExecution } from '../components/CaseExecution';
 import { SubjectLearningStatus, useLearning } from '../learning/react';
+import { bugQuestions } from '../bugs/content';
+
+function practiceLesson(exerciseId?: string) {
+  const ordinary = lessons.find((item) => item.exerciseId === exerciseId);
+  if (ordinary) return ordinary;
+  const bug = bugQuestions.find((q) => q.exerciseRef.id === exerciseId);
+  const base = bug && lessons.find((item) => item.exerciseId === bug.baseExerciseRef.id);
+  return base && bug
+    ? { ...base, exerciseId: bug.exerciseRef.id, exerciseTitle: bug.title }
+    : undefined;
+}
 
 function CodePanel({ generated = false }: { generated?: boolean }) {
   return (
@@ -49,7 +60,7 @@ function CodePanel({ generated = false }: { generated?: boolean }) {
 
 export function PracticePage() {
   const { exerciseId } = useParams();
-  const lesson = lessons.find((item) => item.exerciseId === exerciseId);
+  const lesson = practiceLesson(exerciseId);
   if (!lesson)
     return <MissingPage title="找不到这个练习" backTo="/courses" backLabel="返回课程目录" />;
   return (
@@ -198,7 +209,7 @@ export function VisualizePage() {
 
 export function ReviewPage() {
   const { exerciseId } = useParams();
-  const lesson = lessons.find((item) => item.exerciseId === exerciseId);
+  const lesson = practiceLesson(exerciseId);
   if (!lesson)
     return <MissingPage title="找不到这个练习复盘" backTo="/courses" backLabel="返回课程目录" />;
   return (

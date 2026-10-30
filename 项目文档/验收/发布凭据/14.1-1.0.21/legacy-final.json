@@ -1,0 +1,2628 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--reporter=list,json",
+      "--trace",
+      "off",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output",
+      "tests/browser/blocks.spec.ts",
+      "tests/browser/practice.spec.ts",
+      "tests/browser/block-interaction.spec.ts",
+      "tests/browser/practice-experience.spec.ts",
+      "tests/browser/bidirectional.spec.ts",
+      "tests/browser/editor-presentation.spec.ts",
+      "tests/browser/navigation.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/14.1/legacy-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/14.1/legacy-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/14.1/legacy-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "off",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "bidirectional.spec.ts",
+      "file": "bidirectional.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "code-origin answer passes every real test and preserves input/control identity: exercise.c.echo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1826,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:02.934Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.echo",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-code-origin--42621-ol-identity-exercise-c-echo-chrome\\attachments\\exercise-c-echo-730e096ddf31d43149e8220b5366c30f1b4ed4b7.json"
+                    },
+                    {
+                      "name": "exercise.c.echo-repeat-no-reward",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-code-origin--42621-ol-identity-exercise-c-echo-chrome\\attachments\\exercise-c-echo-repeat-no-reward-92d12fce22d44f9988b31e5ecdd36885622c7449.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-18acf5529bcf8c4ad21b",
+          "file": "bidirectional.spec.ts",
+          "line": 217,
+          "column": 3
+        },
+        {
+          "title": "code-origin answer passes every real test and preserves input/control identity: exercise.c.two-x-plus-three",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1049,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:05.694Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-x-plus-three",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-code-origin--98482-exercise-c-two-x-plus-three-chrome\\attachments\\exercise-c-two-x-plus-three-92eb51a8da58801ab777afde20f12354c3144284.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-3d8c69f5c029fc53369f",
+          "file": "bidirectional.spec.ts",
+          "line": 217,
+          "column": 3
+        },
+        {
+          "title": "code-origin answer passes every real test and preserves input/control identity: exercise.c.nonnegative",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1851,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:06.753Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.nonnegative",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-code-origin--5c638-tity-exercise-c-nonnegative-chrome\\attachments\\exercise-c-nonnegative-3fb9df533163d96329e03d457776761ae0d89626.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-89649462a6315a4de471",
+          "file": "bidirectional.spec.ts",
+          "line": 217,
+          "column": 3
+        },
+        {
+          "title": "code-origin answer passes every real test and preserves input/control identity: exercise.c.two-loop-sums",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2193,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:08.623Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-loop-sums",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-code-origin--abce9-ty-exercise-c-two-loop-sums-chrome\\attachments\\exercise-c-two-loop-sums-009fbcc846cb9e5e59ede52a61d330b0dc54c37f.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-7e1482661c0aeaa73799",
+          "file": "bidirectional.spec.ts",
+          "line": 217,
+          "column": 3
+        },
+        {
+          "title": "code-origin answer passes every real test and preserves input/control identity: exercise.c.increment-at-index",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1955,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:10.830Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.increment-at-index",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-code-origin--6dc9f-ercise-c-increment-at-index-chrome\\attachments\\exercise-c-increment-at-index-576a665a3d64cba8c69a47879d43a953eaa626b7.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-322584418bbbe4097f4c",
+          "file": "bidirectional.spec.ts",
+          "line": 217,
+          "column": 3
+        },
+        {
+          "title": "code-origin answer passes every real test and preserves input/control identity: exercise.c.array-sum",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2132,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:12.795Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.array-sum",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-code-origin--c79ba-entity-exercise-c-array-sum-chrome\\attachments\\exercise-c-array-sum-4ce32e9603c3c12a3e5a9d620c20243667693b38.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-a6198d125efe1296c2fe",
+          "file": "bidirectional.spec.ts",
+          "line": 217,
+          "column": 3
+        },
+        {
+          "title": "a single code-origin source reconstructs every one of the twenty visible block kinds and runs in Rust",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3905,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:14.938Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "all-twenty-code-origin-blocks",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-a-single-cod-57b75-lock-kinds-and-runs-in-Rust-chrome\\attachments\\all-twenty-code-origin-blocks-76c697bd5bd4a5af9ce2074d5c0db411f9a672eb.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-e583e88b41813b6a3fb4",
+          "file": "bidirectional.spec.ts",
+          "line": 299,
+          "column": 1
+        },
+        {
+          "title": "invalid, unmapped and protected-input drafts keep exact text, disable execution and recover through real submission",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2254,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:18.857Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "invalid-unmapped-binding-recovery",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-invalid-unma-e369e-ver-through-real-submission-chrome\\attachments\\invalid-unmapped-binding-recovery-a2faff02579062b82b1b4b101dd684e39d6d775a.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-ff610ee975e1d756333a",
+          "file": "bidirectional.spec.ts",
+          "line": 342,
+          "column": 1
+        },
+        {
+          "title": "native block selection and code pointer selection preserve an accepted run and document revision",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3721,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:21.124Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-selection-preserves-run",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-native-block-af9f6-d-run-and-document-revision-chrome\\attachments\\native-selection-preserves-run-04b0d1a1a1fb1d1d5b8906bf848eb72c22230802.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-5f190d5052d4b920f03c",
+          "file": "bidirectional.spec.ts",
+          "line": 422,
+          "column": 1
+        },
+        {
+          "title": "native block field edits preserve comments, unaffected bytes and a single explicit return through repeated round trips",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1891,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:24.857Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "comments-and-return-roundtrip",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-native-block-30ac1-hrough-repeated-round-trips-chrome\\attachments\\comments-and-return-roundtrip-28eaee753df1d43261ac3a74fe88561c1b0b8d43.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-c33decb3caa428550c1b",
+          "file": "bidirectional.spec.ts",
+          "line": 495,
+          "column": 1
+        },
+        {
+          "title": "invalid code remains intact across editor folding, theme change, settings return and answer-mode switching",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2348,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:26.759Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "invalid-draft-presentation-and-mode",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-invalid-code-c9207-n-and-answer-mode-switching-chrome\\attachments\\invalid-draft-presentation-and-mode-c4f377aa91d70a19f98aee386f18679c56dba403.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-5326de7c6a11f45e77ba",
+          "file": "bidirectional.spec.ts",
+          "line": 524,
+          "column": 1
+        },
+        {
+          "title": "a synchronized native field edit keeps its undo and redo history, source comments and no learning side effects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1775,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:29.118Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "synchronized-native-undo-redo",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-a-synchroniz-38890-nd-no-learning-side-effects-chrome\\attachments\\synchronized-native-undo-redo-221d94ee0527aff649bd587075b0a970ad79c747.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-b29602e6562cdceab4a8",
+          "file": "bidirectional.spec.ts",
+          "line": 574,
+          "column": 1
+        },
+        {
+          "title": "folding and reanalysis retain the last test result identity while the first-input editing draft stays separate",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3327,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:30.907Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "retained-result-before-folding",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-folding-and--f308c-diting-draft-stays-separate-chrome\\attachments\\retained-result-before-folding-e2afe29f0d8f557f81d57affd9f8da52e527d9e8.json"
+                    },
+                    {
+                      "name": "retained-result-after-folding-and-reanalysis",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\bidirectional-folding-and--f308c-diting-draft-stays-separate-chrome\\attachments\\retained-result-after-folding-and-reanalysis-729142fcbcdad0988e5288181ffa722746aefce9.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fa6d8369d2d1947c63d-16abfdc91999ce45d4f6",
+          "file": "bidirectional.spec.ts",
+          "line": 620,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "block-interaction.spec.ts",
+      "file": "block-interaction.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "keyboard editing starts folded, remains keyboard reachable and opening it preserves genuine Rust playback across themes and widths",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1912,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:34.256Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "folded-keyboard-editor-retains-one-rust-submission",
+                      "contentType": "application/json",
+                      "body": "eyJyZXF1ZXN0Ijp7ImJ1ZGdldFJlZiI6eyJpZCI6ImJ1ZGdldC5wMCIsInZlcnNpb24iOiIxLjAuMCJ9LCJkaWFnbm9zdGljVmVyc2lvbiI6IjEuMC4wIiwiZW5jb2RpbmdWZXJzaW9uIjoiMS4wLjAiLCJlbmdpbmVSZWYiOnsiYnVpbGRJZCI6ImFlZDIwM2Y0ZmUzMGNjYWFmZGIzMmQwYzY4YzJhMWYyNjM0YzEwNzI2YzgyOTc3Njg0ZDRlM2QyMDIyODY3OWQiLCJpZCI6ImVuZ2luZS5jLnAwIiwidmVyc2lvbiI6IjEuMC4wIn0sImlkZW50aXR5Ijp7ImNvbnRleHRJZCI6IjJjNDAxZTYwLTNjYTQtNDM2My1iYjZiLTI4MGNjOTFiOTBkYyIsImNvbnRleHRSZXZpc2lvbiI6MywicnVuSWQiOiJiNzkzODBmNi03NDNhLTQ3NzYtOWI5YS05OTNhZDc1YTZhY2EiLCJzb3VyY2VSZXZpc2lvbiI6Mywic3VibWlzc2lvbklkIjoiMmExMjNlODctOTMxYi00NjNkLWE2OWUtZDJiMGQwNDZhY2ZhIiwidGVzdENhc2VLZXkiOiJuZWdhdGl2ZSJ9LCJpbnB1dCI6eyJyYW5kb20iOm51bGwsInNwZWNSZWYiOnsiaWQiOiJpbnB1dC5jLnNjYWxhci14IiwidmVyc2lvbiI6IjEuMC4wIn0sInZhbHVlcyI6eyJ4IjotOX19LCJqdWRnZSI6eyJleHBlY3RlZEV4aXRDb2RlIjowLCJleHBlY3RlZFN0ZG91dCI6Ii05XG4iLCJwcm9maWxlUmVmIjp7ImlkIjoianVkZ2UuYy5lY2hvIiwidmVyc2lvbiI6IjEuMC4wIn0sInJ1bGUiOiJpbnB1dC1yZWFkLW91dHB1dCJ9LCJqdWRnZVZlcnNpb24iOiIxLjAuMCIsImtpbmQiOiJleGVjdXRlIiwibGFuZ3VhZ2VSZWYiOnsiaWQiOiJsYW5nLmMiLCJ2ZXJzaW9uIjoiMS4wLjAifSwibGVhcm5pbmdSZXZpc2lvbiI6MSwibW9kZSI6ImV4ZXJjaXNlLXRlc3QiLCJwYWNrYWdlUmVmIjp7ImlkIjoiY29udGVudC5jLnAwIiwidmVyc2lvbiI6IjEuMC4xIn0sInByb2dyYW1SZWYiOnsiaWQiOiJwcm9ncmFtLmMuZWNobyIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm90b2NvbFZlcnNpb24iOiIxLjAuMCIsInJlbWFpbmluZ01zIjo5MDUsInNvdXJjZSI6eyJiaW5kaW5nTWFwIjpbeyJiaW5kaW5nS2V5IjoicGFyYW0ueCIsImJ5dGVSYW5nZSI6eyJlbmQiOjUxLCJzdGFydCI6NDB9fV0sImJsb2NrTWFwIjpbeyJibG9ja0lkIjoibGVzc29uLmJsb2NrLjEiLCJieXRlUmFuZ2UiOnsiZW5kIjo1MSwic3RhcnQiOjQwfX0seyJibG9ja0lkIjoibGVzc29uLmJsb2NrLjMiLCJieXRlUmFuZ2UiOnsiZW5kIjo3Miwic3RhcnQiOjcxfX0seyJibG9ja0lkIjoibGVzc29uLmJsb2NrLjIiLCJieXRlUmFuZ2UiOnsiZW5kIjo3NCwic3RhcnQiOjU2fX0seyJibG9ja0lkIjoibGVzc29uLm1haW4iLCJieXRlUmFuZ2UiOnsiZW5kIjo5MCwic3RhcnQiOjE5fX1dLCJ0ZXh0IjoiI2luY2x1ZGUgPHN0ZGlvLmg+XG5pbnQgbWFpbih2b2lkKSB7XG4gICAgaW50IHggPSAtOTtcbiAgICBwcmludGYoXCIlZFxcblwiLCB4KTtcbiAgICByZXR1cm4gMDtcbn1cbiJ9LCJzdWJqZWN0UmVmIjp7ImlkIjoiZXhlcmNpc2UuYy5lY2hvIiwidmVyc2lvbiI6IjEuMC4xIn0sInN1YnNldFJlZiI6eyJpZCI6InN1YnNldC5jLnAwIiwidmVyc2lvbiI6IjEuMC4wIn0sInRyYWNlVmVyc2lvbiI6IjEuMC4wIn0sInJlc3VsdCI6eyJidWRnZXRSZWYiOnsiaWQiOiJidWRnZXQucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZGlhZ25vc3RpY1ZlcnNpb24iOiIxLjAuMCIsImVuY29kaW5nVmVyc2lvbiI6IjEuMC4wIiwiZW5naW5lUmVmIjp7ImJ1aWxkSWQiOiJhZWQyMDNmNGZlMzBjY2FhZmRiMzJkMGM2OGMyYTFmMjYzNGMxMDcyNmM4Mjk3NzY4NGQ0ZTNkMjAyMjg2NzlkIiwiaWQiOiJlbmdpbmUuYy5wMCIsInZlcnNpb24iOiIxLjAuMCJ9LCJpZGVudGl0eSI6eyJjb250ZXh0SWQiOiIyYzQwMWU2MC0zY2E0LTQzNjMtYmI2Yi0yODBjYzkxYjkwZGMiLCJjb250ZXh0UmV2aXNpb24iOjMsInJ1bklkIjoiYjc5MzgwZjYtNzQzYS00Nzc2LTliOWEtOTkzYWQ3NWE2YWNhIiwic291cmNlUmV2aXNpb24iOjMsInN1Ym1pc3Npb25JZCI6IjJhMTIzZTg3LTkzMWItNDYzZC1hNjllLWQyYjBkMDQ2YWNmYSIsInRlc3RDYXNlS2V5IjoibmVnYXRpdmUifSwianVkZ2VSZXN1bHQiOnsiY2FzZUtleSI6Im5lZ2F0aXZlIiwiY2hlY2tzIjpbeyJkaWFnbm9zdGljQ29kZXMiOltdLCJrZXkiOiJpbnB1dC1iaW5kaW5ncyIsIm5vZGVJZHMiOlsibjYiXSwic3RhdHVzIjoibWV0Iiwic3RlcFNlcXMiOls0XX0seyJkaWFnbm9zdGljQ29kZXMiOltdLCJrZXkiOiJzdGRvdXQtZXhhY3QiLCJub2RlSWRzIjpbIm42Il0sInN0YXR1cyI6Im1ldCIsInN0ZXBTZXFzIjpbNF19LHsiZGlhZ25vc3RpY0NvZGVzIjpbXSwia2V5IjoiZXhpdC16ZXJvIiwibm9kZUlkcyI6WyJuNiJdLCJzdGF0dXMiOiJtZXQiLCJzdGVwU2VxcyI6WzRdfSx7ImRpYWdub3N0aWNDb2RlcyI6W10sImtleSI6InRlYWNoaW5nLXRhcmdldCIsIm5vZGVJZHMiOlsibjYiXSwic3RhdHVzIjoibWV0Iiwic3RlcFNlcXMiOls0XX1dLCJjb3ZlcmFnZSI6W10sIm9ic2VydmF0aW9ucyI6W10sInByb2ZpbGVSZWYiOnsiaWQiOiJqdWRnZS5jLmVjaG8iLCJ2ZXJzaW9uIjoiMS4wLjAifSwic3RhdHVzIjoibWV0In0sImp1ZGdlVmVyc2lvbiI6IjEuMC4wIiwia2luZCI6InJlc3VsdCIsImxhbmd1YWdlUmVmIjp7ImlkIjoibGFuZy5jIiwidmVyc2lvbiI6IjEuMC4wIn0sImxlYXJuaW5nUmV2aXNpb24iOjEsIm5vZGVNYXAiOlt7ImJ5dGVSYW5nZSI6eyJlbmQiOjkwLCJzdGFydCI6MTl9LCJraW5kIjoiZnVuY3Rpb24iLCJub2RlSWQiOiJuMSIsInBhcmVudElkIjpudWxsfSx7ImJ5dGVSYW5nZSI6eyJlbmQiOjkwLCJzdGFydCI6MzR9LCJraW5kIjoiYmxvY2siLCJub2RlSWQiOiJuMiIsInBhcmVudElkIjoibjEifSx7ImJ5dGVSYW5nZSI6eyJlbmQiOjUxLCJzdGFydCI6NDB9LCJraW5kIjoiZGVjbGFyYXRpb24iLCJub2RlSWQiOiJuMyIsInBhcmVudElkIjoibjIifSx7ImJ5dGVSYW5nZSI6eyJlbmQiOjUwLCJzdGFydCI6NDh9LCJraW5kIjoiZXhwcmVzc2lvbiIsIm5vZGVJZCI6Im40IiwicGFyZW50SWQiOiJuMyJ9LHsiYnl0ZVJhbmdlIjp7ImVuZCI6NTAsInN0YXJ0Ijo0OX0sImtpbmQiOiJleHByZXNzaW9uIiwibm9kZUlkIjoibjUiLCJwYXJlbnRJZCI6Im40In0seyJieXRlUmFuZ2UiOnsiZW5kIjo3NCwic3RhcnQiOjU2fSwia2luZCI6Im91dHB1dCIsIm5vZGVJZCI6Im42IiwicGFyZW50SWQiOiJuMiJ9LHsiYnl0ZVJhbmdlIjp7ImVuZCI6NzIsInN0YXJ0Ijo3MX0sImtpbmQiOiJleHByZXNzaW9uIiwibm9kZUlkIjoibjciLCJwYXJlbnRJZCI6Im42In0seyJieXRlUmFuZ2UiOnsiZW5kIjo4OCwic3RhcnQiOjc5fSwia2luZCI6InJldHVybiIsIm5vZGVJZCI6Im44IiwicGFyZW50SWQiOiJuMiJ9LHsiYnl0ZVJhbmdlIjp7ImVuZCI6ODcsInN0YXJ0Ijo4Nn0sImtpbmQiOiJleHByZXNzaW9uIiwibm9kZUlkIjoibjkiLCJwYXJlbnRJZCI6Im44In1dLCJwYWNrYWdlUmVmIjp7ImlkIjoiY29udGVudC5jLnAwIiwidmVyc2lvbiI6IjEuMC4xIn0sInByb2R1Y2VyIjoicnVzdCIsInByb2dyYW1SZWYiOnsiaWQiOiJwcm9ncmFtLmMuZWNobyIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm90b2NvbFZlcnNpb24iOiIxLjAuMCIsInJlc29sdmVkQmluZGluZ3MiOlt7ImJpbmRpbmdLZXkiOiJwYXJhbS54IiwiZGVjbGFyYXRpb25Ob2RlSWQiOiJuMyJ9XSwic3RhdHMiOnsiZnVlbFVzZWQiOjMxODQsIm1heEFzdERlcHRoIjoyLCJtYXhTeW50YXhEZXB0aCI6MiwicGVha1ZpcnR1YWxCeXRlcyI6NCwicnVzdE1pY3JvcyI6MTAwMH0sInN1YmplY3RSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmVjaG8iLCJ2ZXJzaW9uIjoiMS4wLjEifSwic3Vic2V0UmVmIjp7ImlkIjoic3Vic2V0LmMucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifSwidGVybWluYWwiOnsiY3Vyc29yIjo1LCJkaWFnbm9zdGljcyI6W10sImV4aXRDb2RlIjowLCJsb2NhdGlvbiI6eyJlZGdlIjoid2hvbGUiLCJraW5kIjoic291cmNlIiwibm9kZUlkIjoibjgifSwic3RhdHVzIjoiY29tcGxldGVkIn0sInRyYWNlIjp7ImNoZWNrcG9pbnRzIjpbeyJjdXJzb3IiOjAsInN0YXRlIjp7ImFsbG9jYXRvciI6eyJsaXZlQnl0ZXMiOjAsIm5leHRBZGRyZXNzIjo0MDk2LCJuZXh0RnJhbWUiOjEsIm5leHRPYmplY3QiOjEsIm5leHRTY29wZSI6MX0sImNvbnRyb2wiOnsiYWN0aXZlRnJhbWVJZCI6bnVsbCwiZmxvd1N0YWNrIjpbXSwibmV4dE5vZGVJZCI6Im4xIiwicGhhc2UiOiJyZWFkeSIsInJldHVyblZhbHVlIjpudWxsfSwiY291bnRlcnMiOnsiYXJyYXlXcml0ZXMiOjAsImNvbXBhcmlzb25zIjowLCJzY2FsYXJXcml0ZXMiOjAsInN3YXBzIjowfSwiZnJhbWVzIjpbXSwib2JqZWN0cyI6W10sIm91dHB1dCI6IiIsInNjb3BlcyI6W119fV0sImNvbXBsZXRlbmVzcyI6ImNvbXBsZXRlIiwiZHNsVmVyc2lvbiI6IjEuMC4wIiwiaW5pdGlhbFN0YXRlIjp7ImFsbG9jYXRvciI6eyJsaXZlQnl0ZXMiOjAsIm5leHRBZGRyZXNzIjo0MDk2LCJuZXh0RnJhbWUiOjEsIm5leHRPYmplY3QiOjEsIm5leHRTY29wZSI6MX0sImNvbnRyb2wiOnsiYWN0aXZlRnJhbWVJZCI6bnVsbCwiZmxvd1N0YWNrIjpbXSwibmV4dE5vZGVJZCI6Im4xIiwicGhhc2UiOiJyZWFkeSIsInJldHVyblZhbHVlIjpudWxsfSwiY291bnRlcnMiOnsiYXJyYXlXcml0ZXMiOjAsImNvbXBhcmlzb25zIjowLCJzY2FsYXJXcml0ZXMiOjAsInN3YXBzIjowfSwiZnJhbWVzIjpbXSwib2JqZWN0cyI6W10sIm91dHB1dCI6IiIsInNjb3BlcyI6W119LCJzdGVwcyI6W3siY2hhbmdlcyI6W3siYWZ0ZXIiOnsiZnVuY3Rpb25Ob2RlSWQiOiJuMSIsImlkIjoiZjEiLCJwYXJlbnRGcmFtZUlkIjpudWxsLCJzY29wZUlkcyI6WyJzMSJdfSwiYmVmb3JlIjpudWxsLCJpZCI6ImYxIiwiaW5kZXgiOjAsIm9wIjoicmVjb3JkIiwidGFibGUiOiJmcmFtZXMifSx7ImFmdGVyIjp7ImZyYW1lSWQiOiJmMSIsImlkIjoiczEiLCJraW5kIjoibWFpbiIsIm5vZGVJZCI6Im4yIiwib2JqZWN0SWRzIjpbXSwicGFyZW50U2NvcGVJZCI6bnVsbH0sImJlZm9yZSI6bnVsbCwiaWQiOiJzMSIsImluZGV4IjowLCJvcCI6InJlY29yZCIsInRhYmxlIjoic2NvcGVzIn0seyJhZnRlciI6eyJhY3RpdmVGcmFtZUlkIjoiZjEiLCJmbG93U3RhY2siOlt7Iml0ZXJhdGlvbiI6MCwibm9kZUlkIjoibjIiLCJzdGFnZSI6ImJsb2NrIn1dLCJuZXh0Tm9kZUlkIjoibjMiLCJwaGFzZSI6InJ1bm5pbmciLCJyZXR1cm5WYWx1ZSI6bnVsbH0sImJlZm9yZSI6eyJhY3RpdmVGcmFtZUlkIjpudWxsLCJmbG93U3RhY2siOltdLCJuZXh0Tm9kZUlkIjoibjEiLCJwaGFzZSI6InJlYWR5IiwicmV0dXJuVmFsdWUiOm51bGx9LCJvcCI6ImNvbnRyb2wifSx7ImFmdGVyIjp7ImxpdmVCeXRlcyI6MCwibmV4dEFkZHJlc3MiOjQwOTYsIm5leHRGcmFtZSI6MiwibmV4dE9iamVjdCI6MSwibmV4dFNjb3BlIjoyfSwiYmVmb3JlIjp7ImxpdmVCeXRlcyI6MCwibmV4dEFkZHJlc3MiOjQwOTYsIm5leHRGcmFtZSI6MSwibmV4dE9iamVjdCI6MSwibmV4dFNjb3BlIjoxfSwib3AiOiJhbGxvY2F0b3IifV0sImtpbmQiOiJwcm9ncmFtLmVudGVyIiwibG9jYXRpb24iOnsiZWRnZSI6Indob2xlIiwia2luZCI6InNvdXJjZSIsIm5vZGVJZCI6Im4xIn0sIm9ic2VydmF0aW9ucyI6W10sInNlcSI6MX0seyJjaGFuZ2VzIjpbeyJhZnRlciI6eyJmcmFtZUlkIjoiZjEiLCJpZCI6InMxIiwia2luZCI6Im1haW4iLCJub2RlSWQiOiJuMiIsIm9iamVjdElkcyI6WyJvMSJdLCJwYXJlbnRTY29wZUlkIjpudWxsfSwiYmVmb3JlIjp7ImZyYW1lSWQiOiJmMSIsImlkIjoiczEiLCJraW5kIjoibWFpbiIsIm5vZGVJZCI6Im4yIiwib2JqZWN0SWRzIjpbXSwicGFyZW50U2NvcGVJZCI6bnVsbH0sImlkIjoiczEiLCJpbmRleCI6MCwib3AiOiJyZWNvcmQiLCJ0YWJsZSI6InNjb3BlcyJ9LHsiYWZ0ZXIiOnsiYmFzZUFkZHJlc3MiOjQwOTYsImNlbGxzIjpbXSwiZGVjbGFyYXRpb25Ob2RlSWQiOiJuMyIsImRlZmF1bHRWYWx1ZSI6bnVsbCwiZnJhbWVJZCI6ImYxIiwiaWQiOiJvMSIsImtpbmQiOiJpbnQiLCJsZW5ndGgiOjEsIm5hbWUiOiJ4Iiwic2NvcGVJZCI6InMxIn0sImJlZm9yZSI6bnVsbCwiaWQiOiJvMSIsImluZGV4IjowLCJvcCI6InJlY29yZCIsInRhYmxlIjoib2JqZWN0cyJ9LHsiYWZ0ZXIiOnsibGl2ZUJ5dGVzIjo0LCJuZXh0QWRkcmVzcyI6NDEwMCwibmV4dEZyYW1lIjoyLCJuZXh0T2JqZWN0IjoyLCJuZXh0U2NvcGUiOjJ9LCJiZWZvcmUiOnsibGl2ZUJ5dGVzIjowLCJuZXh0QWRkcmVzcyI6NDA5NiwibmV4dEZyYW1lIjoyLCJuZXh0T2JqZWN0IjoxLCJuZXh0U2NvcGUiOjJ9LCJvcCI6ImFsbG9jYXRvciJ9XSwia2luZCI6Im9iamVjdC5kZWNsYXJlIiwibG9jYXRpb24iOnsiZWRnZSI6Indob2xlIiwia2luZCI6InNvdXJjZSIsIm5vZGVJZCI6Im4zIn0sIm9ic2VydmF0aW9ucyI6W10sInNlcSI6Mn0seyJjaGFuZ2VzIjpbeyJhZnRlciI6LTksImJlZm9yZSI6bnVsbCwiaW5kZXgiOjAsIm9iamVjdElkIjoibzEiLCJvcCI6ImNlbGwifSx7ImFmdGVyIjp7ImFjdGl2ZUZyYW1lSWQiOiJmMSIsImZsb3dTdGFjayI6W3siaXRlcmF0aW9uIjowLCJub2RlSWQiOiJuMiIsInN0YWdlIjoiYmxvY2sifV0sIm5leHROb2RlSWQiOiJuNiIsInBoYXNlIjoicnVubmluZyIsInJldHVyblZhbHVlIjpudWxsfSwiYmVmb3JlIjp7ImFjdGl2ZUZyYW1lSWQiOiJmMSIsImZsb3dTdGFjayI6W3siaXRlcmF0aW9uIjowLCJub2RlSWQiOiJuMiIsInN0YWdlIjoiYmxvY2sifV0sIm5leHROb2RlSWQiOiJuMyIsInBoYXNlIjoicnVubmluZyIsInJldHVyblZhbHVlIjpudWxsfSwib3AiOiJjb250cm9sIn0seyJhZnRlciI6eyJhcnJheVdyaXRlcyI6MCwiY29tcGFyaXNvbnMiOjAsInNjYWxhcldyaXRlcyI6MSwic3dhcHMiOjB9LCJiZWZvcmUiOnsiYXJyYXlXcml0ZXMiOjAsImNvbXBhcmlzb25zIjowLCJzY2FsYXJXcml0ZXMiOjAsInN3YXBzIjowfSwib3AiOiJjb3VudGVycyJ9XSwia2luZCI6InZhbHVlLmluaXRpYWxpemUiLCJsb2NhdGlvbiI6eyJlZGdlIjoid2hvbGUiLCJraW5kIjoic291cmNlIiwibm9kZUlkIjoibjMifSwib2JzZXJ2YXRpb25zIjpbeyJraW5kIjoiZXZhbHVhdGUiLCJub2RlSWQiOiJuNCIsIm9wZXJhbmRzIjpbOV0sIm9wZXJhdG9yIjoiLSIsInZhbHVlIjotOX1dLCJzZXEiOjN9LHsiY2hhbmdlcyI6W3siYWZ0ZXIiOnsiYWN0aXZlRnJhbWVJZCI6ImYxIiwiZmxvd1N0YWNrIjpbeyJpdGVyYXRpb24iOjAsIm5vZGVJZCI6Im4yIiwic3RhZ2UiOiJibG9jayJ9XSwibmV4dE5vZGVJZCI6Im44IiwicGhhc2UiOiJydW5uaW5nIiwicmV0dXJuVmFsdWUiOm51bGx9LCJiZWZvcmUiOnsiYWN0aXZlRnJhbWVJZCI6ImYxIiwiZmxvd1N0YWNrIjpbeyJpdGVyYXRpb24iOjAsIm5vZGVJZCI6Im4yIiwic3RhZ2UiOiJibG9jayJ9XSwibmV4dE5vZGVJZCI6Im42IiwicGhhc2UiOiJydW5uaW5nIiwicmV0dXJuVmFsdWUiOm51bGx9LCJvcCI6ImNvbnRyb2wifSx7ImFmdGVyQnl0ZXMiOjMsImFwcGVuZCI6Ii05XG4iLCJiZWZvcmVCeXRlcyI6MCwib3AiOiJvdXRwdXQifV0sImtpbmQiOiJvdXRwdXQuYXBwZW5kIiwibG9jYXRpb24iOnsiZWRnZSI6Indob2xlIiwia2luZCI6InNvdXJjZSIsIm5vZGVJZCI6Im42In0sIm9ic2VydmF0aW9ucyI6W3siaW5kZXgiOjAsImtpbmQiOiJyZWFkIiwibm9kZUlkIjoibjciLCJvYmplY3RJZCI6Im8xIiwidmFsdWUiOi05fV0sInNlcSI6NH0seyJjaGFuZ2VzIjpbeyJhZnRlciI6bnVsbCwiYmVmb3JlIjp7ImZ1bmN0aW9uTm9kZUlkIjoibjEiLCJpZCI6ImYxIiwicGFyZW50RnJhbWVJZCI6bnVsbCwic2NvcGVJZHMiOlsiczEiXX0sImlkIjoiZjEiLCJpbmRleCI6MCwib3AiOiJyZWNvcmQiLCJ0YWJsZSI6ImZyYW1lcyJ9LHsiYWZ0ZXIiOm51bGwsImJlZm9yZSI6eyJmcmFtZUlkIjoiZjEiLCJpZCI6InMxIiwia2luZCI6Im1haW4iLCJub2RlSWQiOiJuMiIsIm9iamVjdElkcyI6WyJvMSJdLCJwYXJlbnRTY29wZUlkIjpudWxsfSwiaWQiOiJzMSIsImluZGV4IjowLCJvcCI6InJlY29yZCIsInRhYmxlIjoic2NvcGVzIn0seyJhZnRlciI6bnVsbCwiYmVmb3JlIjp7ImJhc2VBZGRyZXNzIjo0MDk2LCJjZWxscyI6W3siaW5kZXgiOjAsInZhbHVlIjotOX1dLCJkZWNsYXJhdGlvbk5vZGVJZCI6Im4zIiwiZGVmYXVsdFZhbHVlIjpudWxsLCJmcmFtZUlkIjoiZjEiLCJpZCI6Im8xIiwia2luZCI6ImludCIsImxlbmd0aCI6MSwibmFtZSI6IngiLCJzY29wZUlkIjoiczEifSwiaWQiOiJvMSIsImluZGV4IjowLCJvcCI6InJlY29yZCIsInRhYmxlIjoib2JqZWN0cyJ9LHsiYWZ0ZXIiOnsiYWN0aXZlRnJhbWVJZCI6bnVsbCwiZmxvd1N0YWNrIjpbXSwibmV4dE5vZGVJZCI6bnVsbCwicGhhc2UiOiJyZXR1cm5lZCIsInJldHVyblZhbHVlIjowfSwiYmVmb3JlIjp7ImFjdGl2ZUZyYW1lSWQiOiJmMSIsImZsb3dTdGFjayI6W3siaXRlcmF0aW9uIjowLCJub2RlSWQiOiJuMiIsInN0YWdlIjoiYmxvY2sifV0sIm5leHROb2RlSWQiOiJuOCIsInBoYXNlIjoicnVubmluZyIsInJldHVyblZhbHVlIjpudWxsfSwib3AiOiJjb250cm9sIn0seyJhZnRlciI6eyJsaXZlQnl0ZXMiOjAsIm5leHRBZGRyZXNzIjo0MTAwLCJuZXh0RnJhbWUiOjIsIm5leHRPYmplY3QiOjIsIm5leHRTY29wZSI6Mn0sImJlZm9yZSI6eyJsaXZlQnl0ZXMiOjQsIm5leHRBZGRyZXNzIjo0MTAwLCJuZXh0RnJhbWUiOjIsIm5leHRPYmplY3QiOjIsIm5leHRTY29wZSI6Mn0sIm9wIjoiYWxsb2NhdG9yIn1dLCJraW5kIjoicHJvZ3JhbS5yZXR1cm4iLCJsb2NhdGlvbiI6eyJlZGdlIjoid2hvbGUiLCJraW5kIjoic291cmNlIiwibm9kZUlkIjoibjgifSwib2JzZXJ2YXRpb25zIjpbXSwic2VxIjo1fV19LCJ0cmFjZVZlcnNpb24iOiIxLjAuMCJ9LCJzYW1wbGVzIjpbeyJ0aGVtZSI6Im1pbmltYWwiLCJ3aWR0aCI6MTQ0MCwiY3Vyc29yIjoiMSIsImlkcyI6WyJsZXNzb24ubWFpbiIsImxlc3Nvbi5ibG9jay4xIiwibGVzc29uLmJsb2NrLjIiLCJsZXNzb24uYmxvY2suMyJdfSx7InRoZW1lIjoibWluaW1hbCIsIndpZHRoIjozOTAsImN1cnNvciI6IjEiLCJpZHMiOlsibGVzc29uLm1haW4iLCJsZXNzb24uYmxvY2suMSIsImxlc3Nvbi5ibG9jay4yIiwibGVzc29uLmJsb2NrLjMiXX1dfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d36435dc95590e1d5bdb-9f60058677d0409fdf76",
+          "file": "block-interaction.spec.ts",
+          "line": 188,
+          "column": 1
+        },
+        {
+          "title": "native value connections expose a visible preview and accept the same twenty-pixel offset at minimum normal and maximum zoom",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8837,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:36.178Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "held-geometry-0.35",
+                      "contentType": "application/json",
+                      "body": "eyJ0YXJnZXRTY2FsZSI6MC4zNSwiZGVzdGluYXRpb24iOnsieCI6NTU1LjUwMDAwMjYyMjYwNDQsInkiOjM5My4xMDMxMjg5MTAwNjQ3fSwicG9pbnRlciI6eyJzdGFydCI6eyJ4Ijo3MzkuMjY2NzAzMjg3NzYwNCwieSI6NTA1LjgyODEzMjYyOTM5NDUzfSwiZW5kIjp7IngiOjU4OS45NjY2NTcwODIyMzk2LCJ5IjozODkuMDc4MTI3Mzg0MTg1OH19LCJoZWxkU2hhcGVzIjpbeyJjbGFzcyI6bnVsbCwicmVjdCI6eyJ4Ijo1NzYuMTk5OTUxMTcxODc1LCJ5IjozODUuNzUzMTEyNzkyOTY4NzUsIndpZHRoIjo0MiwiaGVpZ2h0IjoxNC43MDAwMTIyMDcwMzEyNSwidG9wIjozODUuNzUzMTEyNzkyOTY4NzUsInJpZ2h0Ijo2MTguMTk5OTUxMTcxODc1LCJib3R0b20iOjQwMC40NTMxMjUsImxlZnQiOjU3Ni4xOTk5NTExNzE4NzV9fV0sImZlZWRiYWNrIjoi5bey5om+5Yiw6L+e5o6l5L2N572u77yM5p2+5byA5Y2z5Y+v5ou85o6l44CCIn0="
+                    },
+                    {
+                      "name": "held-geometry-0.8",
+                      "contentType": "application/json",
+                      "body": "eyJ0YXJnZXRTY2FsZSI6MC44LCJkZXN0aW5hdGlvbiI6eyJ4Ijo0ODcuMDAwMDAxMzExMzAyMiwieSI6MzIwLjkwMzEyNjk1NTAzMjM1fSwicG9pbnRlciI6eyJzdGFydCI6eyJ4Ijo2ODguNDY2Njc0ODA0Njg3NSwieSI6NDI4LjUwMzExMjc5Mjk2ODc1fSwiZW5kIjp7IngiOjU0MC4wNjY2NTE3MDE5MjcyLCJ5IjozMDkuNTAzMTE3Nzk5NzU4OX19LCJoZWxkU2hhcGVzIjpbeyJjbGFzcyI6bnVsbCwicmVjdCI6eyJ4Ijo1MDguNTk5OTc1NTg1OTM3NSwieSI6MzA0LjEwMzExODg5NjQ4NDQsIndpZHRoIjo5NiwiaGVpZ2h0IjozMy42MDAwMDYxMDM1MTU2MjUsInRvcCI6MzA0LjEwMzExODg5NjQ4NDQsInJpZ2h0Ijo2MDQuNTk5OTc1NTg1OTM3NSwiYm90dG9tIjozMzcuNzAzMTI1LCJsZWZ0Ijo1MDguNTk5OTc1NTg1OTM3NX19XSwiZmVlZGJhY2siOiLlt7Lmib7liLDov57mjqXkvY3nva7vvIzmnb7lvIDljbPlj6/mi7zmjqXjgIIifQ=="
+                    },
+                    {
+                      "name": "held-geometry-1.5",
+                      "contentType": "application/json",
+                      "body": "eyJ0YXJnZXRTY2FsZSI6MS41LCJkZXN0aW5hdGlvbiI6eyJ4IjozODIsInkiOjM2NS43MDMxMjV9LCJwb2ludGVyIjp7InN0YXJ0Ijp7IngiOjU5NiwieSI6NDQ1LjcwMzEyNX0sImVuZCI6eyJ4Ijo0NTAsInkiOjMzOC4yMDMxMDk3NDEyMTA5NH19LCJoZWxkU2hhcGVzIjpbeyJjbGFzcyI6bnVsbCwicmVjdCI6eyJ4Ijo0MDUsInkiOjMzNC4yMDMxMjUsIndpZHRoIjoxODAsImhlaWdodCI6NjMsInRvcCI6MzM0LjIwMzEyNSwicmlnaHQiOjU4NSwiYm90dG9tIjozOTcuMjAzMTI1LCJsZWZ0Ijo0MDV9fV0sImZlZWRiYWNrIjoi5bey5om+5Yiw6L+e5o6l5L2N572u77yM5p2+5byA5Y2z5Y+v5ou85o6l44CCIn0="
+                    },
+                    {
+                      "name": "actual-native-mouse-screen-space-snapping",
+                      "contentType": "application/json",
+                      "body": "W3sic2NhbGUiOjAuMzUsInBvaW50ZXIiOnsic3RhcnQiOnsieCI6NzM5LjI2NjcwMzI4Nzc2MDQsInkiOjUwNS44MjgxMzI2MjkzOTQ1M30sImVuZCI6eyJ4Ijo1ODkuOTY2NjU3MDgyMjM5NiwieSI6Mzg5LjA3ODEyNzM4NDE4NTh9fSwib3V0c2lkZSI6eyJzdGFydCI6eyJ4Ijo3MzkuMjY2NzAzMjg3NzYwNCwieSI6NTA1LjgyODEzMjYyOTM5NDUzfSwiZW5kIjp7IngiOjYxOS45NjY2NTcwODIyMzk2LCJ5IjozODkuMDc4MTI3Mzg0MTg1OH19LCJjb25uZWN0ZWRUbyI6Imxlc3Nvbi5ibG9jay4yIn0seyJzY2FsZSI6MC44LCJwb2ludGVyIjp7InN0YXJ0Ijp7IngiOjY4OC40NjY2NzQ4MDQ2ODc1LCJ5Ijo0MjguNTAzMTEyNzkyOTY4NzV9LCJlbmQiOnsieCI6NTQwLjA2NjY1MTcwMTkyNzIsInkiOjMwOS41MDMxMTc3OTk3NTg5fX0sIm91dHNpZGUiOnsic3RhcnQiOnsieCI6Njg4LjQ2NjY3NDgwNDY4NzUsInkiOjQyOC41MDMxMTI3OTI5Njg3NX0sImVuZCI6eyJ4Ijo1NzAuMDY2NjUxNzAxOTI3MiwieSI6MzA5LjUwMzExNzc5OTc1ODl9fSwiY29ubmVjdGVkVG8iOiJsZXNzb24uYmxvY2suMiJ9LHsic2NhbGUiOjEuNSwicG9pbnRlciI6eyJzdGFydCI6eyJ4Ijo1OTYsInkiOjQ0NS43MDMxMjV9LCJlbmQiOnsieCI6NDUwLCJ5IjozMzguMjAzMTA5NzQxMjEwOTR9fSwib3V0c2lkZSI6eyJzdGFydCI6eyJ4Ijo1OTcsInkiOjQ2MC43MDMxMjV9LCJlbmQiOnsieCI6NDgwLCJ5IjozMzguMjAzMTI1fX0sImNvbm5lY3RlZFRvIjoibGVzc29uLmJsb2NrLjIifV0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d36435dc95590e1d5bdb-aa37f72f469f1e266e56",
+          "file": "block-interaction.spec.ts",
+          "line": 264,
+          "column": 1
+        },
+        {
+          "title": "native flyout dragging builds nested arithmetic and rejects wrong connection types with reversible deletion before genuine Rust submission",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7096,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:45.023Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-pointer-nesting-delete-undo-redo-and-real-rust",
+                      "contentType": "application/json",
+                      "body": "eyJkZXRhY2hlZCI6eyJzdGFydCI6eyJ4Ijo1MTguNDY2NjU0NDU5NjM1NCwieSI6MTIzLjUwMzEyODA1MTc1NzgxfSwiZW5kIjp7IngiOjY4OC40NjY2NTQ0NTk2MzU0LCJ5IjoyMzguNTAzMTI4MDUxNzU3OH19LCJhcml0aG1ldGljIjp7ImlkIjoiMWQ3ZEVKIVNHbT1TMmFFWnp6MyMiLCJzdGFydCI6eyJ4Ijo0NDUuMjAwMDEyMjA3MDMxMjUsInkiOjcyLjMwMzEyNzI4ODgxODM2fSwiZW5kIjp7IngiOjcyMCwieSI6Mjk4LjcwMzEyNX19LCJpbnRlZ2VyIjp7ImlkIjoiZHxGJTgqS2syXlZsTXhUXS9zKUUiLCJzdGFydCI6eyJ4Ijo0MzUuMDAwMDEwMTcyNTI2MDYsInkiOjE2Ljc2OTc5MjU1Njc2MjY5NX0sImVuZCI6eyJ4Ijo3MjAsInkiOjI5OC43MDMxMjV9fSwiaW52YWxpZCI6eyJpZCI6IlYwN05jTk9OdzJNSF0xY2VBbypFIiwic3RhcnQiOnsieCI6NDM1LjAwMDAxMDE3MjUyNjA2LCJ5IjoxNi43Njk3OTI1NTY3NjI2OTV9LCJlbmQiOnsieCI6NzIwLCJ5IjoyOTguNzAzMTI1fX0sImRlbGV0aW9uIjp7InN0YXJ0Ijp7IngiOjQ3MS44MDAwMDgxMzgwMjA4LCJ5IjoxOTUuMTAzMTM0MTU1MjczNDR9LCJlbmQiOnsieCI6NzczLCJ5Ijo0NDQuNzAzMTI1fX0sInJlcXVlc3QiOnsiYnVkZ2V0UmVmIjp7ImlkIjoiYnVkZ2V0LnAwIiwidmVyc2lvbiI6IjEuMC4wIn0sImRpYWdub3N0aWNWZXJzaW9uIjoiMS4wLjAiLCJlbmNvZGluZ1ZlcnNpb24iOiIxLjAuMCIsImVuZ2luZVJlZiI6eyJidWlsZElkIjoiYWVkMjAzZjRmZTMwY2NhYWZkYjMyZDBjNjhjMmExZjI2MzRjMTA3MjZjODI5Nzc2ODRkNGUzZDIwMjI4Njc5ZCIsImlkIjoiZW5naW5lLmMucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiaWRlbnRpdHkiOnsiY29udGV4dElkIjoiNzdjNTYyYmMtN2RkZi00YTJmLWExOGEtYTk4ZmVkZTc4OTA2IiwiY29udGV4dFJldmlzaW9uIjoxMywicnVuSWQiOiJjYzY5YTU2OC05MGRkLTQ3MTUtOWExMC05YTNjMjNhN2U5ODIiLCJzb3VyY2VSZXZpc2lvbiI6Mywic3VibWlzc2lvbklkIjoiYmY5ZmQ2NTYtNDQyOS00MzM2LTg3ODItOGZkMDgyN2U1NDAwIiwidGVzdENhc2VLZXkiOiJuZWdhdGl2ZSJ9LCJpbnB1dCI6eyJyYW5kb20iOm51bGwsInNwZWNSZWYiOnsiaWQiOiJpbnB1dC5jLnNjYWxhci14IiwidmVyc2lvbiI6IjEuMC4wIn0sInZhbHVlcyI6eyJ4IjotOX19LCJqdWRnZSI6eyJleHBlY3RlZEV4aXRDb2RlIjowLCJleHBlY3RlZFN0ZG91dCI6Ii05XG4iLCJwcm9maWxlUmVmIjp7ImlkIjoianVkZ2UuYy5lY2hvIiwidmVyc2lvbiI6IjEuMC4wIn0sInJ1bGUiOiJpbnB1dC1yZWFkLW91dHB1dCJ9LCJqdWRnZVZlcnNpb24iOiIxLjAuMCIsImtpbmQiOiJleGVjdXRlIiwibGFuZ3VhZ2VSZWYiOnsiaWQiOiJsYW5nLmMiLCJ2ZXJzaW9uIjoiMS4wLjAifSwibGVhcm5pbmdSZXZpc2lvbiI6MSwibW9kZSI6ImV4ZXJjaXNlLXRlc3QiLCJwYWNrYWdlUmVmIjp7ImlkIjoiY29udGVudC5jLnAwIiwidmVyc2lvbiI6IjEuMC4xIn0sInByb2dyYW1SZWYiOnsiaWQiOiJwcm9ncmFtLmMuZWNobyIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm90b2NvbFZlcnNpb24iOiIxLjAuMCIsInJlbWFpbmluZ01zIjo4NjksInNvdXJjZSI6eyJiaW5kaW5nTWFwIjpbeyJiaW5kaW5nS2V5IjoicGFyYW0ueCIsImJ5dGVSYW5nZSI6eyJlbmQiOjUxLCJzdGFydCI6NDB9fV0sImJsb2NrTWFwIjpbeyJibG9ja0lkIjoibGVzc29uLmJsb2NrLjEiLCJieXRlUmFuZ2UiOnsiZW5kIjo1MSwic3RhcnQiOjQwfX0seyJibG9ja0lkIjoibGVzc29uLmJsb2NrLjMiLCJieXRlUmFuZ2UiOnsiZW5kIjo3Mywic3RhcnQiOjcyfX0seyJibG9ja0lkIjoiYmxvY2submF0aXZlLjY0N2M0NjI1MzgyYTRiNmIzMjVlNTY2YzRkNzg1NDVkMmY3MzI5NDUiLCJieXRlUmFuZ2UiOnsiZW5kIjo3Nywic3RhcnQiOjc2fX0seyJibG9ja0lkIjoiYmxvY2submF0aXZlLjMxNjQzNzY0NDU0YTIxNTM0NzZkM2Q1MzMyNjE0NTVhN2E3YTMzMjMiLCJieXRlUmFuZ2UiOnsiZW5kIjo3OCwic3RhcnQiOjcxfX0seyJibG9ja0lkIjoibGVzc29uLmJsb2NrLjIiLCJieXRlUmFuZ2UiOnsiZW5kIjo4MCwic3RhcnQiOjU2fX0seyJibG9ja0lkIjoibGVzc29uLm1haW4iLCJieXRlUmFuZ2UiOnsiZW5kIjo5Niwic3RhcnQiOjE5fX1dLCJ0ZXh0IjoiI2luY2x1ZGUgPHN0ZGlvLmg+XG5pbnQgbWFpbih2b2lkKSB7XG4gICAgaW50IHggPSAtOTtcbiAgICBwcmludGYoXCIlZFxcblwiLCAoeCArIDApKTtcbiAgICByZXR1cm4gMDtcbn1cbiJ9LCJzdWJqZWN0UmVmIjp7ImlkIjoiZXhlcmNpc2UuYy5lY2hvIiwidmVyc2lvbiI6IjEuMC4xIn0sInN1YnNldFJlZiI6eyJpZCI6InN1YnNldC5jLnAwIiwidmVyc2lvbiI6IjEuMC4wIn0sInRyYWNlVmVyc2lvbiI6IjEuMC4wIn0sInJlc3VsdCI6eyJidWRnZXRSZWYiOnsiaWQiOiJidWRnZXQucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZGlhZ25vc3RpY1ZlcnNpb24iOiIxLjAuMCIsImVuY29kaW5nVmVyc2lvbiI6IjEuMC4wIiwiZW5naW5lUmVmIjp7ImJ1aWxkSWQiOiJhZWQyMDNmNGZlMzBjY2FhZmRiMzJkMGM2OGMyYTFmMjYzNGMxMDcyNmM4Mjk3NzY4NGQ0ZTNkMjAyMjg2NzlkIiwiaWQiOiJlbmdpbmUuYy5wMCIsInZlcnNpb24iOiIxLjAuMCJ9LCJpZGVudGl0eSI6eyJjb250ZXh0SWQiOiI3N2M1NjJiYy03ZGRmLTRhMmYtYTE4YS1hOThmZWRlNzg5MDYiLCJjb250ZXh0UmV2aXNpb24iOjEzLCJydW5JZCI6ImNjNjlhNTY4LTkwZGQtNDcxNS05YTEwLTlhM2MyM2E3ZTk4MiIsInNvdXJjZVJldmlzaW9uIjozLCJzdWJtaXNzaW9uSWQiOiJiZjlmZDY1Ni00NDI5LTQzMzYtODc4Mi04ZmQwODI3ZTU0MDAiLCJ0ZXN0Q2FzZUtleSI6Im5lZ2F0aXZlIn0sImp1ZGdlUmVzdWx0Ijp7ImNhc2VLZXkiOiJuZWdhdGl2ZSIsImNoZWNrcyI6W3siZGlhZ25vc3RpY0NvZGVzIjpbXSwia2V5IjoiaW5wdXQtYmluZGluZ3MiLCJub2RlSWRzIjpbIm42Il0sInN0YXR1cyI6Im1ldCIsInN0ZXBTZXFzIjpbNF19LHsiZGlhZ25vc3RpY0NvZGVzIjpbXSwia2V5Ijoic3Rkb3V0LWV4YWN0Iiwibm9kZUlkcyI6WyJuNiJdLCJzdGF0dXMiOiJtZXQiLCJzdGVwU2VxcyI6WzRdfSx7ImRpYWdub3N0aWNDb2RlcyI6W10sImtleSI6ImV4aXQtemVybyIsIm5vZGVJZHMiOlsibjYiXSwic3RhdHVzIjoibWV0Iiwic3RlcFNlcXMiOls0XX0seyJkaWFnbm9zdGljQ29kZXMiOltdLCJrZXkiOiJ0ZWFjaGluZy10YXJnZXQiLCJub2RlSWRzIjpbIm42Il0sInN0YXR1cyI6Im1ldCIsInN0ZXBTZXFzIjpbNF19XSwiY292ZXJhZ2UiOltdLCJvYnNlcnZhdGlvbnMiOltdLCJwcm9maWxlUmVmIjp7ImlkIjoianVkZ2UuYy5lY2hvIiwidmVyc2lvbiI6IjEuMC4wIn0sInN0YXR1cyI6Im1ldCJ9LCJqdWRnZVZlcnNpb24iOiIxLjAuMCIsImtpbmQiOiJyZXN1bHQiLCJsYW5ndWFnZVJlZiI6eyJpZCI6ImxhbmcuYyIsInZlcnNpb24iOiIxLjAuMCJ9LCJsZWFybmluZ1JldmlzaW9uIjoxLCJub2RlTWFwIjpbeyJieXRlUmFuZ2UiOnsiZW5kIjo5Niwic3RhcnQiOjE5fSwia2luZCI6ImZ1bmN0aW9uIiwibm9kZUlkIjoibjEiLCJwYXJlbnRJZCI6bnVsbH0seyJieXRlUmFuZ2UiOnsiZW5kIjo5Niwic3RhcnQiOjM0fSwia2luZCI6ImJsb2NrIiwibm9kZUlkIjoibjIiLCJwYXJlbnRJZCI6Im4xIn0seyJieXRlUmFuZ2UiOnsiZW5kIjo1MSwic3RhcnQiOjQwfSwia2luZCI6ImRlY2xhcmF0aW9uIiwibm9kZUlkIjoibjMiLCJwYXJlbnRJZCI6Im4yIn0seyJieXRlUmFuZ2UiOnsiZW5kIjo1MCwic3RhcnQiOjQ4fSwia2luZCI6ImV4cHJlc3Npb24iLCJub2RlSWQiOiJuNCIsInBhcmVudElkIjoibjMifSx7ImJ5dGVSYW5nZSI6eyJlbmQiOjUwLCJzdGFydCI6NDl9LCJraW5kIjoiZXhwcmVzc2lvbiIsIm5vZGVJZCI6Im41IiwicGFyZW50SWQiOiJuNCJ9LHsiYnl0ZVJhbmdlIjp7ImVuZCI6ODAsInN0YXJ0Ijo1Nn0sImtpbmQiOiJvdXRwdXQiLCJub2RlSWQiOiJuNiIsInBhcmVudElkIjoibjIifSx7ImJ5dGVSYW5nZSI6eyJlbmQiOjc4LCJzdGFydCI6NzF9LCJraW5kIjoiZXhwcmVzc2lvbiIsIm5vZGVJZCI6Im43IiwicGFyZW50SWQiOiJuNiJ9LHsiYnl0ZVJhbmdlIjp7ImVuZCI6NzMsInN0YXJ0Ijo3Mn0sImtpbmQiOiJleHByZXNzaW9uIiwibm9kZUlkIjoibjgiLCJwYXJlbnRJZCI6Im43In0seyJieXRlUmFuZ2UiOnsiZW5kIjo3Nywic3RhcnQiOjc2fSwia2luZCI6ImV4cHJlc3Npb24iLCJub2RlSWQiOiJuOSIsInBhcmVudElkIjoibjcifSx7ImJ5dGVSYW5nZSI6eyJlbmQiOjk0LCJzdGFydCI6ODV9LCJraW5kIjoicmV0dXJuIiwibm9kZUlkIjoibjEwIiwicGFyZW50SWQiOiJuMiJ9LHsiYnl0ZVJhbmdlIjp7ImVuZCI6OTMsInN0YXJ0Ijo5Mn0sImtpbmQiOiJleHByZXNzaW9uIiwibm9kZUlkIjoibjExIiwicGFyZW50SWQiOiJuMTAifV0sInBhY2thZ2VSZWYiOnsiaWQiOiJjb250ZW50LmMucDAiLCJ2ZXJzaW9uIjoiMS4wLjEifSwicHJvZHVjZXIiOiJydXN0IiwicHJvZ3JhbVJlZiI6eyJpZCI6InByb2dyYW0uYy5lY2hvIiwidmVyc2lvbiI6IjEuMC4wIn0sInByb3RvY29sVmVyc2lvbiI6IjEuMC4wIiwicmVzb2x2ZWRCaW5kaW5ncyI6W3siYmluZGluZ0tleSI6InBhcmFtLngiLCJkZWNsYXJhdGlvbk5vZGVJZCI6Im4zIn1dLCJzdGF0cyI6eyJmdWVsVXNlZCI6MzM2MCwibWF4QXN0RGVwdGgiOjIsIm1heFN5bnRheERlcHRoIjozLCJwZWFrVmlydHVhbEJ5dGVzIjo0LCJydXN0TWljcm9zIjoxMDAwfSwic3ViamVjdFJlZiI6eyJpZCI6ImV4ZXJjaXNlLmMuZWNobyIsInZlcnNpb24iOiIxLjAuMSJ9LCJzdWJzZXRSZWYiOnsiaWQiOiJzdWJzZXQuYy5wMCIsInZlcnNpb24iOiIxLjAuMCJ9LCJ0ZXJtaW5hbCI6eyJjdXJzb3IiOjUsImRpYWdub3N0aWNzIjpbXSwiZXhpdENvZGUiOjAsImxvY2F0aW9uIjp7ImVkZ2UiOiJ3aG9sZSIsImtpbmQiOiJzb3VyY2UiLCJub2RlSWQiOiJuMTAifSwic3RhdHVzIjoiY29tcGxldGVkIn0sInRyYWNlIjp7ImNoZWNrcG9pbnRzIjpbeyJjdXJzb3IiOjAsInN0YXRlIjp7ImFsbG9jYXRvciI6eyJsaXZlQnl0ZXMiOjAsIm5leHRBZGRyZXNzIjo0MDk2LCJuZXh0RnJhbWUiOjEsIm5leHRPYmplY3QiOjEsIm5leHRTY29wZSI6MX0sImNvbnRyb2wiOnsiYWN0aXZlRnJhbWVJZCI6bnVsbCwiZmxvd1N0YWNrIjpbXSwibmV4dE5vZGVJZCI6Im4xIiwicGhhc2UiOiJyZWFkeSIsInJldHVyblZhbHVlIjpudWxsfSwiY291bnRlcnMiOnsiYXJyYXlXcml0ZXMiOjAsImNvbXBhcmlzb25zIjowLCJzY2FsYXJXcml0ZXMiOjAsInN3YXBzIjowfSwiZnJhbWVzIjpbXSwib2JqZWN0cyI6W10sIm91dHB1dCI6IiIsInNjb3BlcyI6W119fV0sImNvbXBsZXRlbmVzcyI6ImNvbXBsZXRlIiwiZHNsVmVyc2lvbiI6IjEuMC4wIiwiaW5pdGlhbFN0YXRlIjp7ImFsbG9jYXRvciI6eyJsaXZlQnl0ZXMiOjAsIm5leHRBZGRyZXNzIjo0MDk2LCJuZXh0RnJhbWUiOjEsIm5leHRPYmplY3QiOjEsIm5leHRTY29wZSI6MX0sImNvbnRyb2wiOnsiYWN0aXZlRnJhbWVJZCI6bnVsbCwiZmxvd1N0YWNrIjpbXSwibmV4dE5vZGVJZCI6Im4xIiwicGhhc2UiOiJyZWFkeSIsInJldHVyblZhbHVlIjpudWxsfSwiY291bnRlcnMiOnsiYXJyYXlXcml0ZXMiOjAsImNvbXBhcmlzb25zIjowLCJzY2FsYXJXcml0ZXMiOjAsInN3YXBzIjowfSwiZnJhbWVzIjpbXSwib2JqZWN0cyI6W10sIm91dHB1dCI6IiIsInNjb3BlcyI6W119LCJzdGVwcyI6W3siY2hhbmdlcyI6W3siYWZ0ZXIiOnsiZnVuY3Rpb25Ob2RlSWQiOiJuMSIsImlkIjoiZjEiLCJwYXJlbnRGcmFtZUlkIjpudWxsLCJzY29wZUlkcyI6WyJzMSJdfSwiYmVmb3JlIjpudWxsLCJpZCI6ImYxIiwiaW5kZXgiOjAsIm9wIjoicmVjb3JkIiwidGFibGUiOiJmcmFtZXMifSx7ImFmdGVyIjp7ImZyYW1lSWQiOiJmMSIsImlkIjoiczEiLCJraW5kIjoibWFpbiIsIm5vZGVJZCI6Im4yIiwib2JqZWN0SWRzIjpbXSwicGFyZW50U2NvcGVJZCI6bnVsbH0sImJlZm9yZSI6bnVsbCwiaWQiOiJzMSIsImluZGV4IjowLCJvcCI6InJlY29yZCIsInRhYmxlIjoic2NvcGVzIn0seyJhZnRlciI6eyJhY3RpdmVGcmFtZUlkIjoiZjEiLCJmbG93U3RhY2siOlt7Iml0ZXJhdGlvbiI6MCwibm9kZUlkIjoibjIiLCJzdGFnZSI6ImJsb2NrIn1dLCJuZXh0Tm9kZUlkIjoibjMiLCJwaGFzZSI6InJ1bm5pbmciLCJyZXR1cm5WYWx1ZSI6bnVsbH0sImJlZm9yZSI6eyJhY3RpdmVGcmFtZUlkIjpudWxsLCJmbG93U3RhY2siOltdLCJuZXh0Tm9kZUlkIjoibjEiLCJwaGFzZSI6InJlYWR5IiwicmV0dXJuVmFsdWUiOm51bGx9LCJvcCI6ImNvbnRyb2wifSx7ImFmdGVyIjp7ImxpdmVCeXRlcyI6MCwibmV4dEFkZHJlc3MiOjQwOTYsIm5leHRGcmFtZSI6MiwibmV4dE9iamVjdCI6MSwibmV4dFNjb3BlIjoyfSwiYmVmb3JlIjp7ImxpdmVCeXRlcyI6MCwibmV4dEFkZHJlc3MiOjQwOTYsIm5leHRGcmFtZSI6MSwibmV4dE9iamVjdCI6MSwibmV4dFNjb3BlIjoxfSwib3AiOiJhbGxvY2F0b3IifV0sImtpbmQiOiJwcm9ncmFtLmVudGVyIiwibG9jYXRpb24iOnsiZWRnZSI6Indob2xlIiwia2luZCI6InNvdXJjZSIsIm5vZGVJZCI6Im4xIn0sIm9ic2VydmF0aW9ucyI6W10sInNlcSI6MX0seyJjaGFuZ2VzIjpbeyJhZnRlciI6eyJmcmFtZUlkIjoiZjEiLCJpZCI6InMxIiwia2luZCI6Im1haW4iLCJub2RlSWQiOiJuMiIsIm9iamVjdElkcyI6WyJvMSJdLCJwYXJlbnRTY29wZUlkIjpudWxsfSwiYmVmb3JlIjp7ImZyYW1lSWQiOiJmMSIsImlkIjoiczEiLCJraW5kIjoibWFpbiIsIm5vZGVJZCI6Im4yIiwib2JqZWN0SWRzIjpbXSwicGFyZW50U2NvcGVJZCI6bnVsbH0sImlkIjoiczEiLCJpbmRleCI6MCwib3AiOiJyZWNvcmQiLCJ0YWJsZSI6InNjb3BlcyJ9LHsiYWZ0ZXIiOnsiYmFzZUFkZHJlc3MiOjQwOTYsImNlbGxzIjpbXSwiZGVjbGFyYXRpb25Ob2RlSWQiOiJuMyIsImRlZmF1bHRWYWx1ZSI6bnVsbCwiZnJhbWVJZCI6ImYxIiwiaWQiOiJvMSIsImtpbmQiOiJpbnQiLCJsZW5ndGgiOjEsIm5hbWUiOiJ4Iiwic2NvcGVJZCI6InMxIn0sImJlZm9yZSI6bnVsbCwiaWQiOiJvMSIsImluZGV4IjowLCJvcCI6InJlY29yZCIsInRhYmxlIjoib2JqZWN0cyJ9LHsiYWZ0ZXIiOnsibGl2ZUJ5dGVzIjo0LCJuZXh0QWRkcmVzcyI6NDEwMCwibmV4dEZyYW1lIjoyLCJuZXh0T2JqZWN0IjoyLCJuZXh0U2NvcGUiOjJ9LCJiZWZvcmUiOnsibGl2ZUJ5dGVzIjowLCJuZXh0QWRkcmVzcyI6NDA5NiwibmV4dEZyYW1lIjoyLCJuZXh0T2JqZWN0IjoxLCJuZXh0U2NvcGUiOjJ9LCJvcCI6ImFsbG9jYXRvciJ9XSwia2luZCI6Im9iamVjdC5kZWNsYXJlIiwibG9jYXRpb24iOnsiZWRnZSI6Indob2xlIiwia2luZCI6InNvdXJjZSIsIm5vZGVJZCI6Im4zIn0sIm9ic2VydmF0aW9ucyI6W10sInNlcSI6Mn0seyJjaGFuZ2VzIjpbeyJhZnRlciI6LTksImJlZm9yZSI6bnVsbCwiaW5kZXgiOjAsIm9iamVjdElkIjoibzEiLCJvcCI6ImNlbGwifSx7ImFmdGVyIjp7ImFjdGl2ZUZyYW1lSWQiOiJmMSIsImZsb3dTdGFjayI6W3siaXRlcmF0aW9uIjowLCJub2RlSWQiOiJuMiIsInN0YWdlIjoiYmxvY2sifV0sIm5leHROb2RlSWQiOiJuNiIsInBoYXNlIjoicnVubmluZyIsInJldHVyblZhbHVlIjpudWxsfSwiYmVmb3JlIjp7ImFjdGl2ZUZyYW1lSWQiOiJmMSIsImZsb3dTdGFjayI6W3siaXRlcmF0aW9uIjowLCJub2RlSWQiOiJuMiIsInN0YWdlIjoiYmxvY2sifV0sIm5leHROb2RlSWQiOiJuMyIsInBoYXNlIjoicnVubmluZyIsInJldHVyblZhbHVlIjpudWxsfSwib3AiOiJjb250cm9sIn0seyJhZnRlciI6eyJhcnJheVdyaXRlcyI6MCwiY29tcGFyaXNvbnMiOjAsInNjYWxhcldyaXRlcyI6MSwic3dhcHMiOjB9LCJiZWZvcmUiOnsiYXJyYXlXcml0ZXMiOjAsImNvbXBhcmlzb25zIjowLCJzY2FsYXJXcml0ZXMiOjAsInN3YXBzIjowfSwib3AiOiJjb3VudGVycyJ9XSwia2luZCI6InZhbHVlLmluaXRpYWxpemUiLCJsb2NhdGlvbiI6eyJlZGdlIjoid2hvbGUiLCJraW5kIjoic291cmNlIiwibm9kZUlkIjoibjMifSwib2JzZXJ2YXRpb25zIjpbeyJraW5kIjoiZXZhbHVhdGUiLCJub2RlSWQiOiJuNCIsIm9wZXJhbmRzIjpbOV0sIm9wZXJhdG9yIjoiLSIsInZhbHVlIjotOX1dLCJzZXEiOjN9LHsiY2hhbmdlcyI6W3siYWZ0ZXIiOnsiYWN0aXZlRnJhbWVJZCI6ImYxIiwiZmxvd1N0YWNrIjpbeyJpdGVyYXRpb24iOjAsIm5vZGVJZCI6Im4yIiwic3RhZ2UiOiJibG9jayJ9XSwibmV4dE5vZGVJZCI6Im4xMCIsInBoYXNlIjoicnVubmluZyIsInJldHVyblZhbHVlIjpudWxsfSwiYmVmb3JlIjp7ImFjdGl2ZUZyYW1lSWQiOiJmMSIsImZsb3dTdGFjayI6W3siaXRlcmF0aW9uIjowLCJub2RlSWQiOiJuMiIsInN0YWdlIjoiYmxvY2sifV0sIm5leHROb2RlSWQiOiJuNiIsInBoYXNlIjoicnVubmluZyIsInJldHVyblZhbHVlIjpudWxsfSwib3AiOiJjb250cm9sIn0seyJhZnRlckJ5dGVzIjozLCJhcHBlbmQiOiItOVxuIiwiYmVmb3JlQnl0ZXMiOjAsIm9wIjoib3V0cHV0In1dLCJraW5kIjoib3V0cHV0LmFwcGVuZCIsImxvY2F0aW9uIjp7ImVkZ2UiOiJ3aG9sZSIsImtpbmQiOiJzb3VyY2UiLCJub2RlSWQiOiJuNiJ9LCJvYnNlcnZhdGlvbnMiOlt7ImluZGV4IjowLCJraW5kIjoicmVhZCIsIm5vZGVJZCI6Im44Iiwib2JqZWN0SWQiOiJvMSIsInZhbHVlIjotOX0seyJraW5kIjoiZXZhbHVhdGUiLCJub2RlSWQiOiJuNyIsIm9wZXJhbmRzIjpbLTksMF0sIm9wZXJhdG9yIjoiKyIsInZhbHVlIjotOX1dLCJzZXEiOjR9LHsiY2hhbmdlcyI6W3siYWZ0ZXIiOm51bGwsImJlZm9yZSI6eyJmdW5jdGlvbk5vZGVJZCI6Im4xIiwiaWQiOiJmMSIsInBhcmVudEZyYW1lSWQiOm51bGwsInNjb3BlSWRzIjpbInMxIl19LCJpZCI6ImYxIiwiaW5kZXgiOjAsIm9wIjoicmVjb3JkIiwidGFibGUiOiJmcmFtZXMifSx7ImFmdGVyIjpudWxsLCJiZWZvcmUiOnsiZnJhbWVJZCI6ImYxIiwiaWQiOiJzMSIsImtpbmQiOiJtYWluIiwibm9kZUlkIjoibjIiLCJvYmplY3RJZHMiOlsibzEiXSwicGFyZW50U2NvcGVJZCI6bnVsbH0sImlkIjoiczEiLCJpbmRleCI6MCwib3AiOiJyZWNvcmQiLCJ0YWJsZSI6InNjb3BlcyJ9LHsiYWZ0ZXIiOm51bGwsImJlZm9yZSI6eyJiYXNlQWRkcmVzcyI6NDA5NiwiY2VsbHMiOlt7ImluZGV4IjowLCJ2YWx1ZSI6LTl9XSwiZGVjbGFyYXRpb25Ob2RlSWQiOiJuMyIsImRlZmF1bHRWYWx1ZSI6bnVsbCwiZnJhbWVJZCI6ImYxIiwiaWQiOiJvMSIsImtpbmQiOiJpbnQiLCJsZW5ndGgiOjEsIm5hbWUiOiJ4Iiwic2NvcGVJZCI6InMxIn0sImlkIjoibzEiLCJpbmRleCI6MCwib3AiOiJyZWNvcmQiLCJ0YWJsZSI6Im9iamVjdHMifSx7ImFmdGVyIjp7ImFjdGl2ZUZyYW1lSWQiOm51bGwsImZsb3dTdGFjayI6W10sIm5leHROb2RlSWQiOm51bGwsInBoYXNlIjoicmV0dXJuZWQiLCJyZXR1cm5WYWx1ZSI6MH0sImJlZm9yZSI6eyJhY3RpdmVGcmFtZUlkIjoiZjEiLCJmbG93U3RhY2siOlt7Iml0ZXJhdGlvbiI6MCwibm9kZUlkIjoibjIiLCJzdGFnZSI6ImJsb2NrIn1dLCJuZXh0Tm9kZUlkIjoibjEwIiwicGhhc2UiOiJydW5uaW5nIiwicmV0dXJuVmFsdWUiOm51bGx9LCJvcCI6ImNvbnRyb2wifSx7ImFmdGVyIjp7ImxpdmVCeXRlcyI6MCwibmV4dEFkZHJlc3MiOjQxMDAsIm5leHRGcmFtZSI6MiwibmV4dE9iamVjdCI6MiwibmV4dFNjb3BlIjoyfSwiYmVmb3JlIjp7ImxpdmVCeXRlcyI6NCwibmV4dEFkZHJlc3MiOjQxMDAsIm5leHRGcmFtZSI6MiwibmV4dE9iamVjdCI6MiwibmV4dFNjb3BlIjoyfSwib3AiOiJhbGxvY2F0b3IifV0sImtpbmQiOiJwcm9ncmFtLnJldHVybiIsImxvY2F0aW9uIjp7ImVkZ2UiOiJ3aG9sZSIsImtpbmQiOiJzb3VyY2UiLCJub2RlSWQiOiJuMTAifSwib2JzZXJ2YXRpb25zIjpbXSwic2VxIjo1fV19LCJ0cmFjZVZlcnNpb24iOiIxLjAuMCJ9fQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d36435dc95590e1d5bdb-6397f8182354f9e3c0a5",
+          "file": "block-interaction.spec.ts",
+          "line": 311,
+          "column": 1
+        },
+        {
+          "title": "holding a native dragged block near the canvas edge scrolls progressively and moving inward or releasing stops it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3205,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:52.127Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-held-pointer-edge-scroll",
+                      "contentType": "application/json",
+                      "body": "eyJzdGFydCI6eyJ4Ijo2ODguNDY2Njc0ODA0Njg3NSwieSI6NDI4LjUwMzExMjc5Mjk2ODc1fSwiZWRnZSI6eyJ4Ijo4MDAsInkiOjQ0OS43MDMxMjV9LCJjZW50ZXIiOnsieCI6NTQ2LCJ5Ijo0NDkuNzAzMTI1fSwiZmlyc3QiOiJ0cmFuc2xhdGUoMTE4LCAwKSBzY2FsZSgwLjgpIiwibW92ZWQiOiJ0cmFuc2xhdGUoOTcsIDApIHNjYWxlKDAuOCkiLCJzdG9wcGVkIjoidHJhbnNsYXRlKDk2LCAwKSBzY2FsZSgwLjgpIiwicmVsZWFzZWQiOiJ0cmFuc2xhdGUoOTYuMDAwMDAwMDAwMDAwMDMsIDApIHNjYWxlKDAuOCkiLCJhZnRlclJlbGVhc2UiOnsieCI6NTA5LjczMzMzNzQwMjM0Mzc1LCJ5Ijo0MzkuNTAzMTczODI4MTI1LCJ3aWR0aCI6MTA1LjYwMDAzNjYyMTA5Mzc1LCJoZWlnaHQiOjQzLjE5OTk4MTY4OTQ1MzEyNX0sIm5leHRTdGFydCI6eyJ4Ijo1NDYsInkiOjQ0OS43MDMxNTU1MTc1NzgxfSwibmV4dEVuZCI6eyJ4Ijo0OTYsInkiOjQ3OS43MDMxNTU1MTc1NzgxfX0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d36435dc95590e1d5bdb-baf2233879d6e4f8622e",
+          "file": "block-interaction.spec.ts",
+          "line": 365,
+          "column": 1
+        },
+        {
+          "title": "a statement stack reconnects by native pointer with its child retained and the original C source restored",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2114,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:55.340Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-statement-stack-detach-and-reconnect",
+                      "contentType": "application/json",
+                      "body": "eyJpZCI6Imxlc3Nvbi5ibG9jay4yIiwiY2hpbGQiOiJsZXNzb24uYmxvY2suMyIsImJlZm9yZVBhcmVudCI6Imxlc3Nvbi5ibG9jay4xIiwic3RhcnQiOnsieCI6NDgzLjc5OTk4Nzc5Mjk2ODc1LCJ5IjoyNzMuNTAzMTEyNzkyOTY4NzV9LCJhd2F5Ijp7IngiOjY2MCwieSI6NDY4LjcwMzEyNX0sImdyYWIiOnsieCI6NjYwLCJ5Ijo0NjguNzAzMTU1NTE3NTc4MX0sInByZXZpb3VzIjp7IngiOjYyMy4yMDAwMjc3NTQ5MDMyLCJ5Ijo0NjMuMzAzMTUzNDkxMDIwNTd9LCJ0YXJnZXQiOnsieCI6NDQ3LjAwMDAwMDcxNTI1NTc0LCJ5IjoyNjguMTAzMTI2MTY4MjUxMDR9LCJlbmQiOnsieCI6NDk5Ljc5OTk3Mjk2MDM1MjUzLCJ5IjoyNzMuNTAzMTI4MTk0ODA4Nn0sInNvdXJjZSI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIGludCB4ID0gNztcbiAgICBwcmludGYoXCIlZFxcblwiLCB4KTtcbiAgICByZXR1cm4gMDtcbn1cbiJ9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d36435dc95590e1d5bdb-85345e9a7e572556b49e",
+          "file": "block-interaction.spec.ts",
+          "line": 420,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "blocks.spec.ts",
+      "file": "blocks.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the actual toolbox exposes all twenty supported kinds and the generated C remains read-only",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1386,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:57.476Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b449fa68d84da6f7ebdf-1593dbd79b37b92b3e90",
+          "file": "blocks.spec.ts",
+          "line": 151,
+          "column": 1
+        },
+        {
+          "title": "native flyout drag creates a new block, keyboard controls nest native-id blocks, and real Rust runs that same source",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4836,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:49:58.870Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-drag-nested",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\blocks-native-flyout-drag--889eb--Rust-runs-that-same-source-chrome\\attachments\\native-drag-nested-612ded1305d2418321ecbb9e4f1313088ddc323e.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b449fa68d84da6f7ebdf-d58ee28800c5f0dfe73b",
+          "file": "blocks.spec.ts",
+          "line": 196,
+          "column": 1
+        },
+        {
+          "title": "type rejection, missing-slot drafts and deleted input sources visibly refuse execution and survive review navigation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4674,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:03.717Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b449fa68d84da6f7ebdf-292c35020e493896b338",
+          "file": "blocks.spec.ts",
+          "line": 274,
+          "column": 1
+        },
+        {
+          "title": "a new arithmetic block produces a real located Rust diagnostic and an edit immediately withdraws that run",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4360,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:08.400Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-division-diagnostic",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\blocks-a-new-arithmetic-bl-d0b1d-ediately-withdraws-that-run-chrome\\attachments\\native-division-diagnostic-afcdecace382ce46b524d83c99451e899f8a6436.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b449fa68d84da6f7ebdf-0d16698699899e2df9d2",
+          "file": "blocks.spec.ts",
+          "line": 321,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "editor-presentation.spec.ts",
+      "file": "editor-presentation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.echo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1289,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:12.778Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.echo",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-hidden-277fd-s-all-tests-exercise-c-echo-chrome\\attachments\\exercise-c-echo-7ae85654424d2ef240b462cb7733c74642ae3c77.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-76a408d658aef7fa62d2",
+          "file": "editor-presentation.spec.ts",
+          "line": 237,
+          "column": 3
+        },
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.two-x-plus-three",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1278,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:14.081Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-x-plus-three",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-hidden-2ccd9-exercise-c-two-x-plus-three-chrome\\attachments\\exercise-c-two-x-plus-three-70d0875e4f3e8d4c51a29f79d459b3238a9e62fe.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-a62567a04e1f3e7b644b",
+          "file": "editor-presentation.spec.ts",
+          "line": 237,
+          "column": 3
+        },
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.nonnegative",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1316,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:15.367Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.nonnegative",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-hidden-ffe55-ests-exercise-c-nonnegative-chrome\\attachments\\exercise-c-nonnegative-569408d445e69a5db14226b6d88e27ad4b97e3c0.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-c8e965341c3ece6b2ba2",
+          "file": "editor-presentation.spec.ts",
+          "line": 237,
+          "column": 3
+        },
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.two-loop-sums",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1375,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:16.690Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-loop-sums",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-hidden-261f1-ts-exercise-c-two-loop-sums-chrome\\attachments\\exercise-c-two-loop-sums-038f7688e29ee63662505c66578bfa73609c9be4.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-291459cde294aa355f35",
+          "file": "editor-presentation.spec.ts",
+          "line": 237,
+          "column": 3
+        },
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.increment-at-index",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1362,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:18.072Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.increment-at-index",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-hidden-97fe5-ercise-c-increment-at-index-chrome\\attachments\\exercise-c-increment-at-index-a2bdbaa800c34142aae548c4c71279c6e66dc8bf.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-7c76530671439223ecdf",
+          "file": "editor-presentation.spec.ts",
+          "line": 237,
+          "column": 3
+        },
+        {
+          "title": "hidden-block code answer retains real input mapping and passes all tests: exercise.c.array-sum",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1460,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:19.441Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.array-sum",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-hidden-1fabb--tests-exercise-c-array-sum-chrome\\attachments\\exercise-c-array-sum-eba7b3918d830e5c553853e3edc641820701b334.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-d2d24eb7bb98c8bb778c",
+          "file": "editor-presentation.spec.ts",
+          "line": 237,
+          "column": 3
+        },
+        {
+          "title": "automatic presentation follows each lesson recommendation and explicit preferences override only visibility",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1566,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:20.908Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "automatic-six-lessons",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-automa-07202-es-override-only-visibility-chrome\\attachments\\automatic-six-lessons-55c472b88ed6a78f710e4ec5397e4044a7f8c656.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-c61bd7c1bdd7049c7bb3",
+          "file": "editor-presentation.spec.ts",
+          "line": 302,
+          "column": 1
+        },
+        {
+          "title": "invalid and unmapped code survives hide-show, settings return and mode switching without executing historical blocks",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2421,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:22.480Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "invalid-unmapped-presentation-recovery",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-invali-7839c-executing-historical-blocks-chrome\\attachments\\invalid-unmapped-presentation-recovery-a4821aa7ccae4f6217357ba1e47fa00a3d16455d.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-a738375ed5006804730e",
+          "file": "editor-presentation.spec.ts",
+          "line": 332,
+          "column": 1
+        },
+        {
+          "title": "presentation changes preserve the accepted run, cursor, document bytes and saved awards; logical edits invalidate them",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1616,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:24.908Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "accepted-run-preserved-until-edit",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-presen-794af-gical-edits-invalidate-them-chrome\\attachments\\accepted-run-preserved-until-edit-6ae87e5a2e16575c64056da2ec5432a073274e1f.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-3a2958d7ad5a8cfe1fe9",
+          "file": "editor-presentation.spec.ts",
+          "line": 393,
+          "column": 1
+        },
+        {
+          "title": "native block edits keep comments, coordinates and undo-redo across hide-show while sharing the same code draft",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1398,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:26.532Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-undo-redo-through-presentation",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-native-f86b7-sharing-the-same-code-draft-chrome\\attachments\\native-undo-redo-through-presentation-c8effb0b2301a0a2fa320edb3517225bf8ff92da.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-3db6ef84a45e20555f72",
+          "file": "editor-presentation.spec.ts",
+          "line": 430,
+          "column": 1
+        },
+        {
+          "title": "display settings save only the block preference, preserve an unfinished answer and restore the preference after refresh",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1412,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:27.937Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "settings-persistence-and-ephemeral-draft-boundary",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-displa-ba3e0-he-preference-after-refresh-chrome\\attachments\\settings-persistence-and-ephemeral-draft-boundary-0d111eb0b537d529b6d340aebaf88ba03b76c412.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-f245cb1a3e9eeb3a5159",
+          "file": "editor-presentation.spec.ts",
+          "line": 475,
+          "column": 1
+        },
+        {
+          "title": "native appearance quota and transaction abort retain an honest temporary choice and explicit sparse retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1210,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:29.355Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-preference-faults-and-explicit-retry",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-native-76b3f-e-and-explicit-sparse-retry-chrome\\attachments\\native-preference-faults-and-explicit-retry-8c54f52e00305671a45e4e31b168fdd8c7089731.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-919df8ddfa20b08d0859",
+          "file": "editor-presentation.spec.ts",
+          "line": 544,
+          "column": 1
+        },
+        {
+          "title": "a stale failed preference cannot overwrite peer settings and explicit retry preserves the peer changes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1286,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:30.572Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "peer-appearance-save-and-sparse-preference-retry",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-a-stal-38dec--preserves-the-peer-changes-chrome\\attachments\\peer-appearance-save-and-sparse-preference-retry-047dee5b11c62cc8e213530604b23fa2b5b34e65.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-46919b150275ca978248",
+          "file": "editor-presentation.spec.ts",
+          "line": 575,
+          "column": 1
+        },
+        {
+          "title": "a peer clear discards a failed preference and unfinished answer instead of reviving the previous generation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1644,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:31.865Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "generation-clear-discards-temporary-choice",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-a-peer-41250-ing-the-previous-generation-chrome\\attachments\\generation-clear-discards-temporary-choice-d83556d924a1080dacfe03aa4d8ca74dceab3341.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-0c17a7f9d1802775ba0f",
+          "file": "editor-presentation.spec.ts",
+          "line": 614,
+          "column": 1
+        },
+        {
+          "title": "hidden blocks do not bypass the same teaching checks or accepted source identity",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1097,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:33.516Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "same-teaching-rejection-hidden-and-visible",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-hidden-444a2-or-accepted-source-identity-chrome\\attachments\\same-teaching-rejection-hidden-and-visible-043a838fc635c71f2c2ccf1b60a3e798f922c324.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-1e035a8adf623457258f",
+          "file": "editor-presentation.spec.ts",
+          "line": 654,
+          "column": 1
+        },
+        {
+          "title": "narrow-screen keyboard preference controls keep the current code editable and every action reachable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1085,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:34.620Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "narrow-keyboard-code-only",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-narrow-14283--and-every-action-reachable-chrome\\attachments\\narrow-keyboard-code-only-61ac44a3a5a4227e08339af0e1de25d6eff0dbb5.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-978c97937ddfe9f976e7",
+          "file": "editor-presentation.spec.ts",
+          "line": 680,
+          "column": 1
+        },
+        {
+          "title": "a blocks-first lesson retains an incomplete block draft when hiding before the first code edit",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1420,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:35.712Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "blocks-first-incomplete-hide-code-repair",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\editor-presentation-a-bloc-f59ad--before-the-first-code-edit-chrome\\attachments\\blocks-first-incomplete-hide-code-repair-b9b881b24320934bd2139ebba3147e814316fa12.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e1bacd7905ed2ac2f845-dc0f1d81d35d33050582",
+          "file": "editor-presentation.spec.ts",
+          "line": 714,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "navigation.spec.ts",
+      "file": "navigation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "public routes preserve content relationships, refresh and browser history",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3263,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:37.148Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5d2868f7d23420c27cca-5053b1e28759fb3e55ea",
+          "file": "navigation.spec.ts",
+          "line": 20,
+          "column": 1
+        },
+        {
+          "title": "workspaces keep real blocks beside read-only code, review playback and empty-review boundaries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1863,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:40.418Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5d2868f7d23420c27cca-90df4f55c0c22bd835af",
+          "file": "navigation.spec.ts",
+          "line": 78,
+          "column": 1
+        },
+        {
+          "title": "keyboard navigation, native dialogs and settings tabs remain usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1557,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:42.288Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5d2868f7d23420c27cca-d89eee42f1e66ec73493",
+          "file": "navigation.spec.ts",
+          "line": 151,
+          "column": 1
+        },
+        {
+          "title": "unknown addresses and real lazy module failures provide recovery",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3217,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:43.853Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5d2868f7d23420c27cca-a22d327c9e277779445f",
+          "file": "navigation.spec.ts",
+          "line": 224,
+          "column": 1
+        },
+        {
+          "title": "desktop and narrower layouts avoid horizontal page overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3298,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:47.078Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5d2868f7d23420c27cca-acc41bee0652429c95a9",
+          "file": "navigation.spec.ts",
+          "line": 270,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "practice-experience.spec.ts",
+      "file": "practice-experience.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "all six independent exercises start with only course inputs and reveal hints or correction drafts only by explicit choice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3956,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:50.402Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "six-empty-answers-and-active-help",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-experience-all-si-b2e35-fts-only-by-explicit-choice-chrome\\attachments\\six-empty-answers-and-active-help-baf1f10ea4e7e23b726c628fff9a20ed58643ac5.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-3516db19013f0a5f7076",
+          "file": "practice-experience.spec.ts",
+          "line": 233,
+          "column": 1
+        },
+        {
+          "title": "an answer built from empty native blocks runs one group without saving and submits all real tests before the saved completion checklist advances",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2726,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:54.368Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "from-empty-run-submit-complete",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-experience-an-ans-4550f-mpletion-checklist-advances-chrome\\attachments\\from-empty-run-submit-complete-598f8571d4fb0e0e9db3d6d4098d47bc2853aa4c.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-348593a32181d151550e",
+          "file": "practice-experience.spec.ts",
+          "line": 278,
+          "column": 1
+        },
+        {
+          "title": "a real pass remains visibly unsaved after a native receipt fault; explicit retry reuses that event and repeated submission cannot repeat awards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2496,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:57.103Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-save-retry-and-repeat",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-experience-a-real-2cef4-ission-cannot-repeat-awards-chrome\\attachments\\native-save-retry-and-repeat-59bb6406dfc88a9be4955011b15519d0b0e6133a.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-1c970892bf57f9fb227f",
+          "file": "practice-experience.spec.ts",
+          "line": 360,
+          "column": 1
+        },
+        {
+          "title": "independent and correction answers keep separate native drafts while invalid edits and switching modes withdraw the current run",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2398,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:50:59.605Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "separate-drafts-and-invalidation",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-experience-indepe-e3b8b-es-withdraw-the-current-run-chrome\\attachments\\separate-drafts-and-invalidation-8768d68ea25aad22672375b9dc9c437c409f26df.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-88e4b074e6319942bd1b",
+          "file": "practice-experience.spec.ts",
+          "line": 417,
+          "column": 1
+        },
+        {
+          "title": "cancelling one held genuine run rejects its late result and a fresh one-group run recovers without learning effects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1799,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:02.013Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "run-cancel-stale-recovery",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-experience-cancel-2260d-rs-without-learning-effects-chrome\\attachments\\run-cancel-stale-recovery-e256e0f56abf1416f1dd48db445a3200257222f6.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d25a47f5bfdf61d80d14-87dc42ecaa6dfea0d403",
+          "file": "practice-experience.spec.ts",
+          "line": 520,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "practice.spec.ts",
+      "file": "practice.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "exercise.c.echo: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1864,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:03.834Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.echo-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-echo-r-ae6ec-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-echo-incorrect-24c8702e2151a808fa2ea8d7fd502eaac80ca0bd.json"
+                    },
+                    {
+                      "name": "exercise.c.echo-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-echo-r-ae6ec-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-echo-correct-8367c4978ba0c3ccd82e432d50d1a7358d75a66f.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-d3d0fcee81f3d2ac5c64",
+          "file": "practice.spec.ts",
+          "line": 316,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.two-x-plus-three: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1843,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:05.707Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-x-plus-three-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-two-x--6240c-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-two-x-plus-three-incorrect-5308eabdf137ad9187db9bc545a0b7018ba5b9fd.json"
+                    },
+                    {
+                      "name": "exercise.c.two-x-plus-three-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-two-x--6240c-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-two-x-plus-three-correct-54da8159c51869e8acd0dba017beb08fe32723e7.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-8aca30d5056559118898",
+          "file": "practice.spec.ts",
+          "line": 316,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.nonnegative: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1809,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:07.557Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.nonnegative-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-nonneg-d06e6-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-nonnegative-incorrect-1ea373c31ebe0724ed55aa00ed7f4a8d235e0900.json"
+                    },
+                    {
+                      "name": "exercise.c.nonnegative-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-nonneg-d06e6-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-nonnegative-correct-4fb3d434116e6ac54136882c546062c1030fc071.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-379dceaab6c97f831254",
+          "file": "practice.spec.ts",
+          "line": 316,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.two-loop-sums: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2053,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:09.371Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.two-loop-sums-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-two-lo-6a1a1-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-two-loop-sums-incorrect-355f5070203b9fe16e231fe873715a8f7b9f3402.json"
+                    },
+                    {
+                      "name": "exercise.c.two-loop-sums-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-two-lo-6a1a1-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-two-loop-sums-correct-5b6de5f08c2e6e618a8428be524a781dcf2ec045.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-c6e5a2584597e61945ae",
+          "file": "practice.spec.ts",
+          "line": 316,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.increment-at-index: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1924,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:11.430Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.increment-at-index-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-increm-af166-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-increment-at-index-incorrect-03bfd59d0ce3a92b3471196669a04a5db478b8b2.json"
+                    },
+                    {
+                      "name": "exercise.c.increment-at-index-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-increm-af166-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-increment-at-index-correct-4c810285b1b72edc6338a8fa1f90d89ea0342411.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-69398d3853773341965e",
+          "file": "practice.spec.ts",
+          "line": 316,
+          "column": 3
+        },
+        {
+          "title": "exercise.c.array-sum: real Rust rejects an incorrect answer and accepts all frozen tests with explanation and no learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2096,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:13.361Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "exercise.c.array-sum-incorrect",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-array--637c3-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-array-sum-incorrect-5bc6e3be16ad7c40c581f642bf828eac032fa181.json"
+                    },
+                    {
+                      "name": "exercise.c.array-sum-correct",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\14.1\\legacy-final-output\\practice-exercise-c-array--637c3-tion-and-no-learning-writes-chrome\\attachments\\exercise-c-array-sum-correct-67231dc9acfc29544a8e0ef56883a54c9c05d31f.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-f3d54ce41bb746cbb9a0",
+          "file": "practice.spec.ts",
+          "line": 316,
+          "column": 3
+        },
+        {
+          "title": "same exercise review and return preserve one accepted trace and cursor; edit, leaving and refresh destroy it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4340,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:15.464Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-6aea0e5e4afe266b3f77",
+          "file": "practice.spec.ts",
+          "line": 390,
+          "column": 1
+        },
+        {
+          "title": "another page clearing local data destroys the accepted practice session and never restores it passively",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3539,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:19.811Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-5ebf9783c8afb0b3e604",
+          "file": "practice.spec.ts",
+          "line": 442,
+          "column": 1
+        },
+        {
+          "title": "cancel drops a held real result and a fresh visible submission recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2130,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:23.359Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "cancel-fault-scope",
+                      "contentType": "text/plain",
+                      "body": "SGVsZCBvbmUgdW5jaGFuZ2VkIHJlYWwgUnVzdCBXb3JrZXIgcmVzcG9uc2UgYmVmb3JlIGl0cyBwcm9kdWN0aW9uIGhhbmRsZXIsIGNhbmNlbGxlZCB0aHJvdWdoIHRoZSBVSSwgdGhlbiByZWxlYXNlZCB0aGF0IHN0YWxlIHJlc3BvbnNlLiBObyBmYWJyaWNhdGVkIHJlc3VsdCBvciBsZWFybmluZyBoaXN0b3J5IHdhcyBpbmplY3RlZC4="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-acc8b0961115736b2563",
+          "file": "practice.spec.ts",
+          "line": 520,
+          "column": 1
+        },
+        {
+          "title": "a withheld real result expires under the original submission deadline and retry receives a new identity",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3475,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:25.499Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "deadline-fault-scope",
+                      "contentType": "text/plain",
+                      "body": "QSByZWFsIHJlc3BvbnNlIHdhcyB3aXRoaGVsZCBwYXN0IHRoZSB1bmNoYW5nZWQgcHJvZHVjdGlvbiBzdWJtaXNzaW9uIGRlYWRsaW5lLiBJdHMgYnl0ZXMgd2VyZSByZWxlYXNlZCBvbmx5IGFmdGVyIHZpc2libGUgZXhwaXJ5OyByZWNvdmVyeSB1c2VkIGEgZnJlc2ggcHVibGljIFVJIHN1Ym1pc3Npb24u"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-7df7fa37555a633741ce",
+          "file": "practice.spec.ts",
+          "line": 549,
+          "column": 1
+        },
+        {
+          "title": "a missing practice release fails closed and its visible retry loads only the approved projection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 674,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:51:28.982Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "projection-fault-scope",
+                      "contentType": "text/plain",
+                      "body": "T25seSB0aGUgcHJhY3RpY2UgcHJvamVjdGlvbiBHRVQgd2FzIHJlcGxhY2VkIHdpdGggYW4gaXNvbGF0ZWQgSFRUUCA0MDQ7IHZpc2libGUgcmV0cnkgdXNlZCBpdHMgbm9ybWFsIGFwcHJvdmVkIGJ5dGVzLg=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c0011e267bb7a139fed4-8c21db0371840d73f74a",
+          "file": "practice.spec.ts",
+          "line": 588,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T14:49:01.744Z",
+    "duration": 149437.858,
+    "expected": 60,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
