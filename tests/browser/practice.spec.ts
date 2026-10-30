@@ -41,7 +41,7 @@ interface NativeSnapshot {
   session: Record<string, string>;
 }
 
-/** Read all eleven production stores; never seed exercise-passed rows. */
+/** Read the eleven learning/appearance stores; editHistory is tested independently in 13.4. */
 async function archive(page: Page): Promise<NativeSnapshot> {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -50,7 +50,7 @@ async function archive(page: Page): Promise<NativeSnapshot> {
       request.onsuccess = () => resolve(request.result);
     });
     try {
-      const names = Array.from(db.objectStoreNames);
+      const names = Array.from(db.objectStoreNames).filter((name) => name !== 'editHistory');
       const transaction = db.transaction(names, 'readonly');
       const complete = new Promise<void>((resolve, reject) => {
         transaction.oncomplete = () => resolve();

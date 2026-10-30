@@ -12,18 +12,36 @@ import { useLocation } from 'react-router';
 import { flushSync } from 'react-dom';
 import { useLearning } from '../learning/react';
 import { PracticeSession } from './session';
+import { resolveBlockAccess } from '../blocks/permissions';
 const Context = createContext<PracticeSession | null>(null);
 export function PracticeProvider({ children }: { children: ReactNode }) {
   const { service, state } = useLearning();
   const [session] = useState(
     () =>
-      new PracticeSession(undefined, undefined, (action) => flushSync(action), {
-        context: () => ({
-          catalog: service.getState().practiceCatalog ?? null,
-          epoch: service.getState().sessionEpoch,
-        }),
-        save: (fact, epoch) => service.recordPracticePass(fact, epoch),
-      }),
+      new PracticeSession(
+        undefined,
+        undefined,
+        (action) => flushSync(action),
+        {
+          context: () => ({
+            catalog: service.getState().practiceCatalog ?? null,
+            epoch: service.getState().sessionEpoch,
+          }),
+          save: (fact, epoch) => service.recordPracticePass(fact, epoch),
+          access: (catalog) =>
+            resolveBlockAccess(
+              catalog.packageRef,
+              catalog.subject.lessonRef,
+              service.getState().snapshot,
+            ),
+        },
+        undefined,
+        {
+          context: service.editorHistoryContext,
+          read: service.readEditorHistory,
+          save: service.saveEditorHistory,
+        },
+      ),
   );
   const location = useLocation();
   const lifecycle = useRef({ token: 0 });
@@ -37,8 +55,14 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
       return;
     }
     const match = /^\/practice\/([^/]+)(\/review)?$/.exec(location.pathname);
-    session.enter(match?.[1], Boolean(match?.[2]));
-  }, [session, location.pathname, state.sessionEpoch]);
+    session.enter(
+      match?.[1],
+      Boolean(match?.[2]),
+      new URLSearchParams(location.search).get('mode') === 'reconstruction'
+        ? 'reconstruction'
+        : undefined,
+    );
+  }, [session, location.pathname, location.search, state.sessionEpoch]);
   useEffect(() => {
     const lease = lifecycle.current;
     const token = ++lease.token;

@@ -222,7 +222,7 @@ describe('non-destructive SAVE recovery projection', () => {
       );
     });
   }
-  for (const version of ['1.0.0', '3.0.0', '0.9.0', '0.8.0', 'unrecognized', '']) {
+  for (const version of ['1.0.0', '4.0.0', '0.9.0', '0.8.0', 'unrecognized', '']) {
     it(`never offers current-version clearing or partial reset for observed string version ${JSON.stringify(version)}`, () => {
       const raw = rawSnapshot();
       (raw.meta.values[0] as { schemaVersion: string }).schemaVersion = version;

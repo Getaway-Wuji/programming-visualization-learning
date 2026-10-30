@@ -1,3 +1,4 @@
+import { learnBlockPrerequisites } from './learn-block-prerequisites';
 import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -14,6 +15,13 @@ import {
 import { initSync, prepare_input } from '../../web/src/generated/c_viz_wasm';
 import { blockOptions, blockWorkspace, selectBlock } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
+
+test.beforeEach(async ({ page }, info) => {
+  if (/a single code-origin|native block selection and code pointer/.test(info.title)) {
+    test.setTimeout(Math.max(info.timeout, 90000));
+    await learnBlockPrerequisites(page);
+  }
+});
 
 const content = JSON.parse(
   readFileSync('web/public/content/practice/course-practice-1.0.0.json', 'utf8'),

@@ -1,0 +1,380 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--reporter=list,json",
+      "--trace",
+      "off",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.5\\candidate-second-output",
+      "tests/browser/reconstruction.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/13.5/candidate-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/13.5/candidate-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/13.5/candidate-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.5\\candidate-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "off",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "reconstruction.spec.ts",
+      "file": "reconstruction.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "13.5 six configured references, exact native start, permissions and representative layout",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6944,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('region', { name: '积木工作区', exact: true }).getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option[value=\"while\"]')\nExpected: disabled\nReceived: enabled\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('region', { name: '积木工作区', exact: true }).getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option[value=\"while\"]') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: '积木工作区', exact: true }).getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option[value=\"while\"]')\u001b[22m\n\u001b[2m    13 × locator resolved to <option disabled value=\"while\">while 循环（未解锁）</option>\u001b[22m\n\u001b[2m       - unexpected value \"enabled\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('region', { name: '积木工作区', exact: true }).getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option[value=\"while\"]')\nExpected: disabled\nReceived: enabled\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('region', { name: '积木工作区', exact: true }).getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option[value=\"while\"]') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: '积木工作区', exact: true }).getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option[value=\"while\"]')\u001b[22m\n\u001b[2m    13 × locator resolved to <option disabled value=\"while\">while 循环（未解锁）</option>\u001b[22m\n\u001b[2m       - unexpected value \"enabled\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts:94:120",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts",
+                      "column": 120,
+                      "line": 94
+                    },
+                    "snippet": "  92 |   await open(page);\n  93 |   await blockOptions(page,/./);\n> 94 |   await expect(blockWorkspace(page).getByRole('combobox',{name:'添加积木类型',exact:true}).locator('option[value=\"while\"]')).toBeDisabled();\n     |                                                                                                                        ^\n  95 |   const folder=`.artifacts/13.5/visual/${process.env.TASK_EVIDENCE_LABEL ?? 'initial'}`;\n  96 |   await mkdir(folder,{recursive:true});\n  97 |   for(const width of [1440,768,390]) {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts",
+                        "column": 120,
+                        "line": 94
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('region', { name: '积木工作区', exact: true }).getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option[value=\"while\"]')\nExpected: disabled\nReceived: enabled\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('region', { name: '积木工作区', exact: true }).getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option[value=\"while\"]') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: '积木工作区', exact: true }).getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option[value=\"while\"]')\u001b[22m\n\u001b[2m    13 × locator resolved to <option disabled value=\"while\">while 循环（未解锁）</option>\u001b[22m\n\u001b[2m       - unexpected value \"enabled\"\u001b[22m\n\n\n  92 |   await open(page);\n  93 |   await blockOptions(page,/./);\n> 94 |   await expect(blockWorkspace(page).getByRole('combobox',{name:'添加积木类型',exact:true}).locator('option[value=\"while\"]')).toBeDisabled();\n     |                                                                                                                        ^\n  95 |   const folder=`.artifacts/13.5/visual/${process.env.TASK_EVIDENCE_LABEL ?? 'initial'}`;\n  96 |   await mkdir(folder,{recursive:true});\n  97 |   for(const width of [1440,768,390]) {\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts:94:120"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T13:53:30.132Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.5\\candidate-second-output\\reconstruction-13-5-six-co-11ce9-s-and-representative-layout-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.5\\candidate-second-output\\reconstruction-13-5-six-co-11ce9-s-and-representative-layout-chrome\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts",
+                    "column": 120,
+                    "line": 94
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "23af9497ebaa433d68f7-24b6bbed9e71a9409518",
+          "file": "reconstruction.spec.ts",
+          "line": 76,
+          "column": 1
+        },
+        {
+          "title": "13.5 native reconstruction: wrong answer, real pass, quota retry and shared first reward",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7393,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('draft-code-editor')\nExpected: \u001b[32m\"\u001b[7msynce\u001b[27md\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7minvali\u001b[27md\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('draft-code-editor') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('draft-code-editor')\u001b[22m\n\u001b[2m    - locator resolved to <section data-sync=\"pending\" data-document-revision=\"2\" data-testid=\"draft-code-editor\" class=\"workbench-panel code-pane draft-code-editor\">…</section>\u001b[22m\n\u001b[2m    - unexpected value \"pending\"\u001b[22m\n\u001b[2m    13 × locator resolved to <section data-sync=\"invalid\" data-document-revision=\"2\" data-testid=\"draft-code-editor\" class=\"workbench-panel code-pane draft-code-editor\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"invalid\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('draft-code-editor')\nExpected: \u001b[32m\"\u001b[7msynce\u001b[27md\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7minvali\u001b[27md\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('draft-code-editor') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('draft-code-editor')\u001b[22m\n\u001b[2m    - locator resolved to <section data-sync=\"pending\" data-document-revision=\"2\" data-testid=\"draft-code-editor\" class=\"workbench-panel code-pane draft-code-editor\">…</section>\u001b[22m\n\u001b[2m    - unexpected value \"pending\"\u001b[22m\n\u001b[2m    13 × locator resolved to <section data-sync=\"invalid\" data-document-revision=\"2\" data-testid=\"draft-code-editor\" class=\"workbench-panel code-pane draft-code-editor\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"invalid\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts:162:55",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts",
+                      "column": 55,
+                      "line": 162
+                    },
+                    "snippet": "  160 |   const code=page.getByRole('textbox',{name:'编辑 C 代码',exact:true});\n  161 |   await code.fill(text);\n> 162 |   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync','synced');\n      |                                                       ^\n  163 |   await action(page,'提交练习').click();\n  164 |   await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state',saved);\n  165 |   expect((await archive(page)).ledger).toEqual(first.ledger);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts",
+                        "column": 55,
+                        "line": 162
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('draft-code-editor')\nExpected: \u001b[32m\"\u001b[7msynce\u001b[27md\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7minvali\u001b[27md\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('draft-code-editor') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('draft-code-editor')\u001b[22m\n\u001b[2m    - locator resolved to <section data-sync=\"pending\" data-document-revision=\"2\" data-testid=\"draft-code-editor\" class=\"workbench-panel code-pane draft-code-editor\">…</section>\u001b[22m\n\u001b[2m    - unexpected value \"pending\"\u001b[22m\n\u001b[2m    13 × locator resolved to <section data-sync=\"invalid\" data-document-revision=\"2\" data-testid=\"draft-code-editor\" class=\"workbench-panel code-pane draft-code-editor\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"invalid\"\u001b[22m\n\n\n  160 |   const code=page.getByRole('textbox',{name:'编辑 C 代码',exact:true});\n  161 |   await code.fill(text);\n> 162 |   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync','synced');\n      |                                                       ^\n  163 |   await action(page,'提交练习').click();\n  164 |   await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state',saved);\n  165 |   expect((await archive(page)).ledger).toEqual(first.ledger);\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts:162:55"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T13:53:39.429Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.5\\candidate-second-output\\reconstruction-13-5-native-8a3cf-try-and-shared-first-reward-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.5\\candidate-second-output\\reconstruction-13-5-native-8a3cf-try-and-shared-first-reward-chrome\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts",
+                    "column": 55,
+                    "line": 162
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "23af9497ebaa433d68f7-e99fec0301c1d2cec8cd",
+          "file": "reconstruction.spec.ts",
+          "line": 106,
+          "column": 1
+        },
+        {
+          "title": "13.5 isolated drafts and native history survive refresh while display preference and old execution stay correct",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7951,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('player-controls')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByTestId('player-controls') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('player-controls')\u001b[22m\n\u001b[2m    14 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('player-controls')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByTestId('player-controls') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('player-controls')\u001b[22m\n\u001b[2m    14 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts:195:53",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts",
+                      "column": 53,
+                      "line": 195
+                    },
+                    "snippet": "  193 |   await restore(page,version.entryId);\n  194 |   await expect(panel(page)).toHaveAttribute('data-state','ready');\n> 195 |   await expect(page.getByTestId('player-controls')).toHaveCount(0);\n      |                                                     ^\n  196 |   const options=await page.getByRole('combobox',{name:'历史版本',exact:true}).locator('option').evaluateAll(options=>options.map(option=>(option as HTMLOptionElement).value));\n  197 |   const rows=(await archive(page)).editHistory;\n  198 |   expect(options.length).toBeGreaterThan(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts",
+                        "column": 53,
+                        "line": 195
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('player-controls')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByTestId('player-controls') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('player-controls')\u001b[22m\n\u001b[2m    14 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n\n  193 |   await restore(page,version.entryId);\n  194 |   await expect(panel(page)).toHaveAttribute('data-state','ready');\n> 195 |   await expect(page.getByTestId('player-controls')).toHaveCount(0);\n      |                                                     ^\n  196 |   const options=await page.getByRole('combobox',{name:'历史版本',exact:true}).locator('option').evaluateAll(options=>options.map(option=>(option as HTMLOptionElement).value));\n  197 |   const rows=(await archive(page)).editHistory;\n  198 |   expect(options.length).toBeGreaterThan(0);\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts:195:53"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T13:53:48.966Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.5\\candidate-second-output\\reconstruction-13-5-isolat-b5b40--old-execution-stay-correct-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.5\\candidate-second-output\\reconstruction-13-5-isolat-b5b40--old-execution-stay-correct-chrome\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\reconstruction.spec.ts",
+                    "column": 53,
+                    "line": 195
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "23af9497ebaa433d68f7-ba6dc67c8ab490f1fd9f",
+          "file": "reconstruction.spec.ts",
+          "line": 169,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T13:53:29.523Z",
+    "duration": 29892.416,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

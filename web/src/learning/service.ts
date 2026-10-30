@@ -3,6 +3,7 @@ import { loadCourseLearning } from '../content/course-learning';
 import { caseLearningCatalog } from '../content/case-learning';
 import { openStorage as openDatabase } from '../storage/client';
 import type { StorageClient, SaveResult } from '../storage/client';
+import type { EditorHistoryContext, EditorSnapshotDraft } from '../storage/editor-history';
 import type {
   Appearance,
   Avatar,
@@ -244,6 +245,39 @@ export class LearningService {
       this.state = { ...this.state, practiceCatalog: this.catalog, practiceStatus: 'ready' };
   }
   getState = (): LearningServiceState => this.state;
+  editorHistoryContext = (): EditorHistoryContext | null => {
+    const meta = this.state.snapshot?.meta;
+    return meta && this.client && !this.disposed && this.state.status !== 'readonly'
+      ? {
+          generation: meta.generation,
+          activePackageRef: { ...meta.activePackageRef },
+          epoch: this.state.sessionEpoch,
+        }
+      : null;
+  };
+  private checkEditorHistory(context: EditorHistoryContext) {
+    const current = this.editorHistoryContext();
+    if (!current || context.epoch !== current.epoch || context.generation !== current.generation)
+      throw new StorageError('S_GENERATION_STALE');
+    if (!sameRef(context.activePackageRef, current.activePackageRef))
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  }
+  readEditorHistory = async (context: EditorHistoryContext) => {
+    this.checkEditorHistory(context);
+    const result = await this.storage().readEditorHistory(context);
+    this.checkEditorHistory(context);
+    return result;
+  };
+  saveEditorHistory = async (
+    context: EditorHistoryContext,
+    record: EditorSnapshotDraft,
+    updateOnly: boolean,
+  ) => {
+    this.checkEditorHistory(context);
+    const result = await this.storage().saveEditorHistory(context, record, updateOnly);
+    this.checkEditorHistory(context);
+    return result;
+  };
   private caseCatalog(): LearningCatalog {
     try {
       return caseLearningCatalog(
@@ -1671,6 +1705,9 @@ export function createLearningService() {
   const service = new LearningService();
   // Deliberately no raw command, trusted authority, DB name or fixture options.
   return {
+    editorHistoryContext: service.editorHistoryContext,
+    readEditorHistory: service.readEditorHistory,
+    saveEditorHistory: service.saveEditorHistory,
     recordLesson: service.recordLesson,
     recordPracticePass: service.recordPracticePass,
     recordCaseView: service.recordCaseView,

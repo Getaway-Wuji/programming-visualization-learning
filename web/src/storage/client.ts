@@ -2,6 +2,7 @@ import {
   DB_NAME,
   DB_VERSION,
   STORE_NAMES,
+  ALL_STORE_NAMES,
   SCHEMA_VERSION,
   createMeta,
   defaultSettings,
@@ -23,6 +24,14 @@ import { assertRecord, assertSnapshot, isSafeUint, isTimeZone, isUuid } from './
 import { StorageError, storageError } from './errors';
 import { upgradeV1Snapshot } from './v1-migration';
 import { usableBackground } from './appearance-assets';
+import { upgradeV2Meta } from './v2-migration';
+import { editorHistoryTransaction } from './editor-history';
+import type {
+  EditorHistoryContext,
+  EditorHistorySave,
+  EditorSnapshot,
+  EditorSnapshotDraft,
+} from './editor-history';
 import {
   hasUnknownRecoveryVersion,
   inspectRecoveryRows,
@@ -99,13 +108,13 @@ export interface OpenStorageOptions {
 function checkLayout(db: IDBDatabase): void {
   if (db.version !== DB_VERSION) throw new StorageError('S_VERSION_UNKNOWN');
   if (
-    db.objectStoreNames.length !== STORE_NAMES.length ||
-    STORE_NAMES.some((store) => !db.objectStoreNames.contains(store))
+    db.objectStoreNames.length !== ALL_STORE_NAMES.length ||
+    ALL_STORE_NAMES.some((store) => !db.objectStoreNames.contains(store))
   ) {
     throw new StorageError('S_RECORD_INVALID');
   }
-  const tx = db.transaction(STORE_NAMES, 'readonly');
-  for (const name of STORE_NAMES) {
+  const tx = db.transaction(ALL_STORE_NAMES, 'readonly');
+  for (const name of ALL_STORE_NAMES) {
     const store = tx.objectStore(name);
     if (store.keyPath !== null || store.autoIncrement || store.indexNames.length) {
       throw new StorageError('S_RECORD_INVALID');
@@ -232,6 +241,19 @@ export class StorageClient {
     if (this.closed) throw new StorageError('S_STORAGE_UNAVAILABLE');
     return this.db;
   }
+  readEditorHistory(context: EditorHistoryContext): Promise<EditorSnapshot[]> {
+    return editorHistoryTransaction(this.connection(), context) as Promise<EditorSnapshot[]>;
+  }
+  saveEditorHistory(
+    context: EditorHistoryContext,
+    record: EditorSnapshotDraft,
+    updateOnly: boolean,
+  ): Promise<EditorHistorySave> {
+    return editorHistoryTransaction(this.connection(), context, {
+      record,
+      updateOnly,
+    }) as Promise<EditorHistorySave>;
+  }
   async read(): Promise<StorageSnapshot> {
     const recovery = await this.readRecovery();
     if (!recovery.writable || !recovery.snapshot)
@@ -324,7 +346,7 @@ export class StorageClient {
       throw new StorageError('S_RECORD_INVALID');
     try {
       await this.repairTransaction(guard, 'clear', (_raw, tx) => {
-        for (const name of STORE_NAMES) tx.objectStore(name).clear();
+        for (const name of ALL_STORE_NAMES) tx.objectStore(name).clear();
         tx.objectStore('meta').add(meta, 'current');
         tx.objectStore('settings').add(defaultSettings(), 'current');
         tx.objectStore('avatar').add(defaultAvatar(), 'current');
@@ -408,7 +430,7 @@ export class StorageClient {
     if (!confirmation) throw new StorageError('S_REVISION_CONFLICT');
     const db = this.connection();
     checkLayout(db);
-    const tx = transaction(db, 'readwrite');
+    const tx = db.transaction(ALL_STORE_NAMES, 'readwrite', { durability: 'strict' });
     return new Promise((resolve, reject) => {
       let failure: unknown;
       let written = false;
@@ -898,6 +920,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                 }
                 db.createObjectStore('appearance');
                 db.createObjectStore('appearanceAssets');
+                db.createObjectStore('editHistory');
                 tx.objectStore('appearance').add(upgraded.appearance, 'current');
                 tx.objectStore('meta').put(upgraded.meta, 'current');
               } catch (error) {
@@ -923,9 +946,47 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
             }
             return;
           }
+          if (event.oldVersion === 2) {
+            const db = request.result,
+              tx = request.transaction!;
+            if (
+              db.objectStoreNames.length !== STORE_NAMES.length ||
+              STORE_NAMES.some((name) => !db.objectStoreNames.contains(name))
+            )
+              throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            for (const name of STORE_NAMES) {
+              const store = tx.objectStore(name);
+              if (store.keyPath !== null || store.autoIncrement || store.indexNames.length)
+                throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            }
+            const values = tx.objectStore('meta').getAll();
+            values.onsuccess = () => {
+              try {
+                for (const value of values.result) upgradeV2Meta(value); // Reject unknown future meta without deleting anything.
+                const keys = tx.objectStore('meta').getAllKeys();
+                keys.onsuccess = () => {
+                  try {
+                    const next =
+                      values.result.length === 1 && keys.result[0] === 'current'
+                        ? upgradeV2Meta(values.result[0])
+                        : null;
+                    db.createObjectStore('editHistory');
+                    if (next) tx.objectStore('meta').put(next, 'current');
+                  } catch (error) {
+                    failure = error;
+                    tx.abort();
+                  }
+                };
+              } catch (error) {
+                failure = error;
+                tx.abort();
+              }
+            };
+            return;
+          }
           if (event.oldVersion !== 0) throw new StorageError('S_MIGRATION_UNSUPPORTED');
           createdNew = true;
-          for (const name of STORE_NAMES) request.result.createObjectStore(name);
+          for (const name of ALL_STORE_NAMES) request.result.createObjectStore(name);
           const tx = request.transaction!;
           tx.objectStore('meta').add(meta, 'current');
           tx.objectStore('settings').add(defaultSettings(), 'current');

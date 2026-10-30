@@ -43,11 +43,13 @@ export function PracticeGuidance({
   lessonId,
   mode,
   onMode,
+  reconstruction = false,
 }: {
   id: string;
   lessonId: string;
   mode: PracticeSnapshot['mode'];
   onMode: (mode: PracticeSnapshot['mode']) => void;
+  reconstruction?: boolean;
 }) {
   const [shown, setShown] = useState(0);
   const layers =
@@ -72,6 +74,15 @@ export function PracticeGuidance({
           >
             改错练习
           </button>
+          {reconstruction && (
+            <button
+              className="button button-secondary"
+              aria-pressed={mode === 'reconstruction'}
+              onClick={() => onMode('reconstruction')}
+            >
+              拆积木练习
+            </button>
+          )}
         </div>
         <Link
           className="text-link"
@@ -86,8 +97,10 @@ export function PracticeGuidance({
       <p className="muted" data-testid="practice-mode-description">
         {mode === 'independent'
           ? '从零搭建解答。已保留本题输入声明，请在 main 中加入你的程序。'
-          : '这份程序有待修正，请找出问题后提交测试。'}
-        两份草稿独立保留，切换会清除本次结果；离题或刷新后草稿不保留。示例在新标签页打开。
+          : mode === 'reconstruction'
+            ? '对照参考 C，用积木还原程序；生成代码只读。'
+            : '这份程序有待修正，请找出问题后提交测试。'}
+        各模式草稿独立保留，切换会清除本次结果；已保存的编辑历史可在离题或刷新后选择恢复，未保存内容可能丢失。示例在新标签页打开。
       </p>
       <div className="practice-hints" data-testid="practice-hints">
         <div className="practice-hints-heading">

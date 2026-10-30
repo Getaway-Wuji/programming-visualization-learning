@@ -28,7 +28,10 @@ async function snapshot(page: Page): Promise<StorageSnapshot> {
       request.onerror = () => reject(request.error);
     });
     try {
-      const tx = db.transaction(Array.from(db.objectStoreNames), 'readonly');
+      const tx = db.transaction(
+        Array.from(db.objectStoreNames).filter((name) => name !== 'editHistory'),
+        'readonly',
+      );
       const done = new Promise<void>((resolve, reject) => {
         tx.oncomplete = () => resolve();
         tx.onabort = () => reject(tx.error);

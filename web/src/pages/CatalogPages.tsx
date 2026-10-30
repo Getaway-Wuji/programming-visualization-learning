@@ -7,6 +7,7 @@ import { ReadingBoundary, lessonProgress } from '../components/CourseReading';
 import { continueLesson } from '../content/reading';
 import { LearningSaveStatus } from '../learning/react';
 import { subjectLearningText, useLearning } from '../learning/react';
+import { ReconstructionCatalog } from '../practice/ReconstructionPanel';
 
 export function CoursePage() {
   const { chapterId } = useParams();
@@ -48,6 +49,7 @@ export function CoursePage() {
                 </span>
               </div>
             )}
+            {!selected && <ReconstructionCatalog />}
             <div className="course-grid">
               {visible.map((chapter) => (
                 <section className="card chapter-card" key={chapter.id}>

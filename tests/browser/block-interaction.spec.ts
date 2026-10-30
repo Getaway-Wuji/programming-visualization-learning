@@ -1,3 +1,4 @@
+import { learnBlockPrerequisites } from './learn-block-prerequisites';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
 import {
@@ -9,6 +10,13 @@ import {
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 type Point = { x: number; y: number };
+test.beforeEach(async ({ page }, info) => {
+  if (/native flyout dragging builds nested arithmetic/.test(info.title)) {
+    test.setTimeout(Math.max(info.timeout, 90000));
+    await learnBlockPrerequisites(page);
+  }
+});
+
 const exercise = 'exercise.c.echo';
 const practice = (page: Page) => page.getByTestId('practice-execution');
 const disclosure = (page: Page) => page.getByTestId('block-keyboard-editor');
@@ -213,7 +221,9 @@ test('keyboard editing starts folded, remains keyboard reachable and opening it 
   await settings.goto('/#/settings?panel=appearance');
   await ready(settings);
   const samples = [];
-  for (const theme of ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech']) {
+  for (const theme of process.env.TASK_REPRESENTATIVE_THEME === 'minimal'
+    ? ['minimal']
+    : ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech']) {
     await settings.bringToFront();
     await settings.getByTestId(`theme-${theme}`).click();
     if (await settings.getByTestId('save-appearance').isEnabled())

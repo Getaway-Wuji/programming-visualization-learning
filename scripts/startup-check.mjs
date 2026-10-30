@@ -269,7 +269,7 @@ try {
       assert.ok(audit.databaseOpens >= 1);
       const learningRows = await page.evaluate(async () => {
         const db = await new Promise((resolve, reject) => {
-          const req = globalThis.indexedDB.open('c-viz-learning', 2);
+          const req = globalThis.indexedDB.open('c-viz-learning', 3);
           req.onsuccess = () => resolve(req.result);
           req.onerror = () => reject(req.error);
         });
@@ -297,6 +297,7 @@ try {
         'appearanceAssets',
         'avatar',
         'dailyFacts',
+        'editHistory',
         'goals',
         'ledger',
         'meta',

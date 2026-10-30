@@ -2,51 +2,8 @@ import * as Blockly from 'blockly/core';
 import * as Chinese from 'blockly/msg/zh-hans';
 import { BLOCK_LIMITS } from './model';
 
-export const BLOCK_TYPES = [
-  'main',
-  'integer',
-  'declare',
-  'variable',
-  'assign',
-  'unary',
-  'arithmetic',
-  'compare',
-  'logic',
-  'if',
-  'while',
-  'for',
-  'break',
-  'continue',
-  'array_declare',
-  'array_read',
-  'array_write',
-  'print',
-  'return',
-  'scope',
-] as const;
-export type TeachingBlockKind = (typeof BLOCK_TYPES)[number];
-export const BLOCK_LABELS: Record<TeachingBlockKind, string> = {
-  main: '主程序',
-  integer: '整数',
-  declare: '声明整数',
-  variable: '读取变量',
-  assign: '变量赋值',
-  unary: '一元运算',
-  arithmetic: '算术运算',
-  compare: '比较',
-  logic: '逻辑运算',
-  if: '条件分支',
-  while: 'while 循环',
-  for: 'for 循环',
-  break: '跳出循环',
-  continue: '继续下轮',
-  array_declare: '声明数组',
-  array_read: '读取数组',
-  array_write: '写入数组',
-  print: '输出',
-  return: '返回',
-  scope: '独立作用域',
-};
+import { BLOCK_TYPES, BLOCK_LABELS, type TeachingBlockKind } from './block-kinds';
+export { BLOCK_TYPES, BLOCK_LABELS, type TeachingBlockKind } from './block-kinds';
 export interface InputBlockMetadata {
   bindingKey: string;
   name: string;
@@ -359,12 +316,18 @@ export function registerTeachingBlocks() {
   };
 }
 
-export function teachingToolbox(): Blockly.utils.toolbox.ToolboxInfo {
+export function teachingToolbox(
+  allowed: readonly TeachingBlockKind[] = BLOCK_TYPES,
+): Blockly.utils.toolbox.ToolboxInfo {
   const category = (name: string, colour: string, kinds: TeachingBlockKind[]) => ({
     kind: 'category',
     name,
     colour,
-    contents: kinds.map((kind) => ({ kind: 'block', type: `cv_${kind}` })),
+    contents: kinds.map((kind) => ({
+      kind: 'block',
+      type: `cv_${kind}`,
+      enabled: allowed.includes(kind),
+    })),
   });
   return {
     kind: 'categoryToolbox',

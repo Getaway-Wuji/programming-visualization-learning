@@ -1,3 +1,4 @@
+import { learnBlockPrerequisites } from './learn-block-prerequisites';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
@@ -11,6 +12,13 @@ import {
   showPracticeBlocks,
 } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
+
+test.beforeEach(async ({ page }, info) => {
+  if (/native flyout drag creates|type rejection|a new arithmetic/.test(info.title)) {
+    test.setTimeout(Math.max(info.timeout, 90000));
+    await learnBlockPrerequisites(page);
+  }
+});
 
 const panel = (page: Page) => page.getByTestId('practice-execution');
 const submit = (page: Page) => panel(page).getByRole('button', { name: '提交练习', exact: true });

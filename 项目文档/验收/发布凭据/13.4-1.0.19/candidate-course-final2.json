@@ -1,0 +1,242 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--reporter=list,json",
+      "--trace",
+      "off",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.4\\candidate-course-final2-output",
+      "tests/browser/p05-course-temporary.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/13.4/candidate-course-final2-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/13.4/candidate-course-final2-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/13.4/candidate-course-final2-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.4\\candidate-course-final2-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "off",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "p05-course-temporary.spec.ts",
+      "file": "p05-course-temporary.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "P05 review candidate: normal code editing and real AST maps temporarily pass all 32 exercises and 140 groups without granting any learning record",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 32652,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('practice-execution')\nExpected: \u001b[32m\"passed\"\u001b[39m\nReceived: \u001b[31m\"unmet\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('practice-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('practice-execution')\u001b[22m\n\u001b[2m    6 × locator resolved to <section data-state=\"running\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m      - unexpected value \"running\"\u001b[22m\n\u001b[2m    7 × locator resolved to <section data-state=\"unmet\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m      - unexpected value \"unmet\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('practice-execution')\nExpected: \u001b[32m\"passed\"\u001b[39m\nReceived: \u001b[31m\"unmet\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('practice-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('practice-execution')\u001b[22m\n\u001b[2m    6 × locator resolved to <section data-state=\"running\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m      - unexpected value \"running\"\u001b[22m\n\u001b[2m    7 × locator resolved to <section data-state=\"unmet\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m      - unexpected value \"unmet\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\p05-course-temporary.spec.ts:400:33",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\p05-course-temporary.spec.ts",
+                      "column": 33,
+                      "line": 400
+                    },
+                    "snippet": "  398 |       await expect(panel(page)).toHaveAttribute('data-state', 'ready');\n  399 |       await panel(page).getByRole('button', { name: '提交练习', exact: true }).click();\n> 400 |       await expect(panel(page)).toHaveAttribute('data-state', 'passed');\n      |                                 ^\n  401 |       await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(\n  402 |         'data-save-state',\n  403 |         /^(unavailable|unsaved)$/,"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\p05-course-temporary.spec.ts",
+                        "column": 33,
+                        "line": 400
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('practice-execution')\nExpected: \u001b[32m\"passed\"\u001b[39m\nReceived: \u001b[31m\"unmet\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('practice-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('practice-execution')\u001b[22m\n\u001b[2m    6 × locator resolved to <section data-state=\"running\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m      - unexpected value \"running\"\u001b[22m\n\u001b[2m    7 × locator resolved to <section data-state=\"unmet\" class=\"card section-card\" data-testid=\"practice-execution\">…</section>\u001b[22m\n\u001b[2m      - unexpected value \"unmet\"\u001b[22m\n\n\n  398 |       await expect(panel(page)).toHaveAttribute('data-state', 'ready');\n  399 |       await panel(page).getByRole('button', { name: '提交练习', exact: true }).click();\n> 400 |       await expect(panel(page)).toHaveAttribute('data-state', 'passed');\n      |                                 ^\n  401 |       await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(\n  402 |         'data-save-state',\n  403 |         /^(unavailable|unsaved)$/,\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\p05-course-temporary.spec.ts:400:33"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T13:15:30.625Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.4\\candidate-course-final2-output\\p05-course-temporary-P05-r-0d920-ranting-any-learning-record-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\13.4\\candidate-course-final2-output\\p05-course-temporary-P05-r-0d920-ranting-any-learning-record-chrome\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\p05-course-temporary.spec.ts",
+                    "column": 33,
+                    "line": 400
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "57a1829185a8fcc75769-cdeffb6cd7d9c6a82f0c",
+          "file": "p05-course-temporary.spec.ts",
+          "line": 354,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T13:15:29.591Z",
+    "duration": 36227.091,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

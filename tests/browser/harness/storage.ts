@@ -360,7 +360,7 @@ export const storageHarness = {
     });
   },
   async futureVersion() {
-    const db = await rawOpen(databaseName, 3);
+    const db = await rawOpen(databaseName, 4);
     db.close();
   },
   async beginBlockedCancellation() {

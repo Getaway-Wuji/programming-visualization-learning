@@ -1,5 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { historyMemory } from '../fixtures/editor-history';
+import type { EditorHistoryPort } from '../../web/src/practice/history';
 import { PracticeSession } from '../../web/src/practice/session';
 import type { AnalysisPort } from '../../web/src/practice/edit-document';
 import { draftFromBlockProgram } from '../../web/src/blocks/workspace';
@@ -74,7 +76,11 @@ function client() {
   >;
   return port;
 }
-async function open(id = 'exercise.c.echo', analyzer: AnalysisPort = { analyze, cancel: vi.fn() }) {
+async function open(
+  id = 'exercise.c.echo',
+  analyzer: AnalysisPort = { analyze, cancel: vi.fn() },
+  history?: EditorHistoryPort,
+) {
   const port = client();
   const session = new PracticeSession(
     port,
@@ -82,6 +88,7 @@ async function open(id = 'exercise.c.echo', analyzer: AnalysisPort = { analyze, 
     (action) => action(),
     undefined,
     analyzer,
+    history,
   );
   session.enter(id);
   await vi.waitFor(() => expect(session.getSnapshot().phase).toBe('ready'));
@@ -95,6 +102,111 @@ async function settle(session: PracticeSession) {
 }
 beforeAll(() => initSync({ module: readFileSync('web/src/generated/c_viz_wasm_bg.wasm') }));
 describe('A single bidirectional exercise document with real Rust analysis and execution', () => {
+  it('keeps history writes paused through the execution client final acceptance guard', async () => {
+    const { port: storage, rows } = historyMemory();
+    const { session, port } = await open('exercise.c.echo', { analyze, cancel: vi.fn() }, storage);
+    const state = session.getSnapshot();
+    session.editCode(
+      generateBlockSource(
+        correctBlockProgram('exercise.c.echo', state.catalog!.program.bindings),
+        state.source!,
+        state.catalog!.program.bindings,
+      ).text,
+    );
+    await settle(session);
+    await vi.waitFor(() => expect(session.history.getSnapshot().status).toBe('ready'));
+    const execute = port.execute;
+    let release: (() => void) | undefined;
+    let before = 0;
+    port.execute = vi.fn<ExecutionClient['execute']>(async (...args) => {
+      const result = await execute(...args);
+      if (session.getSnapshot().phase === 'met') {
+        before = vi.mocked(storage.save).mock.calls.length;
+        session.history.markRestore([...rows.keys()][0]);
+        session.history.capture(session.getSnapshot().editDocument!, session.getSnapshot().draft!);
+        await new Promise<void>((resolve) => (release = resolve));
+      }
+      return result;
+    });
+    const submitting = session.submit();
+    await vi.waitFor(() => expect(release).toBeDefined());
+    expect(vi.mocked(storage.save).mock.calls).toHaveLength(before);
+    expect(session.history.getSnapshot().pending).toBe(1);
+    release!();
+    await submitting;
+    await vi.waitFor(() => expect(session.history.getSnapshot().status).toBe('ready'));
+    expect(vi.mocked(storage.save).mock.calls.length).toBeGreaterThan(before);
+    session.close();
+  });
+  it('restores persisted invalid and valid versions with fresh Rust authority and no old run', async () => {
+    const { port: storage, rows } = historyMemory();
+    const analyzer = { analyze: vi.fn(analyze), cancel: vi.fn() };
+    const { session } = await open('exercise.c.echo', analyzer, storage);
+    const original = session.getSnapshot().editDocument!.codeDraft;
+    await vi.waitFor(() => expect(session.history.getSnapshot().status).toBe('ready'));
+    const validId = [...rows.values()].find((row) => row.state === 'synced')!.entryId;
+    session.editCode(`${original}\nint`);
+    await settle(session);
+    await vi.waitFor(() => expect(session.history.getSnapshot().status).toBe('ready'));
+    const invalidId = [...rows.values()].find((row) => row.state === 'invalid')!.entryId;
+    session.editCode(original);
+    await settle(session);
+    await session.run();
+    expect(session.getSnapshot().result?.terminal.status).toBe('completed');
+    const oldRevision = session.getSnapshot().editDocument!.identity.documentRevision;
+    await session.restoreHistory(invalidId);
+    expect(session.getSnapshot().result).toBeUndefined();
+    expect(session.getSnapshot().source).toBeUndefined();
+    expect(session.getSnapshot().editDocument).toMatchObject({
+      codeDraft: `${original}\nint`,
+      syncStatus: 'invalid',
+      lastSynced: null,
+    });
+    expect(session.getSnapshot().editDocument!.identity.documentRevision).toBeGreaterThan(
+      oldRevision,
+    );
+    const calls = analyzer.analyze.mock.calls.length;
+    await session.restoreHistory(validId);
+    expect(analyzer.analyze.mock.calls.length).toBeGreaterThan(calls);
+    expect(session.getSnapshot().editDocument?.syncStatus).toBe('synced');
+    await session.run();
+    expect(session.getSnapshot().result?.terminal.status).toBe('completed');
+    await vi.waitFor(() => expect(session.history.getSnapshot().status).toBe('ready'));
+    expect([...rows.values()].filter((row) => row.reason === 'restore')).toHaveLength(2);
+    session.close();
+    const reopened = await open('exercise.c.echo', analyzer, storage);
+    await vi.waitFor(() => expect(reopened.session.history.getSnapshot().status).toBe('ready'));
+    await reopened.session.restoreHistory(invalidId);
+    expect(reopened.session.getSnapshot().editDocument?.codeDraft).toBe(`${original}\nint`);
+    reopened.session.close();
+  });
+  it('keeps native disconnected blocks and layout on restore without executing an old projection', async () => {
+    const { port: storage, rows } = historyMemory();
+    const { session, port } = await open('exercise.c.echo', { analyze, cancel: vi.fn() }, storage);
+    const raw = structuredClone(session.getSnapshot().draft!);
+    (raw.blocks as { blocks: unknown[] }).blocks.push({
+      type: 'cv_integer',
+      id: 'detached.history',
+      x: 318,
+      y: 227,
+      fields: { VALUE: 99 },
+    });
+    session.editBlocks(
+      null,
+      [{ code: 'BLOCK_SHAPE', blockId: 'detached.history', message: 'disconnected' }],
+      raw,
+    );
+    await vi.waitFor(() => expect(session.history.getSnapshot().status).toBe('ready'));
+    const id = [...rows.values()].find((row) => row.state === 'invalid')!.entryId;
+    session.editCode('int main() { return 0; }');
+    await settle(session);
+    await session.restoreHistory(id);
+    expect(session.getSnapshot().draft).toEqual(raw);
+    expect(session.getSnapshot().editDocument?.syncStatus).toBe('invalid');
+    await session.run();
+    expect(port.execute).not.toHaveBeenCalled();
+    session.close();
+  });
   it('starts the same checked document with no mounted canvas or supplied workspace snapshot', async () => {
     const port = client();
     const session = new PracticeSession(

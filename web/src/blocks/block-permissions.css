@@ -1,0 +1,28 @@
+.block-permissions {
+  margin-block: 12px;
+}
+.block-permissions summary {
+  cursor: pointer;
+  padding-block: 8px;
+}
+.block-permissions ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+.block-permissions li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--p05-control);
+}
+.block-permissions li > span:first-child {
+  min-width: 110px;
+}
+.block-permissions [data-access='未解锁'] > span {
+  color: var(--p05-muted);
+}
+.block-permissions a {
+  margin-inline-start: auto;
+}

@@ -9,6 +9,9 @@ import { inspectContentDraft } from '../web/src/content/validator.mjs';
 import { schema as contentSchema } from '../web/src/content/schema-p05.mjs';
 import * as wasm from '../web/src/generated/c_viz_wasm.js';
 import { reviewedP05Paths } from './p05-09-release-inputs.mjs';
+import { blockPermissionPaths } from './block-permission-release-inputs.mjs';
+import { editorHistoryPaths } from './editor-history-release-inputs.mjs';
+import { reconstructionPaths } from './reconstruction-release-inputs.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const read = (path) => readFileSync(new URL(path, new URL('../', import.meta.url)));
@@ -210,15 +213,31 @@ try {
 const predecessor = json('content/learning/p05-predecessors-1.0.0.json');
 for (const item of predecessor.sources)
   assert.equal(sha(read(item.path)), item.sha256, `Predecessor changed: ${item.path}`);
-const registrationPath = 'content/c/p0/blockly-release-1.0.16.json';
+const permissionRelease = existsSync('content/c/p0/blockly-release-1.0.17.json');
+const releaseVersion = existsSync('content/c/p0/blockly-release-1.0.20.json')
+  ? '1.0.20'
+  : existsSync('content/c/p0/blockly-release-1.0.19.json')
+    ? '1.0.19'
+    : existsSync('content/c/p0/blockly-release-1.0.18.json')
+      ? '1.0.18'
+      : permissionRelease
+        ? '1.0.17'
+        : '1.0.16';
+const registrationPath = `content/c/p0/blockly-release-${releaseVersion}.json`;
 const candidate = process.env.P05_REVIEW_CANDIDATE === '1';
 let registered = false;
 if (existsSync(registrationPath) && !candidate) {
   const registration = json(registrationPath);
-  assert.equal(registration.releaseVersion, '1.0.16');
+  assert.equal(registration.releaseVersion, releaseVersion);
   assert.deepEqual(
     registration.files.map((entry) => entry.path),
-    reviewedP05Paths,
+    releaseVersion === '1.0.20'
+      ? reconstructionPaths
+      : releaseVersion === '1.0.19'
+        ? editorHistoryPaths
+        : permissionRelease
+          ? blockPermissionPaths
+          : reviewedP05Paths,
   );
   for (const entry of registration.files)
     assert.equal(sha(read(entry.path)), entry.sha256, `Unreviewed source: ${entry.path}`);
@@ -270,7 +289,7 @@ if (registered) {
   );
   const registration = json(registrationPath);
   const learningProjection = save(
-    'web/public/content/learning/course-learning-1.0.16.json',
+    `web/public/content/learning/course-learning-${releaseVersion}.json`,
     {
       learningVersion: '1.0.0',
       sourceSha256,

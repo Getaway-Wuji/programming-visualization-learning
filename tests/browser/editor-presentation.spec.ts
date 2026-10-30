@@ -78,7 +78,7 @@ async function snapshot(page: Page): Promise<StorageSnapshot> {
       request.onerror = () => reject(request.error);
     });
     try {
-      const names = Array.from(db.objectStoreNames);
+      const names = Array.from(db.objectStoreNames).filter((name) => name !== 'editHistory');
       const transaction = db.transaction(names, 'readonly');
       const done = new Promise<void>((resolve, reject) => {
         transaction.oncomplete = () => resolve();
@@ -128,8 +128,16 @@ async function counts(page: Page) {
 }
 async function choose(page: Page, value: Preference) {
   await expect(select(page)).toBeEnabled();
-  if ((await select(page).inputValue()) !== value) await select(page).selectOption(value);
+  const changed = (await select(page).inputValue()) !== value;
+  if (changed) await select(page).selectOption(value);
   await expect(select(page)).toHaveValue(value);
+  if (changed) {
+    await expect(prefStatus(page)).toHaveAttribute('data-save-state', /^(saved|temporary)$/);
+    if ((await prefStatus(page).getAttribute('data-save-state')) === 'temporary') {
+      await page.getByRole('button', { name: '重新读取并保存选择', exact: true }).click();
+      await expect(prefStatus(page)).toHaveAttribute('data-save-state', 'saved');
+    }
+  }
   await expect.poll(async () => (await snapshot(page)).appearance.blockWorkspace).toBe(value);
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }

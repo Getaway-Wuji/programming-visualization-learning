@@ -20,9 +20,14 @@ import {
   type EditDocumentSnapshot,
 } from './edit-document';
 import type { ByteRange } from '../engine/protocol';
+import { lockedProgramKinds, type BlockAccess } from '../blocks/permissions';
+import { EditorHistoryController, editorHistoryInput, type EditorHistoryPort } from './history';
+import { sameEditorScope, type EditorScope } from '../storage/editor-history';
+import { reconstructionQuestion, reconstructionReference } from './reconstruction';
 
-export type PracticeMode = 'independent' | 'correction';
+export type PracticeMode = 'independent' | 'correction' | 'reconstruction';
 export interface PracticeSnapshot {
+  reconstructionSource?: string;
   editDocument?: EditDocumentSnapshot;
   codeEditing?: boolean;
   selectedBlockId?: string;
@@ -65,6 +70,7 @@ type PracticeDraft = Pick<
 export interface PracticeLearningPort {
   context(): { catalog: LearningCatalog | null; epoch: number };
   save(fact: VerifiedFact, epoch: number): Promise<unknown>;
+  access?(catalog: ExerciseCatalog): BlockAccess;
 }
 const blockMessages: Record<string, string> = {
   BLOCK_SHAPE: '积木结构或插槽不完整，请检查标记的积木。',
@@ -87,6 +93,8 @@ function blockIssue(error: unknown): WorkspaceIssue {
 }
 /** One ephemeral submission, shared only across the same exercise/review route pair. */
 export class PracticeSession {
+  readonly history: EditorHistoryController;
+  private historyMove = false;
   readonly player = new PlayerController();
   private current: PracticeSnapshot = {
     mode: 'independent',
@@ -103,6 +111,7 @@ export class PracticeSession {
   private contextId = crypto.randomUUID();
   private revision = 1;
   private sourceRevision = 0;
+  private executionPending = 0;
   private base?: PreparedSource;
   private loading?: AbortController;
   private drafts: Partial<Record<PracticeMode, PracticeDraft>> = {};
@@ -116,7 +125,10 @@ export class PracticeSession {
     private readonly present: (action: () => void) => void = (action) => action(),
     private readonly learning?: PracticeLearningPort,
     private readonly analyzer?: AnalysisPort,
-  ) {}
+    private readonly historyPort?: EditorHistoryPort,
+  ) {
+    this.history = new EditorHistoryController(historyPort);
+  }
   readonly getSnapshot = () => this.current;
   readonly subscribe = (listener: () => void) => {
     this.listeners.add(listener);
@@ -126,10 +138,35 @@ export class PracticeSession {
   };
   private set(patch: Partial<PracticeSnapshot>) {
     this.current = { ...this.current, ...patch };
+    this.pauseHistory();
     for (const listener of this.listeners) listener();
+  }
+  private pauseHistory() {
+    this.history.pause(
+      this.executionPending > 0 || ['running', 'preparing'].includes(this.current.phase),
+    );
+  }
+  private permitted(program: BlockProgram): boolean {
+    const catalog = this.current.catalog;
+    if (
+      this.current.mode === 'reconstruction' &&
+      (!catalog ||
+        !reconstructionQuestion(catalog) ||
+        this.current.editDocument?.authoritativeDraft.kind !== 'blocks')
+    ) {
+      this.set({ message: '拆积木练习需要用当前积木解答，请检查工作区后重新提交。' });
+      return false;
+    }
+    const access = catalog && this.learning?.access?.(catalog);
+    if (!access) return true; // Headless adapters without a learning store remain independent.
+    if (access.available && lockedProgramKinds(program, access, this.current.draft).length === 0)
+      return true;
+    this.set({ message: '当前程序含未解锁积木或课程权限尚未就绪；草稿已保留，请查看积木权限。' });
+    return false;
   }
   close(message = '') {
     if (!this.current.exerciseId) return;
+    this.history.leave(Boolean(message));
     ++this.token;
     ++this.revision;
     this.loading?.abort();
@@ -154,12 +191,13 @@ export class PracticeSession {
     };
     for (const listener of this.listeners) listener();
   }
-  enter(id: string | undefined, review = false) {
+  enter(id: string | undefined, review = false, mode?: PracticeMode) {
     if (!id) {
       this.close();
       return;
     }
     if (this.current.exerciseId === id && this.current.phase !== 'empty') {
+      if (mode && !review) this.switchMode(mode);
       if (review && ['running', 'preparing'].includes(this.current.phase)) this.cancel();
       this.player.pause();
       return;
@@ -181,6 +219,12 @@ export class PracticeSession {
         if (this.token !== token) return;
         const source = generateBlockSource(program, base, catalog.program.bindings);
         this.base = base;
+        const question = reconstructionQuestion(catalog);
+        this.set({
+          mode: mode === 'reconstruction' && question ? mode : 'independent',
+          reconstructionSource: question ? reconstructionReference(catalog, base).text : undefined,
+        });
+        this.history.activate(this.editorScope(catalog, this.current.mode));
         this.set({
           catalog,
           initialProgram: program,
@@ -199,8 +243,9 @@ export class PracticeSession {
   }
   reload() {
     const id = this.current.exerciseId;
+    const mode = this.current.mode;
     this.close();
-    this.enter(id);
+    this.enter(id, false, mode);
   }
   switchMode(mode: PracticeMode) {
     const { catalog, exerciseId } = this.current;
@@ -208,7 +253,8 @@ export class PracticeSession {
       !catalog ||
       !exerciseId ||
       mode === this.current.mode ||
-      !['independent', 'correction'].includes(mode)
+      !['independent', 'correction', 'reconstruction'].includes(mode) ||
+      (mode === 'reconstruction' && !reconstructionQuestion(catalog))
     )
       return;
     const { initialProgram, workspaceProgram, program, draft, issues, source, codeEditing } =
@@ -227,10 +273,11 @@ export class PracticeSession {
     this.documents[this.current.mode]?.cancel();
     this.client.invalidate();
     this.player.invalidate();
+    this.history.activate(this.editorScope(catalog, mode));
     let next = this.drafts[mode];
     if (!next) {
       const initial =
-        mode === 'independent'
+        mode !== 'correction'
           ? starterProgram(exerciseId, catalog.program.bindings)
           : correctionProgram(exerciseId, catalog.program.bindings);
       next = {
@@ -278,6 +325,7 @@ export class PracticeSession {
     const ready = document.ready();
     this.set({
       editDocument,
+      draft: document.getDraft(),
       ...(!this.current.result
         ? {
             source: ready ? projection?.source : undefined,
@@ -290,12 +338,107 @@ export class PracticeSession {
         : {}),
       commentsMoved: document.commentsMoved,
     });
+    this.history.capture(editDocument, document.getDraft(), this.historyMove);
+    this.historyMove = false;
   };
-  recordWorkspaceDraft(draft: BlockWorkspaceDraft) {
-    if (!this.current.draft && !this.current.editDocument) this.set({ draft });
+  private editorScope(catalog: ExerciseCatalog, mode: PracticeMode): EditorScope {
+    return {
+      packageRef: catalog.packageRef,
+      exerciseRef: { id: catalog.subject.id, version: catalog.subject.version },
+      programRef: { id: catalog.program.id, version: catalog.program.version },
+      mode,
+    };
+  }
+  recordWorkspaceDraft(draft: BlockWorkspaceDraft, logicalMove = false) {
+    if (!this.current.catalog) return;
+    const document = this.documents[this.current.mode];
+    if (!document) {
+      if (!this.current.draft) this.set({ draft });
+      return;
+    }
+    if (JSON.stringify(draft) === JSON.stringify(document.getDraft())) return;
+    this.historyMove = logicalMove;
+    document.updateWorkspacePresentation(draft);
+  }
+  async restoreHistory(entryId: string) {
+    const { catalog, mode } = this.current,
+      document = this.documents[mode];
+    const record = this.history.find(entryId);
+    if (
+      !catalog ||
+      !record ||
+      !document ||
+      !sameEditorScope(record.scope, this.editorScope(catalog, mode))
+    )
+      return;
+    const context = this.historyPort?.context();
+    if (
+      (context && record.generation !== context.generation) ||
+      (mode === 'reconstruction' && record.authority !== 'blocks') ||
+      record.inputJson !== editorHistoryInput(document.getSnapshot().input)
+    ) {
+      this.set({ message: '此历史版本不属于当前档案或输入，当前草稿已保留。' });
+      return;
+    }
+    const token = ++this.token;
+    ++this.revision;
+    this.client.invalidate();
+    this.player.invalidate();
+    document.cancel();
+    this.set({
+      phase: 'preparing',
+      action: null,
+      result: undefined,
+      source: undefined,
+      program: undefined,
+      summaries: [],
+      saveStatus: 'idle',
+      message: '正在恢复历史并重新检查……',
+      selectedBlockId: undefined,
+      selectedCodeRange: undefined,
+    });
+    try {
+      const { parseHistoryWorkspace, inspectHistoryWorkspace } =
+        await import('../blocks/history-workspace');
+      const draft = parseHistoryWorkspace(record.workspaceJson);
+      const read = inspectHistoryWorkspace(draft, catalog.program.bindings);
+      const base = await this.client.prepare(catalog, catalog.subject.tests[0].input);
+      if (this.token !== token || this.current.mode !== mode) return;
+      let canonical: PreparedSource | undefined;
+      if (read.program && read.issues.length === 0) {
+        try {
+          canonical = generateBlockSource(read.program, base, catalog.program.bindings);
+        } catch {
+          /* Keep invalid native draft; never authorize historical code. */
+        }
+      }
+      this.base = base;
+      this.set({
+        phase: 'ready',
+        draft,
+        workspaceProgram: read.program ?? read.fallback,
+        modeRevision: this.current.modeRevision + 1,
+        issues: read.issues,
+        message: '已恢复历史；旧运行已清除，请检查后重新运行。',
+      });
+      this.history.markRestore(record.entryId);
+      document.restore(
+        record.codeText,
+        record.authority,
+        draft,
+        canonical ? read.program : null,
+        canonical,
+      );
+      await document.wait();
+    } catch {
+      if (this.token !== token) return;
+      this.set({ phase: 'ready', message: '此版本未能恢复，当前草稿已保留，旧运行已清除。' });
+      await document.retry();
+    }
   }
   async enableCodeEditing(visible = true) {
     const { catalog, program, source, mode } = this.current;
+    if (mode === 'reconstruction') visible = false;
     if (this.documents[mode]) {
       if (visible) this.set({ codeEditing: true });
       return;
@@ -330,9 +473,11 @@ export class PracticeSession {
     await this.documents[mode].wait();
   }
   setCodeEditing(visible: boolean) {
+    if (this.current.mode === 'reconstruction' && visible) return;
     this.set({ codeEditing: visible });
   }
   editCode(text: string, changedRange?: ByteRange) {
+    if (this.current.mode === 'reconstruction') return;
     const document = this.documents[this.current.mode];
     if (!document || text === document.getSnapshot().codeDraft) return;
     const bytes = new TextEncoder().encode(text);
@@ -538,8 +683,10 @@ export class PracticeSession {
       (this.documents[this.current.mode] && !this.documents[this.current.mode]?.ready())
     )
       return;
+    if (!this.permitted(program)) return;
     const selected = structuredClone(program);
     const token = ++this.token;
+    ++this.executionPending;
     const revision = this.revision;
     const test = catalog.subject.tests[0];
     this.player.invalidate();
@@ -606,6 +753,9 @@ export class PracticeSession {
           message: '本次运行准备失败或超过时限，可以重试；没有保存通过记录。',
         });
       }
+    } finally {
+      --this.executionPending;
+      this.pauseHistory();
     }
   }
   async submit() {
@@ -622,8 +772,10 @@ export class PracticeSession {
       (this.documents[this.current.mode] && !this.documents[this.current.mode]?.ready())
     )
       return;
+    if (!this.permitted(program)) return;
     const selected = structuredClone(program);
     const token = ++this.token;
+    ++this.executionPending;
     const submissionId = crypto.randomUUID();
     const revision = this.revision;
     let summaries: CaseSummary[] = [];
@@ -714,6 +866,9 @@ export class PracticeSession {
           message: '本次提交准备失败或超过时限，未作通过判定。可以重新提交。',
         });
       }
+    } finally {
+      --this.executionPending;
+      this.pauseHistory();
     }
   }
   private async saveAccepted(token: number, revision: number, catalog: ExerciseCatalog) {

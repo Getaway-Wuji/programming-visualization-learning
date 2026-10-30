@@ -33,9 +33,10 @@ export interface BlockWorkspaceProps {
   draft?: BlockWorkspaceDraft;
   activeBlockIds?: readonly string[];
   disabled?: boolean;
+  allowedKinds?: readonly TeachingBlockKind[];
   selectedBlockId?: string;
   onSelect?(blockId: string | null): void;
-  onSnapshot?(draft: BlockWorkspaceDraft): void;
+  onSnapshot?(draft: BlockWorkspaceDraft, logicalMove?: boolean): void;
 }
 const FIELD_LABELS: Record<string, string> = {
   NAME: '变量名称',
@@ -77,6 +78,7 @@ export function BlockWorkspace({
   draft,
   activeBlockIds = [],
   disabled = false,
+  allowedKinds = BLOCK_TYPES,
   selectedBlockId,
   onSelect,
   onSnapshot,
@@ -86,6 +88,7 @@ export function BlockWorkspace({
   const lastProgram = useRef(value);
   const initial = useRef({ value, draft });
   const callback = useRef(onChange);
+  const allowed = useRef(allowedKinds);
   const selectionCallback = useRef(onSelect);
   const snapshotCallback = useRef(onSnapshot);
   const expectedInputs = useRef(inputBlocks(value));
@@ -114,7 +117,7 @@ export function BlockWorkspace({
     let disposed = false;
     const editor = withoutWorkspaceAudio(() =>
       Blockly.inject(element, {
-        toolbox: teachingToolbox(),
+        toolbox: teachingToolbox(allowed.current),
         media: `${import.meta.env.BASE_URL}blockly/13.4.0/media/`,
         renderer: 'zelos',
         trashcan: true,
@@ -134,7 +137,7 @@ export function BlockWorkspace({
     else loadBlockProgram(editor, initial.current.value);
     const initialRead = readBlockWorkspace(editor, expectedInputs.current);
     acceptedDraft.current = saveBlockWorkspaceDraft(editor);
-    snapshotCallback.current?.(acceptedDraft.current);
+    snapshotCallback.current?.(acceptedDraft.current, false);
     readSignature.current = JSON.stringify(initialRead);
     setIssues(initialRead.issues);
     notify.current = () => {
@@ -151,10 +154,14 @@ export function BlockWorkspace({
         setRevision((previous) => previous + 1);
         return;
       }
+      const layoutChanged = JSON.stringify(nextDraft) !== JSON.stringify(acceptedDraft.current);
       acceptedDraft.current = nextDraft;
       const nextSignature = JSON.stringify(result);
       setRevision((previous) => previous + 1);
-      if (nextSignature === readSignature.current) return;
+      if (nextSignature === readSignature.current) {
+        if (layoutChanged) snapshotCallback.current?.(nextDraft, true);
+        return;
+      }
       readSignature.current = nextSignature;
       if (result.program) lastProgram.current = result.program;
       setIssues(result.issues);
@@ -171,12 +178,18 @@ export function BlockWorkspace({
         editor.getBlockById(event.newElementId)
       )
         setSelectedId(event.newElementId);
-      if (event.isUiEvent || event.type === Blockly.Events.FINISHED_LOADING || disposed || queued)
+      const dragEnded = 'isStart' in event && event.isStart === false;
+      if (
+        (event.isUiEvent && !dragEnded) ||
+        event.type === Blockly.Events.FINISHED_LOADING ||
+        disposed ||
+        queued
+      )
         return;
       queued = true;
       queueMicrotask(() => {
         queued = false;
-        if (!disposed) notify.current();
+        if (!disposed && !editor.isDragging()) notify.current();
       });
     };
     editor.addChangeListener(listener);
@@ -193,6 +206,10 @@ export function BlockWorkspace({
       notify.current = () => {};
     };
   }, []);
+  useEffect(() => {
+    allowed.current = allowedKinds;
+    if (editor) editor.updateToolbox(teachingToolbox(allowedKinds));
+  }, [editor, allowedKinds]);
   useEffect(() => {
     if (!editor) return;
     let signature = '';
@@ -321,6 +338,10 @@ export function BlockWorkspace({
   };
   const add = () => {
     if (!editor || disabled) return;
+    if (!allowed.current.includes(addKind)) {
+      setNotice('该积木尚未解锁，请在“积木权限”中查看学习入口。');
+      return;
+    }
     if (addKind === 'main' && blocks.some((block) => block.type === 'cv_main')) {
       setNotice('工作区只能有一个主程序。');
       return;
@@ -435,13 +456,18 @@ export function BlockWorkspace({
               onChange={(event) => setAddKind(event.target.value as TeachingBlockKind)}
             >
               {BLOCK_TYPES.map((kind) => (
-                <option key={kind} value={kind}>
+                <option key={kind} value={kind} disabled={!allowedKinds.includes(kind)}>
                   {BLOCK_LABELS[kind]}
+                  {allowedKinds.includes(kind) ? '' : '（未解锁）'}
                 </option>
               ))}
             </select>
           </label>
-          <button type="button" onClick={add} disabled={disabled}>
+          <button
+            type="button"
+            onClick={add}
+            disabled={disabled || !allowedKinds.includes(addKind)}
+          >
             添加积木
           </button>
         </div>

@@ -1,0 +1,93 @@
+{
+  "version": "1.0.0",
+  "packageRef": {
+    "id": "content.c.p05",
+    "version": "1.0.0"
+  },
+  "questions": [
+    {
+      "exerciseRef": {
+        "id": "exercise.c.echo",
+        "version": "1.1.0"
+      },
+      "title": "把输入送到输出",
+      "hint": "沿着 x 的值，从输入声明找到输出参数；输出末尾保留换行。",
+      "referenceAnswer": {
+        "outputSource": "x",
+        "constant": "0",
+        "inputStyle": "direct"
+      }
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.c.two-x-plus-three",
+        "version": "1.1.0"
+      },
+      "title": "拆开乘法与加法",
+      "hint": "把乘法放进加法的插槽；交换乘法两侧或引入中间变量也可以。",
+      "referenceAnswer": {
+        "multiplier": "2",
+        "constant": "3",
+        "operation": "+",
+        "operandOrder": "multiplier-first"
+      }
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.c.nonnegative",
+        "version": "1.1.0"
+      },
+      "title": "还原两条分支",
+      "hint": "同一个 if/else 要处理正数、零和负数；反转条件时，也要交换两侧的输出。",
+      "referenceAnswer": {
+        "comparison": ">=",
+        "thenValue": "1",
+        "elseValue": "0"
+      }
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.c.two-loop-sums",
+        "version": "1.1.0"
+      },
+      "title": "还原两种循环",
+      "hint": "分别用 while 和 for 从零累加 1 到 n。遍历方向可以改变，公式不能替代循环。",
+      "referenceAnswer": {
+        "whileInitial": "0",
+        "whileStart": "1",
+        "whileBoundary": "<=",
+        "whileOperation": "+",
+        "forInitial": "0",
+        "forStart": "1",
+        "forBoundary": "<=",
+        "forOperation": "+",
+        "direction": "ascending"
+      }
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.c.increment-at-index",
+        "version": "1.1.0"
+      },
+      "title": "读出、加一、写回",
+      "hint": "读取 values[k] 后加一，再写回同一位置；只输出计算值而不修改数组不能通过。",
+      "referenceAnswer": {
+        "increment": "1"
+      }
+    },
+    {
+      "exerciseRef": {
+        "id": "exercise.c.array-sum",
+        "version": "1.1.0"
+      },
+      "title": "串起数组与累加",
+      "hint": "从零开始，让每个逻辑元素通过循环参与累加；正向或反向遍历均可，空数组不能读取占位元素。",
+      "referenceAnswer": {
+        "initial": "0",
+        "operation": "+",
+        "inputStyle": "direct",
+        "direction": "ascending"
+      }
+    }
+  ]
+}

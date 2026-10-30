@@ -6,6 +6,7 @@ import {
   SCHEMA_VERSION,
   CORE_STORE_NAMES,
   STORE_NAMES,
+  ALL_STORE_NAMES,
   THEME_IDS,
   createMeta,
   defaultAppearance,
@@ -89,8 +90,9 @@ const renamed: Alias = {
 };
 
 describe('SAVE-01 model and store keys', () => {
-  it('fixes exactly eleven out-of-line stores and independent defaults', () => {
-    expect([DB_NAME, DB_VERSION, SCHEMA_VERSION]).toEqual(['c-viz-learning', 2, '2.0.0']);
+  it('fixes eleven projected stores and a separate twelfth physical history store with independent defaults', () => {
+    expect(ALL_STORE_NAMES).toEqual([...STORE_NAMES, 'editHistory']);
+    expect([DB_NAME, DB_VERSION, SCHEMA_VERSION]).toEqual(['c-viz-learning', 3, '3.0.0']);
     expect(STORE_NAMES).toEqual([
       'meta',
       'settings',
@@ -173,7 +175,7 @@ describe('SAVE-01 model and store keys', () => {
 
 describe('closed storage validation', () => {
   for (const example of sample.snapshots) {
-    it(`validates frozen V1 projection ${example.id} and an independent upgraded V2 copy`, () => {
+    it(`validates frozen V1 projection ${example.id} and an independent upgraded V3 copy`, () => {
       const before = structuredClone(example.snapshot);
       expect(() => assertLegacySnapshot(example.snapshot)).not.toThrow();
       expect(validateSnapshot(example.snapshot)).toBe(false);
@@ -184,8 +186,8 @@ describe('closed storage validation', () => {
       assertLegacySnapshot(before);
       expect(upgraded.meta).toEqual({
         ...before.meta,
-        dbVersion: 2,
-        schemaVersion: '2.0.0',
+        dbVersion: 3,
+        schemaVersion: '3.0.0',
         revision: before.meta.revision + 1,
       });
       for (const store of CORE_STORE_NAMES)
@@ -213,7 +215,7 @@ describe('closed storage validation', () => {
     it(`rejects frozen invalid snapshot ${scenario.id} with its dedicated code`, () => {
       const value: unknown = snapshot();
       if (scenario.path)
-        set(value, scenario.path, scenario.id === 'unknown-version' ? '3.0.0' : scenario.value);
+        set(value, scenario.path, scenario.id === 'unknown-version' ? '4.0.0' : scenario.value);
       else {
         const target = pointer(value, scenario.appendTo!);
         const source = pointer(value, scenario.copyFrom!);
@@ -525,7 +527,7 @@ describe('SAVE2 closed six-theme appearance and resource relations', () => {
   });
 });
 
-describe('strict production SAVE1 to SAVE2 recipe', () => {
+describe('strict production SAVE1 to SAVE3 recipe', () => {
   it('preserves each prior display mode and all old rows while adding only defaults and one revision', () => {
     for (const theme of ['system', 'dark', 'light'] as const) {
       const legacy = structuredClone(sample.snapshots[1].snapshot);
@@ -536,8 +538,8 @@ describe('strict production SAVE1 to SAVE2 recipe', () => {
       expect(next.settings.theme).toBe(theme);
       expect(next.meta).toEqual({
         ...before.meta,
-        schemaVersion: '2.0.0',
-        dbVersion: 2,
+        schemaVersion: '3.0.0',
+        dbVersion: 3,
         revision: before.meta.revision + 1,
       });
       for (const store of CORE_STORE_NAMES)

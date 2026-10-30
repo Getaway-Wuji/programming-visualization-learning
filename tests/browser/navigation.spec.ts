@@ -42,8 +42,11 @@ test('public routes preserve content relationships, refresh and browser history'
   await expect(
     page.getByRole('navigation', { name: '当前位置' }).getByRole('link', { name: '变量与表达式' }),
   ).toHaveAttribute('href', '#/courses/chapter.c.values');
+  expect(wasmRequests).toEqual([]);
   await page.getByRole('link', { name: '进入练习工作区' }).click();
   await ready(page, 'PAGE-04');
+  await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
+  expect(wasmRequests.length).toBeGreaterThan(0);
   await expect(page).toHaveURL(/#\/practice\/exercise\.c\.echo$/);
   await page.reload();
   await ready(page, 'PAGE-04');
@@ -69,7 +72,6 @@ test('public routes preserve content relationships, refresh and browser history'
     .getByRole('link', { name: '本地设置' })
     .click();
   await ready(page, 'PAGE-07');
-  expect(wasmRequests).toEqual([]);
   await expect(page.getByRole('link', { name: /登录|注册|排行榜/ })).toHaveCount(0);
 });
 

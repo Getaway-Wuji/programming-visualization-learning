@@ -12,7 +12,7 @@ import type {
   ReverseProjection,
   SourceProvenance,
 } from '../blocks/analysis-types';
-import { reverseAnalysis, UnmappedSourceError } from '../blocks/reverse';
+import { reverseAnalysis, UnmappedSourceError, programStructure } from '../blocks/reverse';
 import { generatedSyntheticRanges, patchBlockSource } from '../blocks/source-patch';
 
 export type AnalysisPort = Pick<AnalysisClient, 'analyze' | 'cancel'>;
@@ -133,6 +133,7 @@ export class EditDocumentController {
   private workspaceDraft: BlockWorkspaceDraft;
   private generationMode: 'canonical' | 'preserve' = 'canonical';
   private syntheticRanges: { start: number; end: number }[] = [];
+  private restoredWorkspace?: { program: BlockProgram; draft: BlockWorkspaceDraft };
   commentsMoved = false;
   constructor(
     private readonly catalog: ExerciseCatalog,
@@ -209,6 +210,7 @@ export class EditDocumentController {
   private edited(origin: EditDocumentSnapshot['origin']) {
     this.analyzer.cancel();
     this.commentsMoved = false;
+    this.restoredWorkspace = undefined;
     this.state = {
       ...this.state,
       origin,
@@ -223,6 +225,57 @@ export class EditDocumentController {
       diagnostics: [],
       issues: [],
     };
+  }
+  updateWorkspacePresentation(draft: BlockWorkspaceDraft) {
+    this.workspaceDraft = draft;
+    if (this.restoredWorkspace) this.restoredWorkspace.draft = draft;
+    const workspaceSnapshotId = crypto.randomUUID();
+    this.emit({
+      blockDraft: { ...this.state.blockDraft, workspaceSnapshotId },
+      ...(this.state.authoritativeDraft.kind === 'blocks'
+        ? { authoritativeDraft: { kind: 'blocks', workspaceSnapshotId } }
+        : {}),
+    });
+  }
+  restore(
+    text: string,
+    authority: 'code' | 'blocks',
+    draft: BlockWorkspaceDraft,
+    program: BlockProgram | null,
+    canonical?: PreparedSource,
+  ) {
+    this.edited(authority);
+    this.projection = undefined;
+    this.workspaceDraft = draft;
+    this.generationMode =
+      authority === 'blocks' && canonical?.text === text ? 'canonical' : 'preserve';
+    this.syntheticRanges =
+      this.generationMode === 'canonical' && program && canonical
+        ? generatedSyntheticRanges(canonical, program)
+        : [];
+    this.restoredWorkspace = program ? { program, draft } : undefined;
+    const workspaceSnapshotId = crypto.randomUUID();
+    this.state = {
+      ...this.state,
+      codeDraft: text,
+      lastSynced: null,
+      validatedDocumentRevision: null,
+      blockDraft: { workspaceSnapshotId, blocklyVersion: '13.4.0', program },
+      authoritativeDraft:
+        authority === 'code' ? { kind: 'code', text } : { kind: 'blocks', workspaceSnapshotId },
+    };
+    if (authority === 'blocks' && !program) {
+      this.pending = undefined;
+      this.emit({
+        analysisPending: false,
+        syncStatus: 'invalid',
+        validatedDocumentRevision: this.state.identity.documentRevision,
+        issues: [{ reason: 'BLOCK_STRUCTURE', nodeId: null, blockId: null, byteRange: null }],
+      });
+      return;
+    }
+    this.change(this);
+    this.pending = this.analyze(text, this.syntheticRanges, this.generationMode);
   }
   editCode(text: string, changedRange?: { start: number; end: number }) {
     if (this.disposed || text === this.state.codeDraft) return;
@@ -390,7 +443,7 @@ export class EditDocumentController {
         });
         return;
       }
-      const projection = reverseAnalysis(result, text, this.catalog.program.bindings, {
+      let projection = reverseAnalysis(result, text, this.catalog.program.bindings, {
         previous: this.projection,
         stableProgram,
         trustedSyntheticRanges: syntheticRanges,
@@ -407,12 +460,23 @@ export class EditDocumentController {
         return;
       }
       let draft = this.workspaceDraft;
-      if (this.state.authoritativeDraft.kind === 'code') {
+      const restored = this.restoredWorkspace;
+      let rebuilt = false;
+      if (restored && programStructure(restored.program) === programStructure(projection.program)) {
+        projection = reverseAnalysis(result, text, this.catalog.program.bindings, {
+          stableProgram: restored.program,
+          trustedSyntheticRanges: syntheticRanges,
+          generationMode,
+        });
+        draft = restored.draft;
+      } else if (this.state.authoritativeDraft.kind === 'code' || restored) {
         const { draftFromBlockProgram } = await import('../blocks/workspace');
         draft = draftFromBlockProgram(projection.program);
+        rebuilt = !!restored;
       }
       if (this.disposed || this.state.identity !== identity) return;
       this.projection = projection;
+      this.restoredWorkspace = undefined;
       this.workspaceDraft = draft;
       const workspaceSnapshotId = crypto.randomUUID();
       this.emit({
@@ -423,7 +487,8 @@ export class EditDocumentController {
         issues: [],
         validatedDocumentRevision: identity.documentRevision,
         lastSynced: saved(projection),
-        ...(this.state.authoritativeDraft.kind === 'blocks'
+        ...(rebuilt ? { authoritativeDraft: { kind: 'code' as const, text } } : {}),
+        ...(!rebuilt && this.state.authoritativeDraft.kind === 'blocks'
           ? { authoritativeDraft: { kind: 'blocks' as const, workspaceSnapshotId } }
           : {}),
         blockDraft: { workspaceSnapshotId, blocklyVersion: '13.4.0', program: projection.program },

@@ -246,7 +246,7 @@ export function DraftCodeEditor({
       )}
       <p className="source-position">
         编辑稿使用本题第一组输入：<code>{JSON.stringify(document.input.values)}</code>
-        。草稿与积木只在当前会话保留；选择代码或积木可查看对应位置。
+        。已保存的编辑历史可在刷新后选择恢复，未保存内容仅在本次页面保留；选择代码或积木可查看对应位置。
       </p>
     </section>
   );
