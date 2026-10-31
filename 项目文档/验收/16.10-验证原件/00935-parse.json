@@ -1,0 +1,82 @@
+{
+  "request": {
+    "analysisVersion": "1.0.0",
+    "identity": {
+      "contextId": "eebf18e1-5a92-4c19-a4e8-cb6042b6f1f9",
+      "contextRevision": 3,
+      "documentRevision": 2,
+      "editId": "6f49577c-4cb6-487b-97a5-54fc7b74b74a",
+      "operationId": "adc41429-f416-4663-b163-3137eb5fb629"
+    },
+    "input": {
+      "random": null,
+      "specRef": {
+        "id": "input.c.scalar-x",
+        "version": "1.0.0"
+      },
+      "values": {
+        "x": 7
+      }
+    },
+    "kind": "analysisRequest",
+    "refs": {
+      "packageRef": {
+        "id": "content.c.p05",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.c.echo",
+        "version": "1.0.0"
+      },
+      "subsetRef": {
+        "id": "subset.c.p0",
+        "version": "1.0.0"
+      }
+    },
+    "sourceText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    // 中文😀：保留原稿\nprintf(\"%d\\n\", x)\nreturn 0;\n}\n"
+  },
+  "result": {
+    "analysisVersion": "1.0.0",
+    "diagnostics": [
+      {
+        "code": "E_PARSE_INVALID",
+        "details": {
+          "expected": "printf semicolon"
+        },
+        "location": {
+          "byteRange": {
+            "end": 108,
+            "start": 102
+          },
+          "kind": "source"
+        },
+        "origin": "rust",
+        "severity": "error",
+        "stage": "parse"
+      }
+    ],
+    "identity": {
+      "contextId": "eebf18e1-5a92-4c19-a4e8-cb6042b6f1f9",
+      "contextRevision": 3,
+      "documentRevision": 2,
+      "editId": "6f49577c-4cb6-487b-97a5-54fc7b74b74a",
+      "operationId": "adc41429-f416-4663-b163-3137eb5fb629"
+    },
+    "kind": "analysisResult",
+    "refs": {
+      "packageRef": {
+        "id": "content.c.p05",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.c.echo",
+        "version": "1.0.0"
+      },
+      "subsetRef": {
+        "id": "subset.c.p0",
+        "version": "1.0.0"
+      }
+    },
+    "status": "invalid"
+  }
+}

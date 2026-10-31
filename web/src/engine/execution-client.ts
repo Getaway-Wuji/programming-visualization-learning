@@ -52,6 +52,12 @@ export interface ExecutionDependencies extends ModuleDependencies {
   createWorker?: () => Worker;
   decode?: typeof decodeResult;
 }
+const acceptedCases = new WeakMap<ExecuteResult, ExecuteRequest>();
+/** Private production acceptance receipt. No provisional/injected result can mint one. */
+export function acceptedCaseRequest(result: ExecuteResult): ExecuteRequest | null {
+  const request = acceptedCases.get(result);
+  return request ? structuredClone(request) : null;
+}
 interface Operation {
   id: string;
   start: number;
@@ -214,17 +220,24 @@ export class ExecutionClient {
               return;
             }
           }
-          const module = await this.store.load(operation.controller.signal, guard);
           guard();
+          // Fetch the trusted Worker script and WASM concurrently after the
+          // original intent. It cannot execute or accept a reply before posting.
           const worker = this.createWorker();
           operation.worker = worker;
+          let posted = false;
           worker.onerror = (event) => {
             event.preventDefault();
             this.fail(operation, 'E_WORKER_FAILURE');
           };
           worker.onmessageerror = () => this.fail(operation, 'E_PROTOCOL_INVALID');
           worker.onmessage = (event: MessageEvent<unknown>) => {
-            if (this.active !== operation || operation.worker !== worker || operation.responded)
+            if (
+              !posted ||
+              this.active !== operation ||
+              operation.worker !== worker ||
+              operation.responded
+            )
               return;
             void (async () => {
               try {
@@ -281,6 +294,8 @@ export class ExecutionClient {
               }
             })();
           };
+          const module = await this.store.load(operation.controller.signal, guard);
+          guard();
           let buffer: ArrayBuffer | undefined = preparationBuffer;
           if (request) {
             request.remainingMs = Math.floor(1000 - (this.now() - operation.start));
@@ -290,6 +305,7 @@ export class ExecutionClient {
           }
           guard();
           this.state = kind === 'execute' ? 'running' : 'preparing';
+          posted = true;
           worker.postMessage(
             {
               kind,
@@ -426,7 +442,7 @@ export class ExecutionClient {
         this.state = 'failed';
         throw new ExecutionFailure('E_PROTOCOL_INVALID');
       }
-      return await this.begin(
+      const final = await this.begin(
         'execute',
         structuredClone(catalog),
         snapshot,
@@ -439,6 +455,13 @@ export class ExecutionClient {
         commit,
         triggeredAt,
       );
+      if (
+        this === executionClient &&
+        snapshot.mode === 'case' &&
+        final.terminal.status === 'completed'
+      )
+        acceptedCases.set(final, snapshot);
+      return final;
     } catch (error) {
       const code = error instanceof ExecutionFailure ? error.code : 'E_PROTOCOL_INVALID';
       const status =

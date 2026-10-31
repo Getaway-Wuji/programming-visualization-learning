@@ -145,7 +145,7 @@ function serviceModel(snapshot = legacy()) {
     },
   };
 }
-function newService(source = serviceModel()) {
+function newService(source = serviceModel(), readingReady?: Promise<void>) {
   const catalog = p05Catalog();
   const oldReading = JSON.parse(
     readFileSync('web/public/content/reading/course-reading-1.0.0.json', 'utf8'),
@@ -157,7 +157,10 @@ function newService(source = serviceModel()) {
   } as CourseReading;
   const service = new LearningService({
     openStorage: async () => source.client,
-    loadReading: async () => reading,
+    loadReading: async () => {
+      if (readingReady) await readingReady;
+      return reading;
+    },
     loadPractice: async () => catalog,
     clock: () => p05At,
   });
@@ -165,6 +168,39 @@ function newService(source = serviceModel()) {
 }
 
 describe('P0.5-09 exact predecessor compatibility', () => {
+  it('an existing P05 archive recovers a transient publication mismatch after its delayed verified catalog loads without minting facts', async () => {
+    const warm = p05Empty();
+    warm.settings.goalTemplate = { revision: 1, targets: { exercise: 1, lesson: 1, case: 0 } };
+    let resolveReading!: () => void;
+    const reading = new Promise<void>((resolve) => {
+      resolveReading = resolve;
+    });
+    const t = newService(serviceModel(warm), reading);
+    // Native storage rejects downgrading an existing P05 archive to the
+    // independent old-case package while the current catalog is still loading.
+    t.source.fake.switchReviewedCaseRelease.mockRejectedValue(
+      new StorageError('S_CONTENT_INCOMPATIBLE'),
+    );
+    const before = t.source.data;
+    await t.service.start();
+    expect(t.service.getState()).toMatchObject({
+      status: 'unsaved',
+      errorCode: 'S_CONTENT_INCOMPATIBLE',
+    });
+    resolveReading();
+    await vi.waitFor(() => expect(t.service.getState().practiceStatus).toBe('ready'));
+    await t.service.refresh({ preserveOutcome: true });
+    expect(t.service.getState()).toMatchObject({
+      status: 'ready',
+      errorCode: null,
+      pendingCount: 0,
+      capabilities: { learning: true },
+    });
+    for (const key of ['progress', 'receipts', 'ledger', 'dailyFacts', 'goals'] as const)
+      expect(t.source.data[key]).toEqual(before[key]);
+    expect(t.source.fake.commitOnce).not.toHaveBeenCalled();
+    t.service.dispose();
+  });
   it('pins the actual immutable old course/reading/practice/authorization/case bytes', () => {
     const manifest = JSON.parse(
       readFileSync('content/learning/p05-predecessors-1.0.0.json', 'utf8'),

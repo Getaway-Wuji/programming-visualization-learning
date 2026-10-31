@@ -172,7 +172,10 @@ test('13.5 native reconstruction: wrong answer, real pass, quota retry and share
   await open(page);
   await action(page, '提交练习').click();
   await expect(panel(page)).toHaveAttribute('data-state', 'unmet');
-  expect((await archive(page)).progress).toEqual([]);
+  const failedProgress = (await archive(page)).progress;
+  expect(failedProgress.filter((row) => row.eventType !== 'exercise.attempt-evaluated')).toEqual(
+    [],
+  );
   const print = await buildEcho(page);
   await selectBlock(page, print);
   await blockWorkspace(page).getByRole('textbox', { name: '输出格式', exact: true }).fill('%d');
@@ -188,6 +191,7 @@ test('13.5 native reconstruction: wrong answer, real pass, quota retry and share
         window as unknown as { __reconstructionFault: { armed: boolean } }
       ).__reconstructionFault.armed = true;
     });
+  const progressBeforePass = (await archive(page)).progress;
   await action(page, '提交练习').click();
   await expect(panel(page)).toHaveAttribute('data-state', 'passed');
   await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(
@@ -195,7 +199,7 @@ test('13.5 native reconstruction: wrong answer, real pass, quota retry and share
     p05CourseRelease.registered ? 'unsaved' : saved,
   );
   if (p05CourseRelease.registered) {
-    expect((await archive(page)).progress).toEqual([]);
+    expect((await archive(page)).progress).toEqual(progressBeforePass);
     await page.evaluate(() => {
       (
         window as unknown as { __reconstructionFault: { armed: boolean } }

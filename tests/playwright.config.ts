@@ -6,11 +6,13 @@ export default defineConfig({
   testMatch: '**/*.spec.ts',
   // Independent interpreter/migration harnesses use their own runners on 4181 / 4182 / 4188.
   testIgnore: [
+    '**/phase2-performance.spec.ts',
     '**/algorithm-engine.spec.ts',
     '**/memory-engine.spec.ts',
     '**/notebook-migration.spec.ts',
     '**/scheduler-migration.spec.ts',
     '**/achievement-migration.spec.ts',
+    '**/challenge-migration.spec.ts',
   ],
   fullyParallel: false,
   workers: 1,

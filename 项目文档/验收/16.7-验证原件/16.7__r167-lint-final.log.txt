@@ -1,0 +1,32 @@
+
+D:\Files\Downloads\编程可视化教学平台\tests\browser\structures.spec.ts
+  162:9  error  The value assigned to 'outcome' is not used in subsequent statements  no-useless-assignment
+
+D:\Files\Downloads\编程可视化教学平台\web\src\structures\StructurePage.tsx
+  27:14  error  Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. This value was memoized in source but not in compilation output.
+
+D:\Files\Downloads\编程可视化教学平台\web\src\structures\StructurePage.tsx:27:14
+  25 |     { view, result, request, status } = snapshot;
+  26 |   const [draft, setDraft] = useState(spec.defaultDraft),
+> 27 |     parsed = useMemo(() => parseOperations(spec, draft), [spec, draft]),
+     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Could not preserve existing memoization
+  28 |     prepared = useMemo(
+  29 |       () => prepareStructure(spec, parsed.valid ? draft : spec.defaultDraft),
+  30 |       [spec, draft, parsed.valid],                       react-hooks/preserve-manual-memoization
+  27:65  error  Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. This dependency may be mutated later, which could cause the value to change unexpectedly.
+
+D:\Files\Downloads\编程可视化教学平台\web\src\structures\StructurePage.tsx:27:65
+  25 |     { view, result, request, status } = snapshot;
+  26 |   const [draft, setDraft] = useState(spec.defaultDraft),
+> 27 |     parsed = useMemo(() => parseOperations(spec, draft), [spec, draft]),
+     |                                                                 ^^^^^ This dependency may be modified later
+  28 |     prepared = useMemo(
+  29 |       () => prepareStructure(spec, parsed.valid ? draft : spec.defaultDraft),
+  30 |       [spec, draft, parsed.valid],  react-hooks/preserve-manual-memoization
+
+✖ 3 problems (3 errors, 0 warnings)
+

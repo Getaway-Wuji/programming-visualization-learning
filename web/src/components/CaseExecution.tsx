@@ -18,7 +18,9 @@ import {
   type PreparedSource,
   type CaseInput,
 } from '../engine/execution-client';
-import type { ByteRange, ExecuteResult } from '../engine/protocol';
+import type { ByteRange, ExecuteResult, ExecuteRequest } from '../engine/protocol';
+import { ExportPanel } from '../snapshot-export/ExportPanel';
+import type { CaptureContext } from '../snapshot-export/types';
 import { DiagnosticPanel } from '../diagnostics/DiagnosticPanel';
 import {
   defaultDraft,
@@ -36,6 +38,8 @@ import { Workbench, type WorkbenchHandle } from '../workbench/Workbench';
 import { createCaseViewSession } from '../learning/case-authority';
 import type { VerifiedFact } from '../learning/authority';
 import '../learning/rewards.css';
+import { createChallengeSession, type ChallengeSession } from '../challenges/authority';
+import { ChallengePanel } from '../challenges/ChallengePanel';
 
 const labels: Record<string, string> = {
   completed: '程序正常结束',
@@ -65,6 +69,12 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
   const [catalog, setCatalog] = useState<ExecutionCatalog>();
   const [source, setSource] = useState<PreparedSource>();
   const [result, setResult] = useState<ExecuteResult>();
+  const [exportRun, setExportRun] = useState<{
+    request: ExecuteRequest;
+    result: ExecuteResult;
+    token: number;
+    epoch: number;
+  } | null>(null);
   const [diagnosticFocus, setDiagnosticFocus] = useState<{
     runId: string;
     range: ByteRange;
@@ -79,6 +89,7 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
   const [preparedInput, setPreparedInput] = useState<CaseInput>();
   const [inputIssues, setInputIssues] = useState<readonly InputIssue[]>([]);
   const [watch, setWatch] = useState<ReturnType<typeof createCaseViewSession> | null>(null);
+  const [challengeRun, setChallengeRun] = useState<ChallengeSession | null>(null);
   const [coverage, setCoverage] = useState({ seen: 0, total: 0, complete: false });
   const [viewSave, setViewSave] = useState<
     'incomplete' | 'saving' | 'saved' | 'unsaved' | 'unavailable'
@@ -147,6 +158,7 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
   }, [watch, player, playerSnapshot.view]);
 
   function resetWatch() {
+    setChallengeRun(null);
     setWatch(null);
     watchFact.current = null;
     setCoverage({ seen: 0, total: 0, complete: false });
@@ -162,6 +174,12 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
     void Promise.resolve()
       .then(async () => {
         if (!mounted || current.token !== token) return;
+        resetWatch();
+        player.invalidate();
+        setResult(undefined);
+        setExportRun(null);
+        setSource(undefined);
+        setPreparedInput(undefined);
         const catalog = caseExecutionCatalog(id);
         if (!catalog) throw new Error('E_CONTENT_MISMATCH');
         const { inputSpec, program } = catalog;
@@ -200,6 +218,7 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
       executionClient.invalidate();
       player.invalidate();
       setResult(undefined);
+      setExportRun(null);
       setSource(undefined);
       setPreparedInput(undefined);
       initializedFor.current = undefined;
@@ -247,6 +266,7 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
     player.invalidate();
     setSource(undefined);
     setResult(undefined);
+    setExportRun(null);
     setPreparedInput(undefined);
     setFailure('');
     setState('unprepared');
@@ -321,6 +341,7 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
     setFailure('');
     setSource(undefined);
     setResult(undefined);
+    setExportRun(null);
     setPreparedInput(undefined);
     const selected = structuredClone({ values: validation.values, random });
     void executionClient
@@ -348,6 +369,7 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
     const epoch = learningState.sessionEpoch;
     resetWatch();
     setResult(undefined);
+    setExportRun(null);
     setFailure('');
     setState('running');
     const request = caseRequest(catalog, source, current, preparedInput);
@@ -368,6 +390,9 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
     void executionClient.execute(request, catalog, display, triggeredAt).then((final) => {
       display(final);
       if (current.token !== token || service.getState().sessionEpoch !== epoch) return;
+      // A provisional render cannot authorize a download; retain only the final boundary.
+      if (final.producer === 'rust' && final.trace)
+        setExportRun({ request: structuredClone(request), result: final, token, epoch });
       try {
         // The display callback is provisional until execute's last deadline guard passes.
         const viewing = createCaseViewSession(
@@ -378,6 +403,13 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
         );
         setWatch(viewing);
         setCoverage(viewing.progress());
+        setChallengeRun(
+          createChallengeSession(
+            catalog,
+            final,
+            () => current.token === token && service.getState().sessionEpoch === epoch,
+          ),
+        );
       } catch {
         setViewSave('unavailable');
       }
@@ -394,11 +426,39 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
       setSource(undefined);
       setPreparedInput(undefined);
       setResult(undefined);
+      setExportRun(null);
       setFailure('');
       setState('cancelled');
       return;
     }
     executionClient.cancel();
+  }
+
+  function exportContext(): CaptureContext | null {
+    const view = player.getSnapshot().view;
+    if (
+      !exportRun ||
+      exportRun.result !== result ||
+      exportRun.token !== session.current.token ||
+      exportRun.epoch !== service.getState().sessionEpoch ||
+      exportRun.request.subjectRef?.id !== id ||
+      exportRun.request.source.text !== source?.text ||
+      !view.state ||
+      !view.identity ||
+      view.identity.runId !== exportRun.result.identity.runId
+    )
+      return null;
+    return {
+      kind: 'case',
+      title: catalog?.subject.title ?? id,
+      observationId: id,
+      mode: 'basic',
+      request: exportRun.request,
+      result: exportRun.result,
+      view,
+      diagnosticFocus:
+        diagnosticFocus?.runId === exportRun.result.identity.runId ? diagnosticFocus.range : null,
+    };
   }
 
   async function confirmView() {
@@ -514,6 +574,7 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
               player.invalidate();
               setState('preparing');
               setResult(undefined);
+              setExportRun(null);
               setSource(undefined);
               setPreparedInput(undefined);
               setFailure('');
@@ -577,6 +638,24 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
                   result={result}
                   input={preparedInput?.values ?? {}}
                   bindings={catalog?.program.bindings ?? []}
+                />
+                <ExportPanel
+                  available={Boolean(
+                    exportRun && exportRun.result === result && playerSnapshot.view.state,
+                  )}
+                  port={{
+                    read: exportContext,
+                    pause: () => player.pause(),
+                    subscribe: player.subscribe,
+                  }}
+                />
+                <ChallengePanel
+                  key={challengeRun?.result.identity.runId ?? 'waiting'}
+                  session={challengeRun}
+                  source={source.text}
+                  result={result}
+                  player={player}
+                  snapshot={playerSnapshot}
                 />
                 <div className="panel-body" aria-live="polite">
                   <h4>本次完整运行结果</h4>

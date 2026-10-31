@@ -1,0 +1,88 @@
+{
+  "captureVersion": "08.4-browser-capture@1",
+  "evidenceLevel": "production-ui-real-worker",
+  "key": "array-single",
+  "caseId": "case.c.array-traversal",
+  "project": "chrome",
+  "browserVersion": "156.0.8078.76",
+  "route": "#/visualize/case.c.array-traversal",
+  "displayedSource": "#include <stdio.h>\nint main(void) {\n    int n = 1;\n    int values[1] = {-999};\n    int sum = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        sum = sum + values[i];\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n",
+  "readOnly": true,
+  "values": {
+    "values": [
+      -999
+    ]
+  },
+  "stdout": "-999\n",
+  "terminal": "completed",
+  "steps": 19,
+  "identity": {
+    "contextId": "18f4ef14-c76b-47fe-93f3-073679e5467a",
+    "contextRevision": 2,
+    "runId": "c36462ad-c264-4240-ab55-d5cb2e27e0e2",
+    "sourceRevision": 2,
+    "submissionId": "2cc5eb8f-7447-495c-85ff-23cbb47633db",
+    "testCaseKey": null
+  },
+  "sourceKind": "public-content-original",
+  "initialCursor": 0,
+  "initialView": {
+    "cursor": 0,
+    "viewCursor": 0,
+    "status": "ready",
+    "kind": "",
+    "output": "",
+    "events": "本步读写与比较本步没有读写或比较观测。",
+    "scalars": [],
+    "arrays": [],
+    "counters": {
+      "comparisons": "0",
+      "scalarWrites": "0",
+      "arrayWrites": "0",
+      "swaps": "0"
+    },
+    "marks": [],
+    "terminalMarkCount": 0
+  },
+  "walk": null,
+  "rates": [],
+  "replay": null,
+  "storage": {
+    "storeNames": [
+      "achievements",
+      "aliases",
+      "appearance",
+      "appearanceAssets",
+      "avatar",
+      "dailyFacts",
+      "editHistory",
+      "goals",
+      "knowledgeMarks",
+      "ledger",
+      "meta",
+      "progress",
+      "receipts",
+      "reviewCards",
+      "settings"
+    ],
+    "beforeSha256": "0c9a3b01f14a01bd4f22edf88648744e077cd67afc11d8b42666b7ff787cd09f",
+    "afterSha256": "0c9a3b01f14a01bd4f22edf88648744e077cd67afc11d8b42666b7ff787cd09f",
+    "unchanged": true,
+    "scope": "native-fifteen-stores+localStorage+sessionStorage"
+  },
+  "worker": {
+    "kind": "execute",
+    "moduleSeen": true,
+    "responseOk": true,
+    "terminated": true,
+    "operationId": "1bde255b-97c6-45ad-af72-d3aee23e6fa4",
+    "responseOperationId": "1bde255b-97c6-45ad-af72-d3aee23e6fa4",
+    "url": "http://127.0.0.1:4178/assets/execution.worker-FvddZkgL.js"
+  },
+  "requestByteLength": 1396,
+  "resultByteLength": 22877,
+  "requestSha256": "edf2fb1782b098c51ba747eca38d1f7006b0f1f330238ca33dd780fe52590701",
+  "resultSha256": "3dd843b80d5308983d55a040a1be25fbc955889f7331d1f56716a8d1f6474e93",
+  "catalogSha256": "ec46ee233b43271b1b31de3d6bf9d730d530c3c3dc2da5ceba67d7c9c1dfe535",
+  "sourceSha256": "cd3071a51237722988ea749846db3801690cf5b91700c52a441298cec9dfe222"
+}

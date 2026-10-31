@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+const file='web/src/algorithms/AlgorithmPage.tsx'; let text=fs.readFileSync(file,'utf8');
+const arrayStart=text.indexOf('const valueText ='),arrayEnd=text.indexOf('function SortWorkspace(');
+fs.writeFileSync('web/src/algorithms/SortArray.tsx',`import type { CSSProperties } from 'react';\nimport type { AlgorithmObject, AlgorithmStep } from '../engine/algorithm-protocol';\nimport { slotValue, writtenSlots } from './presentation';\n\n`+text.slice(arrayStart,arrayEnd).replace('const valueText =','export const valueText =').replace('function SortArray(','export function SortArray('));
+text=text.slice(0,arrayStart)+text.slice(arrayEnd);
+text=text.replace('  type CSSProperties,\n','').replace("import type { AlgorithmObject, AlgorithmStep } from '../engine/algorithm-protocol';\n",'').replace('  sortCatalog,\n  sortCases,','  sortCatalogFor,\n  allSortCases,').replace("import { changedValues, slotValue, sortExplanation, writtenSlots } from './presentation';","import { sortExplanation } from './presentation';\nimport { SortState } from './SortState';");
+text=text.replace('  const state = view.state;\n  const array = state?.objects.find((object) => object.name === \'values\'),\n    counts = state?.objects.find((object) => object.name === \'counts\');\n  const active = Boolean(state);\n  const changes = state ? changedValues(explanation?.step ?? null, state) : [];','  const state = view.state;\n  const active = Boolean(state);\n  const sortCatalog = sortCatalogFor(spec);');
+const start=text.indexOf('                <div className="step-counters"'),end=text.indexOf('                {terminal &&',start);
+text=text.slice(0,start)+`                <SortState view={view} result={result!} inputLength={request?.input.length ?? 0} recursive={Boolean(spec.knowledgeConcepts)} />\n`+text.slice(end);
+text=text.replace('当前案例不提供挑战、双算法对比或快照导出。','当前案例不提供挑战或快照导出；归并与快速可进入同数据对比。').replace('{sortCases.map','{allSortCases.map');
+text=text.replace('      <nav className="inline-actions" aria-label="切换C++排序案例">','      {spec.knowledgeConcepts && <p><Link className="text-link" to="/compare?pair=cpp-recursive">归并与快速 · 同数据对比 →</Link></p>}\n      <nav className="inline-actions" aria-label="切换C++排序案例">');
+fs.writeFileSync(file,text);

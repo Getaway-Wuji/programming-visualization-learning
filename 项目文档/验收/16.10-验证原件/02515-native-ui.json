@@ -1,0 +1,388 @@
+{
+  "label": "synchronized-native-undo-redo",
+  "browser": "chrome",
+  "phase": "ready",
+  "sync": "synced",
+  "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 撤销前保留😀\n/* 内部注释保留😀 */\n    printf(\"[%d]\\n\", x); // 尾部注释保留\nreturn 0;\n}\n",
+  "archive": {
+    "achievements": [],
+    "aliases": [],
+    "appearance": [
+      {
+        "preset": "minimal",
+        "themeOverrides": {
+          "minimal": {
+            "accentColor": null
+          },
+          "cute": {
+            "accentColor": null
+          },
+          "glass": {
+            "accentColor": null
+          },
+          "soft": {
+            "accentColor": null
+          },
+          "cool": {
+            "accentColor": null
+          },
+          "tech": {
+            "accentColor": null
+          }
+        },
+        "blockWorkspace": "show",
+        "layout": {
+          "sidebar": "expanded",
+          "workbenchMode": "standard",
+          "splitRatios": {
+            "practice": 50,
+            "visualize": 35,
+            "review": 35
+          }
+        },
+        "background": {
+          "assetId": null,
+          "visible": false,
+          "fit": "cover",
+          "position": "center",
+          "overlayOpacity": 75
+        }
+      }
+    ],
+    "appearanceAssets": [],
+    "avatar": [
+      {
+        "presetId": "avatar.basic.01",
+        "accentColor": "#168A72"
+      }
+    ],
+    "dailyFacts": [],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "103acbc9-5e04-4053-8812-015380e36adb",
+        "writerId": "586c74fc-a61d-4309-8994-cf8e4498b7b4",
+        "generation": "daf6a9f8-932e-4748-88e9-9ec521b3abab",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:48:35.536Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "blocks",
+        "documentRevision": 5,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 撤销前保留😀\n/* 内部注释保留😀 */\n    printf(\"[%d]\\n\", x); // 尾部注释保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"[%d]\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 5
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "32363057-30f1-44f5-b0b6-7e936c16fa6b",
+        "writerId": "586c74fc-a61d-4309-8994-cf8e4498b7b4",
+        "generation": "daf6a9f8-932e-4748-88e9-9ec521b3abab",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:48:35.293Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "blocks",
+        "documentRevision": 3,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 撤销前保留😀\n/* 内部注释保留😀 */\n    printf(\"[%d]\\n\", x); // 尾部注释保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"[%d]\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 3
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "56f1b12b-32dd-4961-80f0-735c4cfa562d",
+        "writerId": "586c74fc-a61d-4309-8994-cf8e4498b7b4",
+        "generation": "daf6a9f8-932e-4748-88e9-9ec521b3abab",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:48:35.436Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "blocks",
+        "documentRevision": 4,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 撤销前保留😀\n/* 内部注释保留😀 */\n    printf(\"%d\\n\", x); // 尾部注释保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 4
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "58270362-05cc-49f6-ae63-fcd79532f7c2",
+        "writerId": "586c74fc-a61d-4309-8994-cf8e4498b7b4",
+        "generation": "daf6a9f8-932e-4748-88e9-9ec521b3abab",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:48:35.018Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 撤销前保留😀\nprintf(/* 内部注释保留😀 */\"%d\\n\", x); // 尾部注释保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 2
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "cf6f5fc7-bb54-44fb-b348-c8128a3463b8",
+        "writerId": "586c74fc-a61d-4309-8994-cf8e4498b7b4",
+        "generation": "daf6a9f8-932e-4748-88e9-9ec521b3abab",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:48:35.733Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "blocks",
+        "documentRevision": 7,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 撤销前保留😀\n/* 内部注释保留😀 */\n    printf(\"[%d]\\n\", x); // 尾部注释保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"[%d]\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 7
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "e69278ef-d9fc-4225-956c-9592e15e14a6",
+        "writerId": "586c74fc-a61d-4309-8994-cf8e4498b7b4",
+        "generation": "daf6a9f8-932e-4748-88e9-9ec521b3abab",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:48:34.796Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 1
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "ff2322f8-b07f-40d8-9170-e334469d3a5d",
+        "writerId": "586c74fc-a61d-4309-8994-cf8e4498b7b4",
+        "generation": "daf6a9f8-932e-4748-88e9-9ec521b3abab",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:48:35.635Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "blocks",
+        "documentRevision": 6,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 撤销前保留😀\n/* 内部注释保留😀 */\n    printf(\"%d\\n\", x); // 尾部注释保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 6
+      }
+    ],
+    "goals": [],
+    "knowledgeMarks": [],
+    "ledger": [],
+    "meta": [
+      {
+        "schemaVersion": "7.0.0",
+        "dbVersion": 7,
+        "generation": "daf6a9f8-932e-4748-88e9-9ec521b3abab",
+        "revision": 3,
+        "timeZone": "Asia/Shanghai",
+        "createdAt": "2026-10-31T09:48:34.610Z",
+        "activePackageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "progress": [],
+    "receipts": [],
+    "reviewCards": [],
+    "settings": [
+      {
+        "theme": "light",
+        "reducedMotion": "system",
+        "playbackRate": 1,
+        "goalTemplate": {
+          "revision": 1,
+          "targets": {
+            "exercise": 1,
+            "lesson": 1,
+            "case": 0
+          }
+        }
+      }
+    ]
+  },
+  "captures": [
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "a175f52e-428c-4df9-94fb-fab4f544e4cd",
+      "responseOperationId": "a175f52e-428c-4df9-94fb-fab4f544e4cd",
+      "catalogJson": null,
+      "requestBytes": 610,
+      "responseBytes": 2714
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "af7c508f-71f5-4946-a506-8f05d8dd07e7",
+      "responseOperationId": "af7c508f-71f5-4946-a506-8f05d8dd07e7",
+      "catalogJson": null,
+      "requestBytes": 703,
+      "responseBytes": 3732
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "371b0c48-d56d-41ea-893f-f727b3714b78",
+      "responseOperationId": "371b0c48-d56d-41ea-893f-f727b3714b78",
+      "catalogJson": null,
+      "requestBytes": 711,
+      "responseBytes": 3795
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "93f2d238-914b-4a81-b0ae-9bda836e038f",
+      "responseOperationId": "93f2d238-914b-4a81-b0ae-9bda836e038f",
+      "catalogJson": null,
+      "requestBytes": 709,
+      "responseBytes": 3793
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "f5cac79b-1559-4367-ba0a-be646d7700cd",
+      "responseOperationId": "f5cac79b-1559-4367-ba0a-be646d7700cd",
+      "catalogJson": null,
+      "requestBytes": 711,
+      "responseBytes": 3795
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "acea0dfe-eb93-4fbf-b1f3-09d1b4fc7b48",
+      "responseOperationId": "acea0dfe-eb93-4fbf-b1f3-09d1b4fc7b48",
+      "catalogJson": null,
+      "requestBytes": 709,
+      "responseBytes": 3793
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "5e1a4718-2f0b-4434-bdb8-e9e60afba68e",
+      "responseOperationId": "5e1a4718-2f0b-4434-bdb8-e9e60afba68e",
+      "catalogJson": null,
+      "requestBytes": 711,
+      "responseBytes": 3795
+    }
+  ],
+  "runs": []
+}

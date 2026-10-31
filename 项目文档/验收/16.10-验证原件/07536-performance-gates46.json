@@ -1,0 +1,407 @@
+{
+  "task": "16.10",
+  "release": {
+    "path": "content/c/p0/blockly-release-1.0.46.json",
+    "bytes": 48696,
+    "sha256": "ade4ca040a639ee3af32b8c08f0cf3d81fd9f95f8830c037b18ee9766c33fb63"
+  },
+  "passed": true,
+  "report": {
+    "path": ".artifacts/16.10/r1610-perf-formal46-second.json",
+    "bytes": 6507,
+    "sha256": "9aada30341e1df45d1be6e4655c0b3e5e8274e8f07603be13d56278fb885b121"
+  },
+  "source": {
+    "path": ".artifacts/16.10/r1610-perf-formal46-second-sources.json",
+    "bytes": 1868,
+    "sha256": "e4a45973eac1532e2536510f95a51e7f7c19d3d5dfabd1e034fd1f68c2861e16"
+  },
+  "measurements": {
+    "path": ".artifacts/16.10/clean-workspace/.artifacts/11.4/r1610-perf-formal46-second/measurements.json",
+    "bytes": 4045446,
+    "sha256": "b8237dbe0d180379016467fc9cf1e7f4ef34b26f77c45938881cf833dd196478"
+  },
+  "playback": {
+    "path": ".artifacts/16.10/clean-workspace/.artifacts/11.4/r1610-perf-formal46-second/playback.json",
+    "bytes": 408544,
+    "sha256": "562a06b3d10b74ce5033b81350f1cfb7583abb1c774d5babb2553ac59ac9e863"
+  },
+  "navigation": {
+    "n": 110,
+    "min": 288.90000000596046,
+    "median": 588.1999999880791,
+    "p95": 979.9000000059605,
+    "max": 1008.3000000119209
+  },
+  "execution": {
+    "n": 120,
+    "min": 79.10000002384186,
+    "median": 500.09999999403954,
+    "p95": 860.3000000119209,
+    "max": 882
+  },
+  "groups": [
+    {
+      "id": "c-bubble30",
+      "first-context": {
+        "n": 10,
+        "maxMs": 711.0999999940395
+      },
+      "warm-module": {
+        "n": 10,
+        "maxMs": 496
+      }
+    },
+    {
+      "id": "visible-practice-bubble6",
+      "first-context": {
+        "n": 10,
+        "maxMs": 882
+      },
+      "warm-module": {
+        "n": 10,
+        "maxMs": 733
+      }
+    },
+    {
+      "id": "c-pair30",
+      "first-context": {
+        "n": 10,
+        "maxMs": 878.2000000178814
+      },
+      "warm-module": {
+        "n": 10,
+        "maxMs": 746.2000000178814
+      }
+    },
+    {
+      "id": "cpp-pair30",
+      "first-context": {
+        "n": 10,
+        "maxMs": 696.1000000238419
+      },
+      "warm-module": {
+        "n": 10,
+        "maxMs": 527.3999999761581
+      }
+    },
+    {
+      "id": "memory-hanoi5",
+      "first-context": {
+        "n": 10,
+        "maxMs": 275.89999997615814
+      },
+      "warm-module": {
+        "n": 10,
+        "maxMs": 96.40000000596046
+      }
+    },
+    {
+      "id": "cpp-quick30-sorted",
+      "first-context": {
+        "n": 10,
+        "maxMs": 493.59999999403954
+      },
+      "warm-module": {
+        "n": 10,
+        "maxMs": 329.2000000178814
+      }
+    }
+  ],
+  "transactions": 120,
+  "actualRustExecutions": 260,
+  "requiredAnalyses": 100,
+  "original500GroupDeviations": 60,
+  "group800600Deviations": 27,
+  "criterion": "All single executions include actual original intent→full acceptance→two-rAF under original800 cold/600 warm. Compound continuous partitions omit no time and include mandatory analysis/binding/render; full compound group remains under original1000. Original500 and whole-group800/600 deviations retained; not an assertion that every group met500/600.",
+  "playbackCases": [
+    {
+      "id": "c-pair30",
+      "stableDurationMs": 30000,
+      "rate": 4,
+      "cursorStart": 16,
+      "cursorEnd": 243,
+      "applicationPipelineUpperBoundMs": {
+        "n": 228,
+        "min": 2.199999988079071,
+        "median": 4.800000011920929,
+        "p95": 7.0999999940395355,
+        "max": 9.700000017881393
+      },
+      "rafGapMs": {
+        "n": 1798,
+        "min": 13.900000000001455,
+        "median": 16.699999999999818,
+        "p95": 16.800000000000182,
+        "max": 19.299999999999272
+      },
+      "over33_3Ratio": 0,
+      "drawEvents": 233,
+      "paintEvents": 264,
+      "screenshotFrames": 230,
+      "distinctEncodedScreenshots": 230,
+      "allSequential": true,
+      "allForeground": true,
+      "passed": true
+    },
+    {
+      "id": "cpp-pair30",
+      "stableDurationMs": 30000,
+      "rate": 4,
+      "cursorStart": 16,
+      "cursorEnd": 240,
+      "applicationPipelineUpperBoundMs": {
+        "n": 225,
+        "min": 1.2000000178813934,
+        "median": 2.4000000059604645,
+        "p95": 3.699999988079071,
+        "max": 4.800000011920929
+      },
+      "rafGapMs": {
+        "n": 1797,
+        "min": 15.700000000000728,
+        "median": 16.699999999999818,
+        "p95": 16.80000000000109,
+        "max": 17.5
+      },
+      "over33_3Ratio": 0,
+      "drawEvents": 233,
+      "paintEvents": 292,
+      "screenshotFrames": 228,
+      "distinctEncodedScreenshots": 226,
+      "allSequential": true,
+      "allForeground": true,
+      "passed": true
+    },
+    {
+      "id": "memory-hanoi5",
+      "stableDurationMs": 30000,
+      "rate": 4,
+      "cursorStart": 16,
+      "cursorEnd": 243,
+      "applicationPipelineUpperBoundMs": {
+        "n": 228,
+        "min": 0.7999999821186066,
+        "median": 1.9000000059604645,
+        "p95": 3.300000011920929,
+        "max": 4
+      },
+      "rafGapMs": {
+        "n": 1797,
+        "min": 13.800000000000182,
+        "median": 16.699999999999818,
+        "p95": 16.80000000000109,
+        "max": 19.600000000000364
+      },
+      "over33_3Ratio": 0,
+      "drawEvents": 236,
+      "paintEvents": 811,
+      "screenshotFrames": 230,
+      "distinctEncodedScreenshots": 230,
+      "allSequential": true,
+      "allForeground": true,
+      "passed": true
+    }
+  ],
+  "inspectedMiddleScreenshots": [
+    {
+      "path": ".artifacts/16.10/clean-workspace/.artifacts/11.4/r1610-perf-formal46-second/c-pair30-middle.png",
+      "bytes": 201036,
+      "sha256": "e4521f3eee390ae7a6e4afa2b40baa2b0679a05e22742e31846800c2f13c7c6c"
+    },
+    {
+      "path": ".artifacts/16.10/clean-workspace/.artifacts/11.4/r1610-perf-formal46-second/cpp-pair30-middle.png",
+      "bytes": 280074,
+      "sha256": "da0165f1c4fd5acb89136b02ee43e1ec7b3c3699f1e44a564148127199ea7faa"
+    },
+    {
+      "path": ".artifacts/16.10/clean-workspace/.artifacts/11.4/r1610-perf-formal46-second/memory-hanoi5-middle.png",
+      "bytes": 204278,
+      "sha256": "e80f1e5f58f7e3b65f85708ddeb097d220ef45c35a15374ff579132f2c1fb43f"
+    }
+  ],
+  "traces": [
+    {
+      "path": ".artifacts/16.10/clean-workspace/.artifacts/11.4/r1610-perf-formal46-second/c-pair30-trace.json.gz",
+      "bytes": 12171332,
+      "sha256": "4a6ca10d9865a6a86f2f31fe82a394aba9b3d0e2c8aec79590d29351be318ab0"
+    },
+    {
+      "path": ".artifacts/16.10/clean-workspace/.artifacts/11.4/r1610-perf-formal46-second/cpp-pair30-trace.json.gz",
+      "bytes": 12892055,
+      "sha256": "98d5fdb4c409b16b07667454332c5990cc02befaccbd25cbf02229468710426f"
+    },
+    {
+      "path": ".artifacts/16.10/clean-workspace/.artifacts/11.4/r1610-perf-formal46-second/memory-hanoi5-trace.json.gz",
+      "bytes": 13838177,
+      "sha256": "93c3d5c43dbf281803421b60e9789baad8e1b3734216398df9dd5c82ae2a086c"
+    }
+  ],
+  "hostQualification": {
+    "measurement": {
+      "checks": {
+        "startQualified": true,
+        "endQualified": true,
+        "referenceMachine": true,
+        "acPower": true,
+        "balancedPowerPlan": true,
+        "referenceRefresh": true,
+        "chronologicalSpan": true,
+        "unchangedActiveDisplayIdentity": true,
+        "unchangedPhysicalPixelDimensions": true,
+        "unchangedPreciseRefresh": true
+      },
+      "satisfied": true,
+      "endpoints": {
+        "start": {
+          "checks": {
+            "present": true,
+            "referenceMachine": true,
+            "acPower": true,
+            "balancedPowerPlan": true,
+            "referenceRefresh": true,
+            "activeDisplayIdentity": true,
+            "physicalPixelDimensions": true,
+            "preciseRefreshMetadata": true,
+            "recordedTime": true
+          },
+          "satisfied": true,
+          "collectedAt": "2026-10-31T09:38:57.5398903Z",
+          "observedRefreshHz": [
+            59.951
+          ],
+          "activeDisplays": [
+            {
+              "identity": "0:81688:0->0:81688:8448",
+              "dimensions": "2560x1440->2560x1440",
+              "refresh": "59951/1000"
+            }
+          ],
+          "schemeGuid": "381b4222-f694-41f0-9685-ff5bb260df2e"
+        },
+        "end": {
+          "checks": {
+            "present": true,
+            "referenceMachine": true,
+            "acPower": true,
+            "balancedPowerPlan": true,
+            "referenceRefresh": true,
+            "activeDisplayIdentity": true,
+            "physicalPixelDimensions": true,
+            "preciseRefreshMetadata": true,
+            "recordedTime": true
+          },
+          "satisfied": true,
+          "collectedAt": "2026-10-31T09:43:09.6864876Z",
+          "observedRefreshHz": [
+            59.951
+          ],
+          "activeDisplays": [
+            {
+              "identity": "0:81688:0->0:81688:8448",
+              "dimensions": "2560x1440->2560x1440",
+              "refresh": "59951/1000"
+            }
+          ],
+          "schemeGuid": "381b4222-f694-41f0-9685-ff5bb260df2e"
+        }
+      },
+      "observedRefreshHz": {
+        "start": [
+          59.951
+        ],
+        "end": [
+          59.951
+        ]
+      },
+      "collectedAt": {
+        "start": "2026-10-31T09:38:57.5398903Z",
+        "end": "2026-10-31T09:43:09.6864876Z"
+      },
+      "boundary": "Both recorded endpoints must satisfy the reference machine, AC power, Balanced GUID and approximately 60 Hz, and preserve the active source/target adapter-ID display paths, physical pixel dimensions and exact rational refresh rates. Display identity is an adapter path, not an EDID serial. Two matching endpoints alone cannot exclude transient changes between captures, prove an idle OS, physical frame presentation, per-sample foreground state or public hosting."
+    },
+    "playback": {
+      "checks": {
+        "startQualified": true,
+        "endQualified": true,
+        "referenceMachine": true,
+        "acPower": true,
+        "balancedPowerPlan": true,
+        "referenceRefresh": true,
+        "chronologicalSpan": true,
+        "unchangedActiveDisplayIdentity": true,
+        "unchangedPhysicalPixelDimensions": true,
+        "unchangedPreciseRefresh": true
+      },
+      "satisfied": true,
+      "endpoints": {
+        "start": {
+          "checks": {
+            "present": true,
+            "referenceMachine": true,
+            "acPower": true,
+            "balancedPowerPlan": true,
+            "referenceRefresh": true,
+            "activeDisplayIdentity": true,
+            "physicalPixelDimensions": true,
+            "preciseRefreshMetadata": true,
+            "recordedTime": true
+          },
+          "satisfied": true,
+          "collectedAt": "2026-10-31T09:43:13.0869255Z",
+          "observedRefreshHz": [
+            59.951
+          ],
+          "activeDisplays": [
+            {
+              "identity": "0:81688:0->0:81688:8448",
+              "dimensions": "2560x1440->2560x1440",
+              "refresh": "59951/1000"
+            }
+          ],
+          "schemeGuid": "381b4222-f694-41f0-9685-ff5bb260df2e"
+        },
+        "end": {
+          "checks": {
+            "present": true,
+            "referenceMachine": true,
+            "acPower": true,
+            "balancedPowerPlan": true,
+            "referenceRefresh": true,
+            "activeDisplayIdentity": true,
+            "physicalPixelDimensions": true,
+            "preciseRefreshMetadata": true,
+            "recordedTime": true
+          },
+          "satisfied": true,
+          "collectedAt": "2026-10-31T09:45:18.6663850Z",
+          "observedRefreshHz": [
+            59.951
+          ],
+          "activeDisplays": [
+            {
+              "identity": "0:81688:0->0:81688:8448",
+              "dimensions": "2560x1440->2560x1440",
+              "refresh": "59951/1000"
+            }
+          ],
+          "schemeGuid": "381b4222-f694-41f0-9685-ff5bb260df2e"
+        }
+      },
+      "observedRefreshHz": {
+        "start": [
+          59.951
+        ],
+        "end": [
+          59.951
+        ]
+      },
+      "collectedAt": {
+        "start": "2026-10-31T09:43:13.0869255Z",
+        "end": "2026-10-31T09:45:18.6663850Z"
+      },
+      "boundary": "Both recorded endpoints must satisfy the reference machine, AC power, Balanced GUID and approximately 60 Hz, and preserve the active source/target adapter-ID display paths, physical pixel dimensions and exact rational refresh rates. Display identity is an adapter path, not an EDID serial. Two matching endpoints alone cannot exclude transient changes between captures, prove an idle OS, physical frame presentation, per-sample foreground state or public hosting."
+    }
+  },
+  "boundary": "Qualified actual reference laptop, AC/Balanced, physical59.951Hz endpoints, Chrome156,1440x900, HTTPS aggregate20/5Mbps/40msRTT/Brotli. Application pipeline and rAF/native CDP drawing separately measured. No claim of physical60fps, idle OS throughout, real WAN/public hosting, other browsers or machines. Heavy packet/trace metadata processing is outside all corresponding timed windows. Earlier failed45/46 matrices retained unchanged."
+}

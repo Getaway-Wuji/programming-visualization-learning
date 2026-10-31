@@ -1,0 +1,173 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/phase2-performance.config.ts",
+      "--grep",
+      "maximum-scale"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\tests\\phase2-performance.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.10/clean-workspace/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.10/clean-workspace/tests/.artifacts/16.10/r1610-perf-pilot-twelfth-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.10/clean-workspace/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "phase2-performance.spec.ts"
+        ],
+        "timeout": 600000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\tests\\.artifacts\\16.10\\r1610-perf-pilot-twelfth-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\tests\\browser",
+        "testIgnore": [],
+        "testMatch": "phase2-performance.spec.ts",
+        "timeout": 600000,
+        "use": {
+          "channel": "chrome",
+          "headless": false,
+          "baseURL": "https://127.0.0.1:4190",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "locale": "zh-CN",
+          "timezoneId": "Asia/Shanghai",
+          "colorScheme": "light",
+          "serviceWorkers": "block",
+          "ignoreHTTPSErrors": false,
+          "launchOptions": {
+            "args": [
+              "--disable-extensions",
+              "--force-device-scale-factor=1",
+              "--no-first-run",
+              "--ignore-certificate-errors-spki-list=pd16AaT4MaIKoTEifJitKttzi4WSN80UfIU5M5qF++A="
+            ]
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": ".artifacts/16.10/r1610-perf-pilot-twelfth.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-performance.mjs --log-prefix .artifacts/11.4/r1610-perf-pilot-twelfth-network",
+      "port": 4190,
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\",
+      "reuseExistingServer": false,
+      "timeout": 60000
+    }
+  },
+  "suites": [
+    {
+      "title": "phase2-performance.spec.ts",
+      "file": "phase2-performance.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "P1 current production navigation and maximum-scale real execution use qualified HTTPS network and unchanged deadlines",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 600000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 41131,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T09:37:08.331Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d9e332158fea48026116-a1915532512a26516f7b",
+          "file": "phase2-performance.spec.ts",
+          "line": 317,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-31T09:36:59.532Z",
+    "duration": 52495.992999999995,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

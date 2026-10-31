@@ -8,6 +8,7 @@ import { cases } from '../navigation';
 import { LearningSaveStatus, useLearning } from '../learning/react';
 import { memoryBugQuestions } from '../memory-bugs/content';
 import type { LedgerEntry } from '../storage/model';
+import { challengeQuestion } from '../challenges/content';
 import { DailyGoalSettings, DailyGoalSummary, GoalHistory } from '../learning/goal-components';
 import {
   AvatarPicture,
@@ -39,6 +40,7 @@ function contentTitle(id: string) {
     cases.find((item) => item.id === id)?.title ??
     bugQuestions.find((item) => item.exerciseRef.id === id)?.title ??
     memoryBugQuestions.find((item) => item.exerciseRef.id === id)?.title ??
+    challengeQuestion(id)?.title ??
     (id.startsWith('local-goal.') ? `${id.slice('local-goal.'.length)} 每日目标` : '旧版本学习内容')
   );
 }
@@ -49,6 +51,7 @@ function rewardTitle(entry: LedgerEntry) {
     'reward.lesson.first-completion': '小节首次完成',
     'reward.case.first-view': '案例首次观看',
     'reward.daily-goal.once': '每日目标达成',
+    'reward.challenge.first-answer': '挑战首次作答',
   }[entry.sourceId];
 }
 

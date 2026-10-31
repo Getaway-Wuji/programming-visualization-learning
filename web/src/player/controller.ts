@@ -22,6 +22,7 @@ export class PlayerController {
   private timerGeneration = 0;
   private rate: number;
   private current: PlayerControllerSnapshot;
+  private advanceGuard: ((view: PlayerSnapshot) => boolean) | undefined;
 
   constructor(initialRate = 1) {
     this.validateRate(initialRate);
@@ -60,6 +61,7 @@ export class PlayerController {
   }
 
   play(): void {
+    if (this.advanceGuard && !this.advanceGuard(this.current.view)) return;
     if (this.current.view.status === 'playing') return;
     const token = this.model.play();
     if (token === null) return;
@@ -80,6 +82,7 @@ export class PlayerController {
   }
 
   step(delta: -1 | 1): void {
+    if (delta === 1 && this.advanceGuard && !this.advanceGuard(this.current.view)) return;
     const { cursor, length } = this.current.view;
     if (cursor === null || (delta !== -1 && delta !== 1)) return;
     const target = cursor + delta;
@@ -93,6 +96,10 @@ export class PlayerController {
     if (this.current.view.cursor === null) return;
     this.cancelTimer();
     if (!this.model.seek(0)) return;
+    if (this.advanceGuard && !this.advanceGuard(this.model.snapshot())) {
+      this.publish();
+      return;
+    }
     const token = this.model.play();
     if (token !== null) this.schedule(token, this.timerGeneration);
     this.publish();
@@ -108,6 +115,15 @@ export class PlayerController {
       if (token !== null) this.schedule(token, this.timerGeneration);
     }
     this.publish();
+  }
+  /** Challenge checkpoints pause the same player; state and reverse deltas stay in its model. */
+  setAdvanceGuard(guard?: (view: PlayerSnapshot) => boolean): void {
+    this.advanceGuard = guard;
+    if (guard && !guard(this.current.view)) this.pause();
+  }
+  seek(cursor: number): void {
+    this.cancelTimer();
+    if (this.model.seek(cursor)) this.publish();
   }
 
   /** Bind only inside the focusable player workspace; native controls keep their keys. */
@@ -161,6 +177,10 @@ export class PlayerController {
       const frameStart = performance.now();
       if (!this.model.tick(token)) return;
       this.publish(frameStart);
+      if (this.advanceGuard && !this.advanceGuard(this.current.view)) {
+        this.pause();
+        return;
+      }
       // A subscriber can synchronously pause, change rate or replace the run.
       if (generation === this.timerGeneration && this.current.view.status === 'playing')
         this.schedule(token, generation);

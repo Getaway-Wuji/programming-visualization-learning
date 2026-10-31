@@ -22,6 +22,9 @@ import { DebugSource } from '../debug/DebugSource';
 import '../memory/memory.css';
 import { useLearning } from '../learning/react';
 import { AchievementStatus, useAchievements } from '../achievements/react';
+import { acceptedMemoryRequest } from '../engine/memory-client';
+import { ExportPanel } from '../snapshot-export/ExportPanel';
+import type { CaptureContext, SnapshotMode } from '../snapshot-export/types';
 
 const observations = [...memoryExamples, ...stackExamples];
 
@@ -156,6 +159,34 @@ export default function MemoryPage() {
     ? new TextDecoder().decode(bytes.slice(0, byteRange.start)).length
     : 0;
   const available = Boolean(view.state);
+  function exportContext(): CaptureContext | null {
+    const current = controller.getSnapshot(),
+      accepted = current.result;
+    if (!accepted?.trace || !current.view.state || current.status === 'running') return null;
+    const request = acceptedMemoryRequest(accepted);
+    if (!request || request.source !== example.source || request.language !== example.language)
+      return null;
+    const tail = current.view.cursor === current.view.length;
+    const terminal = tail && accepted.terminal.code && accepted.terminal.byteRange;
+    const range = terminal || current.hit?.byteRange || current.view.byteRange;
+    return {
+      kind: 'memory-observation',
+      observationId: example.id,
+      title: example.title,
+      mode: mode as SnapshotMode,
+      request,
+      result: accepted,
+      view: current.view,
+      highlightedRange: range || null,
+      highlightReason: terminal
+        ? 'terminal'
+        : current.hit?.byteRange
+          ? 'breakpoint-call-site'
+          : current.view.cursor === 0
+            ? 'initial'
+            : 'executed-step',
+    };
+  }
   return (
     <div
       className="memory-workspace"
@@ -510,6 +541,14 @@ export default function MemoryPage() {
             </div>
           </section>
         }
+      />
+      <ExportPanel
+        available={available && status !== 'running'}
+        port={{
+          read: exportContext,
+          pause: () => controller.pause(),
+          subscribe: controller.subscribe,
+        }}
       />
       {['functions', 'hanoi'].includes(exampleId) && (
         <section

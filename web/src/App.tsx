@@ -33,6 +33,11 @@ const ReviewPage = lazy(() =>
 );
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const MemoryPage = lazy(() => import('./pages/MemoryPage'));
+const ComparisonPage = lazy(() => import('./comparison/ComparisonPage'));
+const AlgorithmPage = lazy(() => import('./algorithms/AlgorithmPage'));
+const StructurePage = lazy(() => import('./structures/StructurePage'));
+const NodeCasePage = lazy(() => import('./node-cases/NodeCasePage'));
+const ClassicPage = lazy(() => import('./classics/ClassicPage'));
 const CompilationPage = lazy(() => import('./compilation/CompilationPage'));
 const BugPage = lazy(() => import('./bugs/BugPanel'));
 const MemoryBugPage = lazy(() => import('./memory-bugs/MemoryBugPage'));
@@ -82,6 +87,11 @@ function AppRoutes() {
             <Route path="/practice/:exerciseId" element={<PracticePage />} />
             <Route path="/practice/:exerciseId/review" element={<ReviewPage />} />
             <Route path="/cases" element={<CasesPage />} />
+            <Route path="/compare" element={<ComparisonPage />} />
+            <Route path="/algorithms/:algorithmId" element={<AlgorithmPage />} />
+            <Route path="/structures/:structureId" element={<StructurePage />} />
+            <Route path="/nodes/:nodeCaseId" element={<NodeCasePage />} />
+            <Route path="/classics/:classicId" element={<ClassicPage />} />
             <Route path="/memory" element={<MemoryPage />} />
             <Route path="/compilation" element={<CompilationPage />} />
             <Route path="/bugs" element={<BugPage />} />

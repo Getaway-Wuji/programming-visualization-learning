@@ -1,0 +1,101 @@
+.structure-workspace {
+  font-variant-numeric: tabular-nums;
+}
+.structure-workspace p {
+  overflow-wrap: anywhere;
+}
+.structure-workspace pre {
+  font-family: Consolas, monospace;
+}
+.structure-input {
+  display: grid;
+  gap: 8px;
+  margin-block: 16px 20px;
+}
+.structure-input > label {
+  font-weight: 600;
+}
+.structure-input > textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px 12px;
+  border: 1px solid var(--p05-control, var(--line));
+  border-radius: 8px;
+  color: var(--p05-text, inherit);
+  background: var(--p05-surface, var(--surface));
+  font:
+    14px/1.6 Consolas,
+    monospace;
+  resize: vertical;
+}
+.structure-input > p {
+  margin: 0;
+}
+.structure-input .inline-actions {
+  margin: 0;
+}
+.structure-input select {
+  max-width: 100%;
+  padding: 6px;
+}
+.structure-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-block: 12px;
+}
+.structure-summary dt {
+  font-size: 13px;
+}
+.structure-summary dd {
+  margin: 4px 0 0;
+  font-weight: 600;
+}
+.structure-slots {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.structure-slots li {
+  padding: 10px;
+  border: 1px solid var(--p05-border, var(--line));
+  border-radius: 6px;
+  display: grid;
+  gap: 4px;
+}
+.structure-slots li[data-valid='true'] {
+  border-left: 4px solid var(--p05-accent, var(--accent));
+}
+.structure-slots li[data-write='true'] {
+  outline: 2px solid var(--p05-accent, var(--accent));
+  outline-offset: 1px;
+}
+.structure-slots small,
+.structure-index {
+  font-size: 12px;
+}
+.structure-slots-stack li {
+  grid-template-columns: 32px minmax(56px, 1fr) minmax(96px, 2fr);
+  align-items: baseline;
+}
+.structure-slots-stack small {
+  grid-column: 2 / -1;
+}
+.structure-slots-circular-queue {
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+}
+.structure-slots-circular-queue li {
+  text-align: center;
+}
+.structure-output {
+  max-height: 240px;
+  overflow: auto;
+}
+.structure-stage:focus-visible {
+  outline: 2px solid var(--p05-accent, currentColor);
+  outline-offset: -2px;
+}
+.structure-workspace > nav {
+  margin-top: 20px;
+}

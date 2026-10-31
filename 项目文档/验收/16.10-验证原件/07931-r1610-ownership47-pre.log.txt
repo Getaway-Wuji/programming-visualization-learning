@@ -1,0 +1,29 @@
+node:internal/errors:986
+  const err = new Error(message);
+              ^
+
+Error: Command failed: git diff --check
+    at genericNodeError (node:internal/errors:986:15)
+    at wrappedFn (node:internal/errors:540:14)
+    at checkExecSyncError (node:child_process:942:11)
+    at execFileSync (node:child_process:978:15)
+    at git (file:///D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/.artifacts/16.10/audit47.mjs:6:87)
+    at file:///D:/Files/Downloads/%E7%BC%96%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0/.artifacts/16.10/audit47.mjs:20:236
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  status: 2,
+  signal: null,
+  output: [
+    null,
+    '项目文档/任务进度与交接.md:324: trailing whitespace.\n' +
+      '+| 16.10 | P1 | [二期整体验收与交接](./任务包/第16步-完善教学交互、算法目录并验收二期.md) | 进行中 | root | 2026-10-31协调唯一派发；6964开工文件/44的298源、28前置验收交接/4083旧原件/24本地ZIP已核；综合当前P1/一期回归、组合性能、兼容及干净交付审计，范围见DEC-P1-027；只本项，Git待协调整块复核 |\r\n',
+    ''
+  ],
+  pid: 26720,
+  stdout: '项目文档/任务进度与交接.md:324: trailing whitespace.\n' +
+    '+| 16.10 | P1 | [二期整体验收与交接](./任务包/第16步-完善教学交互、算法目录并验收二期.md) | 进行中 | root | 2026-10-31协调唯一派发；6964开工文件/44的298源、28前置验收交接/4083旧原件/24本地ZIP已核；综合当前P1/一期回归、组合性能、兼容及干净交付审计，范围见DEC-P1-027；只本项，Git待协调整块复核 |\r\n',
+  stderr: ''
+}
+
+Node.js v24.21.0

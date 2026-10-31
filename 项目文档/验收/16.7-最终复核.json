@@ -1,0 +1,142 @@
+{
+  "task": "16.7",
+  "reviewedAtUtc": "2026-10-31T04:43:35.083Z",
+  "accepted": true,
+  "release": {
+    "path": "content/c/p0/blockly-release-1.0.42.json",
+    "bytes": 43677,
+    "sha256": "5c1a4dc09d40a2e5c5e61970360725cfdde763dbb324b34e39376dd3ff30b1ab"
+  },
+  "sources": 270,
+  "frontend": {
+    "passed": 99,
+    "newStructure": 35,
+    "scope": "5 affected suites, no full frontend/Rust rerun"
+  },
+  "browser": {
+    "uniquePassed": 35,
+    "formalCurrentPassed": 35,
+    "browser": "Chrome156.0.8078.76",
+    "theme": "minimal",
+    "retries": 0,
+    "skipped": 0
+  },
+  "realAlgorithmBoundaryRuns": 16,
+  "structures": {
+    "count": 2,
+    "capacityEach": 5,
+    "integerDomain": [
+      -999,
+      999
+    ],
+    "maxEncodedInput": 30,
+    "maxDraftChars": 1024,
+    "inputGrammar": "Per line 入 signed decimal integer or 出; [] is whole empty sequence",
+    "wire": "IN=[1,value], OUT=[2]; no hidden header",
+    "stack": "Actual top, valid[0,top);5 is boundary, no slot5",
+    "queue": "Actual monotonic head/tail; physical modulo5, quantity display tail-head; empty0/full5",
+    "businessRejections": "Actual FULL/EMPTY continue, full IN still consumes payload",
+    "physicalStates": [
+      "uninitialized",
+      "valid",
+      "written-but-currently-invalid/pending-or-residual",
+      "removed"
+    ],
+    "sameValueWrites": "Actual counters may change without cell delta; no fabricated write highlight",
+    "actualSourceOnly": true,
+    "noFrontendOperationSimulation": true,
+    "engine": "engine.rust.p1",
+    "exec": "1.2.0",
+    "dsl": "1.1.0",
+    "noMemoryStateCast": true,
+    "fullAtomicReverse": true
+  },
+  "visual": {
+    "fail": 0,
+    "warn": 0,
+    "sourceUiLintFail": 0,
+    "sourceUiLintWarn": 1,
+    "defendedSourceWarning": "Inherited chapter number padStart in shared CatalogPages: fixed course order, not new decorative numbering. This task only adds the structure catalog import/component; keep original C course labels."
+  },
+  "observedTimingMax": {
+    "postToResponseMs": 38.400000005960464,
+    "clickToTerminateMs": 80.09999999403954
+  },
+  "rustOnlySeparatelyMeasured": false,
+  "originalCases": {
+    "c": 7,
+    "priorSortCpp": 6,
+    "newStructureCpp": 2
+  },
+  "storage": "SAVE7/DB7/15stores unchanged; no learning facts/rewards/migration",
+  "budgets": "Original interpreter/source/request/trace/output/live-memory/WASM limits and1000ms deadline unchanged",
+  "archive": {
+    "path": "项目文档/验收/16.7-验证原件/index.json",
+    "bytes": 115818,
+    "sha256": "dbc8e1e3a5ca5b284d47954398d5e91d554d54796183619f6dfe2765749b5692",
+    "entries": 426,
+    "verified": 426,
+    "localFailureTraces": 0
+  },
+  "priorArchives": {
+    "16.1": 310,
+    "16.2": 713,
+    "16.3": 799,
+    "16.4": 323,
+    "16.5": 485,
+    "16.6": 266,
+    "16.4-supplement": 6,
+    "preserved": true,
+    "total": 2902
+  },
+  "baseline": {
+    "files": 5678,
+    "unchanged": 5667,
+    "authorizedModified": 11,
+    "reviewedSourcesAtOpen": 257,
+    "deleted": 0
+  },
+  "externalProtected": {
+    "path": "项目文档/交接/2026-10-31-GitHub-Actions失败排查-交接.md",
+    "sha256": "709c620f3300703138b4d1de0e96c2912a6091c3305319e87a5c8d3a6e6ec75c"
+  },
+  "links": {
+    "fileCount": 11,
+    "checked": 809,
+    "pending": []
+  },
+  "evidence": {
+    "path": "项目文档/验收/16.7-验证原件/16.7__evidence-final.json",
+    "bytes": 6973,
+    "sha256": "a793d1ce04a17592b1bffadde18e859be125ccefe926dd5b35d243fa2d2b1321"
+  },
+  "ownership": {
+    "path": "项目文档/验收/16.7-验证原件/16.7__ownership-final.json",
+    "bytes": 5190,
+    "sha256": "92e741d118bd13d87cb17419e9552e58dcf5396d8ac3d4390111cae0cd87d7ab"
+  },
+  "handoff": {
+    "path": "项目文档/交接/16.7-交接.md",
+    "bytes": 2425,
+    "sha256": "7a27e064a30fb857876e26298cc9b4ca2b65b03a63d35efb8d1ff5b9e21be4c9"
+  },
+  "head": "ec023619c4f49509360ead2365233b9c768b6df4",
+  "branch": "main",
+  "staged": [],
+  "outgoing": 0,
+  "noGitMutation": true,
+  "noAgents": true,
+  "noNewChats": true,
+  "noWorktrees": true,
+  "noAutomations": true,
+  "noRealUserClear": true,
+  "ci": "Not changed or rerun; external handoff SHA preserved",
+  "progress": {
+    "original": "66/88",
+    "main": "66/98",
+    "p1": "25/28",
+    "p05": "9/9",
+    "language21": "0/10"
+  },
+  "next": "16.8 unclaimed;16 incomplete;21 deferred"
+}

@@ -1,0 +1,87 @@
+{
+  "scope": "16.2 only: original C bubble/selection, independent immutable equal inputs and two true runs, shared original deadline, unified reversible replay; no learning facts/storage changes.",
+  "changed": [
+    {
+      "path": "scripts/build-p05-course.mjs",
+      "sha256": "91588607cf8c45d74bed0c64be0bc4d2944fcf72073511f5926e0d7c32c8fce6"
+    },
+    {
+      "path": "scripts/restore-release-evidence.mjs",
+      "sha256": "e1050fb18f79da9a690d9daaded49cbedd2f39402873db3524c8a608f3f040ce"
+    },
+    {
+      "path": "web/src/pages/CatalogPages.tsx",
+      "sha256": "d69ce752ada48d1e3e71072774a3d6dbf9d9c691d5197d5123217a6c578b72fe"
+    },
+    {
+      "path": "web/src/App.tsx",
+      "sha256": "5b1cecfb238e84517b1e505ebad63e7b544b313a5ffa0687ba3e67925bb0071c"
+    },
+    {
+      "path": "web/src/components/Layout.tsx",
+      "sha256": "c9662759fbf451ef3d6d59824a0786cdd8ae099d7b42b13cf30eeb80b6a176b1"
+    },
+    {
+      "path": "web/src/comparison/content.ts",
+      "sha256": "12fd9f510397a6ee53c36de55cb3acb5592bab8bfc66b00ba30ac4fde57ac63b"
+    },
+    {
+      "path": "web/src/comparison/controller.ts",
+      "sha256": "1afb3d33ad9987bf2d372adec70bc70192ee1188dcb4bf261d0b0db2369ba0c0"
+    },
+    {
+      "path": "web/src/comparison/ComparisonPage.tsx",
+      "sha256": "ce1ffa5d3bcb3766f14a3310d5d6ea572f6b4c96ef24af3cdf9389155409d52d"
+    },
+    {
+      "path": "web/src/comparison/comparison.css",
+      "sha256": "212597816698528c167b23334dd4e53e68d73cf70d145c5157a93daf8d718577"
+    },
+    {
+      "path": "项目文档/契约/16.2-双算法对比生命周期.md",
+      "sha256": "dc1201de4d405fb20b42ded6362f7c2510296a22acadbb4baba881264abe01cf"
+    },
+    {
+      "path": "scripts/comparison-release-inputs.mjs",
+      "sha256": "988d35e76c32553fa2c6ce817fbcb237f84e87a13d4767e724c773769e0e8632"
+    }
+  ],
+  "latestSourceAt": "2026-10-31T00:02:22.153Z",
+  "frontend": {
+    "total": 1609,
+    "fullPassed": 1608,
+    "fullFailed": 1,
+    "focusedPassed": 9,
+    "uniqueUnionPassed": 1609,
+    "reports": [
+      {
+        "path": ".artifacts/16.2/frontend-candidate.json",
+        "sha256": "37b6bc83bfb520736fa631f7e734dc28e5e04dbe51d0158c33d2fefba85ed4ab"
+      },
+      {
+        "path": ".artifacts/16.2/frontend-memory-bugs-threads.json",
+        "sha256": "081d1f77c24ca4a9dd81e5d5afbe6aee326428c6b3b8ad028f41f29bd3648af6"
+      }
+    ]
+  },
+  "candidate": {
+    "passed": 14,
+    "reviewedLegacyFallback": true,
+    "formalCurrentCoursePending": true
+  },
+  "firstFailures": [
+    "typecheck-rules",
+    "lint-first",
+    "candidate-first",
+    "frontend-candidate"
+  ],
+  "formalPending": [
+    "comparison14",
+    "nativeStorage36",
+    "challenge10",
+    "affectedRegressions",
+    "threeWidthsInspector",
+    "startup",
+    "ownershipArchiveAudit"
+  ]
+}

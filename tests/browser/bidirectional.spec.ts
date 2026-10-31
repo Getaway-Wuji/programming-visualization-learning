@@ -1,5 +1,6 @@
 import { learnBlockPrerequisites } from './learn-block-prerequisites';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
@@ -37,6 +38,14 @@ const submit = (page: Page) => action(page, '提交练习');
 
 test.beforeAll(() => initSync({ module: readFileSync('web/src/generated/c_viz_wasm_bg.wasm') }));
 test.beforeEach(async ({ page }) => observeCaseSetExecution(page));
+test.afterEach(async ({ page }, info) => {
+  if (info.status !== info.expectedStatus)
+    await capture(
+      page,
+      info,
+      'failed-' + createHash('sha256').update(info.title).digest('hex').slice(0, 10),
+    );
+});
 
 function prepared(id: string) {
   const catalog = exerciseCatalog(content, id);
@@ -525,6 +534,25 @@ test('invalid code remains intact across editor folding, theme change, settings 
   page,
 }, info) => {
   await open(page);
+  // This case starts from a durable display preference. Recover a concurrent
+  // initial history/settings conflict through the same public control first.
+  await expect(page.getByTestId('editor-history')).toHaveAttribute('data-save-state', 'ready');
+  const preference = page.getByTestId('block-preference-save-status');
+  await expect(preference).not.toHaveAttribute('data-save-state', 'saving');
+  const retryPreference = page.getByRole('button', { name: '重新读取并保存选择', exact: true });
+  const recoveredPreference = await retryPreference.isVisible();
+  if (recoveredPreference) await retryPreference.click();
+  await expect(preference).toHaveAttribute('data-save-state', /^(ready|saved)$/);
+  await expect(page.getByTestId('theme-mode-toggle')).toBeEnabled();
+  await info.attach('display-preference-precondition', {
+    body: Buffer.from(
+      JSON.stringify({
+        recoveredPreference,
+        status: await preference.getAttribute('data-save-state'),
+      }),
+    ),
+    contentType: 'application/json',
+  });
   const valid = bodySource('printf("%d\\n",x);return 0;');
   await fillSynced(page, valid);
   const invalid = bodySource('if ( /* 尚未写完的😀草稿 */');

@@ -1,0 +1,48 @@
+{
+  "caseId": "case.cpp.counting-sort",
+  "programId": "program.cpp.counting-sort",
+  "version": "1.0.0",
+  "source": "#include <iostream>\n// @phase setup\nint main() {\n    int n = 7;\n    int values[30] = {};\n    // @phase input\n    for (int i = 0; i < n; i = i + 1) {\n        std::cin >> values[i];\n    }\n    // @phase buckets\n    int counts[41] = {};\n    // @phase count\n    for (int i = 0; i < n; i = i + 1) {\n        int bucket = values[i] + 20;\n        counts[bucket] = counts[bucket] + 1;\n    }\n    // @phase rebuild\n    int at = 0;\n    for (int bucket = 0; bucket < 41; bucket = bucket + 1) {\n        while (counts[bucket] > 0) {\n            values[at] = bucket - 20;\n            at = at + 1;\n            counts[bucket] = counts[bucket] - 1;\n        }\n    }\n    // @phase output\n    for (int i = 0; i < n; i = i + 1) {\n        std::cout << values[i] << \" \";\n    }\n    std::cout << \"\\n\";\n    return 0;\n}\n",
+  "input": [
+    7,
+    -3,
+    0,
+    5,
+    -3,
+    2,
+    9
+  ],
+  "identity": {
+    "runId": "729c345b-8f3e-4e9c-9a28-5412160c12da",
+    "sourceRevision": "e00c54ad-ac28-46b1-81c6-be6aef8f4c26"
+  },
+  "engine": {
+    "buildId": "14be60eb14544c9be02f3818086b03db94596e6dc027336a8e2ffb84b49cfc0e",
+    "id": "engine.rust.p1",
+    "version": "0.1.0"
+  },
+  "steps": 404,
+  "fuel": 12244,
+  "terminal": {
+    "byteRange": null,
+    "code": null,
+    "cursor": 404,
+    "returnValue": 0,
+    "status": "completed"
+  },
+  "counters": {
+    "arrayWrites": 99,
+    "comparisons": 107,
+    "scalarWrites": 75,
+    "swaps": 0
+  },
+  "expected": [
+    -3,
+    -3,
+    0,
+    2,
+    5,
+    7,
+    9
+  ]
+}

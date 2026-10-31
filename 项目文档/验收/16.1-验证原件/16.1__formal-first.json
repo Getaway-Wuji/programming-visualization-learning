@@ -1,0 +1,651 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--reporter=list,json",
+      "--trace",
+      "retain-on-failure",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output",
+      "challenges.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.1/formal-first-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.1/formal-first-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.1/formal-first-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "challenges.spec.ts",
+      "file": "challenges.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "16.1 common seven real C traces expose21 exact checkpoints and corresponding step explanations",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3548,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:10:52.132Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-6505f09c057c24fac89f",
+          "file": "challenges.spec.ts",
+          "line": 84,
+          "column": 1
+        },
+        {
+          "title": "16.1 common three widths keep the actual graph, mode switch and question choices usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1281,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:10:57.003Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-fe05bd10847e6e69032e",
+          "file": "challenges.spec.ts",
+          "line": 107,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal correct and incorrect answers save signed ledger entries without completion or daily facts",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1113,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:10:58.291Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-1234d1e82f7328ed96aa",
+          "file": "challenges.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal replay, modes, input changes, reload and a new day cannot re-score a stable question",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 30248,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts",
+                        "column": 63,
+                        "line": 161
+                      },
+                      "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nBrowser logs:\n\n<launching> C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=C:\\Users\\Spring\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-vQHzBe --remote-debugging-pipe --no-startup-window\n<launched> pid=39568\n[pid=39568] <gracefully close start>\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '后退', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button disabled class=\"button button-small\" aria-keyshortcuts=\"ArrowLeft\">后退</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    56 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n\n  159 |   await page.getByRole('button', { name: '重播', exact: true }).click();\n  160 |   await page.getByRole('button', { name: '预测挑战', exact: true }).click();\n> 161 |   await page.getByRole('button', { name: '后退', exact: true }).click();\n      |                                                               ^\n  162 |   expect((await native(page)).ledger).toEqual(before.ledger);\n  163 |   await page.getByTestId('input-field-x').fill('7');\n  164 |   await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'unprepared');\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts:161:63"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:10:59.409Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-rep-962d2--re-score-a-stable-question-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-rep-962d2--re-score-a-stable-question-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-rep-962d2--re-score-a-stable-question-chrome\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-78baf4e89d1a03c3bdcc",
+          "file": "challenges.spec.ts",
+          "line": 151,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal native quota rolls back answer and score and retries the identical receipt",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1091,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:11:30.616Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-af6416fcf29001aaa91c",
+          "file": "challenges.spec.ts",
+          "line": 182,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal two native pages answering differently share exactly one first-answer ledger row",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1546,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:11:32.775Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-0149af51b5082af5f44a",
+          "file": "challenges.spec.ts",
+          "line": 208,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal peer clear invalidates a failed answer and its retry without resurrecting the old generation",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6412,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('case-execution')\nExpected: \u001b[32m\"invalidated\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('case-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('case-execution')\u001b[22m\n\u001b[2m    14 × locator resolved to <section data-state=\"ready\" class=\"card section-card\" data-testid=\"case-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('case-execution')\nExpected: \u001b[32m\"invalidated\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('case-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('case-execution')\u001b[22m\n\u001b[2m    14 × locator resolved to <section data-state=\"ready\" class=\"card section-card\" data-testid=\"case-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts:251:52",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts",
+                      "column": 52,
+                      "line": 251
+                    },
+                    "snippet": "  249 |   await ready(peer);\n  250 |   await page.bringToFront();\n> 251 |   await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'invalidated');\n      |                                                    ^\n  252 |   await expect(page.getByRole('button', { name: '重试保存原答案', exact: true })).toHaveCount(0);\n  253 |   const after = await native(page);\n  254 |   expect(after.meta.generation).not.toBe(gen);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts",
+                        "column": 52,
+                        "line": 251
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('case-execution')\nExpected: \u001b[32m\"invalidated\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('case-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('case-execution')\u001b[22m\n\u001b[2m    14 × locator resolved to <section data-state=\"ready\" class=\"card section-card\" data-testid=\"case-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n\n\n  249 |   await ready(peer);\n  250 |   await page.bringToFront();\n> 251 |   await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'invalidated');\n      |                                                    ^\n  252 |   await expect(page.getByRole('button', { name: '重试保存原答案', exact: true })).toHaveCount(0);\n  253 |   const after = await native(page);\n  254 |   expect(after.meta.generation).not.toBe(gen);\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts:251:52"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:11:34.328Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-pee-38b98-rrecting-the-old-generation-chrome\\test-failed-2.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-pee-38b98-rrecting-the-old-generation-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-pee-38b98-rrecting-the-old-generation-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-pee-38b98-rrecting-the-old-generation-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts",
+                    "column": 52,
+                    "line": 251
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-efd11dc387823e34e450",
+          "file": "challenges.spec.ts",
+          "line": 235,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal delayed native commit acknowledgement cannot revive a cleared challenge",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6598,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('case-execution')\nExpected: \u001b[32m\"invalidated\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('case-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('case-execution')\u001b[22m\n\u001b[2m    14 × locator resolved to <section data-state=\"ready\" class=\"card section-card\" data-testid=\"case-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('case-execution')\nExpected: \u001b[32m\"invalidated\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('case-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('case-execution')\u001b[22m\n\u001b[2m    14 × locator resolved to <section data-state=\"ready\" class=\"card section-card\" data-testid=\"case-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts:322:52",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts",
+                      "column": 52,
+                      "line": 322
+                    },
+                    "snippet": "  320 |   );\n  321 |   await page.bringToFront();\n> 322 |   await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'invalidated');\n      |                                                    ^\n  323 |   const after = await native(page);\n  324 |   expect(after.meta.generation).not.toBe(gen);\n  325 |   expect(after.ledger).toEqual([]);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts",
+                        "column": 52,
+                        "line": 322
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('case-execution')\nExpected: \u001b[32m\"invalidated\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('case-execution') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('case-execution')\u001b[22m\n\u001b[2m    14 × locator resolved to <section data-state=\"ready\" class=\"card section-card\" data-testid=\"case-execution\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n\n\n  320 |   );\n  321 |   await page.bringToFront();\n> 322 |   await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'invalidated');\n      |                                                    ^\n  323 |   const after = await native(page);\n  324 |   expect(after.meta.generation).not.toBe(gen);\n  325 |   expect(after.ledger).toEqual([]);\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts:322:52"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:11:41.964Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-del-032ec--revive-a-cleared-challenge-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-del-032ec--revive-a-cleared-challenge-chrome\\test-failed-2.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-del-032ec--revive-a-cleared-challenge-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\formal-first-output\\challenges-16-1-formal-del-032ec--revive-a-cleared-challenge-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\challenges.spec.ts",
+                    "column": 52,
+                    "line": 322
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-bdb378f273a6865fd70e",
+          "file": "challenges.spec.ts",
+          "line": 258,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal challenge pauses at the next unanswered checkpoint and switching preserves the same view",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1531,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:11:50.543Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-c9023f60a55b3f4398ec",
+          "file": "challenges.spec.ts",
+          "line": 328,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal saved feedback stays readable at three widths with the actual signed balance",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1833,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:11:53.237Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-375cfee2b6bf22844cfe",
+          "file": "challenges.spec.ts",
+          "line": 350,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T23:10:50.896Z",
+    "duration": 66397.754,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

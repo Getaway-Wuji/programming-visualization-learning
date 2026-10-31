@@ -1,0 +1,988 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--reporter=list,json",
+      "--trace",
+      "retain-on-failure",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.2\\regression-37-output",
+      "tests/browser/challenges.spec.ts",
+      "tests/browser/player-controls.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.2/regression-37-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.2/regression-37-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.2/regression-37-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.2\\regression-37-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "challenges.spec.ts",
+      "file": "challenges.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "16.1 common seven real C traces expose21 exact checkpoints and corresponding step explanations",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5242,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:22.084Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-6505f09c057c24fac89f",
+          "file": "challenges.spec.ts",
+          "line": 87,
+          "column": 1
+        },
+        {
+          "title": "16.1 common three widths keep the actual graph, mode switch and question choices usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1453,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:28.255Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-fe05bd10847e6e69032e",
+          "file": "challenges.spec.ts",
+          "line": 110,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal correct and incorrect answers save signed ledger entries without completion or daily facts",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1339,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:29.715Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-1234d1e82f7328ed96aa",
+          "file": "challenges.spec.ts",
+          "line": 125,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal replay, modes, input changes, reload and a new day cannot re-score a stable question",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2181,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:31.059Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-78baf4e89d1a03c3bdcc",
+          "file": "challenges.spec.ts",
+          "line": 154,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal native quota rolls back answer and score and retries the identical receipt",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1237,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:33.246Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-af6416fcf29001aaa91c",
+          "file": "challenges.spec.ts",
+          "line": 186,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal two native pages answering differently share exactly one first-answer ledger row",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1751,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:34.490Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-0149af51b5082af5f44a",
+          "file": "challenges.spec.ts",
+          "line": 212,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal peer clear invalidates a failed answer and its retry without resurrecting the old generation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1543,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:36.248Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-efd11dc387823e34e450",
+          "file": "challenges.spec.ts",
+          "line": 239,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal delayed native commit acknowledgement cannot revive a cleared challenge",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1753,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:37.800Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-bdb378f273a6865fd70e",
+          "file": "challenges.spec.ts",
+          "line": 263,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal challenge pauses at the next unanswered checkpoint and switching preserves the same view",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1535,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:39.562Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-c9023f60a55b3f4398ec",
+          "file": "challenges.spec.ts",
+          "line": 334,
+          "column": 1
+        },
+        {
+          "title": "16.1 formal saved feedback stays readable at three widths with the actual signed balance",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1919,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:41.103Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b7e3fbccb1bf83d80bba-375cfee2b6bf22844cfe",
+          "file": "challenges.spec.ts",
+          "line": 356,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "player-controls.spec.ts",
+      "file": "player-controls.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "preparation leaves controls disabled and a checked real Rust run starts at the initial cursor",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1336,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:43.058Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "initial-real-Rust-player",
+                      "contentType": "application/json",
+                      "body": "eyJldmlkZW5jZUxldmVsIjoicHJvZHVjdGlvbi11aS1yZWFsLXdvcmtlciIsImJyb3dzZXJWZXJzaW9uIjoiMTU2LjAuODA3OC43NiIsInByb2R1Y2VyIjoicnVzdCIsInRlcm1pbmFsIjoiY29tcGxldGVkIiwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJzdGVwcyI6NiwicmVxdWVzdE9wZXJhdGlvbklkIjoiMDcwOTlkMmMtODViMi00NWIyLWJjOTAtNTAwN2UwZjMyZDE1IiwicmVzcG9uc2VPcGVyYXRpb25JZCI6IjA3MDk5ZDJjLTg1YjItNDViMi1iYzkwLTUwMDdlMGYzMmQxNSIsInBsYXllclN0YXR1cyI6InJlYWR5IiwiY3Vyc29yIjoiMCJ9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-4fb32c217a5226ea9e35",
+          "file": "player-controls.spec.ts",
+          "line": 106,
+          "column": 1
+        },
+        {
+          "title": "single-step boundaries, terminal state and replay use one accepted trajectory",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1980,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:44.403Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "boundaries-and-replay",
+                      "contentType": "application/json",
+                      "body": "eyJldmlkZW5jZUxldmVsIjoicHJvZHVjdGlvbi11aS1yZWFsLXdvcmtlciIsImJyb3dzZXJWZXJzaW9uIjoiMTU2LjAuODA3OC43NiIsInByb2R1Y2VyIjoicnVzdCIsInRlcm1pbmFsIjoiY29tcGxldGVkIiwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJzdGVwcyI6NiwicmVxdWVzdE9wZXJhdGlvbklkIjoiZTU4NjMzM2UtYzRmMi00Y2YyLWEzY2YtMjc1ZDFkYzdlNGJjIiwicmVzcG9uc2VPcGVyYXRpb25JZCI6ImU1ODYzMzNlLWM0ZjItNGNmMi1hM2NmLTI3NWQxZGM3ZTRiYyIsInBsYXllclN0YXR1cyI6InBhdXNlZCIsImN1cnNvciI6IjAiLCJmb3J3YXJkQW5kUmV2ZXJzZVN0ZXBzIjo2fQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-40a2f0367a7ede282814",
+          "file": "player-controls.spec.ts",
+          "line": 129,
+          "column": 1
+        },
+        {
+          "title": "repeated play and pause never multiply timers and a paused cursor remains stable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4139,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:46.391Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "single-scheduler-paused-stability",
+                      "contentType": "application/json",
+                      "body": "eyJldmlkZW5jZUxldmVsIjoicHJvZHVjdGlvbi11aS1yZWFsLXdvcmtlciIsImJyb3dzZXJWZXJzaW9uIjoiMTU2LjAuODA3OC43NiIsInByb2R1Y2VyIjoicnVzdCIsInRlcm1pbmFsIjoiY29tcGxldGVkIiwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJzdGVwcyI6Mjg0LCJyZXF1ZXN0T3BlcmF0aW9uSWQiOiI4NjczYjFhOC1jNzZiLTRiOGQtOTc4OC1jYzBkZTRlMmIyZjgiLCJyZXNwb25zZU9wZXJhdGlvbklkIjoiODY3M2IxYTgtYzc2Yi00YjhkLTk3ODgtY2MwZGU0ZTJiMmY4IiwicGxheWVyU3RhdHVzIjoicGF1c2VkIiwiY3Vyc29yIjoiMiIsInJhcGlkVG9nZ2xlQ3ljbGVzIjoxMn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-d7e9e2197d3f5bd9e750",
+          "file": "player-controls.spec.ts",
+          "line": 167,
+          "column": 1
+        },
+        {
+          "title": "all six speeds control the next real step and a speed change replaces the pending timer",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3975,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:50.537Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "speed-and-reschedule",
+                      "contentType": "application/json",
+                      "body": "eyJldmlkZW5jZUxldmVsIjoicHJvZHVjdGlvbi11aS1yZWFsLXdvcmtlciIsImJyb3dzZXJWZXJzaW9uIjoiMTU2LjAuODA3OC43NiIsInByb2R1Y2VyIjoicnVzdCIsInRlcm1pbmFsIjoiY29tcGxldGVkIiwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJzdGVwcyI6Mjg0LCJyZXF1ZXN0T3BlcmF0aW9uSWQiOiI3NmU3MzEwMy0wNGMwLTQ4YWItYWI4NC05NDczYTM2NmExM2MiLCJyZXNwb25zZU9wZXJhdGlvbklkIjoiNzZlNzMxMDMtMDRjMC00OGFiLWFiODQtOTQ3M2EzNjZhMTNjIiwicGxheWVyU3RhdHVzIjoicGF1c2VkIiwiY3Vyc29yIjoiMiIsIm9ic2VydmF0aW9ucyI6W3sic3BlZWQiOjAuMjUsInBlcmlvZCI6MjAwMCwib2JzZXJ2ZWRDdXJzb3IiOjF9LHsic3BlZWQiOjAuNSwicGVyaW9kIjoxMDAwLCJvYnNlcnZlZEN1cnNvciI6MX0seyJzcGVlZCI6MSwicGVyaW9kIjo1MDAsIm9ic2VydmVkQ3Vyc29yIjoxfSx7InNwZWVkIjoxLjUsInBlcmlvZCI6MzM0LCJvYnNlcnZlZEN1cnNvciI6MX0seyJzcGVlZCI6MiwicGVyaW9kIjoyNTAsIm9ic2VydmVkQ3Vyc29yIjoxfSx7InNwZWVkIjo0LCJwZXJpb2QiOjEyNSwib2JzZXJ2ZWRDdXJzb3IiOjF9XX0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-9e75faecfda30e458a23",
+          "file": "player-controls.spec.ts",
+          "line": 195,
+          "column": 1
+        },
+        {
+          "title": "space and left or right arrows work in the focused workspace and stay scoped to it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1077,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:54.519Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-223ee425a4344890a9ff",
+          "file": "player-controls.spec.ts",
+          "line": 235,
+          "column": 1
+        },
+        {
+          "title": "source, input, select and button focus retain their native keyboard semantics",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1050,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:55.603Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-ad780d53079a0e15cfbd",
+          "file": "player-controls.spec.ts",
+          "line": 266,
+          "column": 1
+        },
+        {
+          "title": "editing, a replacement execution and reload synchronously discard old playback",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2924,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:56.660Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-8ea9cb8b4d2a38ab1486",
+          "file": "player-controls.spec.ts",
+          "line": 303,
+          "column": 1
+        },
+        {
+          "title": "leaving a playing page and returning through browser history cannot revive its run",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1948,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:30:59.593Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-fb5c0b97e69fbb7abc23",
+          "file": "player-controls.spec.ts",
+          "line": 334,
+          "column": 1
+        },
+        {
+          "title": "a document becoming hidden pauses playback and returning does not restart it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4220,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:31:01.549Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "visibility-pause",
+                      "contentType": "application/json",
+                      "body": "eyJldmlkZW5jZUxldmVsIjoicHJvZHVjdGlvbi11aS1yZWFsLXdvcmtlciIsImJyb3dzZXJWZXJzaW9uIjoiMTU2LjAuODA3OC43NiIsInByb2R1Y2VyIjoicnVzdCIsInRlcm1pbmFsIjoiY29tcGxldGVkIiwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJzdGVwcyI6Mjg0LCJyZXF1ZXN0T3BlcmF0aW9uSWQiOiJkNGVkZWNlMS02Njk0LTQzN2UtYjI5Mi0zM2YyYjE5NDE5ZWYiLCJyZXNwb25zZU9wZXJhdGlvbklkIjoiZDRlZGVjZTEtNjY5NC00MzdlLWIyOTItMzNmMmIxOTQxOWVmIiwicGxheWVyU3RhdHVzIjoicGF1c2VkIiwiY3Vyc29yIjoiMSIsInZpc2liaWxpdHlFdmlkZW5jZSI6Imlzb2xhdGVkLURPTS12aXNpYmlsaXR5LWV2ZW50In0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-72d9aef1cd55f941d3c8",
+          "file": "player-controls.spec.ts",
+          "line": 358,
+          "column": 1
+        },
+        {
+          "title": "a genuine Rust failure prefix remains playable and reaches its failed tail",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2097,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:31:05.776Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "real-failure-prefix-controls",
+                      "contentType": "application/json",
+                      "body": "eyJldmlkZW5jZUxldmVsIjoicHJvZHVjdGlvbi11aS1yZWFsLXdvcmtlciIsImJyb3dzZXJWZXJzaW9uIjoiMTU2LjAuODA3OC43NiIsInByb2R1Y2VyIjoicnVzdCIsInRlcm1pbmFsIjoicHJvZ3JhbS1lcnJvciIsImNvbXBsZXRlbmVzcyI6InByZWZpeCIsInN0ZXBzIjo0LCJyZXF1ZXN0T3BlcmF0aW9uSWQiOiJmMDdhOWFjZS1jZmI0LTQ2ZDEtOWVkNS1jN2MxYTA1YWEzNDgiLCJyZXNwb25zZU9wZXJhdGlvbklkIjoiZjA3YTlhY2UtY2ZiNC00NmQxLTllZDUtYzdjMWEwNWFhMzQ4IiwicGxheWVyU3RhdHVzIjoicGF1c2VkIiwiY3Vyc29yIjoiMCIsInNvdXJjZUtpbmQiOiJ0ZXN0LWlzb2xhdGVkLWFwcGxpY2F0aW9uLWNhc2UtY29uZmlnLWNvcHkvZGl2aWRlLWJ5LXplcm8iLCJwdWJsaWNhdGlvbkV2aWRlbmNlIjpmYWxzZSwiaXNvbGF0ZWRDb25maWd1cmF0aW9uIjp7InNvdXJjZUtpbmQiOiJ0ZXN0LWlzb2xhdGVkLWFwcGxpY2F0aW9uLWNhc2UtY29uZmlnLWNvcHkiLCJwdWJsaWNhdGlvbkV2aWRlbmNlIjpmYWxzZSwicHJvZ3JhbUlkIjoicHJvZ3JhbS5jLmFzc2lnbm1lbnQiLCJvcmlnaW5hbFNvdXJjZSI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIGludCB4ID0gMztcbiAgICB4ID0geCArIDI7XG4gICAgcHJpbnRmKFwiJWRcXG5cIiwgeCk7XG4gICAgcmV0dXJuIDA7XG59XG4iLCJtb2RpZmllZFNvdXJjZSI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIGludCB4ID0gMztcbiAgICBwcmludGYoXCIlZFxcblwiLCB4KTsgeCA9IHggLyAwO1xuICAgIHByaW50ZihcIiVkXFxuXCIsIHgpO1xuICAgIHJldHVybiAwO1xufVxuIiwib3JpZ2luYWxCdW5kbGVTaGEyNTYiOiIxM2FhNWFlYWYxYjkwNjg4M2FkZjUyYzY2NTBhMGNmZTg3ZTNmMTI2YWU0Zjc1NDBmNjc2ZDU4M2E1MWNkYTkzIiwibW9kaWZpZWRCdW5kbGVTaGEyNTYiOiJlMDMwNzJlZWZiYzc0OWVlODFlOWIyZTZjZDJmYWJmMzViMmNiZWUyYWViMmM3YTA2ODU5NzJlNTdiN2U0M2Y0IiwiYnVuZGxlVXJsIjoiaHR0cDovLzEyNy4wLjAuMTo0MTc4L2Fzc2V0cy9pbmRleC1Cem9rckVhTC5qcyJ9fQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-59065add3ab4748efc4c",
+          "file": "player-controls.spec.ts",
+          "line": 399,
+          "column": 1
+        },
+        {
+          "title": "a real Worker load failure has no playable trajectory and a new execution recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1162,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:31:07.881Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-4aba3e7f31a5456d7620",
+          "file": "player-controls.spec.ts",
+          "line": 447,
+          "column": 1
+        },
+        {
+          "title": "a real result crossing its deadline during initial player rendering cannot resurrect its trace",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1710,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T00:31:09.049Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "post-commit-deadline-rejection",
+                      "contentType": "application/json",
+                      "body": "eyJldmlkZW5jZUxldmVsIjoicHJvZHVjdGlvbi11aS1yZWFsLXdvcmtlciIsImJyb3dzZXJWZXJzaW9uIjoiMTU2LjAuODA3OC43NiIsInByb2R1Y2VyIjoicnVzdCIsInRlcm1pbmFsIjoiY29tcGxldGVkIiwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJzdGVwcyI6NiwicmVxdWVzdE9wZXJhdGlvbklkIjoiYjJlNzlmMGUtOGUyNy00NTJhLTgzODktY2ZhZjlmNmRlZmI4IiwicmVzcG9uc2VPcGVyYXRpb25JZCI6ImIyZTc5ZjBlLThlMjctNDUyYS04Mzg5LWNmYWY5ZjZkZWZiOCIsInBsYXllclN0YXR1cyI6ImZhaWxlZCIsImN1cnNvciI6IiIsImZhdWx0IjoibWFpbi10aHJlYWQgbW9ub3RvbmljIGNsb2NrIGFkdmFuY2VzIDE1MDAgbXMgYWZ0ZXIgZmlyc3QgcmVhZHkgRE9NIGNvbW1pdCIsImV4cGVjdGVkQWRhcHRlckNvZGUiOiJFX0RFQURMSU5FIiwicGVyZm9ybWFuY2VBY2NlcHRhbmNlQ2xhaW0iOmZhbHNlfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fb9cc8b4190a93749104-47c7355a65306376411f",
+          "file": "player-controls.spec.ts",
+          "line": 469,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-31T00:30:21.263Z",
+    "duration": 53179.483,
+    "expected": 22,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

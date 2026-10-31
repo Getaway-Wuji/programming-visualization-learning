@@ -8,7 +8,11 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const base = '项目文档/验收/发布凭据';
 const tracked = new Set(
-  execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' }).split('\0'),
+  execFileSync('git', ['ls-files', '-z'], {
+    cwd: root,
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+  }).split('\0'),
 );
 const read = (path) => {
   assert.ok(tracked.has(path), `Required release input is not tracked: ${path}`);

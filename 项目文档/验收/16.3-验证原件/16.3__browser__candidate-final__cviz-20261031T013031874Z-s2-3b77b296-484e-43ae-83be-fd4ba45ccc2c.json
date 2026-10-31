@@ -1,0 +1,358 @@
+{
+  "formatVersion": "1.0.0",
+  "formatId": "urn:c-viz:current-snapshot:1.0.0",
+  "snapshotId": "3b77b296-484e-43ae-83be-fd4ba45ccc2c",
+  "capturedAt": "2026-10-31T01:30:31.874Z",
+  "presentation": {
+    "mode": "memory",
+    "scope": "complete-current-state",
+    "image": "reflowed-state-picture",
+    "selectionAndPaginationExcluded": true
+  },
+  "virtualAddresses": "educational-not-host-addresses",
+  "currentState": {
+    "allocator": {
+      "liveBytes": 8,
+      "nextAddress": 4104,
+      "nextFrame": 2,
+      "nextObject": 2,
+      "nextScope": 2
+    },
+    "control": {
+      "activeFrameId": "f1",
+      "inputCursor": 0,
+      "nextNodeId": "n1",
+      "returnValue": null
+    },
+    "counters": {
+      "arrayWrites": 0,
+      "comparisons": 0,
+      "scalarWrites": 0,
+      "swaps": 0
+    },
+    "frames": [
+      {
+        "callNodeId": null,
+        "functionName": "main",
+        "functionNodeId": "n6",
+        "id": "f1",
+        "parentFrameId": null,
+        "scopeIds": [
+          "s1"
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "alive": true,
+        "baseAddress": 4096,
+        "byteLength": 8,
+        "cells": [],
+        "declarationNodeId": "n1",
+        "frameId": "f1",
+        "id": "o1",
+        "length": 1,
+        "name": "p",
+        "scopeId": "s1",
+        "storage": "automatic",
+        "typeName": "int*",
+        "zeroInitialized": false
+      }
+    ],
+    "output": "",
+    "scopes": [
+      {
+        "aliases": [],
+        "frameId": "f1",
+        "id": "s1",
+        "nodeId": "n5",
+        "objectIds": [
+          "o1"
+        ]
+      }
+    ]
+  },
+  "currentStep": {
+    "changes": [
+      {
+        "after": {
+          "alive": true,
+          "baseAddress": 4096,
+          "byteLength": 8,
+          "cells": [],
+          "declarationNodeId": "n1",
+          "frameId": "f1",
+          "id": "o1",
+          "length": 1,
+          "name": "p",
+          "scopeId": "s1",
+          "storage": "automatic",
+          "typeName": "int*",
+          "zeroInitialized": false
+        },
+        "before": null,
+        "id": "o1",
+        "index": 0,
+        "op": "record",
+        "table": "objects"
+      },
+      {
+        "after": {
+          "aliases": [],
+          "frameId": "f1",
+          "id": "s1",
+          "nodeId": "n5",
+          "objectIds": [
+            "o1"
+          ]
+        },
+        "before": {
+          "aliases": [],
+          "frameId": "f1",
+          "id": "s1",
+          "nodeId": "n5",
+          "objectIds": []
+        },
+        "id": "s1",
+        "index": 0,
+        "op": "record",
+        "table": "scopes"
+      },
+      {
+        "after": {
+          "activeFrameId": "f1",
+          "inputCursor": 0,
+          "nextNodeId": "n1",
+          "returnValue": null
+        },
+        "before": {
+          "activeFrameId": "f1",
+          "inputCursor": 0,
+          "nextNodeId": "n6",
+          "returnValue": null
+        },
+        "op": "control"
+      },
+      {
+        "after": {
+          "liveBytes": 8,
+          "nextAddress": 4104,
+          "nextFrame": 2,
+          "nextObject": 2,
+          "nextScope": 2
+        },
+        "before": {
+          "liveBytes": 0,
+          "nextAddress": 4096,
+          "nextFrame": 2,
+          "nextObject": 1,
+          "nextScope": 2
+        },
+        "op": "allocator"
+      }
+    ],
+    "kind": "object.declare",
+    "nodeId": "n1",
+    "seq": 2
+  },
+  "executionOutcome": {
+    "byteRange": {
+      "end": 27,
+      "start": 26
+    },
+    "code": "E_UNINITIALIZED",
+    "cursor": 2,
+    "returnValue": null,
+    "status": "error"
+  },
+  "terminalAtCursor": {
+    "byteRange": {
+      "end": 27,
+      "start": 26
+    },
+    "code": "E_UNINITIALIZED",
+    "cursor": 2,
+    "returnValue": null,
+    "status": "error"
+  },
+  "origin": {
+    "kind": "memory-observation",
+    "id": "uninitialized",
+    "title": "未初始化指针",
+    "caseRef": null,
+    "programRef": null,
+    "packageRef": null,
+    "definitionVersion": {
+      "scheme": "source-sha256",
+      "value": "62fe52362129beb77341c363b22b2f127cbaf16df389028356df95e6e4e1be1e"
+    }
+  },
+  "runtime": {
+    "domain": "p1-memory",
+    "language": "c",
+    "subset": null,
+    "engine": {
+      "buildId": "4f3cb075dc0b7da3a0afc9dd96f178b6a1b71184f125c726ddf0b81384f6b3a7",
+      "id": "engine.rust.memory",
+      "version": "0.1.0"
+    },
+    "identity": {
+      "runId": "9933b871-d980-48f9-b159-93fa53c14589",
+      "sourceRevision": "600f61b0-5767-4b89-b9e6-f53169ef65e5"
+    },
+    "versions": {
+      "execution": "1.3.0",
+      "step": "1.2.0",
+      "diagnostic": "1.2.0",
+      "integerEncoding": "1.0.0",
+      "judge": null
+    }
+  },
+  "source": {
+    "text": "int main(){int* p;return *p;}",
+    "encoding": "UTF-8",
+    "sourceRevision": "600f61b0-5767-4b89-b9e6-f53169ef65e5",
+    "sha256": "62fe52362129beb77341c363b22b2f127cbaf16df389028356df95e6e4e1be1e",
+    "nodeMap": [
+      {
+        "byteRange": {
+          "end": 18,
+          "start": 11
+        },
+        "kind": "declaration",
+        "nodeId": "n1"
+      },
+      {
+        "byteRange": {
+          "end": 27,
+          "start": 26
+        },
+        "kind": "expression",
+        "nodeId": "n2"
+      },
+      {
+        "byteRange": {
+          "end": 27,
+          "start": 25
+        },
+        "kind": "expression",
+        "nodeId": "n3"
+      },
+      {
+        "byteRange": {
+          "end": 28,
+          "start": 18
+        },
+        "kind": "return",
+        "nodeId": "n4"
+      },
+      {
+        "byteRange": {
+          "end": 29,
+          "start": 10
+        },
+        "kind": "block",
+        "nodeId": "n5"
+      },
+      {
+        "byteRange": {
+          "end": 29,
+          "start": 0
+        },
+        "kind": "function",
+        "nodeId": "n6"
+      }
+    ],
+    "blockMap": [],
+    "bindingMap": [],
+    "resolvedBindings": []
+  },
+  "input": [],
+  "types": [
+    {
+      "byteSize": 4,
+      "fields": [],
+      "kind": "int",
+      "name": "int",
+      "pointeeType": null
+    },
+    {
+      "byteSize": 8,
+      "fields": [],
+      "kind": "pointer",
+      "name": "int*",
+      "pointeeType": "int"
+    }
+  ],
+  "position": {
+    "cursor": 2,
+    "length": 2,
+    "stepKind": "object.declare",
+    "paused": true,
+    "atTerminal": true,
+    "executed": {
+      "raw": {
+        "end": 18,
+        "start": 11
+      },
+      "range": {
+        "byteRange": {
+          "start": 11,
+          "end": 18
+        },
+        "utf16Range": {
+          "start": 11,
+          "end": 18
+        },
+        "start": {
+          "line": 1,
+          "column": 12
+        },
+        "end": {
+          "line": 1,
+          "column": 19
+        }
+      },
+      "description": "第 1 行，第 12 列"
+    },
+    "highlighted": {
+      "reason": "terminal",
+      "range": {
+        "byteRange": {
+          "start": 26,
+          "end": 27
+        },
+        "utf16Range": {
+          "start": 26,
+          "end": 27
+        },
+        "start": {
+          "line": 1,
+          "column": 27
+        },
+        "end": {
+          "line": 1,
+          "column": 28
+        }
+      }
+    },
+    "terminalRange": {
+      "byteRange": {
+        "start": 26,
+        "end": 27
+      },
+      "utf16Range": {
+        "start": 26,
+        "end": 27
+      },
+      "start": {
+        "line": 1,
+        "column": 27
+      },
+      "end": {
+        "line": 1,
+        "column": 28
+      }
+    }
+  }
+}

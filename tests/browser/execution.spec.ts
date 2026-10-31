@@ -529,7 +529,8 @@ test('visible module failure is distinct from program completion and retry uses 
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await run(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'infrastructure-failure');
-  await expect(panel(page).getByRole('alert')).toBeVisible();
+  await expect(page.getByTestId('execution-terminal')).toHaveAttribute('role', 'alert');
+  await expect(page.getByTestId('execution-terminal')).toBeVisible();
   await expect(panel(page)).toContainText('E_MODULE_LOAD');
   await expect(page.getByTestId('execution-steps')).toContainText('有效轨迹：0 步');
   await expect(page.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
@@ -559,6 +560,9 @@ test('switching visible cases discards a queued real result before the next case
   await page.evaluate(() => window.__executionAudit.release());
   await expect(page.getByTestId('execution-output')).toHaveCount(0);
   await expect(page.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
+  await page.getByTestId('input-field-values').fill('3 1 2');
+  await page.getByRole('button', { name: '应用输入并准备', exact: true }).click();
+  await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await run(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'completed');
   await expect(page.getByTestId('execution-output')).toHaveText('1 2 3\n');

@@ -1,0 +1,235 @@
+
+Running 49 tests using 1 worker
+
+  ok  1 [chrome] › tests\browser\breakpoints.spec.ts:121:1 › Hanoi real repeated visits stop, continue and reverse restores returned frames at the same cursor (1.9s)
+  ok  2 [chrome] › tests\browser\breakpoints.spec.ts:174:1 › single-line C++ loop hits new iterations; speed, view switching and replay keep one run and learning unchanged (4.9s)
+  ok  3 [chrome] › tests\browser\breakpoints.spec.ts:219:1 › same-line declaration tail advances once; manual steps, pause and no-visit marks never trap playback (1.1s)
+  ok  4 [chrome] › tests\browser\breakpoints.spec.ts:255:1 › input changes keep source-bound marks, sample changes clear them and late cancelled results stay invalid (2.2s)
+  ok  5 [chrome] › tests\browser\breakpoints.spec.ts:286:1 › one representative theme: line marks, real stack and keyboard controls remain usable at three widths (1.5s)
+  ok  6 [chrome] › tests\browser\memory-view.spec.ts:91:1 › real C state is shared by both views, changes reverse, and switching grants no learning (800ms)
+  ok  7 [chrome] › tests\browser\memory-view.spec.ts:123:1 › scope exit keeps tombstones and a dangling diagnostic only at the failing cursor (703ms)
+  ok  8 [chrome] › tests\browser\memory-view.spec.ts:151:1 › C++ heap fields restore across delete and changed inputs produce new real values (970ms)
+  ok  9 [chrome] › tests\browser\memory-view.spec.ts:180:1 › null, uninitialized and field one-past references remain distinct and reversible (1.2s)
+  ok 10 [chrome] › tests\browser\memory-view.spec.ts:213:1 › changing sample invalidates and cancelling a held genuine Worker reply discards late success (1.8s)
+  ok 11 [chrome] › tests\browser\memory-view.spec.ts:238:1 › configured saved themes in both modes preserve readable real memory data (1.4s)
+  ok 12 [chrome] › tests\browser\memory-view.spec.ts:271:1 › keyboard, pause, view switching and replay use a single genuine run for thirty seconds (31.3s)
+  ok 13 [chrome] › tests\browser\memory-view.spec.ts:301:1 › three widths keep memory values readable inside the shared workbench (1.1s)
+  ok 14 [chrome] › tests\browser\p05-course.spec.ts:615:1 › P05 fresh archive: 32 real code answers and 140 groups produce 32 confirmed completions and durable deduplicated rewards (56.4s)
+  ok 15 [chrome] › tests\browser\p05-course.spec.ts:738:1 › P05 upgrade: six genuinely completed old lessons retain their exact records, points and opened-day targets while becoming 6 of 32 (7.6s)
+  ok 16 [chrome] › tests\browser\p05-course.spec.ts:838:1 › P05 native quota and goal bounds: a real new pass saves atomically on retry, 32 is valid and 33 or all-zero is refused without rewriting today (2.5s)
+  ok 17 [chrome] › tests\browser\p05-course.spec.ts:914:1 › P05 multiple tabs: package CAS invalidates an accepted old run and a later native clear cannot revive it or mint a pass (2.3s)
+  ok 18 [chrome] › tests\browser\p05-course.spec.ts:996:1 › P05 partial old archive: confirmation-only and pass-only histories remain partial while an uncommitted old accepted event cannot become a new pass (2.9s)
+  ok 19 [chrome] › tests\browser\p05-course.spec.ts:1149:1 › P05 native corruption: foreign-package and damaged versions of genuinely earned progress remain stored but cannot grant current completion or new rewards (2.1s)
+  ok 20 [chrome] › tests\browser\player-controls.spec.ts:106:1 › preparation leaves controls disabled and a checked real Rust run starts at the initial cursor (1.2s)
+  ok 21 [chrome] › tests\browser\player-controls.spec.ts:129:1 › single-step boundaries, terminal state and replay use one accepted trajectory (1.7s)
+  ok 22 [chrome] › tests\browser\player-controls.spec.ts:167:1 › repeated play and pause never multiply timers and a paused cursor remains stable (3.8s)
+  ok 23 [chrome] › tests\browser\player-controls.spec.ts:195:1 › all six speeds control the next real step and a speed change replaces the pending timer (3.6s)
+  ok 24 [chrome] › tests\browser\player-controls.spec.ts:235:1 › space and left or right arrows work in the focused workspace and stay scoped to it (1.1s)
+  ok 25 [chrome] › tests\browser\player-controls.spec.ts:266:1 › source, input, select and button focus retain their native keyboard semantics (999ms)
+  ok 26 [chrome] › tests\browser\player-controls.spec.ts:303:1 › editing, a replacement execution and reload synchronously discard old playback (2.8s)
+  ok 27 [chrome] › tests\browser\player-controls.spec.ts:334:1 › leaving a playing page and returning through browser history cannot revive its run (1.8s)
+  ok 28 [chrome] › tests\browser\player-controls.spec.ts:358:1 › a document becoming hidden pauses playback and returning does not restart it (2.9s)
+  x  29 [chrome] › tests\browser\player-controls.spec.ts:399:1 › a genuine Rust failure prefix remains playable and reaches its failed tail (6.1s)
+  ok 30 [chrome] › tests\browser\player-controls.spec.ts:442:1 › a real Worker load failure has no playable trajectory and a new execution recovers (1.3s)
+  ok 31 [chrome] › tests\browser\player-controls.spec.ts:464:1 › a real result crossing its deadline during initial player rendering cannot resurrect its trace (1.6s)
+  ok 32 [chrome] › tests\browser\reward-settlement.spec.ts:157:1 › two pages settle simulated prior pending rights only once without new learning facts (3.1s)
+  ok 33 [chrome] › tests\browser\reward-settlement.spec.ts:178:1 › a second native settlement put aborts all posting and explicit retry preserves old dates (2.4s)
+  ok 34 [chrome] › tests\browser\rewards.spec.ts:345:1 › a real complete adjacent case viewing requires active confirmation and awards five only once across replay, refresh and another run (4.7s)
+  ok 35 [chrome] › tests\browser\rewards.spec.ts:398:1 › input changes reset genuine viewing coverage and cancelled or deadline-failed runs cannot award viewing points (4.1s)
+  x  36 [chrome] › tests\browser\rewards.spec.ts:444:1 › a real exercise first pass awards ten and confirmed lesson completion adds twenty plus one daily five; failure, repetition and refresh preserve the ledger (2.9s)
+  ok 37 [chrome] › tests\browser\rewards.spec.ts:490:1 › two real case pages concurrently confirming complete coverage share one five-point first reward (3.6s)
+  x  38 [chrome] › tests\browser\rewards.spec.ts:520:1 › two real exercise pages concurrently passing share one ten-point first reward (6.6s)
+  ok 39 [chrome] › tests\browser\rewards.spec.ts:547:1 › a native second-ledger quota failure rolls all awards and pass effects back, then retries the original operation (3.0s)
+  ok 40 [chrome] › tests\browser\rewards.spec.ts:601:1 › a case ledger quota failure remains unsaved and original accepted confirmation can retry after input invalidation (2.3s)
+  ok 41 [chrome] › tests\browser\rewards.spec.ts:638:1 › clearing from another page discards a pending case award and prevents old-generation revival (2.6s)
+  ok 42 [chrome] › tests\browser\rewards.spec.ts:673:1 › the points detail explains the native ledger and fixed first-reward rules at desktop, tablet and phone widths (2.5s)
+  ok 43 [chrome] › tests\browser\rewards.spec.ts:715:1 › one pixel of trace visibility cannot credit hidden keyboard steps or backfill missing adjacent viewing (3.0s)
+  ok 44 [chrome] › tests\browser\rewards.spec.ts:838:1 › the reviewed independent case keeps genuine viewing and current history when course reading is unavailable (2.1s)
+  ok 45 [chrome] › tests\browser\stack-view.spec.ts:115:1 › C parameters and recursive locals restore after every real function return (1.6s)
+  ok 46 [chrome] › tests\browser\stack-view.spec.ts:140:1 › Hanoi varied inputs change genuine moves while frame selection preserves current source and cursor (3.0s)
+  ok 47 [chrome] › tests\browser\stack-view.spec.ts:205:1 › quicksort keeps caller array aliases and returns sorted real output for five varied inputs (2.5s)
+  ok 48 [chrome] › tests\browser\stack-view.spec.ts:247:1 › deep recursion stops at the original frame limit and its accepted frames remain reversible (983ms)
+  ok 49 [chrome] › tests\browser\stack-view.spec.ts:263:1 › three views keep one live player, input invalidation and learning records unchanged (1.2s)
+
+
+  1) [chrome] › tests\browser\player-controls.spec.ts:399:1 › a genuine Rust failure prefix remains playable and reaches its failed tail 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByTestId('case-execution')
+    Expected: "program-error"
+    Received: "completed"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('case-execution') with timeout 5000ms
+      - waiting for getByTestId('case-execution')
+        2 × locator resolved to <section data-state="running" class="card section-card" data-testid="case-execution">…</section>
+          - unexpected value "running"
+        12 × locator resolved to <section data-state="completed" class="card section-card" data-testid="case-execution">…</section>
+           - unexpected value "completed"
+
+
+      61 | ): Promise<ExecuteResult> {
+      62 |   await run(page).click();
+    > 63 |   await expect(panel(page)).toHaveAttribute('data-state', status);
+         |                             ^
+      64 |   await expect(controls(page)).toHaveAttribute('data-player-status', 'ready');
+      65 |   await cursor(page, 0);
+      66 |   const worker = await observedExecute(page);
+        at accepted (D:\Files\Downloads\编程可视化教学平台\tests\browser\player-controls.spec.ts:63:29)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\player-controls.spec.ts:411:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.1\regression-first-output\player-controls-a-genuine--ad03f-and-reaches-its-failed-tail-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.1\regression-first-output\player-controls-a-genuine--ad03f-and-reaches-its-failed-tail-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.1\regression-first-output\player-controls-a-genuine--ad03f-and-reaches-its-failed-tail-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.1\regression-first-output\player-controls-a-genuine--ad03f-and-reaches-its-failed-tail-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › tests\browser\rewards.spec.ts:444:1 › a real exercise first pass awards ten and confirmed lesson completion adds twenty plus one daily five; failure, repetition and refresh preserve the ledger 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 37
+
+    @@ -108,10 +108,47 @@
+            "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.10\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.5\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.7\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.6\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.9\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.8\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+            "writerId": "f9b2dd43-da42-4d8e-9362-327c39fa17a0",
+          },
+          Object {
+            "authority": "blocks",
+    +       "captureVersion": 3,
+    +       "codeText": "#include <stdio.h>
+    + int main(void) {
+    +     int x = 7;
+    +     return 0;
+    + }
+    + ",
+    +       "createdAt": "2026-10-30T23:19:40.354Z",
+    +       "documentRevision": 1,
+    +       "entryId": "67493aac-3a3b-4c30-ac39-7326129035c7",
+    +       "generation": "3097627c-5b8b-4532-b459-e86a9b09a207",
+    +       "historyVersion": "1.0.0",
+    +       "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+    +       "reason": "initial",
+    +       "restoredFrom": null,
+    +       "scope": Object {
+    +         "exerciseRef": Object {
+    +           "id": "exercise.c.echo",
+    +           "version": "1.1.0",
+    +         },
+    +         "mode": "independent",
+    +         "packageRef": Object {
+    +           "id": "content.c.p05",
+    +           "version": "1.0.0",
+    +         },
+    +         "programRef": Object {
+    +           "id": "program.c.echo",
+    +           "version": "1.0.0",
+    +         },
+    +       },
+    +       "sequence": 4,
+    +       "state": "synced",
+    +       "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+    +       "writerId": "f9b2dd43-da42-4d8e-9362-327c39fa17a0",
+    +     },
+    +     Object {
+    +       "authority": "blocks",
+            "captureVersion": 1,
+            "codeText": "#include <stdio.h>
+      int main(void) {
+          int x = 7;
+          printf(\"%d\", x);
+
+      467 |   await openPractice(page);
+      468 |   await submitPractice(page, 'unmet');
+    > 469 |   expect(await snapshot(page)).toEqual(completed);
+          |                                ^
+      470 |   await correctStarter(page, exerciseId);
+      471 |   await submitPractice(page);
+      472 |   await savedPass(page);
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\rewards.spec.ts:469:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.1\regression-first-output\rewards-a-real-exercise-fi-84cbb-refresh-preserve-the-ledger-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.1\regression-first-output\rewards-a-real-exercise-fi-84cbb-refresh-preserve-the-ledger-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.1\regression-first-output\rewards-a-real-exercise-fi-84cbb-refresh-preserve-the-ledger-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.1\regression-first-output\rewards-a-real-exercise-fi-84cbb-refresh-preserve-the-ledger-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chrome] › tests\browser\rewards.spec.ts:520:1 › two real exercise pages concurrently passing share one ten-point first reward 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByTestId('learning-save-status')
+    Expected: "ready"
+    Received: "conflict"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+        14 × locator resolved to <div data-save-status="conflict" data-testid="learning-save-status">…</div>
+           - unexpected value "conflict"
+
+
+      58 |
+      59 | const localReady = (page: Page) =>
+    > 60 |   expect(saveStatus(page)).toHaveAttribute('data-save-status', 'ready');
+         |                            ^
+      61 |
+      62 | function points(data: StorageSnapshot) {
+      63 |   return data.ledger.reduce((total, row) => total + (row.points ?? 0), 0);
+        at localReady (D:\Files\Downloads\编程可视化教学平台\tests\browser\rewards.spec.ts:60:28)
+        at openPractice (D:\Files\Downloads\编程可视化教学平台\tests\browser\rewards.spec.ts:257:9)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\rewards.spec.ts:526:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.1\regression-first-output\rewards-two-real-exercise--fa6ec--one-ten-point-first-reward-chrome\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.1\regression-first-output\rewards-two-real-exercise--fa6ec--one-ten-point-first-reward-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.1\regression-first-output\rewards-two-real-exercise--fa6ec--one-ten-point-first-reward-chrome\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.1\regression-first-output\rewards-two-real-exercise--fa6ec--one-ten-point-first-reward-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.1\regression-first-output\rewards-two-real-exercise--fa6ec--one-ten-point-first-reward-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chrome] › tests\browser\player-controls.spec.ts:399:1 › a genuine Rust failure prefix remains playable and reaches its failed tail 
+    [chrome] › tests\browser\rewards.spec.ts:444:1 › a real exercise first pass awards ten and confirmed lesson completion adds twenty plus one daily five; failure, repetition and refresh preserve the ledger 
+    [chrome] › tests\browser\rewards.spec.ts:520:1 › two real exercise pages concurrently passing share one ten-point first reward 
+  46 passed (3.6m)
+[WebServer] (node:18132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:53020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:48320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

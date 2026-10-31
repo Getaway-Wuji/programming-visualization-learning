@@ -1,0 +1,1493 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--reporter=list,json",
+      "--trace",
+      "retain-on-failure",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.3\\candidate-download-second-output",
+      "snapshot-export.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.3/candidate-download-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.3/candidate-download-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.3/candidate-download-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.3\\candidate-download-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "snapshot-export.spec.ts",
+      "file": "snapshot-export.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "real downloads preserve current source, input and full state: C assignment",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1607,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:15.240Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-a840f9438b683d70310a",
+          "file": "snapshot-export.spec.ts",
+          "line": 219,
+          "column": 3
+        },
+        {
+          "title": "real downloads preserve current source, input and full state: C branch",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1567,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:17.713Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-8f9a8adc89ff007538b1",
+          "file": "snapshot-export.spec.ts",
+          "line": 219,
+          "column": 3
+        },
+        {
+          "title": "real downloads preserve current source, input and full state: C loops",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1757,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:19.287Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-d62a9141f23a67c85707",
+          "file": "snapshot-export.spec.ts",
+          "line": 219,
+          "column": 3
+        },
+        {
+          "title": "real downloads preserve current source, input and full state: C array-traversal",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1763,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:21.051Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-1c882af5e81de3d73da7",
+          "file": "snapshot-export.spec.ts",
+          "line": 219,
+          "column": 3
+        },
+        {
+          "title": "real downloads preserve current source, input and full state: C bubble-sort",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1887,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:22.819Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-0f693cd76d79ddb66c2f",
+          "file": "snapshot-export.spec.ts",
+          "line": 219,
+          "column": 3
+        },
+        {
+          "title": "real downloads preserve current source, input and full state: C selection-sort",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1903,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:24.712Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-8009d36770a77f66eb25",
+          "file": "snapshot-export.spec.ts",
+          "line": 219,
+          "column": 3
+        },
+        {
+          "title": "real downloads preserve current source, input and full state: C binary-search-first",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1845,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:26.623Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-7ccb7d7576584b78659f",
+          "file": "snapshot-export.spec.ts",
+          "line": 219,
+          "column": 3
+        },
+        {
+          "title": "real C/C++ memory downloads preserve complete restored state: pointers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1891,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:28.475Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-7ba7a7295d9f579e4b0a",
+          "file": "snapshot-export.spec.ts",
+          "line": 249,
+          "column": 3
+        },
+        {
+          "title": "real C/C++ memory downloads preserve complete restored state: scope",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1554,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:30.372Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-738a4a96145d0e4d445d",
+          "file": "snapshot-export.spec.ts",
+          "line": 249,
+          "column": 3
+        },
+        {
+          "title": "real C/C++ memory downloads preserve complete restored state: nodes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2084,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:31.933Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-efc82b5808eccadbb232",
+          "file": "snapshot-export.spec.ts",
+          "line": 249,
+          "column": 3
+        },
+        {
+          "title": "real C/C++ memory downloads preserve complete restored state: null",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1297,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:34.023Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-264aaa67cda8fcc22d5e",
+          "file": "snapshot-export.spec.ts",
+          "line": 249,
+          "column": 3
+        },
+        {
+          "title": "real C/C++ memory downloads preserve complete restored state: uninitialized",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1180,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:35.325Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-5b85659198a8d4ba0087",
+          "file": "snapshot-export.spec.ts",
+          "line": 249,
+          "column": 3
+        },
+        {
+          "title": "real C/C++ memory downloads preserve complete restored state: bounds",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1155,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:36.510Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-f742f032a08efcc80708",
+          "file": "snapshot-export.spec.ts",
+          "line": 249,
+          "column": 3
+        },
+        {
+          "title": "real C/C++ memory downloads preserve complete restored state: functions",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1736,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:37.671Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-a8d129b2fa8118b396b1",
+          "file": "snapshot-export.spec.ts",
+          "line": 249,
+          "column": 3
+        },
+        {
+          "title": "real C/C++ memory downloads preserve complete restored state: hanoi",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1933,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:39.414Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-c4ae898c68e46fefc809",
+          "file": "snapshot-export.spec.ts",
+          "line": 249,
+          "column": 3
+        },
+        {
+          "title": "real C/C++ memory downloads preserve complete restored state: quicksort",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1846,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:41.353Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-678d6796fab9b3025c5c",
+          "file": "snapshot-export.spec.ts",
+          "line": 249,
+          "column": 3
+        },
+        {
+          "title": "real C/C++ memory downloads preserve complete restored state: stack-limit",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1563,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:43.205Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-e517edc996465868a282",
+          "file": "snapshot-export.spec.ts",
+          "line": 249,
+          "column": 3
+        },
+        {
+          "title": "a real digest continuation cannot download after step-away-and-back",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1072,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:44.774Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-219c4bcaba999ce9ce57",
+          "file": "snapshot-export.spec.ts",
+          "line": 357,
+          "column": 3
+        },
+        {
+          "title": "a real canvas continuation cannot download after step-away-and-back",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1215,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:45.852Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-638033748b0b73115f00",
+          "file": "snapshot-export.spec.ts",
+          "line": 357,
+          "column": 3
+        },
+        {
+          "title": "a real fonts continuation cannot download after step-away-and-back",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1047,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:47.073Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-6bb10500ca468c8cf195",
+          "file": "snapshot-export.spec.ts",
+          "line": 357,
+          "column": 3
+        },
+        {
+          "title": "pending actual PNG is cancelled by source",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 858,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:48.126Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-961e0ce5dc30e1e5d647",
+          "file": "snapshot-export.spec.ts",
+          "line": 378,
+          "column": 3
+        },
+        {
+          "title": "pending actual PNG is cancelled by input",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 956,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:48.990Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-41226bfc4e47996c3096",
+          "file": "snapshot-export.spec.ts",
+          "line": 378,
+          "column": 3
+        },
+        {
+          "title": "pending actual PNG is cancelled by run",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 953,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:49.951Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-673a880e22be17f7a3c5",
+          "file": "snapshot-export.spec.ts",
+          "line": 378,
+          "column": 3
+        },
+        {
+          "title": "pending actual PNG is cancelled by mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 886,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:50.910Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-448ddc6fa625158672cd",
+          "file": "snapshot-export.spec.ts",
+          "line": 378,
+          "column": 3
+        },
+        {
+          "title": "pending actual PNG is cancelled by unmount",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 829,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:51.802Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-b3a4bb4168e249ee041d",
+          "file": "snapshot-export.spec.ts",
+          "line": 378,
+          "column": 3
+        },
+        {
+          "title": "pending actual PNG is cancelled by clear",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1241,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:52.636Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-3d68224b0524dfdf530e",
+          "file": "snapshot-export.spec.ts",
+          "line": 378,
+          "column": 3
+        },
+        {
+          "title": "manual cancellation, native encoding failure, timeout and download failure all allow explicit retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6659,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:25:53.884Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-30cb509596bf9e97391f",
+          "file": "snapshot-export.spec.ts",
+          "line": 408,
+          "column": 1
+        },
+        {
+          "title": "literal Unicode seed remains inert in files and absent from URLs, console and learning stores",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1252,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:26:00.549Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-154d99489b341c63c87f",
+          "file": "snapshot-export.spec.ts",
+          "line": 438,
+          "column": 1
+        },
+        {
+          "title": "an export pauses the original playing memory model and never resumes it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1533,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:26:01.809Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-f2b9d7fbcffcc08084d9",
+          "file": "snapshot-export.spec.ts",
+          "line": 472,
+          "column": 1
+        },
+        {
+          "title": "the real 32-frame prefix exports intact JSON and refuses an oversized complete picture",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6174,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('snapshot-export')\nExpected: \u001b[32m\"\u001b[7mfail\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mdownload-start\u001b[27med\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('snapshot-export') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('snapshot-export')\u001b[22m\n\u001b[2m    2 × locator resolved to <section aria-label=\"当前快照导出\" data-phase=\"capturing\" class=\"snapshot-export\" data-testid=\"snapshot-export\">…</section>\u001b[22m\n\u001b[2m      - unexpected value \"capturing\"\u001b[22m\n\u001b[2m    12 × locator resolved to <section aria-label=\"当前快照导出\" class=\"snapshot-export\" data-testid=\"snapshot-export\" data-phase=\"download-started\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"download-started\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('snapshot-export')\nExpected: \u001b[32m\"\u001b[7mfail\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mdownload-start\u001b[27med\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('snapshot-export') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('snapshot-export')\u001b[22m\n\u001b[2m    2 × locator resolved to <section aria-label=\"当前快照导出\" data-phase=\"capturing\" class=\"snapshot-export\" data-testid=\"snapshot-export\">…</section>\u001b[22m\n\u001b[2m      - unexpected value \"capturing\"\u001b[22m\n\u001b[2m    12 × locator resolved to <section aria-label=\"当前快照导出\" class=\"snapshot-export\" data-testid=\"snapshot-export\" data-phase=\"download-started\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"download-started\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\snapshot-export.spec.ts:505:29",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\snapshot-export.spec.ts",
+                      "column": 29,
+                      "line": 505
+                    },
+                    "snippet": "  503 |   p.on('download', () => count++);\n  504 |   await formatButton(p, 'png').click();\n> 505 |   await expect(exporter(p)).toHaveAttribute('data-phase', 'failed');\n      |                             ^\n  506 |   await expect(p.getByTestId('snapshot-export-status')).toContainText('没有截断内容');\n  507 |   expect(count).toBe(0);\n  508 |   verify((await download(p, 'json')).document, real, cursor);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\snapshot-export.spec.ts",
+                        "column": 29,
+                        "line": 505
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('snapshot-export')\nExpected: \u001b[32m\"\u001b[7mfail\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mdownload-start\u001b[27med\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('snapshot-export') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('snapshot-export')\u001b[22m\n\u001b[2m    2 × locator resolved to <section aria-label=\"当前快照导出\" data-phase=\"capturing\" class=\"snapshot-export\" data-testid=\"snapshot-export\">…</section>\u001b[22m\n\u001b[2m      - unexpected value \"capturing\"\u001b[22m\n\u001b[2m    12 × locator resolved to <section aria-label=\"当前快照导出\" class=\"snapshot-export\" data-testid=\"snapshot-export\" data-phase=\"download-started\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"download-started\"\u001b[22m\n\n\n  503 |   p.on('download', () => count++);\n  504 |   await formatButton(p, 'png').click();\n> 505 |   await expect(exporter(p)).toHaveAttribute('data-phase', 'failed');\n      |                             ^\n  506 |   await expect(p.getByTestId('snapshot-export-status')).toContainText('没有截断内容');\n  507 |   expect(count).toBe(0);\n  508 |   verify((await download(p, 'json')).document, real, cursor);\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\snapshot-export.spec.ts:505:29"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:26:03.348Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.3\\candidate-download-second-output\\snapshot-export-the-real-3-45e10--oversized-complete-picture-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.3\\candidate-download-second-output\\snapshot-export-the-real-3-45e10--oversized-complete-picture-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.3\\candidate-download-second-output\\snapshot-export-the-real-3-45e10--oversized-complete-picture-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\snapshot-export.spec.ts",
+                    "column": 29,
+                    "line": 505
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-ac4990625729f07474a1",
+          "file": "snapshot-export.spec.ts",
+          "line": 491,
+          "column": 1
+        },
+        {
+          "title": "changing a case input cancels the actual pending picture and invalidates its final receipt",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6236,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '下载状态文件（JSON）', exact: true })\nExpected: disabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('button', { name: '下载状态文件（JSON）', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '下载状态文件（JSON）', exact: true })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '下载状态文件（JSON）', exact: true })\nExpected: disabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('button', { name: '下载状态文件（JSON）', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '下载状态文件（JSON）', exact: true })\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\snapshot-export.spec.ts:525:41",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\snapshot-export.spec.ts",
+                      "column": 41,
+                      "line": 525
+                    },
+                    "snippet": "  523 |   await p.waitForTimeout(150);\n  524 |   expect(count).toBe(0);\n> 525 |   await expect(formatButton(p, 'json')).toBeDisabled();\n      |                                         ^\n  526 | });\n  527 | test('an isolated public template copy executes and exports its actual CRLF Chinese and emoji source', async ({\n  528 |   page: p,"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\snapshot-export.spec.ts",
+                        "column": 41,
+                        "line": 525
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '下载状态文件（JSON）', exact: true })\nExpected: disabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('button', { name: '下载状态文件（JSON）', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '下载状态文件（JSON）', exact: true })\u001b[22m\n\n\n  523 |   await p.waitForTimeout(150);\n  524 |   expect(count).toBe(0);\n> 525 |   await expect(formatButton(p, 'json')).toBeDisabled();\n      |                                         ^\n  526 | });\n  527 | test('an isolated public template copy executes and exports its actual CRLF Chinese and emoji source', async ({\n  528 |   page: p,\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\snapshot-export.spec.ts:525:41"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:26:11.044Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.3\\candidate-download-second-output\\snapshot-export-changing-a-9e95f-validates-its-final-receipt-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.3\\candidate-download-second-output\\snapshot-export-changing-a-9e95f-validates-its-final-receipt-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.3\\candidate-download-second-output\\snapshot-export-changing-a-9e95f-validates-its-final-receipt-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\snapshot-export.spec.ts",
+                    "column": 41,
+                    "line": 525
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-c5377a89c2e5523f71f1",
+          "file": "snapshot-export.spec.ts",
+          "line": 510,
+          "column": 1
+        },
+        {
+          "title": "an isolated public template copy executes and exports its actual CRLF Chinese and emoji source",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1452,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:26:19.547Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-7e287d00fff506cf0222",
+          "file": "snapshot-export.spec.ts",
+          "line": 527,
+          "column": 1
+        },
+        {
+          "title": "selected caller frames and view switches do not narrow the complete exported memory state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1050,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:26:22.029Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-6db8e77c811f8503fc89",
+          "file": "snapshot-export.spec.ts",
+          "line": 547,
+          "column": 1
+        },
+        {
+          "title": "snapshot controls fit and download from the minimal interface at 1440px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1106,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:26:23.085Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-66c66ea503191cbe68b7",
+          "file": "snapshot-export.spec.ts",
+          "line": 568,
+          "column": 3
+        },
+        {
+          "title": "snapshot controls fit and download from the minimal interface at 768px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1005,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:26:24.197Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-4263e571564340173aad",
+          "file": "snapshot-export.spec.ts",
+          "line": 568,
+          "column": 3
+        },
+        {
+          "title": "snapshot controls fit and download from the minimal interface at 390px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 986,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T01:26:25.208Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8911dbe7e0ed0b5c44cf-92719105a81a844bfd48",
+          "file": "snapshot-export.spec.ts",
+          "line": 568,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-31T01:25:14.549Z",
+    "duration": 73535.63,
+    "expected": 34,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

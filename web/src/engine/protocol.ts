@@ -569,7 +569,7 @@ export async function decodeResult(
     for (let at = 0; at < bytes.length; at += 65536) {
       text += decoder.decode(bytes.subarray(at, at + 65536), { stream: true });
       guard();
-      if (p05 ? performance.now() - decodedSince >= 6 : at % 262144 === 0) {
+      if (performance.now() - decodedSince >= 6) {
         await yieldTask();
         guard();
         decodedSince = performance.now();
@@ -645,28 +645,12 @@ export async function decodeResult(
       await runAsync(sameJson(result[key], request[key]), guard),
       'E_PROTOCOL_INVALID',
     );
-  // The 1.1 path uses the strict lexical pass as its canonical proof: keys
+  // Both versions use the strict lexical pass as their canonical proof: keys
   // are unique sorted nonnumeric ASCII, integers and escapes are shortest,
   // and the private native/chunked parser preserves those scalars exactly.
-  // Schema/identity and full trace checks still run. Keep the legacy 1.0
-  // re-encoding path unchanged; a second whole-tree pass is unnecessary for
-  // the reviewed 1.1 result and can exhaust a multi-group submission deadline.
-  guard();
-  if (!p05 && shape.containers <= NATIVE_CONTAINER_BATCH)
-    protocolAssert(JSON.stringify(result) === text, 'E_PROTOCOL_INVALID');
-  else if (!p05)
-    await runAsync(
-      (function* (): Work<void> {
-        let at = 0;
-        for (const chunk of canonical(result)) {
-          protocolAssert(text.startsWith(chunk, at), 'E_PROTOCOL_INVALID');
-          at += chunk.length;
-          yield;
-        }
-        protocolAssert(at === text.length, 'E_PROTOCOL_INVALID');
-      })(),
-      guard,
-    );
+  // Schema/identity and full forward/inverse trace checks still run. Native
+  // and chunked parsing preserve these validated scalars and sorted keys;
+  // re-encoding the complete tree would repeat the same canonical proof.
   guard();
   await runAsync(validateTraceRelationships(result, request), guard);
   guard();

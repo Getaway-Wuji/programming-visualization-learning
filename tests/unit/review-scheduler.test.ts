@@ -269,7 +269,7 @@ describe('explicit evaluations, corrections and command identity', () => {
       revision: 8,
     };
     const original = structuredClone(old);
-    expect(upgradeV4Meta(old)).toMatchObject({ schemaVersion: '6.0.0', dbVersion: 6, revision: 9 });
+    expect(upgradeV4Meta(old)).toMatchObject({ schemaVersion: '7.0.0', dbVersion: 7, revision: 9 });
     expect(old).toEqual(original);
     expect(() => upgradeV4Meta({ ...old, schemaVersion: '9.0.0' })).toThrow('S_VERSION_UNKNOWN');
   });

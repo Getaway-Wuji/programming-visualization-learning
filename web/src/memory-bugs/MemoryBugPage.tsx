@@ -133,7 +133,7 @@ function MemoryBugWorkspace({ question }: { question: MemoryBugQuestion }) {
     (e) => e.ref.id === question.exerciseRef.id && e.passed,
   );
   const saveState =
-    state.save === 'unsaved' && passed && learning.lastSaved && learning.pendingCount === 0
+    state.save === 'unsaved' && passed && learning.status === 'ready' && learning.pendingCount === 0
       ? 'saved'
       : state.save;
   const range =

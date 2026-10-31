@@ -1,0 +1,814 @@
+{
+  "request": {
+    "budgetRef": {
+      "id": "budget.p0",
+      "version": "1.0.0"
+    },
+    "diagnosticVersion": "1.0.0",
+    "encodingVersion": "1.0.0",
+    "engineRef": {
+      "buildId": "aed203f4fe30ccaafdb32d0c68c2a1f2634c10726c82977684d4e3d20228679d",
+      "id": "engine.c.p0",
+      "version": "1.0.0"
+    },
+    "identity": {
+      "contextId": "a98ecbe9-306f-4040-a028-f8f35ac2d895",
+      "contextRevision": 3,
+      "runId": "6f30ea57-5bec-4606-8104-bf010b61cbda",
+      "sourceRevision": 1,
+      "submissionId": "c6467b53-7d65-433b-ba7f-b7516d850664",
+      "testCaseKey": "positive"
+    },
+    "input": {
+      "random": null,
+      "specRef": {
+        "id": "input.c.quotient-remainder",
+        "version": "1.0.0"
+      },
+      "values": {
+        "a": 7,
+        "b": 3
+      }
+    },
+    "judge": {
+      "expectedExitCode": 0,
+      "expectedStdout": "2 1\n",
+      "profileRef": {
+        "id": "judge.c.quotient-remainder",
+        "version": "1.0.0"
+      },
+      "rule": "integer-quotient-remainder"
+    },
+    "judgeVersion": "1.1.0",
+    "kind": "execute",
+    "languageRef": {
+      "id": "lang.c",
+      "version": "1.0.0"
+    },
+    "learningRevision": 1,
+    "mode": "exercise-test",
+    "packageRef": {
+      "id": "content.c.p05",
+      "version": "1.0.0"
+    },
+    "programRef": {
+      "id": "program.c.practice-quotient-remainder",
+      "version": "1.0.0"
+    },
+    "protocolVersion": "1.1.0",
+    "remainingMs": 995,
+    "source": {
+      "bindingMap": [
+        {
+          "bindingKey": "param.a",
+          "byteRange": {
+            "end": 50,
+            "start": 40
+          }
+        },
+        {
+          "bindingKey": "param.b",
+          "byteRange": {
+            "end": 65,
+            "start": 55
+          }
+        }
+      ],
+      "blockMap": [
+        {
+          "blockId": "lesson.block.1",
+          "byteRange": {
+            "end": 50,
+            "start": 40
+          }
+        },
+        {
+          "blockId": "lesson.block.2",
+          "byteRange": {
+            "end": 65,
+            "start": 55
+          }
+        },
+        {
+          "blockId": "block.code.6",
+          "byteRange": {
+            "end": 115,
+            "start": 114
+          }
+        },
+        {
+          "blockId": "block.code.7",
+          "byteRange": {
+            "end": 119,
+            "start": 118
+          }
+        },
+        {
+          "blockId": "block.code.8",
+          "byteRange": {
+            "end": 119,
+            "start": 114
+          }
+        },
+        {
+          "blockId": "block.code.9",
+          "byteRange": {
+            "end": 121,
+            "start": 99
+          }
+        },
+        {
+          "blockId": "block.code.10",
+          "byteRange": {
+            "end": 130,
+            "start": 129
+          }
+        },
+        {
+          "blockId": "block.code.11",
+          "byteRange": {
+            "end": 131,
+            "start": 122
+          }
+        },
+        {
+          "blockId": "block.code.12",
+          "byteRange": {
+            "end": 133,
+            "start": 19
+          }
+        }
+      ],
+      "text": "#include <stdio.h>\nint main(void) {\n    int a = 7;\n    int b = 3;\n    // 中文😀：保留原稿\nprintf(\"%d\\n\", a / 0); return 0;\n}\n"
+    },
+    "subjectRef": {
+      "id": "exercise.c.quotient-remainder",
+      "version": "1.0.0"
+    },
+    "subsetRef": {
+      "id": "subset.c.p0",
+      "version": "1.0.0"
+    },
+    "traceVersion": "1.0.0"
+  },
+  "result": {
+    "budgetRef": {
+      "id": "budget.p0",
+      "version": "1.0.0"
+    },
+    "diagnosticVersion": "1.0.0",
+    "encodingVersion": "1.0.0",
+    "engineRef": {
+      "buildId": "aed203f4fe30ccaafdb32d0c68c2a1f2634c10726c82977684d4e3d20228679d",
+      "id": "engine.c.p0",
+      "version": "1.0.0"
+    },
+    "identity": {
+      "contextId": "a98ecbe9-306f-4040-a028-f8f35ac2d895",
+      "contextRevision": 3,
+      "runId": "6f30ea57-5bec-4606-8104-bf010b61cbda",
+      "sourceRevision": 1,
+      "submissionId": "c6467b53-7d65-433b-ba7f-b7516d850664",
+      "testCaseKey": "positive"
+    },
+    "judgeResult": {
+      "caseKey": "positive",
+      "checks": [
+        {
+          "diagnosticCodes": [],
+          "key": "input-bindings",
+          "nodeIds": [],
+          "status": "not-evaluated",
+          "stepSeqs": []
+        },
+        {
+          "diagnosticCodes": [],
+          "key": "stdout-exact",
+          "nodeIds": [],
+          "status": "not-evaluated",
+          "stepSeqs": []
+        },
+        {
+          "diagnosticCodes": [],
+          "key": "exit-zero",
+          "nodeIds": [],
+          "status": "not-evaluated",
+          "stepSeqs": []
+        },
+        {
+          "diagnosticCodes": [],
+          "key": "teaching-target",
+          "nodeIds": [],
+          "status": "not-evaluated",
+          "stepSeqs": []
+        }
+      ],
+      "coverage": [],
+      "observations": [],
+      "profileRef": {
+        "id": "judge.c.quotient-remainder",
+        "version": "1.0.0"
+      },
+      "status": "not-evaluated"
+    },
+    "judgeVersion": "1.1.0",
+    "kind": "result",
+    "languageRef": {
+      "id": "lang.c",
+      "version": "1.0.0"
+    },
+    "learningRevision": 1,
+    "nodeMap": [
+      {
+        "byteRange": {
+          "end": 133,
+          "start": 19
+        },
+        "kind": "function",
+        "nodeId": "n1",
+        "parentId": null
+      },
+      {
+        "byteRange": {
+          "end": 133,
+          "start": 34
+        },
+        "kind": "block",
+        "nodeId": "n2",
+        "parentId": "n1"
+      },
+      {
+        "byteRange": {
+          "end": 50,
+          "start": 40
+        },
+        "kind": "declaration",
+        "nodeId": "n3",
+        "parentId": "n2"
+      },
+      {
+        "byteRange": {
+          "end": 49,
+          "start": 48
+        },
+        "kind": "expression",
+        "nodeId": "n4",
+        "parentId": "n3"
+      },
+      {
+        "byteRange": {
+          "end": 65,
+          "start": 55
+        },
+        "kind": "declaration",
+        "nodeId": "n5",
+        "parentId": "n2"
+      },
+      {
+        "byteRange": {
+          "end": 64,
+          "start": 63
+        },
+        "kind": "expression",
+        "nodeId": "n6",
+        "parentId": "n5"
+      },
+      {
+        "byteRange": {
+          "end": 121,
+          "start": 99
+        },
+        "kind": "output",
+        "nodeId": "n7",
+        "parentId": "n2"
+      },
+      {
+        "byteRange": {
+          "end": 119,
+          "start": 114
+        },
+        "kind": "expression",
+        "nodeId": "n8",
+        "parentId": "n7"
+      },
+      {
+        "byteRange": {
+          "end": 115,
+          "start": 114
+        },
+        "kind": "expression",
+        "nodeId": "n9",
+        "parentId": "n8"
+      },
+      {
+        "byteRange": {
+          "end": 119,
+          "start": 118
+        },
+        "kind": "expression",
+        "nodeId": "n10",
+        "parentId": "n8"
+      },
+      {
+        "byteRange": {
+          "end": 131,
+          "start": 122
+        },
+        "kind": "return",
+        "nodeId": "n11",
+        "parentId": "n2"
+      },
+      {
+        "byteRange": {
+          "end": 130,
+          "start": 129
+        },
+        "kind": "expression",
+        "nodeId": "n12",
+        "parentId": "n11"
+      }
+    ],
+    "packageRef": {
+      "id": "content.c.p05",
+      "version": "1.0.0"
+    },
+    "producer": "rust",
+    "programRef": {
+      "id": "program.c.practice-quotient-remainder",
+      "version": "1.0.0"
+    },
+    "protocolVersion": "1.1.0",
+    "resolvedBindings": [
+      {
+        "bindingKey": "param.a",
+        "declarationNodeId": "n3"
+      },
+      {
+        "bindingKey": "param.b",
+        "declarationNodeId": "n5"
+      }
+    ],
+    "stats": {
+      "fuelUsed": 4198,
+      "maxAstDepth": 2,
+      "maxSyntaxDepth": 2,
+      "peakVirtualBytes": 8,
+      "rustMicros": 5000
+    },
+    "subjectRef": {
+      "id": "exercise.c.quotient-remainder",
+      "version": "1.0.0"
+    },
+    "subsetRef": {
+      "id": "subset.c.p0",
+      "version": "1.0.0"
+    },
+    "terminal": {
+      "cursor": 5,
+      "diagnostics": [
+        {
+          "code": "E_DIV_ZERO",
+          "details": {},
+          "location": {
+            "byteRange": {
+              "end": 119,
+              "start": 114
+            },
+            "kind": "source"
+          },
+          "origin": "rust",
+          "severity": "error",
+          "stage": "execute"
+        }
+      ],
+      "exitCode": null,
+      "location": {
+        "byteRange": {
+          "end": 119,
+          "start": 114
+        },
+        "kind": "source"
+      },
+      "status": "program-error"
+    },
+    "trace": {
+      "checkpoints": [
+        {
+          "cursor": 0,
+          "state": {
+            "allocator": {
+              "liveBytes": 0,
+              "nextAddress": 4096,
+              "nextFrame": 1,
+              "nextObject": 1,
+              "nextScope": 1
+            },
+            "control": {
+              "activeFrameId": null,
+              "flowStack": [],
+              "nextNodeId": "n1",
+              "phase": "ready",
+              "returnValue": null
+            },
+            "counters": {
+              "arrayWrites": 0,
+              "comparisons": 0,
+              "scalarWrites": 0,
+              "swaps": 0
+            },
+            "frames": [],
+            "objects": [],
+            "output": "",
+            "scopes": []
+          }
+        }
+      ],
+      "completeness": "prefix",
+      "dslVersion": "1.0.0",
+      "initialState": {
+        "allocator": {
+          "liveBytes": 0,
+          "nextAddress": 4096,
+          "nextFrame": 1,
+          "nextObject": 1,
+          "nextScope": 1
+        },
+        "control": {
+          "activeFrameId": null,
+          "flowStack": [],
+          "nextNodeId": "n1",
+          "phase": "ready",
+          "returnValue": null
+        },
+        "counters": {
+          "arrayWrites": 0,
+          "comparisons": 0,
+          "scalarWrites": 0,
+          "swaps": 0
+        },
+        "frames": [],
+        "objects": [],
+        "output": "",
+        "scopes": []
+      },
+      "steps": [
+        {
+          "changes": [
+            {
+              "after": {
+                "functionNodeId": "n1",
+                "id": "f1",
+                "parentFrameId": null,
+                "scopeIds": [
+                  "s1"
+                ]
+              },
+              "before": null,
+              "id": "f1",
+              "index": 0,
+              "op": "record",
+              "table": "frames"
+            },
+            {
+              "after": {
+                "frameId": "f1",
+                "id": "s1",
+                "kind": "main",
+                "nodeId": "n2",
+                "objectIds": [],
+                "parentScopeId": null
+              },
+              "before": null,
+              "id": "s1",
+              "index": 0,
+              "op": "record",
+              "table": "scopes"
+            },
+            {
+              "after": {
+                "activeFrameId": "f1",
+                "flowStack": [
+                  {
+                    "iteration": 0,
+                    "nodeId": "n2",
+                    "stage": "block"
+                  }
+                ],
+                "nextNodeId": "n3",
+                "phase": "running",
+                "returnValue": null
+              },
+              "before": {
+                "activeFrameId": null,
+                "flowStack": [],
+                "nextNodeId": "n1",
+                "phase": "ready",
+                "returnValue": null
+              },
+              "op": "control"
+            },
+            {
+              "after": {
+                "liveBytes": 0,
+                "nextAddress": 4096,
+                "nextFrame": 2,
+                "nextObject": 1,
+                "nextScope": 2
+              },
+              "before": {
+                "liveBytes": 0,
+                "nextAddress": 4096,
+                "nextFrame": 1,
+                "nextObject": 1,
+                "nextScope": 1
+              },
+              "op": "allocator"
+            }
+          ],
+          "kind": "program.enter",
+          "location": {
+            "edge": "whole",
+            "kind": "source",
+            "nodeId": "n1"
+          },
+          "observations": [],
+          "seq": 1
+        },
+        {
+          "changes": [
+            {
+              "after": {
+                "frameId": "f1",
+                "id": "s1",
+                "kind": "main",
+                "nodeId": "n2",
+                "objectIds": [
+                  "o1"
+                ],
+                "parentScopeId": null
+              },
+              "before": {
+                "frameId": "f1",
+                "id": "s1",
+                "kind": "main",
+                "nodeId": "n2",
+                "objectIds": [],
+                "parentScopeId": null
+              },
+              "id": "s1",
+              "index": 0,
+              "op": "record",
+              "table": "scopes"
+            },
+            {
+              "after": {
+                "baseAddress": 4096,
+                "cells": [],
+                "declarationNodeId": "n3",
+                "defaultValue": null,
+                "frameId": "f1",
+                "id": "o1",
+                "kind": "int",
+                "length": 1,
+                "name": "a",
+                "scopeId": "s1"
+              },
+              "before": null,
+              "id": "o1",
+              "index": 0,
+              "op": "record",
+              "table": "objects"
+            },
+            {
+              "after": {
+                "liveBytes": 4,
+                "nextAddress": 4100,
+                "nextFrame": 2,
+                "nextObject": 2,
+                "nextScope": 2
+              },
+              "before": {
+                "liveBytes": 0,
+                "nextAddress": 4096,
+                "nextFrame": 2,
+                "nextObject": 1,
+                "nextScope": 2
+              },
+              "op": "allocator"
+            }
+          ],
+          "kind": "object.declare",
+          "location": {
+            "edge": "whole",
+            "kind": "source",
+            "nodeId": "n3"
+          },
+          "observations": [],
+          "seq": 2
+        },
+        {
+          "changes": [
+            {
+              "after": 7,
+              "before": null,
+              "index": 0,
+              "objectId": "o1",
+              "op": "cell"
+            },
+            {
+              "after": {
+                "activeFrameId": "f1",
+                "flowStack": [
+                  {
+                    "iteration": 0,
+                    "nodeId": "n2",
+                    "stage": "block"
+                  }
+                ],
+                "nextNodeId": "n5",
+                "phase": "running",
+                "returnValue": null
+              },
+              "before": {
+                "activeFrameId": "f1",
+                "flowStack": [
+                  {
+                    "iteration": 0,
+                    "nodeId": "n2",
+                    "stage": "block"
+                  }
+                ],
+                "nextNodeId": "n3",
+                "phase": "running",
+                "returnValue": null
+              },
+              "op": "control"
+            },
+            {
+              "after": {
+                "arrayWrites": 0,
+                "comparisons": 0,
+                "scalarWrites": 1,
+                "swaps": 0
+              },
+              "before": {
+                "arrayWrites": 0,
+                "comparisons": 0,
+                "scalarWrites": 0,
+                "swaps": 0
+              },
+              "op": "counters"
+            }
+          ],
+          "kind": "value.initialize",
+          "location": {
+            "edge": "whole",
+            "kind": "source",
+            "nodeId": "n3"
+          },
+          "observations": [],
+          "seq": 3
+        },
+        {
+          "changes": [
+            {
+              "after": {
+                "frameId": "f1",
+                "id": "s1",
+                "kind": "main",
+                "nodeId": "n2",
+                "objectIds": [
+                  "o1",
+                  "o2"
+                ],
+                "parentScopeId": null
+              },
+              "before": {
+                "frameId": "f1",
+                "id": "s1",
+                "kind": "main",
+                "nodeId": "n2",
+                "objectIds": [
+                  "o1"
+                ],
+                "parentScopeId": null
+              },
+              "id": "s1",
+              "index": 0,
+              "op": "record",
+              "table": "scopes"
+            },
+            {
+              "after": {
+                "baseAddress": 4100,
+                "cells": [],
+                "declarationNodeId": "n5",
+                "defaultValue": null,
+                "frameId": "f1",
+                "id": "o2",
+                "kind": "int",
+                "length": 1,
+                "name": "b",
+                "scopeId": "s1"
+              },
+              "before": null,
+              "id": "o2",
+              "index": 1,
+              "op": "record",
+              "table": "objects"
+            },
+            {
+              "after": {
+                "liveBytes": 8,
+                "nextAddress": 4104,
+                "nextFrame": 2,
+                "nextObject": 3,
+                "nextScope": 2
+              },
+              "before": {
+                "liveBytes": 4,
+                "nextAddress": 4100,
+                "nextFrame": 2,
+                "nextObject": 2,
+                "nextScope": 2
+              },
+              "op": "allocator"
+            }
+          ],
+          "kind": "object.declare",
+          "location": {
+            "edge": "whole",
+            "kind": "source",
+            "nodeId": "n5"
+          },
+          "observations": [],
+          "seq": 4
+        },
+        {
+          "changes": [
+            {
+              "after": 3,
+              "before": null,
+              "index": 0,
+              "objectId": "o2",
+              "op": "cell"
+            },
+            {
+              "after": {
+                "activeFrameId": "f1",
+                "flowStack": [
+                  {
+                    "iteration": 0,
+                    "nodeId": "n2",
+                    "stage": "block"
+                  }
+                ],
+                "nextNodeId": "n7",
+                "phase": "running",
+                "returnValue": null
+              },
+              "before": {
+                "activeFrameId": "f1",
+                "flowStack": [
+                  {
+                    "iteration": 0,
+                    "nodeId": "n2",
+                    "stage": "block"
+                  }
+                ],
+                "nextNodeId": "n5",
+                "phase": "running",
+                "returnValue": null
+              },
+              "op": "control"
+            },
+            {
+              "after": {
+                "arrayWrites": 0,
+                "comparisons": 0,
+                "scalarWrites": 2,
+                "swaps": 0
+              },
+              "before": {
+                "arrayWrites": 0,
+                "comparisons": 0,
+                "scalarWrites": 1,
+                "swaps": 0
+              },
+              "op": "counters"
+            }
+          ],
+          "kind": "value.initialize",
+          "location": {
+            "edge": "whole",
+            "kind": "source",
+            "nodeId": "n5"
+          },
+          "observations": [],
+          "seq": 5
+        }
+      ]
+    },
+    "traceVersion": "1.0.0"
+  }
+}

@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,readdirSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const dir='.artifacts/16.10',root='项目文档/验收/2026-10-31-CI修复同步与清理',sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
+const manifest=JSON.parse(readFileSync(root+'/archive-manifest.json'));
+assert.equal(sha(root+'/ci-repair-evidence.zip'),manifest.archiveSha256);assert.equal(sha(root+'/repair-08aae414.bundle'),manifest.bundleSha256);
+const paths=['项目文档/交接/2026-10-31-CI修复同步与临时副本清理-交接.md',...readdirSync(root).map(n=>root+'/'+n)];
+const files=paths.map(path=>({path,sha256:sha(path),ownership:'Completed external CI sync/cleanup evidence; preserved, excluded from16.10 ownership and Git plan.'}));
+const copy=JSON.parse(readFileSync(dir+'/delivery-source.json'));
+const copiedExternalNonRuntimeRecords=copy.copied.filter(f=>paths.includes(f.path));for(const f of copiedExternalNonRuntimeRecords)assert.equal(sha(f.path),f.sha256,f.path);
+writeFileSync(dir+'/external-supplement47.json',JSON.stringify({task:'16.10',atUtc:new Date().toISOString(),files,copiedExternalNonRuntimeRecords,scope:'The local isolated source snapshot also contained these then-visible non-runtime external records. They were not build configuration or any of the299 reviewed product inputs; their presence is not claimed as16.10 work and they are not copied into this task raw archive. The prior CI repair directory was recycled by user-authorized cleanup, which explains the unavailable-copy match flags in the first snapshot.',fixCommit:manifest.fixCommit,baseCommit:manifest.baseCommit},null,2)+'\n',{flag:'wx'});console.log({foreignRecords:files.length,localSourceCopyNonRuntime:copiedExternalNonRuntimeRecords.length});

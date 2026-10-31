@@ -233,7 +233,7 @@ describe('11.3 exact derived learning levels', () => {
     });
     expect(deriveLearningLevel('9'.repeat(400), config).level).toBe(5);
   });
-  it.each(['', '-1', '1.0', '01', ' 30', '1e3', 'NaN', 'Infinity'])(
+  it.each(['', '-0', '1.0', '01', ' 30', '1e3', 'NaN', 'Infinity'])(
     'rejects noncanonical confirmed totals %j',
     (value) => {
       expect(() => deriveLearningLevel(value, config)).toThrow('PROFILE_POINTS_INVALID');

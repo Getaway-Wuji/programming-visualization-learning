@@ -1,0 +1,82 @@
+{
+  "request": {
+    "analysisVersion": "1.0.0",
+    "identity": {
+      "contextId": "dea94d9a-5874-460c-87b7-d28c73d8a51a",
+      "contextRevision": 3,
+      "documentRevision": 2,
+      "editId": "da11645f-b84e-493d-95e8-66ffbb3beef9",
+      "operationId": "f9a64539-ff30-47a9-a9ec-48102c3c0ed6"
+    },
+    "input": {
+      "random": null,
+      "specRef": {
+        "id": "input.c.scalar-x",
+        "version": "1.0.0"
+      },
+      "values": {
+        "x": 7
+      }
+    },
+    "kind": "analysisRequest",
+    "refs": {
+      "packageRef": {
+        "id": "content.c.p05",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.c.echo",
+        "version": "1.0.0"
+      },
+      "subsetRef": {
+        "id": "subset.c.p0",
+        "version": "1.0.0"
+      }
+    },
+    "sourceText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    // 中文😀：保留原稿\n@\n}\n"
+  },
+  "result": {
+    "analysisVersion": "1.0.0",
+    "diagnostics": [
+      {
+        "code": "E_LEX_INVALID",
+        "details": {
+          "expected": "P0-C character"
+        },
+        "location": {
+          "byteRange": {
+            "end": 85,
+            "start": 84
+          },
+          "kind": "source"
+        },
+        "origin": "rust",
+        "severity": "error",
+        "stage": "lex"
+      }
+    ],
+    "identity": {
+      "contextId": "dea94d9a-5874-460c-87b7-d28c73d8a51a",
+      "contextRevision": 3,
+      "documentRevision": 2,
+      "editId": "da11645f-b84e-493d-95e8-66ffbb3beef9",
+      "operationId": "f9a64539-ff30-47a9-a9ec-48102c3c0ed6"
+    },
+    "kind": "analysisResult",
+    "refs": {
+      "packageRef": {
+        "id": "content.c.p05",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.c.echo",
+        "version": "1.0.0"
+      },
+      "subsetRef": {
+        "id": "subset.c.p0",
+        "version": "1.0.0"
+      }
+    },
+    "status": "invalid"
+  }
+}

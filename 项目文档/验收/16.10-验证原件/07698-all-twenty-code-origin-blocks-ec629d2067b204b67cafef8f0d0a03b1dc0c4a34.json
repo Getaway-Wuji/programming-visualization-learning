@@ -1,0 +1,963 @@
+{
+  "label": "all-twenty-code-origin-blocks",
+  "browser": "chrome",
+  "phase": "ran",
+  "sync": "synced",
+  "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\nint y; y=1; int a[3]={+7,-2,-0}; {int z=1; z=z+1;} if(x>=0 && !(x<0)){y=a[0];}else{} while(0){continue;break;} for(int i=0;i<1;i=i+1){a[i]=i;} printf(\"%d\\n\",+x); return 0;\n}\n",
+  "archive": {
+    "achievements": [],
+    "aliases": [],
+    "appearance": [
+      {
+        "preset": "minimal",
+        "themeOverrides": {
+          "minimal": {
+            "accentColor": null
+          },
+          "cute": {
+            "accentColor": null
+          },
+          "glass": {
+            "accentColor": null
+          },
+          "soft": {
+            "accentColor": null
+          },
+          "cool": {
+            "accentColor": null
+          },
+          "tech": {
+            "accentColor": null
+          }
+        },
+        "blockWorkspace": "show",
+        "layout": {
+          "sidebar": "expanded",
+          "workbenchMode": "standard",
+          "splitRatios": {
+            "practice": 50,
+            "visualize": 35,
+            "review": 35
+          }
+        },
+        "background": {
+          "assetId": null,
+          "visible": false,
+          "fit": "cover",
+          "position": "center",
+          "overlayOpacity": 75
+        }
+      }
+    ],
+    "appearanceAssets": [],
+    "avatar": [
+      {
+        "presetId": "avatar.basic.01",
+        "accentColor": "#168A72"
+      }
+    ],
+    "dailyFacts": [
+      {
+        "eventType": "exercise.passed",
+        "subjectRef": {
+          "id": "exercise.c.increment-at-index",
+          "version": "1.1.0"
+        },
+        "canonicalSubjectId": "exercise.c.increment-at-index",
+        "occurredAt": "2026-10-31T10:19:16.017Z",
+        "localDate": "2026-10-31"
+      },
+      {
+        "eventType": "exercise.passed",
+        "subjectRef": {
+          "id": "exercise.c.two-loop-sums",
+          "version": "1.1.0"
+        },
+        "canonicalSubjectId": "exercise.c.two-loop-sums",
+        "occurredAt": "2026-10-31T10:19:15.386Z",
+        "localDate": "2026-10-31"
+      },
+      {
+        "eventType": "exercise.passed",
+        "subjectRef": {
+          "id": "exercise.c.two-x-plus-three",
+          "version": "1.1.0"
+        },
+        "canonicalSubjectId": "exercise.c.two-x-plus-three",
+        "occurredAt": "2026-10-31T10:19:14.707Z",
+        "localDate": "2026-10-31"
+      },
+      {
+        "eventType": "lesson.completed",
+        "subjectRef": {
+          "id": "lesson.c.array-update",
+          "version": "1.1.0"
+        },
+        "canonicalSubjectId": "lesson.c.array-update",
+        "occurredAt": "2026-10-31T10:19:16.017Z",
+        "localDate": "2026-10-31"
+      },
+      {
+        "eventType": "lesson.completed",
+        "subjectRef": {
+          "id": "lesson.c.expressions",
+          "version": "1.1.0"
+        },
+        "canonicalSubjectId": "lesson.c.expressions",
+        "occurredAt": "2026-10-31T10:19:14.707Z",
+        "localDate": "2026-10-31"
+      },
+      {
+        "eventType": "lesson.completed",
+        "subjectRef": {
+          "id": "lesson.c.loops",
+          "version": "1.1.0"
+        },
+        "canonicalSubjectId": "lesson.c.loops",
+        "occurredAt": "2026-10-31T10:19:15.386Z",
+        "localDate": "2026-10-31"
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "126981d4-16f9-4164-800f-994ee7df38a0",
+        "writerId": "f48502da-ae25-49d5-9be2-9333f8353c15",
+        "generation": "14360bbe-07bf-4b5c-baba-0054bcc4bdee",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T10:19:15.147Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.two-loop-sums",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.two-loop-sums",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int n = 0;\n    int i = 1;\n    int sumWhile = 0;\n    while ((i <= n)) {\n        sumWhile = (sumWhile + i);\n        i = (i + 1);\n    }\n    int sumFor = 0;\n    for (int j = 1; (j <= n); j = (j + 1)) {\n        sumFor = (sumFor + j);\n    }\n    printf(\"%d\\n%d\\n\", sumWhile, sumFor);\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.41\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.n\",\"name\":\"n\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"n\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.5\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"i\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.4\",\"fields\":{\"VALUE\":\"1\"}}}},\"next\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.7\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"sumWhile\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}},\"next\":{\"block\":{\"type\":\"cv_while\",\"id\":\"block.code.19\",\"inputs\":{\"CONDITION\":{\"block\":{\"type\":\"cv_compare\",\"id\":\"block.code.10\",\"fields\":{\"OP\":\"<=\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.8\",\"fields\":{\"NAME\":\"i\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.9\",\"fields\":{\"NAME\":\"n\"}}}}}},\"BODY\":{\"block\":{\"type\":\"cv_assign\",\"id\":\"block.code.14\",\"fields\":{\"NAME\":\"sumWhile\"},\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.13\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.11\",\"fields\":{\"NAME\":\"sumWhile\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.12\",\"fields\":{\"NAME\":\"i\"}}}}}}},\"next\":{\"block\":{\"type\":\"cv_assign\",\"id\":\"block.code.18\",\"fields\":{\"NAME\":\"i\"},\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.17\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.15\",\"fields\":{\"NAME\":\"i\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.16\",\"fields\":{\"VALUE\":\"1\"}}}}}}}}}}}},\"next\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.21\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"sumFor\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.20\",\"fields\":{\"VALUE\":\"0\"}}}},\"next\":{\"block\":{\"type\":\"cv_for\",\"id\":\"block.code.35\",\"inputs\":{\"INIT\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.23\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"j\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.22\",\"fields\":{\"VALUE\":\"1\"}}}}}},\"CONDITION\":{\"block\":{\"type\":\"cv_compare\",\"id\":\"block.code.30\",\"fields\":{\"OP\":\"<=\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.28\",\"fields\":{\"NAME\":\"j\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.29\",\"fields\":{\"NAME\":\"n\"}}}}}},\"UPDATE\":{\"block\":{\"type\":\"cv_assign\",\"id\":\"block.code.27\",\"fields\":{\"NAME\":\"j\"},\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.26\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.24\",\"fields\":{\"NAME\":\"j\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.25\",\"fields\":{\"VALUE\":\"1\"}}}}}}}}},\"BODY\":{\"block\":{\"type\":\"cv_assign\",\"id\":\"block.code.34\",\"fields\":{\"NAME\":\"sumFor\"},\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.33\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.31\",\"fields\":{\"NAME\":\"sumFor\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.32\",\"fields\":{\"NAME\":\"j\"}}}}}}}}}},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.38\",\"extraState\":{\"arguments\":2},\"fields\":{\"FORMAT\":\"%d\\\\n%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.36\",\"fields\":{\"NAME\":\"sumWhile\"}}},\"ARG1\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.37\",\"fields\":{\"NAME\":\"sumFor\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.40\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.39\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.loop-count\",\"version\":\"1.0.0\"},\"values\":{\"n\":0}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 4
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "1439d31e-b164-4b54-954e-713f9a9bc95d",
+        "writerId": "f48502da-ae25-49d5-9be2-9333f8353c15",
+        "generation": "14360bbe-07bf-4b5c-baba-0054bcc4bdee",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T10:19:15.648Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.increment-at-index",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.increment-at-index",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {4, 0, -2};\n    int k = 0;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.n\",\"name\":\"n\",\"targetKind\":\"logical-length\"}},\"fields\":{\"NAME\":\"n\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_array_declare\",\"id\":\"lesson.block.2\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.values\",\"name\":\"values\",\"targetKind\":\"array\"}},\"fields\":{\"NAME\":\"values\"},\"next\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.3\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.k\",\"name\":\"k\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"k\",\"INITIALIZE\":false}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.array-update\",\"version\":\"1.0.0\"},\"values\":{\"k\":0,\"values\":[4,0,-2]}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 5
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "3a71678a-161d-4e2a-bef8-168af60ccd84",
+        "writerId": "3b664fa2-ff6b-44a0-932c-673997c766da",
+        "generation": "14360bbe-07bf-4b5c-baba-0054bcc4bdee",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T10:19:16.669Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\nint y; y=1; int a[3]={+7,-2,-0}; {int z=1; z=z+1;} if(x>=0 && !(x<0)){y=a[0];}else{} while(0){continue;break;} for(int i=0;i<1;i=i+1){a[i]=i;} printf(\"%d\\n\",+x); return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.49\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.4\",\"extraState\":{\"hasInitial\":false},\"fields\":{\"NAME\":\"y\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_assign\",\"id\":\"block.code.6\",\"fields\":{\"NAME\":\"y\"},\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.5\",\"fields\":{\"VALUE\":\"1\"}}}},\"next\":{\"block\":{\"type\":\"cv_array_declare\",\"id\":\"block.code.7\",\"fields\":{\"NAME\":\"a\",\"LENGTH\":\"3\",\"VALUES\":\"7, -2, 0\"},\"next\":{\"block\":{\"type\":\"cv_scope\",\"id\":\"block.code.14\",\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.9\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"z\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.8\",\"fields\":{\"VALUE\":\"1\"}}}},\"next\":{\"block\":{\"type\":\"cv_assign\",\"id\":\"block.code.13\",\"fields\":{\"NAME\":\"z\"},\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.12\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.10\",\"fields\":{\"NAME\":\"z\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.11\",\"fields\":{\"VALUE\":\"1\"}}}}}}}}}}}},\"next\":{\"block\":{\"type\":\"cv_if\",\"id\":\"block.code.26\",\"extraState\":{\"hasElse\":true},\"fields\":{\"HAS_ELSE\":true},\"inputs\":{\"CONDITION\":{\"block\":{\"type\":\"cv_logic\",\"id\":\"block.code.22\",\"fields\":{\"OP\":\"&&\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_compare\",\"id\":\"block.code.17\",\"fields\":{\"OP\":\">=\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.15\",\"fields\":{\"NAME\":\"x\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.16\",\"fields\":{\"VALUE\":\"0\"}}}}}},\"RIGHT\":{\"block\":{\"type\":\"cv_unary\",\"id\":\"block.code.21\",\"fields\":{\"OP\":\"!\"},\"inputs\":{\"OPERAND\":{\"block\":{\"type\":\"cv_compare\",\"id\":\"block.code.20\",\"fields\":{\"OP\":\"<\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.18\",\"fields\":{\"NAME\":\"x\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.19\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}},\"THEN\":{\"block\":{\"type\":\"cv_assign\",\"id\":\"block.code.25\",\"fields\":{\"NAME\":\"y\"},\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_array_read\",\"id\":\"block.code.24\",\"fields\":{\"NAME\":\"a\"},\"inputs\":{\"INDEX\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.23\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}},\"next\":{\"block\":{\"type\":\"cv_while\",\"id\":\"block.code.30\",\"inputs\":{\"CONDITION\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.27\",\"fields\":{\"VALUE\":\"0\"}}},\"BODY\":{\"block\":{\"type\":\"cv_continue\",\"id\":\"block.code.28\",\"next\":{\"block\":{\"type\":\"cv_break\",\"id\":\"block.code.29\"}}}}},\"next\":{\"block\":{\"type\":\"cv_for\",\"id\":\"block.code.43\",\"inputs\":{\"INIT\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.32\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"i\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.31\",\"fields\":{\"VALUE\":\"0\"}}}}}},\"CONDITION\":{\"block\":{\"type\":\"cv_compare\",\"id\":\"block.code.39\",\"fields\":{\"OP\":\"<\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.37\",\"fields\":{\"NAME\":\"i\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.38\",\"fields\":{\"VALUE\":\"1\"}}}}}},\"UPDATE\":{\"block\":{\"type\":\"cv_assign\",\"id\":\"block.code.36\",\"fields\":{\"NAME\":\"i\"},\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.35\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.33\",\"fields\":{\"NAME\":\"i\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.34\",\"fields\":{\"VALUE\":\"1\"}}}}}}}}},\"BODY\":{\"block\":{\"type\":\"cv_array_write\",\"id\":\"block.code.42\",\"fields\":{\"NAME\":\"a\"},\"inputs\":{\"INDEX\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.40\",\"fields\":{\"NAME\":\"i\"}}},\"VALUE\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.41\",\"fields\":{\"NAME\":\"i\"}}}}}}},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.46\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_unary\",\"id\":\"block.code.45\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"OPERAND\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.44\",\"fields\":{\"NAME\":\"x\"}}}}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.48\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.47\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}}}}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 8
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "43e9cf81-b838-4116-bdd2-50d99937e7cf",
+        "writerId": "f48502da-ae25-49d5-9be2-9333f8353c15",
+        "generation": "14360bbe-07bf-4b5c-baba-0054bcc4bdee",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T10:19:15.776Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.increment-at-index",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.increment-at-index",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {4, 0, -2};\n    int k = 0;\n    values[k] = (values[k] + 1);\n    printf(\"%d\\n\", values[k]);\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.19\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.n\",\"name\":\"n\",\"targetKind\":\"logical-length\"}},\"fields\":{\"NAME\":\"n\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_array_declare\",\"id\":\"lesson.block.2\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.values\",\"name\":\"values\",\"targetKind\":\"array\"}},\"fields\":{\"NAME\":\"values\"},\"next\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.3\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.k\",\"name\":\"k\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"k\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_array_write\",\"id\":\"block.code.13\",\"fields\":{\"NAME\":\"values\"},\"inputs\":{\"INDEX\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.8\",\"fields\":{\"NAME\":\"k\"}}},\"VALUE\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.12\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_array_read\",\"id\":\"block.code.10\",\"fields\":{\"NAME\":\"values\"},\"inputs\":{\"INDEX\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.9\",\"fields\":{\"NAME\":\"k\"}}}}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.11\",\"fields\":{\"VALUE\":\"1\"}}}}}}},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.16\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_array_read\",\"id\":\"block.code.15\",\"fields\":{\"NAME\":\"values\"},\"inputs\":{\"INDEX\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.14\",\"fields\":{\"NAME\":\"k\"}}}}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.18\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.17\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.array-update\",\"version\":\"1.0.0\"},\"values\":{\"k\":0,\"values\":[4,0,-2]}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 6
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "5827ac83-68b8-48fe-b459-366e37bf6242",
+        "writerId": "3b664fa2-ff6b-44a0-932c-673997c766da",
+        "generation": "14360bbe-07bf-4b5c-baba-0054bcc4bdee",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T10:19:16.457Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 7
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "97e301cf-d81c-411b-8852-7146e2ecc395",
+        "writerId": "f48502da-ae25-49d5-9be2-9333f8353c15",
+        "generation": "14360bbe-07bf-4b5c-baba-0054bcc4bdee",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T10:19:15.044Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.two-loop-sums",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.two-loop-sums",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int n = 0;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.n\",\"name\":\"n\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"n\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.loop-count\",\"version\":\"1.0.0\"},\"values\":{\"n\":0}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 3
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "a463a510-3d93-48da-81e6-40492f325272",
+        "writerId": "f48502da-ae25-49d5-9be2-9333f8353c15",
+        "generation": "14360bbe-07bf-4b5c-baba-0054bcc4bdee",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T10:19:14.387Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.two-x-plus-three",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.two-x-plus-three",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 1
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "ae164e67-a812-400b-add2-3148fa558b41",
+        "writerId": "f48502da-ae25-49d5-9be2-9333f8353c15",
+        "generation": "14360bbe-07bf-4b5c-baba-0054bcc4bdee",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T10:19:14.500Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.two-x-plus-three",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.two-x-plus-three",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int result = ((2 * x) + 3);\n    printf(\"%d\\n\", result);\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.14\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.9\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"result\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.8\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.6\",\"fields\":{\"OP\":\"*\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.4\",\"fields\":{\"VALUE\":\"2\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.5\",\"fields\":{\"NAME\":\"x\"}}}}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.7\",\"fields\":{\"VALUE\":\"3\"}}}}}}},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.11\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.10\",\"fields\":{\"NAME\":\"result\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.13\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.12\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 2
+      }
+    ],
+    "goals": [
+      {
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "targets": {
+          "exercise": 1,
+          "lesson": 1,
+          "case": 0
+        },
+        "achievedAt": "2026-10-31T10:19:14.707Z"
+      }
+    ],
+    "knowledgeMarks": [],
+    "ledger": [
+      {
+        "sourceId": "reward.daily-goal.once",
+        "subjectId": "local-goal.2026-10-31",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T10:19:14.707Z",
+        "status": "posted",
+        "points": 5,
+        "policyRef": {
+          "id": "reward.policy.daily-goal.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.increment-at-index",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T10:19:16.017Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.two-loop-sums",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T10:19:15.386Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.two-x-plus-three",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T10:19:14.707Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.lesson.first-completion",
+        "subjectId": "lesson.c.array-update",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T10:19:16.017Z",
+        "status": "posted",
+        "points": 20,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.lesson.first-completion",
+        "subjectId": "lesson.c.expressions",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T10:19:14.707Z",
+        "status": "posted",
+        "points": 20,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.lesson.first-completion",
+        "subjectId": "lesson.c.loops",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T10:19:15.386Z",
+        "status": "posted",
+        "points": 20,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "meta": [
+      {
+        "schemaVersion": "7.0.0",
+        "dbVersion": 7,
+        "generation": "14360bbe-07bf-4b5c-baba-0054bcc4bdee",
+        "revision": 14,
+        "timeZone": "Asia/Shanghai",
+        "createdAt": "2026-10-31T10:19:13.995Z",
+        "activePackageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.increment-at-index",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:16.017Z",
+        "lastAt": "2026-10-31T10:19:16.017Z"
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.two-loop-sums",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:15.386Z",
+        "lastAt": "2026-10-31T10:19:15.386Z"
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.two-x-plus-three",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:14.707Z",
+        "lastAt": "2026-10-31T10:19:14.707Z"
+      },
+      {
+        "eventType": "lesson.completed",
+        "result": "completed",
+        "subjectRef": {
+          "id": "lesson.c.array-update",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:16.017Z",
+        "lastAt": "2026-10-31T10:19:16.017Z"
+      },
+      {
+        "eventType": "lesson.completed",
+        "result": "completed",
+        "subjectRef": {
+          "id": "lesson.c.expressions",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:14.707Z",
+        "lastAt": "2026-10-31T10:19:14.707Z"
+      },
+      {
+        "eventType": "lesson.completed",
+        "result": "completed",
+        "subjectRef": {
+          "id": "lesson.c.loops",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:15.386Z",
+        "lastAt": "2026-10-31T10:19:15.386Z"
+      },
+      {
+        "eventType": "lesson.started",
+        "result": "started",
+        "subjectRef": {
+          "id": "lesson.c.array-update",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:15.536Z",
+        "lastAt": "2026-10-31T10:19:15.536Z"
+      },
+      {
+        "eventType": "lesson.started",
+        "result": "started",
+        "subjectRef": {
+          "id": "lesson.c.expressions",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:14.207Z",
+        "lastAt": "2026-10-31T10:19:14.207Z"
+      },
+      {
+        "eventType": "lesson.started",
+        "result": "started",
+        "subjectRef": {
+          "id": "lesson.c.loops",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:14.922Z",
+        "lastAt": "2026-10-31T10:19:14.922Z"
+      },
+      {
+        "eventType": "lesson.study-confirmed",
+        "result": "confirmed",
+        "subjectRef": {
+          "id": "lesson.c.array-update",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:15.620Z",
+        "lastAt": "2026-10-31T10:19:15.620Z"
+      },
+      {
+        "eventType": "lesson.study-confirmed",
+        "result": "confirmed",
+        "subjectRef": {
+          "id": "lesson.c.expressions",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:14.270Z",
+        "lastAt": "2026-10-31T10:19:14.270Z"
+      },
+      {
+        "eventType": "lesson.study-confirmed",
+        "result": "confirmed",
+        "subjectRef": {
+          "id": "lesson.c.loops",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:19:15.004Z",
+        "lastAt": "2026-10-31T10:19:15.004Z"
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.two-loop-sums",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "0392eb65-e40e-49aa-bb0f-439789bc2141",
+        "occurredAt": "2026-10-31T10:19:15.386Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 10
+      },
+      {
+        "eventType": "lesson.study-confirmed",
+        "result": "confirmed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "lesson.c.expressions",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "1603cab8-51e0-4a98-b5c2-baab7259c711",
+        "occurredAt": "2026-10-31T10:19:14.270Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 5
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.two-x-plus-three",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "19b06117-6bcf-4162-9934-bad56514d02e",
+        "occurredAt": "2026-10-31T10:19:14.707Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 7
+      },
+      {
+        "eventType": "lesson.study-confirmed",
+        "result": "confirmed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "lesson.c.array-update",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "1a8e5f55-29b7-4c72-8964-51198814ed2f",
+        "occurredAt": "2026-10-31T10:19:15.620Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 12
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.increment-at-index",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "6c229824-a32a-4519-a9b2-7b005b81edbd",
+        "occurredAt": "2026-10-31T10:19:16.017Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 13
+      },
+      {
+        "eventType": "lesson.study-confirmed",
+        "result": "confirmed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "lesson.c.loops",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "6f4a57dc-a1ab-4f92-82e6-cd2a921bd706",
+        "occurredAt": "2026-10-31T10:19:15.004Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 9
+      },
+      {
+        "eventType": "lesson.started",
+        "result": "started",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "lesson.c.expressions",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "8d6cae0e-3855-4209-83b5-0f3636eb4bff",
+        "occurredAt": "2026-10-31T10:19:14.207Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 4
+      },
+      {
+        "eventType": "lesson.started",
+        "result": "started",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "lesson.c.loops",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "c6900640-b2a3-4b90-bfe1-682c8f51d4d7",
+        "occurredAt": "2026-10-31T10:19:14.922Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 8
+      },
+      {
+        "eventType": "lesson.started",
+        "result": "started",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "lesson.c.array-update",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "f5e0ca09-e8b2-4bf7-bd0e-33c987b52264",
+        "occurredAt": "2026-10-31T10:19:15.536Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 11
+      }
+    ],
+    "reviewCards": [],
+    "settings": [
+      {
+        "theme": "light",
+        "reducedMotion": "system",
+        "playbackRate": 1,
+        "goalTemplate": {
+          "revision": 1,
+          "targets": {
+            "exercise": 1,
+            "lesson": 1,
+            "case": 0
+          }
+        }
+      }
+    ]
+  },
+  "captures": [
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "d74954fe-1f69-4255-80fc-ba4259149c8a",
+      "responseOperationId": "d74954fe-1f69-4255-80fc-ba4259149c8a",
+      "catalogJson": null,
+      "requestBytes": 610,
+      "responseBytes": 2714
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "fe45aebd-f7f4-4976-a96f-6d2a51bd7d3e",
+      "responseOperationId": "fe45aebd-f7f4-4976-a96f-6d2a51bd7d3e",
+      "catalogJson": null,
+      "requestBytes": 771,
+      "responseBytes": 19657
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "524a0b5f-ca03-4a39-90d7-3f8bd7a55a91",
+      "responseOperationId": "524a0b5f-ca03-4a39-90d7-3f8bd7a55a91",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.echo\",\"version\":\"1.1.0\",\"title\":\"输出输入变量\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.variables-output\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.variables\",\"version\":\"1.0.0\"},{\"id\":\"knowledge.c.output\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.echo\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.echo\",\"version\":\"1.0.0\"},\"prompt\":\"保留输入源变量x（-999到999），用输出积木读取x，输出它的十进制整数和一个换行，不要加提示文字。例：x=7输出7并换行，x=0输出0，x=-9输出-9。必须实际声明、读取输入变量，不能打印固定答案。所有测试正常结束且main返回0。思路：先找到输入声明，再把变量读取放进printf的%d参数。\",\"tests\":[{\"caseKey\":\"positive\",\"input\":{\"x\":7},\"expectedStdout\":\"7\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zero\",\"input\":{\"x\":0},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"negative\",\"input\":{\"x\":-9},\"expectedStdout\":\"-9\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.echo\",\"version\":\"1.0.0\",\"title\":\"变量输出参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"exampleInput\":{\"x\":7},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int x = 7;\\n    printf(\\\"%d\\\\n\\\", x);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.x\",\"inputKey\":\"x\",\"targetName\":\"x\",\"targetKind\":\"scalar\",\"from\":\"field\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"},{\"id\":\"block.c.unary\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-01\"}},\"inputSpec\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\",\"title\":\"普通整数x\",\"fields\":[{\"key\":\"x\",\"kind\":\"integer\",\"min\":-999,\"max\":999}],\"relations\":[]},\"judgeProfile\":{\"id\":\"judge.c.echo\",\"version\":\"1.0.0\",\"title\":\"输入读取输出检查\",\"rule\":\"input-read-output\",\"targetDescription\":\"真实声明并读取x，输出依赖输入，不打印固定答案。\"}}",
+      "requestBytes": 4426,
+      "responseBytes": 35857
+    }
+  ],
+  "runs": [
+    {
+      "identity": {
+        "contextId": "31b8b176-d65b-4d6e-a489-b5925883563a",
+        "contextRevision": 2,
+        "runId": "915dfe3b-9ebe-43a4-9199-3f8a4a497b79",
+        "sourceRevision": 1,
+        "submissionId": "244e3097-8d87-48c9-aad4-c9a91235a6ba",
+        "testCaseKey": "positive"
+      },
+      "terminal": {
+        "cursor": 29,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n68"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "positive",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n65"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              28
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n65"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              28
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n65"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              28
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n65"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              28
+            ]
+          }
+        ],
+        "coverage": [],
+        "observations": [],
+        "profileRef": {
+          "id": "judge.c.echo",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    }
+  ]
+}

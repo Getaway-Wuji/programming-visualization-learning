@@ -1,0 +1,36 @@
+
+ RUN  v5.0.4 D:/Files/Downloads/编程可视化教学平台
+
+ ❯ tests/unit/memory-bugs.test.ts (9 tests | 1 failed | 8 skipped) 1104ms
+   ↓ real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-uninitialized-pointer
+   ↓ real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-dangling-pointer
+   ↓ real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-missing-update
+   × real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-wrong-direction 1012ms
+   ↓ rejects identity/input/version additions and old consumers reject the companion
+   ↓ closed judgement refuses tampering or pretending a pointer error is met
+   ↓ precise 40 identities preserve the original36 and refuse field/version/parent/case drift
+   ↓ private pass capability requires four actual accepted results and live ownership
+   ↓ code-only history keeps original text and rejects old generations or foreign input
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/memory-bugs.test.ts > real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-wrong-direction
+Error: E_DEADLINE
+ ❯ MemoryExecutionClient.fail web/src/engine/memory-client.ts:96:22
+     94|       code === 'E_CANCELLED' ? 'cancelled' : code === 'E_DEADLINE' ? '…
+     95|     this.release(operation);
+     96|     operation.reject(new Error(code));
+       |                      ^
+     97|   }
+     98|   cancel() {
+ ❯ Timeout.<anonymous> web/src/engine/memory-client.ts:146:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  07:26:10
+   Duration  1.51s (tests 84%, transform 9%, import 7%)
+
+JSON report written to D:/Files/Downloads/编程可视化教学平台/.artifacts/16.1/frontend-direction-recheck.json

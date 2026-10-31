@@ -1,0 +1,223 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "catalog.cpp.stack-queue",
+  "version": "1.0.0",
+  "inputEncoding": {
+    "version": "1.0.0",
+    "maxEncodedItems": 30,
+    "maxDraftChars": 1024,
+    "inCode": 1,
+    "outCode": 2
+  },
+  "cases": [
+    {
+      "id": "case.cpp.array-stack",
+      "version": "1.0.0",
+      "programId": "program.cpp.array-stack",
+      "programVersion": "1.0.0",
+      "language": "cpp",
+      "kind": "stack",
+      "title": "数组栈",
+      "description": "沿真实C++操作观察后进先出，分清有效栈项、容量端点与物理残值。",
+      "objectives": [
+        "区分逻辑有效项与物理未初始化/残值",
+        "核对真实空满结果和输入槽消费",
+        "前后单步恢复完整存储/输出/计数"
+      ],
+      "min": -999,
+      "max": 999,
+      "capacity": 5,
+      "defaultDraft": "入 7\n入 -3\n出\n入 0\n出\n入 9\n出",
+      "variant": "容量5，top为有效项数/下次入栈位置；有效段[0,top)，满拒绝入、空拒绝出，出栈保留物理残值。",
+      "complexity": "每条操作O(1)，m条操作O(m)；输出、轨迹编码与校验开销另计，播放速度不代表算法时间。",
+      "extraSpace": "data[5]占20教学字节，另有常数标量；无堆节点/动态容器/递归。",
+      "sourceFile": "content/algorithms/cpp/array-stack-1.0.0.cpp",
+      "knowledgeConcepts": [
+        "数组",
+        "栈",
+        "后进先出",
+        "空满边界"
+      ],
+      "sourceOrigin": "project-original",
+      "boundaryDrafts": [
+        {
+          "id": "empty",
+          "title": "空序列",
+          "draft": "[]"
+        },
+        {
+          "id": "full",
+          "title": "填满后再入，再出",
+          "draft": "入 -999\n入 0\n入 999\n入 0\n入 -3\n入 2\n出"
+        },
+        {
+          "id": "drain",
+          "title": "连续出到空后再出",
+          "draft": "入 -999\n入 0\n入 999\n入 0\n入 -3\n出\n出\n出\n出\n出\n出"
+        },
+        {
+          "id": "alternate",
+          "title": "最大30槽，重复入0再出",
+          "draft": "入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出"
+        }
+      ],
+      "phases": [
+        {
+          "id": "setup",
+          "title": "建立物理存储与边界",
+          "explanation": "自动数组容量5且未初始化；边界/序号、消费数、处理数和结果逐个声明初始化，不能把尚未声明的值当0。"
+        },
+        {
+          "id": "read",
+          "title": "读取下一条命令",
+          "explanation": "读取命令码1或2，consumed按实际语句更新；cin游标与此变量的独立赋值不提前补齐。"
+        },
+        {
+          "id": "dispatch",
+          "title": "按命令选择分支",
+          "explanation": "C++按command分支决定入/出/非法码；结果只以实际outcome和cout为准，不按界面输入预演。"
+        },
+        {
+          "id": "insert",
+          "title": "读取入值并检查容量",
+          "explanation": "入操作继续读取一个值，即使已满也消费参数。满则真实FULL拒绝且不改结构数据/有效边界；未满才进入存储。"
+        },
+        {
+          "id": "store",
+          "title": "写入并发布有效项",
+          "explanation": "先写data[top]，再将top加1发布有效范围；两步之间新槽仍不算有效项。同值写可能只有写计数变化。"
+        },
+        {
+          "id": "remove",
+          "title": "检查空并处理出操作",
+          "explanation": "空结构输出EMPTY且不读data；非空分支才读取有效项。处理数/输入游标/输出仍会按源码变化。"
+        },
+        {
+          "id": "take",
+          "title": "取出并缩短有效范围",
+          "explanation": "先读data[top−1]，再将top减1，真实OUT输出取出的值；残值不清零，不能仍算栈项。"
+        },
+        {
+          "id": "invalid",
+          "title": "非法内部编码停止",
+          "explanation": "GUI编码不会产生此分支；受控非法码会输出INVALID、结果5并返回1，不能称作全部操作成功。"
+        },
+        {
+          "id": "advance",
+          "title": "完成一条命令",
+          "explanation": "processed加1，表示一条命令已完整处理，包括FULL/EMPTY业务拒绝；然后回到循环判断。"
+        },
+        {
+          "id": "finish",
+          "title": "输出结束标记并返回",
+          "explanation": "END是实际程序输出，表示序列处理结束，不等于每条命令都成功；main返回移除自动对象，后退可恢复。"
+        }
+      ]
+    },
+    {
+      "id": "case.cpp.circular-queue",
+      "version": "1.0.0",
+      "programId": "program.cpp.circular-queue",
+      "programVersion": "1.0.0",
+      "language": "cpp",
+      "kind": "circular-queue",
+      "title": "环形队列",
+      "description": "沿真实C++操作观察先进先出，用读写序号取模复用五个物理槽。",
+      "objectives": [
+        "区分逻辑有效项与物理未初始化/残值",
+        "核对真实空满结果和输入槽消费",
+        "前后单步恢复完整存储/输出/计数"
+      ],
+      "min": -999,
+      "max": 999,
+      "capacity": 5,
+      "defaultDraft": "入 7\n入 -3\n出\n入 0\n出\n入 9\n出",
+      "variant": "容量5，head/tail为单调读写序号，物理下标取模5，数量为tail−head；满差5、空差0，出队保留物理残值。",
+      "complexity": "每条操作O(1)，m条操作O(m)；输出、轨迹编码与校验开销另计，播放速度不代表算法时间。",
+      "extraSpace": "data[5]占20教学字节，另有常数标量；无堆节点/动态容器/递归。",
+      "sourceFile": "content/algorithms/cpp/circular-queue-1.0.0.cpp",
+      "knowledgeConcepts": [
+        "数组",
+        "队列",
+        "先进先出",
+        "环形存储",
+        "空满区分"
+      ],
+      "sourceOrigin": "project-original",
+      "boundaryDrafts": [
+        {
+          "id": "empty",
+          "title": "空序列",
+          "draft": "[]"
+        },
+        {
+          "id": "full",
+          "title": "填满后再入，再出",
+          "draft": "入 -999\n入 0\n入 999\n入 0\n入 -3\n入 2\n出"
+        },
+        {
+          "id": "wrap",
+          "title": "满/空与头尾绕回",
+          "draft": "入 1\n入 2\n入 3\n入 4\n入 5\n入 99\n出\n出\n出\n入 6\n入 7\n入 8\n出\n出\n出\n出\n出\n出"
+        },
+        {
+          "id": "alternate",
+          "title": "最大30槽，连续绕回",
+          "draft": "入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出\n入 0\n出"
+        }
+      ],
+      "phases": [
+        {
+          "id": "setup",
+          "title": "建立物理存储与边界",
+          "explanation": "自动数组容量5且未初始化；边界/序号、消费数、处理数和结果逐个声明初始化，不能把尚未声明的值当0。"
+        },
+        {
+          "id": "read",
+          "title": "读取下一条命令",
+          "explanation": "读取命令码1或2，consumed按实际语句更新；cin游标与此变量的独立赋值不提前补齐。"
+        },
+        {
+          "id": "dispatch",
+          "title": "按命令选择分支",
+          "explanation": "C++按command分支决定入/出/非法码；结果只以实际outcome和cout为准，不按界面输入预演。"
+        },
+        {
+          "id": "insert",
+          "title": "读取入值并检查容量",
+          "explanation": "入操作继续读取一个值，即使已满也消费参数。满则真实FULL拒绝且不改结构数据/有效边界；未满才进入存储。"
+        },
+        {
+          "id": "store",
+          "title": "写入并发布有效项",
+          "explanation": "slot=tail%5是Rust算出的真实局部值；先写该槽，再将tail加1发布有效项。序号本身不绕回，物理槽绕回。"
+        },
+        {
+          "id": "remove",
+          "title": "检查空并处理出操作",
+          "explanation": "空结构输出EMPTY且不读data；非空分支才读取有效项。处理数/输入游标/输出仍会按源码变化。"
+        },
+        {
+          "id": "take",
+          "title": "取出并缩短有效范围",
+          "explanation": "slot=head%5，先读该槽再head加1；有效范围随当前序号缩短，OUT按先进先出输出，旧槽残值保留。"
+        },
+        {
+          "id": "invalid",
+          "title": "非法内部编码停止",
+          "explanation": "GUI编码不会产生此分支；受控非法码会输出INVALID、结果5并返回1，不能称作全部操作成功。"
+        },
+        {
+          "id": "advance",
+          "title": "完成一条命令",
+          "explanation": "processed加1，表示一条命令已完整处理，包括FULL/EMPTY业务拒绝；然后回到循环判断。"
+        },
+        {
+          "id": "finish",
+          "title": "输出结束标记并返回",
+          "explanation": "END是实际程序输出，表示序列处理结束，不等于每条命令都成功；main返回移除自动对象，后退可恢复。"
+        }
+      ]
+    }
+  ]
+}

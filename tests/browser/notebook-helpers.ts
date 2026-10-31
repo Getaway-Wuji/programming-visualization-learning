@@ -97,9 +97,16 @@ async function openAnswer(page: Page, exerciseId: string) {
   await page.goto(`/#/practice/${exerciseId}`);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await ready(page);
-  const expand = page.getByRole('button', { name: '编辑 C 并同步积木', exact: true });
-  await expect(code(page).or(expand).first()).toBeVisible();
-  if (await expand.isVisible()) await expand.click();
+  // The normal auto preference can reveal code between checking and clicking
+  // its expander. Select the public code-only view before editing instead.
+  await page
+    .getByTestId('block-workspace-preference')
+    .getByRole('combobox', { name: '积木显示', exact: true })
+    .selectOption('hide');
+  await expect(page.getByTestId('practice-editor-layout')).toHaveAttribute(
+    'data-blocks-visible',
+    'no',
+  );
   await expect(code(page)).toBeEditable();
   await code(page).fill(source.source.text);
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');

@@ -1,0 +1,79 @@
+{
+  "caseId": "case.cpp.singly-linked-list",
+  "input": [
+    1,
+    0,
+    -999,
+    3,
+    2,
+    0,
+    3
+  ],
+  "identity": {
+    "runId": "86ea253a-0bcc-43e6-bcb2-3086049010df",
+    "sourceRevision": "e049adcc-1f6d-4166-9917-1cc1d7f7ec21"
+  },
+  "engine": {
+    "buildId": "4f3cb075dc0b7da3a0afc9dd96f178b6a1b71184f125c726ddf0b81384f6b3a7",
+    "id": "engine.rust.memory",
+    "version": "0.1.0"
+  },
+  "steps": 147,
+  "fuel": 10739,
+  "maxFrames": 2,
+  "maxHeap": 1,
+  "terminal": {
+    "byteRange": null,
+    "code": null,
+    "cursor": 147,
+    "returnValue": 0,
+    "status": "completed"
+  },
+  "expected": {
+    "commits": [
+      {
+        "size": 1,
+        "outcome": 1,
+        "consumed": 3,
+        "output": "INSERT -999\n",
+        "list": [
+          -999
+        ],
+        "tree": null
+      },
+      {
+        "size": 1,
+        "outcome": 3,
+        "consumed": 4,
+        "output": "INSERT -999\nLIST -999\n",
+        "list": [
+          -999
+        ],
+        "tree": null
+      },
+      {
+        "size": 0,
+        "outcome": 2,
+        "consumed": 6,
+        "output": "INSERT -999\nLIST -999\nDELETE -999\n",
+        "list": [],
+        "tree": null
+      },
+      {
+        "size": 0,
+        "outcome": 3,
+        "consumed": 7,
+        "output": "INSERT -999\nLIST -999\nDELETE -999\nLIST\n",
+        "list": [],
+        "tree": null
+      }
+    ],
+    "output": "INSERT -999\nLIST -999\nDELETE -999\nLIST\nEND\n"
+  },
+  "commits": [
+    48,
+    81,
+    115,
+    142
+  ]
+}

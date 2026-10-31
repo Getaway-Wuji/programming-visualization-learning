@@ -1,0 +1,64 @@
+.step-teaching {
+  padding: 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+.step-teaching-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.step-teaching h4,
+.step-teaching p {
+  margin: 0 0 12px;
+}
+.step-teaching ul {
+  padding-inline-start: 20px;
+  margin: 0 0 12px;
+}
+.step-mode,
+.challenge-checkpoints,
+.challenge-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.step-mode .button[aria-pressed='true'],
+.challenge-checkpoints .button[aria-pressed='true'] {
+  border-color: var(--ink);
+  font-weight: 600;
+}
+.challenge-rule {
+  color: var(--muted);
+}
+.challenge-choices {
+  flex-direction: column;
+  align-items: stretch;
+}
+.challenge-choices .button {
+  text-align: left;
+  justify-content: flex-start;
+  white-space: normal;
+  min-height: 44px;
+}
+.challenge-feedback {
+  border-inline-start: 3px solid var(--ink);
+  padding-inline-start: 12px;
+}
+.step-teaching {
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 640px) {
+  .step-teaching-heading {
+    gap: 8px;
+  }
+  .step-mode {
+    width: 100%;
+  }
+  .step-mode .button {
+    flex: 1;
+  }
+}

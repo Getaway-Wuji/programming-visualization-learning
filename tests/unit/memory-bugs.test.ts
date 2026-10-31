@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
@@ -48,16 +48,21 @@ const old = {
 };
 const catalog = extendMemoryBugLearning(old);
 let memory: WebAssembly.Memory;
+// This file is the declared controlled-clock semantic adapter. The real
+// 1000ms native Worker/deadline path is tested separately in the browser.
+beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] }));
+afterEach(() => vi.useRealTimers());
 beforeAll(() => {
   memory = wasm.initSync({ module: bytes }).memory;
 });
 afterAll(() => {
-  mkdirSync('.artifacts/14.4', { recursive: true });
+  const directory = `.artifacts/${process.env.TASK_EVIDENCE_TASK ?? '14.4'}`;
+  mkdirSync(directory, { recursive: true });
   const label = process.env.TASK_EVIDENCE_LABEL ?? String(Date.now());
   const compressed = gzipSync(JSON.stringify(raw));
-  writeFileSync(`.artifacts/14.4/memory-bug-raw-${label}.json.gz`, compressed, { flag: 'wx' });
+  writeFileSync(`${directory}/memory-bug-raw-${label}.json.gz`, compressed, { flag: 'wx' });
   writeFileSync(
-    `.artifacts/14.4/memory-bug-execution-${label}.json`,
+    `${directory}/memory-bug-execution-${label}.json`,
     JSON.stringify(
       {
         semanticAdapter: true,

@@ -1,0 +1,773 @@
+{
+  "task": "16.2",
+  "accepted": true,
+  "release": {
+    "path": "content/c/p0/blockly-release-1.0.37.json",
+    "bytes": 34460,
+    "sha256": "3a00ba84deb23be8b2bc3a1dd2eb9b4500ce4487884d7bd5dbb96901337d0041"
+  },
+  "sources": 210,
+  "frontend": {
+    "uniquePassed": 1609,
+    "fullPassed": 1608,
+    "earlierFullPassed": 1608,
+    "earlierFocusedPassed": 9,
+    "finalFocusedPassed": 1,
+    "singleBatchAllGreen": false
+  },
+  "browser": {
+    "uniquePassed": 119,
+    "reports": [
+      {
+        "path": ".artifacts/16.2/formal-comparison-37.json",
+        "bytes": 20476,
+        "sha256": "36ba03c1cfb7eb920e52074b21499502735aff0bbe72dc1d53ca6ce3873322f7"
+      },
+      {
+        "path": ".artifacts/16.2/storage-final37.json",
+        "bytes": 101041,
+        "sha256": "c48cd1fe679b63d77b8983d090f4d090ec22419d693aadacb67d1ec311e87ef9"
+      },
+      {
+        "path": ".artifacts/16.2/regression-formal.json",
+        "bytes": 695395,
+        "sha256": "cdde5caf0a1b6a5d21bcbc13e64573c6005437da9032433ebfeb8b7451b157de"
+      },
+      {
+        "path": ".artifacts/16.2/regression-case-set.json",
+        "bytes": 169436,
+        "sha256": "ddbf2e36707a03ec318ccdbf93208307f755e18b50c3299bc068dc867018356f"
+      },
+      {
+        "path": ".artifacts/16.2/regression-bubble.json",
+        "bytes": 41947,
+        "sha256": "3d633ec48cbe192ded414203179e25785b5ae535fff5c164a9665c58619f4d57"
+      },
+      {
+        "path": ".artifacts/16.2/regression-37.json",
+        "bytes": 35876,
+        "sha256": "0865894238f17047288ea1a3e5a81bf12760c92ac3bbd289024fa984e6e6e5d3"
+      }
+    ],
+    "cases": [
+      {
+        "key": "comparison.spec.ts:two independent real C programs receive identical data; controls and full-state counters restore without storage facts",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:real boundary pair: empty",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:real boundary pair: single",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:real boundary pair: equal",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:real boundary pair: sorted",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:real boundary pair: reverse",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:real boundary pair: limits",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:input limits reject before execution; maximum 30 values remain under original budgets or show the actual limit",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:algorithm swap, text, seed, length, generation and reset immediately invalidate; same seed is reproducible",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:one real Worker failure remains visible; other algorithm executes, then fresh run recovers",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:cancel during second run retains finalized first and never accepts the pending side; rerun recovers",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:editing during pending execution cancels old group; navigation and reload do not retain comparison input or traces",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:clearing the real local archive invalidates comparison in another tab",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "comparison.spec.ts:minimal representative three widths show both lanes without document overflow",
+        "report": "formal-comparison-37.json"
+      },
+      {
+        "key": "editor-history.spec.ts:13.4 native partition: atomic count/byte eviction, two writers, faults, corruption and clear barrier",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "editor-history.spec.ts:13.4 native DB2 migration preserves the eleven old projections; damaged known meta is clearable and future meta is untouched",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "editor-history.spec.ts:13.4 real editor: code history survives refresh, invalid drafts stay exact, old Rust runs clear and current locks still apply",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "editor-history.spec.ts:13.4 native block value/add/delete and drag endpoints restore exact canvas and remain usable at three widths",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "editor-history.spec.ts:13.4 production save failure stays visible, explicit retry preserves IDs and clear removes history across tabs",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:invalid display/avatar rows stay in native IDB while valid learning remains visible; confirmed local reset preserves every unrelated row",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:invalid progress and receipts are isolated without erasure and pause learning writes",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:an invalid ledger marks total points uncertain and cannot be converted into an empty or repaired reward history",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:known eleven-store archives with invalid or missing meta can be explicitly cleared into a fresh generation",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:unknown semantic and future physical versions refuse this client clear and preserve every native row",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:native quota and permission API faults leave provisional learning unsaved and retry the original command without extra rights",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:a new-day goal-open failure retries the original trusted occurrence without inventing a goal version or changing the date",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:an unavailable open permits clearly temporary learning without rebinding its facts when storage returns",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:aborting after native learning writes and after clear writes preserves the entire previous eleven-store archive",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:two actual same-origin pages merge same and different synthetic facts without dropped rows or duplicate first rewards",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:clear invalidates an in-flight command and queued local settings immediately, then prevents every old operation from restoring data",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:a peer that misses every notification still rejects its pre-clear command instead of rebinding it to the new generation",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:real production BroadcastChannel updates a peer without focus refresh and discards its old draft after another page clears",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:a production peer clear invalidates a pending real WASM download and its late network completion cannot revive the old check",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:production clear confirmation cancels without writes, then confirmed clear restores defaults in a fresh generation across refresh",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:production home visibly marks a corrupt ledger total as unconfirmed instead of displaying zero points",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:production singleton reset requires its own confirmation and leaves all unrelated stored settings and learning rows unchanged",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "recovery.spec.ts:actual isolated browser contexts keep native IDB through refresh and discard that isolated profile when the context closes",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:new native IndexedDB has twelve out-of-line stores, one saved default set and a nondestructive availability probe",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:synthetic receipt and unique reward survive refresh and closing/reopening a page without producing new facts",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:same receipt retries return the original revision and different IDs cannot duplicate the stable reward key",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:reusing an event ID with changed subject version, learning revision, occurrence time or goal version is rejected without changes",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:a real transaction aborted after a successful receipt request rolls back all stores and reports unsaved, then exact retry succeeds",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:injected quota and storage-disabled API faults are unsaved and never erase existing data",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:writing with a stale generation fails even without an invalidation notification",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:unknown semantic versions, invalid meta and missing meta preserve the native archive instead of reinitializing it",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:versionchange closes the current connection, and future physical versions remain intact and reject the old client",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:a queued native open can be cancelled while another connection blocks deletion, and late open does not leak a connection",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:frozen synthetic reference 0.9 migrates atomically to SAVE1 without inventing day facts, receipts or completion rewards",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:interrupting reference migration after a native row request succeeds preserves every original row and supports controlled retry",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "storage.spec.ts:invalid reference predecessors reject without rewriting the original native rows",
+        "report": "storage-final37.json"
+      },
+      {
+        "key": "case-preparation-cancel.spec.ts:a native cancel click aborts the first cold execution and a fresh run recovers",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.assignment",
+        "report": "regression-case-set.json"
+      },
+      {
+        "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.branch",
+        "report": "regression-case-set.json"
+      },
+      {
+        "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.loops",
+        "report": "regression-case-set.json"
+      },
+      {
+        "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.array-traversal",
+        "report": "regression-case-set.json"
+      },
+      {
+        "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.bubble-sort",
+        "report": "regression-bubble.json"
+      },
+      {
+        "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.selection-sort",
+        "report": "regression-case-set.json"
+      },
+      {
+        "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.binary-search-first",
+        "report": "regression-case-set.json"
+      },
+      {
+        "key": "case-set.spec.ts:binary input refuses unsorted and invalid drafts before preparing, preserves order and recovers",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "case-set.spec.ts:all four demonstration and three algorithm catalog links open the correct real input workspace",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "challenges.spec.ts:16.1 common seven real C traces expose21 exact checkpoints and corresponding step explanations",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "challenges.spec.ts:16.1 common three widths keep the actual graph, mode switch and question choices usable",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "challenges.spec.ts:16.1 formal correct and incorrect answers save signed ledger entries without completion or daily facts",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "challenges.spec.ts:16.1 formal replay, modes, input changes, reload and a new day cannot re-score a stable question",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "challenges.spec.ts:16.1 formal native quota rolls back answer and score and retries the identical receipt",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "challenges.spec.ts:16.1 formal two native pages answering differently share exactly one first-answer ledger row",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "challenges.spec.ts:16.1 formal peer clear invalidates a failed answer and its retry without resurrecting the old generation",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "challenges.spec.ts:16.1 formal delayed native commit acknowledgement cannot revive a cleared challenge",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "challenges.spec.ts:16.1 formal challenge pauses at the next unanswered checkpoint and switching preserves the same view",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "challenges.spec.ts:16.1 formal saved feedback stays readable at three widths with the actual signed balance",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "input-data.spec.ts:seven public templates bind changed inputs into their actual Rust source without replacing static examples",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:logical array sizes zero, one and thirty remain real valid inputs including empty storage placeholders",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:the visible thirty-item reverse bubble run receives its complete checked trajectory within the original deadline",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:manual sequence input rejects blank, malformed, fractional, out-of-domain and excessive values without silent repair",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:manual scalar validation is explicit and accepts both integer endpoints after correction",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:binary search explains nondecreasing input, rejects disorder and returns the first duplicate match from Rust",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:the same seed and length reproduce random values, prepared source and real output with versioned temporary metadata",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:random generation supports lengths zero, one and thirty and enforces its length and seed bounds",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:editing values, seed or length immediately removes a previous result and reset prepares the original example",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:a replacement input invalidates a queued real fixture preparation and its late response cannot overwrite the new source",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:retrying a real first-run module failure preserves the random draft, seed and matching prepared source",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:an edited input defeats a queued real completed result and no old output returns",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:case switching, refresh and a peer data clear discard custom input, seed, source and trajectory",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "input-data.spec.ts:public random seed and actual input stay out of network, URL, logs, web storage, IndexedDB and Cache API",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "player-controls.spec.ts:preparation leaves controls disabled and a checked real Rust run starts at the initial cursor",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:single-step boundaries, terminal state and replay use one accepted trajectory",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:repeated play and pause never multiply timers and a paused cursor remains stable",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:all six speeds control the next real step and a speed change replaces the pending timer",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:space and left or right arrows work in the focused workspace and stay scoped to it",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:source, input, select and button focus retain their native keyboard semantics",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:editing, a replacement execution and reload synchronously discard old playback",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:leaving a playing page and returning through browser history cannot revive its run",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:a document becoming hidden pauses playback and returning does not restart it",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:a genuine Rust failure prefix remains playable and reaches its failed tail",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:a real Worker load failure has no playable trajectory and a new execution recovers",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "player-controls.spec.ts:a real result crossing its deadline during initial player rendering cannot resurrect its trace",
+        "report": "regression-37.json"
+      },
+      {
+        "key": "reviewed-case-release.spec.ts:native IDB upgrades reviewed predecessor 1.0.0 with only a meta write",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "reviewed-case-release.spec.ts:native IDB upgrades reviewed predecessor 1.0.1 with only a meta write",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "reviewed-case-release.spec.ts:native IDB competing CAS and quota/abort failures preserve data and allow an explicit retry",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "reviewed-case-release.spec.ts:native IDB refuses unknown metadata packages and stale generation without writing",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:a real complete adjacent case viewing requires active confirmation and awards five only once across replay, refresh and another run",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:input changes reset genuine viewing coverage and cancelled or deadline-failed runs cannot award viewing points",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:a real exercise first pass awards ten and confirmed lesson completion adds twenty plus one daily five; failure, repetition and refresh preserve the ledger",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:two real case pages concurrently confirming complete coverage share one five-point first reward",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:two real exercise pages concurrently passing share one ten-point first reward",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:a native second-ledger quota failure rolls all awards and pass effects back, then retries the original operation",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:a case ledger quota failure remains unsaved and original accepted confirmation can retry after input invalidation",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:clearing from another page discards a pending case award and prevents old-generation revival",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:the points detail explains the native ledger and fixed first-reward rules at desktop, tablet and phone widths",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:one pixel of trace visibility cannot credit hidden keyboard steps or backfill missing adjacent viewing",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "rewards.spec.ts:the reviewed independent case keeps genuine viewing and current history when course reading is unavailable",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "workbench-layout.spec.ts:selected themes use the available workbench width and keep the collapsible navigation on the left",
+        "report": "regression-case-set.json"
+      },
+      {
+        "key": "workbench-layout.spec.ts:pointer and keyboard resizing clamp safely, persist independent ratios and restore the defaults",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "workbench-layout.spec.ts:real Rust submission, Blockly draft and review cursor survive expansion, focus and narrow region switches",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "workbench-layout.spec.ts:narrow code and trace regions retain one genuine case run and only count the visible current frame",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "workbench-layout.spec.ts:saving a sidebar layout never commits a pending theme preview and explicit rebase preserves both choices",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "workbench-layout.spec.ts:a peer save during a held drag rejects the old revision and explicit layout retry preserves the peer choices",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "workbench-layout.spec.ts:native appearance write faults roll back atomically, retry visibly and cannot revive a cleared-generation layout draft",
+        "report": "regression-formal.json"
+      },
+      {
+        "key": "workbench-layout.spec.ts:a long real bubble trace reveals its current code line after a hidden pane returns and hidden workspace keys cannot restart playback",
+        "report": "regression-formal.json"
+      }
+    ]
+  },
+  "visual": {
+    "path": ".artifacts/16.2/taste/inspect-final37/report.json",
+    "bytes": 32788,
+    "sha256": "a98cf25bb09e86a913eb3de6eca2b8609aa0adff14622137166639a2070f01c7"
+  },
+  "failureReview": [
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:two independent real C programs receive identical data; controls and full-state counters restore without storage facts",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:real boundary pair: empty",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:real boundary pair: single",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:real boundary pair: equal",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:real boundary pair: sorted",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:real boundary pair: reverse",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:real boundary pair: limits",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:input limits reject before execution; maximum 30 values remain under original budgets or show the actual limit",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:algorithm swap, text, seed, length, generation and reset immediately invalidate; same seed is reproducible",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:one real Worker failure remains visible; other algorithm executes, then fresh run recovers",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:cancel during second run retains finalized first and never accepts the pending side; rerun recovers",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:editing during pending execution cancels old group; navigation and reload do not retain comparison input or traces",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "candidate-first.json",
+      "key": "comparison.spec.ts:minimal representative three widths show both lanes without document overflow",
+      "recheckedIn": "formal-comparison-37.json"
+    },
+    {
+      "report": "frontend-candidate.json",
+      "key": "memory-bugs.test.ts:2:real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-missing-update",
+      "recheckedIn": "frontend-wrap.json"
+    },
+    {
+      "report": "frontend-wrap-memory.json",
+      "key": "memory-bugs.test.ts:3:real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-wrong-direction",
+      "recheckedIn": "frontend-wrap-wrong-only.json"
+    },
+    {
+      "report": "frontend-wrap.json",
+      "key": "memory-bugs.test.ts:3:real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-wrong-direction",
+      "recheckedIn": "frontend-wrap-wrong-only.json"
+    },
+    {
+      "report": "regression-case-set.json",
+      "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.bubble-sort",
+      "recheckedIn": "regression-bubble.json"
+    },
+    {
+      "report": "regression-formal.json",
+      "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.assignment",
+      "recheckedIn": "regression-case-set.json"
+    },
+    {
+      "report": "regression-formal.json",
+      "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.branch",
+      "recheckedIn": "regression-case-set.json"
+    },
+    {
+      "report": "regression-formal.json",
+      "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.loops",
+      "recheckedIn": "regression-case-set.json"
+    },
+    {
+      "report": "regression-formal.json",
+      "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.array-traversal",
+      "recheckedIn": "regression-case-set.json"
+    },
+    {
+      "report": "regression-formal.json",
+      "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.bubble-sort",
+      "recheckedIn": "regression-bubble.json"
+    },
+    {
+      "report": "regression-formal.json",
+      "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.selection-sort",
+      "recheckedIn": "regression-case-set.json"
+    },
+    {
+      "report": "regression-formal.json",
+      "key": "case-set.spec.ts:minimal case set uses genuine Rust, exact input and reversible playback: case.c.binary-search-first",
+      "recheckedIn": "regression-case-set.json"
+    },
+    {
+      "report": "regression-formal.json",
+      "key": "workbench-layout.spec.ts:selected themes use the available workbench width and keep the collapsible navigation on the left",
+      "recheckedIn": "regression-case-set.json"
+    },
+    {
+      "report": "storage-formal.json",
+      "key": "recovery.spec.ts:production clear confirmation cancels without writes, then confirmed clear restores defaults in a fresh generation across refresh",
+      "recheckedIn": "storage-final37.json"
+    },
+    {
+      "report": "storage-formal.json",
+      "key": "recovery.spec.ts:production singleton reset requires its own confirmation and leaves all unrelated stored settings and learning rows unchanged",
+      "recheckedIn": "storage-final37.json"
+    }
+  ],
+  "staticFailureReview": [
+    {
+      "failed": "typecheck-rules",
+      "rechecked": "typecheck-final37",
+      "failure": {
+        "path": ".artifacts/16.2/typecheck-rules.log",
+        "bytes": 1397,
+        "sha256": "60fc2dc639ed9eb62df677ab675e2150e77c0bf753ff52b066e909b9537699c3"
+      },
+      "accepted": {
+        "path": ".artifacts/16.2/typecheck-final37.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "failed": "lint-first",
+      "rechecked": "lint-final37",
+      "failure": {
+        "path": ".artifacts/16.2/lint-first.log",
+        "bytes": 1239,
+        "sha256": "9cfa71565d95d44fe23ba0276e06afa6e367a326f490b31c2b45d8ad2b189acb"
+      },
+      "accepted": {
+        "path": ".artifacts/16.2/lint-final37.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "failed": "visual-final",
+      "rechecked": "visual-final37",
+      "failure": {
+        "path": ".artifacts/16.2/visual-final.log",
+        "bytes": 2211,
+        "sha256": "16f3a4f7adcab50065a36afe33d1e2a4c260a8efbda15189dbef20d94fb1e574"
+      },
+      "accepted": {
+        "path": ".artifacts/16.2/visual-final37.log",
+        "bytes": 17,
+        "sha256": "142b83d705a2524052efa520629eab0192c804eb954e974d351ae60e5fe2b9cf"
+      }
+    },
+    {
+      "failed": "visual-accepted",
+      "rechecked": "visual-final37",
+      "failure": {
+        "path": ".artifacts/16.2/visual-accepted.log",
+        "bytes": 2218,
+        "sha256": "c644a71c665c38fd2c92ea29541fc165f4d7a7c3bf4ebd48efb6d40b6419c8e3"
+      },
+      "accepted": {
+        "path": ".artifacts/16.2/visual-final37.log",
+        "bytes": 17,
+        "sha256": "142b83d705a2524052efa520629eab0192c804eb954e974d351ae60e5fe2b9cf"
+      }
+    },
+    {
+      "failed": "visual-polish",
+      "rechecked": "visual-final37",
+      "failure": {
+        "path": ".artifacts/16.2/visual-polish.log",
+        "bytes": 2190,
+        "sha256": "42014714cdc80318a17857ac0126646200bf9f8ff87063a3b2451141c2e9072d"
+      },
+      "accepted": {
+        "path": ".artifacts/16.2/visual-final37.log",
+        "bytes": 17,
+        "sha256": "142b83d705a2524052efa520629eab0192c804eb954e974d351ae60e5fe2b9cf"
+      }
+    }
+  ],
+  "realExecution": {
+    "path": ".artifacts/16.2/real-pair-summary37.json",
+    "bytes": 26796,
+    "sha256": "cdb6bfb55542609bf6fffd83e622653418dfffacfeb22ee60ffc1e75ebff6ab6"
+  },
+  "preserved": {
+    "rustPassedInherited": 507,
+    "rustFullRerun": false,
+    "save": "7.0.0",
+    "database": 7,
+    "stores": 15,
+    "lessons": 32,
+    "exercises": 40,
+    "groups": 172,
+    "blocks": 20,
+    "originalCCases": 7
+  },
+  "ownership": {
+    "path": ".artifacts/16.2/ownership-final.json",
+    "bytes": 15572,
+    "sha256": "f5ebc742a686b15afd7b0e72f4c66492bd45a5d62085a75622a03d48d31d4148"
+  },
+  "archive": {
+    "path": "项目文档/验收/16.2-验证原件/index.json"
+  },
+  "archiveEntries": 713,
+  "localOnlyFailureTraces": 24,
+  "next": "16.3 unclaimed; no Git until full16 block acceptance"
+}

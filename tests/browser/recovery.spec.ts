@@ -4,6 +4,7 @@ import type { HarnessResult } from './harness/storage';
 import type { LearningServiceState } from '../../web/src/learning/service';
 import type { StorageSnapshot } from '../../web/src/storage/model';
 import { defaultAppearance } from '../../web/src/storage/model';
+import { p05CourseRelease } from '../../web/src/content/p05-course-release.generated';
 import type {} from './harness/recovery';
 
 const first = 'exercise.synthetic.first';
@@ -24,11 +25,19 @@ function unsaved(answer: HarnessResult<unknown>, code?: string) {
   if (code) expect(answer.error.code).toBe(code);
 }
 function initial(snapshot: StorageSnapshot, production = false) {
+  const expanded =
+    production && p05CourseRelease.registered && process.env.P05_HIDE_COURSE_BUNDLE !== '1';
   expect(snapshot.meta).toMatchObject({
-    schemaVersion: '6.0.0',
-    dbVersion: 6,
-    revision: production ? 1 : 0,
+    schemaVersion: '7.0.0',
+    dbVersion: 7,
+    revision: production ? (expanded ? 2 : 1) : 0,
   });
+  if (production)
+    expect(snapshot.meta.activePackageRef).toEqual(
+      expanded
+        ? { id: 'content.c.p05', version: '1.0.0' }
+        : { id: 'content.c.p0', version: '1.0.2' },
+    );
   expect(snapshot.settings).toEqual({
     theme: 'light',
     reducedMotion: 'system',
@@ -146,7 +155,7 @@ test('known eleven-store archives with invalid or missing meta can be explicitly
     expect(cleared.cleared).toBe(true);
     expect(cleared.snapshot!.meta.generation).not.toBe(old.snapshot!.meta.generation);
     initial(cleared.snapshot!);
-    expect((await page.evaluate(() => window.recoveryHarness.rawDump())).version).toBe(6);
+    expect((await page.evaluate(() => window.recoveryHarness.rawDump())).version).toBe(7);
   }
 });
 
@@ -593,7 +602,12 @@ test('real production BroadcastChannel updates a peer without focus refresh and 
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
-  await expect(page.getByTestId('learning-save-status')).toContainText('本地数据已清除');
+  // Current providers re-read the fresh archive after clear; the following native
+  // generation/default assertions prove the clear independently of that transient notice.
+  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+    'data-save-status',
+    'ready',
+  );
   await expect(peer.locator('html')).toHaveAttribute('data-theme-preference', 'light');
   await expect(peer.getByRole('combobox', { name: '主题', exact: true })).toHaveValue('light');
   await expect(peer.getByRole('button', { name: '保存显示设置', exact: true })).toBeDisabled();
@@ -665,7 +679,10 @@ test('a production peer clear invalidates a pending real WASM download and its l
   await expect(engine).toHaveAttribute('data-state', 'loading');
   try {
     await confirmation.getByRole('button', { name: '确认清除', exact: true }).click();
-    await expect(page.getByTestId('learning-save-status')).toContainText('本地数据已清除');
+    await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+      'data-save-status',
+      'ready',
+    );
     await expect(engine).toHaveAttribute('data-state', 'idle');
     expect(await peer.evaluate(() => window.__recoveryProductionPeer.workersCreated)).toBe(0);
     expect(await peer.evaluate(() => window.__recoveryProductionPeer.engineStates)).not.toContain(
@@ -711,6 +728,13 @@ test('production clear confirmation cancels without writes, then confirmed clear
 }) => {
   await page.goto('/#/settings?panel=display');
   await expect(page.getByRole('combobox', { name: '主题', exact: true })).toBeEnabled();
+  await expect
+    .poll(async () => (await productionSnapshot(page)).settings.goalTemplate)
+    .not.toBeNull();
+  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+    'data-save-status',
+    'ready',
+  );
   await page.getByRole('combobox', { name: '主题', exact: true }).selectOption('dark');
   await page.getByRole('button', { name: '保存显示设置', exact: true }).click();
   await expect(page.getByTestId('learning-save-status')).toContainText('已保存');
@@ -726,7 +750,17 @@ test('production clear confirmation cancels without writes, then confirmed clear
   await page.getByRole('button', { name: '清除本地数据', exact: true }).click();
   await dialog.getByRole('button', { name: '确认清除', exact: true }).click();
   await expect(dialog).not.toBeVisible();
-  await expect(page.getByTestId('learning-save-status')).toContainText('本地数据已清除');
+  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+    'data-save-status',
+    'ready',
+  );
+  await expect
+    .poll(async () => (await productionSnapshot(page)).meta.activePackageRef)
+    .toEqual(
+      p05CourseRelease.registered && process.env.P05_HIDE_COURSE_BUNDLE !== '1'
+        ? { id: 'content.c.p05', version: '1.0.0' }
+        : { id: 'content.c.p0', version: '1.0.2' },
+    );
   const after = await productionSnapshot(page);
   expect(after.meta.generation).not.toBe(before.meta.generation);
   initial(after, true);
@@ -785,6 +819,13 @@ test('production singleton reset requires its own confirmation and leaves all un
 }) => {
   await page.goto('/#/settings?panel=display');
   await expect(page.getByRole('combobox', { name: '主题', exact: true })).toBeEnabled();
+  await expect
+    .poll(async () => (await productionSnapshot(page)).settings.goalTemplate)
+    .not.toBeNull();
+  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+    'data-save-status',
+    'ready',
+  );
   await page.getByRole('combobox', { name: '主题', exact: true }).selectOption('dark');
   await page.getByRole('button', { name: '保存显示设置', exact: true }).click();
   await expect(page.getByTestId('learning-save-status')).toContainText('已保存');

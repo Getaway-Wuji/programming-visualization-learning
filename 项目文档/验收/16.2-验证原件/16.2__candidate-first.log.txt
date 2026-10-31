@@ -1,0 +1,606 @@
+
+Running 13 tests using 1 worker
+
+  x   1 [chrome] › tests\browser\comparison.spec.ts:82:1 › two independent real C programs receive identical data; controls and full-state counters restore without storage facts (5.6s)
+  x   2 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: empty (5.6s)
+  x   3 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: single (5.6s)
+  x   4 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: equal (5.6s)
+  x   5 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: sorted (5.6s)
+  x   6 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: reverse (5.6s)
+  x   7 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: limits (5.6s)
+  x   8 [chrome] › tests\browser\comparison.spec.ts:166:1 › input limits reject before execution; maximum 30 values remain under original budgets or show the actual limit (5.6s)
+  x   9 [chrome] › tests\browser\comparison.spec.ts:202:1 › algorithm swap, text, seed, length, generation and reset immediately invalidate; same seed is reproducible (5.5s)
+  x  10 [chrome] › tests\browser\comparison.spec.ts:254:1 › one real Worker failure remains visible; other algorithm executes, then fresh run recovers (5.6s)
+  x  11 [chrome] › tests\browser\comparison.spec.ts:271:1 › cancel during second run retains finalized first and never accepts the pending side; rerun recovers (5.6s)
+  x  12 [chrome] › tests\browser\comparison.spec.ts:292:1 › editing during pending execution cancels old group; navigation and reload do not retain comparison input or traces (5.6s)
+  x  13 [chrome] › tests\browser\comparison.spec.ts:331:1 › minimal representative three widths show both lanes without document overflow (5.5s)
+
+
+  1) [chrome] › tests\browser\comparison.spec.ts:82:1 › two independent real C programs receive identical data; controls and full-state counters restore without storage facts 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:86:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-two-independent-61a60-store-without-storage-facts-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-two-independent-61a60-store-without-storage-facts-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-two-independent-61a60-store-without-storage-facts-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-two-independent-61a60-store-without-storage-facts-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: empty ─────────────────
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:151:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-empty-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-empty-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-empty-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-empty-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: single ────────────────
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:151:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-single-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-single-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-single-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-single-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: equal ─────────────────
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:151:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-equal-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-equal-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-equal-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-equal-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: sorted ────────────────
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:151:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-sorted-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-sorted-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-sorted-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-sorted-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: reverse ───────────────
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:151:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-reverse-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-reverse-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-reverse-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-reverse-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: limits ────────────────
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:151:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-limits-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-limits-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-limits-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-real-boundary-pair-limits-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [chrome] › tests\browser\comparison.spec.ts:166:1 › input limits reject before execution; maximum 30 values remain under original budgets or show the actual limit 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:170:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-input-limits-re-c6153-ts-or-show-the-actual-limit-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-input-limits-re-c6153-ts-or-show-the-actual-limit-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-input-limits-re-c6153-ts-or-show-the-actual-limit-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-input-limits-re-c6153-ts-or-show-the-actual-limit-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [chrome] › tests\browser\comparison.spec.ts:202:1 › algorithm swap, text, seed, length, generation and reset immediately invalidate; same seed is reproducible 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:206:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-algorithm-swap--49f53-e-same-seed-is-reproducible-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-algorithm-swap--49f53-e-same-seed-is-reproducible-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-algorithm-swap--49f53-e-same-seed-is-reproducible-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-algorithm-swap--49f53-e-same-seed-is-reproducible-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [chrome] › tests\browser\comparison.spec.ts:254:1 › one real Worker failure remains visible; other algorithm executes, then fresh run recovers 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:259:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-one-real-Worker-fd370-tes-then-fresh-run-recovers-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-one-real-Worker-fd370-tes-then-fresh-run-recovers-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-one-real-Worker-fd370-tes-then-fresh-run-recovers-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-one-real-Worker-fd370-tes-then-fresh-run-recovers-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [chrome] › tests\browser\comparison.spec.ts:271:1 › cancel during second run retains finalized first and never accepts the pending side; rerun recovers 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:276:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-cancel-during-s-634af-pending-side-rerun-recovers-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-cancel-during-s-634af-pending-side-rerun-recovers-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-cancel-during-s-634af-pending-side-rerun-recovers-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-cancel-during-s-634af-pending-side-rerun-recovers-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [chrome] › tests\browser\comparison.spec.ts:292:1 › editing during pending execution cancels old group; navigation and reload do not retain comparison input or traces 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:297:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-editing-during--78993--comparison-input-or-traces-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-editing-during--78993--comparison-input-or-traces-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-editing-during--78993--comparison-input-or-traces-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-editing-during--78993--comparison-input-or-traces-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [chrome] › tests\browser\comparison.spec.ts:331:1 › minimal representative three widths show both lanes without document overflow 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      15 |   await p.bringToFront();
+      16 |   await p.goto('/#/compare');
+    > 17 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      18 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      19 |   await expect(p.getByTestId('input-field-values')).toBeVisible();
+      20 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:17:41)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\comparison.spec.ts:335:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-minimal-represe-458c3-s-without-document-overflow-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.2\candidate-first-output\comparison-minimal-represe-458c3-s-without-document-overflow-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.2\candidate-first-output\comparison-minimal-represe-458c3-s-without-document-overflow-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.2\candidate-first-output\comparison-minimal-represe-458c3-s-without-document-overflow-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13 failed
+    [chrome] › tests\browser\comparison.spec.ts:82:1 › two independent real C programs receive identical data; controls and full-state counters restore without storage facts 
+    [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: empty ──────────────────
+    [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: single ─────────────────
+    [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: equal ──────────────────
+    [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: sorted ─────────────────
+    [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: reverse ────────────────
+    [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: limits ─────────────────
+    [chrome] › tests\browser\comparison.spec.ts:166:1 › input limits reject before execution; maximum 30 values remain under original budgets or show the actual limit 
+    [chrome] › tests\browser\comparison.spec.ts:202:1 › algorithm swap, text, seed, length, generation and reset immediately invalidate; same seed is reproducible 
+    [chrome] › tests\browser\comparison.spec.ts:254:1 › one real Worker failure remains visible; other algorithm executes, then fresh run recovers 
+    [chrome] › tests\browser\comparison.spec.ts:271:1 › cancel during second run retains finalized first and never accepts the pending side; rerun recovers 
+    [chrome] › tests\browser\comparison.spec.ts:292:1 › editing during pending execution cancels old group; navigation and reload do not retain comparison input or traces 
+    [chrome] › tests\browser\comparison.spec.ts:331:1 › minimal representative three widths show both lanes without document overflow 
+[WebServer] (node:27108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:45436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:5672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:31472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:52044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:52800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:50736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:46664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:54096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

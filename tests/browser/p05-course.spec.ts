@@ -626,7 +626,7 @@ test('P05 fresh archive: 32 real code answers and 140 groups produce 32 confirme
   await ready(page);
   await expect(page.locator('[data-course-lesson]')).toHaveCount(32);
   const initial = await archive(page);
-  expect(initial.databaseVersion).toBe(6);
+  expect(initial.databaseVersion).toBe(7);
   expect(initial.stores).toHaveLength(15);
   expect(initial.data.meta.activePackageRef).toEqual(p05Package);
   for (const key of ['progress', 'receipts', 'ledger', 'dailyFacts', 'goals'] as const)
@@ -679,7 +679,7 @@ test('P05 fresh archive: 32 real code answers and 140 groups produce 32 confirme
   await page.goto('/#/cases');
   // The directory has no save panel; its shell reports the shared archive state.
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
-  const caseLinks = page.locator('.case-grid .case-card .card-link');
+  const caseLinks = page.locator('.case-grid .case-card .card-link[href^="#/visualize/"]');
   await expect(caseLinks).toHaveCount(7);
   const caseDirectoryIds = await caseLinks.evaluateAll((links) =>
     links.map((link) =>

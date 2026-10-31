@@ -1,0 +1,1317 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--reporter=list,json",
+      "--trace",
+      "retain-on-failure",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.4\\candidate-final-output",
+      "iterative-sorts.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.4/candidate-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.4/candidate-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.4/candidate-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.4\\candidate-final-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "iterative-sorts.spec.ts",
+      "file": "iterative-sorts.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "actual 插入排序 default: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1302,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:01.847Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-24c0f10faf4687a2be4b",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 插入排序 empty: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1203,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:04.600Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-b84c2086ad7b2f95d603",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 插入排序 single: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1131,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:05.811Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-f290d97e52484ddb07e4",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 插入排序 duplicates: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1195,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:06.948Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-7df2664d08772b6efa6d",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 插入排序 domain-ends: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1194,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:08.149Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-7c9ee82d8d4c9fd64948",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 插入排序 capacity-reverse: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1579,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:09.349Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-f51045340e7b52108530",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "插入排序 rejects malformed, oversized and out-of-domain input before creating a Worker",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 753,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:10.935Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-5d76e9981f4204f50c79",
+          "file": "iterative-sorts.spec.ts",
+          "line": 215,
+          "column": 3
+        },
+        {
+          "title": "actual 希尔排序 default: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1330,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:11.693Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-e462cdf73c779c2117bf",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 希尔排序 empty: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1221,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:13.030Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-07b7c2d2ffb4d403bbe1",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 希尔排序 single: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1180,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:14.257Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-fe0986875ae8eb99cbe8",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 希尔排序 duplicates: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1319,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:15.443Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-565e1bb5024f2f3ee6c6",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 希尔排序 domain-ends: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1153,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:16.768Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-a1ed19f30f46d493deb0",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 希尔排序 capacity-reverse: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1480,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:17.926Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-bf704b23ec2044b12fd5",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "希尔排序 rejects malformed, oversized and out-of-domain input before creating a Worker",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 818,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:19.413Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-e6cac76d48357e48bb51",
+          "file": "iterative-sorts.spec.ts",
+          "line": 215,
+          "column": 3
+        },
+        {
+          "title": "actual 计数排序 default: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1349,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:20.237Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-44a0a595a8611a6efc13",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 计数排序 empty: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1420,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:21.593Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-a0ed458e544e12d5bebe",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 计数排序 single: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1405,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:23.019Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-2a121f9c9cf747882c8d",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 计数排序 duplicates: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1382,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:24.430Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-a27c3643f8f18eb8e7aa",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 计数排序 domain-ends: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1359,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:25.818Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-e29972d02a65a45b4069",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "actual 计数排序 capacity-reverse: source, sorted output, deltas and reverse state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1456,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:27.182Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-2681a48f3e61f7b33923",
+          "file": "iterative-sorts.spec.ts",
+          "line": 121,
+          "column": 5
+        },
+        {
+          "title": "计数排序 rejects malformed, oversized and out-of-domain input before creating a Worker",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 828,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:28.644Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-06c5da841e159b061496",
+          "file": "iterative-sorts.spec.ts",
+          "line": 215,
+          "column": 3
+        },
+        {
+          "title": "real held C++ result cannot revive after edit",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 764,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:29.478Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-54243d55b4b7afca93c6",
+          "file": "iterative-sorts.spec.ts",
+          "line": 290,
+          "column": 3
+        },
+        {
+          "title": "real held C++ result cannot revive after cancel",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 814,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:30.248Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-7266773c0d3122dfc66e",
+          "file": "iterative-sorts.spec.ts",
+          "line": 290,
+          "column": 3
+        },
+        {
+          "title": "real held C++ result cannot revive after clear",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6149,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('sort-workspace')\nExpected: \u001b[32m\"idle\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('sort-workspace') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('sort-workspace')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-cursor=\"0\" data-length=\"199\" data-state=\"ready\" class=\"sort-workspace\" data-testid=\"sort-workspace\" data-run-id=\"cf7c3838-6adc-4cc5-ad7c-658a8cd7160b\" data-source-revision=\"44667ef0-587c-41ec-9256-0f2cfab558e4\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('sort-workspace')\nExpected: \u001b[32m\"idle\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('sort-workspace') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('sort-workspace')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-cursor=\"0\" data-length=\"199\" data-state=\"ready\" class=\"sort-workspace\" data-testid=\"sort-workspace\" data-run-id=\"cf7c3838-6adc-4cc5-ad7c-658a8cd7160b\" data-source-revision=\"44667ef0-587c-41ec-9256-0f2cfab558e4\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\iterative-sorts.spec.ts:310:39",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\iterative-sorts.spec.ts",
+                      "column": 39,
+                      "line": 310
+                    },
+                    "snippet": "  308 |       await expect(workspace(p)).toHaveAttribute('data-state', 'failed');\n  309 |       await expect(p.getByTestId('sort-error')).toContainText('E_CANCELLED');\n> 310 |     } else await expect(workspace(p)).toHaveAttribute('data-state', 'idle');\n      |                                       ^\n  311 |     await expect(workspace(p)).toHaveAttribute('data-run-id', '');\n  312 |     await expect(p.getByTestId('sort-output')).toHaveCount(0);\n  313 |     await run(p, [2, 1]);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\iterative-sorts.spec.ts",
+                        "column": 39,
+                        "line": 310
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('sort-workspace')\nExpected: \u001b[32m\"idle\"\u001b[39m\nReceived: \u001b[31m\"ready\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('sort-workspace') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('sort-workspace')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-cursor=\"0\" data-length=\"199\" data-state=\"ready\" class=\"sort-workspace\" data-testid=\"sort-workspace\" data-run-id=\"cf7c3838-6adc-4cc5-ad7c-658a8cd7160b\" data-source-revision=\"44667ef0-587c-41ec-9256-0f2cfab558e4\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"ready\"\u001b[22m\n\n\n  308 |       await expect(workspace(p)).toHaveAttribute('data-state', 'failed');\n  309 |       await expect(p.getByTestId('sort-error')).toContainText('E_CANCELLED');\n> 310 |     } else await expect(workspace(p)).toHaveAttribute('data-state', 'idle');\n      |                                       ^\n  311 |     await expect(workspace(p)).toHaveAttribute('data-run-id', '');\n  312 |     await expect(p.getByTestId('sort-output')).toHaveCount(0);\n  313 |     await run(p, [2, 1]);\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\iterative-sorts.spec.ts:310:39"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:31.069Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.4\\candidate-final-output\\iterative-sorts-real-held-C-result-cannot-revive-after-clear-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.4\\candidate-final-output\\iterative-sorts-real-held-C-result-cannot-revive-after-clear-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.4\\candidate-final-output\\iterative-sorts-real-held-C-result-cannot-revive-after-clear-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\iterative-sorts.spec.ts",
+                    "column": 39,
+                    "line": 310
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-821f911416e851717ea2",
+          "file": "iterative-sorts.spec.ts",
+          "line": 290,
+          "column": 3
+        },
+        {
+          "title": "real held C++ result cannot revive after leave",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 950,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:38.580Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-dd0364475ffc385c5531",
+          "file": "iterative-sorts.spec.ts",
+          "line": 290,
+          "column": 3
+        },
+        {
+          "title": "native Worker load failure has no stale picture and an explicit new run recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 668,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:40.526Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-bf4eeb8e5558399e173c",
+          "file": "iterative-sorts.spec.ts",
+          "line": 318,
+          "column": 1
+        },
+        {
+          "title": "one live player supports six speeds, keyboard, source focus and hidden-page pause without new runs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1173,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:41.202Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-010f44fb4e22d58d7970",
+          "file": "iterative-sorts.spec.ts",
+          "line": 333,
+          "column": 1
+        },
+        {
+          "title": "catalog exposes exactly three new C++ cases and retains all seven original C routes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 929,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:42.381Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-646befff8cb121163be8",
+          "file": "iterative-sorts.spec.ts",
+          "line": 393,
+          "column": 1
+        },
+        {
+          "title": "switching among actual C++, original C, memory and paired C engines preserves their boundaries without learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2846,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:43.317Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-6d18aa464e21840933b6",
+          "file": "iterative-sorts.spec.ts",
+          "line": 408,
+          "column": 1
+        },
+        {
+          "title": "minimal 1440px keeps actual C++ values, source and controls usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 899,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:46.168Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-f2647c8863bee573400f",
+          "file": "iterative-sorts.spec.ts",
+          "line": 460,
+          "column": 3
+        },
+        {
+          "title": "minimal 768px keeps actual C++ values, source and controls usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 931,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:47.072Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-d2735d9aa1818b529b53",
+          "file": "iterative-sorts.spec.ts",
+          "line": 460,
+          "column": 3
+        },
+        {
+          "title": "minimal 390px keeps actual C++ values, source and controls usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 902,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T02:06:48.009Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "12586cbba19f3dacd007-d18b5830180e93ce7112",
+          "file": "iterative-sorts.spec.ts",
+          "line": 460,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-31T02:06:00.712Z",
+    "duration": 50090.253000000004,
+    "expected": 31,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

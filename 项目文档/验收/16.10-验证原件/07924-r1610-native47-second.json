@@ -1,0 +1,825 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--reporter=list,json",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\r1610-native47-second-output",
+      "tests/browser/execution.spec.ts",
+      "tests/browser/performance-exceptions.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.10/clean-workspace/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.10/r1610-native47-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.10/clean-workspace/tests/browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.10/r1610-native47-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.10/clean-workspace/tests/browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.10/r1610-native47-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.10/clean-workspace/tests/browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\r1610-native47-second-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\tests\\browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\clean-workspace\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "execution.spec.ts",
+      "file": "execution.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "hard cancellation releases an actual busy Rust Worker and a fresh run recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 575,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:32.198Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-ff88aab7e141b63487fe",
+          "file": "execution.spec.ts",
+          "line": 177,
+          "column": 1
+        },
+        {
+          "title": "all seven public cases return real Rust trajectories with their displayed source and no judge or learning claim",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 657,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:33.608Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "seven-real-public-cases",
+                      "contentType": "application/json",
+                      "body": "eyJvYnNlcnZhdGlvbnMiOlt7ImlkIjoiY2FzZS5jLmFzc2lnbm1lbnQiLCJpZGVudGl0eSI6eyJjb250ZXh0SWQiOiIxN2MyMjRlYy0xMDY1LTRiM2QtOWMzOS02MjQxZjk4NjA2MmYiLCJjb250ZXh0UmV2aXNpb24iOjEsInJ1bklkIjoiNDMxMWMxYTctNjIwZS00N2ZjLTk5YTYtYjA4OWU2NTAzZTIxIiwic291cmNlUmV2aXNpb24iOjEsInN1Ym1pc3Npb25JZCI6ImQzNjJjNWVlLTFhMDItNDViMy04MDU2LThlYjM4YTU2NTgzZCIsInRlc3RDYXNlS2V5IjpudWxsfSwicHJvZHVjZXIiOiJydXN0Iiwic3RhdHVzIjoiY29tcGxldGVkIiwiZXhpdENvZGUiOjAsImNvZGVzIjpbXSwiY3Vyc29yIjo2LCJzdGVwcyI6NiwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJub2RlQ291bnQiOjEzLCJiaW5kaW5nQ291bnQiOjEsIm91dHB1dCI6IjVcbiIsInN0YXRzIjp7ImZ1ZWxVc2VkIjozMjcyLCJtYXhBc3REZXB0aCI6MiwibWF4U3ludGF4RGVwdGgiOjIsInBlYWtWaXJ0dWFsQnl0ZXMiOjQsInJ1c3RNaWNyb3MiOjcwMDB9LCJqdWRnZSI6bnVsbH0seyJpZCI6ImNhc2UuYy5icmFuY2giLCJpZGVudGl0eSI6eyJjb250ZXh0SWQiOiIwM2NhODY0My1mYzg3LTQ2ZTYtODJkZi00Y2NjNGUwZjg3ZTYiLCJjb250ZXh0UmV2aXNpb24iOjEsInJ1bklkIjoiMjg4MWEzYjMtYmE1Ni00MzhjLTk3Y2UtNjIzMjNmODAyMzU3Iiwic291cmNlUmV2aXNpb24iOjEsInN1Ym1pc3Npb25JZCI6IjM3YmU3NDc5LTA2YTQtNDQzMi1iMjNlLWI5MmMyYmFlY2I1NSIsInRlc3RDYXNlS2V5IjpudWxsfSwicHJvZHVjZXIiOiJydXN0Iiwic3RhdHVzIjoiY29tcGxldGVkIiwiZXhpdENvZGUiOjAsImNvZGVzIjpbXSwiY3Vyc29yIjo4LCJzdGVwcyI6OCwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJub2RlQ291bnQiOjE2LCJiaW5kaW5nQ291bnQiOjEsIm91dHB1dCI6IjBcbiIsInN0YXRzIjp7ImZ1ZWxVc2VkIjozNzU3LCJtYXhBc3REZXB0aCI6MiwibWF4U3ludGF4RGVwdGgiOjQsInBlYWtWaXJ0dWFsQnl0ZXMiOjQsInJ1c3RNaWNyb3MiOjEwMDB9LCJqdWRnZSI6bnVsbH0seyJpZCI6ImNhc2UuYy5sb29wcyIsImlkZW50aXR5Ijp7ImNvbnRleHRJZCI6IjBhZTRiYTBlLTcyZjgtNDBkOC1hNzg2LTRlMDg1NThjMjE2ZSIsImNvbnRleHRSZXZpc2lvbiI6MSwicnVuSWQiOiIxM2UwNzNhOC02NTdmLTQxMDctODcwNC04ZGRkYmExYzBkNjMiLCJzb3VyY2VSZXZpc2lvbiI6MSwic3VibWlzc2lvbklkIjoiZjFjZTJlZTktZDAxMC00ZDUyLWE0OWQtODlhMzUzOTNhNjYxIiwidGVzdENhc2VLZXkiOm51bGx9LCJwcm9kdWNlciI6InJ1c3QiLCJzdGF0dXMiOiJjb21wbGV0ZWQiLCJleGl0Q29kZSI6MCwiY29kZXMiOltdLCJjdXJzb3IiOjY3LCJzdGVwcyI6NjcsImNvbXBsZXRlbmVzcyI6ImNvbXBsZXRlIiwibm9kZUNvdW50Ijo0OSwiYmluZGluZ0NvdW50IjoxLCJvdXRwdXQiOiIxNVxuMTVcbiIsInN0YXRzIjp7ImZ1ZWxVc2VkIjoxMjk3MCwibWF4QXN0RGVwdGgiOjIsIm1heFN5bnRheERlcHRoIjozLCJwZWFrVmlydHVhbEJ5dGVzIjoyMCwicnVzdE1pY3JvcyI6MjAwMH0sImp1ZGdlIjpudWxsfSx7ImlkIjoiY2FzZS5jLmFycmF5LXRyYXZlcnNhbCIsImlkZW50aXR5Ijp7ImNvbnRleHRJZCI6IjMxMWNlMGUyLTNiY2UtNGNjZi05ZWM2LWY4ZTAwYzQ0ZjkzMSIsImNvbnRleHRSZXZpc2lvbiI6MSwicnVuSWQiOiIwMjA0ZmU1MS1mMTdiLTRhOWItOTE4OS04NTRiMTBkOTk1MzYiLCJzb3VyY2VSZXZpc2lvbiI6MSwic3VibWlzc2lvbklkIjoiNjVkMzg2NTMtZTYxYS00ZGE4LTlmYzAtMjJhYzRkNmJhZGMyIiwidGVzdENhc2VLZXkiOm51bGx9LCJwcm9kdWNlciI6InJ1c3QiLCJzdGF0dXMiOiJjb21wbGV0ZWQiLCJleGl0Q29kZSI6MCwiY29kZXMiOltdLCJjdXJzb3IiOjI5LCJzdGVwcyI6MjksImNvbXBsZXRlbmVzcyI6ImNvbXBsZXRlIiwibm9kZUNvdW50IjozNSwiYmluZGluZ0NvdW50IjoyLCJvdXRwdXQiOiI0XG4iLCJzdGF0cyI6eyJmdWVsVXNlZCI6Nzg2OCwibWF4QXN0RGVwdGgiOjMsIm1heFN5bnRheERlcHRoIjo0LCJwZWFrVmlydHVhbEJ5dGVzIjoyNCwicnVzdE1pY3JvcyI6MTAwMH0sImp1ZGdlIjpudWxsfSx7ImlkIjoiY2FzZS5jLmJ1YmJsZS1zb3J0IiwiaWRlbnRpdHkiOnsiY29udGV4dElkIjoiOGRjYmMzOTYtZDBhZi00NzY5LWIwNjAtNzcwOWQ2NTUzNjMwIiwiY29udGV4dFJldmlzaW9uIjoxLCJydW5JZCI6ImFiODE1NzViLWU1NzQtNGYzYi05ODRkLTRhMjEzOGRmMWQxNiIsInNvdXJjZVJldmlzaW9uIjoxLCJzdWJtaXNzaW9uSWQiOiI2MTFiMTkwMy00ZTM2LTQzMDktYjU2My1hODEwODM2YzY1MTQiLCJ0ZXN0Q2FzZUtleSI6bnVsbH0sInByb2R1Y2VyIjoicnVzdCIsInN0YXR1cyI6ImNvbXBsZXRlZCIsImV4aXRDb2RlIjowLCJjb2RlcyI6W10sImN1cnNvciI6ODYsInN0ZXBzIjo4NiwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJub2RlQ291bnQiOjk1LCJiaW5kaW5nQ291bnQiOjIsIm91dHB1dCI6IjEgMiAzXG4iLCJzdGF0cyI6eyJmdWVsVXNlZCI6MjA2ODAsIm1heEFzdERlcHRoIjo0LCJtYXhTeW50YXhEZXB0aCI6OCwicGVha1ZpcnR1YWxCeXRlcyI6MjgsInJ1c3RNaWNyb3MiOjMwMDB9LCJqdWRnZSI6bnVsbH0seyJpZCI6ImNhc2UuYy5zZWxlY3Rpb24tc29ydCIsImlkZW50aXR5Ijp7ImNvbnRleHRJZCI6ImRlMzZmYWI1LTE0ZDQtNDAzYy05YmU2LTkxYTExOTkxZjE1MSIsImNvbnRleHRSZXZpc2lvbiI6MSwicnVuSWQiOiJlNjI1YjQ4My1hMWRjLTQ5OWUtOGFhNS1lNDkxYjgzOWFjYWIiLCJzb3VyY2VSZXZpc2lvbiI6MSwic3VibWlzc2lvbklkIjoiNjYzYWJmMjEtNDc0Mi00MWE1LWE4NWMtMWJmYmZmYTJjNDA3IiwidGVzdENhc2VLZXkiOm51bGx9LCJwcm9kdWNlciI6InJ1c3QiLCJzdGF0dXMiOiJjb21wbGV0ZWQiLCJleGl0Q29kZSI6MCwiY29kZXMiOltdLCJjdXJzb3IiOjk4LCJzdGVwcyI6OTgsImNvbXBsZXRlbmVzcyI6ImNvbXBsZXRlIiwibm9kZUNvdW50IjoxMDIsImJpbmRpbmdDb3VudCI6Miwib3V0cHV0IjoiMSAyIDNcbiIsInN0YXRzIjp7ImZ1ZWxVc2VkIjoyMzExOCwibWF4QXN0RGVwdGgiOjMsIm1heFN5bnRheERlcHRoIjo4LCJwZWFrVmlydHVhbEJ5dGVzIjoyOCwicnVzdE1pY3JvcyI6MzAwMH0sImp1ZGdlIjpudWxsfSx7ImlkIjoiY2FzZS5jLmJpbmFyeS1zZWFyY2gtZmlyc3QiLCJpZGVudGl0eSI6eyJjb250ZXh0SWQiOiI1ZjAwZGEzYS01Nzc3LTQyZmItODU2OS0xODIxNGY1NmM4NDkiLCJjb250ZXh0UmV2aXNpb24iOjEsInJ1bklkIjoiMTExMWY1ZmEtMGM1OS00ZDM1LWI4NjktM2NlNTNkZjU1NzFiIiwic291cmNlUmV2aXNpb24iOjEsInN1Ym1pc3Npb25JZCI6IjQ0Yzc5Y2JlLWIyOGYtNDE5OS04ZDk5LWE4MmVkODgyNjE1YyIsInRlc3RDYXNlS2V5IjpudWxsfSwicHJvZHVjZXIiOiJydXN0Iiwic3RhdHVzIjoiY29tcGxldGVkIiwiZXhpdENvZGUiOjAsImNvZGVzIjpbXSwiY3Vyc29yIjo1MSwic3RlcHMiOjUxLCJjb21wbGV0ZW5lc3MiOiJjb21wbGV0ZSIsIm5vZGVDb3VudCI6NzAsImJpbmRpbmdDb3VudCI6Mywib3V0cHV0IjoiMVxuIiwic3RhdHMiOnsiZnVlbFVzZWQiOjE0NzkzLCJtYXhBc3REZXB0aCI6NCwibWF4U3ludGF4RGVwdGgiOjgsInBlYWtWaXJ0dWFsQnl0ZXMiOjQ0LCJydXN0TWljcm9zIjoyMDAwfSwianVkZ2UiOm51bGx9XSwiYXVkaXQiOnsid29ya2VycyI6W3sia2luZCI6InByZXBhcmUtY2FzZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6MSwicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MH0seyJraW5kIjoiZXhlY3V0ZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6MSwicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MX0seyJraW5kIjoicHJlcGFyZS1jYXNlIiwidGVybWluYXRlZCI6dHJ1ZSwibW9kdWxlIjoyLCJyZXNwb25zZXMiOjEsInJ1c3RSZXN1bHRzIjowfSx7ImtpbmQiOiJleGVjdXRlIiwidGVybWluYXRlZCI6dHJ1ZSwibW9kdWxlIjoyLCJyZXNwb25zZXMiOjEsInJ1c3RSZXN1bHRzIjoxfSx7ImtpbmQiOiJwcmVwYXJlLWNhc2UiLCJ0ZXJtaW5hdGVkIjp0cnVlLCJtb2R1bGUiOjMsInJlc3BvbnNlcyI6MSwicnVzdFJlc3VsdHMiOjB9LHsia2luZCI6ImV4ZWN1dGUiLCJ0ZXJtaW5hdGVkIjp0cnVlLCJtb2R1bGUiOjMsInJlc3BvbnNlcyI6MSwicnVzdFJlc3VsdHMiOjF9LHsia2luZCI6InByZXBhcmUtY2FzZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6NCwicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MH0seyJraW5kIjoiZXhlY3V0ZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6NCwicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MX0seyJraW5kIjoicHJlcGFyZS1jYXNlIiwidGVybWluYXRlZCI6dHJ1ZSwibW9kdWxlIjo1LCJyZXNwb25zZXMiOjEsInJ1c3RSZXN1bHRzIjowfSx7ImtpbmQiOiJleGVjdXRlIiwidGVybWluYXRlZCI6dHJ1ZSwibW9kdWxlIjo1LCJyZXNwb25zZXMiOjEsInJ1c3RSZXN1bHRzIjoxfSx7ImtpbmQiOiJwcmVwYXJlLWNhc2UiLCJ0ZXJtaW5hdGVkIjp0cnVlLCJtb2R1bGUiOjYsInJlc3BvbnNlcyI6MSwicnVzdFJlc3VsdHMiOjB9LHsia2luZCI6ImV4ZWN1dGUiLCJ0ZXJtaW5hdGVkIjp0cnVlLCJtb2R1bGUiOjYsInJlc3BvbnNlcyI6MSwicnVzdFJlc3VsdHMiOjF9LHsia2luZCI6InByZXBhcmUtY2FzZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6NywicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MH0seyJraW5kIjoiZXhlY3V0ZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6NywicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MX1dLCJtYXhBY3RpdmUiOjF9fQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-5380d9136a03f8683a92",
+          "file": "execution.spec.ts",
+          "line": 215,
+          "column": 1
+        },
+        {
+          "title": "changed public source changes the result while Rust runtime errors keep an honest prefix and the next run recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 482,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:34.273Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-7336149547f4e3778467",
+          "file": "execution.spec.ts",
+          "line": 267,
+          "column": 1
+        },
+        {
+          "title": "one cached Module serves fresh terminated Workers and late cancel cannot rewrite an accepted result",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 333,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:34.762Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-206e5a4339d536b62995",
+          "file": "execution.spec.ts",
+          "line": 306,
+          "column": 1
+        },
+        {
+          "title": "queued real old results cannot survive cancel, superseding run or context invalidation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 806,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:35.104Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-03d8880c25b3de4c715e",
+          "file": "execution.spec.ts",
+          "line": 337,
+          "column": 1
+        },
+        {
+          "title": "current Worker malformed buffers, identity mismatches, fixture origins and invalid transitions fail without fake completion and recover",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 587,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:35.919Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-f0a3e748ddd2b9e9a676",
+          "file": "execution.spec.ts",
+          "line": 370,
+          "column": 1
+        },
+        {
+          "title": "the original one-second deadline includes asynchronous validation and rejects a real late successful buffer",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1367,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:36.516Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-b66ed8591e6740bd2d14",
+          "file": "execution.spec.ts",
+          "line": 407,
+          "column": 1
+        },
+        {
+          "title": "public developer marker stays in temporary execution and never enters requests, console, browser storage or Cache API",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 466,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:37.891Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "runtime-content-boundary",
+                      "contentType": "application/json",
+                      "body": "eyJyZXF1ZXN0Q291bnQiOjYsImNvbnNvbGVDb3VudCI6MCwic3RvcmFnZVdyaXRlcyI6MCwiY2FjaGVOYW1lcyI6W10sImRhdGFiYXNlcyI6W119"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-c47e24cf58495bb4b536",
+          "file": "execution.spec.ts",
+          "line": 432,
+          "column": 1
+        },
+        {
+          "title": "the visible case runs the exact read-only source and exposes real terminal, steps, output and ready playback",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 839,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:38.365Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-c566b5d0df0a68dddcf5",
+          "file": "execution.spec.ts",
+          "line": 494,
+          "column": 1
+        },
+        {
+          "title": "visible module failure is distinct from program completion and retry uses real Rust",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 713,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:39.211Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-5962207be5b879b1d61c",
+          "file": "execution.spec.ts",
+          "line": 522,
+          "column": 1
+        },
+        {
+          "title": "switching visible cases discards a queued real result before the next case runs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 876,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:39.932Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-9573f8af81f022a477ed",
+          "file": "execution.spec.ts",
+          "line": 544,
+          "column": 1
+        },
+        {
+          "title": "clearing local data in a peer tab invalidates an already accepted real trajectory",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1991,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:40.814Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-66b450f38ffe605c786d",
+          "file": "execution.spec.ts",
+          "line": 571,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "performance-exceptions.spec.ts",
+      "file": "performance-exceptions.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "a genuine dead loop naturally reaches a bounded resource terminal and a normal new run recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1163,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:42.850Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "natural-resource-terminal",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\r1610-native47-second-output\\performance-exceptions-a-g-e7fc5-d-a-normal-new-run-recovers-chrome\\attachments\\natural-resource-terminal-4d674cc5c1e085503ebe211edccf7444d82ece9b.json"
+                    },
+                    {
+                      "name": "natural-resource-recovered",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\r1610-native47-second-output\\performance-exceptions-a-g-e7fc5-d-a-normal-new-run-recovers-chrome\\attachments\\natural-resource-recovered-5180ce60135a302d351e27d2ae4ae6b87bf5db08.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "954ba100db75980f4d1e-d4d9762b0cc5a36dcfc8",
+          "file": "performance-exceptions.spec.ts",
+          "line": 46,
+          "column": 1
+        },
+        {
+          "title": "cold Module download cancellation settles within 100ms and terminates its unposted Worker without late creation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 410,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:44.030Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "cold-download-cancel",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\r1610-native47-second-output\\performance-exceptions-col-c826b-orker-without-late-creation-chrome\\attachments\\cold-download-cancel-41e0174656d91107ecbdf169703f8d4f9973d482.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "954ba100db75980f4d1e-6a81af342eb1e2d380ec",
+          "file": "performance-exceptions.spec.ts",
+          "line": 130,
+          "column": 1
+        },
+        {
+          "title": "an already dispatched real Worker cancels within 100ms and cannot commit a late success",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 516,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:44.446Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "dispatched-worker-cancel",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\r1610-native47-second-output\\performance-exceptions-an--56390-annot-commit-a-late-success-chrome\\attachments\\dispatched-worker-cancel-36e8c7c072ec92342c41a9ff895ec38691ddfe79.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "954ba100db75980f4d1e-1a6bb1800c2b0b47eecc",
+          "file": "performance-exceptions.spec.ts",
+          "line": 225,
+          "column": 1
+        },
+        {
+          "title": "fifty alternating real executions and cancellations keep one Worker and record available heap trends",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 743,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:44.969Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "fifty-alternating",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\r1610-native47-second-output\\performance-exceptions-fif-0eca6-ecord-available-heap-trends-chrome\\attachments\\fifty-alternating-844519a472f9c59b538ed09969e8155dfc3356c8.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "954ba100db75980f4d1e-4518e4c985807fe7b835",
+          "file": "performance-exceptions.spec.ts",
+          "line": 279,
+          "column": 1
+        },
+        {
+          "title": "a failed inner Blockly lazy module reaches the page boundary and an explicit reload recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1007,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T10:30:45.732Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "inner-blockly-lazy-recovery",
+                      "contentType": "application/json",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.10\\r1610-native47-second-output\\performance-exceptions-a-f-07fa3-an-explicit-reload-recovers-chrome\\attachments\\inner-blockly-lazy-recovery-41e3fadf2b749f50a71bfe5d0fd54c7ac4a8a7ed.json"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "954ba100db75980f4d1e-315380ed8534e92d8a0d",
+          "file": "performance-exceptions.spec.ts",
+          "line": 396,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-31T10:30:31.609Z",
+    "duration": 16690.438,
+    "expected": 17,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

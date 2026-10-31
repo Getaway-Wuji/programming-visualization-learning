@@ -110,11 +110,14 @@ export function deriveLearningLevel(
   totalPoints: string,
   configuration: ProfileConfiguration,
 ): LearningLevel {
-  if (typeof totalPoints !== 'string' || !/^(0|[1-9][0-9]*)$/.test(totalPoints))
+  if (typeof totalPoints !== 'string' || !/^(0|-?[1-9][0-9]*)$/.test(totalPoints))
     throw new Error('PROFILE_POINTS_INVALID');
   const config = decodeProfileConfiguration(configuration);
   const points = BigInt(totalPoints);
-  const index = config.levels.findLastIndex((level) => points >= BigInt(level.minimumPoints));
+  const index = Math.max(
+    0,
+    config.levels.findLastIndex((level) => points >= BigInt(level.minimumPoints)),
+  );
   const current = config.levels[index];
   const next = config.levels[index + 1];
   const minimum = BigInt(current.minimumPoints);
@@ -124,6 +127,8 @@ export function deriveLearningLevel(
     nextThreshold: next?.minimumPoints ?? null,
     remainingPoints: nextPoints === null ? '0' : String(nextPoints - points),
     progressPercent:
-      nextPoints === null ? 100 : Number(((points - minimum) * 100n) / (nextPoints - minimum)),
+      nextPoints === null
+        ? 100
+        : Math.max(0, Number(((points - minimum) * 100n) / (nextPoints - minimum))),
   });
 }

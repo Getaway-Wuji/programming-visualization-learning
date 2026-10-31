@@ -1,0 +1,123 @@
+{
+  "evidenceLevel": "engineering-build",
+  "interpreterReady": true,
+  "executionProtocol": "EXEC-01 1.0.0",
+  "supportedExecutionProtocols": [
+    "EXEC-01 1.0.0",
+    "EXEC-01 1.1.0"
+  ],
+  "supportedVersionVectors": [
+    "1.0.0/1.0.0/1.0.0/1.0.0/1.0.0",
+    "1.1.0/1.0.0/1.0.0/1.1.0/1.0.0"
+  ],
+  "environment": {
+    "node": "v24.21.0",
+    "npm": "11.19.0",
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "bindgen": "wasm-bindgen 0.2.129"
+  },
+  "memories": [
+    {
+      "minimum": 17,
+      "maximum": 2048,
+      "shared": false
+    }
+  ],
+  "features": [
+    "+bulk-memory",
+    "+bulk-memory-opt",
+    "+call-indirect-overlong",
+    "+multivalue",
+    "+mutable-globals",
+    "+nontrapping-fptoint",
+    "+reference-types",
+    "+sign-ext"
+  ],
+  "imports": [
+    {
+      "module": "./c_viz_wasm_bg.js",
+      "name": "__wbg_now_1b05fba468b632aa",
+      "kind": "function"
+    },
+    {
+      "module": "./c_viz_wasm_bg.js",
+      "name": "__wbindgen_init_externref_table",
+      "kind": "function"
+    },
+    {
+      "module": "./c_viz_wasm_bg.js",
+      "name": "__wbindgen_generic_0000000000000001",
+      "kind": "function"
+    }
+  ],
+  "exports": [
+    {
+      "name": "memory",
+      "kind": "memory"
+    },
+    {
+      "name": "analyze_code_draft",
+      "kind": "function"
+    },
+    {
+      "name": "build_probe",
+      "kind": "function"
+    },
+    {
+      "name": "execute_request",
+      "kind": "function"
+    },
+    {
+      "name": "last_execution_timings",
+      "kind": "function"
+    },
+    {
+      "name": "prepare_case",
+      "kind": "function"
+    },
+    {
+      "name": "prepare_input",
+      "kind": "function"
+    },
+    {
+      "name": "__abort_handler",
+      "kind": "global"
+    },
+    {
+      "name": "__instance_terminated",
+      "kind": "global"
+    },
+    {
+      "name": "__wbindgen_externrefs",
+      "kind": "table"
+    },
+    {
+      "name": "__wbindgen_malloc",
+      "kind": "function"
+    },
+    {
+      "name": "__wbindgen_realloc",
+      "kind": "function"
+    },
+    {
+      "name": "__externref_table_dealloc",
+      "kind": "function"
+    },
+    {
+      "name": "__wbindgen_free",
+      "kind": "function"
+    },
+    {
+      "name": "__wbindgen_start",
+      "kind": "function"
+    }
+  ],
+  "bytes": 1368307,
+  "hashes": {
+    "package-lock.json": "1f20229c85a01249648dceb447bae286adfaeb94efbe575ad8e11188b41dc078",
+    "Cargo.lock": "9c5678bb964575f1702f6f5b778d1096c6a5b33adcfac505e67f3dc8b3bbad31",
+    "web/src/generated/c_viz_wasm.js": "954d18376c6b886e1ae40d1f86cd19b18362ca5a54d00397275b892fd8703c3e",
+    "web/src/generated/c_viz_wasm_bg.wasm": "aed203f4fe30ccaafdb32d0c68c2a1f2634c10726c82977684d4e3d20228679d"
+  }
+}

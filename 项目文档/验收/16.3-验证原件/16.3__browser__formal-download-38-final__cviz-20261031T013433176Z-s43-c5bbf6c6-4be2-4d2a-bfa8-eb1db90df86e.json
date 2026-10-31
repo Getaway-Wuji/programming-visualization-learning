@@ -1,0 +1,1324 @@
+{
+  "formatVersion": "1.0.0",
+  "formatId": "urn:c-viz:current-snapshot:1.0.0",
+  "snapshotId": "c5bbf6c6-4be2-4d2a-bfa8-eb1db90df86e",
+  "capturedAt": "2026-10-31T01:34:33.176Z",
+  "presentation": {
+    "mode": "memory",
+    "scope": "complete-current-state",
+    "image": "reflowed-state-picture",
+    "selectionAndPaginationExcluded": true
+  },
+  "virtualAddresses": "educational-not-host-addresses",
+  "currentState": {
+    "allocator": {
+      "liveBytes": 88,
+      "nextAddress": 4244,
+      "nextFrame": 6,
+      "nextObject": 21,
+      "nextScope": 8
+    },
+    "control": {
+      "activeFrameId": "f5",
+      "inputCursor": 3,
+      "nextNodeId": "n33",
+      "returnValue": null
+    },
+    "counters": {
+      "arrayWrites": 0,
+      "comparisons": 1,
+      "scalarWrites": 29,
+      "swaps": 0
+    },
+    "frames": [
+      {
+        "callNodeId": null,
+        "functionName": "main",
+        "functionNodeId": "n76",
+        "id": "f1",
+        "parentFrameId": null,
+        "scopeIds": [
+          "s1"
+        ]
+      },
+      {
+        "callNodeId": "n58",
+        "functionName": "print",
+        "functionNodeId": "n37",
+        "id": "f5",
+        "parentFrameId": "f1",
+        "scopeIds": [
+          "s5",
+          "s6"
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "alive": true,
+        "baseAddress": 4096,
+        "byteLength": 4,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": 4
+          }
+        ],
+        "declarationNodeId": "n38",
+        "frameId": "f1",
+        "id": "o1",
+        "length": 1,
+        "name": "a",
+        "scopeId": "s1",
+        "storage": "automatic",
+        "typeName": "int",
+        "zeroInitialized": false
+      },
+      {
+        "alive": true,
+        "baseAddress": 4100,
+        "byteLength": 4,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": 2
+          }
+        ],
+        "declarationNodeId": "n39",
+        "frameId": "f1",
+        "id": "o2",
+        "length": 1,
+        "name": "b",
+        "scopeId": "s1",
+        "storage": "automatic",
+        "typeName": "int",
+        "zeroInitialized": false
+      },
+      {
+        "alive": true,
+        "baseAddress": 4104,
+        "byteLength": 4,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": 9
+          }
+        ],
+        "declarationNodeId": "n40",
+        "frameId": "f1",
+        "id": "o3",
+        "length": 1,
+        "name": "c",
+        "scopeId": "s1",
+        "storage": "automatic",
+        "typeName": "int",
+        "zeroInitialized": false
+      },
+      {
+        "alive": true,
+        "baseAddress": 4108,
+        "byteLength": 8,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": {
+              "byteOffset": 0,
+              "lowerBound": 0,
+              "objectId": "o8",
+              "pointeeType": "Node",
+              "upperBound": 12
+            }
+          }
+        ],
+        "declarationNodeId": "n48",
+        "frameId": "f1",
+        "id": "o4",
+        "length": 1,
+        "name": "tail",
+        "scopeId": "s1",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": false,
+        "baseAddress": 4116,
+        "byteLength": 4,
+        "cells": [],
+        "declarationNodeId": "n4",
+        "frameId": "f2",
+        "id": "o5",
+        "length": 1,
+        "name": "value",
+        "scopeId": "s2",
+        "storage": "automatic",
+        "typeName": "int",
+        "zeroInitialized": false
+      },
+      {
+        "alive": false,
+        "baseAddress": 4120,
+        "byteLength": 8,
+        "cells": [],
+        "declarationNodeId": "n5",
+        "frameId": "f2",
+        "id": "o6",
+        "length": 1,
+        "name": "next",
+        "scopeId": "s2",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": false,
+        "baseAddress": 4128,
+        "byteLength": 8,
+        "cells": [],
+        "declarationNodeId": "n7",
+        "frameId": "f2",
+        "id": "o7",
+        "length": 1,
+        "name": "node",
+        "scopeId": "s2",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": true,
+        "baseAddress": 4136,
+        "byteLength": 12,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": 9
+          }
+        ],
+        "declarationNodeId": "n6",
+        "frameId": null,
+        "id": "o8",
+        "length": 1,
+        "name": "heap",
+        "scopeId": null,
+        "storage": "heap",
+        "typeName": "Node",
+        "zeroInitialized": true
+      },
+      {
+        "alive": true,
+        "baseAddress": 4148,
+        "byteLength": 8,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": {
+              "byteOffset": 0,
+              "lowerBound": 0,
+              "objectId": "o13",
+              "pointeeType": "Node",
+              "upperBound": 12
+            }
+          }
+        ],
+        "declarationNodeId": "n52",
+        "frameId": "f1",
+        "id": "o9",
+        "length": 1,
+        "name": "middle",
+        "scopeId": "s1",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": false,
+        "baseAddress": 4156,
+        "byteLength": 4,
+        "cells": [],
+        "declarationNodeId": "n4",
+        "frameId": "f3",
+        "id": "o10",
+        "length": 1,
+        "name": "value",
+        "scopeId": "s3",
+        "storage": "automatic",
+        "typeName": "int",
+        "zeroInitialized": false
+      },
+      {
+        "alive": false,
+        "baseAddress": 4160,
+        "byteLength": 8,
+        "cells": [],
+        "declarationNodeId": "n5",
+        "frameId": "f3",
+        "id": "o11",
+        "length": 1,
+        "name": "next",
+        "scopeId": "s3",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": false,
+        "baseAddress": 4168,
+        "byteLength": 8,
+        "cells": [],
+        "declarationNodeId": "n7",
+        "frameId": "f3",
+        "id": "o12",
+        "length": 1,
+        "name": "node",
+        "scopeId": "s3",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": true,
+        "baseAddress": 4176,
+        "byteLength": 12,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": 2
+          },
+          {
+            "byteOffset": 4,
+            "value": {
+              "byteOffset": 0,
+              "lowerBound": 0,
+              "objectId": "o8",
+              "pointeeType": "Node",
+              "upperBound": 12
+            }
+          }
+        ],
+        "declarationNodeId": "n6",
+        "frameId": null,
+        "id": "o13",
+        "length": 1,
+        "name": "heap",
+        "scopeId": null,
+        "storage": "heap",
+        "typeName": "Node",
+        "zeroInitialized": true
+      },
+      {
+        "alive": true,
+        "baseAddress": 4188,
+        "byteLength": 8,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": {
+              "byteOffset": 0,
+              "lowerBound": 0,
+              "objectId": "o18",
+              "pointeeType": "Node",
+              "upperBound": 12
+            }
+          }
+        ],
+        "declarationNodeId": "n56",
+        "frameId": "f1",
+        "id": "o14",
+        "length": 1,
+        "name": "head",
+        "scopeId": "s1",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": false,
+        "baseAddress": 4196,
+        "byteLength": 4,
+        "cells": [],
+        "declarationNodeId": "n4",
+        "frameId": "f4",
+        "id": "o15",
+        "length": 1,
+        "name": "value",
+        "scopeId": "s4",
+        "storage": "automatic",
+        "typeName": "int",
+        "zeroInitialized": false
+      },
+      {
+        "alive": false,
+        "baseAddress": 4200,
+        "byteLength": 8,
+        "cells": [],
+        "declarationNodeId": "n5",
+        "frameId": "f4",
+        "id": "o16",
+        "length": 1,
+        "name": "next",
+        "scopeId": "s4",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": false,
+        "baseAddress": 4208,
+        "byteLength": 8,
+        "cells": [],
+        "declarationNodeId": "n7",
+        "frameId": "f4",
+        "id": "o17",
+        "length": 1,
+        "name": "node",
+        "scopeId": "s4",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": true,
+        "baseAddress": 4216,
+        "byteLength": 12,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": 4
+          },
+          {
+            "byteOffset": 4,
+            "value": {
+              "byteOffset": 0,
+              "lowerBound": 0,
+              "objectId": "o13",
+              "pointeeType": "Node",
+              "upperBound": 12
+            }
+          }
+        ],
+        "declarationNodeId": "n6",
+        "frameId": null,
+        "id": "o18",
+        "length": 1,
+        "name": "heap",
+        "scopeId": null,
+        "storage": "heap",
+        "typeName": "Node",
+        "zeroInitialized": true
+      },
+      {
+        "alive": true,
+        "baseAddress": 4228,
+        "byteLength": 8,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": {
+              "byteOffset": 0,
+              "lowerBound": 0,
+              "objectId": "o18",
+              "pointeeType": "Node",
+              "upperBound": 12
+            }
+          }
+        ],
+        "declarationNodeId": "n20",
+        "frameId": "f5",
+        "id": "o19",
+        "length": 1,
+        "name": "head",
+        "scopeId": "s5",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": true,
+        "baseAddress": 4236,
+        "byteLength": 8,
+        "cells": [
+          {
+            "byteOffset": 0,
+            "value": {
+              "byteOffset": 0,
+              "lowerBound": 0,
+              "objectId": "o18",
+              "pointeeType": "Node",
+              "upperBound": 12
+            }
+          }
+        ],
+        "declarationNodeId": "n22",
+        "frameId": "f5",
+        "id": "o20",
+        "length": 1,
+        "name": "p",
+        "scopeId": "s6",
+        "storage": "automatic",
+        "typeName": "Node*",
+        "zeroInitialized": false
+      }
+    ],
+    "output": "4 ",
+    "scopes": [
+      {
+        "aliases": [],
+        "frameId": "f1",
+        "id": "s1",
+        "nodeId": "n75",
+        "objectIds": [
+          "o1",
+          "o2",
+          "o3",
+          "o4",
+          "o9",
+          "o14"
+        ]
+      },
+      {
+        "aliases": [],
+        "frameId": "f5",
+        "id": "s5",
+        "nodeId": "n36",
+        "objectIds": [
+          "o19"
+        ]
+      },
+      {
+        "aliases": [],
+        "frameId": "f5",
+        "id": "s6",
+        "nodeId": "n34",
+        "objectIds": [
+          "o20"
+        ]
+      }
+    ]
+  },
+  "currentStep": {
+    "changes": [
+      {
+        "after": null,
+        "before": {
+          "aliases": [],
+          "frameId": "f5",
+          "id": "s7",
+          "nodeId": "n33",
+          "objectIds": []
+        },
+        "id": "s7",
+        "index": 3,
+        "op": "record",
+        "table": "scopes"
+      },
+      {
+        "after": {
+          "callNodeId": "n58",
+          "functionName": "print",
+          "functionNodeId": "n37",
+          "id": "f5",
+          "parentFrameId": "f1",
+          "scopeIds": [
+            "s5",
+            "s6"
+          ]
+        },
+        "before": {
+          "callNodeId": "n58",
+          "functionName": "print",
+          "functionNodeId": "n37",
+          "id": "f5",
+          "parentFrameId": "f1",
+          "scopeIds": [
+            "s5",
+            "s6",
+            "s7"
+          ]
+        },
+        "id": "f5",
+        "index": 1,
+        "op": "record",
+        "table": "frames"
+      },
+      {
+        "after": {
+          "activeFrameId": "f5",
+          "inputCursor": 3,
+          "nextNodeId": "n33",
+          "returnValue": null
+        },
+        "before": {
+          "activeFrameId": "f5",
+          "inputCursor": 3,
+          "nextNodeId": "n32",
+          "returnValue": null
+        },
+        "op": "control"
+      }
+    ],
+    "kind": "scope.exit",
+    "nodeId": "n33",
+    "seq": 43
+  },
+  "executionOutcome": {
+    "byteRange": null,
+    "code": null,
+    "cursor": 85,
+    "returnValue": 0,
+    "status": "completed"
+  },
+  "terminalAtCursor": null,
+  "origin": {
+    "kind": "memory-observation",
+    "id": "nodes",
+    "title": "节点连接与释放",
+    "caseRef": null,
+    "programRef": null,
+    "packageRef": null,
+    "definitionVersion": {
+      "scheme": "source-sha256",
+      "value": "560e16e3b375ed4bcd5d8d02628cc8ed7b539375d275dff38888c658d2bf2870"
+    }
+  },
+  "runtime": {
+    "domain": "p1-memory",
+    "language": "cpp",
+    "subset": null,
+    "engine": {
+      "buildId": "4f3cb075dc0b7da3a0afc9dd96f178b6a1b71184f125c726ddf0b81384f6b3a7",
+      "id": "engine.rust.memory",
+      "version": "0.1.0"
+    },
+    "identity": {
+      "runId": "bfc3bfc9-b20b-44fa-a29f-a9ae51cc3bf5",
+      "sourceRevision": "ab29782c-cac7-4dcb-99e3-8f89cc3c2035"
+    },
+    "versions": {
+      "execution": "1.3.0",
+      "step": "1.2.0",
+      "diagnostic": "1.2.0",
+      "integerEncoding": "1.0.0",
+      "judge": null
+    }
+  },
+  "source": {
+    "text": "#include <iostream>\nstruct Node {\n    int value;\n    Node* next;\n};\nNode* make(int value, Node* next) {\n    Node* node = new Node{};\n    node->value = value;\n    node->next = next;\n    return node;\n}\nvoid print(Node* head) {\n    for (Node* p = head; p != nullptr; p = p->next) {\n        std::cout << p->value << \" \";\n    }\n    std::cout << \"\\n\";\n}\nint main() {\n    int a;\n    int b;\n    int c;\n    std::cin >> a >> b >> c;\n    Node* tail = make(c, nullptr);\n    Node* middle = make(b, tail);\n    Node* head = make(a, middle);\n    print(head);\n    head->next = tail;\n    delete middle;\n    print(head);\n    delete head;\n    delete tail;\n    return 0;\n}\n",
+    "encoding": "UTF-8",
+    "sourceRevision": "ab29782c-cac7-4dcb-99e3-8f89cc3c2035",
+    "sha256": "560e16e3b375ed4bcd5d8d02628cc8ed7b539375d275dff38888c658d2bf2870",
+    "nodeMap": [
+      {
+        "byteRange": {
+          "end": 48,
+          "start": 38
+        },
+        "kind": "field",
+        "nodeId": "n1"
+      },
+      {
+        "byteRange": {
+          "end": 64,
+          "start": 53
+        },
+        "kind": "field",
+        "nodeId": "n2"
+      },
+      {
+        "byteRange": {
+          "end": 67,
+          "start": 20
+        },
+        "kind": "struct",
+        "nodeId": "n3"
+      },
+      {
+        "byteRange": {
+          "end": 88,
+          "start": 79
+        },
+        "kind": "parameter",
+        "nodeId": "n4"
+      },
+      {
+        "byteRange": {
+          "end": 100,
+          "start": 90
+        },
+        "kind": "parameter",
+        "nodeId": "n5"
+      },
+      {
+        "byteRange": {
+          "end": 131,
+          "start": 121
+        },
+        "kind": "expression",
+        "nodeId": "n6"
+      },
+      {
+        "byteRange": {
+          "end": 132,
+          "start": 108
+        },
+        "kind": "declaration",
+        "nodeId": "n7"
+      },
+      {
+        "byteRange": {
+          "end": 141,
+          "start": 137
+        },
+        "kind": "expression",
+        "nodeId": "n8"
+      },
+      {
+        "byteRange": {
+          "end": 148,
+          "start": 137
+        },
+        "kind": "expression",
+        "nodeId": "n9"
+      },
+      {
+        "byteRange": {
+          "end": 156,
+          "start": 151
+        },
+        "kind": "expression",
+        "nodeId": "n10"
+      },
+      {
+        "byteRange": {
+          "end": 157,
+          "start": 137
+        },
+        "kind": "assignment",
+        "nodeId": "n11"
+      },
+      {
+        "byteRange": {
+          "end": 166,
+          "start": 162
+        },
+        "kind": "expression",
+        "nodeId": "n12"
+      },
+      {
+        "byteRange": {
+          "end": 172,
+          "start": 162
+        },
+        "kind": "expression",
+        "nodeId": "n13"
+      },
+      {
+        "byteRange": {
+          "end": 179,
+          "start": 175
+        },
+        "kind": "expression",
+        "nodeId": "n14"
+      },
+      {
+        "byteRange": {
+          "end": 180,
+          "start": 162
+        },
+        "kind": "assignment",
+        "nodeId": "n15"
+      },
+      {
+        "byteRange": {
+          "end": 196,
+          "start": 192
+        },
+        "kind": "expression",
+        "nodeId": "n16"
+      },
+      {
+        "byteRange": {
+          "end": 197,
+          "start": 185
+        },
+        "kind": "return",
+        "nodeId": "n17"
+      },
+      {
+        "byteRange": {
+          "end": 199,
+          "start": 102
+        },
+        "kind": "block",
+        "nodeId": "n18"
+      },
+      {
+        "byteRange": {
+          "end": 199,
+          "start": 68
+        },
+        "kind": "function",
+        "nodeId": "n19"
+      },
+      {
+        "byteRange": {
+          "end": 221,
+          "start": 211
+        },
+        "kind": "parameter",
+        "nodeId": "n20"
+      },
+      {
+        "byteRange": {
+          "end": 248,
+          "start": 244
+        },
+        "kind": "expression",
+        "nodeId": "n21"
+      },
+      {
+        "byteRange": {
+          "end": 249,
+          "start": 234
+        },
+        "kind": "declaration",
+        "nodeId": "n22"
+      },
+      {
+        "byteRange": {
+          "end": 251,
+          "start": 250
+        },
+        "kind": "expression",
+        "nodeId": "n23"
+      },
+      {
+        "byteRange": {
+          "end": 262,
+          "start": 255
+        },
+        "kind": "expression",
+        "nodeId": "n24"
+      },
+      {
+        "byteRange": {
+          "end": 262,
+          "start": 250
+        },
+        "kind": "expression",
+        "nodeId": "n25"
+      },
+      {
+        "byteRange": {
+          "end": 265,
+          "start": 264
+        },
+        "kind": "expression",
+        "nodeId": "n26"
+      },
+      {
+        "byteRange": {
+          "end": 269,
+          "start": 268
+        },
+        "kind": "expression",
+        "nodeId": "n27"
+      },
+      {
+        "byteRange": {
+          "end": 275,
+          "start": 268
+        },
+        "kind": "expression",
+        "nodeId": "n28"
+      },
+      {
+        "byteRange": {
+          "end": 275,
+          "start": 264
+        },
+        "kind": "assignment",
+        "nodeId": "n29"
+      },
+      {
+        "byteRange": {
+          "end": 301,
+          "start": 300
+        },
+        "kind": "expression",
+        "nodeId": "n30"
+      },
+      {
+        "byteRange": {
+          "end": 308,
+          "start": 300
+        },
+        "kind": "expression",
+        "nodeId": "n31"
+      },
+      {
+        "byteRange": {
+          "end": 316,
+          "start": 287
+        },
+        "kind": "output",
+        "nodeId": "n32"
+      },
+      {
+        "byteRange": {
+          "end": 322,
+          "start": 277
+        },
+        "kind": "block",
+        "nodeId": "n33"
+      },
+      {
+        "byteRange": {
+          "end": 322,
+          "start": 229
+        },
+        "kind": "for",
+        "nodeId": "n34"
+      },
+      {
+        "byteRange": {
+          "end": 345,
+          "start": 327
+        },
+        "kind": "output",
+        "nodeId": "n35"
+      },
+      {
+        "byteRange": {
+          "end": 347,
+          "start": 223
+        },
+        "kind": "block",
+        "nodeId": "n36"
+      },
+      {
+        "byteRange": {
+          "end": 347,
+          "start": 200
+        },
+        "kind": "function",
+        "nodeId": "n37"
+      },
+      {
+        "byteRange": {
+          "end": 371,
+          "start": 365
+        },
+        "kind": "declaration",
+        "nodeId": "n38"
+      },
+      {
+        "byteRange": {
+          "end": 382,
+          "start": 376
+        },
+        "kind": "declaration",
+        "nodeId": "n39"
+      },
+      {
+        "byteRange": {
+          "end": 393,
+          "start": 387
+        },
+        "kind": "declaration",
+        "nodeId": "n40"
+      },
+      {
+        "byteRange": {
+          "end": 411,
+          "start": 410
+        },
+        "kind": "expression",
+        "nodeId": "n41"
+      },
+      {
+        "byteRange": {
+          "end": 416,
+          "start": 415
+        },
+        "kind": "expression",
+        "nodeId": "n42"
+      },
+      {
+        "byteRange": {
+          "end": 421,
+          "start": 420
+        },
+        "kind": "expression",
+        "nodeId": "n43"
+      },
+      {
+        "byteRange": {
+          "end": 422,
+          "start": 398
+        },
+        "kind": "input",
+        "nodeId": "n44"
+      },
+      {
+        "byteRange": {
+          "end": 446,
+          "start": 445
+        },
+        "kind": "expression",
+        "nodeId": "n45"
+      },
+      {
+        "byteRange": {
+          "end": 455,
+          "start": 448
+        },
+        "kind": "expression",
+        "nodeId": "n46"
+      },
+      {
+        "byteRange": {
+          "end": 456,
+          "start": 440
+        },
+        "kind": "call",
+        "nodeId": "n47"
+      },
+      {
+        "byteRange": {
+          "end": 457,
+          "start": 427
+        },
+        "kind": "declaration",
+        "nodeId": "n48"
+      },
+      {
+        "byteRange": {
+          "end": 483,
+          "start": 482
+        },
+        "kind": "expression",
+        "nodeId": "n49"
+      },
+      {
+        "byteRange": {
+          "end": 489,
+          "start": 485
+        },
+        "kind": "expression",
+        "nodeId": "n50"
+      },
+      {
+        "byteRange": {
+          "end": 490,
+          "start": 477
+        },
+        "kind": "call",
+        "nodeId": "n51"
+      },
+      {
+        "byteRange": {
+          "end": 491,
+          "start": 462
+        },
+        "kind": "declaration",
+        "nodeId": "n52"
+      },
+      {
+        "byteRange": {
+          "end": 515,
+          "start": 514
+        },
+        "kind": "expression",
+        "nodeId": "n53"
+      },
+      {
+        "byteRange": {
+          "end": 523,
+          "start": 517
+        },
+        "kind": "expression",
+        "nodeId": "n54"
+      },
+      {
+        "byteRange": {
+          "end": 524,
+          "start": 509
+        },
+        "kind": "call",
+        "nodeId": "n55"
+      },
+      {
+        "byteRange": {
+          "end": 525,
+          "start": 496
+        },
+        "kind": "declaration",
+        "nodeId": "n56"
+      },
+      {
+        "byteRange": {
+          "end": 540,
+          "start": 536
+        },
+        "kind": "expression",
+        "nodeId": "n57"
+      },
+      {
+        "byteRange": {
+          "end": 541,
+          "start": 530
+        },
+        "kind": "call",
+        "nodeId": "n58"
+      },
+      {
+        "byteRange": {
+          "end": 542,
+          "start": 530
+        },
+        "kind": "expression-statement",
+        "nodeId": "n59"
+      },
+      {
+        "byteRange": {
+          "end": 551,
+          "start": 547
+        },
+        "kind": "expression",
+        "nodeId": "n60"
+      },
+      {
+        "byteRange": {
+          "end": 557,
+          "start": 547
+        },
+        "kind": "expression",
+        "nodeId": "n61"
+      },
+      {
+        "byteRange": {
+          "end": 564,
+          "start": 560
+        },
+        "kind": "expression",
+        "nodeId": "n62"
+      },
+      {
+        "byteRange": {
+          "end": 565,
+          "start": 547
+        },
+        "kind": "assignment",
+        "nodeId": "n63"
+      },
+      {
+        "byteRange": {
+          "end": 583,
+          "start": 577
+        },
+        "kind": "expression",
+        "nodeId": "n64"
+      },
+      {
+        "byteRange": {
+          "end": 584,
+          "start": 570
+        },
+        "kind": "delete",
+        "nodeId": "n65"
+      },
+      {
+        "byteRange": {
+          "end": 599,
+          "start": 595
+        },
+        "kind": "expression",
+        "nodeId": "n66"
+      },
+      {
+        "byteRange": {
+          "end": 600,
+          "start": 589
+        },
+        "kind": "call",
+        "nodeId": "n67"
+      },
+      {
+        "byteRange": {
+          "end": 601,
+          "start": 589
+        },
+        "kind": "expression-statement",
+        "nodeId": "n68"
+      },
+      {
+        "byteRange": {
+          "end": 617,
+          "start": 613
+        },
+        "kind": "expression",
+        "nodeId": "n69"
+      },
+      {
+        "byteRange": {
+          "end": 618,
+          "start": 606
+        },
+        "kind": "delete",
+        "nodeId": "n70"
+      },
+      {
+        "byteRange": {
+          "end": 634,
+          "start": 630
+        },
+        "kind": "expression",
+        "nodeId": "n71"
+      },
+      {
+        "byteRange": {
+          "end": 635,
+          "start": 623
+        },
+        "kind": "delete",
+        "nodeId": "n72"
+      },
+      {
+        "byteRange": {
+          "end": 648,
+          "start": 647
+        },
+        "kind": "expression",
+        "nodeId": "n73"
+      },
+      {
+        "byteRange": {
+          "end": 649,
+          "start": 640
+        },
+        "kind": "return",
+        "nodeId": "n74"
+      },
+      {
+        "byteRange": {
+          "end": 651,
+          "start": 359
+        },
+        "kind": "block",
+        "nodeId": "n75"
+      },
+      {
+        "byteRange": {
+          "end": 651,
+          "start": 348
+        },
+        "kind": "function",
+        "nodeId": "n76"
+      }
+    ],
+    "blockMap": [],
+    "bindingMap": [],
+    "resolvedBindings": []
+  },
+  "input": [
+    4,
+    2,
+    9
+  ],
+  "types": [
+    {
+      "byteSize": 4,
+      "fields": [],
+      "kind": "int",
+      "name": "int",
+      "pointeeType": null
+    },
+    {
+      "byteSize": 12,
+      "fields": [
+        {
+          "byteOffset": 0,
+          "name": "value",
+          "typeName": "int"
+        },
+        {
+          "byteOffset": 4,
+          "name": "next",
+          "typeName": "Node*"
+        }
+      ],
+      "kind": "struct",
+      "name": "Node",
+      "pointeeType": null
+    },
+    {
+      "byteSize": 8,
+      "fields": [],
+      "kind": "pointer",
+      "name": "int*",
+      "pointeeType": "int"
+    },
+    {
+      "byteSize": 8,
+      "fields": [],
+      "kind": "pointer",
+      "name": "Node*",
+      "pointeeType": "Node"
+    }
+  ],
+  "position": {
+    "cursor": 43,
+    "length": 85,
+    "stepKind": "scope.exit",
+    "paused": true,
+    "atTerminal": false,
+    "executed": {
+      "raw": {
+        "end": 322,
+        "start": 277
+      },
+      "range": {
+        "byteRange": {
+          "start": 277,
+          "end": 322
+        },
+        "utf16Range": {
+          "start": 277,
+          "end": 322
+        },
+        "start": {
+          "line": 13,
+          "column": 53
+        },
+        "end": {
+          "line": 15,
+          "column": 6
+        }
+      },
+      "description": "第 13 行，第 53 列"
+    },
+    "highlighted": {
+      "reason": "executed-step",
+      "range": {
+        "byteRange": {
+          "start": 277,
+          "end": 322
+        },
+        "utf16Range": {
+          "start": 277,
+          "end": 322
+        },
+        "start": {
+          "line": 13,
+          "column": 53
+        },
+        "end": {
+          "line": 15,
+          "column": 6
+        }
+      }
+    },
+    "terminalRange": null
+  }
+}

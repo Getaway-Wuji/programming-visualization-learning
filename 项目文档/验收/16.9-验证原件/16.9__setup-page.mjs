@@ -1,0 +1,22 @@
+import{readFileSync as read,writeFileSync as write}from'node:fs';
+let s=read('web/src/node-cases/NodeCasePage.tsx','utf8');
+for(const[a,b]of Object.entries({parseNodeOperations:'parseClassicInput',prepareNodeCase:'prepareClassic',nodeCases:'classicCases',nodeCase:'classicCase',nodeCatalog:'classicCatalog',NodeCaseController:'ClassicController',NodeCaseWorkspace:'ClassicWorkspace',NodeCasePage:'ClassicPage',NodeCase:'ClassicCase',nodeExplanation:'classicExplanation',nodeCaseId:'classicId',NodeGraph:'ClassicState'}))s=s.replaceAll(a,b);
+s=s.replaceAll("'graph'","'values'").replaceAll('value="graph"','value="values"').replaceAll('node-','classic-').replaceAll('/nodes/','/classics/').replace("'./nodes.css'","'./classics.css'");
+s=s.replaceAll('spec.defaultDraft',"spec.defaultInput.join(' ')").replaceAll('parsed.operationCount','spec.inputArity').replaceAll('parsed.encoded.length','parsed.values.length').replaceAll('spec.boundaryDrafts','spec.boundarySamples').replaceAll('selected.draft',"selected.input.join(' ')");
+s=s.replace('maxLength={1024}','maxLength={128}').replace('rows={4}','rows={2}');
+let a=s.indexOf('        <p id="classic-input-help">'),b=s.indexOf('        </p>',a)+12;s=s.slice(0,a)+`        <p id="classic-input-help">{spec.inputHelp} 用空格或逗号分隔，恰{spec.inputArity}项。修改输入撤销旧运行，观察不计课程或积分。</p>`+s.slice(b);
+s=s.replace('{spec.inputArity}条操作 · {parsed.values.length} / 30输入槽','{parsed.values.length} / {spec.inputArity}项输入');
+s=s.replaceAll('逐行操作','输入整数').replaceAll('节点操作序列','经典问题输入').replaceAll('运行C++节点操作','运行C++经典案例').replaceAll('节点边界样例','经典边界样例').replaceAll('动态节点执行观察','经典问题执行观察').replaceAll('节点执行步骤','经典执行步骤').replaceAll('节点播放速度','经典播放速度').replaceAll('节点播放控制','经典播放控制').replaceAll('节点观察视图','经典观察视图').replaceAll('节点观察','数值与过程').replaceAll('节点连接','当前数值与盘图').replaceAll('可复制的完整节点C++源码','可复制的完整经典C++源码');
+s=s.replace('C++ · 操作序列 · 真实回放','C++ · 经典问题 · 真实回放');
+s=s.replace('原序列经cin读取。','固定参数经cin读取。').replace('只实例化编码长度，','原文完整执行，');
+s=s.replace(/\s*<button className="button" onClick=\{\(\) => change\('\[\]'\)\}\>[\s\S]*?<\/button>/,'');
+// Fixed-arity examples have no valid empty sequence button.
+s=s.replace(/\s*<button className="button" onClick=\{\(\) => change\('\[\]'\)\}>\s*使用空序列\s*<\/button>/,'');
+s=s.replace('                      step={view.cursor ? result.trace!.steps[view.cursor - 1] : null}\n','');
+s=s.replace('                    step={view.cursor ? result.trace!.steps[view.cursor - 1] : null}\n','');
+s=s.replace('程序正常结束；FULL/RANGE/DUP表示对应操作被实际拒绝，MISS表示未找到。','程序正常结束；素数/回文的0表示正常判断为否。').replace('非法内部编码已停止。','输入域保护已停止。');
+s=s.replace('先输入合法操作序列并运行，再核对真实节点、指向关系和对象生命周期。','输入合法整数并运行，再核对真实数值、盘位置和调用栈。').replace('切换链表与BST案例','切换四个经典案例').replace('找不到这个节点案例','找不到这个经典案例');
+write('web/src/classics/ClassicPage.tsx',s,{flag:'wx'});
+let p='web/src/App.tsx',t=read(p,'utf8');t=t.replace("const NodeCasePage = lazy(() => import('./node-cases/NodeCasePage'));","const NodeCasePage = lazy(() => import('./node-cases/NodeCasePage'));\nconst ClassicPage = lazy(() => import('./classics/ClassicPage'));");t=t.replace('<Route path="/nodes/:nodeCaseId" element={<NodeCasePage />} />','<Route path="/nodes/:nodeCaseId" element={<NodeCasePage />} />\n            <Route path="/classics/:classicId" element={<ClassicPage />} />');write(p,t);
+p='web/src/components/Layout.tsx';t=read(p,'utf8').replace("location.pathname.startsWith('/nodes/')","location.pathname.startsWith('/nodes/') || location.pathname.startsWith('/classics/')");write(p,t);
+p='web/src/pages/CatalogPages.tsx';t=read(p,'utf8').replace("import { NodeCaseCatalog } from '../node-cases/NodeCaseCatalog';","import { NodeCaseCatalog } from '../node-cases/NodeCaseCatalog';\nimport { ClassicCatalog } from '../classics/ClassicCatalog';").replace('<NodeCaseCatalog />','<NodeCaseCatalog />\n      <ClassicCatalog />');write(p,t);console.log('Four classic workspaces and three necessary shared entry points created.');

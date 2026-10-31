@@ -122,8 +122,8 @@ test('new native IndexedDB has twelve out-of-line stores, one saved default set 
 }) => {
   const { name, snapshot } = await opened(page);
   expect(snapshot.meta).toMatchObject({
-    schemaVersion: '6.0.0',
-    dbVersion: 6,
+    schemaVersion: '7.0.0',
+    dbVersion: 7,
     revision: 0,
     timeZone: 'Asia/Shanghai',
     activePackageRef: { id: 'content.c.p0', version: '1.0.0' },
@@ -143,7 +143,7 @@ test('new native IndexedDB has twelve out-of-line stores, one saved default set 
   for (const store of ['progress', 'dailyFacts', 'goals', 'ledger', 'receipts', 'aliases'] as const)
     expect(snapshot[store]).toEqual([]);
   const before = await page.evaluate(() => window.storageHarness.rawDump());
-  expect(before.version).toBe(6);
+  expect(before.version).toBe(7);
   expect(before.stores.map((store) => store.name).toSorted()).toEqual(
     [...storeNames, 'editHistory', 'knowledgeMarks', 'reviewCards', 'achievements'].toSorted(),
   );
@@ -335,7 +335,7 @@ test('unknown semantic versions, invalid meta and missing meta preserve the nati
   const { name } = await opened(page);
   value(await page.evaluate((id) => window.storageHarness.commitEvent(id), randomUUID()));
   const original = value(await page.evaluate(() => window.storageHarness.read()));
-  for (const patch of [{ schemaVersion: '9.0.0' }, { schemaVersion: '6.0.0', generation: '' }]) {
+  for (const patch of [{ schemaVersion: '9.0.0' }, { schemaVersion: '7.0.0', generation: '' }]) {
     await page.evaluate((patch) => window.storageHarness.patchMeta(patch), patch);
     const before = await page.evaluate(() => window.storageHarness.rawDump());
     failure(

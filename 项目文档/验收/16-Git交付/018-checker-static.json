@@ -1,0 +1,33 @@
+{
+  "atUtc": "2026-10-31T11:40:39.033Z",
+  "checks": [
+    {
+      "name": "syntax",
+      "command": [
+        ".tools/node-v24.21.0-win-x64/node.exe",
+        "--check",
+        "scripts/check-release-archives.mjs"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "eslint",
+      "command": [
+        ".tools/node-v24.21.0-win-x64/node.exe",
+        "node_modules/eslint/bin/eslint.js",
+        "scripts/check-release-archives.mjs"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "format",
+      "command": [
+        ".tools/node-v24.21.0-win-x64/node.exe",
+        "node_modules/prettier/bin/prettier.cjs",
+        "--check",
+        "scripts/check-release-archives.mjs"
+      ],
+      "exit": 0
+    }
+  ]
+}

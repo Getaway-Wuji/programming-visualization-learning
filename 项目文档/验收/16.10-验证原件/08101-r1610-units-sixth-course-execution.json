@@ -1,0 +1,743 @@
+{
+  "evidenceVersion": "09.1-reference-execution@1",
+  "passed": true,
+  "method": "Original public programs instantiated and executed by unchanged Rust/WASM; full production decoder validates all complete traces.",
+  "courseSha256": "713133313e65ba9ea000daa18d5feaea84beeb65f296b8102edc5de114fa2611",
+  "wasmSha256": "aed203f4fe30ccaafdb32d0c68c2a1f2634c10726c82977684d4e3d20228679d",
+  "publicTestCount": 24,
+  "defaultReferenceCount": 10,
+  "judgeImplemented": false,
+  "publicationVerified": false,
+  "samples": [
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.echo-positive",
+      "input": {
+        "x": 7
+      },
+      "stdout": "7\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "fb7dd51a0badb787f6ebcc2afb396e3a249ab40bbccb85791261729ae299c12f",
+      "requestSha256": "9acdac3b091076cfc145dd0c0740fcc0b17c24fbc6f790733be9b89dadc47484",
+      "resultSha256": "0ea845f8effeb1f2b9c1e27c75ddfa92b1765e606d1d4ea667632648c8b129b3",
+      "steps": 5
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.echo-zero",
+      "input": {
+        "x": 0
+      },
+      "stdout": "0\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "9d4df48c3a29eb597ed2eb7b7405b67021d0d8e7269cfd820954a81b1606b8eb",
+      "requestSha256": "450bdefe14366a9100f8ffe07606e8bfcd4e806249f75cc1a2d84b848c53e0d9",
+      "resultSha256": "5ddf108eeb24e088253ebf1b26edab38b8624f6e071d300e8c1fb3fda60d10a1",
+      "steps": 5
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.echo-negative",
+      "input": {
+        "x": -9
+      },
+      "stdout": "-9\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "343e3e0054a3864564493d7dd9ce51f9cee02f034f06a7e02c7db25c90474655",
+      "requestSha256": "b4d0c789b7e42b69b7ec5a9389b3b147a86020980af22deb8178a0de92a05323",
+      "resultSha256": "92486d4c02b239794c0e8eb246f6305531eadb70a81526709dc34e954c310bd2",
+      "steps": 5
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.two-x-plus-three-positive",
+      "input": {
+        "x": 7
+      },
+      "stdout": "17\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "a2b0918d21b8bdedaa982a1968394e7a9be130cf5e6dbf0a34c36c3b97686c85",
+      "requestSha256": "5c0860a7a275851c619d9e77ad87c17d22bf4b0c4eacd9a582e1e3b21c74c004",
+      "resultSha256": "fded16e9114c3db4845ef678129ceeadd66f8cb81244151140f2475077eac742",
+      "steps": 7
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.two-x-plus-three-zero",
+      "input": {
+        "x": 0
+      },
+      "stdout": "3\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "bcb7e20f1b1b8a29ad948db5ed87fdad314e06b2bfef0554ebfe6e6963cccc36",
+      "requestSha256": "917f80b8b7c0a316a6acae8fcfb2924310f924d94c151105ba5e4b34519ec020",
+      "resultSha256": "fbebe8398557f70feb67f81209a6e04cc757e158924e83cd321b291eb3da515d",
+      "steps": 7
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.two-x-plus-three-negative",
+      "input": {
+        "x": -9
+      },
+      "stdout": "-15\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "8ff602d52a5df82f568146512d80b518726d1da84ebe8689fec4b91f14251069",
+      "requestSha256": "a951be84d1d4e112956f3310ef4b867641052e836846cb8a10cd9ba26621cc1d",
+      "resultSha256": "0bcca503ae45dac5cd7685a9b75a550b81db8dbe26219693db930776a2dbb184",
+      "steps": 7
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.nonnegative-positive",
+      "input": {
+        "x": 5
+      },
+      "stdout": "1\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "add450c303f3cb22af80d0d182c0d3bd21cc141b9ab92c061812e1f63e0935f8",
+      "requestSha256": "d410e777b39b55a2cef6ac27315680ab5083f68dbbec759eae01060ad1806077",
+      "resultSha256": "0098eb0bbae5750d58140b79e38627c87509efd1ff2a3c78680fde81c8c458ac",
+      "steps": 8
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.nonnegative-zero",
+      "input": {
+        "x": 0
+      },
+      "stdout": "1\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "b1b97de2251af018a0eaa41c77743a5db05d8d923eec4b8dc4542f48105a2494",
+      "requestSha256": "54a3e255454ed7c0e4752a152ac99aaabc565d2401f67745caefbfd397f71012",
+      "resultSha256": "c2653fb6036288b1e87731ad83694d0f5c883d6a9632641876f43d1afe4778da",
+      "steps": 8
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.nonnegative-negative",
+      "input": {
+        "x": -3
+      },
+      "stdout": "0\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "3a8f97e17551a1f77f1da155f62493933721f4a0af96866bd31553a0a312444c",
+      "requestSha256": "812e29219c17ddf15b0f88983a27f8f7606a6218efe5276f5a5617dca7c91cb3",
+      "resultSha256": "528dc542787e408f469d5658cae1ebaa8c77b238220b144224c506d1c3c1997a",
+      "steps": 8
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.two-loop-sums-zero",
+      "input": {
+        "n": 0
+      },
+      "stdout": "0\n0\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "6514e459579ba8db2a747379098c8a0e865ca05199000e1fbcd79260df0a0732",
+      "requestSha256": "a1eb2cf8474fedb4cc23764b33514727c51e68e0dcee593f38021744ac21ada9",
+      "resultSha256": "04439d6778d1eb3562e03647f2f78ca9006bf54e265b1e183bc7c02ddf0b1b5b",
+      "steps": 17
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.two-loop-sums-one",
+      "input": {
+        "n": 1
+      },
+      "stdout": "1\n1\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "cca95b93583b09f858288fc7250edceb1e5196f7908c8f0cf17a5dcbf48c8d0d",
+      "requestSha256": "6373684b5dc9a2bd2d11b4a94274441285f2a1e8c886d90dd6fc05e21744507d",
+      "resultSha256": "008f7865c37f526b93c92585bb5c1516914d3440c0d5058727ba9b28824a5bfc",
+      "steps": 27
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.two-loop-sums-normal",
+      "input": {
+        "n": 5
+      },
+      "stdout": "15\n15\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "04101a70238e31441cc1a32ca1d98a63511ca66598f7ac2f3e0fdd026232a9a7",
+      "requestSha256": "465acfb09cd974ad6c9b296794ff1032992af24d1f558f6fddf0e78dbdbb0c94",
+      "resultSha256": "b2195a918be50b3a5099ca9b4d930803822aa626a94ce8632772d55271f0c891",
+      "steps": 67
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.two-loop-sums-maximum",
+      "input": {
+        "n": 30
+      },
+      "stdout": "465\n465\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "cac32d0f52ed62d0d9ff26351933a4d74df1527104e9334c781d14ee628fc165",
+      "requestSha256": "26b30bcde1dbdecc3d3f6b954f5852a884514b22116cac74191ddc0b8cc6739a",
+      "resultSha256": "a51e15b977ecfc21d8bec86a44d986b42c653e03bd7f461d036b150882a64f7a",
+      "steps": 317
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.increment-at-index-first",
+      "input": {
+        "values": [
+          4,
+          0,
+          -2
+        ],
+        "k": 0
+      },
+      "stdout": "5\n",
+      "expectedArray": [
+        5,
+        0,
+        -2
+      ],
+      "observedArray": [
+        5,
+        0,
+        -2
+      ],
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "52d7980c5e19d0ab97e40304b5771bcf6051c459e6c020ac8d88a6014397b2f6",
+      "requestSha256": "8c2f15fc684efb08921a9f437adfe5ee3f851c4820c8e4447e4a6576381bf758",
+      "resultSha256": "2b176f160bc14fb359af23e0876a1184acef9da3a0e1651525d16cdd1591176d",
+      "steps": 10
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.increment-at-index-middle",
+      "input": {
+        "values": [
+          4,
+          0,
+          -2
+        ],
+        "k": 1
+      },
+      "stdout": "1\n",
+      "expectedArray": [
+        4,
+        1,
+        -2
+      ],
+      "observedArray": [
+        4,
+        1,
+        -2
+      ],
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "c2b1e3ba44f83e5f1f01ddd472ba305c88723803a1ed02277e49f8983d975341",
+      "requestSha256": "2ad0a38b45d8a334b5fc898f8b30ce492e3cb71c4c6a38e8e337baee4cc4b5c4",
+      "resultSha256": "20a432c12918288f4d8dcf329ae4a2accd3ecc4c78c2bdf980e3fe6e1c3323e2",
+      "steps": 10
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.increment-at-index-last",
+      "input": {
+        "values": [
+          4,
+          0,
+          -2
+        ],
+        "k": 2
+      },
+      "stdout": "-1\n",
+      "expectedArray": [
+        4,
+        0,
+        -1
+      ],
+      "observedArray": [
+        4,
+        0,
+        -1
+      ],
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "47ff6cf540e0b990e0e79da973f3e3f808378335bf55ffa6400be12f644d1dff",
+      "requestSha256": "3f7a473af16377300ab1def5567b1de04fe4ec715ee21d3f50efc76168b574fa",
+      "resultSha256": "21a0bfdecfe3da13cec9be94d9dd90bd85e2881a49458ccbee0414ca158fc7b0",
+      "steps": 10
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.increment-at-index-upper",
+      "input": {
+        "values": [
+          999
+        ],
+        "k": 0
+      },
+      "stdout": "1000\n",
+      "expectedArray": [
+        1000
+      ],
+      "observedArray": [
+        1000
+      ],
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "0c5f92182729fcecd96e503bd8112afd979f8dcf7d05eb78af1363342c85f352",
+      "requestSha256": "4ac2e737e22edb0be888c0dbc694ce507eb1da0455b877eddb81e6fea924f520",
+      "resultSha256": "19bc515c936f45444972f9cb94713ed3add5aa5d412e2257da1809a0f22baea8",
+      "steps": 10
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.increment-at-index-lower",
+      "input": {
+        "values": [
+          -999
+        ],
+        "k": 0
+      },
+      "stdout": "-998\n",
+      "expectedArray": [
+        -998
+      ],
+      "observedArray": [
+        -998
+      ],
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "167a766ff5d7ca010026e7ba9aa34e167a89916707f7980199bc58c9e7a7cd6a",
+      "requestSha256": "c3216076b5e3706781d229c5dcdd44ea5b88dd28ee1effa3588ff47e0d7ecaf6",
+      "resultSha256": "4768705816515f67f443e51dd2b514ebd8e120090c3c577048532120908c82d6",
+      "steps": 10
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.array-sum-normal",
+      "input": {
+        "values": [
+          3,
+          -1,
+          2
+        ]
+      },
+      "stdout": "4\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "125a7405266d1519f956355f010e55c3014967d1909d93a1d150e602a7e6c7b3",
+      "requestSha256": "031df25914c29c9d8a292b88f3412ad447d06621478a1bc1eda83c950ae70dee",
+      "resultSha256": "da241593b0a71d8f30111161af7c80c4af6798c04bd02377b00c50c1b8667546",
+      "steps": 29
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.array-sum-empty",
+      "input": {
+        "values": []
+      },
+      "stdout": "0\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "614cd82c67d86129d24b0797bed80f170cef47b502193128301273ffe932bdeb",
+      "requestSha256": "7a7ac0e3dfc9e695caa7b76cb905ccd50b3bf64c94ba72182214818ed9d8a824",
+      "resultSha256": "6733c9b1a8ad15bf2624fcc1ca6533a29901f460c686a803a9313127c6f242f1",
+      "steps": 14
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.array-sum-one",
+      "input": {
+        "values": [
+          7
+        ]
+      },
+      "stdout": "7\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "bcf845acd1a65803675705b396888df3e4e04afe75d367731021af91ed7ed875",
+      "requestSha256": "4e45afa840e3a37f036061d5829d38137e5b612aa5126dd879f03fe4a5673680",
+      "resultSha256": "c065591ab307789136151cfcc824e0eed712d05f2d78994ac8395d353cdafd4a",
+      "steps": 19
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.array-sum-zeros",
+      "input": {
+        "values": [
+          0,
+          0
+        ]
+      },
+      "stdout": "0\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "fd5ffec58abd896163c65be085ff40104699b82742608f091554f0495054461f",
+      "requestSha256": "04e0948e6abd4d045e68f1dbae0e38ae52093c64bcd7aad24bcc1b247d94244c",
+      "resultSha256": "40e7776df6d518299f7adfba1f144967274b6b7f5bb38e230c98f6ecdcef119f",
+      "steps": 24
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.array-sum-upper-maximum",
+      "input": {
+        "values": [
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999,
+          999
+        ]
+      },
+      "stdout": "29970\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "93725123ee3cf35a0d6ff07b3ae0b4d9c7ce8b95bda14bcf2376704047363ecb",
+      "requestSha256": "cd34868f92ad1675d7e61db99b8d85cc32a028ddbe844e99b1c8bbd7f847156d",
+      "resultSha256": "0528c4edee194c66345e2d1a243e7d296718e81f448384c7bec7bf46f9206b85",
+      "steps": 164
+    },
+    {
+      "kind": "exercise-reference-test",
+      "key": "exercise.c.array-sum-lower-maximum",
+      "input": {
+        "values": [
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999,
+          -999
+        ]
+      },
+      "stdout": "-29970\n",
+      "expectedArray": null,
+      "observedArray": null,
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "judgeStatus": "met",
+      "sourceSha256": "b10582a979dabf2ad6c90b9401158195c673d91f34069a1cb2d6c3907b12cdde",
+      "requestSha256": "4e83535818959f74bc0548d83f0e9ba5f9276047900706568be905bf133b6242",
+      "resultSha256": "48ad66681cc9f2b1f630c0d816e981b0b5fb2b9033ca6de68b10ea9847733efe",
+      "steps": 164
+    },
+    {
+      "kind": "default-reference",
+      "key": "program.c.echo",
+      "input": {
+        "x": 7
+      },
+      "stdout": "7\n",
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "sourceSha256": "fb7dd51a0badb787f6ebcc2afb396e3a249ab40bbccb85791261729ae299c12f",
+      "requestSha256": "90a42f2a268f2966376ba3eaa7fcfd42a56c8c235a9910d84b75616665fda125",
+      "resultSha256": "94e2f250a3739d6be73ac83aa5135572e82add337524980b100869f5b515520e",
+      "steps": 5
+    },
+    {
+      "kind": "default-reference",
+      "key": "program.c.two-x-plus-three",
+      "input": {
+        "x": 7
+      },
+      "stdout": "17\n",
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "sourceSha256": "a2b0918d21b8bdedaa982a1968394e7a9be130cf5e6dbf0a34c36c3b97686c85",
+      "requestSha256": "5d4fad99b7fab866af8694583e9978dea4c7ffa51e067ecdbe4399ce37f93c56",
+      "resultSha256": "b57f0ec6148aedddfdd65afffdc29477a165b026698f29366cca88c48b60724d",
+      "steps": 7
+    },
+    {
+      "kind": "default-reference",
+      "key": "program.c.nonnegative",
+      "input": {
+        "x": -3
+      },
+      "stdout": "0\n",
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "sourceSha256": "3a8f97e17551a1f77f1da155f62493933721f4a0af96866bd31553a0a312444c",
+      "requestSha256": "c32ab86dc6a71c1e287038213c36853d414fcfeb1f8ab21ec1d4483fe2669ae9",
+      "resultSha256": "9524d524788b88eaf6d5ccd35a143080f80362c15385c1ff2c3ae4c50aaa2f4a",
+      "steps": 8
+    },
+    {
+      "kind": "default-reference",
+      "key": "program.c.two-loop-sums",
+      "input": {
+        "n": 5
+      },
+      "stdout": "15\n15\n",
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "sourceSha256": "04101a70238e31441cc1a32ca1d98a63511ca66598f7ac2f3e0fdd026232a9a7",
+      "requestSha256": "5d93aa183359b6090e6a59609d63ac716129ee14cc8512bf0291dd43d9f9997a",
+      "resultSha256": "cca0df574a83ad6ab757fb9b03b2d04ffba598af76898ef438080a9419e49f9c",
+      "steps": 67
+    },
+    {
+      "kind": "default-reference",
+      "key": "program.c.increment-at-index",
+      "input": {
+        "values": [
+          4,
+          0,
+          -2
+        ],
+        "k": 1
+      },
+      "stdout": "1\n",
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "sourceSha256": "c2b1e3ba44f83e5f1f01ddd472ba305c88723803a1ed02277e49f8983d975341",
+      "requestSha256": "8bd570c55fdfe23107163f5ed8b645395c550f30565ef7d6e69109b63281bc74",
+      "resultSha256": "78506c0d67a0e698cb0341e867adb4de9209e5d5c1a4f6de2c3bfbf6613f5357",
+      "steps": 10
+    },
+    {
+      "kind": "default-reference",
+      "key": "program.c.array-sum",
+      "input": {
+        "values": [
+          3,
+          -1,
+          2
+        ]
+      },
+      "stdout": "4\n",
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "sourceSha256": "125a7405266d1519f956355f010e55c3014967d1909d93a1d150e602a7e6c7b3",
+      "requestSha256": "20b4e4f1ff20830bd62964634fb67b1ceee64f1384e6536dff63143424a246f2",
+      "resultSha256": "5b271e2f664c39407278d2aa6f2000769a3ce6c7d870657706f7e781c3682598",
+      "steps": 29
+    },
+    {
+      "kind": "default-reference",
+      "key": "program.c.assignment",
+      "input": {
+        "x": 3
+      },
+      "stdout": "5\n",
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "sourceSha256": "d1e8c38b23899791ee542a0ff932ce90cc88df809024e1ad06b311ddf4c6249e",
+      "requestSha256": "8b075d9bdfef03070311016a1ea36fbe1027f155bef944c1b53b463ba8b7df55",
+      "resultSha256": "6b3c8c6cbf2b4f82eb00dd791a1c9902ba443726cd97051dcbe8dbaf3305f37a",
+      "steps": 6
+    },
+    {
+      "kind": "default-reference",
+      "key": "program.c.bubble-sort",
+      "input": {
+        "values": [
+          3,
+          1,
+          2
+        ]
+      },
+      "stdout": "1 2 3\n",
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "sourceSha256": "36c0cf433c40fc24bb5bfdc7b9a491f5c213428c74e6929733030015c7975bf9",
+      "requestSha256": "8675caa7d588bbc26878bfc1dda829692eafaa71245a4356189f96b460b3c5a9",
+      "resultSha256": "8edc77a0fab48e380b8c6f5fd3414ea4fad8f2c2cd51defe2542e23b8305ff8e",
+      "steps": 86
+    },
+    {
+      "kind": "default-reference",
+      "key": "program.c.selection-sort",
+      "input": {
+        "values": [
+          3,
+          1,
+          2
+        ]
+      },
+      "stdout": "1 2 3\n",
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "sourceSha256": "c4ca0e955f907a1b0c36f198e04e6554ec592058899bcd4294cdd1337e944eb6",
+      "requestSha256": "0b672e5aa9831b2e62ec21a818272cafb2f834546e3c62b6a7c59afb65682725",
+      "resultSha256": "66988e939144856b0e66ee2e2242223cd6bb2b8b52986c60df75aba1faa61f9d",
+      "steps": 98
+    },
+    {
+      "kind": "default-reference",
+      "key": "program.c.binary-search-first",
+      "input": {
+        "values": [
+          -2,
+          0,
+          0,
+          4,
+          8
+        ],
+        "target": 0
+      },
+      "stdout": "1\n",
+      "producer": "rust",
+      "terminal": "completed",
+      "exitCode": 0,
+      "sourceSha256": "2c893cf9f3f886256276fb2ba047c7f343035cfb83bf9422ab76454b7fef057b",
+      "requestSha256": "9be8d88deee5f45c6cc934b41eced054ae181f48efe59c2c75d073684e80026b",
+      "resultSha256": "59cf8332d631c76809a4125dec318b72f7aa8444e882dff0eb32f4aa90627d88",
+      "steps": 51
+    }
+  ]
+}

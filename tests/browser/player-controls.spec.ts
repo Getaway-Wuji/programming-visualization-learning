@@ -400,6 +400,11 @@ test('a genuine Rust failure prefix remains playable and reaches its failed tail
   page,
 }, testInfo) => {
   await observeVerticalExecution(page);
+  // This test changes the bundled independent case only. Keep the separately
+  // fetched current course unavailable so it cannot supply an unmodified template.
+  await page.route(/\/content\/(?:course|review)\//, (route) =>
+    route.fulfill({ status: 404, body: 'Isolated independent-case failure-prefix test' }),
+  );
   const isolation = await isolateCaseProgram(page, 'program.c.assignment', (original) => {
     const find = 'x = x + 2;';
     expect(original.split(find)).toHaveLength(2);

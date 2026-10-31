@@ -1,0 +1,1021 @@
+{
+  "label": "exercise.c.array-sum",
+  "browser": "chrome",
+  "phase": "passed",
+  "sync": "synced",
+  "source": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, -1, 2};\n    int sum = 0;\n    for (int i = 0; (i < n); i = (i + 1)) {\n        sum = (sum + values[i]);\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n",
+  "archive": {
+    "achievements": [],
+    "aliases": [],
+    "appearance": [
+      {
+        "preset": "minimal",
+        "themeOverrides": {
+          "minimal": {
+            "accentColor": null
+          },
+          "cute": {
+            "accentColor": null
+          },
+          "glass": {
+            "accentColor": null
+          },
+          "soft": {
+            "accentColor": null
+          },
+          "cool": {
+            "accentColor": null
+          },
+          "tech": {
+            "accentColor": null
+          }
+        },
+        "blockWorkspace": "auto",
+        "layout": {
+          "sidebar": "expanded",
+          "workbenchMode": "standard",
+          "splitRatios": {
+            "practice": 50,
+            "visualize": 35,
+            "review": 35
+          }
+        },
+        "background": {
+          "assetId": null,
+          "visible": false,
+          "fit": "cover",
+          "position": "center",
+          "overlayOpacity": 75
+        }
+      }
+    ],
+    "appearanceAssets": [],
+    "avatar": [
+      {
+        "presetId": "avatar.basic.01",
+        "accentColor": "#168A72"
+      }
+    ],
+    "dailyFacts": [
+      {
+        "eventType": "exercise.passed",
+        "subjectRef": {
+          "id": "exercise.c.array-sum",
+          "version": "1.1.0"
+        },
+        "canonicalSubjectId": "exercise.c.array-sum",
+        "occurredAt": "2026-10-31T09:47:46.316Z",
+        "localDate": "2026-10-31"
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "be495600-c63a-4c25-a3e8-4446c08d1ce0",
+        "writerId": "4046b3f1-ccc9-4ce1-a8d9-6ea7b8e88a89",
+        "generation": "6fe8ba91-da5a-4426-99ac-cbeba4a8bff5",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:47:45.134Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.array-sum",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.array-sum",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, -1, 2};\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.n\",\"name\":\"n\",\"targetKind\":\"logical-length\"}},\"fields\":{\"NAME\":\"n\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_array_declare\",\"id\":\"lesson.block.2\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.values\",\"name\":\"values\",\"targetKind\":\"array\"}},\"fields\":{\"NAME\":\"values\"}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\"},\"values\":{\"values\":[3,-1,2]}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 1
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "cc0e5865-12a1-4cfc-ac1e-9e0a6a460e08",
+        "writerId": "4046b3f1-ccc9-4ce1-a8d9-6ea7b8e88a89",
+        "generation": "6fe8ba91-da5a-4426-99ac-cbeba4a8bff5",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:47:45.660Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.array-sum",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.array-sum",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {3, -1, 2};\n    int sum = 0;\n    for (int i = 0; (i < n); i = (i + 1)) {\n        sum = (sum + values[i]);\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.27\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.n\",\"name\":\"n\",\"targetKind\":\"logical-length\"}},\"fields\":{\"NAME\":\"n\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_array_declare\",\"id\":\"lesson.block.2\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.values\",\"name\":\"values\",\"targetKind\":\"array\"}},\"fields\":{\"NAME\":\"values\"},\"next\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.7\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"sum\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}},\"next\":{\"block\":{\"type\":\"cv_for\",\"id\":\"block.code.22\",\"inputs\":{\"INIT\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.9\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"i\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.8\",\"fields\":{\"VALUE\":\"0\"}}}}}},\"CONDITION\":{\"block\":{\"type\":\"cv_compare\",\"id\":\"block.code.16\",\"fields\":{\"OP\":\"<\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.14\",\"fields\":{\"NAME\":\"i\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.15\",\"fields\":{\"NAME\":\"n\"}}}}}},\"UPDATE\":{\"block\":{\"type\":\"cv_assign\",\"id\":\"block.code.13\",\"fields\":{\"NAME\":\"i\"},\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.12\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.10\",\"fields\":{\"NAME\":\"i\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.11\",\"fields\":{\"VALUE\":\"1\"}}}}}}}}},\"BODY\":{\"block\":{\"type\":\"cv_assign\",\"id\":\"block.code.21\",\"fields\":{\"NAME\":\"sum\"},\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.20\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.17\",\"fields\":{\"NAME\":\"sum\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_array_read\",\"id\":\"block.code.19\",\"fields\":{\"NAME\":\"values\"},\"inputs\":{\"INDEX\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.18\",\"fields\":{\"NAME\":\"i\"}}}}}}}}}}}}},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.24\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.23\",\"fields\":{\"NAME\":\"sum\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.26\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.25\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\"},\"values\":{\"values\":[3,-1,2]}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 2
+      }
+    ],
+    "goals": [
+      {
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "targets": {
+          "exercise": 1,
+          "lesson": 1,
+          "case": 0
+        },
+        "achievedAt": null
+      }
+    ],
+    "knowledgeMarks": [],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.array-sum",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T09:47:46.316Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "meta": [
+      {
+        "schemaVersion": "7.0.0",
+        "dbVersion": 7,
+        "generation": "6fe8ba91-da5a-4426-99ac-cbeba4a8bff5",
+        "revision": 4,
+        "timeZone": "Asia/Shanghai",
+        "createdAt": "2026-10-31T09:47:44.805Z",
+        "activePackageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.array-sum",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T09:47:46.316Z",
+        "lastAt": "2026-10-31T09:47:46.316Z"
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.array-sum",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "a57729bc-60cd-4f2c-ab1b-a0f4b44d2567",
+        "occurredAt": "2026-10-31T09:47:46.316Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 4
+      }
+    ],
+    "reviewCards": [],
+    "settings": [
+      {
+        "theme": "light",
+        "reducedMotion": "system",
+        "playbackRate": 1,
+        "goalTemplate": {
+          "revision": 1,
+          "targets": {
+            "exercise": 1,
+            "lesson": 1,
+            "case": 0
+          }
+        }
+      }
+    ]
+  },
+  "captures": [
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "d4f6378e-9032-4c1a-8ecd-70528c3870e4",
+      "responseOperationId": null,
+      "catalogJson": null,
+      "requestBytes": 664,
+      "responseBytes": null
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "c3af5bae-345d-4d03-a75e-2c4a0a0f48bb",
+      "responseOperationId": "c3af5bae-345d-4d03-a75e-2c4a0a0f48bb",
+      "catalogJson": null,
+      "requestBytes": 664,
+      "responseBytes": 4240
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "80906da0-fe87-4a86-8b57-11fcd43a6339",
+      "responseOperationId": "80906da0-fe87-4a86-8b57-11fcd43a6339",
+      "catalogJson": null,
+      "requestBytes": 797,
+      "responseBytes": 12299
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "f077a438-cfa5-4db9-9576-b96000fabd3f",
+      "responseOperationId": "f077a438-cfa5-4db9-9576-b96000fabd3f",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.array-sum\",\"version\":\"1.1.0\",\"title\":\"数组求和\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.array-sum\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.arrays\",\"version\":\"1.0.0\"},{\"id\":\"knowledge.c.loops\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\"},\"prompt\":\"输入values长度0到30、元素-999到999，保留输入绑定且不改变逻辑长度n。循环遍历[0,n)的元素，真实累加并输出总和及换行。[]的和为0，不能读取占位元素；[3,-1,2]为4，[7]为7，[0,0]为0，30个999为29970，30个-999为-29970。非空必须实际遍历并将读取贡献到输出，不接受装饰循环加固定答案。所有测试正常结束且返回0。思路：sum从0开始，逐项加，循环结束后输出。\",\"tests\":[{\"caseKey\":\"normal\",\"input\":{\"values\":[3,-1,2]},\"expectedStdout\":\"4\\n\",\"expectedExitCode\":0},{\"caseKey\":\"empty\",\"input\":{\"values\":[]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"one\",\"input\":{\"values\":[7]},\"expectedStdout\":\"7\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zeros\",\"input\":{\"values\":[0,0]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"upper-maximum\",\"input\":{\"values\":[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999]},\"expectedStdout\":\"29970\\n\",\"expectedExitCode\":0},{\"caseKey\":\"lower-maximum\",\"input\":{\"values\":[-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999]},\"expectedStdout\":\"-29970\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"数组求和参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\"},\"exampleInput\":{\"values\":[3,-1,2]},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int n = 3;\\n    int values[3] = {3, -1, 2};\\n    int sum = 0;\\n    for (int i = 0; i < n; i = i + 1) {\\n        sum = sum + values[i];\\n    }\\n    printf(\\\"%d\\\\n\\\", sum);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.n\",\"inputKey\":\"values\",\"targetName\":\"n\",\"targetKind\":\"logical-length\",\"from\":\"length-of\"},{\"bindingKey\":\"param.values\",\"inputKey\":\"values\",\"targetName\":\"values\",\"targetKind\":\"array\",\"from\":\"field\",\"emptyStorage\":\"one-zero-placeholder\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.assign-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.arithmetic\",\"version\":\"1.0.0\"},{\"id\":\"block.c.comparison\",\"version\":\"1.0.0\"},{\"id\":\"block.c.for\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-06\"}},\"inputSpec\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\",\"title\":\"逻辑整数序列\",\"fields\":[{\"key\":\"values\",\"kind\":\"sequence\",\"min\":-999,\"max\":999,\"minItems\":0,\"maxItems\":30}],\"relations\":[{\"kind\":\"length-of\",\"field\":\"values\",\"target\":\"n\"}]},\"judgeProfile\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"逻辑遍历累加检查\",\"rule\":\"logical-array-accumulation\",\"targetDescription\":\"真实循环读取[0,n)累加到输出，空序列不读占位。\"}}",
+      "requestBytes": 3078,
+      "responseBytes": 34089
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "bef9cb23-3abd-4050-aaa9-8d87b9719985",
+      "responseOperationId": "bef9cb23-3abd-4050-aaa9-8d87b9719985",
+      "catalogJson": null,
+      "requestBytes": 784,
+      "responseBytes": 11589
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "987148e2-7af4-4c9d-ae30-a561f7b640a6",
+      "responseOperationId": "987148e2-7af4-4c9d-ae30-a561f7b640a6",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.array-sum\",\"version\":\"1.1.0\",\"title\":\"数组求和\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.array-sum\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.arrays\",\"version\":\"1.0.0\"},{\"id\":\"knowledge.c.loops\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\"},\"prompt\":\"输入values长度0到30、元素-999到999，保留输入绑定且不改变逻辑长度n。循环遍历[0,n)的元素，真实累加并输出总和及换行。[]的和为0，不能读取占位元素；[3,-1,2]为4，[7]为7，[0,0]为0，30个999为29970，30个-999为-29970。非空必须实际遍历并将读取贡献到输出，不接受装饰循环加固定答案。所有测试正常结束且返回0。思路：sum从0开始，逐项加，循环结束后输出。\",\"tests\":[{\"caseKey\":\"normal\",\"input\":{\"values\":[3,-1,2]},\"expectedStdout\":\"4\\n\",\"expectedExitCode\":0},{\"caseKey\":\"empty\",\"input\":{\"values\":[]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"one\",\"input\":{\"values\":[7]},\"expectedStdout\":\"7\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zeros\",\"input\":{\"values\":[0,0]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"upper-maximum\",\"input\":{\"values\":[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999]},\"expectedStdout\":\"29970\\n\",\"expectedExitCode\":0},{\"caseKey\":\"lower-maximum\",\"input\":{\"values\":[-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999]},\"expectedStdout\":\"-29970\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"数组求和参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\"},\"exampleInput\":{\"values\":[3,-1,2]},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int n = 3;\\n    int values[3] = {3, -1, 2};\\n    int sum = 0;\\n    for (int i = 0; i < n; i = i + 1) {\\n        sum = sum + values[i];\\n    }\\n    printf(\\\"%d\\\\n\\\", sum);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.n\",\"inputKey\":\"values\",\"targetName\":\"n\",\"targetKind\":\"logical-length\",\"from\":\"length-of\"},{\"bindingKey\":\"param.values\",\"inputKey\":\"values\",\"targetName\":\"values\",\"targetKind\":\"array\",\"from\":\"field\",\"emptyStorage\":\"one-zero-placeholder\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.assign-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.arithmetic\",\"version\":\"1.0.0\"},{\"id\":\"block.c.comparison\",\"version\":\"1.0.0\"},{\"id\":\"block.c.for\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-06\"}},\"inputSpec\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\",\"title\":\"逻辑整数序列\",\"fields\":[{\"key\":\"values\",\"kind\":\"sequence\",\"min\":-999,\"max\":999,\"minItems\":0,\"maxItems\":30}],\"relations\":[{\"kind\":\"length-of\",\"field\":\"values\",\"target\":\"n\"}]},\"judgeProfile\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"逻辑遍历累加检查\",\"rule\":\"logical-array-accumulation\",\"targetDescription\":\"真实循环读取[0,n)累加到输出，空序列不读占位。\"}}",
+      "requestBytes": 3063,
+      "responseBytes": 18286
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "32d8ddd3-1fe5-4198-af14-4b6e80961bb1",
+      "responseOperationId": "32d8ddd3-1fe5-4198-af14-4b6e80961bb1",
+      "catalogJson": null,
+      "requestBytes": 785,
+      "responseBytes": 11589
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "b4ce0ed1-3ccb-4df1-94b1-154a473e8324",
+      "responseOperationId": "b4ce0ed1-3ccb-4df1-94b1-154a473e8324",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.array-sum\",\"version\":\"1.1.0\",\"title\":\"数组求和\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.array-sum\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.arrays\",\"version\":\"1.0.0\"},{\"id\":\"knowledge.c.loops\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\"},\"prompt\":\"输入values长度0到30、元素-999到999，保留输入绑定且不改变逻辑长度n。循环遍历[0,n)的元素，真实累加并输出总和及换行。[]的和为0，不能读取占位元素；[3,-1,2]为4，[7]为7，[0,0]为0，30个999为29970，30个-999为-29970。非空必须实际遍历并将读取贡献到输出，不接受装饰循环加固定答案。所有测试正常结束且返回0。思路：sum从0开始，逐项加，循环结束后输出。\",\"tests\":[{\"caseKey\":\"normal\",\"input\":{\"values\":[3,-1,2]},\"expectedStdout\":\"4\\n\",\"expectedExitCode\":0},{\"caseKey\":\"empty\",\"input\":{\"values\":[]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"one\",\"input\":{\"values\":[7]},\"expectedStdout\":\"7\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zeros\",\"input\":{\"values\":[0,0]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"upper-maximum\",\"input\":{\"values\":[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999]},\"expectedStdout\":\"29970\\n\",\"expectedExitCode\":0},{\"caseKey\":\"lower-maximum\",\"input\":{\"values\":[-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999]},\"expectedStdout\":\"-29970\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"数组求和参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\"},\"exampleInput\":{\"values\":[3,-1,2]},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int n = 3;\\n    int values[3] = {3, -1, 2};\\n    int sum = 0;\\n    for (int i = 0; i < n; i = i + 1) {\\n        sum = sum + values[i];\\n    }\\n    printf(\\\"%d\\\\n\\\", sum);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.n\",\"inputKey\":\"values\",\"targetName\":\"n\",\"targetKind\":\"logical-length\",\"from\":\"length-of\"},{\"bindingKey\":\"param.values\",\"inputKey\":\"values\",\"targetName\":\"values\",\"targetKind\":\"array\",\"from\":\"field\",\"emptyStorage\":\"one-zero-placeholder\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.assign-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.arithmetic\",\"version\":\"1.0.0\"},{\"id\":\"block.c.comparison\",\"version\":\"1.0.0\"},{\"id\":\"block.c.for\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-06\"}},\"inputSpec\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\",\"title\":\"逻辑整数序列\",\"fields\":[{\"key\":\"values\",\"kind\":\"sequence\",\"min\":-999,\"max\":999,\"minItems\":0,\"maxItems\":30}],\"relations\":[{\"kind\":\"length-of\",\"field\":\"values\",\"target\":\"n\"}]},\"judgeProfile\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"逻辑遍历累加检查\",\"rule\":\"logical-array-accumulation\",\"targetDescription\":\"真实循环读取[0,n)累加到输出，空序列不读占位。\"}}",
+      "requestBytes": 3062,
+      "responseBytes": 23413
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "22754d83-9633-4ec2-88cf-e68c5f931f12",
+      "responseOperationId": "22754d83-9633-4ec2-88cf-e68c5f931f12",
+      "catalogJson": null,
+      "requestBytes": 790,
+      "responseBytes": 11847
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "83190a70-2cc4-4a4a-9016-dced7d8c2720",
+      "responseOperationId": "83190a70-2cc4-4a4a-9016-dced7d8c2720",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.array-sum\",\"version\":\"1.1.0\",\"title\":\"数组求和\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.array-sum\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.arrays\",\"version\":\"1.0.0\"},{\"id\":\"knowledge.c.loops\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\"},\"prompt\":\"输入values长度0到30、元素-999到999，保留输入绑定且不改变逻辑长度n。循环遍历[0,n)的元素，真实累加并输出总和及换行。[]的和为0，不能读取占位元素；[3,-1,2]为4，[7]为7，[0,0]为0，30个999为29970，30个-999为-29970。非空必须实际遍历并将读取贡献到输出，不接受装饰循环加固定答案。所有测试正常结束且返回0。思路：sum从0开始，逐项加，循环结束后输出。\",\"tests\":[{\"caseKey\":\"normal\",\"input\":{\"values\":[3,-1,2]},\"expectedStdout\":\"4\\n\",\"expectedExitCode\":0},{\"caseKey\":\"empty\",\"input\":{\"values\":[]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"one\",\"input\":{\"values\":[7]},\"expectedStdout\":\"7\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zeros\",\"input\":{\"values\":[0,0]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"upper-maximum\",\"input\":{\"values\":[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999]},\"expectedStdout\":\"29970\\n\",\"expectedExitCode\":0},{\"caseKey\":\"lower-maximum\",\"input\":{\"values\":[-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999]},\"expectedStdout\":\"-29970\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"数组求和参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\"},\"exampleInput\":{\"values\":[3,-1,2]},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int n = 3;\\n    int values[3] = {3, -1, 2};\\n    int sum = 0;\\n    for (int i = 0; i < n; i = i + 1) {\\n        sum = sum + values[i];\\n    }\\n    printf(\\\"%d\\\\n\\\", sum);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.n\",\"inputKey\":\"values\",\"targetName\":\"n\",\"targetKind\":\"logical-length\",\"from\":\"length-of\"},{\"bindingKey\":\"param.values\",\"inputKey\":\"values\",\"targetName\":\"values\",\"targetKind\":\"array\",\"from\":\"field\",\"emptyStorage\":\"one-zero-placeholder\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.assign-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.arithmetic\",\"version\":\"1.0.0\"},{\"id\":\"block.c.comparison\",\"version\":\"1.0.0\"},{\"id\":\"block.c.for\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-06\"}},\"inputSpec\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\",\"title\":\"逻辑整数序列\",\"fields\":[{\"key\":\"values\",\"kind\":\"sequence\",\"min\":-999,\"max\":999,\"minItems\":0,\"maxItems\":30}],\"relations\":[{\"kind\":\"length-of\",\"field\":\"values\",\"target\":\"n\"}]},\"judgeProfile\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"逻辑遍历累加检查\",\"rule\":\"logical-array-accumulation\",\"targetDescription\":\"真实循环读取[0,n)累加到输出，空序列不读占位。\"}}",
+      "requestBytes": 3070,
+      "responseBytes": 28596
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "5a5a4213-107c-40cf-b3df-e6668274794d",
+      "responseOperationId": "5a5a4213-107c-40cf-b3df-e6668274794d",
+      "catalogJson": null,
+      "requestBytes": 1052,
+      "responseBytes": 18949
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "ee40037b-7636-442e-bea5-04e72deeb3d6",
+      "responseOperationId": "ee40037b-7636-442e-bea5-04e72deeb3d6",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.array-sum\",\"version\":\"1.1.0\",\"title\":\"数组求和\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.array-sum\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.arrays\",\"version\":\"1.0.0\"},{\"id\":\"knowledge.c.loops\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\"},\"prompt\":\"输入values长度0到30、元素-999到999，保留输入绑定且不改变逻辑长度n。循环遍历[0,n)的元素，真实累加并输出总和及换行。[]的和为0，不能读取占位元素；[3,-1,2]为4，[7]为7，[0,0]为0，30个999为29970，30个-999为-29970。非空必须实际遍历并将读取贡献到输出，不接受装饰循环加固定答案。所有测试正常结束且返回0。思路：sum从0开始，逐项加，循环结束后输出。\",\"tests\":[{\"caseKey\":\"normal\",\"input\":{\"values\":[3,-1,2]},\"expectedStdout\":\"4\\n\",\"expectedExitCode\":0},{\"caseKey\":\"empty\",\"input\":{\"values\":[]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"one\",\"input\":{\"values\":[7]},\"expectedStdout\":\"7\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zeros\",\"input\":{\"values\":[0,0]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"upper-maximum\",\"input\":{\"values\":[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999]},\"expectedStdout\":\"29970\\n\",\"expectedExitCode\":0},{\"caseKey\":\"lower-maximum\",\"input\":{\"values\":[-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999]},\"expectedStdout\":\"-29970\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"数组求和参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\"},\"exampleInput\":{\"values\":[3,-1,2]},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int n = 3;\\n    int values[3] = {3, -1, 2};\\n    int sum = 0;\\n    for (int i = 0; i < n; i = i + 1) {\\n        sum = sum + values[i];\\n    }\\n    printf(\\\"%d\\\\n\\\", sum);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.n\",\"inputKey\":\"values\",\"targetName\":\"n\",\"targetKind\":\"logical-length\",\"from\":\"length-of\"},{\"bindingKey\":\"param.values\",\"inputKey\":\"values\",\"targetName\":\"values\",\"targetKind\":\"array\",\"from\":\"field\",\"emptyStorage\":\"one-zero-placeholder\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.assign-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.arithmetic\",\"version\":\"1.0.0\"},{\"id\":\"block.c.comparison\",\"version\":\"1.0.0\"},{\"id\":\"block.c.for\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-06\"}},\"inputSpec\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\",\"title\":\"逻辑整数序列\",\"fields\":[{\"key\":\"values\",\"kind\":\"sequence\",\"min\":-999,\"max\":999,\"minItems\":0,\"maxItems\":30}],\"relations\":[{\"kind\":\"length-of\",\"field\":\"values\",\"target\":\"n\"}]},\"judgeProfile\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"逻辑遍历累加检查\",\"rule\":\"logical-array-accumulation\",\"targetDescription\":\"真实循环读取[0,n)累加到输出，空序列不读占位。\"}}",
+      "requestBytes": 3350,
+      "responseBytes": 179674
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "1c7f58d1-b5a1-4ed1-9a04-7820649dd4dd",
+      "responseOperationId": "1c7f58d1-b5a1-4ed1-9a04-7820649dd4dd",
+      "catalogJson": null,
+      "requestBytes": 1112,
+      "responseBytes": 25113
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "90c36d44-3332-4ea3-9cb8-0055525ef6fd",
+      "responseOperationId": "90c36d44-3332-4ea3-9cb8-0055525ef6fd",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.array-sum\",\"version\":\"1.1.0\",\"title\":\"数组求和\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.array-sum\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.arrays\",\"version\":\"1.0.0\"},{\"id\":\"knowledge.c.loops\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\"},\"prompt\":\"输入values长度0到30、元素-999到999，保留输入绑定且不改变逻辑长度n。循环遍历[0,n)的元素，真实累加并输出总和及换行。[]的和为0，不能读取占位元素；[3,-1,2]为4，[7]为7，[0,0]为0，30个999为29970，30个-999为-29970。非空必须实际遍历并将读取贡献到输出，不接受装饰循环加固定答案。所有测试正常结束且返回0。思路：sum从0开始，逐项加，循环结束后输出。\",\"tests\":[{\"caseKey\":\"normal\",\"input\":{\"values\":[3,-1,2]},\"expectedStdout\":\"4\\n\",\"expectedExitCode\":0},{\"caseKey\":\"empty\",\"input\":{\"values\":[]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"one\",\"input\":{\"values\":[7]},\"expectedStdout\":\"7\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zeros\",\"input\":{\"values\":[0,0]},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"upper-maximum\",\"input\":{\"values\":[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999]},\"expectedStdout\":\"29970\\n\",\"expectedExitCode\":0},{\"caseKey\":\"lower-maximum\",\"input\":{\"values\":[-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999,-999]},\"expectedStdout\":\"-29970\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"数组求和参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\"},\"exampleInput\":{\"values\":[3,-1,2]},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int n = 3;\\n    int values[3] = {3, -1, 2};\\n    int sum = 0;\\n    for (int i = 0; i < n; i = i + 1) {\\n        sum = sum + values[i];\\n    }\\n    printf(\\\"%d\\\\n\\\", sum);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.n\",\"inputKey\":\"values\",\"targetName\":\"n\",\"targetKind\":\"logical-length\",\"from\":\"length-of\"},{\"bindingKey\":\"param.values\",\"inputKey\":\"values\",\"targetName\":\"values\",\"targetKind\":\"array\",\"from\":\"field\",\"emptyStorage\":\"one-zero-placeholder\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.assign-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.arithmetic\",\"version\":\"1.0.0\"},{\"id\":\"block.c.comparison\",\"version\":\"1.0.0\"},{\"id\":\"block.c.for\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-array\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-06\"}},\"inputSpec\":{\"id\":\"input.c.int-sequence\",\"version\":\"1.0.0\",\"title\":\"逻辑整数序列\",\"fields\":[{\"key\":\"values\",\"kind\":\"sequence\",\"min\":-999,\"max\":999,\"minItems\":0,\"maxItems\":30}],\"relations\":[{\"kind\":\"length-of\",\"field\":\"values\",\"target\":\"n\"}]},\"judgeProfile\":{\"id\":\"judge.c.array-sum\",\"version\":\"1.0.0\",\"title\":\"逻辑遍历累加检查\",\"rule\":\"logical-array-accumulation\",\"targetDescription\":\"真实循环读取[0,n)累加到输出，空序列不读占位。\"}}",
+      "requestBytes": 3411,
+      "responseBytes": 185094
+    }
+  ],
+  "runs": [
+    {
+      "identity": {
+        "contextId": "13db26d2-3c14-4f3d-be31-c3e3d855d21d",
+        "contextRevision": 3,
+        "runId": "48a2f512-719e-48f3-8f58-97c6ea30a1ef",
+        "sourceRevision": 1,
+        "submissionId": "bbfb683e-d202-4d22-8e08-30fa665e3f6e",
+        "testCaseKey": "normal"
+      },
+      "terminal": {
+        "cursor": 29,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n34"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "normal",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n32"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              28
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n32"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              28
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n32"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              28
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n32"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              28
+            ]
+          }
+        ],
+        "coverage": [
+          {
+            "branch": "for",
+            "nodeId": "n12",
+            "siteKey": "block.code.22",
+            "visits": 3
+          }
+        ],
+        "observations": [
+          {
+            "beforeCursor": 28,
+            "bindingKey": "param.values",
+            "declarationNodeId": "n5",
+            "kind": "array-before-destroy",
+            "location": {
+              "edge": "whole",
+              "kind": "source",
+              "nodeId": "n34"
+            },
+            "objectId": "o2",
+            "values": [
+              3,
+              -1,
+              2
+            ]
+          }
+        ],
+        "profileRef": {
+          "id": "judge.c.array-sum",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "13db26d2-3c14-4f3d-be31-c3e3d855d21d",
+        "contextRevision": 3,
+        "runId": "252fee23-f310-468a-bdd2-f5493c40fcff",
+        "sourceRevision": 2,
+        "submissionId": "bbfb683e-d202-4d22-8e08-30fa665e3f6e",
+        "testCaseKey": "empty"
+      },
+      "terminal": {
+        "cursor": 14,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n31"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "empty",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n29"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              13
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n29"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              13
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n29"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              13
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n29"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              13
+            ]
+          }
+        ],
+        "coverage": [
+          {
+            "branch": "for",
+            "nodeId": "n9",
+            "siteKey": "block.code.22",
+            "visits": 0
+          }
+        ],
+        "observations": [
+          {
+            "beforeCursor": 13,
+            "bindingKey": "param.values",
+            "declarationNodeId": "n5",
+            "kind": "array-before-destroy",
+            "location": {
+              "edge": "whole",
+              "kind": "source",
+              "nodeId": "n31"
+            },
+            "objectId": "o2",
+            "values": []
+          }
+        ],
+        "profileRef": {
+          "id": "judge.c.array-sum",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "13db26d2-3c14-4f3d-be31-c3e3d855d21d",
+        "contextRevision": 3,
+        "runId": "9f9e56a4-cf4c-48c0-ad9e-1fa1b6a0b1ed",
+        "sourceRevision": 3,
+        "submissionId": "bbfb683e-d202-4d22-8e08-30fa665e3f6e",
+        "testCaseKey": "one"
+      },
+      "terminal": {
+        "cursor": 19,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n31"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "one",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n29"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              18
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n29"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              18
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n29"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              18
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n29"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              18
+            ]
+          }
+        ],
+        "coverage": [
+          {
+            "branch": "for",
+            "nodeId": "n9",
+            "siteKey": "block.code.22",
+            "visits": 1
+          }
+        ],
+        "observations": [
+          {
+            "beforeCursor": 18,
+            "bindingKey": "param.values",
+            "declarationNodeId": "n5",
+            "kind": "array-before-destroy",
+            "location": {
+              "edge": "whole",
+              "kind": "source",
+              "nodeId": "n31"
+            },
+            "objectId": "o2",
+            "values": [
+              7
+            ]
+          }
+        ],
+        "profileRef": {
+          "id": "judge.c.array-sum",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "13db26d2-3c14-4f3d-be31-c3e3d855d21d",
+        "contextRevision": 3,
+        "runId": "f8a20d73-0f73-406c-8dbe-fbc7a8b1eac5",
+        "sourceRevision": 4,
+        "submissionId": "bbfb683e-d202-4d22-8e08-30fa665e3f6e",
+        "testCaseKey": "zeros"
+      },
+      "terminal": {
+        "cursor": 24,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n32"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "zeros",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n30"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              23
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n30"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              23
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n30"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              23
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n30"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              23
+            ]
+          }
+        ],
+        "coverage": [
+          {
+            "branch": "for",
+            "nodeId": "n10",
+            "siteKey": "block.code.22",
+            "visits": 2
+          }
+        ],
+        "observations": [
+          {
+            "beforeCursor": 23,
+            "bindingKey": "param.values",
+            "declarationNodeId": "n5",
+            "kind": "array-before-destroy",
+            "location": {
+              "edge": "whole",
+              "kind": "source",
+              "nodeId": "n32"
+            },
+            "objectId": "o2",
+            "values": [
+              0,
+              0
+            ]
+          }
+        ],
+        "profileRef": {
+          "id": "judge.c.array-sum",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "13db26d2-3c14-4f3d-be31-c3e3d855d21d",
+        "contextRevision": 3,
+        "runId": "443affcd-ac9a-4021-814c-80d2e62bb7da",
+        "sourceRevision": 5,
+        "submissionId": "bbfb683e-d202-4d22-8e08-30fa665e3f6e",
+        "testCaseKey": "upper-maximum"
+      },
+      "terminal": {
+        "cursor": 164,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n60"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "upper-maximum",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n58"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              163
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n58"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              163
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n58"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              163
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n58"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              163
+            ]
+          }
+        ],
+        "coverage": [
+          {
+            "branch": "for",
+            "nodeId": "n38",
+            "siteKey": "block.code.22",
+            "visits": 30
+          }
+        ],
+        "observations": [
+          {
+            "beforeCursor": 163,
+            "bindingKey": "param.values",
+            "declarationNodeId": "n5",
+            "kind": "array-before-destroy",
+            "location": {
+              "edge": "whole",
+              "kind": "source",
+              "nodeId": "n60"
+            },
+            "objectId": "o2",
+            "values": [
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999,
+              999
+            ]
+          }
+        ],
+        "profileRef": {
+          "id": "judge.c.array-sum",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "13db26d2-3c14-4f3d-be31-c3e3d855d21d",
+        "contextRevision": 3,
+        "runId": "53dd68ef-b229-410d-8ed0-8269324154b1",
+        "sourceRevision": 6,
+        "submissionId": "bbfb683e-d202-4d22-8e08-30fa665e3f6e",
+        "testCaseKey": "lower-maximum"
+      },
+      "terminal": {
+        "cursor": 164,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n90"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "lower-maximum",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n88"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              163
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n88"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              163
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n88"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              163
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n88"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              163
+            ]
+          }
+        ],
+        "coverage": [
+          {
+            "branch": "for",
+            "nodeId": "n68",
+            "siteKey": "block.code.22",
+            "visits": 30
+          }
+        ],
+        "observations": [
+          {
+            "beforeCursor": 163,
+            "bindingKey": "param.values",
+            "declarationNodeId": "n5",
+            "kind": "array-before-destroy",
+            "location": {
+              "edge": "whole",
+              "kind": "source",
+              "nodeId": "n90"
+            },
+            "objectId": "o2",
+            "values": [
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999,
+              -999
+            ]
+          }
+        ],
+        "profileRef": {
+          "id": "judge.c.array-sum",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    }
+  ]
+}

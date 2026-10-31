@@ -78,7 +78,14 @@ export function Layout({ children }: { children: ReactNode }) {
   }, [location.pathname]);
   const courseRoute =
     /^\/(lessons|practice)\//.test(location.pathname) || location.pathname.startsWith('/bugs');
-  const caseRoute = location.pathname.startsWith('/visualize/') || location.pathname === '/memory';
+  const caseRoute =
+    location.pathname.startsWith('/visualize/') ||
+    location.pathname.startsWith('/algorithms/') ||
+    location.pathname.startsWith('/structures/') ||
+    location.pathname.startsWith('/nodes/') ||
+    location.pathname.startsWith('/classics/') ||
+    location.pathname === '/memory' ||
+    location.pathname === '/compare';
   const toolRoute = caseRoute || location.pathname.startsWith('/practice/');
   const focused = toolRoute && workbench.layout.workbenchMode === 'focus';
   const collapsed = focused || workbench.layout.sidebar === 'collapsed';

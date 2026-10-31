@@ -22,7 +22,7 @@ import {
 
 const captureRoot = fileURLToPath(
   new URL(
-    `../../.artifacts/${process.env.TASK_EVIDENCE_TASK ? `${process.env.TASK_EVIDENCE_TASK}/regression/case-set` : '08.4'}/browser-captures/`,
+    `../../.artifacts/${process.env.TASK_EVIDENCE_TASK ? `${process.env.TASK_EVIDENCE_TASK}/regression/case-set/${process.env.TASK_EVIDENCE_LABEL ?? 'local'}` : '08.4'}/browser-captures/`,
     import.meta.url,
   ),
 );
@@ -308,6 +308,14 @@ async function openCase(page: Page, caseId: string) {
   await expect(page.locator(`[data-learning-subject="${caseId}"]`)).toContainText(
     '尚无已保存的学习记录',
   );
+  await expect
+    .poll(async () => {
+      const settings = (await storageSnapshot(page)).stores.settings[0] as {
+        goalTemplate?: unknown;
+      };
+      return Boolean(settings?.goalTemplate);
+    })
+    .toBe(true);
 }
 
 async function prepareRun(page: Page, sample: CaseSetSample): Promise<Run> {
@@ -402,7 +410,7 @@ async function prepareRun(page: Page, sample: CaseSetSample): Promise<Run> {
   return run;
 }
 
-/** Exact raw records from all eleven stores, plus both browser key/value stores. */
+/** Exact raw records from all fifteen current stores, plus both browser key/value stores. */
 async function storageSnapshot(page: Page) {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -553,16 +561,20 @@ async function saveCapture(
 ) {
   const after = await storageSnapshot(page);
   expect(Object.keys(before.stores).sort()).toEqual([
+    'achievements',
     'aliases',
     'appearance',
     'appearanceAssets',
     'avatar',
     'dailyFacts',
+    'editHistory',
     'goals',
+    'knowledgeMarks',
     'ledger',
     'meta',
     'progress',
     'receipts',
+    'reviewCards',
     'settings',
   ]);
   expect(after).toEqual(before);
@@ -603,7 +615,7 @@ async function saveCapture(
       beforeSha256: sha256(JSON.stringify(before)),
       afterSha256: sha256(JSON.stringify(after)),
       unchanged: true,
-      scope: 'native-eleven-stores+localStorage+sessionStorage',
+      scope: 'native-fifteen-stores+localStorage+sessionStorage',
     },
     worker: {
       kind: run.worker.kind,

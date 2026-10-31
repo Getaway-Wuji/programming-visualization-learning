@@ -1,0 +1,90 @@
+{
+  "captureVersion": "08.4-browser-capture@1",
+  "evidenceLevel": "production-ui-real-worker",
+  "key": "bubble-sort-reverse",
+  "caseId": "case.c.bubble-sort",
+  "project": "chrome",
+  "browserVersion": "156.0.8078.76",
+  "route": "#/visualize/case.c.bubble-sort",
+  "displayedSource": "#include <stdio.h>\nint main(void) {\n    int n = 3;\n    int values[3] = {4, 0, -3};\n    for (int end = n - 1; end > 0; end = end - 1) {\n        for (int j = 0; j < end; j = j + 1) {\n            if (values[j] > values[j + 1]) {\n                int temp = values[j];\n                values[j] = values[j + 1];\n                values[j + 1] = temp;\n            }\n        }\n    }\n    for (int i = 0; i < n; i = i + 1) {\n        if (i > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "readOnly": true,
+  "values": {
+    "values": [
+      4,
+      0,
+      -3
+    ]
+  },
+  "stdout": "-3 0 4\n",
+  "terminal": "completed",
+  "steps": 92,
+  "identity": {
+    "contextId": "f0f65533-5a00-4051-94ba-24e6b94b0cfb",
+    "contextRevision": 2,
+    "runId": "b5deaadf-7d9d-4f49-97ce-63edb8c8e9a2",
+    "sourceRevision": 2,
+    "submissionId": "e7a6181d-9adf-4638-abfc-ae6a3e902b1c",
+    "testCaseKey": null
+  },
+  "sourceKind": "public-content-original",
+  "initialCursor": 0,
+  "initialView": {
+    "cursor": 0,
+    "viewCursor": 0,
+    "status": "ready",
+    "kind": "",
+    "output": "",
+    "events": "本步读写与比较本步没有读写或比较观测。",
+    "scalars": [],
+    "arrays": [],
+    "counters": {
+      "comparisons": "0",
+      "scalarWrites": "0",
+      "arrayWrites": "0",
+      "swaps": "0"
+    },
+    "marks": [],
+    "terminalMarkCount": 0
+  },
+  "walk": null,
+  "rates": [],
+  "replay": null,
+  "storage": {
+    "storeNames": [
+      "achievements",
+      "aliases",
+      "appearance",
+      "appearanceAssets",
+      "avatar",
+      "dailyFacts",
+      "editHistory",
+      "goals",
+      "knowledgeMarks",
+      "ledger",
+      "meta",
+      "progress",
+      "receipts",
+      "reviewCards",
+      "settings"
+    ],
+    "beforeSha256": "275baa9ea065ccdfd5f9f89566ab69144109fdab7cfb5550d7ccb57cf5359167",
+    "afterSha256": "275baa9ea065ccdfd5f9f89566ab69144109fdab7cfb5550d7ccb57cf5359167",
+    "unchanged": true,
+    "scope": "native-fifteen-stores+localStorage+sessionStorage"
+  },
+  "worker": {
+    "kind": "execute",
+    "moduleSeen": true,
+    "responseOk": true,
+    "terminated": true,
+    "operationId": "ab476b41-ce31-42fc-b857-8bea6aa9502f",
+    "responseOperationId": "ab476b41-ce31-42fc-b857-8bea6aa9502f",
+    "url": "http://127.0.0.1:4178/assets/execution.worker-FvddZkgL.js"
+  },
+  "requestByteLength": 1741,
+  "resultByteLength": 112507,
+  "requestSha256": "a5bdbcdb8a04adf67de47205fc41f8368c83646e24e17c3ec87c2ba8cf8cb803",
+  "resultSha256": "e5142b4a45ee7f81cb6014819608dcd191d827f78908780db24d5278f2b9283d",
+  "catalogSha256": "4cfc1c45a5073bff73db8b83caa8b7c56f5b06100a759b49a730221ce1639d02",
+  "sourceSha256": "4e6df80035e73d20a37b89667c90383c2e6777f803f8b20ebed5a45a3811adaa"
+}

@@ -1,0 +1,44 @@
+{
+  "caseId": "case.cpp.shell-sort",
+  "programId": "program.cpp.shell-sort",
+  "version": "1.0.0",
+  "source": "#include <iostream>\n// @phase setup\nint main() {\n    int n = 5;\n    int values[30] = {};\n    // @phase input\n    for (int i = 0; i < n; i = i + 1) {\n        std::cin >> values[i];\n    }\n    // @phase gap\n    for (int gap = n / 2; gap > 0; gap = gap / 2) {\n        // @phase insert\n        for (int i = gap; i < n; i = i + 1) {\n            int key = values[i];\n            int j = i;\n            // @phase shift\n            while (j >= gap && values[j - gap] > key) {\n                values[j] = values[j - gap];\n                j = j - gap;\n            }\n            // @phase place\n            values[j] = key;\n        }\n    }\n    // @phase output\n    for (int i = 0; i < n; i = i + 1) {\n        std::cout << values[i] << \" \";\n    }\n    std::cout << \"\\n\";\n    return 0;\n}\n",
+  "input": [
+    999,
+    -999,
+    0,
+    999,
+    -999
+  ],
+  "identity": {
+    "runId": "130ce964-f14f-4bca-af62-b673789edf5c",
+    "sourceRevision": "3927fddb-c64c-4384-925b-251a90bd04ec"
+  },
+  "engine": {
+    "buildId": "14be60eb14544c9be02f3818086b03db94596e6dc027336a8e2ffb84b49cfc0e",
+    "id": "engine.rust.p1",
+    "version": "0.1.0"
+  },
+  "steps": 180,
+  "fuel": 6642,
+  "terminal": {
+    "byteRange": null,
+    "code": null,
+    "cursor": 180,
+    "returnValue": 0,
+    "status": "completed"
+  },
+  "counters": {
+    "arrayWrites": 45,
+    "comparisons": 37,
+    "scalarWrites": 37,
+    "swaps": 0
+  },
+  "expected": [
+    -999,
+    -999,
+    0,
+    999,
+    999
+  ]
+}

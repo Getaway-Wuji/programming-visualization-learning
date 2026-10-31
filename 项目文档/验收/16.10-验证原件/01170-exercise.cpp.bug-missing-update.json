@@ -1,0 +1,960 @@
+{
+  "captures": [
+    {
+      "request": {
+        "bug": {
+          "caseKey": "three",
+          "exerciseId": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          3
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "3508717f-130b-44c4-808a-330c1ed9c26f",
+        "source": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "1"
+      },
+      "moduleSeen": true,
+      "operationId": "ef4e9fff-7dc7-4610-957c-01d51ea21e46",
+      "timing": {
+        "postMessageAt": 332.89999997615814,
+        "responseAt": 604.7999999821186,
+        "terminatedAt": 1114,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 3.7999999821186066
+      },
+      "terminal": {
+        "byteRange": {
+          "end": 127,
+          "start": 103
+        },
+        "code": "E_STEP_LIMIT",
+        "cursor": 20000,
+        "returnValue": null,
+        "status": "limited"
+      },
+      "verdict": {
+        "caseKey": "three",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": false
+          },
+          {
+            "id": "stdout-exact",
+            "met": false
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "unmet",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 529390
+      },
+      "steps": 20000,
+      "completeness": "prefix",
+      "raw": {
+        "file": "exercise.cpp.bug-missing-update-0.json.gz",
+        "bytes": 12413047,
+        "sha256": "7591175b951006c1faaba785d3593b8733aaedb9a29bfd6a0a668c444bc7295c"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "three",
+          "exerciseId": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          3
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "1a70dfc7-e2cc-4e04-8ec2-13e47b6e12ed",
+        "source": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "bcd50ff8-0c6b-4ec4-9ef2-7dab2c147767",
+      "timing": {
+        "postMessageAt": 1481.2999999821186,
+        "responseAt": 1495.199999988079,
+        "terminatedAt": 1497.199999988079,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 26,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "three",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 1494
+      },
+      "steps": 26,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-missing-update-1.json.gz",
+        "bytes": 20228,
+        "sha256": "d85885fa5a20dd9108aa15b22780e35b223109a939c14277dae5a5fccd9168a2"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "empty",
+          "exerciseId": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          0
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "80c547c2-c2dd-4d47-b3e8-83caa74cfd6f",
+        "source": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "732e0444-1672-4873-920b-ca03a31a606c",
+      "timing": {
+        "postMessageAt": 1498.7999999821186,
+        "responseAt": 1509.699999988079,
+        "terminatedAt": 1511.5,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 11,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "empty",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 1109
+      },
+      "steps": 11,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-missing-update-2.json.gz",
+        "bytes": 11519,
+        "sha256": "20a4863fed9bde905a6c2eb0d2203ed37f959e4ec907dfac4691a8a528065b5b"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "single",
+          "exerciseId": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          1
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "767401d9-b5ee-4551-bcf5-da7dc2e7e97d",
+        "source": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "6d1e81eb-5b41-44a4-a7ad-d13cba530b67",
+      "timing": {
+        "postMessageAt": 1512.7999999821186,
+        "responseAt": 1522.5999999940395,
+        "terminatedAt": 1523.7999999821186,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 16,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "single",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 1236
+      },
+      "steps": 16,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-missing-update-3.json.gz",
+        "bytes": 14379,
+        "sha256": "49bbc99d3c0f805e9400770e8d3afa95c9106deeaa0b2858510c385ba79b9ab5"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "seven",
+          "exerciseId": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          7
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "88dff619-0fde-4c9f-88e1-2908f405fab7",
+        "source": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "713380b4-983e-4f88-914f-3d6f1e35f8f1",
+      "timing": {
+        "postMessageAt": 1524.8999999761581,
+        "responseAt": 1535.2999999821186,
+        "terminatedAt": 1537.5999999940395,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 46,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "seven",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 2011
+      },
+      "steps": 46,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-missing-update-4.json.gz",
+        "bytes": 31958,
+        "sha256": "f4390a6da77dc78a15d3e3e985219780de4058bec90e8bcad8e8782bdd31caf0"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "three",
+          "exerciseId": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          3
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "6bf826db-0d42-432f-8c5b-8dbb76b9086b",
+        "source": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "2e1f4fc3-d93a-488c-bc6d-90ad9856ee92",
+      "timing": {
+        "postMessageAt": 1631.199999988079,
+        "responseAt": 1643.2999999821186,
+        "terminatedAt": 1644.8999999761581,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0.09999999403953552
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 26,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "three",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 1494
+      },
+      "steps": 26,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-missing-update-5.json.gz",
+        "bytes": 20228,
+        "sha256": "420b434afff930f7f81cbbf07eaad1a5c21781ebcf11e831055f4f7376831e14"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "empty",
+          "exerciseId": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          0
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "d740378a-8227-4cbc-857e-7909505f45a3",
+        "source": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "b88ba122-3f11-4c84-86e4-94d30de47f03",
+      "timing": {
+        "postMessageAt": 1646.5,
+        "responseAt": 1659.8999999761581,
+        "terminatedAt": 1661,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0.10000002384185791
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 11,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "empty",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 1109
+      },
+      "steps": 11,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-missing-update-6.json.gz",
+        "bytes": 11519,
+        "sha256": "a1e80094389df7ed9dacfeeb95e48e753cd6d74f49c9fc25633553d9f923fd2f"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "single",
+          "exerciseId": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          1
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "cf94cfbd-f20c-4086-b54d-7d669da4f68d",
+        "source": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "25f017ff-9d18-41df-8c70-50f0e291199b",
+      "timing": {
+        "postMessageAt": 1662.199999988079,
+        "responseAt": 1672.699999988079,
+        "terminatedAt": 1674,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0.09999999403953552
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 16,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "single",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 1236
+      },
+      "steps": 16,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-missing-update-7.json.gz",
+        "bytes": 14379,
+        "sha256": "bdccba8bdc155f352479ce368644be1f4b8ba3d11fceaf1cedd42120cf22fbba"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "seven",
+          "exerciseId": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          7
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "32f4d962-d243-48ff-b8c3-25b61bc0d266",
+        "source": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "4893a4b3-fdfb-45bb-aaa2-b44b3fddf7eb",
+      "timing": {
+        "postMessageAt": 1675.0999999940395,
+        "responseAt": 1686.699999988079,
+        "terminatedAt": 1688.5,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 46,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "seven",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 2011
+      },
+      "steps": 46,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-missing-update-8.json.gz",
+        "bytes": 31958,
+        "sha256": "b9a4f3a9c370320394d082bbcdc85fc433ee8d26ba9366b7acd29090a24bf60a"
+      }
+    }
+  ],
+  "budgets": [
+    {
+      "operationId": "ef4e9fff-7dc7-4610-957c-01d51ea21e46",
+      "remainingMs": 987,
+      "at": 332.7999999821186,
+      "wasmPages": 888
+    },
+    {
+      "operationId": "bcd50ff8-0c6b-4ec4-9ef2-7dab2c147767",
+      "remainingMs": 999,
+      "at": 1481.2999999821186,
+      "wasmPages": 20
+    },
+    {
+      "operationId": "732e0444-1672-4873-920b-ca03a31a606c",
+      "remainingMs": 981,
+      "at": 1498.7999999821186,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "6d1e81eb-5b41-44a4-a7ad-d13cba530b67",
+      "remainingMs": 967,
+      "at": 1512.7999999821186,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "713380b4-983e-4f88-914f-3d6f1e35f8f1",
+      "remainingMs": 955,
+      "at": 1524.8999999761581,
+      "wasmPages": 20
+    },
+    {
+      "operationId": "2e1f4fc3-d93a-488c-bc6d-90ad9856ee92",
+      "remainingMs": 998,
+      "at": 1631.199999988079,
+      "wasmPages": 20
+    },
+    {
+      "operationId": "b88ba122-3f11-4c84-86e4-94d30de47f03",
+      "remainingMs": 983,
+      "at": 1646.5,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "25f017ff-9d18-41df-8c70-50f0e291199b",
+      "remainingMs": 967,
+      "at": 1662.199999988079,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "4893a4b3-fdfb-45bb-aaa2-b44b3fddf7eb",
+      "remainingMs": 954,
+      "at": 1675.0999999940395,
+      "wasmPages": 20
+    }
+  ],
+  "observations": {
+    "brokenElapsedMs": 798.2999999821186,
+    "repairedAcceptedMs": 58.599999994039536
+  },
+  "rows": {
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T10:00:19.932Z",
+        "lastAt": "2026-10-31T10:00:20.082Z"
+      }
+    ],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.cpp.bug-missing-update",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T10:00:19.932Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "71a04a37-b909-42e9-91b1-3d3d208744ef",
+        "occurredAt": "2026-10-31T10:00:20.082Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 5
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.cpp.bug-missing-update",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "b5f87047-ff79-40fa-ac98-cc3e7c3cd044",
+        "occurredAt": "2026-10-31T10:00:19.932Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 4
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "ab3ffe98-8d75-4593-afd5-5546654a70bf",
+        "writerId": "9f8c8ebd-d362-4576-a5b2-0fbe6fa6f1b3",
+        "generation": "3987201b-8316-4f47-93d3-ab78f1e0f5a6",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T10:00:18.636Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-missing-update",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-missing-update",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"three\",\"input\":[3]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 1
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "e0c0fd30-835b-48c7-80b2-99a3ae0c5693",
+        "writerId": "9f8c8ebd-d362-4576-a5b2-0fbe6fa6f1b3",
+        "generation": "3987201b-8316-4f47-93d3-ab78f1e0f5a6",
+        "captureVersion": 2,
+        "createdAt": "2026-10-31T10:00:19.825Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-missing-update",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-missing-update",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int n;\n  std::cin >> n;\n  int i = 0;\n  int sum = 0;\n  while (i < n) {\n    sum = sum + i;\n    i = i + 1;\n  }\n  std::cout << sum << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"three\",\"input\":[3]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 2
+      }
+    ]
+  }
+}

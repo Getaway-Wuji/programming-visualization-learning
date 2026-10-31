@@ -1,0 +1,213 @@
+{
+  "schemaVersion": "1.1.0",
+  "id": "catalog.cpp.recursive-sorts",
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "case.cpp.merge-sort",
+      "version": "1.0.0",
+      "programId": "program.cpp.merge-sort",
+      "programVersion": "1.0.0",
+      "language": "cpp",
+      "title": "归并排序",
+      "description": "递归整理两个闭区间，借助同一个辅助数组合并，再写回原区间。",
+      "objectives": [
+        "辨认闭区间、mid和真实递归深度",
+        "追踪同一scratch对象的别名与合并写入",
+        "区分正在执行、返回后和调用者观察"
+      ],
+      "min": -999,
+      "max": 999,
+      "maxItems": 30,
+      "defaultInput": [
+        7,
+        -3,
+        0,
+        5,
+        -3,
+        2,
+        9
+      ],
+      "variant": "闭区间二分；相等时先取左侧，稳定归并；scratch只在main分配一次，由各帧共享别名。",
+      "complexity": "O(n log n)时间；空或单项立即返回。原始计数包含循环、边界判断及初始化，并非只统计元素比较。",
+      "extraSpace": "逻辑额外O(n)数组与O(log n)调用栈；scratch[30]实际占120教学字节，values[30]为输入。",
+      "sourceFile": "content/algorithms/cpp/merge-sort-1.0.0.cpp",
+      "knowledgeConcepts": [
+        "递归",
+        "数组",
+        "分治",
+        "排序"
+      ],
+      "sourceOrigin": "project-original",
+      "phases": [
+        {
+          "id": "split",
+          "title": "拆分闭区间",
+          "explanation": "left>=right立即返回；否则以mid划分两半，先左后右递归。"
+        },
+        {
+          "id": "merge",
+          "title": "合并两段",
+          "explanation": "两段已由真实递归整理；比较values[i]与values[j]，相等先取左侧，写入共享scratch。"
+        },
+        {
+          "id": "tails",
+          "title": "接上剩余项",
+          "explanation": "只复制尚未耗尽的那一段；at、i、j均为当前帧的真实局部变量。"
+        },
+        {
+          "id": "copy",
+          "title": "写回原区间",
+          "explanation": "将scratch的left..right逐项写回values；其他区间不参与本次合并。"
+        },
+        {
+          "id": "setup",
+          "title": "准备物理存储",
+          "explanation": "n为原输入项数；values容量30，归并另有一份容量30的scratch。"
+        },
+        {
+          "id": "input",
+          "title": "读入原数据",
+          "explanation": "cin只消费原n项，请求中没有排序结果或第二份隐藏程序。"
+        },
+        {
+          "id": "run",
+          "title": "调用排序",
+          "explanation": "用闭区间0..n-1调用当前显示的函数；空数组对应0..-1并立即返回。"
+        },
+        {
+          "id": "output",
+          "title": "输出并结束",
+          "explanation": "输出实际values；返回后局部对象离开作用域，后退恢复完整状态。"
+        }
+      ],
+      "boundarySamples": [
+        [],
+        [
+          0
+        ],
+        [
+          2,
+          2,
+          -1,
+          2
+        ],
+        [
+          -999,
+          0,
+          999
+        ],
+        [
+          5,
+          4,
+          3,
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "case.cpp.quick-sort",
+      "version": "1.0.0",
+      "programId": "program.cpp.quick-sort",
+      "programVersion": "1.0.0",
+      "language": "cpp",
+      "title": "快速排序",
+      "description": "以区间末项为枢轴分区，递归较小的一侧，在当前帧循环处理较大的一侧。",
+      "objectives": [
+        "核对末项枢轴和<=的分区规则",
+        "观察真实交换写入与跳过自交换",
+        "辨认较小段递归和较大段同帧循环"
+      ],
+      "min": -999,
+      "max": 999,
+      "maxItems": 30,
+      "defaultInput": [
+        7,
+        -3,
+        0,
+        5,
+        -3,
+        2,
+        9
+      ],
+      "variant": "末项枢轴Lomuto；<=枢轴进入左段，跳过自交换；仅长度至少2的较小段递归，较大段用while处理。一般不稳定。",
+      "complexity": "平均O(n log n)、最坏O(n²)时间；已排序、逆序和全相等仍可能退化。较小段递归保证O(log n)调用栈，不画不存在的全递归树。",
+      "extraSpace": "原数组内分区，额外O(1)数组存储及O(log n)调用栈；values物理容量30个int。",
+      "sourceFile": "content/algorithms/cpp/quick-sort-1.0.0.cpp",
+      "knowledgeConcepts": [
+        "递归",
+        "数组",
+        "分治",
+        "排序"
+      ],
+      "sourceOrigin": "project-original",
+      "phases": [
+        {
+          "id": "partition",
+          "title": "取末项枢轴",
+          "explanation": "pivotValue保存values[right]；small从left起，尚未扫描区间由i推进。"
+        },
+        {
+          "id": "scan",
+          "title": "扫描与交换",
+          "explanation": "<=枢轴的项进入左段；small!=i才执行两次数组赋值，不能把每次条件成立都称作交换。"
+        },
+        {
+          "id": "pivot",
+          "title": "将枢轴放回分界",
+          "explanation": "small!=right才交换枢轴；返回small作为分界，后续区间严格排除该位置。"
+        },
+        {
+          "id": "recurse",
+          "title": "递归较小段",
+          "explanation": "只对长度至少2的较小段建立真实调用帧；较大段在同一帧缩小left或right。排序和全相等输入也逐轮缩短区间。"
+        },
+        {
+          "id": "setup",
+          "title": "准备物理存储",
+          "explanation": "n为原输入项数；values容量30，归并另有一份容量30的scratch。"
+        },
+        {
+          "id": "input",
+          "title": "读入原数据",
+          "explanation": "cin只消费原n项，请求中没有排序结果或第二份隐藏程序。"
+        },
+        {
+          "id": "run",
+          "title": "调用排序",
+          "explanation": "用闭区间0..n-1调用当前显示的函数；空数组对应0..-1并立即返回。"
+        },
+        {
+          "id": "output",
+          "title": "输出并结束",
+          "explanation": "输出实际values；返回后局部对象离开作用域，后退恢复完整状态。"
+        }
+      ],
+      "boundarySamples": [
+        [],
+        [
+          0
+        ],
+        [
+          2,
+          2,
+          -1,
+          2
+        ],
+        [
+          -999,
+          0,
+          999
+        ],
+        [
+          5,
+          4,
+          3,
+          2,
+          1
+        ]
+      ]
+    }
+  ]
+}

@@ -135,39 +135,58 @@ export async function loadCourseBundle(
         );
         if (target.origin !== location.origin || !target.pathname.includes('/content/'))
           throw new Error('COURSE_BUNDLE_RESOURCE');
-        const response = await Promise.race([
-          fetcher(target, {
-            signal: controller.signal,
-            credentials: 'omit',
-            cache: 'no-store',
-            redirect: 'error',
-            referrerPolicy: 'no-referrer',
-            headers: { Accept: 'application/json' },
-          }),
-          aborted,
-        ]);
-        if (!response.ok || response.redirected || !response.body)
-          throw new Error('COURSE_BUNDLE_UNAVAILABLE');
-        const length = response.headers.get('content-length');
-        if (length && (!/^\d+$/.test(length) || Number(length) > 2 * 1024 * 1024))
-          throw new Error('COURSE_BUNDLE_SIZE');
-        reader = response.body.getReader();
-        const chunks: Uint8Array[] = [];
-        let size = 0;
-        while (true) {
-          const chunk = await Promise.race([reader.read(), aborted]);
-          if (chunk.done) break;
-          size += chunk.value.length;
-          if (size > 2 * 1024 * 1024) throw new Error('COURSE_BUNDLE_SIZE');
-          chunks.push(chunk.value);
+        // Only public static bytes use the HTTP cache. Every realm still checks
+        // the compiled length/hash and full content before granting authority.
+        const fetchAndDecode = async (cache: RequestCache): Promise<CourseBundle> => {
+          const response = await Promise.race([
+            fetcher(target, {
+              signal: controller.signal,
+              credentials: 'omit',
+              cache,
+              redirect: 'error',
+              referrerPolicy: 'no-referrer',
+              headers: { Accept: 'application/json' },
+            }),
+            aborted,
+          ]);
+          if (!response.ok || response.redirected || !response.body)
+            throw new Error('COURSE_BUNDLE_UNAVAILABLE');
+          const length = response.headers.get('content-length');
+          if (length && (!/^\d+$/.test(length) || Number(length) > 2 * 1024 * 1024))
+            throw new Error('COURSE_BUNDLE_SIZE');
+          reader = response.body.getReader();
+          const chunks: Uint8Array[] = [];
+          let size = 0;
+          while (true) {
+            const chunk = await Promise.race([reader.read(), aborted]);
+            if (chunk.done) break;
+            size += chunk.value.length;
+            if (size > 2 * 1024 * 1024) throw new Error('COURSE_BUNDLE_SIZE');
+            chunks.push(chunk.value);
+          }
+          const bytes = new Uint8Array(size);
+          let at = 0;
+          for (const chunk of chunks) {
+            bytes.set(chunk, at);
+            at += chunk.length;
+          }
+          return await decodeCourseBundle(bytes);
+        };
+        let bundle: CourseBundle;
+        try {
+          bundle = await fetchAndDecode(retry ? 'reload' : 'force-cache');
+        } catch (error) {
+          // A new build may expect new bytes at the same public path. Revalidate
+          // stale bytes once, under the original timeout; never trust the cache.
+          if (
+            retry ||
+            !(error instanceof Error) ||
+            error.message !== 'COURSE_BUNDLE_INTEGRITY' ||
+            controller.signal.aborted
+          )
+            throw error;
+          bundle = await fetchAndDecode('reload');
         }
-        const bytes = new Uint8Array(size);
-        let at = 0;
-        for (const chunk of chunks) {
-          bytes.set(chunk, at);
-          at += chunk.length;
-        }
-        const bundle = await decodeCourseBundle(bytes);
         current = bundle;
         failure = null;
         activateCourseNavigation(bundle.reading);

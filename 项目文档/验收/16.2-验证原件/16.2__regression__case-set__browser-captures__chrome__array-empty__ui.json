@@ -1,0 +1,86 @@
+{
+  "captureVersion": "08.4-browser-capture@1",
+  "evidenceLevel": "production-ui-real-worker",
+  "key": "array-empty",
+  "caseId": "case.c.array-traversal",
+  "project": "chrome",
+  "browserVersion": "156.0.8078.76",
+  "route": "#/visualize/case.c.array-traversal",
+  "displayedSource": "#include <stdio.h>\nint main(void) {\n    int n = 0;\n    int values[1] = {0};\n    int sum = 0;\n    for (int i = 0; i < n; i = i + 1) {\n        sum = sum + values[i];\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n",
+  "readOnly": true,
+  "values": {
+    "values": []
+  },
+  "stdout": "0\n",
+  "terminal": "completed",
+  "steps": 14,
+  "identity": {
+    "contextId": "6c60048d-068c-49cb-ae54-934a4b4f0dfe",
+    "contextRevision": 2,
+    "runId": "ef7ff6ad-8957-443b-a87c-9633aeaf04d5",
+    "sourceRevision": 2,
+    "submissionId": "1282f003-47e5-4bc0-a5de-814484752d5f",
+    "testCaseKey": null
+  },
+  "sourceKind": "public-content-original",
+  "initialCursor": 0,
+  "initialView": {
+    "cursor": 0,
+    "viewCursor": 0,
+    "status": "ready",
+    "kind": "",
+    "output": "",
+    "events": "本步读写与比较本步没有读写或比较观测。",
+    "scalars": [],
+    "arrays": [],
+    "counters": {
+      "comparisons": "0",
+      "scalarWrites": "0",
+      "arrayWrites": "0",
+      "swaps": "0"
+    },
+    "marks": [],
+    "terminalMarkCount": 0
+  },
+  "walk": null,
+  "rates": [],
+  "replay": null,
+  "storage": {
+    "storeNames": [
+      "achievements",
+      "aliases",
+      "appearance",
+      "appearanceAssets",
+      "avatar",
+      "dailyFacts",
+      "editHistory",
+      "goals",
+      "knowledgeMarks",
+      "ledger",
+      "meta",
+      "progress",
+      "receipts",
+      "reviewCards",
+      "settings"
+    ],
+    "beforeSha256": "0c9a3b01f14a01bd4f22edf88648744e077cd67afc11d8b42666b7ff787cd09f",
+    "afterSha256": "0c9a3b01f14a01bd4f22edf88648744e077cd67afc11d8b42666b7ff787cd09f",
+    "unchanged": true,
+    "scope": "native-fifteen-stores+localStorage+sessionStorage"
+  },
+  "worker": {
+    "kind": "execute",
+    "moduleSeen": true,
+    "responseOk": true,
+    "terminated": true,
+    "operationId": "2679266d-ad3e-4cf2-b2dd-3645bf3ab0df",
+    "responseOperationId": "2679266d-ad3e-4cf2-b2dd-3645bf3ab0df",
+    "url": "http://127.0.0.1:4178/assets/execution.worker-FvddZkgL.js"
+  },
+  "requestByteLength": 1389,
+  "resultByteLength": 17524,
+  "requestSha256": "40ac06d398939d9c6cb7eeb5c5d2c4e3abdbf0b84a11d7b5c55368ad8cf4fbaf",
+  "resultSha256": "6378990f188d387338ce1dfda7a63d8d302a012820ef4062d8f63ff7646c151b",
+  "catalogSha256": "ec46ee233b43271b1b31de3d6bf9d730d530c3c3dc2da5ceba67d7c9c1dfe535",
+  "sourceSha256": "614cd82c67d86129d24b0797bed80f170cef47b502193128301273ffe932bdeb"
+}

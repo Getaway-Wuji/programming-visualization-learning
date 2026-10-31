@@ -62,6 +62,7 @@ async function until(check: () => boolean) {
 }
 afterEach(() => {
   for (const client of clients.splice(0)) client.invalidate();
+  vi.useRealTimers();
 });
 test('cancelling an in-flight run terminates Worker and rejects queued success', async () => {
   const h = setup();
@@ -133,4 +134,37 @@ test('caller edits after submit cannot mutate the captured source or input', asy
   expect(wire).toMatchObject({ source: request.source, input: [], language: 'c' });
   h.workers[0].reply();
   await pending;
+});
+test('a shared start gives the second operation only the remaining Worker and timer budget', async () => {
+  vi.useFakeTimers();
+  const h = setup();
+  const pending = h.client.execute(request, -600).catch((error: Error) => error.message);
+  await until(() => h.workers.length === 1);
+  expect(h.workers[0].message!.remainingMs).toBe(400);
+  vi.advanceTimersByTime(399);
+  expect(h.client.inspect().activeWorkers).toBe(1);
+  vi.advanceTimersByTime(1);
+  expect(await pending).toBe('E_DEADLINE');
+  expect(h.workers[0].terminate).toHaveBeenCalledOnce();
+});
+test('expired, future and nonfinite shared starts never load or allocate a Worker', async () => {
+  for (const start of [-1000, 1, NaN, Infinity]) {
+    const h = setup();
+    await expect(h.client.execute(request, start)).rejects.toThrow('E_DEADLINE');
+    expect(h.fetcher).not.toHaveBeenCalled();
+    expect(h.workers).toHaveLength(0);
+  }
+});
+test('the shared deadline includes asynchronous result validation', async () => {
+  const h = setup();
+  h.decode.mockImplementation(async (_bytes, _request, _build, guard) => {
+    h.now.mockReturnValue(400);
+    guard?.();
+    return fixture(engineBuild.wasmSha256);
+  });
+  const pending = h.client.execute(request, -600).catch((error: Error) => error.message);
+  await until(() => h.workers.length === 1);
+  h.workers[0].reply();
+  expect(await pending).toBe('E_DEADLINE');
+  expect(h.client.inspect().state).toBe('expired');
 });

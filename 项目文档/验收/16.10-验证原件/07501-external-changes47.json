@@ -1,0 +1,64 @@
+{
+  "task": "16.10",
+  "observedAtUtc": "2026-10-31T10:47:56.996Z",
+  "externalChanges": [
+    {
+      "path": ".gitignore",
+      "beforeSha256": "478d5516e00a2d2f309e68a9de7c73faaa4a46dbab15e6a9f2786229fb7c9c93",
+      "currentSha256": "fdc0b516a5e122f3d9bcc8e7d79284b5a4771cde1b47376abd283c16dd190e04",
+      "matchesIsolatedRepairCopy": false,
+      "ownership": "External CI repair scope, not16.10; current root bytes preserved and excluded from this task Git plan."
+    },
+    {
+      "path": ".github/workflows/webpack.yml",
+      "beforeSha256": "1724c99599dc510ba4f7192c783953911368822f4371cd019bf917d27a182693",
+      "currentSha256": "1397c3159e6359694c190222496a7af20e19e607ebd111bb9cdeaf41ac447630",
+      "matchesIsolatedRepairCopy": false,
+      "ownership": "External CI repair scope, not16.10; current root bytes preserved and excluded from this task Git plan."
+    }
+  ],
+  "externalAdded": [
+    {
+      "path": "scripts/check-release-archives.mjs",
+      "sha256": "7a54b0562819bda48fea9fda363e30aad2524853e0e126b74ea16b5c88603ebb"
+    },
+    {
+      "path": "项目文档/交接/2026-10-31-GitHub-Actions构建修复-交接.md",
+      "sha256": "7f7c145c5995d8e11b17f2e07d280d479f804ae7ece134e4c148934f8163cdbe"
+    }
+  ],
+  "historicalReceipts": [
+    {
+      "path": "项目文档/验收/发布凭据/15.4-1.0.33/ui-lint-vector-final.log",
+      "sha256": "c7c9974eb23149f3f5e2b2562c845543a66369e922be8570ee85a991b51ac4bd",
+      "unchangedHistoricalBuildInput": true
+    },
+    {
+      "path": "项目文档/验收/发布凭据/15.4-1.0.34/ui-lint-vector-final.log",
+      "sha256": "c7c9974eb23149f3f5e2b2562c845543a66369e922be8570ee85a991b51ac4bd",
+      "unchangedHistoricalBuildInput": true
+    }
+  ],
+  "deliveryOverrides": [
+    {
+      "path": ".gitignore",
+      "from": ".artifacts/16.10/clean-workspace/.gitignore",
+      "sha256": "478d5516e00a2d2f309e68a9de7c73faaa4a46dbab15e6a9f2786229fb7c9c93",
+      "reason": "Keep the independently reviewed pre-CI source configuration in this task delivery copy without changing the shared root."
+    },
+    {
+      "path": ".github/workflows/webpack.yml",
+      "from": ".artifacts/16.10/clean-workspace/.github/workflows/webpack.yml",
+      "sha256": "1724c99599dc510ba4f7192c783953911368822f4371cd019bf917d27a182693",
+      "reason": "Keep the independently reviewed pre-CI source configuration in this task delivery copy without changing the shared root."
+    }
+  ],
+  "excludedTaskGitPaths": [
+    "项目文档/交接/2026-10-31-GitHub-Actions失败排查-交接.md",
+    ".gitignore",
+    ".github/workflows/webpack.yml",
+    "scripts/check-release-archives.mjs",
+    "项目文档/交接/2026-10-31-GitHub-Actions构建修复-交接.md"
+  ],
+  "coordination": "Relevant existing CI chat01a18f49-d37d-75d3-adeb-fa6e02525566 records user authorization for an isolated six-file repair and a historical published08aae41. This task does not modify, stage or claim current remote CI verification. Coordinator must inspect the live remote chain when separately dispatching16 Git closeout."
+}

@@ -1,0 +1,48 @@
+{
+  "caseId": "case.cpp.quick-sort",
+  "programId": "program.cpp.quick-sort",
+  "version": "1.0.0",
+  "source": "#include <iostream>\n// @phase partition\nint partition(int values[], int left, int right) {\n    int pivotValue = values[right];\n    int small = left;\n    // @phase scan\n    for (int i = left; i < right; i = i + 1) {\n        if (values[i] <= pivotValue) {\n            if (small != i) {\n                int temp = values[small];\n                values[small] = values[i];\n                values[i] = temp;\n            }\n            small = small + 1;\n        }\n    }\n    // @phase pivot\n    if (small != right) {\n        int temp = values[small];\n        values[small] = values[right];\n        values[right] = temp;\n    }\n    return small;\n}\n// @phase recurse\nvoid quick_sort(int values[], int left, int right) {\n    while (left < right) {\n        int pivotIndex = partition(values, left, right);\n        if (pivotIndex - left < right - pivotIndex) {\n            if (left < pivotIndex - 1) {\n                quick_sort(values, left, pivotIndex - 1);\n            }\n            left = pivotIndex + 1;\n        } else {\n            if (pivotIndex + 1 < right) {\n                quick_sort(values, pivotIndex + 1, right);\n            }\n            right = pivotIndex - 1;\n        }\n    }\n    return;\n}\n// @phase setup\nint main() {\n    int n = 7;\n    int values[30] = {};\n    // @phase input\n    for (int i = 0; i < n; i = i + 1) {\n        std::cin >> values[i];\n    }\n    // @phase run\n    quick_sort(values, 0, n - 1);\n    // @phase output\n    for (int i = 0; i < n; i = i + 1) {\n        std::cout << values[i] << \" \";\n    }\n    std::cout << \"\\n\";\n    return 0;\n}\n",
+  "input": [
+    7,
+    -3,
+    0,
+    5,
+    -3,
+    2,
+    9
+  ],
+  "identity": {
+    "runId": "dc1a91f1-f0c5-423a-9228-fc236a69e9ff",
+    "sourceRevision": "fa6d5527-3e57-440a-b907-78f7e3b8e539"
+  },
+  "engine": {
+    "buildId": "14be60eb14544c9be02f3818086b03db94596e6dc027336a8e2ffb84b49cfc0e",
+    "id": "engine.rust.p1",
+    "version": "0.1.0"
+  },
+  "steps": 336,
+  "fuel": 12687,
+  "terminal": {
+    "byteRange": null,
+    "code": null,
+    "cursor": 336,
+    "returnValue": 0,
+    "status": "completed"
+  },
+  "counters": {
+    "arrayWrites": 49,
+    "comparisons": 69,
+    "scalarWrites": 72,
+    "swaps": 0
+  },
+  "expected": [
+    -3,
+    -3,
+    0,
+    2,
+    5,
+    7,
+    9
+  ]
+}

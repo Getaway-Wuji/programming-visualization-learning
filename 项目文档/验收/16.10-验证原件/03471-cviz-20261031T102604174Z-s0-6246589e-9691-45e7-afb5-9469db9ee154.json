@@ -1,0 +1,176 @@
+{
+  "formatVersion": "1.0.0",
+  "formatId": "urn:c-viz:current-snapshot:1.0.0",
+  "snapshotId": "6246589e-9691-45e7-afb5-9469db9ee154",
+  "capturedAt": "2026-10-31T10:26:04.174Z",
+  "presentation": {
+    "mode": "memory",
+    "scope": "complete-current-state",
+    "image": "reflowed-state-picture",
+    "selectionAndPaginationExcluded": true
+  },
+  "virtualAddresses": "educational-not-host-addresses",
+  "currentState": {
+    "allocator": {
+      "liveBytes": 0,
+      "nextAddress": 4096,
+      "nextFrame": 1,
+      "nextObject": 1,
+      "nextScope": 1
+    },
+    "control": {
+      "activeFrameId": null,
+      "inputCursor": 0,
+      "nextNodeId": "n6",
+      "returnValue": null
+    },
+    "counters": {
+      "arrayWrites": 0,
+      "comparisons": 0,
+      "scalarWrites": 0,
+      "swaps": 0
+    },
+    "frames": [],
+    "objects": [],
+    "output": "",
+    "scopes": []
+  },
+  "currentStep": null,
+  "executionOutcome": {
+    "byteRange": {
+      "end": 27,
+      "start": 26
+    },
+    "code": "E_UNINITIALIZED",
+    "cursor": 2,
+    "returnValue": null,
+    "status": "error"
+  },
+  "terminalAtCursor": null,
+  "origin": {
+    "kind": "memory-observation",
+    "id": "uninitialized",
+    "title": "未初始化指针",
+    "caseRef": null,
+    "programRef": null,
+    "packageRef": null,
+    "definitionVersion": {
+      "scheme": "source-sha256",
+      "value": "62fe52362129beb77341c363b22b2f127cbaf16df389028356df95e6e4e1be1e"
+    }
+  },
+  "runtime": {
+    "domain": "p1-memory",
+    "language": "c",
+    "subset": null,
+    "engine": {
+      "buildId": "4f3cb075dc0b7da3a0afc9dd96f178b6a1b71184f125c726ddf0b81384f6b3a7",
+      "id": "engine.rust.memory",
+      "version": "0.1.0"
+    },
+    "identity": {
+      "runId": "adf1686f-09fa-4964-87e3-ea77f81b6929",
+      "sourceRevision": "5e75e8e1-a39b-4edd-9540-694750eeaaff"
+    },
+    "versions": {
+      "execution": "1.3.0",
+      "step": "1.2.0",
+      "diagnostic": "1.2.0",
+      "integerEncoding": "1.0.0",
+      "judge": null
+    }
+  },
+  "source": {
+    "text": "int main(){int* p;return *p;}",
+    "encoding": "UTF-8",
+    "sourceRevision": "5e75e8e1-a39b-4edd-9540-694750eeaaff",
+    "sha256": "62fe52362129beb77341c363b22b2f127cbaf16df389028356df95e6e4e1be1e",
+    "nodeMap": [
+      {
+        "byteRange": {
+          "end": 18,
+          "start": 11
+        },
+        "kind": "declaration",
+        "nodeId": "n1"
+      },
+      {
+        "byteRange": {
+          "end": 27,
+          "start": 26
+        },
+        "kind": "expression",
+        "nodeId": "n2"
+      },
+      {
+        "byteRange": {
+          "end": 27,
+          "start": 25
+        },
+        "kind": "expression",
+        "nodeId": "n3"
+      },
+      {
+        "byteRange": {
+          "end": 28,
+          "start": 18
+        },
+        "kind": "return",
+        "nodeId": "n4"
+      },
+      {
+        "byteRange": {
+          "end": 29,
+          "start": 10
+        },
+        "kind": "block",
+        "nodeId": "n5"
+      },
+      {
+        "byteRange": {
+          "end": 29,
+          "start": 0
+        },
+        "kind": "function",
+        "nodeId": "n6"
+      }
+    ],
+    "blockMap": [],
+    "bindingMap": [],
+    "resolvedBindings": []
+  },
+  "input": [],
+  "types": [
+    {
+      "byteSize": 4,
+      "fields": [],
+      "kind": "int",
+      "name": "int",
+      "pointeeType": null
+    },
+    {
+      "byteSize": 8,
+      "fields": [],
+      "kind": "pointer",
+      "name": "int*",
+      "pointeeType": "int"
+    }
+  ],
+  "position": {
+    "cursor": 0,
+    "length": 2,
+    "stepKind": null,
+    "paused": true,
+    "atTerminal": false,
+    "executed": {
+      "raw": null,
+      "range": null,
+      "description": "初始状态，尚未完成源码步骤"
+    },
+    "highlighted": {
+      "reason": "initial",
+      "range": null
+    },
+    "terminalRange": null
+  }
+}

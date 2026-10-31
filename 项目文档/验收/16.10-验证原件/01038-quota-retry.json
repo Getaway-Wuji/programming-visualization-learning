@@ -1,0 +1,263 @@
+{
+  "fault": {
+    "armed": false,
+    "hits": 1,
+    "eventId": "90e86f93-9373-442c-b6f5-fa8831d8d038"
+  },
+  "first": {
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:27.339Z",
+        "lastAt": "2026-10-31T06:30:27.339Z"
+      }
+    ],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.cpp.bug-dangling-pointer",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:27.339Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "90e86f93-9373-442c-b6f5-fa8831d8d038",
+        "occurredAt": "2026-10-31T06:30:27.339Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 4
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "2dbde047-394f-4a14-a3db-df69b6c73d0d",
+        "writerId": "00ae15bc-cfe5-4b70-a787-3fe608e67cd2",
+        "generation": "da9afba7-d8f2-4285-a5aa-b170a4ee658c",
+        "captureVersion": 2,
+        "createdAt": "2026-10-31T06:30:27.193Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 2
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "82a43374-d97c-48e8-adb7-94e63b849fd1",
+        "writerId": "00ae15bc-cfe5-4b70-a787-3fe608e67cd2",
+        "generation": "da9afba7-d8f2-4285-a5aa-b170a4ee658c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:27.141Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p;\n  {\n    int value = x;\n    p = &value;\n  }\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 1
+      }
+    ]
+  },
+  "after": {
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:27.339Z",
+        "lastAt": "2026-10-31T06:30:27.570Z"
+      }
+    ],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.cpp.bug-dangling-pointer",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:27.339Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "90456024-ffb1-4bc8-b7d5-e0a31e39fdbe",
+        "occurredAt": "2026-10-31T06:30:27.570Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 6
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "90e86f93-9373-442c-b6f5-fa8831d8d038",
+        "occurredAt": "2026-10-31T06:30:27.339Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 4
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "2dbde047-394f-4a14-a3db-df69b6c73d0d",
+        "writerId": "00ae15bc-cfe5-4b70-a787-3fe608e67cd2",
+        "generation": "da9afba7-d8f2-4285-a5aa-b170a4ee658c",
+        "captureVersion": 2,
+        "createdAt": "2026-10-31T06:30:27.193Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 2
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "82a43374-d97c-48e8-adb7-94e63b849fd1",
+        "writerId": "00ae15bc-cfe5-4b70-a787-3fe608e67cd2",
+        "generation": "da9afba7-d8f2-4285-a5aa-b170a4ee658c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:27.141Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p;\n  {\n    int value = x;\n    p = &value;\n  }\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 1
+      }
+    ]
+  }
+}

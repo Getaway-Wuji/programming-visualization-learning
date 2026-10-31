@@ -1,0 +1,46 @@
+
+Running 2 tests using 1 worker
+
+  ok 1 [chrome] › tests\browser\memory-bugs.spec.ts:282:1 › eight-level catalog and real diagnostic remain usable at three widths (1.7s)
+  x  2 [chrome] › tests\browser\phase2-integration.spec.ts:14:1 › one native archive connects real failure, review, completion, challenge, both execution families and downloaded current state (1.5m)
+
+
+  1) [chrome] › tests\browser\phase2-integration.spec.ts:14:1 › one native archive connects real failure, review, completion, challenge, both execution families and downloaded current state 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.click: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '记得', exact: true })
+
+
+      37 |   await p.goto('/#/reviews');
+      38 |   await expect(p.getByTestId('review-detail')).toBeVisible();
+    > 39 |   await p.getByRole('button', { name: '记得', exact: true }).click();
+         |                                                            ^
+      40 |   await expect.poll(async () => (await native(p)).reviewCards[0]?.reviewCount).toBe(1);
+      41 |   await openAnswer(p, 'exercise.c.echo');
+      42 |   await submit(p);
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\phase2-integration.spec.ts:39:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-combined-first-output\phase2-integration-one-nat-90119-nd-downloaded-current-state-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-combined-first-output\phase2-integration-one-nat-90119-nd-downloaded-current-state-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-combined-first-output\phase2-integration-one-nat-90119-nd-downloaded-current-state-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-combined-first-output\phase2-integration-one-nat-90119-nd-downloaded-current-state-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chrome] › tests\browser\phase2-integration.spec.ts:14:1 › one native archive connects real failure, review, completion, challenge, both execution families and downloaded current state 
+  1 passed (1.6m)
+[WebServer] (node:57012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:33172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

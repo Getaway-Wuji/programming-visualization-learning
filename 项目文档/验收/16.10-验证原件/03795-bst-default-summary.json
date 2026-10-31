@@ -1,0 +1,374 @@
+{
+  "caseId": "case.cpp.binary-search-tree",
+  "input": [
+    1,
+    4,
+    1,
+    2,
+    1,
+    6,
+    1,
+    1,
+    1,
+    3,
+    1,
+    5,
+    1,
+    7,
+    2,
+    5,
+    3,
+    4,
+    5
+  ],
+  "identity": {
+    "runId": "8416ed2e-55ad-4c78-9119-f42d244daabe",
+    "sourceRevision": "058ce27b-e095-4a24-a509-968a68af4fba"
+  },
+  "engine": {
+    "buildId": "4f3cb075dc0b7da3a0afc9dd96f178b6a1b71184f125c726ddf0b81384f6b3a7",
+    "id": "engine.rust.memory",
+    "version": "0.1.0"
+  },
+  "steps": 860,
+  "fuel": 39376,
+  "maxFrames": 5,
+  "maxHeap": 7,
+  "terminal": {
+    "byteRange": null,
+    "code": null,
+    "cursor": 860,
+    "returnValue": 0,
+    "status": "completed"
+  },
+  "expected": {
+    "commits": [
+      {
+        "size": 1,
+        "outcome": 1,
+        "consumed": 2,
+        "output": "INSERT 4\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": null,
+          "right": null
+        }
+      },
+      {
+        "size": 2,
+        "outcome": 1,
+        "consumed": 4,
+        "output": "INSERT 4\nINSERT 2\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": {
+            "value": 2,
+            "left": null,
+            "right": null
+          },
+          "right": null
+        }
+      },
+      {
+        "size": 3,
+        "outcome": 1,
+        "consumed": 6,
+        "output": "INSERT 4\nINSERT 2\nINSERT 6\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": {
+            "value": 2,
+            "left": null,
+            "right": null
+          },
+          "right": {
+            "value": 6,
+            "left": null,
+            "right": null
+          }
+        }
+      },
+      {
+        "size": 4,
+        "outcome": 1,
+        "consumed": 8,
+        "output": "INSERT 4\nINSERT 2\nINSERT 6\nINSERT 1\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": {
+            "value": 2,
+            "left": {
+              "value": 1,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          },
+          "right": {
+            "value": 6,
+            "left": null,
+            "right": null
+          }
+        }
+      },
+      {
+        "size": 5,
+        "outcome": 1,
+        "consumed": 10,
+        "output": "INSERT 4\nINSERT 2\nINSERT 6\nINSERT 1\nINSERT 3\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": {
+            "value": 2,
+            "left": {
+              "value": 1,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          },
+          "right": {
+            "value": 6,
+            "left": null,
+            "right": null
+          }
+        }
+      },
+      {
+        "size": 6,
+        "outcome": 1,
+        "consumed": 12,
+        "output": "INSERT 4\nINSERT 2\nINSERT 6\nINSERT 1\nINSERT 3\nINSERT 5\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": {
+            "value": 2,
+            "left": {
+              "value": 1,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          },
+          "right": {
+            "value": 6,
+            "left": {
+              "value": 5,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          }
+        }
+      },
+      {
+        "size": 7,
+        "outcome": 1,
+        "consumed": 14,
+        "output": "INSERT 4\nINSERT 2\nINSERT 6\nINSERT 1\nINSERT 3\nINSERT 5\nINSERT 7\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": {
+            "value": 2,
+            "left": {
+              "value": 1,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          },
+          "right": {
+            "value": 6,
+            "left": {
+              "value": 5,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 7,
+              "left": null,
+              "right": null
+            }
+          }
+        }
+      },
+      {
+        "size": 7,
+        "outcome": 7,
+        "consumed": 16,
+        "output": "INSERT 4\nINSERT 2\nINSERT 6\nINSERT 1\nINSERT 3\nINSERT 5\nINSERT 7\nFOUND 5\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": {
+            "value": 2,
+            "left": {
+              "value": 1,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          },
+          "right": {
+            "value": 6,
+            "left": {
+              "value": 5,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 7,
+              "left": null,
+              "right": null
+            }
+          }
+        }
+      },
+      {
+        "size": 7,
+        "outcome": 3,
+        "consumed": 17,
+        "output": "INSERT 4\nINSERT 2\nINSERT 6\nINSERT 1\nINSERT 3\nINSERT 5\nINSERT 7\nFOUND 5\nPRE 4 2 1 3 6 5 7\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": {
+            "value": 2,
+            "left": {
+              "value": 1,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          },
+          "right": {
+            "value": 6,
+            "left": {
+              "value": 5,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 7,
+              "left": null,
+              "right": null
+            }
+          }
+        }
+      },
+      {
+        "size": 7,
+        "outcome": 3,
+        "consumed": 18,
+        "output": "INSERT 4\nINSERT 2\nINSERT 6\nINSERT 1\nINSERT 3\nINSERT 5\nINSERT 7\nFOUND 5\nPRE 4 2 1 3 6 5 7\nIN 1 2 3 4 5 6 7\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": {
+            "value": 2,
+            "left": {
+              "value": 1,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          },
+          "right": {
+            "value": 6,
+            "left": {
+              "value": 5,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 7,
+              "left": null,
+              "right": null
+            }
+          }
+        }
+      },
+      {
+        "size": 7,
+        "outcome": 3,
+        "consumed": 19,
+        "output": "INSERT 4\nINSERT 2\nINSERT 6\nINSERT 1\nINSERT 3\nINSERT 5\nINSERT 7\nFOUND 5\nPRE 4 2 1 3 6 5 7\nIN 1 2 3 4 5 6 7\nPOST 1 3 2 5 7 6 4\n",
+        "list": [],
+        "tree": {
+          "value": 4,
+          "left": {
+            "value": 2,
+            "left": {
+              "value": 1,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 3,
+              "left": null,
+              "right": null
+            }
+          },
+          "right": {
+            "value": 6,
+            "left": {
+              "value": 5,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "value": 7,
+              "left": null,
+              "right": null
+            }
+          }
+        }
+      }
+    ],
+    "output": "INSERT 4\nINSERT 2\nINSERT 6\nINSERT 1\nINSERT 3\nINSERT 5\nINSERT 7\nFOUND 5\nPRE 4 2 1 3 6 5 7\nIN 1 2 3 4 5 6 7\nPOST 1 3 2 5 7 6 4\nEND\n"
+  },
+  "commits": [
+    52,
+    107,
+    162,
+    232,
+    302,
+    372,
+    442,
+    492,
+    587,
+    685,
+    786
+  ]
+}

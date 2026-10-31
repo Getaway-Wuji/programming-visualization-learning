@@ -1,0 +1,146 @@
+
+ RUN  v5.0.4 D:/Files/Downloads/编程可视化教学平台
+
+ ✓ tests/unit/execution-performance.test.ts (7 tests) 2320ms
+   ✓ specialized protocol validation with real maximum-input Rust packets (7)
+     ✓ keeps the generated validator exactly reproducible from the frozen schema 643ms
+     ✓ accepts the complete 5330-step n30 packet with full schema, checkpoints and inverse checks 311ms
+     ✓ still validates the final step and final checkpoint after deferred schema batches 906ms
+ ❯ tests/unit/memory-bugs.test.ts (9 tests | 1 failed) 2444ms
+   ✓ real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-uninitialized-pointer 54ms
+   ✓ real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-dangling-pointer 19ms
+   × real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-missing-update 1003ms
+   ✓ real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-wrong-direction 1115ms
+   ✓ rejects identity/input/version additions and old consumers reject the companion 2ms
+   ✓ closed judgement refuses tampering or pretending a pointer error is met 1ms
+   ✓ precise 40 identities preserve the original36 and refuse field/version/parent/case drift 2ms
+   ✓ private pass capability requires four actual accepted results and live ownership 4ms
+   ✓ code-only history keeps original text and rejects old generations or foreign input 67ms
+ ✓ tests/unit/reconstruction.test.ts (8 tests) 2532ms
+   ✓ 13.5 configured reconstruction with real Rust and isolated drafts (8)
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.echo 387ms
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.two-x-plus-three 323ms
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.nonnegative 324ms
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.two-loop-sums 416ms
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.increment-at-index 351ms
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.array-sum 409ms
+ ✓ tests/unit/edit-session.test.ts (20 tests) 2697ms
+ ✓ tests/unit/block-session.test.ts (27 tests) 1950ms
+ ✓ tests/unit/execution-performance-11.4.test.ts (4 tests) 1889ms
+   ✓ records separate complete maximum-packet receive costs without changing acceptance budgets 1479ms
+ ✓ tests/unit/case-set.test.ts (57 tests) 1721ms
+   ✓ 08.4 seven public cases through the unchanged real Rust/WASM execution boundary (53)
+     ✓ accepts the original public template and known trace semantics: bubble-sort-maximum 442ms
+   ✓ 08.4 permanent public UI representatives (offline, no C rerun) (4)
+     ✓ verifies all seven complete UI representatives while explicitly retaining subset status 378ms
+ ✓ tests/unit/bugs.test.ts (11 tests) 1780ms
+   ✓ real Rust broken, repair, alternative and constant rejection: exercise.c.bug-semicolon 957ms
+ ✓ tests/unit/p05-encoding.test.ts (45 tests) 1236ms
+   ✓ P0.5 1.1 canonical receive proof remains strict without duplicate tree encoding (45)
+     ✓ does not post byte-count scheduling tasks when genuine maximum-packet UTF-8 work is still fast 365ms
+ ✓ tests/unit/p05-course-wasm.test.ts (65 tests) 1396ms
+   ✓ P0.5 real WASM producer and closed browser protocol consumer (65)
+     ✓ accepts every fixed group and branch aggregation of exercise.c.bubble-sort 485ms
+ ✓ tests/unit/prepared-source-11.4.test.ts (54 tests) 691ms
+ ✓ tests/unit/editor-history.test.ts (6 tests) 715ms
+   ✓ bounded editor capture queue and independent SAVE3 migration (6)
+     ✓ coalesces analysis, records edits/moves/restores and ignores presentation repeats 373ms
+ ✓ tests/unit/player-model.test.ts (14 tests) 681ms
+   ✓ 08.1 state and restoration using validated real Rust traces (14)
+     ✓ jumps across current real Rust n30 checkpoints and restores all 5330 steps 555ms
+ ✓ tests/unit/storage-recovery.test.ts (38 tests) 673ms
+ ✓ tests/unit/content-loader.test.ts (63 tests) 530ms
+ ✓ tests/unit/daily-goals.test.ts (34 tests) 578ms
+ ✓ tests/unit/vertical-evidence.test.ts (19 tests) 555ms
+   ✓ 07.3 archived public production-UI evidence (no C rerun) (19)
+     ✓ independently verifies real source/input/trace/UI for assignment 438ms
+ ✓ tests/unit/course-content.test.ts (48 tests) 513ms
+ ✓ tests/unit/p05-recovery-fast-path.test.ts (12 tests) 402ms
+ ✓ tests/unit/p05-course.test.ts (25 tests) 364ms
+ ✓ tests/unit/block-generator.test.ts (43 tests) 360ms
+ ✓ tests/unit/comparison.test.ts (15 tests) 377ms
+ ✓ tests/unit/p05-learning-compatibility.test.ts (14 tests) 342ms
+ ✓ tests/unit/practice-wasm.test.ts (16 tests) 308ms
+ ✓ tests/unit/storage-model.test.ts (75 tests) 279ms
+ ✓ tests/unit/case-view.test.ts (30 tests) 252ms
+ ✓ tests/unit/challenges.test.ts (17 tests) 215ms
+ ✓ tests/unit/execution-protocol.test.ts (29 tests) 219ms
+ ✓ tests/unit/reward-service.test.ts (8 tests) 256ms
+ ✓ tests/unit/profile-ui.test.ts (9 tests) 329ms
+ ✓ tests/unit/edit-analysis.test.ts (44 tests) 146ms
+ ✓ tests/unit/learning-service.test.ts (14 tests) 149ms
+ ✓ tests/unit/learning-domain.test.ts (42 tests) 154ms
+ ✓ tests/unit/player-presentation.test.ts (12 tests) 168ms
+ ✓ tests/unit/player-controller.test.ts (43 tests) 247ms
+ ✓ tests/unit/schema-dispatch-11.4.test.ts (42 tests) 159ms
+ ✓ tests/unit/learning-recovery.test.ts (12 tests) 137ms
+ ✓ tests/unit/profile.test.ts (37 tests) 157ms
+ ✓ tests/unit/goal-form.test.ts (2 tests) 155ms
+ ✓ tests/unit/p05-durable-display.test.ts (9 tests) 103ms
+ ✓ tests/unit/practice-learning.test.ts (19 tests) 124ms
+ ✓ tests/unit/block-permissions.test.ts (38 tests) 137ms
+ ✓ tests/unit/p05-goals.test.ts (13 tests) 100ms
+ ✓ tests/unit/diagnostics.test.ts (23 tests) 99ms
+ ✓ tests/unit/execution-json-string-scan.test.ts (2 tests) 94ms
+ ✓ tests/unit/execution-client.test.ts (11 tests) 65ms
+ ✓ tests/unit/engine-client.test.ts (16 tests) 75ms
+ ✓ tests/unit/reverse-mapping.test.ts (20 tests) 67ms
+ ✓ tests/unit/p05-coverage.test.ts (9 tests) 67ms
+ ✓ tests/unit/reviewed-case-release.test.ts (6 tests) 63ms
+ ✓ tests/unit/input-data.test.ts (25 tests) 54ms
+ ✓ tests/unit/trace-validation-performance.test.ts (17 tests) 47ms
+ ✓ tests/unit/rewards.test.ts (13 tests) 48ms
+ ✓ tests/unit/review-scheduler.test.ts (35 tests) 36ms
+ ✓ tests/unit/memory-client.test.ts (10 tests) 39ms
+ ✓ tests/unit/memory-protocol.test.ts (36 tests) 38ms
+ ✓ tests/unit/course-reading.test.ts (9 tests) 31ms
+ ✓ tests/unit/algorithm-client.test.ts (5 tests) 32ms
+ ✓ tests/unit/block-workspace-preference.test.ts (5 tests) 48ms
+ ✓ tests/unit/achievements.test.ts (31 tests) 25ms
+ ✓ tests/unit/block-workspace.test.ts (11 tests) 48ms
+ ✓ tests/unit/source-location.test.ts (10 tests) 28ms
+ ✓ tests/unit/appearance-service.test.ts (5 tests) 28ms
+ ✓ tests/unit/appearance-config.test.ts (16 tests) 30ms
+ ✓ tests/unit/algorithm-protocol.test.ts (18 tests) 27ms
+ ✓ tests/unit/notebook.test.ts (20 tests) 23ms
+ ✓ tests/unit/execution-preparation-11.4.test.ts (4 tests) 15ms
+ ✓ tests/unit/knowledge-map.test.ts (18 tests) 18ms
+ ✓ tests/unit/practice-answer.test.ts (11 tests) 11ms
+ ✓ tests/unit/breakpoints.test.ts (8 tests) 15ms
+ ✓ tests/unit/memory-workspace.test.ts (4 tests) 10ms
+ ✓ tests/unit/practice-submission.test.ts (8 tests) 9ms
+ ✓ tests/unit/teaching-presentation.test.ts (7 tests) 9ms
+ ✓ tests/unit/reward-storage.test.ts (10 tests) 6ms
+ ✓ tests/unit/wasm-artifact.test.ts (1 test) 8ms
+ ✓ tests/unit/memory-view.test.ts (4 tests) 5ms
+ ✓ tests/unit/stack-view.test.ts (6 tests) 6ms
+ ✓ tests/unit/lesson-completion.test.ts (5 tests) 4ms
+ ✓ tests/unit/silent-workspace.test.ts (11 tests) 6ms
+ ✓ tests/unit/storage-channel.test.ts (1 test) 2ms
+ ✓ tests/unit/history-workspace.test.ts (9 tests) 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/memory-bugs.test.ts > real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-missing-update
+Error: E_DEADLINE
+ ❯ MemoryExecutionClient.fail web/src/engine/memory-client.ts:96:22
+     94|       code === 'E_CANCELLED' ? 'cancelled' : code === 'E_DEADLINE' ? '…
+     95|     this.release(operation);
+     96|     operation.reject(new Error(code));
+       |                      ^
+     97|   }
+     98|   cancel() {
+ ❯ Timeout.<anonymous> web/src/engine/memory-client.ts:146:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 80 passed (81)
+      Tests  1 failed | 1608 passed (1609)
+   Start at  08:02:22
+   Duration  14.74s (tests 69%, import 20%, environment 7%, transform 3%, worker 1%)
+
+    Isolate  81 workers spawned · ~185ms startup each (spawn + environment, per file)
+             at least ~3.56s faster with isolate: false — reuses workers across files instead of one per file
+
+JSON report written to D:/Files/Downloads/编程可视化教学平台/.artifacts/16.2/frontend-candidate.json

@@ -28,6 +28,7 @@ import { upgradeV2Meta } from './v2-migration';
 import { upgradeV3Meta } from './v3-migration';
 import { upgradeV4Meta } from './v4-migration';
 import { upgradeV5Meta } from './v5-migration';
+import { upgradeV6Meta } from './v6-migration';
 import { achievementsTransaction, type AchievementSourceReader } from './achievements';
 import type { AchievementEvidence } from '../achievements/model';
 import { reviewCardsTransaction, type ReviewSourceReader } from './review-cards';
@@ -1145,6 +1146,43 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                         ? upgradeV5Meta(values.result[0])
                         : null;
                     db.createObjectStore('achievements');
+                    if (next) tx.objectStore('meta').put(next, 'current');
+                  } catch (error) {
+                    failure = error;
+                    tx.abort();
+                  }
+                };
+              } catch (error) {
+                failure = error;
+                tx.abort();
+              }
+            };
+            return;
+          }
+          if (event.oldVersion === 6) {
+            const db = request.result,
+              tx = request.transaction!;
+            if (
+              db.objectStoreNames.length !== ALL_STORE_NAMES.length ||
+              ALL_STORE_NAMES.some((name) => !db.objectStoreNames.contains(name))
+            )
+              throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            for (const name of ALL_STORE_NAMES) {
+              const store = tx.objectStore(name);
+              if (store.keyPath !== null || store.autoIncrement || store.indexNames.length)
+                throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            }
+            const values = tx.objectStore('meta').getAll();
+            values.onsuccess = () => {
+              try {
+                for (const value of values.result) upgradeV6Meta(value);
+                const keys = tx.objectStore('meta').getAllKeys();
+                keys.onsuccess = () => {
+                  try {
+                    const next =
+                      values.result.length === 1 && keys.result[0] === 'current'
+                        ? upgradeV6Meta(values.result[0])
+                        : null;
                     if (next) tx.objectStore('meta').put(next, 'current');
                   } catch (error) {
                     failure = error;

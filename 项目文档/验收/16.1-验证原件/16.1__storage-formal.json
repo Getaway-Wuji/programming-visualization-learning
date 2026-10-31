@@ -1,0 +1,1621 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project",
+      "chrome",
+      "--reporter=list,json",
+      "--trace",
+      "retain-on-failure",
+      "--output",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output",
+      "storage.spec.ts",
+      "recovery.spec.ts",
+      "editor-history.spec.ts"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.1/storage-formal-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.1/storage-formal-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/16.1/storage-formal-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "editor-history.spec.ts",
+      "file": "editor-history.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "13.4 native partition: atomic count/byte eviction, two writers, faults, corruption and clear barrier",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2906,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:11:58.718Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-count-bytes-isolation",
+                      "contentType": "application/json",
+                      "body": "eyJpbml0aWFsIjp7Im1ldGEiOnsic2NoZW1hVmVyc2lvbiI6IjcuMC4wIiwiZGJWZXJzaW9uIjo3LCJnZW5lcmF0aW9uIjoiZDM0NGNmNTUtMTlmNC00ODNlLWIyNWEtY2E2NDQwNTc3ZmQwIiwicmV2aXNpb24iOjAsInRpbWVab25lIjoiQXNpYS9TaGFuZ2hhaSIsImNyZWF0ZWRBdCI6IjIwMjYtMTAtMzBUMjM6MTI6MDAuMDYxWiIsImFjdGl2ZVBhY2thZ2VSZWYiOnsiaWQiOiJjb250ZW50LmMucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifX0sInNldHRpbmdzIjp7InRoZW1lIjoibGlnaHQiLCJyZWR1Y2VkTW90aW9uIjoic3lzdGVtIiwicGxheWJhY2tSYXRlIjoxLCJnb2FsVGVtcGxhdGUiOm51bGx9LCJhdmF0YXIiOnsicHJlc2V0SWQiOiJhdmF0YXIuYmFzaWMuMDEiLCJhY2NlbnRDb2xvciI6IiMxNjhBNzIifSwiYXBwZWFyYW5jZSI6eyJwcmVzZXQiOiJtaW5pbWFsIiwidGhlbWVPdmVycmlkZXMiOnsibWluaW1hbCI6eyJhY2NlbnRDb2xvciI6bnVsbH0sImN1dGUiOnsiYWNjZW50Q29sb3IiOm51bGx9LCJnbGFzcyI6eyJhY2NlbnRDb2xvciI6bnVsbH0sInNvZnQiOnsiYWNjZW50Q29sb3IiOm51bGx9LCJjb29sIjp7ImFjY2VudENvbG9yIjpudWxsfSwidGVjaCI6eyJhY2NlbnRDb2xvciI6bnVsbH19LCJibG9ja1dvcmtzcGFjZSI6ImF1dG8iLCJsYXlvdXQiOnsic2lkZWJhciI6ImV4cGFuZGVkIiwid29ya2JlbmNoTW9kZSI6InN0YW5kYXJkIiwic3BsaXRSYXRpb3MiOnsicHJhY3RpY2UiOjUwLCJ2aXN1YWxpemUiOjM1LCJyZXZpZXciOjM1fX0sImJhY2tncm91bmQiOnsiYXNzZXRJZCI6bnVsbCwidmlzaWJsZSI6ZmFsc2UsImZpdCI6ImNvdmVyIiwicG9zaXRpb24iOiJjZW50ZXIiLCJvdmVybGF5T3BhY2l0eSI6NzV9fSwiYXBwZWFyYW5jZUFzc2V0cyI6W10sInByb2dyZXNzIjpbXSwiZGFpbHlGYWN0cyI6W10sImdvYWxzIjpbXSwibGVkZ2VyIjpbXSwicmVjZWlwdHMiOltdLCJhbGlhc2VzIjpbXX0sInJldGFpbmVkIjpbeyJpZCI6IjBlYWQyNGZiLTEzYjEtNDAyNi1hZDFkLTgzN2Y3YmIwOWRlMiIsInNlcXVlbmNlIjozfSx7ImlkIjoiMTg2ZDgzNWItOWE0YS00ZDhkLThiODItODBjYzFhYzI0ZmY1Iiwic2VxdWVuY2UiOjR9LHsiaWQiOiJiNGYyYmJlOC1lYWRmLTRkNzUtYmIxZC1hZDFmZDdkMzFkZmMiLCJzZXF1ZW5jZSI6NX0seyJpZCI6ImNjZDgxZDg0LTA2MDYtNGMwMy04Y2ZjLTQzZjQ0M2I2MGY3YSIsInNlcXVlbmNlIjo2fSx7ImlkIjoiYTE1M2E2NTMtOGUzMC00ZjAwLWI1ZDktYTU4NDA2NmU5MDFiIiwic2VxdWVuY2UiOjd9LHsiaWQiOiIwNjQwYTI0NS1mZjBmLTQzYWEtODUwYS05MWIxMmQyODYzYWIiLCJzZXF1ZW5jZSI6OH0seyJpZCI6ImQyZmViZjcxLWQ0Y2ItNDk1ZS1hNjZkLTI3OTUxZWFkMjI5NiIsInNlcXVlbmNlIjo5fSx7ImlkIjoiY2I3ZmViNGItZjYzOS00YTM1LThhNGMtZDFkNmM2OWNhZTBiIiwic2VxdWVuY2UiOjEwfSx7ImlkIjoiNmRjNTcxOTctODlhYS00MTQ0LTg3OGYtMDIwMjQxYzQ5NTg5Iiwic2VxdWVuY2UiOjExfSx7ImlkIjoiOTNjNjJiMDEtOGVjYi00ZDQyLThjYTctZGI0YmVhOGE1YTE0Iiwic2VxdWVuY2UiOjEyfSx7ImlkIjoiYjI2MWRhMGUtMzU5Zi00YzIwLTg5MzAtZmQ4OTg0OGM4NDkyIiwic2VxdWVuY2UiOjEzfSx7ImlkIjoiNDE2NmRjYTQtNmVhMi00ZWZjLWE5ODctYmU1NGNhMDA1OGQzIiwic2VxdWVuY2UiOjE0fSx7ImlkIjoiZTljOWJjNDctMzcxMi00ZTI0LWE4NzEtOGJmZWJiYTc1MDg3Iiwic2VxdWVuY2UiOjE1fSx7ImlkIjoiZjUyMzFmOTktMDE2Yy00OTk2LThjZDYtYjdhZWIzOGRhYzQwIiwic2VxdWVuY2UiOjE2fSx7ImlkIjoiMGI0NTk0N2EtMWY0ZS00NDk5LTg4OGMtYTBlZWVlMWM1NTM0Iiwic2VxdWVuY2UiOjE3fSx7ImlkIjoiYTAzNzIxMmMtYzcyMy00ZTY0LWI1ZTEtMmFmM2E2YjllODIwIiwic2VxdWVuY2UiOjE4fSx7ImlkIjoiYWU1YTBlMDktZWY5ZC00ZGQ1LWE5OTktMmIwNDU3MmE3ZGEyIiwic2VxdWVuY2UiOjE5fSx7ImlkIjoiMmYwZDM4ZmUtNGI3Yy00Y2QwLTgxMzAtN2RmZGZiYTM1OTk2Iiwic2VxdWVuY2UiOjIwfSx7ImlkIjoiNTc2MTVlYzctNGZkNC00NThiLTljZjYtOTBjZjA3ODNjNjdiIiwic2VxdWVuY2UiOjIxfSx7ImlkIjoiMjVjMjQ3ZmUtZjIyOC00ZmE0LWEyNWYtNDZhNGJkZmU0ZTlhIiwic2VxdWVuY2UiOjIyfSx7ImlkIjoiNjBhMjlhN2MtMzdhMS00ODhjLTlmYjYtY2E5YTEzM2QxMDNkIiwic2VxdWVuY2UiOjIzfSx7ImlkIjoiZGVjNWM1MjYtNzAxNy00YjJkLTkzYTMtZGU4YTU0MzYyZTFlIiwic2VxdWVuY2UiOjI0fSx7ImlkIjoiODgyNzlkNWQtODI3ZC00OGZhLWFlMWMtZWE2MDdlYTZlYWMxIiwic2VxdWVuY2UiOjI1fSx7ImlkIjoiODNiNzEzNTctYmNkMi00MmYzLWJiZTAtMDRjODE0ODA2Y2RjIiwic2VxdWVuY2UiOjI2fSx7ImlkIjoiNGE2MGE2NWItNjIzMi00ZWM0LWI3YTYtNjlkOGYwMWRkZGMyIiwic2VxdWVuY2UiOjI3fSx7ImlkIjoiMDdmODZhMGItM2E2Mi00NWE4LWFlYjktMDg0NzY0MzQzOGEwIiwic2VxdWVuY2UiOjI4fSx7ImlkIjoiNDk2OGYzZjktNzVhNy00NDdiLWEzMGYtNGFkNTcwNjIzNGI3Iiwic2VxdWVuY2UiOjI5fSx7ImlkIjoiMmE1YTk2ZjEtN2QwYi00MzAxLTkwMTMtZTUzZTY1NjkyMGUzIiwic2VxdWVuY2UiOjMwfSx7ImlkIjoiNGMzOGYwNDYtODUxNC00YmFiLTg4NDgtZGUwODJmZDIxZjYxIiwic2VxdWVuY2UiOjMxfSx7ImlkIjoiNzM0MGM5YTItMjZiZi00ZGQyLWE1ZDctYjFjZDUyODQzOGE3Iiwic2VxdWVuY2UiOjMyfSx7ImlkIjoiY2UxMjZkZGMtMzRkYi00ZWMyLTgyYzktYjZjYWMzNzJlZTFhIiwic2VxdWVuY2UiOjMzfSx7ImlkIjoiMWFjMTFiOWQtODk1Ny00ZTE4LWIwODAtYjMyNTY0NzFmZjdkIiwic2VxdWVuY2UiOjM0fSx7ImlkIjoiNWEyYWY4MzAtNmQ4Yy00MjE1LThiMDAtOWM0NTVlNWNkY2FkIiwic2VxdWVuY2UiOjM1fSx7ImlkIjoiYTZhMzZhNmYtZWZmZC00MGQ0LTk3ZWQtYzdkNmIzYjIwZmRiIiwic2VxdWVuY2UiOjM2fSx7ImlkIjoiZDY3NjlkOGItN2E1OC00ODhjLTgzZWMtMjc4NGMyYTBjMmFkIiwic2VxdWVuY2UiOjM3fSx7ImlkIjoiMDYzOGMxOGYtM2MyNy00ZDFjLWE0YzQtYmY0Y2Y5MzcwNGYyIiwic2VxdWVuY2UiOjM4fSx7ImlkIjoiMGM4YzBmZDEtMjk2OS00YzQ4LWI0OTAtOTcxOWZjM2E0OWI2Iiwic2VxdWVuY2UiOjM5fSx7ImlkIjoiZjRiZGFkNTYtOTE5Yy00NTA3LWExNjUtMTEwOWFkMzI2YjQ4Iiwic2VxdWVuY2UiOjQwfSx7ImlkIjoiZTQ4ODFiNzEtMDFkYi00OWZhLWJjYzEtOWY5OWM2MDViZTBlIiwic2VxdWVuY2UiOjQxfSx7ImlkIjoiYTc0MDBmYTgtNDYxNy00ZDk3LWI3ZWItNDliYWY1N2NkODc3Iiwic2VxdWVuY2UiOjQyfSx7ImlkIjoiM2MyZTY4ODYtN2M5MS00NmMzLWFlNTMtYzE2NTU0NTY5NjVkIiwic2VxdWVuY2UiOjQzfSx7ImlkIjoiMjVhOWVjOTMtMzljOS00YzgwLWExOGQtZmIyNzAyZGU3Y2QwIiwic2VxdWVuY2UiOjQ0fSx7ImlkIjoiYmI3MTc3ODktNzkxNC00MmUxLTg3MTctYTE4M2Q4NDg5NWZhIiwic2VxdWVuY2UiOjQ1fSx7ImlkIjoiOWFlNTMzMjYtZDQ4Yy00YWE0LWEyNmEtZTg3YmZkYjRjZTM2Iiwic2VxdWVuY2UiOjQ2fSx7ImlkIjoiZmU5MzVlYzYtZDVkOC00NTcwLTg3YmEtZDdhMjBiMTUzOGIyIiwic2VxdWVuY2UiOjQ3fSx7ImlkIjoiMzBhMGEyMDEtMDBiZC00OGMwLWIwNmQtYjEwMjZhYjc3YWZmIiwic2VxdWVuY2UiOjQ4fSx7ImlkIjoiYmU1ZDg0NmEtMTllNi00NzdkLThiOTctM2I1NDBkNDllNzM5Iiwic2VxdWVuY2UiOjQ5fSx7ImlkIjoiZjMzNmNkMTItODc3ZS00OWRhLWE0NjktZWNjODk5MGFkNmM3Iiwic2VxdWVuY2UiOjUwfSx7ImlkIjoiYzQ0NzFhNjUtNDFkMC00MmE0LWE5NDQtNDc2NThiNGU5NWY4Iiwic2VxdWVuY2UiOjUxfSx7ImlkIjoiN2JjMmE1OWUtODhlNS00NmI4LTg0ZDQtMTcxODEyYWFiN2YxIiwic2VxdWVuY2UiOjUyfSx7ImlkIjoiM2FjY2RiOGMtMjExMC00ZWE0LTlkNjgtNzJjNDVlMTgxYzBmIiwic2VxdWVuY2UiOjUzfSx7ImlkIjoiYzc5NWUwZmYtZWRlMS00NjA1LTlhM2ItNTM0YmY4YzgxOTYyIiwic2VxdWVuY2UiOjU0fSx7ImlkIjoiYTFlNGMxODQtZjc3My00M2RlLThkN2ItMmZhNzNmYTNmMzI2Iiwic2VxdWVuY2UiOjU1fSx7ImlkIjoiYjcxYzY5YWEtYzliOC00NjkxLWJlZDQtMjlkNzliOGE2OWFjIiwic2VxdWVuY2UiOjU2fSx7ImlkIjoiZWI2YzJhMWYtNDA3ZS00Zjc5LWEzYjQtNjEyOWYwMGE1OGEzIiwic2VxdWVuY2UiOjU3fSx7ImlkIjoiOWQ2MzgzMmMtM2UwMi00NmY4LWEyYjItZjNmYTYwZDNjZDEzIiwic2VxdWVuY2UiOjU4fSx7ImlkIjoiZTFkN2M2N2UtNzk1YS00ZGFkLWJiNmUtMzJhMmViNzczZjBiIiwic2VxdWVuY2UiOjU5fSx7ImlkIjoiMjNhZDE4ZWYtYjFiMy00OGNhLTkwZGUtNWIzYzJlNGJmZjM1Iiwic2VxdWVuY2UiOjYwfSx7ImlkIjoiODgzN2E4OTgtY2YxMi00NmNhLTlmNTYtYThjMDA0YzljMGZmIiwic2VxdWVuY2UiOjYxfSx7ImlkIjoiNTYyOTIzNDYtNzExYS00MTZlLWFjNWYtODJiMzkwM2UwNmVlIiwic2VxdWVuY2UiOjYyfSx7ImlkIjoiZjBlZGNmNDItMjVlMC00MDkzLWJmMGUtN2NiNDJhNmNlYTk5Iiwic2VxdWVuY2UiOjYzfSx7ImlkIjoiNmMzYzNiYjUtYjdhZS00NDJiLWIzNGYtM2IxYzU4OTM5YTdhIiwic2VxdWVuY2UiOjY0fSx7ImlkIjoiY2IzMWU1NzYtZWNiNi00N2Q2LWFhODYtZTJlZDlkZmRmZmM2Iiwic2VxdWVuY2UiOjY1fSx7ImlkIjoiZTZmZmJkYjctMzU5My00ZTMzLTgwZTUtZTcwNmY2ZDU2ODE1Iiwic2VxdWVuY2UiOjY2fSx7ImlkIjoiZGYyNmZmMDItMzQ3Yi00ZGI1LThmZWItNWUyNzc5MDFhNzA2Iiwic2VxdWVuY2UiOjY3fSx7ImlkIjoiMTdhZjRmNzktNGQ4ZC00YzMxLWJlYzgtZGMyZTk4ZDJjMzk0Iiwic2VxdWVuY2UiOjY4fSx7ImlkIjoiZTYxNDE1NDYtMWM5YS00NWQ3LWE3NWEtMjQ2NjU2NGMxOTg5Iiwic2VxdWVuY2UiOjY5fSx7ImlkIjoiMGY2NGM2NDQtNGI5OC00ZGQ1LTk1NzMtZTA1NjkzY2EwNTVlIiwic2VxdWVuY2UiOjcwfSx7ImlkIjoiNmVlOGZiZGMtODk1Mi00NmQyLTgxZTUtZmM5NmEyZGU0OTBiIiwic2VxdWVuY2UiOjcxfSx7ImlkIjoiMGNmNDUzMTItZTBmMC00N2RiLTg5YTYtNGI4MWMwYWI1M2YzIiwic2VxdWVuY2UiOjcyfSx7ImlkIjoiMzZjNzNhZmUtYjJkNi00Zjg0LWI4MjctNTA5NGRkYzY4ZjVkIiwic2VxdWVuY2UiOjczfSx7ImlkIjoiMGMxYTQ5NmMtMDM2ZC00ZDQ5LTkyODUtMDdiM2VlMDRiN2U1Iiwic2VxdWVuY2UiOjc0fSx7ImlkIjoiODZhYmU0YjQtMGQ1My00MzNmLTlhMWMtMDBhMDk3NGIwNDdlIiwic2VxdWVuY2UiOjc1fSx7ImlkIjoiM2MyMThiMDItY2VjMS00ODEyLWIxN2YtN2RiODZjY2I1MDNkIiwic2VxdWVuY2UiOjc2fSx7ImlkIjoiOTQwMWI3ZDgtYzRlOC00ZWI3LThjMTItZWIzYTQ4MTlhZTY3Iiwic2VxdWVuY2UiOjc3fSx7ImlkIjoiYzBhYmRmNzItMGRlMS00MzhlLWE1NmMtNTUzMGM0NzhjYTdiIiwic2VxdWVuY2UiOjc4fSx7ImlkIjoiNDM5MGNmZjktMDc2NS00ODU2LWI0ZTMtMWFmOTFiYzU2NjJmIiwic2VxdWVuY2UiOjc5fSx7ImlkIjoiZDE5NWE1ODUtNmU3Yy00MTRhLWE3MDYtOTI3Y2MyODVmNjY4Iiwic2VxdWVuY2UiOjgwfSx7ImlkIjoiMWYyN2Y0MmMtYjRjNC00ZWE5LTg1ZTUtODg0YmRjMmQ1YmVhIiwic2VxdWVuY2UiOjgxfSx7ImlkIjoiYWRkMWE1OGYtYWQ1NS00MjFlLWEwNDktNGZhZWQ0MGM0MjFhIiwic2VxdWVuY2UiOjgyfSx7ImlkIjoiMjllZjk4MzctMmYyOC00NTY1LTkxMzctNzA5OGQ1Njk0MjRlIiwic2VxdWVuY2UiOjgzfSx7ImlkIjoiM2VmMTUxMjYtNWY1YS00YzY4LThhNmMtZWQwNWRjNDIwYzhiIiwic2VxdWVuY2UiOjg0fSx7ImlkIjoiNWY0MWNkYjAtMGNjOC00OThiLTk1ODgtYTQ1MTBiNzk0YTEyIiwic2VxdWVuY2UiOjg1fSx7ImlkIjoiODkzZTI3YzMtYzQ0MS00NDE0LThiZDQtMDdjOGY3YTRkNWE3Iiwic2VxdWVuY2UiOjg2fSx7ImlkIjoiNjZiOWExOTctMGI1NC00MTZjLTg5NmQtY2MxZjI4OTlhM2M0Iiwic2VxdWVuY2UiOjg3fSx7ImlkIjoiMjNjZDI4NDQtYjRlNC00YmVhLWJkYjctYWVhYzgzMTQ0NGM3Iiwic2VxdWVuY2UiOjg4fSx7ImlkIjoiYmNmNDc0NzYtZTEzNS00OTI5LThkMzgtM2Q2MWM4YzdjNTkyIiwic2VxdWVuY2UiOjg5fSx7ImlkIjoiM2JmNDdlNDgtNmUxMy00Y2VjLWI5OWUtMzUxN2Y0NzEzZDVhIiwic2VxdWVuY2UiOjkwfSx7ImlkIjoiY2VjZTA2NDYtMjJjOC00YjA4LWI0MGItNzlhMTM3Njk1ODJjIiwic2VxdWVuY2UiOjkxfSx7ImlkIjoiODQyNmU1NTItNzc2OC00ZDRjLWEzNDEtYWZmODc3ZjdjYTY3Iiwic2VxdWVuY2UiOjkyfSx7ImlkIjoiZTE4YzM3MTQtODgwMC00MmExLWFlZDItZWQzODI2YzgwNDZkIiwic2VxdWVuY2UiOjkzfSx7ImlkIjoiZDZhMWI4ZjUtZmExOC00NDI2LWFiYWItNGE2MDI2OTZhNDFiIiwic2VxdWVuY2UiOjk0fSx7ImlkIjoiNTFlYTE2M2MtYWI3OC00ZDg4LWJlMzgtZGFkZjMyZjUzYjkxIiwic2VxdWVuY2UiOjk1fSx7ImlkIjoiNWZmN2ZkZWQtNzY2Zi00MDFhLTllMTgtOTA4NDM5MWMzYjg3Iiwic2VxdWVuY2UiOjk2fSx7ImlkIjoiOWFhYTgzM2ItNTdhYi00MjNiLTg5MGItMzE2YWJlODEwMjFlIiwic2VxdWVuY2UiOjk3fSx7ImlkIjoiOTJmMmQ2MGYtMjRiYS00YWQ3LWI0ZGUtZWZiMjM4NzU1YzZkIiwic2VxdWVuY2UiOjk4fSx7ImlkIjoiOGQ5YzE3YTgtYTRhNC00MDRjLTg1MzItOGQ1MzY3Y2Q4ZDA4Iiwic2VxdWVuY2UiOjk5fSx7ImlkIjoiOGNlM2Q2N2ItM2M1NS00MDJjLWI4YWItZDgyNDFmZWZiNDlkIiwic2VxdWVuY2UiOjEwMH0seyJpZCI6ImZkMGU2NThjLWZiMGEtNGYzYy04Y2NiLWIxODkzODkwNjcwYSIsInNlcXVlbmNlIjoxMDF9LHsiaWQiOiI4ZTlmN2Q4Ny01ODg3LTQwMjMtYTJhOC1mNDQ3MjgwNzkwNDAiLCJzZXF1ZW5jZSI6MTAyfV0sImJ5dGVzIjo3NjA0ODE2LCJieXRlUmV0YWluZWQiOjgsImNsZWFyZWQiOnsibWV0YSI6eyJzY2hlbWFWZXJzaW9uIjoiNy4wLjAiLCJkYlZlcnNpb24iOjcsImdlbmVyYXRpb24iOiI1NGIyNTZhZi0yMDUxLTQ3NmUtYmM5NC0wMWRiYjdmZTkwNTYiLCJyZXZpc2lvbiI6MCwidGltZVpvbmUiOiJBc2lhL1NoYW5naGFpIiwiY3JlYXRlZEF0IjoiMjAyNi0xMC0zMFQyMzoxMjowMi41MDFaIiwiYWN0aXZlUGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMCIsInZlcnNpb24iOiIxLjAuMCJ9fSwic2V0dGluZ3MiOnsidGhlbWUiOiJsaWdodCIsInJlZHVjZWRNb3Rpb24iOiJzeXN0ZW0iLCJwbGF5YmFja1JhdGUiOjEsImdvYWxUZW1wbGF0ZSI6bnVsbH0sImF2YXRhciI6eyJwcmVzZXRJZCI6ImF2YXRhci5iYXNpYy4wMSIsImFjY2VudENvbG9yIjoiIzE2OEE3MiJ9LCJhcHBlYXJhbmNlIjp7InByZXNldCI6Im1pbmltYWwiLCJ0aGVtZU92ZXJyaWRlcyI6eyJtaW5pbWFsIjp7ImFjY2VudENvbG9yIjpudWxsfSwiY3V0ZSI6eyJhY2NlbnRDb2xvciI6bnVsbH0sImdsYXNzIjp7ImFjY2VudENvbG9yIjpudWxsfSwic29mdCI6eyJhY2NlbnRDb2xvciI6bnVsbH0sImNvb2wiOnsiYWNjZW50Q29sb3IiOm51bGx9LCJ0ZWNoIjp7ImFjY2VudENvbG9yIjpudWxsfX0sImJsb2NrV29ya3NwYWNlIjoiYXV0byIsImxheW91dCI6eyJzaWRlYmFyIjoiZXhwYW5kZWQiLCJ3b3JrYmVuY2hNb2RlIjoic3RhbmRhcmQiLCJzcGxpdFJhdGlvcyI6eyJwcmFjdGljZSI6NTAsInZpc3VhbGl6ZSI6MzUsInJldmlldyI6MzV9fSwiYmFja2dyb3VuZCI6eyJhc3NldElkIjpudWxsLCJ2aXNpYmxlIjpmYWxzZSwiZml0IjoiY292ZXIiLCJwb3NpdGlvbiI6ImNlbnRlciIsIm92ZXJsYXlPcGFjaXR5Ijo3NX19LCJhcHBlYXJhbmNlQXNzZXRzIjpbXSwicHJvZ3Jlc3MiOltdLCJkYWlseUZhY3RzIjpbXSwiZ29hbHMiOltdLCJsZWRnZXIiOltdLCJyZWNlaXB0cyI6W10sImFsaWFzZXMiOltdfX0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f8922de58f65d9fd73e3-15c486ff7242b4328a9e",
+          "file": "editor-history.spec.ts",
+          "line": 10,
+          "column": 1
+        },
+        {
+          "title": "13.4 native DB2 migration preserves the eleven old projections; damaged known meta is clearable and future meta is untouched",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 395,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:02.595Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f8922de58f65d9fd73e3-2947e126fa8fbd1b138b",
+          "file": "editor-history.spec.ts",
+          "line": 85,
+          "column": 1
+        },
+        {
+          "title": "13.4 real editor: code history survives refresh, invalid drafts stay exact, old Rust runs clear and current locks still apply",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2289,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:02.998Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "real-history-rust",
+                      "contentType": "application/json",
+                      "body": "eyJyZXF1ZXN0Ijp7ImJ1ZGdldFJlZiI6eyJpZCI6ImJ1ZGdldC5wMCIsInZlcnNpb24iOiIxLjAuMCJ9LCJkaWFnbm9zdGljVmVyc2lvbiI6IjEuMC4wIiwiZW5jb2RpbmdWZXJzaW9uIjoiMS4wLjAiLCJlbmdpbmVSZWYiOnsiYnVpbGRJZCI6ImFlZDIwM2Y0ZmUzMGNjYWFmZGIzMmQwYzY4YzJhMWYyNjM0YzEwNzI2YzgyOTc3Njg0ZDRlM2QyMDIyODY3OWQiLCJpZCI6ImVuZ2luZS5jLnAwIiwidmVyc2lvbiI6IjEuMC4wIn0sImlkZW50aXR5Ijp7ImNvbnRleHRJZCI6IjJkYjEyNTM2LWZjMzMtNDE0MS04MzBmLTY5Y2U2ZTI2MTBhOSIsImNvbnRleHRSZXZpc2lvbiI6NiwicnVuSWQiOiI5YzNjYjA5ZC05YWVkLTRkMmUtYTI4MC0xMjIwMjhkODEyMDAiLCJzb3VyY2VSZXZpc2lvbiI6MSwic3VibWlzc2lvbklkIjoiYzZmNmE0ZTUtYmVjNS00Njk3LTgzNTctZjI5NjFmM2RiNDA0IiwidGVzdENhc2VLZXkiOiJvbmx5In0sImlucHV0Ijp7InJhbmRvbSI6bnVsbCwic3BlY1JlZiI6eyJpZCI6ImlucHV0LmMuZmlyc3Qtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sInZhbHVlcyI6e319LCJqdWRnZSI6eyJleHBlY3RlZEV4aXRDb2RlIjowLCJleHBlY3RlZFN0ZG91dCI6IkhlbGxvLCBDIVxuIiwicHJvZmlsZVJlZiI6eyJpZCI6Imp1ZGdlLmMuZmlyc3Qtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sInJ1bGUiOiJlbnRyeS1vdXRwdXQifSwianVkZ2VWZXJzaW9uIjoiMS4xLjAiLCJraW5kIjoiZXhlY3V0ZSIsImxhbmd1YWdlUmVmIjp7ImlkIjoibGFuZy5jIiwidmVyc2lvbiI6IjEuMC4wIn0sImxlYXJuaW5nUmV2aXNpb24iOjEsIm1vZGUiOiJleGVyY2lzZS10ZXN0IiwicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMDUiLCJ2ZXJzaW9uIjoiMS4wLjAifSwicHJvZ3JhbVJlZiI6eyJpZCI6InByb2dyYW0uYy5wcmFjdGljZS1maXJzdC1vdXRwdXQiLCJ2ZXJzaW9uIjoiMS4wLjAifSwicHJvdG9jb2xWZXJzaW9uIjoiMS4xLjAiLCJyZW1haW5pbmdNcyI6OTk2LCJzb3VyY2UiOnsiYmluZGluZ01hcCI6W10sImJsb2NrTWFwIjpbeyJibG9ja0lkIjoiYmxvY2suY29kZS4yIiwiYnl0ZVJhbmdlIjp7ImVuZCI6NTgsInN0YXJ0Ijo0MH19LHsiYmxvY2tJZCI6ImJsb2NrLmNvZGUuMyIsImJ5dGVSYW5nZSI6eyJlbmQiOjcxLCJzdGFydCI6NzB9fSx7ImJsb2NrSWQiOiJibG9jay5jb2RlLjQiLCJieXRlUmFuZ2UiOnsiZW5kIjo3Miwic3RhcnQiOjYzfX0seyJibG9ja0lkIjoiYmxvY2suY29kZS41IiwiYnl0ZVJhbmdlIjp7ImVuZCI6NzQsInN0YXJ0IjoxOX19XSwidGV4dCI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIHByaW50ZihcIkhpc3RvcnlcIik7XG4gICAgcmV0dXJuIDA7XG59XG4ifSwic3ViamVjdFJlZiI6eyJpZCI6ImV4ZXJjaXNlLmMuZmlyc3Qtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sInN1YnNldFJlZiI6eyJpZCI6InN1YnNldC5jLnAwIiwidmVyc2lvbiI6IjEuMC4wIn0sInRyYWNlVmVyc2lvbiI6IjEuMC4wIn0sInJlc3VsdCI6eyJidWRnZXRSZWYiOnsiaWQiOiJidWRnZXQucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZGlhZ25vc3RpY1ZlcnNpb24iOiIxLjAuMCIsImVuY29kaW5nVmVyc2lvbiI6IjEuMC4wIiwiZW5naW5lUmVmIjp7ImJ1aWxkSWQiOiJhZWQyMDNmNGZlMzBjY2FhZmRiMzJkMGM2OGMyYTFmMjYzNGMxMDcyNmM4Mjk3NzY4NGQ0ZTNkMjAyMjg2NzlkIiwiaWQiOiJlbmdpbmUuYy5wMCIsInZlcnNpb24iOiIxLjAuMCJ9LCJpZGVudGl0eSI6eyJjb250ZXh0SWQiOiIyZGIxMjUzNi1mYzMzLTQxNDEtODMwZi02OWNlNmUyNjEwYTkiLCJjb250ZXh0UmV2aXNpb24iOjYsInJ1bklkIjoiOWMzY2IwOWQtOWFlZC00ZDJlLWEyODAtMTIyMDI4ZDgxMjAwIiwic291cmNlUmV2aXNpb24iOjEsInN1Ym1pc3Npb25JZCI6ImM2ZjZhNGU1LWJlYzUtNDY5Ny04MzU3LWYyOTYxZjNkYjQwNCIsInRlc3RDYXNlS2V5Ijoib25seSJ9LCJqdWRnZVJlc3VsdCI6eyJjYXNlS2V5Ijoib25seSIsImNoZWNrcyI6W3siZGlhZ25vc3RpY0NvZGVzIjpbXSwia2V5IjoiaW5wdXQtYmluZGluZ3MiLCJub2RlSWRzIjpbIm4zIl0sInN0YXR1cyI6Im1ldCIsInN0ZXBTZXFzIjpbMl19LHsiZGlhZ25vc3RpY0NvZGVzIjpbIkpfU1RET1VUX01JU01BVENIIl0sImtleSI6InN0ZG91dC1leGFjdCIsIm5vZGVJZHMiOlsibjMiXSwic3RhdHVzIjoidW5tZXQiLCJzdGVwU2VxcyI6WzJdfSx7ImRpYWdub3N0aWNDb2RlcyI6W10sImtleSI6ImV4aXQtemVybyIsIm5vZGVJZHMiOlsibjMiXSwic3RhdHVzIjoibWV0Iiwic3RlcFNlcXMiOlsyXX0seyJkaWFnbm9zdGljQ29kZXMiOltdLCJrZXkiOiJ0ZWFjaGluZy10YXJnZXQiLCJub2RlSWRzIjpbIm4zIl0sInN0YXR1cyI6Im1ldCIsInN0ZXBTZXFzIjpbMl19XSwiY292ZXJhZ2UiOltdLCJvYnNlcnZhdGlvbnMiOltdLCJwcm9maWxlUmVmIjp7ImlkIjoianVkZ2UuYy5maXJzdC1vdXRwdXQiLCJ2ZXJzaW9uIjoiMS4wLjAifSwic3RhdHVzIjoidW5tZXQifSwianVkZ2VWZXJzaW9uIjoiMS4xLjAiLCJraW5kIjoicmVzdWx0IiwibGFuZ3VhZ2VSZWYiOnsiaWQiOiJsYW5nLmMiLCJ2ZXJzaW9uIjoiMS4wLjAifSwibGVhcm5pbmdSZXZpc2lvbiI6MSwibm9kZU1hcCI6W3siYnl0ZVJhbmdlIjp7ImVuZCI6NzQsInN0YXJ0IjoxOX0sImtpbmQiOiJmdW5jdGlvbiIsIm5vZGVJZCI6Im4xIiwicGFyZW50SWQiOm51bGx9LHsiYnl0ZVJhbmdlIjp7ImVuZCI6NzQsInN0YXJ0IjozNH0sImtpbmQiOiJibG9jayIsIm5vZGVJZCI6Im4yIiwicGFyZW50SWQiOiJuMSJ9LHsiYnl0ZVJhbmdlIjp7ImVuZCI6NTgsInN0YXJ0Ijo0MH0sImtpbmQiOiJvdXRwdXQiLCJub2RlSWQiOiJuMyIsInBhcmVudElkIjoibjIifSx7ImJ5dGVSYW5nZSI6eyJlbmQiOjcyLCJzdGFydCI6NjN9LCJraW5kIjoicmV0dXJuIiwibm9kZUlkIjoibjQiLCJwYXJlbnRJZCI6Im4yIn0seyJieXRlUmFuZ2UiOnsiZW5kIjo3MSwic3RhcnQiOjcwfSwia2luZCI6ImV4cHJlc3Npb24iLCJub2RlSWQiOiJuNSIsInBhcmVudElkIjoibjQifV0sInBhY2thZ2VSZWYiOnsiaWQiOiJjb250ZW50LmMucDA1IiwidmVyc2lvbiI6IjEuMC4wIn0sInByb2R1Y2VyIjoicnVzdCIsInByb2dyYW1SZWYiOnsiaWQiOiJwcm9ncmFtLmMucHJhY3RpY2UtZmlyc3Qtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sInByb3RvY29sVmVyc2lvbiI6IjEuMS4wIiwicmVzb2x2ZWRCaW5kaW5ncyI6W10sInN0YXRzIjp7ImZ1ZWxVc2VkIjoyNjYwLCJtYXhBc3REZXB0aCI6MSwibWF4U3ludGF4RGVwdGgiOjIsInBlYWtWaXJ0dWFsQnl0ZXMiOjAsInJ1c3RNaWNyb3MiOjgwMDB9LCJzdWJqZWN0UmVmIjp7ImlkIjoiZXhlcmNpc2UuYy5maXJzdC1vdXRwdXQiLCJ2ZXJzaW9uIjoiMS4wLjAifSwic3Vic2V0UmVmIjp7ImlkIjoic3Vic2V0LmMucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifSwidGVybWluYWwiOnsiY3Vyc29yIjozLCJkaWFnbm9zdGljcyI6W10sImV4aXRDb2RlIjowLCJsb2NhdGlvbiI6eyJlZGdlIjoid2hvbGUiLCJraW5kIjoic291cmNlIiwibm9kZUlkIjoibjQifSwic3RhdHVzIjoiY29tcGxldGVkIn0sInRyYWNlIjp7ImNoZWNrcG9pbnRzIjpbeyJjdXJzb3IiOjAsInN0YXRlIjp7ImFsbG9jYXRvciI6eyJsaXZlQnl0ZXMiOjAsIm5leHRBZGRyZXNzIjo0MDk2LCJuZXh0RnJhbWUiOjEsIm5leHRPYmplY3QiOjEsIm5leHRTY29wZSI6MX0sImNvbnRyb2wiOnsiYWN0aXZlRnJhbWVJZCI6bnVsbCwiZmxvd1N0YWNrIjpbXSwibmV4dE5vZGVJZCI6Im4xIiwicGhhc2UiOiJyZWFkeSIsInJldHVyblZhbHVlIjpudWxsfSwiY291bnRlcnMiOnsiYXJyYXlXcml0ZXMiOjAsImNvbXBhcmlzb25zIjowLCJzY2FsYXJXcml0ZXMiOjAsInN3YXBzIjowfSwiZnJhbWVzIjpbXSwib2JqZWN0cyI6W10sIm91dHB1dCI6IiIsInNjb3BlcyI6W119fV0sImNvbXBsZXRlbmVzcyI6ImNvbXBsZXRlIiwiZHNsVmVyc2lvbiI6IjEuMC4wIiwiaW5pdGlhbFN0YXRlIjp7ImFsbG9jYXRvciI6eyJsaXZlQnl0ZXMiOjAsIm5leHRBZGRyZXNzIjo0MDk2LCJuZXh0RnJhbWUiOjEsIm5leHRPYmplY3QiOjEsIm5leHRTY29wZSI6MX0sImNvbnRyb2wiOnsiYWN0aXZlRnJhbWVJZCI6bnVsbCwiZmxvd1N0YWNrIjpbXSwibmV4dE5vZGVJZCI6Im4xIiwicGhhc2UiOiJyZWFkeSIsInJldHVyblZhbHVlIjpudWxsfSwiY291bnRlcnMiOnsiYXJyYXlXcml0ZXMiOjAsImNvbXBhcmlzb25zIjowLCJzY2FsYXJXcml0ZXMiOjAsInN3YXBzIjowfSwiZnJhbWVzIjpbXSwib2JqZWN0cyI6W10sIm91dHB1dCI6IiIsInNjb3BlcyI6W119LCJzdGVwcyI6W3siY2hhbmdlcyI6W3siYWZ0ZXIiOnsiZnVuY3Rpb25Ob2RlSWQiOiJuMSIsImlkIjoiZjEiLCJwYXJlbnRGcmFtZUlkIjpudWxsLCJzY29wZUlkcyI6WyJzMSJdfSwiYmVmb3JlIjpudWxsLCJpZCI6ImYxIiwiaW5kZXgiOjAsIm9wIjoicmVjb3JkIiwidGFibGUiOiJmcmFtZXMifSx7ImFmdGVyIjp7ImZyYW1lSWQiOiJmMSIsImlkIjoiczEiLCJraW5kIjoibWFpbiIsIm5vZGVJZCI6Im4yIiwib2JqZWN0SWRzIjpbXSwicGFyZW50U2NvcGVJZCI6bnVsbH0sImJlZm9yZSI6bnVsbCwiaWQiOiJzMSIsImluZGV4IjowLCJvcCI6InJlY29yZCIsInRhYmxlIjoic2NvcGVzIn0seyJhZnRlciI6eyJhY3RpdmVGcmFtZUlkIjoiZjEiLCJmbG93U3RhY2siOlt7Iml0ZXJhdGlvbiI6MCwibm9kZUlkIjoibjIiLCJzdGFnZSI6ImJsb2NrIn1dLCJuZXh0Tm9kZUlkIjoibjMiLCJwaGFzZSI6InJ1bm5pbmciLCJyZXR1cm5WYWx1ZSI6bnVsbH0sImJlZm9yZSI6eyJhY3RpdmVGcmFtZUlkIjpudWxsLCJmbG93U3RhY2siOltdLCJuZXh0Tm9kZUlkIjoibjEiLCJwaGFzZSI6InJlYWR5IiwicmV0dXJuVmFsdWUiOm51bGx9LCJvcCI6ImNvbnRyb2wifSx7ImFmdGVyIjp7ImxpdmVCeXRlcyI6MCwibmV4dEFkZHJlc3MiOjQwOTYsIm5leHRGcmFtZSI6MiwibmV4dE9iamVjdCI6MSwibmV4dFNjb3BlIjoyfSwiYmVmb3JlIjp7ImxpdmVCeXRlcyI6MCwibmV4dEFkZHJlc3MiOjQwOTYsIm5leHRGcmFtZSI6MSwibmV4dE9iamVjdCI6MSwibmV4dFNjb3BlIjoxfSwib3AiOiJhbGxvY2F0b3IifV0sImtpbmQiOiJwcm9ncmFtLmVudGVyIiwibG9jYXRpb24iOnsiZWRnZSI6Indob2xlIiwia2luZCI6InNvdXJjZSIsIm5vZGVJZCI6Im4xIn0sIm9ic2VydmF0aW9ucyI6W10sInNlcSI6MX0seyJjaGFuZ2VzIjpbeyJhZnRlciI6eyJhY3RpdmVGcmFtZUlkIjoiZjEiLCJmbG93U3RhY2siOlt7Iml0ZXJhdGlvbiI6MCwibm9kZUlkIjoibjIiLCJzdGFnZSI6ImJsb2NrIn1dLCJuZXh0Tm9kZUlkIjoibjQiLCJwaGFzZSI6InJ1bm5pbmciLCJyZXR1cm5WYWx1ZSI6bnVsbH0sImJlZm9yZSI6eyJhY3RpdmVGcmFtZUlkIjoiZjEiLCJmbG93U3RhY2siOlt7Iml0ZXJhdGlvbiI6MCwibm9kZUlkIjoibjIiLCJzdGFnZSI6ImJsb2NrIn1dLCJuZXh0Tm9kZUlkIjoibjMiLCJwaGFzZSI6InJ1bm5pbmciLCJyZXR1cm5WYWx1ZSI6bnVsbH0sIm9wIjoiY29udHJvbCJ9LHsiYWZ0ZXJCeXRlcyI6NywiYXBwZW5kIjoiSGlzdG9yeSIsImJlZm9yZUJ5dGVzIjowLCJvcCI6Im91dHB1dCJ9XSwia2luZCI6Im91dHB1dC5hcHBlbmQiLCJsb2NhdGlvbiI6eyJlZGdlIjoid2hvbGUiLCJraW5kIjoic291cmNlIiwibm9kZUlkIjoibjMifSwib2JzZXJ2YXRpb25zIjpbXSwic2VxIjoyfSx7ImNoYW5nZXMiOlt7ImFmdGVyIjpudWxsLCJiZWZvcmUiOnsiZnVuY3Rpb25Ob2RlSWQiOiJuMSIsImlkIjoiZjEiLCJwYXJlbnRGcmFtZUlkIjpudWxsLCJzY29wZUlkcyI6WyJzMSJdfSwiaWQiOiJmMSIsImluZGV4IjowLCJvcCI6InJlY29yZCIsInRhYmxlIjoiZnJhbWVzIn0seyJhZnRlciI6bnVsbCwiYmVmb3JlIjp7ImZyYW1lSWQiOiJmMSIsImlkIjoiczEiLCJraW5kIjoibWFpbiIsIm5vZGVJZCI6Im4yIiwib2JqZWN0SWRzIjpbXSwicGFyZW50U2NvcGVJZCI6bnVsbH0sImlkIjoiczEiLCJpbmRleCI6MCwib3AiOiJyZWNvcmQiLCJ0YWJsZSI6InNjb3BlcyJ9LHsiYWZ0ZXIiOnsiYWN0aXZlRnJhbWVJZCI6bnVsbCwiZmxvd1N0YWNrIjpbXSwibmV4dE5vZGVJZCI6bnVsbCwicGhhc2UiOiJyZXR1cm5lZCIsInJldHVyblZhbHVlIjowfSwiYmVmb3JlIjp7ImFjdGl2ZUZyYW1lSWQiOiJmMSIsImZsb3dTdGFjayI6W3siaXRlcmF0aW9uIjowLCJub2RlSWQiOiJuMiIsInN0YWdlIjoiYmxvY2sifV0sIm5leHROb2RlSWQiOiJuNCIsInBoYXNlIjoicnVubmluZyIsInJldHVyblZhbHVlIjpudWxsfSwib3AiOiJjb250cm9sIn1dLCJraW5kIjoicHJvZ3JhbS5yZXR1cm4iLCJsb2NhdGlvbiI6eyJlZGdlIjoid2hvbGUiLCJraW5kIjoic291cmNlIiwibm9kZUlkIjoibjQifSwib2JzZXJ2YXRpb25zIjpbXSwic2VxIjozfV19LCJ0cmFjZVZlcnNpb24iOiIxLjAuMCJ9LCJ2ZXJzaW9ucyI6W3siaGlzdG9yeVZlcnNpb24iOiIxLjAuMCIsImVudHJ5SWQiOiJhODZlZWI3NS0zMmZhLTQ4Y2ItOGZiMS01MTAxNzZkOWE1MDYiLCJ3cml0ZXJJZCI6ImZjYzllMWZlLTQzYmYtNGNmMS05YTE4LWI4YjMzNGE0NmUyNSIsImdlbmVyYXRpb24iOiJmNDk2OTAzYi1lZWE4LTQ1NjMtYTc0MS0wMDA4YjA3NTNkZjkiLCJjYXB0dXJlVmVyc2lvbiI6MSwiY3JlYXRlZEF0IjoiMjAyNi0xMC0zMFQyMzoxMjowMy41MTJaIiwic2NvcGUiOnsicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMDUiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZXhlcmNpc2VSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm9ncmFtUmVmIjp7ImlkIjoicHJvZ3JhbS5jLnByYWN0aWNlLWZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJtb2RlIjoiaW5kZXBlbmRlbnQifSwicmVhc29uIjoiaW5pdGlhbCIsImRvY3VtZW50UmV2aXNpb24iOjEsImF1dGhvcml0eSI6ImJsb2NrcyIsImNvZGVUZXh0IjoiI2luY2x1ZGUgPHN0ZGlvLmg+XG5pbnQgbWFpbih2b2lkKSB7XG4gICAgcmV0dXJuIDA7XG59XG4iLCJpbnB1dEpzb24iOiJ7XCJyYW5kb21cIjpudWxsLFwic3BlY1JlZlwiOntcImlkXCI6XCJpbnB1dC5jLmZpcnN0LW91dHB1dFwiLFwidmVyc2lvblwiOlwiMS4wLjBcIn0sXCJ2YWx1ZXNcIjp7fX0iLCJzdGF0ZSI6InN5bmNlZCIsInJlc3RvcmVkRnJvbSI6bnVsbCwic2VxdWVuY2UiOjF9LHsiaGlzdG9yeVZlcnNpb24iOiIxLjAuMCIsImVudHJ5SWQiOiI4YzM2MmY1ZC0wMjAwLTRhYjAtODU5My05YjY5YTUyNDkyMjQiLCJ3cml0ZXJJZCI6ImZjYzllMWZlLTQzYmYtNGNmMS05YTE4LWI4YjMzNGE0NmUyNSIsImdlbmVyYXRpb24iOiJmNDk2OTAzYi1lZWE4LTQ1NjMtYTc0MS0wMDA4YjA3NTNkZjkiLCJjYXB0dXJlVmVyc2lvbiI6MSwiY3JlYXRlZEF0IjoiMjAyNi0xMC0zMFQyMzoxMjowMy42NzBaIiwic2NvcGUiOnsicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMDUiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZXhlcmNpc2VSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm9ncmFtUmVmIjp7ImlkIjoicHJvZ3JhbS5jLnByYWN0aWNlLWZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJtb2RlIjoiaW5kZXBlbmRlbnQifSwicmVhc29uIjoiY29kZSIsImRvY3VtZW50UmV2aXNpb24iOjIsImF1dGhvcml0eSI6ImNvZGUiLCJjb2RlVGV4dCI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIHByaW50ZihcIkhpc3RvcnlcIik7XG4gICAgcmV0dXJuIDA7XG59XG4iLCJpbnB1dEpzb24iOiJ7XCJyYW5kb21cIjpudWxsLFwic3BlY1JlZlwiOntcImlkXCI6XCJpbnB1dC5jLmZpcnN0LW91dHB1dFwiLFwidmVyc2lvblwiOlwiMS4wLjBcIn0sXCJ2YWx1ZXNcIjp7fX0iLCJzdGF0ZSI6InN5bmNlZCIsInJlc3RvcmVkRnJvbSI6bnVsbCwic2VxdWVuY2UiOjJ9LHsiaGlzdG9yeVZlcnNpb24iOiIxLjAuMCIsImVudHJ5SWQiOiI2NTg3MWJiOC03M2Q4LTQ2ZjgtYTE3MC1lOGEwZmUyMDMxZjkiLCJ3cml0ZXJJZCI6ImZjYzllMWZlLTQzYmYtNGNmMS05YTE4LWI4YjMzNGE0NmUyNSIsImdlbmVyYXRpb24iOiJmNDk2OTAzYi1lZWE4LTQ1NjMtYTc0MS0wMDA4YjA3NTNkZjkiLCJjYXB0dXJlVmVyc2lvbiI6MSwiY3JlYXRlZEF0IjoiMjAyNi0xMC0zMFQyMzoxMjowMy43NDZaIiwic2NvcGUiOnsicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMDUiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZXhlcmNpc2VSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm9ncmFtUmVmIjp7ImlkIjoicHJvZ3JhbS5jLnByYWN0aWNlLWZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJtb2RlIjoiaW5kZXBlbmRlbnQifSwicmVhc29uIjoiY29kZSIsImRvY3VtZW50UmV2aXNpb24iOjMsImF1dGhvcml0eSI6ImNvZGUiLCJjb2RlVGV4dCI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIHByaW50ZihcIkhpc3RvcnlcIik7XG4gICAgcmV0dXJuIDA7XG59XG5cbmludCIsImlucHV0SnNvbiI6IntcInJhbmRvbVwiOm51bGwsXCJzcGVjUmVmXCI6e1wiaWRcIjpcImlucHV0LmMuZmlyc3Qtb3V0cHV0XCIsXCJ2ZXJzaW9uXCI6XCIxLjAuMFwifSxcInZhbHVlc1wiOnt9fSIsInN0YXRlIjoiaW52YWxpZCIsInJlc3RvcmVkRnJvbSI6bnVsbCwic2VxdWVuY2UiOjN9LHsiaGlzdG9yeVZlcnNpb24iOiIxLjAuMCIsImVudHJ5SWQiOiIyMWY2ZjY5Mi1kY2RhLTQ5MTktOGIwMC1jNDc2ODI3NzY0ZWMiLCJ3cml0ZXJJZCI6ImZjYzllMWZlLTQzYmYtNGNmMS05YTE4LWI4YjMzNGE0NmUyNSIsImdlbmVyYXRpb24iOiJmNDk2OTAzYi1lZWE4LTQ1NjMtYTc0MS0wMDA4YjA3NTNkZjkiLCJjYXB0dXJlVmVyc2lvbiI6MiwiY3JlYXRlZEF0IjoiMjAyNi0xMC0zMFQyMzoxMjowMy44NzVaIiwic2NvcGUiOnsicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMDUiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZXhlcmNpc2VSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm9ncmFtUmVmIjp7ImlkIjoicHJvZ3JhbS5jLnByYWN0aWNlLWZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJtb2RlIjoiaW5kZXBlbmRlbnQifSwicmVhc29uIjoiY29kZSIsImRvY3VtZW50UmV2aXNpb24iOjQsImF1dGhvcml0eSI6ImNvZGUiLCJjb2RlVGV4dCI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIHdoaWxlICgwKSB7fVxuICBwcmludGYoXCJIaXN0b3J5XCIpO1xuICAgIHJldHVybiAwO1xufVxuIiwiaW5wdXRKc29uIjoie1wicmFuZG9tXCI6bnVsbCxcInNwZWNSZWZcIjp7XCJpZFwiOlwiaW5wdXQuYy5maXJzdC1vdXRwdXRcIixcInZlcnNpb25cIjpcIjEuMC4wXCJ9LFwidmFsdWVzXCI6e319Iiwic3RhdGUiOiJlcnJvciIsInJlc3RvcmVkRnJvbSI6bnVsbCwic2VxdWVuY2UiOjR9LHsiaGlzdG9yeVZlcnNpb24iOiIxLjAuMCIsImVudHJ5SWQiOiI1ZmZmNDhkMC1lNjBiLTQ4N2ItYTg3ZS0xMGUyZWQ4OGRkM2YiLCJ3cml0ZXJJZCI6ImZjYzllMWZlLTQzYmYtNGNmMS05YTE4LWI4YjMzNGE0NmUyNSIsImdlbmVyYXRpb24iOiJmNDk2OTAzYi1lZWE4LTQ1NjMtYTc0MS0wMDA4YjA3NTNkZjkiLCJjYXB0dXJlVmVyc2lvbiI6MiwiY3JlYXRlZEF0IjoiMjAyNi0xMC0zMFQyMzoxMjowNC4wMzFaIiwic2NvcGUiOnsicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMDUiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZXhlcmNpc2VSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm9ncmFtUmVmIjp7ImlkIjoicHJvZ3JhbS5jLnByYWN0aWNlLWZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJtb2RlIjoiaW5kZXBlbmRlbnQifSwicmVhc29uIjoicmVzdG9yZSIsImRvY3VtZW50UmV2aXNpb24iOjUsImF1dGhvcml0eSI6ImNvZGUiLCJjb2RlVGV4dCI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIHByaW50ZihcIkhpc3RvcnlcIik7XG4gICAgcmV0dXJuIDA7XG59XG4iLCJpbnB1dEpzb24iOiJ7XCJyYW5kb21cIjpudWxsLFwic3BlY1JlZlwiOntcImlkXCI6XCJpbnB1dC5jLmZpcnN0LW91dHB1dFwiLFwidmVyc2lvblwiOlwiMS4wLjBcIn0sXCJ2YWx1ZXNcIjp7fX0iLCJzdGF0ZSI6ImVycm9yIiwicmVzdG9yZWRGcm9tIjoiOGMzNjJmNWQtMDIwMC00YWIwLTg1OTMtOWI2OWE1MjQ5MjI0Iiwic2VxdWVuY2UiOjV9LHsiaGlzdG9yeVZlcnNpb24iOiIxLjAuMCIsImVudHJ5SWQiOiI1ZjEzNmQ2MS0xZDYwLTRmMGItOTMzNy03OTRiZGZlYTk5NjAiLCJ3cml0ZXJJZCI6ImZjYzllMWZlLTQzYmYtNGNmMS05YTE4LWI4YjMzNGE0NmUyNSIsImdlbmVyYXRpb24iOiJmNDk2OTAzYi1lZWE4LTQ1NjMtYTc0MS0wMDA4YjA3NTNkZjkiLCJjYXB0dXJlVmVyc2lvbiI6MiwiY3JlYXRlZEF0IjoiMjAyNi0xMC0zMFQyMzoxMjowNC4zOTVaIiwic2NvcGUiOnsicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMDUiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZXhlcmNpc2VSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm9ncmFtUmVmIjp7ImlkIjoicHJvZ3JhbS5jLnByYWN0aWNlLWZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJtb2RlIjoiaW5kZXBlbmRlbnQifSwicmVhc29uIjoicmVzdG9yZSIsImRvY3VtZW50UmV2aXNpb24iOjYsImF1dGhvcml0eSI6ImNvZGUiLCJjb2RlVGV4dCI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIHByaW50ZihcIkhpc3RvcnlcIik7XG4gICAgcmV0dXJuIDA7XG59XG5cbmludCIsImlucHV0SnNvbiI6IntcInJhbmRvbVwiOm51bGwsXCJzcGVjUmVmXCI6e1wiaWRcIjpcImlucHV0LmMuZmlyc3Qtb3V0cHV0XCIsXCJ2ZXJzaW9uXCI6XCIxLjAuMFwifSxcInZhbHVlc1wiOnt9fSIsInN0YXRlIjoiZXJyb3IiLCJyZXN0b3JlZEZyb20iOiI2NTg3MWJiOC03M2Q4LTQ2ZjgtYTE3MC1lOGEwZmUyMDMxZjkiLCJzZXF1ZW5jZSI6Nn0seyJoaXN0b3J5VmVyc2lvbiI6IjEuMC4wIiwiZW50cnlJZCI6IjAxOTE2Yzg3LWRhMjctNDM1NC1hMWUyLTM0YTc2YTdkMDhmYSIsIndyaXRlcklkIjoiZmNjOWUxZmUtNDNiZi00Y2YxLTlhMTgtYjhiMzM0YTQ2ZTI1IiwiZ2VuZXJhdGlvbiI6ImY0OTY5MDNiLWVlYTgtNDU2My1hNzQxLTAwMDhiMDc1M2RmOSIsImNhcHR1cmVWZXJzaW9uIjoxLCJjcmVhdGVkQXQiOiIyMDI2LTEwLTMwVDIzOjEyOjA0LjU5N1oiLCJzY29wZSI6eyJwYWNrYWdlUmVmIjp7ImlkIjoiY29udGVudC5jLnAwNSIsInZlcnNpb24iOiIxLjAuMCJ9LCJleGVyY2lzZVJlZiI6eyJpZCI6ImV4ZXJjaXNlLmMuZmlyc3Qtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sInByb2dyYW1SZWYiOnsiaWQiOiJwcm9ncmFtLmMucHJhY3RpY2UtZmlyc3Qtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sIm1vZGUiOiJpbmRlcGVuZGVudCJ9LCJyZWFzb24iOiJyZXN0b3JlIiwiZG9jdW1lbnRSZXZpc2lvbiI6NywiYXV0aG9yaXR5IjoiY29kZSIsImNvZGVUZXh0IjoiI2luY2x1ZGUgPHN0ZGlvLmg+XG5pbnQgbWFpbih2b2lkKSB7XG4gICAgd2hpbGUgKDApIHt9XG4gIHByaW50ZihcIkhpc3RvcnlcIik7XG4gICAgcmV0dXJuIDA7XG59XG4iLCJpbnB1dEpzb24iOiJ7XCJyYW5kb21cIjpudWxsLFwic3BlY1JlZlwiOntcImlkXCI6XCJpbnB1dC5jLmZpcnN0LW91dHB1dFwiLFwidmVyc2lvblwiOlwiMS4wLjBcIn0sXCJ2YWx1ZXNcIjp7fX0iLCJzdGF0ZSI6InN5bmNlZCIsInJlc3RvcmVkRnJvbSI6IjIxZjZmNjkyLWRjZGEtNDkxOS04YjAwLWM0NzY4Mjc3NjRlYyIsInNlcXVlbmNlIjo3fSx7Imhpc3RvcnlWZXJzaW9uIjoiMS4wLjAiLCJlbnRyeUlkIjoiMGIxMDE1MzYtYjQxNi00ZDZmLWExYTMtNWE5YmRlNDJkMWJjIiwid3JpdGVySWQiOiJiNTdjYjIzZS1lOWI5LTRmY2ItODFkNy1iMWY5NmZjY2I0ZDMiLCJnZW5lcmF0aW9uIjoiZjQ5NjkwM2ItZWVhOC00NTYzLWE3NDEtMDAwOGIwNzUzZGY5IiwiY2FwdHVyZVZlcnNpb24iOjIsImNyZWF0ZWRBdCI6IjIwMjYtMTAtMzBUMjM6MTI6MDQuODcwWiIsInNjb3BlIjp7InBhY2thZ2VSZWYiOnsiaWQiOiJjb250ZW50LmMucDA1IiwidmVyc2lvbiI6IjEuMC4wIn0sImV4ZXJjaXNlUmVmIjp7ImlkIjoiZXhlcmNpc2UuYy5maXJzdC1vdXRwdXQiLCJ2ZXJzaW9uIjoiMS4wLjAifSwicHJvZ3JhbVJlZiI6eyJpZCI6InByb2dyYW0uYy5wcmFjdGljZS1maXJzdC1vdXRwdXQiLCJ2ZXJzaW9uIjoiMS4wLjAifSwibW9kZSI6ImluZGVwZW5kZW50In0sInJlYXNvbiI6ImluaXRpYWwiLCJkb2N1bWVudFJldmlzaW9uIjoxLCJhdXRob3JpdHkiOiJibG9ja3MiLCJjb2RlVGV4dCI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIHJldHVybiAwO1xufVxuIiwiaW5wdXRKc29uIjoie1wicmFuZG9tXCI6bnVsbCxcInNwZWNSZWZcIjp7XCJpZFwiOlwiaW5wdXQuYy5maXJzdC1vdXRwdXRcIixcInZlcnNpb25cIjpcIjEuMC4wXCJ9LFwidmFsdWVzXCI6e319Iiwic3RhdGUiOiJlcnJvciIsInJlc3RvcmVkRnJvbSI6bnVsbCwic2VxdWVuY2UiOjh9LHsiaGlzdG9yeVZlcnNpb24iOiIxLjAuMCIsImVudHJ5SWQiOiJkNTIzYTg3OC0wM2RhLTRjMDItYTdjZC03Mzk5MWFmYjFlYjUiLCJ3cml0ZXJJZCI6ImI1N2NiMjNlLWU5YjktNGZjYi04MWQ3LWIxZjk2ZmNjYjRkMyIsImdlbmVyYXRpb24iOiJmNDk2OTAzYi1lZWE4LTQ1NjMtYTc0MS0wMDA4YjA3NTNkZjkiLCJjYXB0dXJlVmVyc2lvbiI6MSwiY3JlYXRlZEF0IjoiMjAyNi0xMC0zMFQyMzoxMjowNS4xMzNaIiwic2NvcGUiOnsicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMDUiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZXhlcmNpc2VSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm9ncmFtUmVmIjp7ImlkIjoicHJvZ3JhbS5jLnByYWN0aWNlLWZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJtb2RlIjoiaW5kZXBlbmRlbnQifSwicmVhc29uIjoicmVzdG9yZSIsImRvY3VtZW50UmV2aXNpb24iOjIsImF1dGhvcml0eSI6ImNvZGUiLCJjb2RlVGV4dCI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIHByaW50ZihcIkhpc3RvcnlcIik7XG4gICAgcmV0dXJuIDA7XG59XG5cbmludCIsImlucHV0SnNvbiI6IntcInJhbmRvbVwiOm51bGwsXCJzcGVjUmVmXCI6e1wiaWRcIjpcImlucHV0LmMuZmlyc3Qtb3V0cHV0XCIsXCJ2ZXJzaW9uXCI6XCIxLjAuMFwifSxcInZhbHVlc1wiOnt9fSIsInN0YXRlIjoiaW52YWxpZCIsInJlc3RvcmVkRnJvbSI6IjY1ODcxYmI4LTczZDgtNDZmOC1hMTcwLWU4YTBmZTIwMzFmOSIsInNlcXVlbmNlIjo5fV19"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f8922de58f65d9fd73e3-851607f32e93bfdafe82",
+          "file": "editor-history.spec.ts",
+          "line": 181,
+          "column": 1
+        },
+        {
+          "title": "13.4 native block value/add/delete and drag endpoints restore exact canvas and remain usable at three widths",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2916,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:05.294Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-block-history",
+                      "contentType": "application/json",
+                      "body": "eyJhZGRlZCI6eyJoaXN0b3J5VmVyc2lvbiI6IjEuMC4wIiwiZW50cnlJZCI6ImEwMzc5ZmNmLTkzNWQtNDMwMC1hN2IzLWFlYmMzODA1OGJjMCIsIndyaXRlcklkIjoiYmRjODVlYTQtZWI3YS00ZDIzLWI0OWUtNTk1NWNhYzUyMTBkIiwiZ2VuZXJhdGlvbiI6IjkyYmUyZWNlLTlhMWUtNGVlNS04OWVlLTA5MzJjNGJkYTU3MSIsImNhcHR1cmVWZXJzaW9uIjowLCJjcmVhdGVkQXQiOiIyMDI2LTEwLTMwVDIzOjEyOjA2LjYwM1oiLCJzY29wZSI6eyJwYWNrYWdlUmVmIjp7ImlkIjoiY29udGVudC5jLnAwNSIsInZlcnNpb24iOiIxLjAuMCJ9LCJleGVyY2lzZVJlZiI6eyJpZCI6ImV4ZXJjaXNlLmMuZmlyc3Qtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sInByb2dyYW1SZWYiOnsiaWQiOiJwcm9ncmFtLmMucHJhY3RpY2UtZmlyc3Qtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sIm1vZGUiOiJpbmRlcGVuZGVudCJ9LCJyZWFzb24iOiJibG9ja3MiLCJkb2N1bWVudFJldmlzaW9uIjo0LCJhdXRob3JpdHkiOiJibG9ja3MiLCJjb2RlVGV4dCI6IiNpbmNsdWRlIDxzdGRpby5oPlxuaW50IG1haW4odm9pZCkge1xuICAgIHByaW50ZihcImhpc3RvcnkgdmFsdWVcIik7XG4gICAgcmV0dXJuIDA7XG59XG4iLCJ3b3Jrc3BhY2VKc29uIjoie1wiYmxvY2tzXCI6e1wibGFuZ3VhZ2VWZXJzaW9uXCI6MCxcImJsb2Nrc1wiOlt7XCJ0eXBlXCI6XCJjdl9tYWluXCIsXCJpZFwiOlwiYmxvY2suY29kZS41XCIsXCJ4XCI6MCxcInlcIjowLFwiaW5wdXRzXCI6e1wiQk9EWVwiOntcImJsb2NrXCI6e1widHlwZVwiOlwiY3ZfcHJpbnRcIixcImlkXCI6XCJibG9jay5jb2RlLjJcIixcImV4dHJhU3RhdGVcIjp7XCJhcmd1bWVudHNcIjowfSxcImZpZWxkc1wiOntcIkZPUk1BVFwiOlwiaGlzdG9yeSB2YWx1ZVwifSxcIm5leHRcIjp7XCJibG9ja1wiOntcInR5cGVcIjpcImN2X3JldHVyblwiLFwiaWRcIjpcImJsb2NrLmNvZGUuNFwiLFwiaW5wdXRzXCI6e1wiVkFMVUVcIjp7XCJibG9ja1wiOntcInR5cGVcIjpcImN2X2ludGVnZXJcIixcImlkXCI6XCJibG9jay5jb2RlLjNcIixcImZpZWxkc1wiOntcIlZBTFVFXCI6XCIwXCJ9fX19fX19fX19LHtcInR5cGVcIjpcImN2X2ludGVnZXJcIixcImlkXCI6XCJ6cGRyVmEvYDd0KmI0djdEaUpeU1wiLFwieFwiOjEzNixcInlcIjoxMzYsXCJmaWVsZHNcIjp7XCJWQUxVRVwiOlwiMFwifX1dfX0iLCJpbnB1dEpzb24iOiJ7XCJyYW5kb21cIjpudWxsLFwic3BlY1JlZlwiOntcImlkXCI6XCJpbnB1dC5jLmZpcnN0LW91dHB1dFwiLFwidmVyc2lvblwiOlwiMS4wLjBcIn0sXCJ2YWx1ZXNcIjp7fX0iLCJzdGF0ZSI6ImludmFsaWQiLCJyZXN0b3JlZEZyb20iOm51bGwsInNlcXVlbmNlIjo0fSwibW92ZWQiOnsiaGlzdG9yeVZlcnNpb24iOiIxLjAuMCIsImVudHJ5SWQiOiI1NmY4YzcxNy04NWEzLTQ5YzMtOTMwMC02ZWNhNzRjNWQ0YzEiLCJ3cml0ZXJJZCI6ImJkYzg1ZWE0LWViN2EtNGQyMy1iNDllLTU5NTVjYWM1MjEwZCIsImdlbmVyYXRpb24iOiI5MmJlMmVjZS05YTFlLTRlZTUtODllZS0wOTMyYzRiZGE1NzEiLCJjYXB0dXJlVmVyc2lvbiI6MCwiY3JlYXRlZEF0IjoiMjAyNi0xMC0zMFQyMzoxMjowNy4wMTVaIiwic2NvcGUiOnsicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMDUiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiZXhlcmNpc2VSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJwcm9ncmFtUmVmIjp7ImlkIjoicHJvZ3JhbS5jLnByYWN0aWNlLWZpcnN0LW91dHB1dCIsInZlcnNpb24iOiIxLjAuMCJ9LCJtb2RlIjoiaW5kZXBlbmRlbnQifSwicmVhc29uIjoibW92ZSIsImRvY3VtZW50UmV2aXNpb24iOjQsImF1dGhvcml0eSI6ImJsb2NrcyIsImNvZGVUZXh0IjoiI2luY2x1ZGUgPHN0ZGlvLmg+XG5pbnQgbWFpbih2b2lkKSB7XG4gICAgcHJpbnRmKFwiaGlzdG9yeSB2YWx1ZVwiKTtcbiAgICByZXR1cm4gMDtcbn1cbiIsIndvcmtzcGFjZUpzb24iOiJ7XCJibG9ja3NcIjp7XCJsYW5ndWFnZVZlcnNpb25cIjowLFwiYmxvY2tzXCI6W3tcInR5cGVcIjpcImN2X21haW5cIixcImlkXCI6XCJibG9jay5jb2RlLjVcIixcInhcIjowLFwieVwiOjAsXCJpbnB1dHNcIjp7XCJCT0RZXCI6e1wiYmxvY2tcIjp7XCJ0eXBlXCI6XCJjdl9wcmludFwiLFwiaWRcIjpcImJsb2NrLmNvZGUuMlwiLFwiZXh0cmFTdGF0ZVwiOntcImFyZ3VtZW50c1wiOjB9LFwiZmllbGRzXCI6e1wiRk9STUFUXCI6XCJoaXN0b3J5IHZhbHVlXCJ9LFwibmV4dFwiOntcImJsb2NrXCI6e1widHlwZVwiOlwiY3ZfcmV0dXJuXCIsXCJpZFwiOlwiYmxvY2suY29kZS40XCIsXCJpbnB1dHNcIjp7XCJWQUxVRVwiOntcImJsb2NrXCI6e1widHlwZVwiOlwiY3ZfaW50ZWdlclwiLFwiaWRcIjpcImJsb2NrLmNvZGUuM1wiLFwiZmllbGRzXCI6e1wiVkFMVUVcIjpcIjBcIn19fX19fX19fX0se1widHlwZVwiOlwiY3ZfaW50ZWdlclwiLFwiaWRcIjpcInpwZHJWYS9gN3QqYjR2N0RpSl5TXCIsXCJ4XCI6MjY3LFwieVwiOjIwOSxcImZpZWxkc1wiOntcIlZBTFVFXCI6XCIwXCJ9fV19fSIsImlucHV0SnNvbiI6IntcInJhbmRvbVwiOm51bGwsXCJzcGVjUmVmXCI6e1wiaWRcIjpcImlucHV0LmMuZmlyc3Qtb3V0cHV0XCIsXCJ2ZXJzaW9uXCI6XCIxLjAuMFwifSxcInZhbHVlc1wiOnt9fSIsInN0YXRlIjoiaW52YWxpZCIsInJlc3RvcmVkRnJvbSI6bnVsbCwic2VxdWVuY2UiOjV9LCJyZXN0b3JlZCI6eyJoaXN0b3J5VmVyc2lvbiI6IjEuMC4wIiwiZW50cnlJZCI6IjZmMTI1NmMzLTM5YzktNGZkZS04MTc2LTYzNzkzY2JmMThiNiIsIndyaXRlcklkIjoiYmRjODVlYTQtZWI3YS00ZDIzLWI0OWUtNTk1NWNhYzUyMTBkIiwiZ2VuZXJhdGlvbiI6IjkyYmUyZWNlLTlhMWUtNGVlNS04OWVlLTA5MzJjNGJkYTU3MSIsImNhcHR1cmVWZXJzaW9uIjowLCJjcmVhdGVkQXQiOiIyMDI2LTEwLTMwVDIzOjEyOjA3LjU2NloiLCJzY29wZSI6eyJwYWNrYWdlUmVmIjp7ImlkIjoiY29udGVudC5jLnAwNSIsInZlcnNpb24iOiIxLjAuMCJ9LCJleGVyY2lzZVJlZiI6eyJpZCI6ImV4ZXJjaXNlLmMuZmlyc3Qtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sInByb2dyYW1SZWYiOnsiaWQiOiJwcm9ncmFtLmMucHJhY3RpY2UtZmlyc3Qtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sIm1vZGUiOiJpbmRlcGVuZGVudCJ9LCJyZWFzb24iOiJyZXN0b3JlIiwiZG9jdW1lbnRSZXZpc2lvbiI6NywiYXV0aG9yaXR5IjoiYmxvY2tzIiwiY29kZVRleHQiOiIjaW5jbHVkZSA8c3RkaW8uaD5cbmludCBtYWluKHZvaWQpIHtcbiAgICBwcmludGYoXCJoaXN0b3J5IHZhbHVlXCIpO1xuICAgIHJldHVybiAwO1xufVxuIiwid29ya3NwYWNlSnNvbiI6IntcImJsb2Nrc1wiOntcImxhbmd1YWdlVmVyc2lvblwiOjAsXCJibG9ja3NcIjpbe1widHlwZVwiOlwiY3ZfbWFpblwiLFwiaWRcIjpcImJsb2NrLmNvZGUuNVwiLFwieFwiOjAsXCJ5XCI6MCxcImlucHV0c1wiOntcIkJPRFlcIjp7XCJibG9ja1wiOntcInR5cGVcIjpcImN2X3ByaW50XCIsXCJpZFwiOlwiYmxvY2suY29kZS4yXCIsXCJleHRyYVN0YXRlXCI6e1wiYXJndW1lbnRzXCI6MH0sXCJmaWVsZHNcIjp7XCJGT1JNQVRcIjpcImhpc3RvcnkgdmFsdWVcIn0sXCJuZXh0XCI6e1wiYmxvY2tcIjp7XCJ0eXBlXCI6XCJjdl9yZXR1cm5cIixcImlkXCI6XCJibG9jay5jb2RlLjRcIixcImlucHV0c1wiOntcIlZBTFVFXCI6e1wiYmxvY2tcIjp7XCJ0eXBlXCI6XCJjdl9pbnRlZ2VyXCIsXCJpZFwiOlwiYmxvY2suY29kZS4zXCIsXCJmaWVsZHNcIjp7XCJWQUxVRVwiOlwiMFwifX19fX19fX19fSx7XCJ0eXBlXCI6XCJjdl9pbnRlZ2VyXCIsXCJpZFwiOlwienBkclZhL2A3dCpiNHY3RGlKXlNcIixcInhcIjoyNjcsXCJ5XCI6MjA5LFwiZmllbGRzXCI6e1wiVkFMVUVcIjpcIjBcIn19XX19IiwiaW5wdXRKc29uIjoie1wicmFuZG9tXCI6bnVsbCxcInNwZWNSZWZcIjp7XCJpZFwiOlwiaW5wdXQuYy5maXJzdC1vdXRwdXRcIixcInZlcnNpb25cIjpcIjEuMC4wXCJ9LFwidmFsdWVzXCI6e319Iiwic3RhdGUiOiJpbnZhbGlkIiwicmVzdG9yZWRGcm9tIjoiNTZmOGM3MTctODVhMy00OWMzLTkzMDAtNmVjYTc0YzVkNGMxIiwic2VxdWVuY2UiOjh9LCJ3aWR0aHMiOlsxNDQwLDc2OCwzOTBdfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f8922de58f65d9fd73e3-89aaab1cc34a9985470a",
+          "file": "editor-history.spec.ts",
+          "line": 232,
+          "column": 1
+        },
+        {
+          "title": "13.4 production save failure stays visible, explicit retry preserves IDs and clear removes history across tabs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1576,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:08.217Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f8922de58f65d9fd73e3-3bd3bf0de8d2e36c62a9",
+          "file": "editor-history.spec.ts",
+          "line": 361,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "recovery.spec.ts",
+      "file": "recovery.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "invalid display/avatar rows stay in native IDB while valid learning remains visible; confirmed local reset preserves every unrelated row",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 701,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:09.826Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-49ac8a79522929111042",
+          "file": "recovery.spec.ts",
+          "line": 68,
+          "column": 1
+        },
+        {
+          "title": "invalid progress and receipts are isolated without erasure and pause learning writes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 662,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:10.534Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-f8e634693f0ce18a09f8",
+          "file": "recovery.spec.ts",
+          "line": 94,
+          "column": 1
+        },
+        {
+          "title": "an invalid ledger marks total points uncertain and cannot be converted into an empty or repaired reward history",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 489,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:11.205Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-3996b4af88b9b2a938b4",
+          "file": "recovery.spec.ts",
+          "line": 115,
+          "column": 1
+        },
+        {
+          "title": "known eleven-store archives with invalid or missing meta can be explicitly cleared into a fresh generation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 643,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:11.702Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-fa7bfefbc5c2c393838d",
+          "file": "recovery.spec.ts",
+          "line": 133,
+          "column": 1
+        },
+        {
+          "title": "unknown semantic and future physical versions refuse this client clear and preserve every native row",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 672,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:12.351Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-cda63970227a56cbcd48",
+          "file": "recovery.spec.ts",
+          "line": 153,
+          "column": 1
+        },
+        {
+          "title": "native quota and permission API faults leave provisional learning unsaved and retry the original command without extra rights",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 551,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:13.030Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "recovery-api-fault-scope",
+                      "contentType": "text/plain",
+                      "body": "UXVvdGFFeGNlZWRlZEVycm9yIGFuZCBTZWN1cml0eUVycm9yIGFyZSBpbmplY3RlZCBhdCBuYXRpdmUgd3JpdGUgYm91bmRhcmllcy4gVGhpcyB2ZXJpZmllcyBhdG9taWMgcm9sbGJhY2ssIHByb3Zpc2lvbmFsIHN0YXRlIGFuZCBvcmlnaW5hbC1jb21tYW5kIHJldHJ5LiBBY3R1YWwgZGlzayBleGhhdXN0aW9uIGFuZCBicm93c2VyIHByaXZhdGUtbW9kZSByZXN0cmljdGlvbnMgYXJlIG5vdCBjbGFpbWVkLg=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-0c98dc3eb7f01d0e8578",
+          "file": "recovery.spec.ts",
+          "line": 172,
+          "column": 1
+        },
+        {
+          "title": "a new-day goal-open failure retries the original trusted occurrence without inventing a goal version or changing the date",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 377,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:13.588Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-c82d7f55235d40f33f4c",
+          "file": "recovery.spec.ts",
+          "line": 213,
+          "column": 1
+        },
+        {
+          "title": "an unavailable open permits clearly temporary learning without rebinding its facts when storage returns",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 524,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:13.972Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "open-security-fault-scope",
+                      "contentType": "text/plain",
+                      "body": "U3RvcmFnZSBvcGVuIFNlY3VyaXR5RXJyb3IgaXMgYW4gQVBJIGluamVjdGlvbiBpbiBhIGZyZXNoIGJyb3dzZXIgY29udGV4dCwgbm90IGEgY2xhaW0gdGhhdCBhIHBhcnRpY3VsYXIgcmVhbCBwcml2YXRlLWJyb3dzaW5nIGNvbmZpZ3VyYXRpb24gYmxvY2tzIEluZGV4ZWREQi4="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-f4a545d6875aa42ee23f",
+          "file": "recovery.spec.ts",
+          "line": 249,
+          "column": 1
+        },
+        {
+          "title": "aborting after native learning writes and after clear writes preserves the entire previous eleven-store archive",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 553,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:14.503Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-e3a443a0dd07770972e5",
+          "file": "recovery.spec.ts",
+          "line": 295,
+          "column": 1
+        },
+        {
+          "title": "two actual same-origin pages merge same and different synthetic facts without dropped rows or duplicate first rewards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 645,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:15.062Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "actual-two-page-concurrency",
+                      "contentType": "application/json",
+                      "body": "eyJldmlkZW5jZUtpbmQiOiJ0d28gYWN0dWFsIHBhZ2VzLCBuYXRpdmUgSURCIHRyYW5zYWN0aW9ucywgc3ludGhldGljIHRydXN0ZWQgZmFjdHM7IEJyb2FkY2FzdENoYW5uZWwgdW5hdmFpbGFibGUiLCJzbmFwc2hvdCI6eyJtZXRhIjp7InNjaGVtYVZlcnNpb24iOiI3LjAuMCIsImRiVmVyc2lvbiI6NywiZ2VuZXJhdGlvbiI6IjYxMzJlNjZkLTlkOWItNGE1Yi05OTlkLTk4ZGY3NzE1YzdiMyIsInJldmlzaW9uIjo1LCJ0aW1lWm9uZSI6IkFzaWEvU2hhbmdoYWkiLCJjcmVhdGVkQXQiOiIyMDI2LTEwLTMwVDIzOjEyOjE1LjI4OFoiLCJhY3RpdmVQYWNrYWdlUmVmIjp7ImlkIjoiY29udGVudC5zeW50aGV0aWMubGVhcm5pbmciLCJ2ZXJzaW9uIjoiMS4wLjAifX0sInNldHRpbmdzIjp7InRoZW1lIjoibGlnaHQiLCJyZWR1Y2VkTW90aW9uIjoic3lzdGVtIiwicGxheWJhY2tSYXRlIjoxLCJnb2FsVGVtcGxhdGUiOm51bGx9LCJhdmF0YXIiOnsicHJlc2V0SWQiOiJhdmF0YXIuYmFzaWMuMDEiLCJhY2NlbnRDb2xvciI6IiMxNjhBNzIifSwiYXBwZWFyYW5jZSI6eyJwcmVzZXQiOiJtaW5pbWFsIiwidGhlbWVPdmVycmlkZXMiOnsibWluaW1hbCI6eyJhY2NlbnRDb2xvciI6bnVsbH0sImN1dGUiOnsiYWNjZW50Q29sb3IiOm51bGx9LCJnbGFzcyI6eyJhY2NlbnRDb2xvciI6bnVsbH0sInNvZnQiOnsiYWNjZW50Q29sb3IiOm51bGx9LCJjb29sIjp7ImFjY2VudENvbG9yIjpudWxsfSwidGVjaCI6eyJhY2NlbnRDb2xvciI6bnVsbH19LCJibG9ja1dvcmtzcGFjZSI6ImF1dG8iLCJsYXlvdXQiOnsic2lkZWJhciI6ImV4cGFuZGVkIiwid29ya2JlbmNoTW9kZSI6InN0YW5kYXJkIiwic3BsaXRSYXRpb3MiOnsicHJhY3RpY2UiOjUwLCJ2aXN1YWxpemUiOjM1LCJyZXZpZXciOjM1fX0sImJhY2tncm91bmQiOnsiYXNzZXRJZCI6bnVsbCwidmlzaWJsZSI6ZmFsc2UsImZpdCI6ImNvdmVyIiwicG9zaXRpb24iOiJjZW50ZXIiLCJvdmVybGF5T3BhY2l0eSI6NzV9fSwiYXBwZWFyYW5jZUFzc2V0cyI6W10sInByb2dyZXNzIjpbeyJldmVudFR5cGUiOiJjYXNlLnZpZXctY29uZmlybWVkIiwicmVzdWx0IjoiY29uZmlybWVkIiwic3ViamVjdFJlZiI6eyJpZCI6ImNhc2Uuc3ludGhldGljLmFzc2lnbm1lbnQiLCJ2ZXJzaW9uIjoiMS4wLjAifSwicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuc3ludGhldGljLmxlYXJuaW5nIiwidmVyc2lvbiI6IjEuMC4wIn0sImxlYXJuaW5nUmV2aXNpb24iOjEsImZpcnN0QXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoiLCJsYXN0QXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoifSx7ImV2ZW50VHlwZSI6ImV4ZXJjaXNlLnBhc3NlZCIsInJlc3VsdCI6InBhc3NlZCIsInN1YmplY3RSZWYiOnsiaWQiOiJleGVyY2lzZS5zeW50aGV0aWMuZmlyc3QiLCJ2ZXJzaW9uIjoiMS4wLjAifSwicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuc3ludGhldGljLmxlYXJuaW5nIiwidmVyc2lvbiI6IjEuMC4wIn0sImxlYXJuaW5nUmV2aXNpb24iOjEsImZpcnN0QXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoiLCJsYXN0QXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoifSx7ImV2ZW50VHlwZSI6ImV4ZXJjaXNlLnBhc3NlZCIsInJlc3VsdCI6InBhc3NlZCIsInN1YmplY3RSZWYiOnsiaWQiOiJleGVyY2lzZS5zeW50aGV0aWMuc2Vjb25kIiwidmVyc2lvbiI6IjEuMC4wIn0sInBhY2thZ2VSZWYiOnsiaWQiOiJjb250ZW50LnN5bnRoZXRpYy5sZWFybmluZyIsInZlcnNpb24iOiIxLjAuMCJ9LCJsZWFybmluZ1JldmlzaW9uIjoxLCJmaXJzdEF0IjoiMjAyNi0xMC0xNVQwMjowMDowMC4wMDBaIiwibGFzdEF0IjoiMjAyNi0xMC0xNVQwMjowMDowMC4wMDBaIn1dLCJkYWlseUZhY3RzIjpbeyJldmVudFR5cGUiOiJjYXNlLnZpZXctY29uZmlybWVkIiwic3ViamVjdFJlZiI6eyJpZCI6ImNhc2Uuc3ludGhldGljLmFzc2lnbm1lbnQiLCJ2ZXJzaW9uIjoiMS4wLjAifSwiY2Fub25pY2FsU3ViamVjdElkIjoiY2FzZS5zeW50aGV0aWMuYXNzaWdubWVudCIsIm9jY3VycmVkQXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoiLCJsb2NhbERhdGUiOiIyMDI2LTEwLTE1In0seyJldmVudFR5cGUiOiJleGVyY2lzZS5wYXNzZWQiLCJzdWJqZWN0UmVmIjp7ImlkIjoiZXhlcmNpc2Uuc3ludGhldGljLmZpcnN0IiwidmVyc2lvbiI6IjEuMC4wIn0sImNhbm9uaWNhbFN1YmplY3RJZCI6ImV4ZXJjaXNlLnN5bnRoZXRpYy5maXJzdCIsIm9jY3VycmVkQXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoiLCJsb2NhbERhdGUiOiIyMDI2LTEwLTE1In0seyJldmVudFR5cGUiOiJleGVyY2lzZS5wYXNzZWQiLCJzdWJqZWN0UmVmIjp7ImlkIjoiZXhlcmNpc2Uuc3ludGhldGljLnNlY29uZCIsInZlcnNpb24iOiIxLjAuMCJ9LCJjYW5vbmljYWxTdWJqZWN0SWQiOiJleGVyY2lzZS5zeW50aGV0aWMuc2Vjb25kIiwib2NjdXJyZWRBdCI6IjIwMjYtMTAtMTVUMDI6MDA6MDAuMDAwWiIsImxvY2FsRGF0ZSI6IjIwMjYtMTAtMTUifV0sImdvYWxzIjpbeyJsb2NhbERhdGUiOiIyMDI2LTEwLTE1IiwiZ29hbFZlcnNpb24iOjEsInRhcmdldHMiOm51bGwsImFjaGlldmVkQXQiOm51bGx9XSwibGVkZ2VyIjpbeyJzb3VyY2VJZCI6InJld2FyZC5jYXNlLmZpcnN0LXZpZXciLCJzdWJqZWN0SWQiOiJjYXNlLnN5bnRoZXRpYy5hc3NpZ25tZW50IiwibG9jYWxEYXRlIjoiMjAyNi0xMC0xNSIsIm9jY3VycmVkQXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoiLCJzdGF0dXMiOiJwZW5kaW5nIiwicG9pbnRzIjpudWxsLCJwb2xpY3lSZWYiOm51bGx9LHsic291cmNlSWQiOiJyZXdhcmQuZXhlcmNpc2UuZmlyc3QtcGFzcyIsInN1YmplY3RJZCI6ImV4ZXJjaXNlLnN5bnRoZXRpYy5maXJzdCIsImxvY2FsRGF0ZSI6IjIwMjYtMTAtMTUiLCJvY2N1cnJlZEF0IjoiMjAyNi0xMC0xNVQwMjowMDowMC4wMDBaIiwic3RhdHVzIjoicGVuZGluZyIsInBvaW50cyI6bnVsbCwicG9saWN5UmVmIjpudWxsfSx7InNvdXJjZUlkIjoicmV3YXJkLmV4ZXJjaXNlLmZpcnN0LXBhc3MiLCJzdWJqZWN0SWQiOiJleGVyY2lzZS5zeW50aGV0aWMuc2Vjb25kIiwibG9jYWxEYXRlIjoiMjAyNi0xMC0xNSIsIm9jY3VycmVkQXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoiLCJzdGF0dXMiOiJwZW5kaW5nIiwicG9pbnRzIjpudWxsLCJwb2xpY3lSZWYiOm51bGx9XSwicmVjZWlwdHMiOlt7ImV2ZW50VHlwZSI6ImV4ZXJjaXNlLnBhc3NlZCIsInN1YmplY3RSZWYiOnsiaWQiOiJleGVyY2lzZS5zeW50aGV0aWMuZmlyc3QiLCJ2ZXJzaW9uIjoiMS4wLjAifSwicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuc3ludGhldGljLmxlYXJuaW5nIiwidmVyc2lvbiI6IjEuMC4wIn0sImxlYXJuaW5nUmV2aXNpb24iOjEsInJlc3VsdCI6InBhc3NlZCIsImV2ZW50SWQiOiJhNDgyMzg2Ni0zNjg1LTRmM2UtOTZjMS1jZWFjYTdhYTQ2ODAiLCJvY2N1cnJlZEF0IjoiMjAyNi0xMC0xNVQwMjowMDowMC4wMDBaIiwibG9jYWxEYXRlIjoiMjAyNi0xMC0xNSIsImdvYWxWZXJzaW9uIjoxLCJjb21taXR0ZWRSZXZpc2lvbiI6M30seyJldmVudFR5cGUiOiJjYXNlLnZpZXctY29uZmlybWVkIiwic3ViamVjdFJlZiI6eyJpZCI6ImNhc2Uuc3ludGhldGljLmFzc2lnbm1lbnQiLCJ2ZXJzaW9uIjoiMS4wLjAifSwicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuc3ludGhldGljLmxlYXJuaW5nIiwidmVyc2lvbiI6IjEuMC4wIn0sImxlYXJuaW5nUmV2aXNpb24iOjEsInJlc3VsdCI6ImNvbmZpcm1lZCIsImV2ZW50SWQiOiJlNGZlNjEwMS0zNDU3LTQzNzktOTQ5Ny01ODMwZTljNWVmZWEiLCJvY2N1cnJlZEF0IjoiMjAyNi0xMC0xNVQwMjowMDowMC4wMDBaIiwibG9jYWxEYXRlIjoiMjAyNi0xMC0xNSIsImdvYWxWZXJzaW9uIjoxLCJjb21taXR0ZWRSZXZpc2lvbiI6NH0seyJldmVudFR5cGUiOiJleGVyY2lzZS5wYXNzZWQiLCJzdWJqZWN0UmVmIjp7ImlkIjoiZXhlcmNpc2Uuc3ludGhldGljLmZpcnN0IiwidmVyc2lvbiI6IjEuMC4wIn0sInBhY2thZ2VSZWYiOnsiaWQiOiJjb250ZW50LnN5bnRoZXRpYy5sZWFybmluZyIsInZlcnNpb24iOiIxLjAuMCJ9LCJsZWFybmluZ1JldmlzaW9uIjoxLCJyZXN1bHQiOiJwYXNzZWQiLCJldmVudElkIjoiZjdiZjQ4MzItMWI5Zi00YmU1LTg2YjQtNDY2YTdlZDM0NWQ1Iiwib2NjdXJyZWRBdCI6IjIwMjYtMTAtMTVUMDI6MDA6MDAuMDAwWiIsImxvY2FsRGF0ZSI6IjIwMjYtMTAtMTUiLCJnb2FsVmVyc2lvbiI6MSwiY29tbWl0dGVkUmV2aXNpb24iOjJ9LHsiZXZlbnRUeXBlIjoiZXhlcmNpc2UucGFzc2VkIiwic3ViamVjdFJlZiI6eyJpZCI6ImV4ZXJjaXNlLnN5bnRoZXRpYy5zZWNvbmQiLCJ2ZXJzaW9uIjoiMS4wLjAifSwicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuc3ludGhldGljLmxlYXJuaW5nIiwidmVyc2lvbiI6IjEuMC4wIn0sImxlYXJuaW5nUmV2aXNpb24iOjEsInJlc3VsdCI6InBhc3NlZCIsImV2ZW50SWQiOiJmZDY5MjY2YS0zMmUyLTQyMWMtYWFiYi1hMGExMWVlNzE2NTMiLCJvY2N1cnJlZEF0IjoiMjAyNi0xMC0xNVQwMjowMDowMC4wMDBaIiwibG9jYWxEYXRlIjoiMjAyNi0xMC0xNSIsImdvYWxWZXJzaW9uIjoxLCJjb21taXR0ZWRSZXZpc2lvbiI6NX1dLCJhbGlhc2VzIjpbXX19"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-a142c30bc11a42b46679",
+          "file": "recovery.spec.ts",
+          "line": 336,
+          "column": 1
+        },
+        {
+          "title": "clear invalidates an in-flight command and queued local settings immediately, then prevents every old operation from restoring data",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 373,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:15.713Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-53d83970c165a3b83895",
+          "file": "recovery.spec.ts",
+          "line": 385,
+          "column": 1
+        },
+        {
+          "title": "a peer that misses every notification still rejects its pre-clear command instead of rebinding it to the new generation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 523,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:16.092Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-2c9b3f4b731fee1f9dbd",
+          "file": "recovery.spec.ts",
+          "line": 426,
+          "column": 1
+        },
+        {
+          "title": "real production BroadcastChannel updates a peer without focus refresh and discards its old draft after another page clears",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6704,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"本地\u001b[7m数据已清除\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"本地\u001b[7m档案已读取正在显示当前浏览器中已保存的记录与设置。\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    - locator resolved to <div data-save-status=\"saving\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m    - unexpected value \"正在保存保存确认完成后，这次更改才会显示为已保存。\"\u001b[22m\n\u001b[2m    - locator resolved to <div data-save-status=\"unsaved\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m    - unexpected value \"正在临时使用，尚未保存当前更改仅在本次页面中使用。关闭或刷新页面会丢失未保存的内容。重新读取档案重试未保存操作当前处于临时模式。有 1 条操作尚未保存。关闭或刷新页面会丢失未保存的内容；恢复存储后可重试。\"\u001b[22m\n\u001b[2m    12 × locator resolved to <div data-save-status=\"ready\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"本地档案已读取正在显示当前浏览器中已保存的记录与设置。\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"本地\u001b[7m数据已清除\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"本地\u001b[7m档案已读取正在显示当前浏览器中已保存的记录与设置。\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    - locator resolved to <div data-save-status=\"saving\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m    - unexpected value \"正在保存保存确认完成后，这次更改才会显示为已保存。\"\u001b[22m\n\u001b[2m    - locator resolved to <div data-save-status=\"unsaved\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m    - unexpected value \"正在临时使用，尚未保存当前更改仅在本次页面中使用。关闭或刷新页面会丢失未保存的内容。重新读取档案重试未保存操作当前处于临时模式。有 1 条操作尚未保存。关闭或刷新页面会丢失未保存的内容；恢复存储后可重试。\"\u001b[22m\n\u001b[2m    12 × locator resolved to <div data-save-status=\"ready\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"本地档案已读取正在显示当前浏览器中已保存的记录与设置。\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts:596:58",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts",
+                      "column": 58,
+                      "line": 596
+                    },
+                    "snippet": "  594 |     .getByRole('button', { name: '确认清除', exact: true })\n  595 |     .click();\n> 596 |   await expect(page.getByTestId('learning-save-status')).toContainText('本地数据已清除');\n      |                                                          ^\n  597 |   await expect(peer.locator('html')).toHaveAttribute('data-theme-preference', 'light');\n  598 |   await expect(peer.getByRole('combobox', { name: '主题', exact: true })).toHaveValue('light');\n  599 |   await expect(peer.getByRole('button', { name: '保存显示设置', exact: true })).toBeDisabled();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts",
+                        "column": 58,
+                        "line": 596
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"本地\u001b[7m数据已清除\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"本地\u001b[7m档案已读取正在显示当前浏览器中已保存的记录与设置。\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    - locator resolved to <div data-save-status=\"saving\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m    - unexpected value \"正在保存保存确认完成后，这次更改才会显示为已保存。\"\u001b[22m\n\u001b[2m    - locator resolved to <div data-save-status=\"unsaved\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m    - unexpected value \"正在临时使用，尚未保存当前更改仅在本次页面中使用。关闭或刷新页面会丢失未保存的内容。重新读取档案重试未保存操作当前处于临时模式。有 1 条操作尚未保存。关闭或刷新页面会丢失未保存的内容；恢复存储后可重试。\"\u001b[22m\n\u001b[2m    12 × locator resolved to <div data-save-status=\"ready\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"本地档案已读取正在显示当前浏览器中已保存的记录与设置。\"\u001b[22m\n\n\n  594 |     .getByRole('button', { name: '确认清除', exact: true })\n  595 |     .click();\n> 596 |   await expect(page.getByTestId('learning-save-status')).toContainText('本地数据已清除');\n      |                                                          ^\n  597 |   await expect(peer.locator('html')).toHaveAttribute('data-theme-preference', 'light');\n  598 |   await expect(peer.getByRole('combobox', { name: '主题', exact: true })).toHaveValue('light');\n  599 |   await expect(peer.getByRole('button', { name: '保存显示设置', exact: true })).toBeDisabled();\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts:596:58"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:16.621Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-real-production-B-85179-t-after-another-page-clears-chrome\\test-failed-2.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-real-production-B-85179-t-after-another-page-clears-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-real-production-B-85179-t-after-another-page-clears-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-real-production-B-85179-t-after-another-page-clears-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts",
+                    "column": 58,
+                    "line": 596
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-983ef7fb6b30bceb60f9",
+          "file": "recovery.spec.ts",
+          "line": 557,
+          "column": 1
+        },
+        {
+          "title": "a production peer clear invalidates a pending real WASM download and its late network completion cannot revive the old check",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6700,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"本地\u001b[7m数据已清除\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"本地\u001b[7m档案已读取正在显示当前浏览器中已保存的记录与设置。\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    - locator resolved to <div data-save-status=\"saving\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m    - unexpected value \"正在保存保存确认完成后，这次更改才会显示为已保存。\"\u001b[22m\n\u001b[2m    13 × locator resolved to <div data-save-status=\"ready\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"本地档案已读取正在显示当前浏览器中已保存的记录与设置。\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"本地\u001b[7m数据已清除\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"本地\u001b[7m档案已读取正在显示当前浏览器中已保存的记录与设置。\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    - locator resolved to <div data-save-status=\"saving\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m    - unexpected value \"正在保存保存确认完成后，这次更改才会显示为已保存。\"\u001b[22m\n\u001b[2m    13 × locator resolved to <div data-save-status=\"ready\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"本地档案已读取正在显示当前浏览器中已保存的记录与设置。\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts:668:60",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts",
+                      "column": 60,
+                      "line": 668
+                    },
+                    "snippet": "  666 |   try {\n  667 |     await confirmation.getByRole('button', { name: '确认清除', exact: true }).click();\n> 668 |     await expect(page.getByTestId('learning-save-status')).toContainText('本地数据已清除');\n      |                                                            ^\n  669 |     await expect(engine).toHaveAttribute('data-state', 'idle');\n  670 |     expect(await peer.evaluate(() => window.__recoveryProductionPeer.workersCreated)).toBe(0);\n  671 |     expect(await peer.evaluate(() => window.__recoveryProductionPeer.engineStates)).not.toContain("
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts",
+                        "column": 60,
+                        "line": 668
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"本地\u001b[7m数据已清除\u001b[27m\"\u001b[39m\nReceived string:    \u001b[31m\"本地\u001b[7m档案已读取正在显示当前浏览器中已保存的记录与设置。\u001b[27m\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    - locator resolved to <div data-save-status=\"saving\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m    - unexpected value \"正在保存保存确认完成后，这次更改才会显示为已保存。\"\u001b[22m\n\u001b[2m    13 × locator resolved to <div data-save-status=\"ready\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"本地档案已读取正在显示当前浏览器中已保存的记录与设置。\"\u001b[22m\n\n\n  666 |   try {\n  667 |     await confirmation.getByRole('button', { name: '确认清除', exact: true }).click();\n> 668 |     await expect(page.getByTestId('learning-save-status')).toContainText('本地数据已清除');\n      |                                                            ^\n  669 |     await expect(engine).toHaveAttribute('data-state', 'idle');\n  670 |     expect(await peer.evaluate(() => window.__recoveryProductionPeer.workersCreated)).toBe(0);\n  671 |     expect(await peer.evaluate(() => window.__recoveryProductionPeer.engineStates)).not.toContain(\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts:668:60"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:24.608Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-a-production-peer-46d9f-cannot-revive-the-old-check-chrome\\test-failed-2.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-a-production-peer-46d9f-cannot-revive-the-old-check-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-a-production-peer-46d9f-cannot-revive-the-old-check-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-a-production-peer-46d9f-cannot-revive-the-old-check-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts",
+                    "column": 60,
+                    "line": 668
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-2d2a4df320f1e17cda10",
+          "file": "recovery.spec.ts",
+          "line": 623,
+          "column": 1
+        },
+        {
+          "title": "production clear confirmation cancels without writes, then confirmed clear restores defaults in a fresh generation across refresh",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5755,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"已保存\"\u001b[39m\nReceived string:    \u001b[31m\"设置发生冲突其他页面已更新本地档案。这次更改未保存，请重新读取后再选择设置。重新读取档案\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-save-status=\"conflict\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"设置发生冲突其他页面已更新本地档案。这次更改未保存，请重新读取后再选择设置。重新读取档案\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"已保存\"\u001b[39m\nReceived string:    \u001b[31m\"设置发生冲突其他页面已更新本地档案。这次更改未保存，请重新读取后再选择设置。重新读取档案\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-save-status=\"conflict\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"设置发生冲突其他页面已更新本地档案。这次更改未保存，请重新读取后再选择设置。重新读取档案\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts:716:58",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts",
+                      "column": 58,
+                      "line": 716
+                    },
+                    "snippet": "  714 |   await page.getByRole('combobox', { name: '主题', exact: true }).selectOption('dark');\n  715 |   await page.getByRole('button', { name: '保存显示设置', exact: true }).click();\n> 716 |   await expect(page.getByTestId('learning-save-status')).toContainText('已保存');\n      |                                                          ^\n  717 |   await page.getByRole('tab', { name: '本地数据', exact: true }).click();\n  718 |   const before = await productionSnapshot(page);\n  719 |   await page.getByRole('button', { name: '清除本地数据', exact: true }).click();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts",
+                        "column": 58,
+                        "line": 716
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"已保存\"\u001b[39m\nReceived string:    \u001b[31m\"设置发生冲突其他页面已更新本地档案。这次更改未保存，请重新读取后再选择设置。重新读取档案\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-save-status=\"conflict\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"设置发生冲突其他页面已更新本地档案。这次更改未保存，请重新读取后再选择设置。重新读取档案\"\u001b[22m\n\n\n  714 |   await page.getByRole('combobox', { name: '主题', exact: true }).selectOption('dark');\n  715 |   await page.getByRole('button', { name: '保存显示设置', exact: true }).click();\n> 716 |   await expect(page.getByTestId('learning-save-status')).toContainText('已保存');\n      |                                                          ^\n  717 |   await page.getByRole('tab', { name: '本地数据', exact: true }).click();\n  718 |   const before = await productionSnapshot(page);\n  719 |   await page.getByRole('button', { name: '清除本地数据', exact: true }).click();\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts:716:58"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:33.445Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-production-clear--71fed-h-generation-across-refresh-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-production-clear--71fed-h-generation-across-refresh-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\16.1\\storage-formal-output\\recovery-production-clear--71fed-h-generation-across-refresh-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\recovery.spec.ts",
+                    "column": 58,
+                    "line": 716
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-957c8a99defee820ec0b",
+          "file": "recovery.spec.ts",
+          "line": 709,
+          "column": 1
+        },
+        {
+          "title": "production home visibly marks a corrupt ledger total as unconfirmed instead of displaying zero points",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 768,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:41.377Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-3ff8470247ad7ebdb51c",
+          "file": "recovery.spec.ts",
+          "line": 743,
+          "column": 1
+        },
+        {
+          "title": "production singleton reset requires its own confirmation and leaves all unrelated stored settings and learning rows unchanged",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1280,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:43.052Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-c39335e5ebb3f07e39ae",
+          "file": "recovery.spec.ts",
+          "line": 783,
+          "column": 1
+        },
+        {
+          "title": "actual isolated browser contexts keep native IDB through refresh and discard that isolated profile when the context closes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 839,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:44.339Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "actual-isolated-context-storage-lifecycle",
+                      "contentType": "text/plain",
+                      "body": "VGhpcyBpcyBhbiBhY3R1YWwgc2VwYXJhdGUgYnJvd3NlciBjb250ZXh0L3Byb2ZpbGUgbGlmZXRpbWUgY2hlY2sgd2l0aCB3b3JraW5nIG5hdGl2ZSBJbmRleGVkREIuIEl0IGRlbW9uc3RyYXRlcyByZWZyZXNoIHBlcnNpc3RlbmNlIGFuZCBpc29sYXRpb24gYWZ0ZXIgY29udGV4dCBjbG9zdXJlLiBTdG9yYWdlLWRpc2FibGVkL3ByaXZhdGUtbW9kZSByZXN0cmljdGlvbnMgYW5kIGRpc2sgZXhoYXVzdGlvbiBhcmUgc2VwYXJhdGVseSBpZGVudGlmaWVkIEFQSSBpbmplY3Rpb25zLg=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-477b1203af9e7fc6dd9f",
+          "file": "recovery.spec.ts",
+          "line": 862,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "storage.spec.ts",
+      "file": "storage.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "new native IndexedDB has twelve out-of-line stores, one saved default set and a nondestructive availability probe",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 332,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:45.211Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-a11aa5a52446ca0a4b9a",
+          "file": "storage.spec.ts",
+          "line": 120,
+          "column": 1
+        },
+        {
+          "title": "synthetic receipt and unique reward survive refresh and closing/reopening a page without producing new facts",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 632,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:45.551Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "native-idb-refresh-reopen",
+                      "contentType": "application/json",
+                      "body": "eyJuYW1lIjoiYy12aXotbGVhcm5pbmcudGVzdC4xYjRmYmNhNy04NWYwLTQ3MDAtOTZjMy01NzkxOTUwYTMwMGUiLCJzbmFwc2hvdCI6eyJtZXRhIjp7InNjaGVtYVZlcnNpb24iOiI3LjAuMCIsImRiVmVyc2lvbiI6NywiZ2VuZXJhdGlvbiI6IjAyMDE3MTgxLWFmMjItNDA0Yy04ZTIyLTcwMjNjNTMzMGM5ZiIsInJldmlzaW9uIjoxLCJ0aW1lWm9uZSI6IkFzaWEvU2hhbmdoYWkiLCJjcmVhdGVkQXQiOiIyMDI2LTEwLTMwVDIzOjEyOjQ1Ljc4MloiLCJhY3RpdmVQYWNrYWdlUmVmIjp7ImlkIjoiY29udGVudC5jLnAwIiwidmVyc2lvbiI6IjEuMC4wIn19LCJzZXR0aW5ncyI6eyJ0aGVtZSI6ImxpZ2h0IiwicmVkdWNlZE1vdGlvbiI6InN5c3RlbSIsInBsYXliYWNrUmF0ZSI6MSwiZ29hbFRlbXBsYXRlIjpudWxsfSwiYXZhdGFyIjp7InByZXNldElkIjoiYXZhdGFyLmJhc2ljLjAxIiwiYWNjZW50Q29sb3IiOiIjMTY4QTcyIn0sImFwcGVhcmFuY2UiOnsicHJlc2V0IjoibWluaW1hbCIsInRoZW1lT3ZlcnJpZGVzIjp7Im1pbmltYWwiOnsiYWNjZW50Q29sb3IiOm51bGx9LCJjdXRlIjp7ImFjY2VudENvbG9yIjpudWxsfSwiZ2xhc3MiOnsiYWNjZW50Q29sb3IiOm51bGx9LCJzb2Z0Ijp7ImFjY2VudENvbG9yIjpudWxsfSwiY29vbCI6eyJhY2NlbnRDb2xvciI6bnVsbH0sInRlY2giOnsiYWNjZW50Q29sb3IiOm51bGx9fSwiYmxvY2tXb3Jrc3BhY2UiOiJhdXRvIiwibGF5b3V0Ijp7InNpZGViYXIiOiJleHBhbmRlZCIsIndvcmtiZW5jaE1vZGUiOiJzdGFuZGFyZCIsInNwbGl0UmF0aW9zIjp7InByYWN0aWNlIjo1MCwidmlzdWFsaXplIjozNSwicmV2aWV3IjozNX19LCJiYWNrZ3JvdW5kIjp7ImFzc2V0SWQiOm51bGwsInZpc2libGUiOmZhbHNlLCJmaXQiOiJjb3ZlciIsInBvc2l0aW9uIjoiY2VudGVyIiwib3ZlcmxheU9wYWNpdHkiOjc1fX0sImFwcGVhcmFuY2VBc3NldHMiOltdLCJwcm9ncmVzcyI6W3siZXZlbnRUeXBlIjoiZXhlcmNpc2UucGFzc2VkIiwicmVzdWx0IjoicGFzc2VkIiwic3ViamVjdFJlZiI6eyJpZCI6ImV4ZXJjaXNlLmMuZWNobyIsInZlcnNpb24iOiIxLjAuMCJ9LCJwYWNrYWdlUmVmIjp7ImlkIjoiY29udGVudC5jLnAwIiwidmVyc2lvbiI6IjEuMC4wIn0sImxlYXJuaW5nUmV2aXNpb24iOjEsImZpcnN0QXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoiLCJsYXN0QXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoifV0sImRhaWx5RmFjdHMiOlt7ImV2ZW50VHlwZSI6ImV4ZXJjaXNlLnBhc3NlZCIsInN1YmplY3RSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmVjaG8iLCJ2ZXJzaW9uIjoiMS4wLjAifSwiY2Fub25pY2FsU3ViamVjdElkIjoiZXhlcmNpc2UuYy5lY2hvIiwib2NjdXJyZWRBdCI6IjIwMjYtMTAtMTVUMDI6MDA6MDAuMDAwWiIsImxvY2FsRGF0ZSI6IjIwMjYtMTAtMTUifV0sImdvYWxzIjpbeyJsb2NhbERhdGUiOiIyMDI2LTEwLTE1IiwiZ29hbFZlcnNpb24iOjEsInRhcmdldHMiOm51bGwsImFjaGlldmVkQXQiOm51bGx9XSwibGVkZ2VyIjpbeyJzb3VyY2VJZCI6InJld2FyZC5leGVyY2lzZS5maXJzdC1wYXNzIiwic3ViamVjdElkIjoiZXhlcmNpc2UuYy5lY2hvIiwibG9jYWxEYXRlIjoiMjAyNi0xMC0xNSIsIm9jY3VycmVkQXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoiLCJzdGF0dXMiOiJwZW5kaW5nIiwicG9pbnRzIjpudWxsLCJwb2xpY3lSZWYiOm51bGx9XSwicmVjZWlwdHMiOlt7ImV2ZW50SWQiOiJhZDQ5YmYxNi00MWRiLTQ3MzYtODg1MS03NDUyMjJmNmNlZGMiLCJldmVudFR5cGUiOiJleGVyY2lzZS5wYXNzZWQiLCJyZXN1bHQiOiJwYXNzZWQiLCJzdWJqZWN0UmVmIjp7ImlkIjoiZXhlcmNpc2UuYy5lY2hvIiwidmVyc2lvbiI6IjEuMC4wIn0sInBhY2thZ2VSZWYiOnsiaWQiOiJjb250ZW50LmMucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifSwibGVhcm5pbmdSZXZpc2lvbiI6MSwiZ29hbFZlcnNpb24iOjEsIm9jY3VycmVkQXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoiLCJsb2NhbERhdGUiOiIyMDI2LTEwLTE1IiwiY29tbWl0dGVkUmV2aXNpb24iOjF9XSwiYWxpYXNlcyI6W119LCJyYXciOnsidmVyc2lvbiI6Nywic3RvcmVzIjpbeyJuYW1lIjoiYWNoaWV2ZW1lbnRzIiwia2V5UGF0aCI6bnVsbCwiYXV0b0luY3JlbWVudCI6ZmFsc2UsInJvd3MiOltdfSx7Im5hbWUiOiJhbGlhc2VzIiwia2V5UGF0aCI6bnVsbCwiYXV0b0luY3JlbWVudCI6ZmFsc2UsInJvd3MiOltdfSx7Im5hbWUiOiJhcHBlYXJhbmNlIiwia2V5UGF0aCI6bnVsbCwiYXV0b0luY3JlbWVudCI6ZmFsc2UsInJvd3MiOlt7ImtleSI6ImN1cnJlbnQiLCJ2YWx1ZSI6eyJwcmVzZXQiOiJtaW5pbWFsIiwidGhlbWVPdmVycmlkZXMiOnsibWluaW1hbCI6eyJhY2NlbnRDb2xvciI6bnVsbH0sImN1dGUiOnsiYWNjZW50Q29sb3IiOm51bGx9LCJnbGFzcyI6eyJhY2NlbnRDb2xvciI6bnVsbH0sInNvZnQiOnsiYWNjZW50Q29sb3IiOm51bGx9LCJjb29sIjp7ImFjY2VudENvbG9yIjpudWxsfSwidGVjaCI6eyJhY2NlbnRDb2xvciI6bnVsbH19LCJibG9ja1dvcmtzcGFjZSI6ImF1dG8iLCJsYXlvdXQiOnsic2lkZWJhciI6ImV4cGFuZGVkIiwid29ya2JlbmNoTW9kZSI6InN0YW5kYXJkIiwic3BsaXRSYXRpb3MiOnsicHJhY3RpY2UiOjUwLCJ2aXN1YWxpemUiOjM1LCJyZXZpZXciOjM1fX0sImJhY2tncm91bmQiOnsiYXNzZXRJZCI6bnVsbCwidmlzaWJsZSI6ZmFsc2UsImZpdCI6ImNvdmVyIiwicG9zaXRpb24iOiJjZW50ZXIiLCJvdmVybGF5T3BhY2l0eSI6NzV9fX1dfSx7Im5hbWUiOiJhcHBlYXJhbmNlQXNzZXRzIiwia2V5UGF0aCI6bnVsbCwiYXV0b0luY3JlbWVudCI6ZmFsc2UsInJvd3MiOltdfSx7Im5hbWUiOiJhdmF0YXIiLCJrZXlQYXRoIjpudWxsLCJhdXRvSW5jcmVtZW50IjpmYWxzZSwicm93cyI6W3sia2V5IjoiY3VycmVudCIsInZhbHVlIjp7InByZXNldElkIjoiYXZhdGFyLmJhc2ljLjAxIiwiYWNjZW50Q29sb3IiOiIjMTY4QTcyIn19XX0seyJuYW1lIjoiZGFpbHlGYWN0cyIsImtleVBhdGgiOm51bGwsImF1dG9JbmNyZW1lbnQiOmZhbHNlLCJyb3dzIjpbeyJrZXkiOlsiMDIwMTcxODEtYWYyMi00MDRjLThlMjItNzAyM2M1MzMwYzlmIiwiMjAyNi0xMC0xNSIsImV4ZXJjaXNlLnBhc3NlZCIsImV4ZXJjaXNlLmMuZWNobyJdLCJ2YWx1ZSI6eyJldmVudFR5cGUiOiJleGVyY2lzZS5wYXNzZWQiLCJzdWJqZWN0UmVmIjp7ImlkIjoiZXhlcmNpc2UuYy5lY2hvIiwidmVyc2lvbiI6IjEuMC4wIn0sImNhbm9uaWNhbFN1YmplY3RJZCI6ImV4ZXJjaXNlLmMuZWNobyIsIm9jY3VycmVkQXQiOiIyMDI2LTEwLTE1VDAyOjAwOjAwLjAwMFoiLCJsb2NhbERhdGUiOiIyMDI2LTEwLTE1In19XX0seyJuYW1lIjoiZWRpdEhpc3RvcnkiLCJrZXlQYXRoIjpudWxsLCJhdXRvSW5jcmVtZW50IjpmYWxzZSwicm93cyI6W119LHsibmFtZSI6ImdvYWxzIiwia2V5UGF0aCI6bnVsbCwiYXV0b0luY3JlbWVudCI6ZmFsc2UsInJvd3MiOlt7ImtleSI6WyIwMjAxNzE4MS1hZjIyLTQwNGMtOGUyMi03MDIzYzUzMzBjOWYiLCIyMDI2LTEwLTE1Il0sInZhbHVlIjp7ImxvY2FsRGF0ZSI6IjIwMjYtMTAtMTUiLCJnb2FsVmVyc2lvbiI6MSwidGFyZ2V0cyI6bnVsbCwiYWNoaWV2ZWRBdCI6bnVsbH19XX0seyJuYW1lIjoia25vd2xlZGdlTWFya3MiLCJrZXlQYXRoIjpudWxsLCJhdXRvSW5jcmVtZW50IjpmYWxzZSwicm93cyI6W119LHsibmFtZSI6ImxlZGdlciIsImtleVBhdGgiOm51bGwsImF1dG9JbmNyZW1lbnQiOmZhbHNlLCJyb3dzIjpbeyJrZXkiOlsiMDIwMTcxODEtYWYyMi00MDRjLThlMjItNzAyM2M1MzMwYzlmIiwicmV3YXJkLmV4ZXJjaXNlLmZpcnN0LXBhc3MiLCJleGVyY2lzZS5jLmVjaG8iXSwidmFsdWUiOnsic291cmNlSWQiOiJyZXdhcmQuZXhlcmNpc2UuZmlyc3QtcGFzcyIsInN1YmplY3RJZCI6ImV4ZXJjaXNlLmMuZWNobyIsImxvY2FsRGF0ZSI6IjIwMjYtMTAtMTUiLCJvY2N1cnJlZEF0IjoiMjAyNi0xMC0xNVQwMjowMDowMC4wMDBaIiwic3RhdHVzIjoicGVuZGluZyIsInBvaW50cyI6bnVsbCwicG9saWN5UmVmIjpudWxsfX1dfSx7Im5hbWUiOiJtZXRhIiwia2V5UGF0aCI6bnVsbCwiYXV0b0luY3JlbWVudCI6ZmFsc2UsInJvd3MiOlt7ImtleSI6ImN1cnJlbnQiLCJ2YWx1ZSI6eyJzY2hlbWFWZXJzaW9uIjoiNy4wLjAiLCJkYlZlcnNpb24iOjcsImdlbmVyYXRpb24iOiIwMjAxNzE4MS1hZjIyLTQwNGMtOGUyMi03MDIzYzUzMzBjOWYiLCJyZXZpc2lvbiI6MSwidGltZVpvbmUiOiJBc2lhL1NoYW5naGFpIiwiY3JlYXRlZEF0IjoiMjAyNi0xMC0zMFQyMzoxMjo0NS43ODJaIiwiYWN0aXZlUGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMCIsInZlcnNpb24iOiIxLjAuMCJ9fX1dfSx7Im5hbWUiOiJwcm9ncmVzcyIsImtleVBhdGgiOm51bGwsImF1dG9JbmNyZW1lbnQiOmZhbHNlLCJyb3dzIjpbeyJrZXkiOlsiMDIwMTcxODEtYWYyMi00MDRjLThlMjItNzAyM2M1MzMwYzlmIiwiZXhlcmNpc2UucGFzc2VkIiwiZXhlcmNpc2UuYy5lY2hvIiwiMS4wLjAiLDFdLCJ2YWx1ZSI6eyJldmVudFR5cGUiOiJleGVyY2lzZS5wYXNzZWQiLCJyZXN1bHQiOiJwYXNzZWQiLCJzdWJqZWN0UmVmIjp7ImlkIjoiZXhlcmNpc2UuYy5lY2hvIiwidmVyc2lvbiI6IjEuMC4wIn0sInBhY2thZ2VSZWYiOnsiaWQiOiJjb250ZW50LmMucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifSwibGVhcm5pbmdSZXZpc2lvbiI6MSwiZmlyc3RBdCI6IjIwMjYtMTAtMTVUMDI6MDA6MDAuMDAwWiIsImxhc3RBdCI6IjIwMjYtMTAtMTVUMDI6MDA6MDAuMDAwWiJ9fV19LHsibmFtZSI6InJlY2VpcHRzIiwia2V5UGF0aCI6bnVsbCwiYXV0b0luY3JlbWVudCI6ZmFsc2UsInJvd3MiOlt7ImtleSI6WyIwMjAxNzE4MS1hZjIyLTQwNGMtOGUyMi03MDIzYzUzMzBjOWYiLCJhZDQ5YmYxNi00MWRiLTQ3MzYtODg1MS03NDUyMjJmNmNlZGMiXSwidmFsdWUiOnsiZXZlbnRJZCI6ImFkNDliZjE2LTQxZGItNDczNi04ODUxLTc0NTIyMmY2Y2VkYyIsImV2ZW50VHlwZSI6ImV4ZXJjaXNlLnBhc3NlZCIsInJlc3VsdCI6InBhc3NlZCIsInN1YmplY3RSZWYiOnsiaWQiOiJleGVyY2lzZS5jLmVjaG8iLCJ2ZXJzaW9uIjoiMS4wLjAifSwicGFja2FnZVJlZiI6eyJpZCI6ImNvbnRlbnQuYy5wMCIsInZlcnNpb24iOiIxLjAuMCJ9LCJsZWFybmluZ1JldmlzaW9uIjoxLCJnb2FsVmVyc2lvbiI6MSwib2NjdXJyZWRBdCI6IjIwMjYtMTAtMTVUMDI6MDA6MDAuMDAwWiIsImxvY2FsRGF0ZSI6IjIwMjYtMTAtMTUiLCJjb21taXR0ZWRSZXZpc2lvbiI6MX19XX0seyJuYW1lIjoicmV2aWV3Q2FyZHMiLCJrZXlQYXRoIjpudWxsLCJhdXRvSW5jcmVtZW50IjpmYWxzZSwicm93cyI6W119LHsibmFtZSI6InNldHRpbmdzIiwia2V5UGF0aCI6bnVsbCwiYXV0b0luY3JlbWVudCI6ZmFsc2UsInJvd3MiOlt7ImtleSI6ImN1cnJlbnQiLCJ2YWx1ZSI6eyJ0aGVtZSI6ImxpZ2h0IiwicmVkdWNlZE1vdGlvbiI6InN5c3RlbSIsInBsYXliYWNrUmF0ZSI6MSwiZ29hbFRlbXBsYXRlIjpudWxsfX1dfV19LCJldmlkZW5jZUtpbmQiOiJzeW50aGV0aWMgc3RvcmFnZSBwcmltaXRpdmUsIG5vdCByZWFsIGxlYXJuaW5nIn0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-0861b5970b3125b15a55",
+          "file": "storage.spec.ts",
+          "line": 168,
+          "column": 1
+        },
+        {
+          "title": "same receipt retries return the original revision and different IDs cannot duplicate the stable reward key",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 364,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:46.190Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-f5a9e7f5e0ef4afca669",
+          "file": "storage.spec.ts",
+          "line": 212,
+          "column": 1
+        },
+        {
+          "title": "reusing an event ID with changed subject version, learning revision, occurrence time or goal version is rejected without changes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 371,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:46.562Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-bd1f6dd9fc1b8e5f9c99",
+          "file": "storage.spec.ts",
+          "line": 232,
+          "column": 1
+        },
+        {
+          "title": "a real transaction aborted after a successful receipt request rolls back all stores and reports unsaved, then exact retry succeeds",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 351,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:46.939Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-b3bbe0033e38faf7bf2f",
+          "file": "storage.spec.ts",
+          "line": 257,
+          "column": 1
+        },
+        {
+          "title": "injected quota and storage-disabled API faults are unsaved and never erase existing data",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 368,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:47.298Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "fault-evidence-scope",
+                      "contentType": "text/plain",
+                      "body": "U2VjdXJpdHlFcnJvciBhbmQgUXVvdGFFeGNlZWRlZEVycm9yIHdlcmUgaW5qZWN0ZWQgYXQgbmF0aXZlIEFQSSBib3VuZGFyaWVzLiBUaGlzIGRvZXMgbm90IHRlc3QgcmVhbCBwcml2YXRlLW1vZGUgcmVzdHJpY3Rpb25zLCBwaHlzaWNhbCBkaXNrIGV4aGF1c3Rpb24gb3IgYWN0dWFsIGJyb3dzZXIgcXVvdGEgZXhoYXVzdGlvbi4="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-5738abace8d6a8ab3765",
+          "file": "storage.spec.ts",
+          "line": 288,
+          "column": 1
+        },
+        {
+          "title": "writing with a stale generation fails even without an invalidation notification",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 328,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:47.674Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-600cb59bc484d26cdeac",
+          "file": "storage.spec.ts",
+          "line": 312,
+          "column": 1
+        },
+        {
+          "title": "unknown semantic versions, invalid meta and missing meta preserve the native archive instead of reinitializing it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 386,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:48.009Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-65ba45f3e63e511096b1",
+          "file": "storage.spec.ts",
+          "line": 332,
+          "column": 1
+        },
+        {
+          "title": "versionchange closes the current connection, and future physical versions remain intact and reject the old client",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 343,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:48.401Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-891f0cd72d8e37357e5d",
+          "file": "storage.spec.ts",
+          "line": 358,
+          "column": 1
+        },
+        {
+          "title": "a queued native open can be cancelled while another connection blocks deletion, and late open does not leak a connection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 334,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:48.750Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-7922e1aec432dc3acd4a",
+          "file": "storage.spec.ts",
+          "line": 378,
+          "column": 1
+        },
+        {
+          "title": "frozen synthetic reference 0.9 migrates atomically to SAVE1 without inventing day facts, receipts or completion rewards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 339,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:49.092Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "reference-migration-not-published-legacy",
+                      "contentType": "application/json",
+                      "body": "eyJldmlkZW5jZUtpbmQiOiJmcm96ZW4gc3ludGhldGljIDAuOSBwcmVkZWNlc3Nvcjsgbm8gaGlzdG9yaWNhbCBwcm9kdWN0IHJlbGVhc2UgY2xhaW1lZCIsIm1pZ3JhdGVkIjp7Im1ldGEiOnsic2NoZW1hVmVyc2lvbiI6IjEuMC4wIiwiZGJWZXJzaW9uIjoxLCJnZW5lcmF0aW9uIjoiMTExMTExMTEtMTExMS00MTExLTgxMTEtMTExMTExMTExMTExIiwicmV2aXNpb24iOjEsInRpbWVab25lIjoiQXNpYS9TaGFuZ2hhaSIsImNyZWF0ZWRBdCI6IjIwMjYtMTAtMTNUMTY6MDA6MDAuMDAwWiIsImFjdGl2ZVBhY2thZ2VSZWYiOnsiaWQiOiJjb250ZW50LmMucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifX0sInNldHRpbmdzIjp7InRoZW1lIjoiZGFyayIsInJlZHVjZWRNb3Rpb24iOiJzeXN0ZW0iLCJwbGF5YmFja1JhdGUiOjEsImdvYWxUZW1wbGF0ZSI6bnVsbH0sImF2YXRhciI6eyJwcmVzZXRJZCI6ImF2YXRhci5iYXNpYy4wMSIsImFjY2VudENvbG9yIjoiIzE2OEE3MiJ9LCJwcm9ncmVzcyI6W3siZXZlbnRUeXBlIjoibGVzc29uLnN0dWR5LWNvbmZpcm1lZCIsInJlc3VsdCI6ImNvbmZpcm1lZCIsInN1YmplY3RSZWYiOnsiaWQiOiJsZXNzb24uYy52YXJpYWJsZXMtb3V0cHV0IiwidmVyc2lvbiI6IjEuMC4wIn0sInBhY2thZ2VSZWYiOnsiaWQiOiJjb250ZW50LmMucDAiLCJ2ZXJzaW9uIjoiMS4wLjAifSwibGVhcm5pbmdSZXZpc2lvbiI6MSwiZmlyc3RBdCI6IjIwMjYtMTAtMTNUMTY6MDA6MDAuMDAwWiIsImxhc3RBdCI6IjIwMjYtMTAtMTNUMTY6MDA6MDAuMDAwWiJ9LHsiZXZlbnRUeXBlIjoiZXhlcmNpc2UucGFzc2VkIiwicmVzdWx0IjoicGFzc2VkIiwic3ViamVjdFJlZiI6eyJpZCI6ImV4ZXJjaXNlLmMuZWNobyIsInZlcnNpb24iOiIxLjAuMCJ9LCJwYWNrYWdlUmVmIjp7ImlkIjoiY29udGVudC5jLnAwIiwidmVyc2lvbiI6IjEuMC4wIn0sImxlYXJuaW5nUmV2aXNpb24iOjEsImZpcnN0QXQiOiIyMDI2LTEwLTEzVDE2OjAxOjAwLjAwMFoiLCJsYXN0QXQiOiIyMDI2LTEwLTEzVDE2OjAxOjAwLjAwMFoifV0sImRhaWx5RmFjdHMiOltdLCJnb2FscyI6W10sImxlZGdlciI6W3sic291cmNlSWQiOiJyZXdhcmQuZXhlcmNpc2UuZmlyc3QtcGFzcyIsInN1YmplY3RJZCI6ImV4ZXJjaXNlLmMuZWNobyIsInBvaW50cyI6MTIsIm9jY3VycmVkQXQiOiIyMDI2LTEwLTEzVDE2OjAxOjAwLjAwMFoiLCJsb2NhbERhdGUiOiIyMDI2LTEwLTE0Iiwic3RhdHVzIjoicG9zdGVkIiwicG9saWN5UmVmIjp7ImlkIjoibGVnYWN5LmZpeHR1cmUiLCJ2ZXJzaW9uIjoiMC45LjAifX1dLCJyZWNlaXB0cyI6W10sImFsaWFzZXMiOltdfX0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-b39bcc207a0bde5de732",
+          "file": "storage.spec.ts",
+          "line": 391,
+          "column": 1
+        },
+        {
+          "title": "interrupting reference migration after a native row request succeeds preserves every original row and supports controlled retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 318,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:49.438Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-09301b7df3da2cabb22b",
+          "file": "storage.spec.ts",
+          "line": 440,
+          "column": 1
+        },
+        {
+          "title": "invalid reference predecessors reject without rewriting the original native rows",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 327,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T23:12:49.762Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b48019861cf9d71d9131-e3721a87dc1a7ac12fa5",
+          "file": "storage.spec.ts",
+          "line": 470,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T23:11:57.851Z",
+    "duration": 54398.354,
+    "expected": 33,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

@@ -368,7 +368,11 @@ export function inspectRecoveryRows(
     return accepted;
   });
   const dailyLedger = valid.ledger.filter((entry) => entry.sourceId === 'reward.daily-goal.once');
-  for (const entry of valid.ledger.filter((entry) => entry.sourceId !== 'reward.daily-goal.once')) {
+  for (const entry of valid.ledger.filter(
+    (entry) =>
+      entry.sourceId !== 'reward.daily-goal.once' &&
+      entry.sourceId !== 'reward.challenge.first-answer',
+  )) {
     snapshot.ledger.push(entry);
     if (!consistent(snapshot)) {
       snapshot.ledger.pop();
@@ -409,12 +413,41 @@ export function inspectRecoveryRows(
       ledgerUncertain = true;
     }
   }
-  for (const receipt of valid.receipts) {
+  for (const entry of valid.ledger.filter((e) => e.sourceId === 'reward.challenge.first-answer')) {
+    const related = valid.receipts.filter(
+      (r) => r.eventType === 'challenge.answered' && r.subjectRef.id === entry.subjectId,
+    );
+    const candidate = {
+      ...snapshot,
+      ledger: [...snapshot.ledger, entry],
+      receipts: [...snapshot.receipts, ...related],
+    };
+    if (consistent(candidate)) {
+      snapshot.ledger = candidate.ledger;
+      snapshot.receipts = candidate.receipts;
+    } else {
+      issue('ledger');
+      issue('receipts', related.length);
+      ledgerUncertain = true;
+    }
+  }
+  for (const receipt of valid.receipts.filter((r) => r.eventType !== 'challenge.answered')) {
     snapshot.receipts.push(receipt);
     if (!consistent(snapshot)) {
       snapshot.receipts.pop();
       issue('receipts');
     }
+  }
+  const orphanChallenges = valid.receipts.filter(
+    (r) =>
+      r.eventType === 'challenge.answered' &&
+      !valid.ledger.some(
+        (e) => e.sourceId === 'reward.challenge.first-answer' && e.subjectId === r.subjectRef.id,
+      ),
+  );
+  if (orphanChallenges.length) {
+    issue('receipts', orphanChallenges.length);
+    ledgerUncertain = true;
   }
   // Invalid meta/relationships are never repaired by dropping data in the DB.
   return result(snapshot);

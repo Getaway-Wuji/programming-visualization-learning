@@ -1,0 +1,282 @@
+
+Running 2 tests using 1 worker
+
+  x  1 tests\browser\phase2-performance.spec.ts:296:1 › P1 current production navigation and maximum-scale real execution use qualified HTTPS network and unchanged deadlines (5.3m)
+  x  2 tests\browser\phase2-performance.spec.ts:486:1 › P1 two30-item panels and real recursion stack remain responsive for three independent30-second stable playbacks (9.2s)
+
+
+  1) tests\browser\phase2-performance.spec.ts:296:1 › P1 current production navigation and maximum-scale real execution use qualified HTTPS network and unchanged deadlines 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -   1
+    + Received  + 228
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "error": "Error: expect(locator).toHaveAttribute(expected) failed
+    +
+    + Locator:  locator('.app-shell')
+    + Expected: \"ready\"
+    + Received: \"unsaved\"
+    + Timeout:  5000ms
+    +
+    + Call log:
+    +   - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms
+    +   - waiting for locator('.app-shell')
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"loading\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"loading\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"failed\">…</div>
+    +     11 × unexpected value \"unsaved\"
+    +        - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"ready\" data-learning-reward-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"ready\">…</div>
+    +     - unexpected value \"unsaved\"
+    + ",
+    +     "id": "home",
+    +     "index": 1,
+    +     "navigation": true,
+    +   },
+    +   Object {
+    +     "error": "Error: expect(locator).toHaveAttribute(expected) failed
+    +
+    + Locator:  locator('.app-shell')
+    + Expected: \"ready\"
+    + Received: \"unsaved\"
+    + Timeout:  5000ms
+    +
+    + Call log:
+    +   - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms
+    +   - waiting for locator('.app-shell')
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"loading\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"loading\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"failed\">…</div>
+    +     11 × unexpected value \"unsaved\"
+    +        - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"ready\" data-learning-reward-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"ready\">…</div>
+    +     - unexpected value \"unsaved\"
+    + ",
+    +     "id": "home",
+    +     "index": 2,
+    +     "navigation": true,
+    +   },
+    +   Object {
+    +     "error": "Error: expect(locator).toHaveAttribute(expected) failed
+    +
+    + Locator:  locator('.app-shell')
+    + Expected: \"ready\"
+    + Received: \"unsaved\"
+    + Timeout:  5000ms
+    +
+    + Call log:
+    +   - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms
+    +   - waiting for locator('.app-shell')
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"loading\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"loading\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     11 × unexpected value \"unsaved\"
+    +        - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"ready\" data-learning-reward-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"ready\">…</div>
+    +     - unexpected value \"unsaved\"
+    + ",
+    +     "id": "home",
+    +     "index": 3,
+    +     "navigation": true,
+    +   },
+    +   Object {
+    +     "error": "Error: expect(locator).toHaveAttribute(expected) failed
+    +
+    + Locator:  locator('.app-shell')
+    + Expected: \"ready\"
+    + Received: \"unsaved\"
+    + Timeout:  5000ms
+    +
+    + Call log:
+    +   - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms
+    +   - waiting for locator('.app-shell')
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"loading\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"loading\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"failed\">…</div>
+    +     11 × unexpected value \"unsaved\"
+    +        - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"ready\" data-learning-reward-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"ready\">…</div>
+    +     - unexpected value \"unsaved\"
+    + ",
+    +     "id": "home",
+    +     "index": 4,
+    +     "navigation": true,
+    +   },
+    +   Object {
+    +     "error": "Error: expect(locator).toHaveAttribute(expected) failed
+    +
+    + Locator:  locator('.app-shell')
+    + Expected: \"ready\"
+    + Received: \"unsaved\"
+    + Timeout:  5000ms
+    +
+    + Call log:
+    +   - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms
+    +   - waiting for locator('.app-shell')
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"loading\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"loading\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     11 × unexpected value \"unsaved\"
+    +        - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"ready\" data-learning-reward-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"ready\">…</div>
+    +     - unexpected value \"unsaved\"
+    + ",
+    +     "id": "home",
+    +     "index": 5,
+    +     "navigation": true,
+    +   },
+    +   Object {
+    +     "error": "Error: expect(locator).toHaveAttribute(expected) failed
+    +
+    + Locator:  locator('.app-shell')
+    + Expected: \"ready\"
+    + Received: \"unsaved\"
+    + Timeout:  5000ms
+    +
+    + Call log:
+    +   - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms
+    +   - waiting for locator('.app-shell')
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"loading\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"loading\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     11 × unexpected value \"unsaved\"
+    +        - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"ready\" data-learning-reward-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"ready\">…</div>
+    +     - unexpected value \"unsaved\"
+    + ",
+    +     "id": "courses",
+    +     "index": 2,
+    +     "navigation": true,
+    +   },
+    +   Object {
+    +     "error": "Error: expect(locator).toHaveAttribute(expected) failed
+    +
+    + Locator:  locator('.app-shell')
+    + Expected: \"ready\"
+    + Received: \"unsaved\"
+    + Timeout:  5000ms
+    +
+    + Call log:
+    +   - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms
+    +   - waiting for locator('.app-shell')
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"loading\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"loading\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     11 × unexpected value \"unsaved\"
+    +        - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"ready\" data-learning-reward-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"ready\">…</div>
+    +     - unexpected value \"unsaved\"
+    + ",
+    +     "id": "courses",
+    +     "index": 4,
+    +     "navigation": true,
+    +   },
+    +   Object {
+    +     "error": "Error: expect(locator).toHaveAttribute(expected) failed
+    +
+    + Locator:  locator('.app-shell')
+    + Expected: \"ready\"
+    + Received: \"unsaved\"
+    + Timeout:  5000ms
+    +
+    + Call log:
+    +   - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms
+    +   - waiting for locator('.app-shell')
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"loading\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"loading\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"unsaved\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"failed\">…</div>
+    +     10 × unexpected value \"unsaved\"
+    +        - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"ready\" data-learning-reward-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"ready\">…</div>
+    +     - unexpected value \"unsaved\"
+    + ",
+    +     "id": "lesson",
+    +     "index": 1,
+    +     "navigation": true,
+    +   },
+    +   Object {
+    +     "error": "Error: expect(locator).toHaveAttribute(expected) failed
+    +
+    + Locator:  locator('.app-shell')
+    + Expected: \"ready\"
+    + Received: \"unsaved\"
+    + Timeout:  5000ms
+    +
+    + Call log:
+    +   - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms
+    +   - waiting for locator('.app-shell')
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"loading\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"loading\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"unsaved\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"failed\">…</div>
+    +     10 × unexpected value \"unsaved\"
+    +        - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"ready\" data-learning-reward-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"ready\">…</div>
+    +     - unexpected value \"unsaved\"
+    + ",
+    +     "id": "lesson",
+    +     "index": 2,
+    +     "navigation": true,
+    +   },
+    +   Object {
+    +     "error": "Error: expect(locator).toHaveAttribute(expected) failed
+    +
+    + Locator:  locator('.app-shell')
+    + Expected: \"ready\"
+    + Received: \"unsaved\"
+    + Timeout:  5000ms
+    +
+    + Call log:
+    +   - Expect \"toHaveAttribute\" locator('.app-shell') with timeout 5000ms
+    +   - waiting for locator('.app-shell')
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"loading\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"loading\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-profile-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-learning-reading-status=\"loading\" data-learning-practice-status=\"loading\" data-achievement-storage-status=\"failed\">…</div>
+    +     - unexpected value \"unsaved\"
+    +     - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-review-storage-status=\"failed\" data-learning-goal-status=\"loading\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-reward-status=\"loading\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"failed\">…</div>
+    +     10 × unexpected value \"unsaved\"
+    +        - locator resolved to <div data-nav-open=\"false\" data-sidebar=\"expanded\" class=\"app-shell p05-app\" data-workbench-mode=\"standard\" data-learning-goal-status=\"ready\" data-review-storage-status=\"ready\" data-learning-reward-status=\"ready\" data-learning-reading-status=\"ready\" data-learning-profile-status=\"ready\" data-learning-practice-status=\"ready\" data-learning-storage-status=\"unsaved\" data-achievement-storage-status=\"ready\">…</div>
+    +     - unexpected value \"unsaved\"
+    + ",
+    +     "id": "lesson",
+    +     "index": 4,
+    +     "navigation": true,
+    +   },
+    + ]
+
+      434 |     write('measurements', report);
+      435 |   }
+    > 436 |   expect(report.failures).toEqual([]);
+          |                           ^
+      437 |   expect(report.qualification.satisfied).toBe(true);
+      438 |   expect(report.navigation.every((r: any) => r.passed)).toBe(true);
+      439 |   expect(
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\phase2-performance.spec.ts:436:27
+
+    Error Context: tests\.artifacts\16.10\r1610-perf-formal-first-output\phase2-performance-P1-curr-a65ab-ork-and-unchanged-deadlines\error-context.md
+
+  2) tests\browser\phase2-performance.spec.ts:486:1 › P1 two30-item panels and real recursion stack remain responsive for three independent30-second stable playbacks 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      504 |       await prepare(p, d);
+      505 |       const execution = await sample(p, d, 'playback-preparation', 1);
+    > 506 |       expect(execution.valid).toBe(true);
+          |                               ^
+      507 |       const rate =
+      508 |         id === 'c-pair30'
+      509 |           ? '对比回放速度'
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\phase2-performance.spec.ts:506:31
+
+    Error Context: tests\.artifacts\16.10\r1610-perf-formal-first-output\phase2-performance-P1-two3-ac0b4-t30-second-stable-playbacks\error-context.md
+
+  2 failed
+    tests\browser\phase2-performance.spec.ts:296:1 › P1 current production navigation and maximum-scale real execution use qualified HTTPS network and unchanged deadlines 
+    tests\browser\phase2-performance.spec.ts:486:1 › P1 two30-item panels and real recursion stack remain responsive for three independent30-second stable playbacks 
+[WebServer] (node:13452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:60180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:16308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

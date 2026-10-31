@@ -1,4 +1,6 @@
 import { achievementPassSources, type AchievementEvidence } from '../achievements/model';
+import { readChallengeFact, type ChallengeFact } from '../challenges/authority';
+import { prepareChallengeAnswer, type ChallengeReceiptSummary } from '../challenges/domain';
 import { observationSubject, type ObservationFact } from '../achievements/observation';
 import { loadCourseReading, type CourseReading } from '../content/reading';
 import { loadCourseLearning } from '../content/course-learning';
@@ -207,6 +209,16 @@ export class LearningService {
   private sessionListeners = new Set<() => void>();
   private pendingCommands = new Set<LearningCommand>();
   private pendingFacts = new Set<VerifiedFact>();
+  private pendingChallengeFacts = new Set<ChallengeFact>();
+  private challengeCaptures = new WeakMap<
+    ChallengeFact,
+    {
+      context: EditorHistoryContext;
+      eventId: string;
+      at: string;
+      receipt?: ChallengeReceiptSummary;
+    }
+  >();
   private temporarySnapshot: StorageSnapshot | undefined;
   private isolatedTemporarySnapshot: StorageSnapshot | undefined;
   private memorySession = 0;
@@ -256,6 +268,98 @@ export class LearningService {
     { context: EditorHistoryContext; evidence: AchievementEvidence }
   >();
   getState = (): LearningServiceState => this.state;
+  recordChallengeAnswer = (
+    fact: ChallengeFact,
+    expectedEpoch: number,
+  ): Promise<SaveResult & { firstAnswer: boolean; points: number }> => {
+    let captured: NonNullable<ReturnType<typeof this.challengeCaptures.get>>;
+    try {
+      if (expectedEpoch !== this.state.sessionEpoch || this.disposed)
+        throw new StorageError('S_GENERATION_STALE');
+      const prior = this.challengeCaptures.get(fact);
+      const context = prior?.context ?? this.editorHistoryContext();
+      if (!context) throw new StorageError('S_STORAGE_UNAVAILABLE');
+      this.checkEditorHistory(context);
+      if (!this.state.capabilities.learning || this.state.recovery?.writable === false)
+        throw new StorageError('S_CONTENT_INCOMPATIBLE');
+      if (!prior && this.state.clockStatus === 'rollback') throw new StorageError('S_DATE_INVALID');
+      readChallengeFact(fact, true);
+      captured = prior ?? {
+        context: structuredClone(context),
+        eventId: (this.options.id ?? (() => crypto.randomUUID()))(),
+        at: (this.options.clock ?? (() => new Date().toISOString()))(),
+      };
+      this.challengeCaptures.set(fact, captured);
+    } catch (error) {
+      return Promise.reject(storageError(error));
+    }
+    return this.enqueue(async () => {
+      const { context } = captured;
+      try {
+        this.checkEditorHistory(context);
+        if (!captured.receipt) {
+          await this.openDay(
+            context.generation,
+            captured.at,
+            this.caseCatalog(),
+            context.activePackageRef,
+          );
+          this.checkEditorHistory(context);
+          const snapshot = await this.storage().read();
+          if (snapshot.meta.generation !== context.generation)
+            throw new StorageError('S_GENERATION_STALE');
+          const localDate = localDateAt(captured.at, snapshot.meta.timeZone);
+          const goal = snapshot.goals.find((g) => g.localDate === localDate);
+          if (!goal) throw new StorageError('S_DATE_INVALID');
+          captured.receipt = {
+            ...readChallengeFact(fact),
+            eventId: captured.eventId,
+            occurredAt: captured.at,
+            localDate,
+            goalVersion: goal.goalVersion,
+          };
+        }
+        this.checkEditorHistory(context);
+        const receipt = captured.receipt;
+        this.publish({ status: 'saving', lastSaved: false, errorCode: null, cleared: false });
+        const result = await this.storage().commitOnce(
+          { generation: context.generation, receipt },
+          (snapshot) => {
+            this.checkEditorHistory(context);
+            this.assertCurrentPackage(snapshot, context.activePackageRef);
+            readChallengeFact(fact);
+            return prepareChallengeAnswer(snapshot, receipt);
+          },
+        );
+        this.pendingChallengeFacts.delete(fact);
+        const saved = await this.savedRead(result, context.generation, context.epoch);
+        const first = this.state.snapshot?.receipts
+          .filter(
+            (r) =>
+              r.eventType === 'challenge.answered' && r.subjectRef.id === receipt.subjectRef.id,
+          )
+          .sort((a, b) => a.committedRevision - b.committedRevision)[0];
+        return {
+          ...saved,
+          firstAnswer: first?.eventId === captured.eventId,
+          points: first?.eventId === captured.eventId ? (receipt.result === 'correct' ? 2 : -1) : 0,
+        };
+      } catch (error) {
+        const code = storageError(error).code;
+        if (context.epoch === this.state.sessionEpoch) {
+          if (['S_QUOTA', 'S_STORAGE_UNAVAILABLE', 'S_ABORTED'].includes(code))
+            this.pendingChallengeFacts.add(fact);
+          this.fail(error);
+          this.publish({ pendingCount: this.pendingCount() });
+          if (code === 'S_GENERATION_STALE') {
+            this.invalidateSession();
+            void this.refresh({ preserveOutcome: true });
+          }
+        }
+        throw storageError(error);
+      }
+    });
+  };
   syncAchievements = async (context: EditorHistoryContext, fact?: ObservationFact) => {
     this.checkEditorHistory(context);
     const catalog = this.state.practiceCatalog;
@@ -432,7 +536,10 @@ export class LearningService {
   }
   private pendingCount(): number {
     return (
-      this.pendingCommands.size + this.pendingFacts.size + Number(!!this.reviewedSwitchFailure)
+      this.pendingCommands.size +
+      this.pendingFacts.size +
+      this.pendingChallengeFacts.size +
+      Number(!!this.reviewedSwitchFailure)
     );
   }
   private assertCurrentPackage(snapshot: StorageSnapshot, expected?: Ref): void {
@@ -577,6 +684,7 @@ export class LearningService {
   private invalidateSession(): void {
     this.pendingCommands.clear();
     this.pendingFacts.clear();
+    this.pendingChallengeFacts.clear();
     this.temporarySnapshot = undefined;
     this.isolatedTemporarySnapshot = undefined;
     this.memorySessionActive = false;
@@ -865,7 +973,24 @@ export class LearningService {
           prior.snapshot?.meta.generation === this.state.snapshot?.meta.generation &&
           same(prior.snapshot?.meta.activePackageRef, this.state.snapshot?.meta.activePackageRef)
         ) {
-          if (prior.status === 'unsaved' || prior.status === 'conflict') {
+          // A warm P05 archive can be read before its current catalog arrives.
+          // The old-case publication check then rejects a downgrade. Once the
+          // full current assembly is verified and nothing awaits saving, that
+          // transient publication error no longer describes the archive.
+          const recoveredPublication =
+            prior.status === 'unsaved' &&
+            prior.errorCode === 'S_CONTENT_INCOMPATIBLE' &&
+            this.state.status === 'ready' &&
+            this.state.readingStatus === 'ready' &&
+            this.state.practiceStatus === 'ready' &&
+            this.usesReviewedCourseRelease() &&
+            !!this.state.snapshot &&
+            sameRef(this.state.snapshot.meta.activePackageRef, reviewedCoursePackage) &&
+            this.pendingCount() === 0;
+          if (
+            (prior.status === 'unsaved' || prior.status === 'conflict') &&
+            !recoveredPublication
+          ) {
             this.publish({ status: prior.status, errorCode: prior.errorCode, lastSaved: false });
           } else if (
             prior.lastSaved &&
@@ -1446,8 +1571,17 @@ export class LearningService {
   retryPending = async (): Promise<void> => {
     const commands = [...this.pendingCommands];
     const facts = [...this.pendingFacts];
+    const challenges = [...this.pendingChallengeFacts];
     await this.refresh();
     if (!this.client) await this.start();
+    for (const fact of challenges) {
+      if (!this.pendingChallengeFacts.has(fact)) continue;
+      try {
+        await this.recordChallengeAnswer(fact, this.state.sessionEpoch);
+      } catch {
+        return;
+      }
+    }
     for (const fact of facts) {
       if (!this.pendingFacts.has(fact)) continue;
       try {
@@ -1809,6 +1943,7 @@ export class LearningService {
     this.invalidationCleanup = undefined;
     this.pendingCommands.clear();
     this.pendingFacts.clear();
+    this.pendingChallengeFacts.clear();
     this.temporarySnapshot = undefined;
     this.isolatedTemporarySnapshot = undefined;
     this.client?.close();
@@ -1822,6 +1957,7 @@ export function createLearningService() {
   const service = new LearningService();
   // Deliberately no raw command, trusted authority, DB name or fixture options.
   return {
+    recordChallengeAnswer: service.recordChallengeAnswer,
     editorHistoryContext: service.editorHistoryContext,
     readEditorHistory: service.readEditorHistory,
     saveEditorHistory: service.saveEditorHistory,

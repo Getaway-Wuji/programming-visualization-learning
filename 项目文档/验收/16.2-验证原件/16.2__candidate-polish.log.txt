@@ -1,0 +1,23 @@
+
+Running 14 tests using 1 worker
+
+  ok  1 [chrome] › tests\browser\comparison.spec.ts:82:1 › two independent real C programs receive identical data; controls and full-state counters restore without storage facts (3.0s)
+  ok  2 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: empty (789ms)
+  ok  3 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: single (785ms)
+  ok  4 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: equal (847ms)
+  ok  5 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: sorted (798ms)
+  ok  6 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: reverse (918ms)
+  ok  7 [chrome] › tests\browser\comparison.spec.ts:149:3 › real boundary pair: limits (771ms)
+  ok  8 [chrome] › tests\browser\comparison.spec.ts:166:1 › input limits reject before execution; maximum 30 values remain under original budgets or show the actual limit (2.5s)
+  ok  9 [chrome] › tests\browser\comparison.spec.ts:202:1 › algorithm swap, text, seed, length, generation and reset immediately invalidate; same seed is reproducible (1.3s)
+  ok 10 [chrome] › tests\browser\comparison.spec.ts:255:1 › one real Worker failure remains visible; other algorithm executes, then fresh run recovers (777ms)
+  ok 11 [chrome] › tests\browser\comparison.spec.ts:272:1 › cancel during second run retains finalized first and never accepts the pending side; rerun recovers (2.0s)
+  ok 12 [chrome] › tests\browser\comparison.spec.ts:293:1 › editing during pending execution cancels old group; navigation and reload do not retain comparison input or traces (2.4s)
+  ok 13 [chrome] › tests\browser\comparison.spec.ts:315:1 › clearing the real local archive invalidates comparison in another tab (1.2s)
+  ok 14 [chrome] › tests\browser\comparison.spec.ts:332:1 › minimal representative three widths show both lanes without document overflow (1.2s)
+
+  14 passed (23.7s)
+[WebServer] (node:33728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:12308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

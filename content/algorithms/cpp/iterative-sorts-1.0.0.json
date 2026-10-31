@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "catalog.cpp.iterative-sorts",
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "case.cpp.insertion-sort",
+      "version": "1.0.0",
+      "programId": "program.cpp.insertion-sort",
+      "programVersion": "1.0.0",
+      "language": "cpp",
+      "title": "插入排序",
+      "description": "暂存一个数，将左侧较大的元素右移，再放回空位。",
+      "objectives": [
+        "沿真实步骤观察key、j与右移写入",
+        "分清逻辑输入长度与物理容量",
+        "后退恢复每一次赋值与当前输出"
+      ],
+      "min": -999,
+      "max": 999,
+      "maxItems": 30,
+      "defaultInput": [7, -3, 0, 5, -3, 2, 9],
+      "variant": "稳定直接插入；只移动严格大于key的项。",
+      "complexity": "最好O(n)，最坏O(n²)；原计数包含循环判断、输入和初始化，不能只当元素比较次数。",
+      "extraSpace": "原数组内移动，额外O(1)标量；values物理容量30个int。",
+      "sourceFile": "content/algorithms/cpp/insertion-sort-1.0.0.cpp",
+      "phases": [
+        {
+          "id": "setup",
+          "title": "准备存储",
+          "explanation": "建立逻辑长度n和容量30的数组；零初始化不是已读入数据。"
+        },
+        {
+          "id": "input",
+          "title": "读入原数据",
+          "explanation": "cin按请求顺序写入values的前n项；画面直接显示实际状态。"
+        },
+        {
+          "id": "insert",
+          "title": "取出待插入值",
+          "explanation": "暂存values[i]为key，令j从它左侧开始检查。"
+        },
+        {
+          "id": "shift",
+          "title": "比较并右移",
+          "explanation": "先检查j>=0再读取values[j]；严格大于key才右移，相等项不越过。右移期间允许出现重复值，key仍单独保留。"
+        },
+        {
+          "id": "place",
+          "title": "写回插入位置",
+          "explanation": "把key写到j+1；这是实际赋值，包含值不变的写入。"
+        },
+        {
+          "id": "output",
+          "title": "输出并结束",
+          "explanation": "逐项输出实际数组。主函数结束后对象离开作用域，后退可以恢复。"
+        }
+      ],
+      "boundarySamples": [[], [0], [2, 2, -1, 2], [-999, 0, 999], [5, 4, 3, 2, 1]]
+    },
+    {
+      "id": "case.cpp.shell-sort",
+      "version": "1.0.0",
+      "programId": "program.cpp.shell-sort",
+      "programVersion": "1.0.0",
+      "language": "cpp",
+      "title": "希尔排序",
+      "description": "按逐次减半的间隔做插入，最后以间隔1完成整理。",
+      "objectives": [
+        "观察gap的整数减半序列",
+        "核对j-gap与j两处真实槽位",
+        "理解它通常不稳定且不是另一种增量序列"
+      ],
+      "min": -999,
+      "max": 999,
+      "maxItems": 30,
+      "defaultInput": [7, -3, 0, 5, -3, 2, 9],
+      "variant": "gap从⌊n/2⌋起，每轮取⌊gap/2⌋，到0结束；一般不稳定。",
+      "complexity": "此减半增量采用O(n²)最坏界，不套用其他增量序列结论；调速不影响计数。",
+      "extraSpace": "原数组内分组插入，额外O(1)标量；values物理容量30个int。",
+      "sourceFile": "content/algorithms/cpp/shell-sort-1.0.0.cpp",
+      "phases": [
+        {
+          "id": "setup",
+          "title": "准备存储",
+          "explanation": "创建n与物理容量30的values，逻辑长度仍为输入项数。"
+        },
+        {
+          "id": "input",
+          "title": "读入原数据",
+          "explanation": "cin只消费原n个输入整数，没有隐藏的排序结果。"
+        },
+        {
+          "id": "gap",
+          "title": "选择本轮间隔",
+          "explanation": "整数除法产生n/2、再减半的序列。0或1项时初始gap为0，不进入分组插入。"
+        },
+        {
+          "id": "insert",
+          "title": "取出分组中的一项",
+          "explanation": "暂存key，j从i开始，在同一余数组内向左移动。"
+        },
+        {
+          "id": "shift",
+          "title": "按间隔移动",
+          "explanation": "先确保j>=gap，再比较values[j-gap]；较大值写到values[j]，j减去gap。"
+        },
+        {
+          "id": "place",
+          "title": "插入本组空位",
+          "explanation": "将key写到最终j位置；相同值不保证跨不同gap轮的相对次序。"
+        },
+        {
+          "id": "output",
+          "title": "输出并结束",
+          "explanation": "间隔1完成后逐项输出；当前输出随游标变化，可完整回退。"
+        }
+      ],
+      "boundarySamples": [[], [7], [3, 3, -2, 3], [-999, 999], [9, 7, 5, 3, 1]]
+    },
+    {
+      "id": "case.cpp.counting-sort",
+      "version": "1.0.0",
+      "programId": "program.cpp.counting-sort",
+      "programVersion": "1.0.0",
+      "language": "cpp",
+      "title": "计数排序",
+      "description": "将−20～20映射到41个频率桶，再从小到大回填原数组。",
+      "objectives": [
+        "核对value+20的桶索引",
+        "观察原频率累积与回填时扣减",
+        "理解有限整数域及额外存储的代价"
+      ],
+      "min": -20,
+      "max": 20,
+      "maxItems": 30,
+      "defaultInput": [7, -3, 0, 5, -3, 2, 9],
+      "variant": "固定41桶的频次回填；不使用累计位置或第二结果数组，不演示带附加字段记录的稳定性。",
+      "complexity": "O(n+41)，即O(n+k)且k固定为41；实际比较还包括循环条件，并非零比较。",
+      "extraSpace": "counts[41]增加41个int槽=164教学字节，另有常数标量；values[30]为原数组，不把输入存储算作额外结果数组。",
+      "sourceFile": "content/algorithms/cpp/counting-sort-1.0.0.cpp",
+      "phases": [
+        {
+          "id": "setup",
+          "title": "准备原数组",
+          "explanation": "原数组物理容量30，逻辑长度n为实际输入数。"
+        },
+        {
+          "id": "input",
+          "title": "读入有限域整数",
+          "explanation": "仅允许−20～20；越域输入不会进入该案例的执行。"
+        },
+        {
+          "id": "buckets",
+          "title": "建立41个零桶",
+          "explanation": "counts[0]对应−20，counts[40]对应20；真实零初始化也计数组写入。"
+        },
+        {
+          "id": "count",
+          "title": "累加真实频率",
+          "explanation": "bucket=values[i]+20，将对应counts[bucket]加1；重复值落入同一桶。"
+        },
+        {
+          "id": "rebuild",
+          "title": "按桶回填",
+          "explanation": "桶索引从0到40；非零时把bucket−20写入values[at]并扣减频率，at前进。此时桶内显示剩余次数，不能冒称仍是最初频率。"
+        },
+        {
+          "id": "output",
+          "title": "输出并结束",
+          "explanation": "回填完成后桶为0，逐项输出真实数组；末步对象结束，后退恢复原状态。"
+        }
+      ],
+      "boundarySamples": [[], [0], [20, -20, 20, -20], [-20, 0, 20], [5, 4, 3, 2, 1]]
+    }
+  ]
+}

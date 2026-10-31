@@ -1,0 +1,569 @@
+{
+  "label": "exercise.c.nonnegative",
+  "browser": "chrome",
+  "phase": "passed",
+  "sync": "synced",
+  "source": "#include <stdio.h>\nint main(void) {\n    int x = 5;\n    if ((x >= 0)) {\n        printf(\"%d\\n\", 1);\n    } else {\n        printf(\"%d\\n\", 0);\n    }\n    return 0;\n}\n",
+  "archive": {
+    "achievements": [],
+    "aliases": [],
+    "appearance": [
+      {
+        "preset": "minimal",
+        "themeOverrides": {
+          "minimal": {
+            "accentColor": null
+          },
+          "cute": {
+            "accentColor": null
+          },
+          "glass": {
+            "accentColor": null
+          },
+          "soft": {
+            "accentColor": null
+          },
+          "cool": {
+            "accentColor": null
+          },
+          "tech": {
+            "accentColor": null
+          }
+        },
+        "blockWorkspace": "show",
+        "layout": {
+          "sidebar": "expanded",
+          "workbenchMode": "standard",
+          "splitRatios": {
+            "practice": 50,
+            "visualize": 35,
+            "review": 35
+          }
+        },
+        "background": {
+          "assetId": null,
+          "visible": false,
+          "fit": "cover",
+          "position": "center",
+          "overlayOpacity": 75
+        }
+      }
+    ],
+    "appearanceAssets": [],
+    "avatar": [
+      {
+        "presetId": "avatar.basic.01",
+        "accentColor": "#168A72"
+      }
+    ],
+    "dailyFacts": [
+      {
+        "eventType": "exercise.passed",
+        "subjectRef": {
+          "id": "exercise.c.nonnegative",
+          "version": "1.1.0"
+        },
+        "canonicalSubjectId": "exercise.c.nonnegative",
+        "occurredAt": "2026-10-31T07:46:38.951Z",
+        "localDate": "2026-10-31"
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "7e9dc5f7-3404-4b70-9baf-c04af517c3d5",
+        "writerId": "46a316ba-3e0b-4b6d-96d6-51e86017151e",
+        "generation": "b2d59c53-0a12-4f8e-b589-d1899f04249f",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T07:46:38.551Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.nonnegative",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.nonnegative",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 5;\n    if ((x >= 0)) {\n        printf(\"%d\\n\", 1);\n    } else {\n        printf(\"%d\\n\", 0);\n    }\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.14\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_if\",\"id\":\"block.code.11\",\"extraState\":{\"hasElse\":true},\"fields\":{\"HAS_ELSE\":true},\"inputs\":{\"CONDITION\":{\"block\":{\"type\":\"cv_compare\",\"id\":\"block.code.6\",\"fields\":{\"OP\":\">=\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.5\",\"fields\":{\"VALUE\":\"0\"}}}}}},\"THEN\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.8\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.7\",\"fields\":{\"VALUE\":\"1\"}}}}}},\"ELSE\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.10\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.9\",\"fields\":{\"VALUE\":\"0\"}}}}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.13\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.12\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":5}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 2
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "8840842d-cd43-4920-b179-a25a3cdac9dd",
+        "writerId": "46a316ba-3e0b-4b6d-96d6-51e86017151e",
+        "generation": "b2d59c53-0a12-4f8e-b589-d1899f04249f",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T07:46:38.335Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.nonnegative",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.nonnegative",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 5;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":5}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 1
+      }
+    ],
+    "goals": [
+      {
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "targets": {
+          "exercise": 1,
+          "lesson": 1,
+          "case": 0
+        },
+        "achievedAt": null
+      }
+    ],
+    "knowledgeMarks": [],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.nonnegative",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T07:46:38.951Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "meta": [
+      {
+        "schemaVersion": "7.0.0",
+        "dbVersion": 7,
+        "generation": "b2d59c53-0a12-4f8e-b589-d1899f04249f",
+        "revision": 5,
+        "timeZone": "Asia/Shanghai",
+        "createdAt": "2026-10-31T07:46:38.177Z",
+        "activePackageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.nonnegative",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T07:46:38.951Z",
+        "lastAt": "2026-10-31T07:46:38.951Z"
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.nonnegative",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "eab5dcd1-88c2-4742-a0e7-a96eab152020",
+        "occurredAt": "2026-10-31T07:46:38.951Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 5
+      }
+    ],
+    "reviewCards": [],
+    "settings": [
+      {
+        "theme": "light",
+        "reducedMotion": "system",
+        "playbackRate": 1,
+        "goalTemplate": {
+          "revision": 1,
+          "targets": {
+            "exercise": 1,
+            "lesson": 1,
+            "case": 0
+          }
+        }
+      }
+    ]
+  },
+  "captures": [
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "f49390a0-6bc5-413b-9aa7-306b2fd96e01",
+      "responseOperationId": "f49390a0-6bc5-413b-9aa7-306b2fd96e01",
+      "catalogJson": null,
+      "requestBytes": 617,
+      "responseBytes": 2721
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "3374911b-a163-4908-bbd3-842e0497a0c1",
+      "responseOperationId": "3374911b-a163-4908-bbd3-842e0497a0c1",
+      "catalogJson": null,
+      "requestBytes": 721,
+      "responseBytes": 6260
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "9b38978f-14ad-4dd2-b6ba-9cc47bcde554",
+      "responseOperationId": "9b38978f-14ad-4dd2-b6ba-9cc47bcde554",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.nonnegative\",\"version\":\"1.1.0\",\"title\":\"非负判定\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.conditions\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.conditions\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.nonnegative\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.nonnegative\",\"version\":\"1.0.0\"},\"prompt\":\"保留输入源x，用if/else判断非负。x>=0时输出1和换行，否则输出0和换行。测试5、0、-3，两条路径都必须真实走到；不能只打印比较表达式来跳过if/else目标。所有测试正常结束且返回0。思路：先判断是否大于或等于0，把两个输出分别放在两个分支内。\",\"tests\":[{\"caseKey\":\"positive\",\"input\":{\"x\":5},\"expectedStdout\":\"1\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zero\",\"input\":{\"x\":0},\"expectedStdout\":\"1\\n\",\"expectedExitCode\":0},{\"caseKey\":\"negative\",\"input\":{\"x\":-3},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.nonnegative\",\"version\":\"1.0.0\",\"title\":\"非负分支参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"exampleInput\":{\"x\":-3},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int x = -3;\\n    if (x >= 0) {\\n        printf(\\\"1\\\\n\\\");\\n    } else {\\n        printf(\\\"0\\\\n\\\");\\n    }\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.x\",\"inputKey\":\"x\",\"targetName\":\"x\",\"targetKind\":\"scalar\",\"from\":\"field\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.comparison\",\"version\":\"1.0.0\"},{\"id\":\"block.c.if\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"},{\"id\":\"block.c.unary\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-03\"}},\"inputSpec\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\",\"title\":\"普通整数x\",\"fields\":[{\"key\":\"x\",\"kind\":\"integer\",\"min\":-999,\"max\":999}],\"relations\":[]},\"judgeProfile\":{\"id\":\"judge.c.nonnegative\",\"version\":\"1.0.0\",\"title\":\"两路分支检查\",\"rule\":\"if-else-paths\",\"targetDescription\":\"if/else两路在整个测试组分别执行。\"}}",
+      "requestBytes": 2155,
+      "responseBytes": 10836
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "f330c358-fd6c-4833-afb6-c8d2272f0467",
+      "responseOperationId": "f330c358-fd6c-4833-afb6-c8d2272f0467",
+      "catalogJson": null,
+      "requestBytes": 721,
+      "responseBytes": 6260
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "174543b0-d2e2-4f0b-b405-4cf20e3c5e99",
+      "responseOperationId": "174543b0-d2e2-4f0b-b405-4cf20e3c5e99",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.nonnegative\",\"version\":\"1.1.0\",\"title\":\"非负判定\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.conditions\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.conditions\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.nonnegative\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.nonnegative\",\"version\":\"1.0.0\"},\"prompt\":\"保留输入源x，用if/else判断非负。x>=0时输出1和换行，否则输出0和换行。测试5、0、-3，两条路径都必须真实走到；不能只打印比较表达式来跳过if/else目标。所有测试正常结束且返回0。思路：先判断是否大于或等于0，把两个输出分别放在两个分支内。\",\"tests\":[{\"caseKey\":\"positive\",\"input\":{\"x\":5},\"expectedStdout\":\"1\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zero\",\"input\":{\"x\":0},\"expectedStdout\":\"1\\n\",\"expectedExitCode\":0},{\"caseKey\":\"negative\",\"input\":{\"x\":-3},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.nonnegative\",\"version\":\"1.0.0\",\"title\":\"非负分支参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"exampleInput\":{\"x\":-3},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int x = -3;\\n    if (x >= 0) {\\n        printf(\\\"1\\\\n\\\");\\n    } else {\\n        printf(\\\"0\\\\n\\\");\\n    }\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.x\",\"inputKey\":\"x\",\"targetName\":\"x\",\"targetKind\":\"scalar\",\"from\":\"field\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.comparison\",\"version\":\"1.0.0\"},{\"id\":\"block.c.if\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"},{\"id\":\"block.c.unary\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-03\"}},\"inputSpec\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\",\"title\":\"普通整数x\",\"fields\":[{\"key\":\"x\",\"kind\":\"integer\",\"min\":-999,\"max\":999}],\"relations\":[]},\"judgeProfile\":{\"id\":\"judge.c.nonnegative\",\"version\":\"1.0.0\",\"title\":\"两路分支检查\",\"rule\":\"if-else-paths\",\"targetDescription\":\"if/else两路在整个测试组分别执行。\"}}",
+      "requestBytes": 2151,
+      "responseBytes": 10827
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "d8406065-7370-4c2f-badf-a24a0a2539c6",
+      "responseOperationId": "d8406065-7370-4c2f-badf-a24a0a2539c6",
+      "catalogJson": null,
+      "requestBytes": 723,
+      "responseBytes": 6461
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "3d604fef-5588-4035-908a-7eb394611158",
+      "responseOperationId": "3d604fef-5588-4035-908a-7eb394611158",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.nonnegative\",\"version\":\"1.1.0\",\"title\":\"非负判定\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.conditions\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.conditions\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.nonnegative\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.nonnegative\",\"version\":\"1.0.0\"},\"prompt\":\"保留输入源x，用if/else判断非负。x>=0时输出1和换行，否则输出0和换行。测试5、0、-3，两条路径都必须真实走到；不能只打印比较表达式来跳过if/else目标。所有测试正常结束且返回0。思路：先判断是否大于或等于0，把两个输出分别放在两个分支内。\",\"tests\":[{\"caseKey\":\"positive\",\"input\":{\"x\":5},\"expectedStdout\":\"1\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zero\",\"input\":{\"x\":0},\"expectedStdout\":\"1\\n\",\"expectedExitCode\":0},{\"caseKey\":\"negative\",\"input\":{\"x\":-3},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.nonnegative\",\"version\":\"1.0.0\",\"title\":\"非负分支参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"exampleInput\":{\"x\":-3},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int x = -3;\\n    if (x >= 0) {\\n        printf(\\\"1\\\\n\\\");\\n    } else {\\n        printf(\\\"0\\\\n\\\");\\n    }\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.x\",\"inputKey\":\"x\",\"targetName\":\"x\",\"targetKind\":\"scalar\",\"from\":\"field\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.comparison\",\"version\":\"1.0.0\"},{\"id\":\"block.c.if\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"},{\"id\":\"block.c.unary\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-03\"}},\"inputSpec\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\",\"title\":\"普通整数x\",\"fields\":[{\"key\":\"x\",\"kind\":\"integer\",\"min\":-999,\"max\":999}],\"relations\":[]},\"judgeProfile\":{\"id\":\"judge.c.nonnegative\",\"version\":\"1.0.0\",\"title\":\"两路分支检查\",\"rule\":\"if-else-paths\",\"targetDescription\":\"if/else两路在整个测试组分别执行。\"}}",
+      "requestBytes": 2157,
+      "responseBytes": 11001
+    }
+  ],
+  "runs": [
+    {
+      "identity": {
+        "contextId": "30c319ab-f049-4241-8e6d-3e9210598b2e",
+        "contextRevision": 3,
+        "runId": "7cd72cf6-a00f-4360-ab35-9583cec69c58",
+        "sourceRevision": 1,
+        "submissionId": "bb0876e6-85fc-4bed-a2a8-1107bfb05f08",
+        "testCaseKey": "positive"
+      },
+      "terminal": {
+        "cursor": 8,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n16"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "positive",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          }
+        ],
+        "coverage": [
+          {
+            "branch": "then",
+            "nodeId": "n5",
+            "siteKey": "block.code.11",
+            "visits": 1
+          },
+          {
+            "branch": "else",
+            "nodeId": "n5",
+            "siteKey": "block.code.11",
+            "visits": 0
+          }
+        ],
+        "observations": [],
+        "profileRef": {
+          "id": "judge.c.nonnegative",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "30c319ab-f049-4241-8e6d-3e9210598b2e",
+        "contextRevision": 3,
+        "runId": "d11982ea-336f-4a38-9b13-3811bda571cf",
+        "sourceRevision": 2,
+        "submissionId": "bb0876e6-85fc-4bed-a2a8-1107bfb05f08",
+        "testCaseKey": "zero"
+      },
+      "terminal": {
+        "cursor": 8,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n16"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "zero",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          }
+        ],
+        "coverage": [
+          {
+            "branch": "then",
+            "nodeId": "n5",
+            "siteKey": "block.code.11",
+            "visits": 1
+          },
+          {
+            "branch": "else",
+            "nodeId": "n5",
+            "siteKey": "block.code.11",
+            "visits": 0
+          }
+        ],
+        "observations": [],
+        "profileRef": {
+          "id": "judge.c.nonnegative",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "30c319ab-f049-4241-8e6d-3e9210598b2e",
+        "contextRevision": 3,
+        "runId": "b6d35028-3a5a-44ae-8850-91aa0aa5b301",
+        "sourceRevision": 3,
+        "submissionId": "bb0876e6-85fc-4bed-a2a8-1107bfb05f08",
+        "testCaseKey": "negative"
+      },
+      "terminal": {
+        "cursor": 8,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n17"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "negative",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n15"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n15"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n15"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n15"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          }
+        ],
+        "coverage": [
+          {
+            "branch": "then",
+            "nodeId": "n6",
+            "siteKey": "block.code.11",
+            "visits": 0
+          },
+          {
+            "branch": "else",
+            "nodeId": "n6",
+            "siteKey": "block.code.11",
+            "visits": 1
+          }
+        ],
+        "observations": [],
+        "profileRef": {
+          "id": "judge.c.nonnegative",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    }
+  ]
+}

@@ -6,6 +6,12 @@ import {
   THEME_IDS,
   recordKey,
 } from './model';
+import {
+  challengePackage,
+  challengePolicy,
+  challengeQuestion,
+  challengeSource,
+} from '../challenges/rules';
 import type {
   Alias,
   ContentEventType,
@@ -135,14 +141,18 @@ const eventResults: Record<EventType, string> = {
   'lesson.completed': 'completed',
   'case.view-confirmed': 'confirmed',
   'daily-goal.achieved': 'achieved',
+  'challenge.answered': 'correct',
 };
-const contentEvents = Object.keys(eventResults).filter((type) => type !== 'daily-goal.achieved');
+const contentEvents = Object.keys(eventResults).filter(
+  (type) => type !== 'daily-goal.achieved' && type !== 'challenge.answered',
+);
 const dailyEvents = ['exercise.passed', 'lesson.completed', 'case.view-confirmed'];
 const sourceEvents = {
   'reward.exercise.first-pass': 'exercise.passed',
   'reward.lesson.first-completion': 'lesson.completed',
   'reward.case.first-view': 'case.view-confirmed',
   'reward.daily-goal.once': 'daily-goal.achieved',
+  'reward.challenge.first-answer': 'challenge.answered',
 } as const;
 const categories = [
   'wrong-answer',
@@ -193,9 +203,33 @@ function eventRow(value: unknown, fields: readonly string[], receipt: boolean): 
   requireRule(hasType(type, receipt ? Object.keys(eventResults) : contentEvents));
   const valueRow = row(
     value,
-    type === 'exercise.attempt-evaluated' ? [...fields, 'resultCategory', 'failedCaseKey'] : fields,
+    type === 'exercise.attempt-evaluated'
+      ? [...fields, 'resultCategory', 'failedCaseKey']
+      : type === 'challenge.answered'
+        ? [...fields, 'eventContractVersion', 'answerKind']
+        : fields,
   );
-  requireRule(valueRow.result === eventResults[type as EventType]);
+  requireRule(
+    type === 'challenge.answered'
+      ? valueRow.result === 'correct' || valueRow.result === 'incorrect'
+      : valueRow.result === eventResults[type as EventType],
+  );
+  if (type === 'challenge.answered') {
+    assertPublicRef(valueRow.subjectRef);
+    assertPublicRef(valueRow.packageRef);
+    const question = challengeQuestion(valueRow.subjectRef.id);
+    requireRule(
+      question &&
+        valueRow.subjectRef.version === question.ref.version &&
+        valueRow.eventContractVersion === '1.1.0' &&
+        valueRow.learningRevision === 1 &&
+        sameRef(valueRow.packageRef, challengePackage),
+    );
+    requireRule(question.choices.includes(valueRow.answerKind as never));
+    requireRule(
+      valueRow.result === (valueRow.answerKind === question.anchorKind ? 'correct' : 'incorrect'),
+    );
+  }
   if (type === 'exercise.attempt-evaluated') assertAttempt(valueRow);
   if (type !== 'daily-goal.achieved') {
     assertPublicRef(valueRow.subjectRef);
@@ -379,7 +413,15 @@ export function assertRecord<S extends StoreName>(
         const event = sourceEvents[valueRow.sourceId as keyof typeof sourceEvents];
         requireRule(valueRow.subjectId.startsWith(`${event.split('.')[0]}.`));
       }
-      if (valueRow.status === 'pending')
+      if (valueRow.sourceId === challengeSource) {
+        requireRule(
+          challengeQuestion(valueRow.subjectId as string) &&
+            valueRow.status === 'posted' &&
+            (valueRow.points === 2 || valueRow.points === -1),
+        );
+        assertPublicRef(valueRow.policyRef);
+        requireRule(sameRef(valueRow.policyRef, challengePolicy));
+      } else if (valueRow.status === 'pending')
         requireRule(valueRow.points === null && valueRow.policyRef === null);
       else {
         requireRule(valueRow.status === 'posted' && isSafeUint(valueRow.points));
@@ -513,7 +555,17 @@ function checkRelations(snapshot: StorageSnapshot) {
       entry.status === 'posted' &&
       entry.policyRef.id === 'legacy.fixture' &&
       entry.policyRef.version === '0.9.0';
-    if (entry.sourceId === 'reward.daily-goal.once') {
+    if (entry.sourceId === challengeSource) {
+      const first = receipts
+        .filter((r) => r.eventType === 'challenge.answered' && r.subjectRef.id === entry.subjectId)
+        .sort((a, b) => a.committedRevision - b.committedRevision)[0];
+      requireRule(
+        first?.eventType === 'challenge.answered' &&
+          first.occurredAt === entry.occurredAt &&
+          first.localDate === entry.localDate &&
+          entry.points === (first.result === 'correct' ? 2 : -1),
+      );
+    } else if (entry.sourceId === 'reward.daily-goal.once') {
       requireRule(
         legacy ||
           goals.some(
@@ -537,7 +589,11 @@ function checkRelations(snapshot: StorageSnapshot) {
     requireRule(receipt.committedRevision <= meta.revision);
     const goal = goals.find((goal) => goal.localDate === receipt.localDate);
     requireRule(goal && goal.goalVersion === receipt.goalVersion);
-    if (receipt.eventType === 'daily-goal.achieved') {
+    if (receipt.eventType === 'challenge.answered') {
+      requireRule(
+        ledger.some((e) => e.sourceId === challengeSource && e.subjectId === receipt.subjectRef.id),
+      );
+    } else if (receipt.eventType === 'daily-goal.achieved') {
       requireRule(goal.achievedAt === receipt.occurredAt);
     } else {
       requireRule(

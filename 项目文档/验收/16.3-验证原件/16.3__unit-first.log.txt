@@ -1,0 +1,98 @@
+
+ RUN  v5.0.4 D:/Files/Downloads/编程可视化教学平台
+
+ ❯ tests/unit/snapshot-export.test.ts (28 tests | 13 failed) 318ms
+   ❯ 16.3 real current-state extraction and bounded file generation (28)
+     ✓ copies complete actual Rust state, source, input and positions without the trajectory: assignment 44ms
+     ✓ copies complete actual Rust state, source, input and positions without the trajectory: branch 9ms
+     ✓ copies complete actual Rust state, source, input and positions without the trajectory: loops 17ms
+     ✓ copies complete actual Rust state, source, input and positions without the trajectory: array-traversal 12ms
+     ✓ copies complete actual Rust state, source, input and positions without the trajectory: bubble-sort 36ms
+     ✓ copies complete actual Rust state, source, input and positions without the trajectory: selection-sort 30ms
+     × copies complete actual Rust state, source, input and positions without the trajectory: binary-search-first 1ms
+     × preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: pointers 12ms
+     × preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: scope 2ms
+     × preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: nodes 6ms
+     × preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: null 1ms
+     × preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: uninitialized 0ms
+     × preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: bounds 1ms
+     × preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: functions 2ms
+     × preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: hanoi 3ms
+     × preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: quicksort 9ms
+     × preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: stack-limit 6ms
+     × keeps complete sparse state and refuses an oversized picture without changing the JSON data 1ms
+     × preserves Chinese, CRLF, supplementary characters and exact UTF8 byte coordinates 3ms
+     ✓ rejects unavailable, crossed identities and active playback rather than making a fake snapshot 19ms
+     ✓ renders untrusted strings as literal drawing data and visibly represents control characters 19ms
+     ✓ uses PNG iTXt Unicode metadata and independent native CRC32 without altering the native image bytes 1ms
+     ✓ pauses the actual player and downloads a separate complete document for each cursor and repeated click 5ms
+     ✓ invalidates an asynchronous digest on step-away/step-back ABA and never revives its file 2ms
+     ✓ cancels a raster wait on invalidation and ignores a late successful image 65ms
+     ✓ clears a pending operation when the current run disappears, and an unavailable run cannot download 2ms
+     ✓ times out at the independent5000ms export budget without granting execution time or late download 4ms
+     ✓ reports an actual download exception without claiming a disk save and permits explicit retry 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > copies complete actual Rust state, source, input and positions without the trajectory: binary-search-first
+Unknown Error: E_INPUT_INVALID
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: pointers
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: scope
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: nodes
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: null
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: uninitialized
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: bounds
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: functions
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: hanoi
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: quicksort
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves actual memory frames, aliases, typed-null/uninitialized/dead objects and return state: stack-limit
+Error: E_PROTOCOL_INVALID
+ ❯ memoryAssert web/src/engine/memory-protocol.ts:136:25
+    134|
+    135| export function memoryAssert(condition: unknown): asserts condition {
+    136|   if (!condition) throw new Error('E_PROTOCOL_INVALID');
+       |                         ^
+    137| }
+    138| const enc = new TextEncoder();
+ ❯ decodeMemoryResult web/src/engine/memory-protocol.ts:924:5
+ ❯ memory tests/unit/snapshot-export.test.ts:80:24
+ ❯ tests/unit/snapshot-export.test.ts:191:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > keeps complete sparse state and refuses an oversized picture without changing the JSON data
+Error: E_PROTOCOL_INVALID
+ ❯ memoryAssert web/src/engine/memory-protocol.ts:136:25
+    134|
+    135| export function memoryAssert(condition: unknown): asserts condition {
+    136|   if (!condition) throw new Error('E_PROTOCOL_INVALID');
+       |                         ^
+    137| }
+    138| const enc = new TextEncoder();
+ ❯ decodeMemoryResult web/src/engine/memory-protocol.ts:924:5
+ ❯ memory tests/unit/snapshot-export.test.ts:80:24
+ ❯ tests/unit/snapshot-export.test.ts:230:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  tests/unit/snapshot-export.test.ts > 16.3 real current-state extraction and bounded file generation > preserves Chinese, CRLF, supplementary characters and exact UTF8 byte coordinates
+Error: Invalid Chai property: toStartWith
+ ❯ tests/unit/snapshot-export.test.ts:251:33
+    249|     context.diagnosticFocus = { start: 3, end: 13 };
+    250|     const document = documentOf(context);
+    251|     expect(document.source.text).toStartWith('// 中文😀\r\n');
+       |                                 ^
+    252|     expect(document.position.highlighted.range).toMatchObject({
+    253|       byteRange: { start: 3, end: 13 },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  13 failed | 15 passed (28)
+   Start at  09:11:55
+   Duration  792ms (tests 50%, transform 39%, import 11%, worker 1%)
+
+JSON report written to D:/Files/Downloads/编程可视化教学平台/.artifacts/16.3/unit-first.json

@@ -145,6 +145,19 @@ test.beforeEach(async ({ page }) => {
     };
   });
 });
+test.afterEach(async ({ page }, info) => {
+  if (info.status === info.expectedStatus) return;
+  await capture(
+    page,
+    'failure-' + createHash('sha256').update(info.title).digest('hex').slice(0, 10),
+    {
+      title: info.title,
+      status: info.status,
+      root: await root(page).evaluate((element) => element.outerHTML.slice(0, 1800)),
+      native: await rows(page),
+    },
+  );
+});
 for (const [index, q] of memoryBugQuestions.entries())
   test(`real pointer/loop failure and durable repair: ${q.exerciseRef.id}`, async ({ page }) => {
     await open(page, index);
@@ -295,8 +308,15 @@ test('eight-level catalog and real diagnostic remain usable at three widths', as
   await mkdir(folder, { recursive: true });
   for (const width of [1440, 768, 390]) {
     await page.setViewportSize({ width, height: 900 });
+    await expect(page.getByTestId('workbench')).toHaveAttribute(
+      'data-narrow',
+      width === 1440 ? 'false' : 'true',
+    );
     const tab = page.getByRole('tab', { name: '真实执行复盘', exact: true });
-    if (await tab.isVisible()) await tab.click();
+    if (width !== 1440) {
+      await expect(tab).toBeVisible();
+      await tab.click();
+    }
     await page.getByTestId('diagnostic-panel').scrollIntoViewIfNeeded();
     await page.screenshot({ path: `${folder}/memory-bug-${width}.png` });
     await expect

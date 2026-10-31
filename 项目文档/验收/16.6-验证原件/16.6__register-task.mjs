@@ -1,0 +1,3 @@
+import fs from 'node:fs';
+const p='项目文档/任务进度与交接.md';let s=fs.readFileSync(p,'utf8');const at=s.indexOf('\n');
+s=s.slice(0,at+1)+'\n16.6领取（2026-10-31）：root按协调明确派发唯一负责，只16.6，不领取16.7/21。守则→裁决→台账→任务包及12.1/12.2/12.3与16.4/16.5前置已读；5387文件SHA基线（含本轮先冻结决议/契约）见.artifacts/16.6/baseline.json，HEAD ec023619、空暂存/待推送链0。先冻结[DEC-P1-022](./架构决策/16.6-C++有界桶排序与物理布局.md)与[ALG-CASE-01 1.2](./契约/16.6-C++桶案例与槽位投影.md)：5固定桶、域−20..29、0～30项、bucketData[150]/bucketSizes[5]、每桶30槽、稳定插入/顺序合并，实际Algorithm P1协议/源码/原预算，不混memory对象。root独占新增桶content/投影/验证、algorithms必要目录/工作区/SortState/样式、明确递归入口判定、后继41+发布与当前生成指纹、中央五资料和独立交接。原五CPP/两内容包及配对/三引擎/预算/SAVE7/DB7/15store/学习奖励保持，桶不接挑战/对比/快照。35—40及16.1—16.5原件/外窗CI交接保护，不修CI。Chrome/minimal，无代理/新聊天/工作树/自动化/暂存/提交/推送。\n'+s.slice(at+1);fs.writeFileSync(p,s);

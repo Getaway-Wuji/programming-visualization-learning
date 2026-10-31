@@ -1,0 +1,233 @@
+
+ RUN  v5.0.4 D:/Files/Downloads/编程可视化教学平台
+
+ ✓ tests/unit/practice-wasm.test.ts (16 tests) 604ms
+ ✓ tests/unit/editor-history.test.ts (6 tests) 839ms
+   ✓ bounded editor capture queue and independent SAVE3 migration (6)
+     ✓ coalesces analysis, records edits/moves/restores and ignores presentation repeats 428ms
+ ✓ tests/unit/block-generator.test.ts (43 tests) 710ms
+ ✓ tests/unit/content-loader.test.ts (63 tests) 957ms
+ ✓ tests/unit/p05-recovery-fast-path.test.ts (12 tests) 850ms
+ ✓ tests/unit/p05-course.test.ts (25 tests) 825ms
+ ✓ tests/unit/course-content.test.ts (48 tests) 952ms
+ ✓ tests/unit/p05-learning-compatibility.test.ts (14 tests) 638ms
+ ✓ tests/unit/daily-goals.test.ts (34 tests) 803ms
+ ✓ tests/unit/player-model.test.ts (14 tests) 1405ms
+   ✓ 08.1 state and restoration using validated real Rust traces (14)
+     ✓ jumps across current real Rust n30 checkpoints and restores all 5330 steps 1170ms
+ ✓ tests/unit/vertical-evidence.test.ts (19 tests) 1443ms
+   ✓ 07.3 archived public production-UI evidence (no C rerun) (19)
+     ✓ independently verifies real source/input/trace/UI for assignment 1169ms
+ ✓ tests/unit/storage-recovery.test.ts (38 tests) 1215ms
+ ✓ tests/unit/execution-protocol.test.ts (29 tests) 365ms
+ ✓ tests/unit/case-view.test.ts (30 tests) 401ms
+ ✓ tests/unit/storage-model.test.ts (75 tests) 466ms
+ ✓ tests/unit/reward-service.test.ts (8 tests) 318ms
+ ✓ tests/unit/challenges.test.ts (17 tests) 365ms
+ ✓ tests/unit/learning-service.test.ts (14 tests) 171ms
+ ✓ tests/unit/schema-dispatch-11.4.test.ts (42 tests) 179ms
+ ✓ tests/unit/learning-recovery.test.ts (12 tests) 148ms
+ ✓ tests/unit/p05-encoding.test.ts (45 tests) 2098ms
+   ✓ P0.5 1.1 canonical receive proof remains strict without duplicate tree encoding (45)
+     ✓ fully consumes the actual maximum bubble packet through the 1.1 protocol boundary 431ms
+     ✓ does not post byte-count scheduling tasks when genuine maximum-packet UTF-8 work is still fast 503ms
+ ✓ tests/unit/player-presentation.test.ts (12 tests) 261ms
+ ✓ tests/unit/edit-analysis.test.ts (44 tests) 227ms
+ ✓ tests/unit/prepared-source-11.4.test.ts (54 tests) 2222ms
+   ✓ all published examples, 24 fixed tests and 0/1/30 boundary inputs exactly match Rust bytes and ranges 557ms
+ ✓ tests/unit/learning-domain.test.ts (42 tests) 236ms
+ ✓ tests/unit/practice-learning.test.ts (19 tests) 155ms
+ ❯ tests/unit/profile.test.ts (37 tests | 1 failed) 132ms
+   ✓ 11.3 closed local profile configuration (3)
+     ✓ loads four reviewed static presets and five immutable levels 2ms
+     ✓ rejects unknown versions, rights, URLs, changed thresholds and duplicate presets 1ms
+     ✓ rejects inherited fields, accessors, sparse arrays and hidden data without invoking accessors 1ms
+   ❯ 11.3 exact derived learning levels (19)
+     ✓ derives threshold 0 without a stored level 1ms
+     ✓ derives threshold 29 without a stored level 0ms
+     ✓ derives threshold 30 without a stored level 0ms
+     ✓ derives threshold 99 without a stored level 0ms
+     ✓ derives threshold 100 without a stored level 0ms
+     ✓ derives threshold 199 without a stored level 0ms
+     ✓ derives threshold 200 without a stored level 0ms
+     ✓ derives threshold 399 without a stored level 0ms
+     ✓ derives threshold 400 without a stored level 0ms
+     ✓ accepts precise totals beyond Number safe range and never converts them to Number 0ms
+     ✓ rejects noncanonical confirmed totals "" 0ms
+     × rejects noncanonical confirmed totals "-1" 6ms
+     ✓ rejects noncanonical confirmed totals "1.0" 0ms
+     ✓ rejects noncanonical confirmed totals "01" 0ms
+     ✓ rejects noncanonical confirmed totals " 30" 0ms
+     ✓ rejects noncanonical confirmed totals "1e3" 0ms
+     ✓ rejects noncanonical confirmed totals "NaN" 0ms
+     ✓ rejects noncanonical confirmed totals "Infinity" 0ms
+     ✓ uses the unified posted-only exact projection; pending rights cannot advance a level 22ms
+   ✓ 11.3 profile service settings and lifecycle (15)
+     ✓ keeps synthetic catalogs disabled unless the narrow loader is explicitly injected 3ms
+     ✓ loads profile configuration independently of unavailable storage 2ms
+     ✓ allows reviewed profile choices when reading is unavailable without publishing content 7ms
+     ✓ saves each controlled preset with revision CAS and changes no learning or reward records 6ms
+     ✓ preserves the prior saved avatar and reports conflict when another tab advanced the revision 2ms
+     ✓ never acknowledges a quota failure or failed verification read as saved 1ms
+     ✓ does not write damaged/readonly recovery archives even with valid profile configuration 1ms
+     ✓ rejects extra fields and noncanonical colors before persistence 3ms
+     ✓ provides only safe default color editing if configuration fails and can explicitly reload 2ms
+     ✓ retains an unavailable saved preset during failure rather than replacing or writing it 1ms
+     ✓ discards obsolete loader results and does not let configuration success change storage recovery state 1ms
+     ✓ clears to the original default and rejects an avatar edit captured before the clear barrier 2ms
+     ✓ rejects writes if another tab changed the generation without a delivered notification 1ms
+     ✓ a late configuration load after clear never recreates old avatar or learning data 60ms
+     ✓ does not publish a late configuration result after disposal 1ms
+ ✓ tests/unit/block-session.test.ts (27 tests) 2269ms
+ ✓ tests/unit/p05-course-wasm.test.ts (65 tests) 2415ms
+   ✓ P0.5 real WASM producer and closed browser protocol consumer (65)
+     ✓ accepts every fixed group and branch aggregation of exercise.c.bubble-sort 911ms
+     ✓ accepts every fixed group and branch aggregation of exercise.c.selection-sort 319ms
+ ✓ tests/unit/input-data.test.ts (25 tests) 67ms
+ ❯ tests/unit/memory-bugs.test.ts (9 tests | 2 failed) 2546ms
+   ✓ real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-uninitialized-pointer 102ms
+   ✓ real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-dangling-pointer 112ms
+   × real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-missing-update 1004ms
+   × real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-wrong-direction 1001ms
+   ✓ rejects identity/input/version additions and old consumers reject the companion 3ms
+   ✓ closed judgement refuses tampering or pretending a pointer error is met 2ms
+   ✓ precise 40 identities preserve the original36 and refuse field/version/parent/case drift 2ms
+   ✓ private pass capability requires four actual accepted results and live ownership 8ms
+   ✓ code-only history keeps original text and rejects old generations or foreign input 58ms
+ ✓ tests/unit/rewards.test.ts (13 tests) 86ms
+ ✓ tests/unit/reverse-mapping.test.ts (20 tests) 101ms
+ ✓ tests/unit/trace-validation-performance.test.ts (17 tests) 67ms
+ ✓ tests/unit/reviewed-case-release.test.ts (6 tests) 79ms
+ ❯ tests/unit/bugs.test.ts (11 tests | 1 failed) 2491ms
+   × real Rust broken, repair, alternative and constant rejection: exercise.c.bug-semicolon 1538ms
+   ✓ real Rust broken, repair, alternative and constant rejection: exercise.c.bug-parenthesis 326ms
+   ✓ real Rust broken, repair, alternative and constant rejection: exercise.c.bug-zero-branch 296ms
+   ✓ real Rust broken, repair, alternative and constant rejection: exercise.c.bug-sum-initial 302ms
+   ✓ supplement adds only four identities and preserves every original byte and required relation 11ms
+   ✓ does not authorize an altered supplementary catalog: id 0ms
+   ✓ does not authorize an altered supplementary catalog: version 0ms
+   ✓ does not authorize an altered supplementary catalog: revision 0ms
+   ✓ does not authorize an altered supplementary catalog: parent 0ms
+   ✓ does not authorize an altered supplementary catalog: cases 0ms
+   ✓ does not authorize an altered supplementary catalog: missing 0ms
+ ✓ tests/unit/p05-goals.test.ts (13 tests) 93ms
+ ✓ tests/unit/review-scheduler.test.ts (35 tests) 54ms
+ ✓ tests/unit/source-location.test.ts (10 tests) 38ms
+ ✓ tests/unit/memory-protocol.test.ts (36 tests) 65ms
+ ✓ tests/unit/execution-client.test.ts (11 tests) 99ms
+ ✓ tests/unit/p05-coverage.test.ts (9 tests) 87ms
+ ✓ tests/unit/execution-json-string-scan.test.ts (2 tests) 120ms
+ ✓ tests/unit/engine-client.test.ts (16 tests) 102ms
+ ✓ tests/unit/case-set.test.ts (57 tests) 3127ms
+   ✓ 08.4 seven public cases through the unchanged real Rust/WASM execution boundary (53)
+     ✓ accepts the original public template and known trace semantics: bubble-sort-maximum 892ms
+     ✓ accepts the original public template and known trace semantics: selection-sort-maximum 340ms
+   ✓ 08.4 permanent public UI representatives (offline, no C rerun) (4)
+     ✓ verifies all seven complete UI representatives while explicitly retaining subset status 791ms
+ ✓ tests/unit/execution-performance-11.4.test.ts (4 tests) 3377ms
+   ✓ records separate complete maximum-packet receive costs without changing acceptance budgets 2287ms
+ ✓ tests/unit/player-controller.test.ts (43 tests) 247ms
+ ✓ tests/unit/block-permissions.test.ts (38 tests) 151ms
+ ✓ tests/unit/execution-performance.test.ts (7 tests) 3622ms
+   ✓ specialized protocol validation with real maximum-input Rust packets (7)
+     ✓ keeps the generated validator exactly reproducible from the frozen schema 917ms
+     ✓ accepts the complete 5330-step n30 packet with full schema, checkpoints and inverse checks 433ms
+     ✓ still validates the final step and final checkpoint after deferred schema batches 1303ms
+ ✓ tests/unit/diagnostics.test.ts (23 tests) 109ms
+ ✓ tests/unit/course-reading.test.ts (9 tests) 47ms
+ ✓ tests/unit/block-workspace.test.ts (11 tests) 64ms
+ ✓ tests/unit/practice-answer.test.ts (11 tests) 15ms
+ ✓ tests/unit/memory-client.test.ts (10 tests) 55ms
+ ✓ tests/unit/algorithm-protocol.test.ts (18 tests) 24ms
+ ✓ tests/unit/algorithm-client.test.ts (5 tests) 42ms
+ ✓ tests/unit/execution-preparation-11.4.test.ts (4 tests) 36ms
+ ✓ tests/unit/p05-durable-display.test.ts (9 tests) 174ms
+ ✓ tests/unit/appearance-service.test.ts (5 tests) 30ms
+ ✓ tests/unit/appearance-config.test.ts (16 tests) 33ms
+ ✓ tests/unit/wasm-artifact.test.ts (1 test) 25ms
+ ✓ tests/unit/teaching-presentation.test.ts (7 tests) 12ms
+ ✓ tests/unit/lesson-completion.test.ts (5 tests) 7ms
+ ✓ tests/unit/memory-workspace.test.ts (4 tests) 15ms
+ ✓ tests/unit/reward-storage.test.ts (10 tests) 13ms
+ ✓ tests/unit/breakpoints.test.ts (8 tests) 18ms
+ ✓ tests/unit/knowledge-map.test.ts (18 tests) 27ms
+ ✓ tests/unit/notebook.test.ts (20 tests) 28ms
+ ✓ tests/unit/achievements.test.ts (31 tests) 36ms
+ ✓ tests/unit/practice-submission.test.ts (8 tests) 30ms
+ ✓ tests/unit/block-workspace-preference.test.ts (5 tests) 75ms
+ ✓ tests/unit/stack-view.test.ts (6 tests) 8ms
+ ✓ tests/unit/goal-form.test.ts (2 tests) 503ms
+ ✓ tests/unit/memory-view.test.ts (4 tests) 9ms
+ ✓ tests/unit/storage-channel.test.ts (1 test) 4ms
+ ✓ tests/unit/reconstruction.test.ts (8 tests) 2797ms
+   ✓ 13.5 configured reconstruction with real Rust and isolated drafts (8)
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.echo 410ms
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.two-x-plus-three 338ms
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.nonnegative 344ms
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.two-loop-sums 473ms
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.increment-at-index 385ms
+     ✓ validates the reference, a native block answer and a different structure: exercise.c.array-sum 511ms
+ ✓ tests/unit/profile-ui.test.ts (9 tests) 377ms
+ ✓ tests/unit/edit-session.test.ts (20 tests) 3022ms
+   ✓ A single bidirectional exercise document with real Rust analysis and execution (20)
+     ✓ restores persisted invalid and valid versions with fresh Rust authority and no old run 464ms
+ ✓ tests/unit/history-workspace.test.ts (9 tests) 12ms
+ ✓ tests/unit/silent-workspace.test.ts (11 tests) 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/bugs.test.ts > real Rust broken, repair, alternative and constant rejection: exercise.c.bug-semicolon
+AssertionError: expected undefined to be defined
+ ❯ tests/unit/bugs.test.ts:126:28
+    124|   await vi.waitFor(() => {
+    125|     const s = session.getSnapshot();
+    126|     expect(s.editDocument).toBeDefined();
+       |                            ^
+    127|     expect(s.editDocument?.analysisPending).toBe(false);
+    128|     expect(s.codeEditing).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/unit/memory-bugs.test.ts > real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-missing-update
+ FAIL  tests/unit/memory-bugs.test.ts > real memory Bug failure, two repairs, full inverse and non-teaching rejection: exercise.cpp.bug-wrong-direction
+Error: E_DEADLINE
+ ❯ MemoryExecutionClient.fail web/src/engine/memory-client.ts:96:22
+     94|       code === 'E_CANCELLED' ? 'cancelled' : code === 'E_DEADLINE' ? '…
+     95|     this.release(operation);
+     96|     operation.reject(new Error(code));
+       |                      ^
+     97|   }
+     98|   cancel() {
+ ❯ Timeout.<anonymous> web/src/engine/memory-client.ts:146:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/unit/profile.test.ts > 11.3 exact derived learning levels > rejects noncanonical confirmed totals "-1"
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ tests/unit/profile.test.ts:239:56
+    237|     'rejects noncanonical confirmed totals %j',
+    238|     (value) => {
+    239|       expect(() => deriveLearningLevel(value, config)).toThrow('PROFIL…
+       |                                                        ^
+    240|     },
+    241|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  3 failed | 77 passed (80)
+      Tests  4 failed | 1590 passed (1594)
+   Start at  07:02:17
+   Duration  6.20s (tests 54%, transform 21%, import 19%, environment 5%)
+
+    Isolate  80 workers spawned · ~352ms startup each (spawn + environment, per file)
+             at least ~872ms faster with isolate: false — reuses workers across files instead of one per file
+
+JSON report written to D:/Files/Downloads/编程可视化教学平台/.artifacts/16.1/frontend-first.json

@@ -208,6 +208,9 @@ test('selected themes use the available workbench width and keep the collapsible
         'C 语言课程',
         '算法与演示',
         '编译流程',
+        '错题与陌生点',
+        '今日复习',
+        '学习成就',
         '本地设置',
       ]);
       for (const name of ['学习首页', 'C 语言课程', '算法与演示', '编译流程', '本地设置'])

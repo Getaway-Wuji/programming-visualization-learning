@@ -1,0 +1,16 @@
+{
+  "task": "16.9",
+  "latestSourceAt": "2026-10-31T05:40:14.705Z",
+  "contract": "CLASSIC-CASE-01 1.0.0",
+  "scope": "Four exact-source C++ cases on unchanged memory engine: Hanoi0..5 with actual positions/moveState arrays and aliases, sign-normalized Euclidean GCD including agreed(0,0)=0, bounded trial-division prime and full-digit palindrome. Fixed arity/strict input bounds, same-cursor state/memory/stack, all atomic reverse. No frontend solution, source substitution, protocol/engine/budget/SAVE/learning changes or challenge/comparison/snapshot.",
+  "frontend": 105,
+  "candidateUniquePassed": 60,
+  "visual": {
+    "path": ".artifacts/16.9/visual.json",
+    "sha256": "596aee0ca835e6de04e660e34caeaaac436edd4561ff0843cb743c9c2c0581ee"
+  },
+  "failureReportsPreserved": [
+    "r169-unit-engine-first:5 Hanoi cases exposed object.declare before value.initialize. Null slots are legitimate uninitialized values; projection now separates layoutReady from invalid non-null peg, with no fabricated initial0. Second44 and final105 pass."
+  ],
+  "formalCurrentCoursePending": true
+}

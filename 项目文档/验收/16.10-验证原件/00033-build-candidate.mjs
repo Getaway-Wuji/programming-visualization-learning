@@ -1,0 +1,1 @@
+import{spawnSync}from'node:child_process';const result=spawnSync(process.execPath,['scripts/build.mjs'],{cwd:'.artifacts/16.10/clean-workspace',env:{...process.env,P05_REVIEW_CANDIDATE:'1'},stdio:'inherit',windowsHide:true});process.exitCode=result.status??1;

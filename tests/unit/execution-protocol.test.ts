@@ -7,6 +7,7 @@ import {
   ProtocolFailure,
 } from '../../web/src/engine/protocol';
 import type { ExecuteRequest, ExecuteResult } from '../../web/src/engine/protocol';
+import { precheckJson, parseChunked } from '../../web/src/engine/execution-json';
 
 interface Fixture {
   id: string;
@@ -62,6 +63,56 @@ function request() {
 }
 
 describe('EXEC canonical bounded browser protocol (authored protocol data only)', () => {
+  it('strict lexical proof preserves exact canonical bytes in native and chunked parsing', () => {
+    const finish = <T>(work: Generator<void, T, unknown>) => {
+      let next = work.next();
+      while (!next.done) next = work.next();
+      return next.value;
+    };
+    const scalars = [
+      null,
+      true,
+      false,
+      0,
+      -1,
+      2147483647,
+      -2147483648,
+      9007199254740991,
+      '',
+      '中😀',
+      '\u2028\u2029',
+      '\0\b\t\n\f\r"\\/',
+    ];
+    const texts = [
+      ...fixtures.map((f) => canonical(pair(f.id).result)),
+      ...scalars.flatMap((a) => scalars.map((b) => canonical({ a: [a, { b }], z: b }))),
+      canonical(Array.from({ length: 250001 }, (_, i) => ({ a: i, b: i % 2 ? '中😀' : null }))),
+    ];
+    for (const text of texts) {
+      finish(precheckJson(text));
+      expect(JSON.stringify(JSON.parse(text))).toBe(text);
+      expect(JSON.stringify(finish(parseChunked(text)))).toBe(text);
+    }
+    for (const text of [
+      '{"a":-0}',
+      '{"a":1e0}',
+      '{"a":1.0}',
+      '{"a":01}',
+      '{"a":"\\u0061"}',
+      '{"a":"\\/"}',
+      '{"a":1,"a":2}',
+      '{"b":1,"a":2}',
+      '{"1":0}',
+      '{"__proto__":0,"a":1}',
+      '{"a":9007199254740992}',
+    ]) {
+      if (text.includes('__proto__')) {
+        // This legal identifier remains an own key in both parser paths.
+        finish(precheckJson(text));
+        expect(JSON.stringify(finish(parseChunked(text)))).toBe(text);
+      } else expect(() => finish(precheckJson(text))).toThrow(ProtocolFailure);
+    }
+  });
   it('encodes all frozen legal request shapes into canonical exact bytes', () => {
     for (const fixture of fixtures)
       expect(new TextDecoder().decode(encodeRequest(fixture.request))).toBe(

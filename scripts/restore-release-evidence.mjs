@@ -73,28 +73,61 @@ for (const release of [
   '1.0.32',
   '1.0.33',
   '1.0.34',
+  '1.0.35',
+  '1.0.36',
+  '1.0.37',
+  '1.0.38',
+  '1.0.39',
+  '1.0.40',
+  '1.0.41',
+  '1.0.42',
+  '1.0.43',
+  '1.0.44',
+  '1.0.45',
+  '1.0.46',
+  '1.0.47',
 ]) {
   const successor = `content/c/p0/blockly-release-${release}.json`;
   if (!existsSync(resolve(root, successor))) continue;
-  const task = ['1.0.30', '1.0.31', '1.0.32', '1.0.33', '1.0.34'].includes(release)
-    ? '15.4'
-    : ['1.0.28', '1.0.29'].includes(release)
-      ? '15.3'
-      : ['1.0.26', '1.0.27'].includes(release)
-        ? '15.2'
-        : release === '1.0.25'
-          ? '15.1'
-          : release === '1.0.24'
-            ? '14.4'
-            : ['1.0.22', '1.0.23'].includes(release)
-              ? '14.3'
-              : release === '1.0.21'
-                ? '14.1'
-                : release === '1.0.20'
-                  ? '13.5'
-                  : release === '1.0.19'
-                    ? '13.4'
-                    : '13.3';
+  const task = ['1.0.45', '1.0.46', '1.0.47'].includes(release)
+    ? '16.10'
+    : release === '1.0.44'
+      ? '16.9'
+      : release === '1.0.43'
+        ? '16.8'
+        : release === '1.0.42'
+          ? '16.7'
+          : release === '1.0.41'
+            ? '16.6'
+            : release === '1.0.40'
+              ? '16.5'
+              : release === '1.0.39'
+                ? '16.4'
+                : release === '1.0.38'
+                  ? '16.3'
+                  : ['1.0.36', '1.0.37'].includes(release)
+                    ? '16.2'
+                    : release === '1.0.35'
+                      ? '16.1'
+                      : ['1.0.30', '1.0.31', '1.0.32', '1.0.33', '1.0.34'].includes(release)
+                        ? '15.4'
+                        : ['1.0.28', '1.0.29'].includes(release)
+                          ? '15.3'
+                          : ['1.0.26', '1.0.27'].includes(release)
+                            ? '15.2'
+                            : release === '1.0.25'
+                              ? '15.1'
+                              : release === '1.0.24'
+                                ? '14.4'
+                                : ['1.0.22', '1.0.23'].includes(release)
+                                  ? '14.3'
+                                  : release === '1.0.21'
+                                    ? '14.1'
+                                    : release === '1.0.20'
+                                      ? '13.5'
+                                      : release === '1.0.19'
+                                        ? '13.4'
+                                        : '13.3';
   const nextArchive = `项目文档/验收/发布凭据/${task}-${release}`;
   const nextIndex = json(`${nextArchive}/index.json`);
   assert.equal(nextIndex.registration.path, successor);

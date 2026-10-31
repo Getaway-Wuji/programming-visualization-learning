@@ -1,0 +1,213 @@
+.sort-input {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 16px;
+  margin: 16px 0 18px;
+}
+.sort-input > label {
+  display: block;
+  grid-column: 1 / -1;
+  margin: 0;
+  font-weight: 600;
+}
+.sort-input > input {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid var(--p05-control, var(--line));
+  border-radius: 8px;
+  background: var(--p05-surface, var(--surface));
+  color: var(--p05-text, inherit);
+  font: inherit;
+}
+.sort-input > p {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.sort-input > .inline-actions {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+  align-self: start;
+}
+.sort-source,
+.sort-stage {
+  padding: 16px;
+  min-width: 0;
+}
+.sort-source h2,
+.sort-stage > h2 {
+  font-size: 20px;
+  margin: 0 0 12px;
+}
+.sort-source pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font:
+    13px/1.7 Consolas,
+    monospace;
+  background: var(--p05-surface, var(--surface));
+  padding: 12px;
+}
+.sort-source textarea {
+  width: 100%;
+  min-height: 180px;
+  font:
+    13px/1.7 Consolas,
+    monospace;
+}
+.sort-source mark {
+  background: var(--p05-highlight, #ffe6a8);
+  color: #20242b;
+}
+.sort-seek {
+  display: flex;
+  flex: 1 1 200px;
+  gap: 8px;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+}
+.sort-seek input {
+  min-width: 90px;
+  flex: 1;
+}
+.sort-stage h3 {
+  font-size: 16px;
+  margin: 16px 0 8px;
+}
+.sort-stage pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.sort-explanation {
+  border-bottom: 1px solid var(--p05-border, var(--line));
+  padding-bottom: 8px;
+}
+.sort-buckets {
+  margin-top: 18px;
+}
+.sort-buckets summary,
+.sort-method summary,
+.sort-complete-output summary,
+.sort-source summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.sort-complete-output,
+.sort-method {
+  margin: 18px 0;
+}
+.sort-workspace > nav {
+  margin-top: 20px;
+}
+.sort-stack {
+  border-block: 1px solid var(--p05-border, var(--line));
+  padding-block: 8px;
+}
+.sort-memory {
+  overflow-x: auto;
+  margin-block: 12px;
+}
+.sort-memory table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.sort-workspace,
+.recursive-comparison {
+  font-variant-numeric: tabular-nums;
+}
+.sort-memory th:nth-child(n + 3),
+.sort-memory td:nth-child(n + 3) {
+  text-align: right;
+}
+.sort-memory th,
+.sort-memory td {
+  padding: 8px;
+  border-bottom: 1px solid var(--p05-border, var(--line));
+  text-align: left;
+}
+.sort-memory caption {
+  text-align: left;
+  margin-bottom: 8px;
+}
+.sort-memory small {
+  display: block;
+}
+.recursive-comparison .sort-source {
+  padding-inline: 0;
+}
+.comparison-family {
+  margin-bottom: 16px;
+}
+.bucket-stage {
+  margin-block: 20px;
+}
+.bucket-row {
+  padding-block: 12px;
+  border-top: 1px solid var(--p05-border, var(--line));
+}
+.bucket-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.bucket-heading h4 {
+  margin: 0;
+  font-size: 16px;
+}
+.bucket-heading [data-write='true'] {
+  font-weight: 700;
+  text-decoration: underline;
+}
+.bucket-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+.bucket-slots li {
+  display: grid;
+  gap: 4px;
+  padding: 10px 8px;
+  border: 1px solid var(--p05-border, var(--line));
+  border-radius: 6px;
+  text-align: center;
+}
+.bucket-slots li[data-write='true'] {
+  border: 2px solid var(--p05-accent, var(--accent));
+  padding: 9px 7px;
+}
+.bucket-slots small,
+.bucket-slots span {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.sort-workspace p {
+  overflow-wrap: anywhere;
+}
+.sort-stage:focus-visible {
+  outline: 2px solid var(--p05-accent, currentColor);
+  outline-offset: -2px;
+}
+@media (max-width: 1000px) {
+  .sort-input {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sort-input > .inline-actions {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+@media (max-width: 600px) {
+  .sort-source,
+  .sort-stage {
+    padding: 12px;
+  }
+  .sort-seek {
+    flex-basis: 100%;
+  }
+}

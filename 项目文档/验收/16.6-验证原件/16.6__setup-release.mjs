@@ -1,0 +1,7 @@
+import fs from 'node:fs';
+let path='scripts/build-p05-course.mjs',s=fs.readFileSync(path,'utf8');s=s.replace("import { validateRecursiveSorts } from './recursive-sort-content.mjs';","import { validateRecursiveSorts } from './recursive-sort-content.mjs';\nimport { bucketSortPaths } from './bucket-sort-release-inputs.mjs';\nimport { validateBucketSort } from './bucket-sort-content.mjs';");
+s=s.replace('validateRecursiveSorts();','validateRecursiveSorts();\nvalidateBucketSort();');
+s=s.replace("const releaseVersion = existsSync('content/c/p0/blockly-release-1.0.40.json')","const releaseVersion = existsSync('content/c/p0/blockly-release-1.0.41.json') ? '1.0.41' : existsSync('content/c/p0/blockly-release-1.0.40.json')");
+s=s.replace("    releaseVersion === '1.0.40'","    releaseVersion === '1.0.41' ? bucketSortPaths : releaseVersion === '1.0.40'").replace("      '1.0.40',","      '1.0.40',\n      '1.0.41',").replace("['1.0.39', '1.0.40'].includes(releaseVersion)","['1.0.39', '1.0.40', '1.0.41'].includes(releaseVersion)");fs.writeFileSync(path,s);
+path='scripts/restore-release-evidence.mjs';s=fs.readFileSync(path,'utf8').replace("  '1.0.40',","  '1.0.40',\n  '1.0.41',").replace("    release === '1.0.40'","    release === '1.0.41' ? '16.6' : release === '1.0.40'");fs.writeFileSync(path,s);
+s=fs.readFileSync('scripts/recursive-sorts-browser.mjs','utf8').replaceAll('16.5','16.6');s=s.replace("assert.match(label ?? '', /^[A-Za-z0-9_.-]+$/);","assert.match(label ?? '', /^r166-[A-Za-z0-9_.-]+$/);");fs.writeFileSync('scripts/bucket-sort-browser.mjs',s);

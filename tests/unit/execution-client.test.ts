@@ -105,7 +105,7 @@ afterEach(() => {
 });
 
 test.each(['fetch', 'digest', 'compile'] as const)(
-  'cancelling during %s prevents late worker creation and cache writes',
+  'cancelling during %s terminates the waiting worker and prevents late posts or cache writes',
   async (phase) => {
     const h = setup();
     const response = pending<Response>(),
@@ -134,10 +134,24 @@ test.each(['fetch', 'digest', 'compile'] as const)(
     compiled.resolve(h.module);
     expect((await result).terminal.status).toBe('cancelled');
     for (let i = 0; i < 100; i++) await Promise.resolve();
-    expect(h.workers).toHaveLength(0);
+    expect(h.workers).toHaveLength(1);
+    expect(h.workers[0].terminate).toHaveBeenCalledOnce();
+    expect(h.workers[0].postMessage).not.toHaveBeenCalled();
     expect(h.client.inspect().cachedModules).toBe(0);
   },
 );
+test('a waiting worker cannot publish startup messages or receive user data before the trusted module', async () => {
+  const h = setup();
+  h.fetcher.mockReturnValue(pending<Response>().promise);
+  const result = h.client.execute(request(), catalog);
+  await until(() => h.workers.length === 1);
+  h.workers[0].reply({ ok: true, operationId: 'startup', buffer: new ArrayBuffer(1) });
+  expect(h.decode).not.toHaveBeenCalled();
+  expect(h.workers[0].postMessage).not.toHaveBeenCalled();
+  h.client.cancel();
+  expect((await result).terminal.status).toBe('cancelled');
+  expect(h.workers[0].terminate).toHaveBeenCalledOnce();
+});
 test('the timer expires an unresolved download without trace, stats or judge', async () => {
   const h = setup();
   h.fetcher.mockReturnValue(pending<Response>().promise);
@@ -151,14 +165,22 @@ test('the timer expires an unresolved download without trace, stats or judge', a
     terminal: { status: 'resource-limit', diagnostics: [{ code: 'E_DEADLINE' }] },
   });
 });
+test('an already exhausted shared deadline starts neither Worker nor module fetch', async () => {
+  const h = setup();
+  const result = await h.client.execute(request(), catalog, undefined, -1000);
+  expect(result.terminal.diagnostics[0]?.code).toBe('E_DEADLINE');
+  expect(h.workers).toHaveLength(0);
+  expect(h.fetcher).not.toHaveBeenCalled();
+  expect(h.client.inspect().activeWorkers).toBe(0);
+});
 test('superseding invalidates before terminating and ignores an already queued old callback', async () => {
   const h = setup();
   const old = h.client.execute(request(), catalog);
-  await until(() => h.workers.length === 1);
+  await until(() => Boolean(h.workers[0]?.message));
   const worker = h.workers[0]!,
     handler = worker.onmessage;
   const latest = h.client.execute(request(), catalog);
-  await until(() => h.workers.length === 2);
+  await until(() => Boolean(h.workers[1]?.message));
   expect((await old).terminal.status).toBe('cancelled');
   expect(worker.terminate).toHaveBeenCalledOnce();
   worker.reply(undefined, handler);
@@ -176,7 +198,7 @@ test('late cancellation and repeated terminal callbacks preserve an accepted ter
   const h = setup();
   const commit = vi.fn();
   const result = h.client.execute(request(), catalog, commit);
-  await until(() => h.workers.length === 1);
+  await until(() => Boolean(h.workers[0]?.message));
   const worker = h.workers[0]!,
     handler = worker.onmessage;
   worker.reply();
@@ -193,7 +215,7 @@ test('a source change in the caller cannot mutate the dispatched identity or sou
   const original = req.identity.contextId;
   const result = h.client.execute(req, catalog);
   req.identity.contextId = 'edited';
-  await until(() => h.workers.length === 1);
+  await until(() => Boolean(h.workers[0]?.message));
   h.workers[0]!.reply();
   expect((await result).identity.contextId).toBe(original);
 });
@@ -212,7 +234,7 @@ test.each(['validation', 'commit'] as const)(
     const result = h.client.execute(request(), catalog, () => {
       if (phase === 'commit') h.now.mockReturnValue(1000);
     });
-    await until(() => h.workers.length === 1);
+    await until(() => Boolean(h.workers[0]?.message));
     h.workers[0]!.reply();
     expect((await result).terminal.diagnostics[0]!.code).toBe('E_DEADLINE');
     expect(h.client.inspect().state).toBe('expired');
@@ -222,7 +244,7 @@ test('a wrong operation and an oversized buffer fail before decoding', async () 
   for (const bad of ['identity', 'size']) {
     const h = setup();
     const result = h.client.execute(request(), catalog);
-    await until(() => h.workers.length === 1);
+    await until(() => Boolean(h.workers[0]?.message));
     h.workers[0]!.reply({
       ok: true,
       operationId: bad === 'identity' ? 'wrong' : h.workers[0]!.message!.operationId,

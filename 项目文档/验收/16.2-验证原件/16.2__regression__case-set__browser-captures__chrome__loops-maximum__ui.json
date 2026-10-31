@@ -1,0 +1,86 @@
+{
+  "captureVersion": "08.4-browser-capture@1",
+  "evidenceLevel": "production-ui-real-worker",
+  "key": "loops-maximum",
+  "caseId": "case.c.loops",
+  "project": "chrome",
+  "browserVersion": "156.0.8078.76",
+  "route": "#/visualize/case.c.loops",
+  "displayedSource": "#include <stdio.h>\nint main(void) {\n    int n = 30;\n    int i = 1;\n    int sumWhile = 0;\n    while (i <= n) {\n        sumWhile = sumWhile + i;\n        i = i + 1;\n    }\n    int sumFor = 0;\n    for (int j = 1; j <= n; j = j + 1) {\n        sumFor = sumFor + j;\n    }\n    printf(\"%d\\n%d\\n\", sumWhile, sumFor);\n    return 0;\n}\n",
+  "readOnly": true,
+  "values": {
+    "n": 30
+  },
+  "stdout": "465\n465\n",
+  "terminal": "completed",
+  "steps": 317,
+  "identity": {
+    "contextId": "6f08611c-85c4-480d-bc34-fce7cbec9558",
+    "contextRevision": 2,
+    "runId": "06ee6793-8420-4215-bd2d-b2ffaad5e575",
+    "sourceRevision": 2,
+    "submissionId": "e44c11c9-06fa-4140-a585-3d81a2dcdeb7",
+    "testCaseKey": null
+  },
+  "sourceKind": "public-content-original",
+  "initialCursor": 0,
+  "initialView": {
+    "cursor": 0,
+    "viewCursor": 0,
+    "status": "ready",
+    "kind": "",
+    "output": "",
+    "events": "本步读写与比较本步没有读写或比较观测。",
+    "scalars": [],
+    "arrays": [],
+    "counters": {
+      "comparisons": "0",
+      "scalarWrites": "0",
+      "arrayWrites": "0",
+      "swaps": "0"
+    },
+    "marks": [],
+    "terminalMarkCount": 0
+  },
+  "walk": null,
+  "rates": [],
+  "replay": null,
+  "storage": {
+    "storeNames": [
+      "achievements",
+      "aliases",
+      "appearance",
+      "appearanceAssets",
+      "avatar",
+      "dailyFacts",
+      "editHistory",
+      "goals",
+      "knowledgeMarks",
+      "ledger",
+      "meta",
+      "progress",
+      "receipts",
+      "reviewCards",
+      "settings"
+    ],
+    "beforeSha256": "9d8c46a97df2dcf285c1c9f5af77b96d18c145dbc772dc6eb165c656247e7f79",
+    "afterSha256": "9d8c46a97df2dcf285c1c9f5af77b96d18c145dbc772dc6eb165c656247e7f79",
+    "unchanged": true,
+    "scope": "native-fifteen-stores+localStorage+sessionStorage"
+  },
+  "worker": {
+    "kind": "execute",
+    "moduleSeen": true,
+    "responseOk": true,
+    "terminated": true,
+    "operationId": "53479f6e-118e-4b75-bde1-0b447b16af80",
+    "responseOperationId": "53479f6e-118e-4b75-bde1-0b447b16af80",
+    "url": "http://127.0.0.1:4178/assets/execution.worker-FvddZkgL.js"
+  },
+  "requestByteLength": 1429,
+  "resultByteLength": 330934,
+  "requestSha256": "a5e77b799de906965fe8088178d98601fa90d7d5d15f3032891d0d9a0a7e6cd3",
+  "resultSha256": "55f6e8f7b3981509b9957a4ee74a4ff8b12e427637287e0022ec6f08ecfd5c0a",
+  "catalogSha256": "425d1ffe6b8255f44e25f7d395edbd353faaafbb0d3f0042966e60a607e7839a",
+  "sourceSha256": "cac32d0f52ed62d0d9ff26351933a4d74df1527104e9334c781d14ee628fc165"
+}

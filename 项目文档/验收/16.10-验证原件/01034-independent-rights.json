@@ -1,0 +1,1151 @@
+{
+  "old": {
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:28.604Z",
+        "lastAt": "2026-10-31T06:30:28.604Z"
+      }
+    ],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.echo",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:28.604Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "b7b9e8c0-a474-4165-b177-921f103bfe40",
+        "occurredAt": "2026-10-31T06:30:28.604Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 4
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "0e3502a3-4bf3-4085-ab83-3a9d2e5107c9",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.272Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 1
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "4ccd6413-cdec-45bb-8585-77629ee71021",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.390Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    printf(\"%d\\n\", x);return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 2
+      }
+    ]
+  },
+  "previous": {
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.bug-semicolon",
+          "version": "1.0.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:29.039Z",
+        "lastAt": "2026-10-31T06:30:29.039Z"
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:28.604Z",
+        "lastAt": "2026-10-31T06:30:28.604Z"
+      }
+    ],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.bug-semicolon",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:29.039Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.echo",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:28.604Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.bug-semicolon",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "0080ebdc-e267-4da8-bb87-314351677005",
+        "occurredAt": "2026-10-31T06:30:29.039Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 5
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "b7b9e8c0-a474-4165-b177-921f103bfe40",
+        "occurredAt": "2026-10-31T06:30:28.604Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 4
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "0e3502a3-4bf3-4085-ab83-3a9d2e5107c9",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.272Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 1
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "2a8449bd-82ae-45af-ac8e-8cf7d2feead0",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.811Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.bug-semicolon",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 3,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = -9;\n    printf(\"%d\\n\", x);\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":-9}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 5
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "4ccd6413-cdec-45bb-8585-77629ee71021",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.390Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    printf(\"%d\\n\", x);return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 2
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "e87b861f-9970-4f65-b2e4-3ea3f0a72a04",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.771Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.bug-semicolon",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = -9;\n    printf(\"%d\\n\", x)\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":-9}}",
+        "state": "invalid",
+        "restoredFrom": null,
+        "sequence": 4
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "f64dfae5-3380-4fb3-9eba-2369e07fae23",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.735Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.bug-semicolon",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = -9;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":-9}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 3
+      }
+    ]
+  },
+  "all": {
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.bug-semicolon",
+          "version": "1.0.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:29.039Z",
+        "lastAt": "2026-10-31T06:30:29.039Z"
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:28.604Z",
+        "lastAt": "2026-10-31T06:30:28.604Z"
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.cpp.bug-uninitialized-pointer",
+          "version": "1.0.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:29.579Z",
+        "lastAt": "2026-10-31T06:30:29.579Z"
+      }
+    ],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.bug-semicolon",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:29.039Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.echo",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:28.604Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.cpp.bug-uninitialized-pointer",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:29.579Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.bug-semicolon",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "0080ebdc-e267-4da8-bb87-314351677005",
+        "occurredAt": "2026-10-31T06:30:29.039Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 5
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "b7b9e8c0-a474-4165-b177-921f103bfe40",
+        "occurredAt": "2026-10-31T06:30:28.604Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 4
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.cpp.bug-uninitialized-pointer",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "f1fac577-a6df-4651-beb4-9103b834ad4e",
+        "occurredAt": "2026-10-31T06:30:29.579Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 6
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "0e3502a3-4bf3-4085-ab83-3a9d2e5107c9",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.272Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 1
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "2a8449bd-82ae-45af-ac8e-8cf7d2feead0",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.811Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.bug-semicolon",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 3,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = -9;\n    printf(\"%d\\n\", x);\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":-9}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 5
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "2aad8315-17dd-4011-b5bc-ba33e820ba0e",
+        "writerId": "3619d8c5-1bab-43e4-8d8c-cd209410132b",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 2,
+        "createdAt": "2026-10-31T06:30:29.455Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-uninitialized-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-uninitialized-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p = &x;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 7
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "42798975-334f-4c8f-a0a0-1eade48a8206",
+        "writerId": "3619d8c5-1bab-43e4-8d8c-cd209410132b",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:29.424Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-uninitialized-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-uninitialized-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 6
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "4ccd6413-cdec-45bb-8585-77629ee71021",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.390Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    printf(\"%d\\n\", x);return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 2
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "e87b861f-9970-4f65-b2e4-3ea3f0a72a04",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.771Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.bug-semicolon",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = -9;\n    printf(\"%d\\n\", x)\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":-9}}",
+        "state": "invalid",
+        "restoredFrom": null,
+        "sequence": 4
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "f64dfae5-3380-4fb3-9eba-2369e07fae23",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.735Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.bug-semicolon",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = -9;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":-9}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 3
+      }
+    ]
+  },
+  "after": {
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.bug-semicolon",
+          "version": "1.0.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:29.039Z",
+        "lastAt": "2026-10-31T06:30:29.039Z"
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:28.604Z",
+        "lastAt": "2026-10-31T06:30:28.604Z"
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.cpp.bug-uninitialized-pointer",
+          "version": "1.0.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:29.579Z",
+        "lastAt": "2026-10-31T06:30:29.579Z"
+      }
+    ],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.bug-semicolon",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:29.039Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.echo",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:28.604Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.cpp.bug-uninitialized-pointer",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:29.579Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.bug-semicolon",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "0080ebdc-e267-4da8-bb87-314351677005",
+        "occurredAt": "2026-10-31T06:30:29.039Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 5
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "b7b9e8c0-a474-4165-b177-921f103bfe40",
+        "occurredAt": "2026-10-31T06:30:28.604Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 4
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.cpp.bug-uninitialized-pointer",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "f1fac577-a6df-4651-beb4-9103b834ad4e",
+        "occurredAt": "2026-10-31T06:30:29.579Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 6
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "0e3502a3-4bf3-4085-ab83-3a9d2e5107c9",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.272Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 1
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "2a8449bd-82ae-45af-ac8e-8cf7d2feead0",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.811Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.bug-semicolon",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 3,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = -9;\n    printf(\"%d\\n\", x);\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":-9}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 5
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "2aad8315-17dd-4011-b5bc-ba33e820ba0e",
+        "writerId": "3619d8c5-1bab-43e4-8d8c-cd209410132b",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 2,
+        "createdAt": "2026-10-31T06:30:29.455Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-uninitialized-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-uninitialized-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p = &x;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 7
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "42798975-334f-4c8f-a0a0-1eade48a8206",
+        "writerId": "3619d8c5-1bab-43e4-8d8c-cd209410132b",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:29.424Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-uninitialized-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-uninitialized-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 6
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "4ccd6413-cdec-45bb-8585-77629ee71021",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.390Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    printf(\"%d\\n\", x);return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 2
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "57425d72-8f99-4167-a964-175a54bb12a7",
+        "writerId": "6fbd5d78-adc8-4e61-986d-159b2375ca80",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:29.814Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-uninitialized-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-uninitialized-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 8
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "e87b861f-9970-4f65-b2e4-3ea3f0a72a04",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.771Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.bug-semicolon",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = -9;\n    printf(\"%d\\n\", x)\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":-9}}",
+        "state": "invalid",
+        "restoredFrom": null,
+        "sequence": 4
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "f64dfae5-3380-4fb3-9eba-2369e07fae23",
+        "writerId": "64b1d38f-3fb7-478d-9af3-8091fbeb598e",
+        "generation": "1bf1ba90-ea00-4a22-90eb-e45d2f9d4c6c",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:28.735Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.bug-semicolon",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = -9;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":-9}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 3
+      }
+    ]
+  }
+}

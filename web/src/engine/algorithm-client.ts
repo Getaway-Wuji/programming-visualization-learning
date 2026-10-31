@@ -111,10 +111,15 @@ export class AlgorithmExecutionClient {
       }
     }
   }
-  execute(request: AlgorithmRequest): Promise<AlgorithmResult> {
+  execute(request: AlgorithmRequest, triggeredAt?: number): Promise<AlgorithmResult> {
     this.cancel();
+    const now = this.now();
+    const start = triggeredAt ?? now;
+    if (!Number.isFinite(start) || start > now || now - start >= 1000) {
+      this.state = 'expired';
+      return Promise.reject(new Error('E_DEADLINE'));
+    }
     const snapshot = structuredClone(request);
-    const start = this.now();
     let bytes: Uint8Array<ArrayBuffer>;
     try {
       bytes = encodeAlgorithmRequest(snapshot);
@@ -133,7 +138,10 @@ export class AlgorithmExecutionClient {
       };
       this.active = operation;
       operation.releaseSlot = claimEngineSlot(() => this.fail(operation, 'E_CANCELLED'));
-      operation.timer = setTimeout(() => this.fail(operation, 'E_DEADLINE'), 1000);
+      operation.timer = setTimeout(
+        () => this.fail(operation, 'E_DEADLINE'),
+        Math.max(0, 1000 - (this.now() - start)),
+      );
       const guard = () => this.guard(operation);
       void (async () => {
         try {

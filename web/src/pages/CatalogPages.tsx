@@ -9,6 +9,10 @@ import { LearningSaveStatus } from '../learning/react';
 import { subjectLearningText, useLearning } from '../learning/react';
 import { ReconstructionCatalog } from '../practice/ReconstructionPanel';
 import { BugCatalogLink } from '../bugs/BugPanel';
+import { AlgorithmCatalog } from '../algorithms/AlgorithmCatalog';
+import { StructureCatalog } from '../structures/StructureCatalog';
+import { NodeCaseCatalog } from '../node-cases/NodeCaseCatalog';
+import { ClassicCatalog } from '../classics/ClassicCatalog';
 
 export function CoursePage() {
   const { chapterId } = useParams();
@@ -103,9 +107,15 @@ export function CasesPage() {
       <PageHeading
         kicker="看懂程序怎样执行"
         title="让数据变化，有迹可循。"
-        description="选择案例、输入数据，运行真实 C 程序并逐步查看变化。完整观看后主动确认，可获得首次观看奖励。"
+        description="选择案例、输入数据，运行实际源码并逐步查看变化。原C案例完整观看后主动确认可获首次奖励；新增C++观察不计积分。"
       />
       <CatalogSample kind="case" />
+      <p>
+        <Link className="button" to="/compare">
+          打开同数据双算法对比
+        </Link>{' '}
+        分别运行冒泡与选择排序，统一回放并核对真实比较、交换和写入计数。
+      </p>
       <p>
         <Link className="button" to="/memory?example=hanoi&view=stack">
           打开递归与调用栈
@@ -118,6 +128,10 @@ export function CasesPage() {
         </Link>{' '}
         逐步查看指针、对象与教学地址。
       </p>
+      <AlgorithmCatalog />
+      <StructureCatalog />
+      <NodeCaseCatalog />
+      <ClassicCatalog />
       {(['demo', 'algorithm'] as const).map((kind) => (
         <section key={kind}>
           <div className="section-heading">

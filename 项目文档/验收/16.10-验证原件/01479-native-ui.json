@@ -1,0 +1,694 @@
+{
+  "label": "comments-and-return-roundtrip",
+  "browser": "chrome",
+  "phase": "passed",
+  "sync": "synced",
+  "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 句前保留😀\n/* 输出内部保留😀 */\n    printf(\"%d\\n\", x); // 同行尾注保留\nreturn 0;\n}\n",
+  "archive": {
+    "achievements": [],
+    "aliases": [],
+    "appearance": [
+      {
+        "preset": "minimal",
+        "themeOverrides": {
+          "minimal": {
+            "accentColor": null
+          },
+          "cute": {
+            "accentColor": null
+          },
+          "glass": {
+            "accentColor": null
+          },
+          "soft": {
+            "accentColor": null
+          },
+          "cool": {
+            "accentColor": null
+          },
+          "tech": {
+            "accentColor": null
+          }
+        },
+        "blockWorkspace": "show",
+        "layout": {
+          "sidebar": "expanded",
+          "workbenchMode": "standard",
+          "splitRatios": {
+            "practice": 50,
+            "visualize": 35,
+            "review": 35
+          }
+        },
+        "background": {
+          "assetId": null,
+          "visible": false,
+          "fit": "cover",
+          "position": "center",
+          "overlayOpacity": 75
+        }
+      }
+    ],
+    "appearanceAssets": [],
+    "avatar": [
+      {
+        "presetId": "avatar.basic.01",
+        "accentColor": "#168A72"
+      }
+    ],
+    "dailyFacts": [
+      {
+        "eventType": "exercise.passed",
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "canonicalSubjectId": "exercise.c.echo",
+        "occurredAt": "2026-10-31T06:27:44.093Z",
+        "localDate": "2026-10-31"
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "49d81517-0d2e-4e17-a613-c52f44d0cb28",
+        "writerId": "2d1627e9-d1f5-40e8-b6b5-5c3f2631e3ec",
+        "generation": "7e58f79f-5ee4-4b8b-87c4-1e868cf1bed4",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:27:43.085Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "blocks",
+        "documentRevision": 3,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 句前保留😀\n/* 输出内部保留😀 */\n    printf(\"[%d]\\n\", x); // 同行尾注保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"[%d]\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 3
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "5cdc91bc-5729-4700-8b67-8942a476db86",
+        "writerId": "2d1627e9-d1f5-40e8-b6b5-5c3f2631e3ec",
+        "generation": "7e58f79f-5ee4-4b8b-87c4-1e868cf1bed4",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:27:42.755Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 句前保留😀\nprintf(/* 输出内部保留😀 */\"%d\\n\", x); // 同行尾注保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 2
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "8c07e2b6-b3f9-4240-a328-dc56957a22fe",
+        "writerId": "2d1627e9-d1f5-40e8-b6b5-5c3f2631e3ec",
+        "generation": "7e58f79f-5ee4-4b8b-87c4-1e868cf1bed4",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:27:43.325Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "blocks",
+        "documentRevision": 4,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 句前保留😀\n/* 输出内部保留😀 */\n    printf(\"%d\\n\", x); // 同行尾注保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 4
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "a17f4c5f-d8b2-431e-b2ab-28b88f7d1a64",
+        "writerId": "2d1627e9-d1f5-40e8-b6b5-5c3f2631e3ec",
+        "generation": "7e58f79f-5ee4-4b8b-87c4-1e868cf1bed4",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:27:43.553Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "blocks",
+        "documentRevision": 5,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 句前保留😀\n/* 输出内部保留😀 */\n    printf(\"%d 次数\\n\", x); // 同行尾注保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d 次数\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 5
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "eb0a1d85-2d60-465d-b588-d610dd4e9a82",
+        "writerId": "2d1627e9-d1f5-40e8-b6b5-5c3f2631e3ec",
+        "generation": "7e58f79f-5ee4-4b8b-87c4-1e868cf1bed4",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:27:42.469Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 1
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "ed775e1b-24e3-4c27-a225-d3b877cdd621",
+        "writerId": "2d1627e9-d1f5-40e8-b6b5-5c3f2631e3ec",
+        "generation": "7e58f79f-5ee4-4b8b-87c4-1e868cf1bed4",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:27:43.765Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.echo",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.echo",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "blocks",
+        "documentRevision": 6,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n// 句前保留😀\n/* 输出内部保留😀 */\n    printf(\"%d\\n\", x); // 同行尾注保留\nreturn 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.8\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.5\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.4\",\"fields\":{\"NAME\":\"x\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.7\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.6\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 6
+      }
+    ],
+    "goals": [
+      {
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "targets": {
+          "exercise": 1,
+          "lesson": 1,
+          "case": 0
+        },
+        "achievedAt": null
+      }
+    ],
+    "knowledgeMarks": [],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.echo",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:27:44.093Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "meta": [
+      {
+        "schemaVersion": "7.0.0",
+        "dbVersion": 7,
+        "generation": "7e58f79f-5ee4-4b8b-87c4-1e868cf1bed4",
+        "revision": 5,
+        "timeZone": "Asia/Shanghai",
+        "createdAt": "2026-10-31T06:27:42.237Z",
+        "activePackageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:27:44.093Z",
+        "lastAt": "2026-10-31T06:27:44.093Z"
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.echo",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "af7ea065-88fc-4ec4-8e5e-892cbc4daca8",
+        "occurredAt": "2026-10-31T06:27:44.093Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 5
+      }
+    ],
+    "reviewCards": [],
+    "settings": [
+      {
+        "theme": "light",
+        "reducedMotion": "system",
+        "playbackRate": 1,
+        "goalTemplate": {
+          "revision": 1,
+          "targets": {
+            "exercise": 1,
+            "lesson": 1,
+            "case": 0
+          }
+        }
+      }
+    ]
+  },
+  "captures": [
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "09850509-8e3f-4b15-a006-962086512349",
+      "responseOperationId": "09850509-8e3f-4b15-a006-962086512349",
+      "catalogJson": null,
+      "requestBytes": 610,
+      "responseBytes": 2714
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "0b253894-2187-4e3d-8a5b-2a184fcb6adc",
+      "responseOperationId": "0b253894-2187-4e3d-8a5b-2a184fcb6adc",
+      "catalogJson": null,
+      "requestBytes": 700,
+      "responseBytes": 3732
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "80cc6932-daf0-44d2-965e-b19c7fcae834",
+      "responseOperationId": "80cc6932-daf0-44d2-965e-b19c7fcae834",
+      "catalogJson": null,
+      "requestBytes": 708,
+      "responseBytes": 3793
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "82638720-337c-49f0-b466-5c3416004cad",
+      "responseOperationId": "82638720-337c-49f0-b466-5c3416004cad",
+      "catalogJson": null,
+      "requestBytes": 706,
+      "responseBytes": 3791
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "37d814a6-d090-437c-b456-5cf786ed92b0",
+      "responseOperationId": "37d814a6-d090-437c-b456-5cf786ed92b0",
+      "catalogJson": null,
+      "requestBytes": 713,
+      "responseBytes": 3798
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "e0292641-149b-4121-b0cd-c643d77d1222",
+      "responseOperationId": "e0292641-149b-4121-b0cd-c643d77d1222",
+      "catalogJson": null,
+      "requestBytes": 706,
+      "responseBytes": 3791
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "09684294-e25b-4c22-828b-2f997c9fd9f7",
+      "responseOperationId": "09684294-e25b-4c22-828b-2f997c9fd9f7",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.echo\",\"version\":\"1.1.0\",\"title\":\"输出输入变量\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.variables-output\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.variables\",\"version\":\"1.0.0\"},{\"id\":\"knowledge.c.output\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.echo\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.echo\",\"version\":\"1.0.0\"},\"prompt\":\"保留输入源变量x（-999到999），用输出积木读取x，输出它的十进制整数和一个换行，不要加提示文字。例：x=7输出7并换行，x=0输出0，x=-9输出-9。必须实际声明、读取输入变量，不能打印固定答案。所有测试正常结束且main返回0。思路：先找到输入声明，再把变量读取放进printf的%d参数。\",\"tests\":[{\"caseKey\":\"positive\",\"input\":{\"x\":7},\"expectedStdout\":\"7\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zero\",\"input\":{\"x\":0},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"negative\",\"input\":{\"x\":-9},\"expectedStdout\":\"-9\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.echo\",\"version\":\"1.0.0\",\"title\":\"变量输出参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"exampleInput\":{\"x\":7},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int x = 7;\\n    printf(\\\"%d\\\\n\\\", x);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.x\",\"inputKey\":\"x\",\"targetName\":\"x\",\"targetKind\":\"scalar\",\"from\":\"field\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"},{\"id\":\"block.c.unary\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-01\"}},\"inputSpec\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\",\"title\":\"普通整数x\",\"fields\":[{\"key\":\"x\",\"kind\":\"integer\",\"min\":-999,\"max\":999}],\"relations\":[]},\"judgeProfile\":{\"id\":\"judge.c.echo\",\"version\":\"1.0.0\",\"title\":\"输入读取输出检查\",\"rule\":\"input-read-output\",\"targetDescription\":\"真实声明并读取x，输出依赖输入，不打印固定答案。\"}}",
+      "requestBytes": 1758,
+      "responseBytes": 7158
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "98c96c19-0d56-4b4c-ac49-660a5e6707ff",
+      "responseOperationId": "98c96c19-0d56-4b4c-ac49-660a5e6707ff",
+      "catalogJson": null,
+      "requestBytes": 706,
+      "responseBytes": 3791
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "1323d0b3-7789-4f25-9936-9580d7c7c36a",
+      "responseOperationId": "1323d0b3-7789-4f25-9936-9580d7c7c36a",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.echo\",\"version\":\"1.1.0\",\"title\":\"输出输入变量\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.variables-output\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.variables\",\"version\":\"1.0.0\"},{\"id\":\"knowledge.c.output\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.echo\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.echo\",\"version\":\"1.0.0\"},\"prompt\":\"保留输入源变量x（-999到999），用输出积木读取x，输出它的十进制整数和一个换行，不要加提示文字。例：x=7输出7并换行，x=0输出0，x=-9输出-9。必须实际声明、读取输入变量，不能打印固定答案。所有测试正常结束且main返回0。思路：先找到输入声明，再把变量读取放进printf的%d参数。\",\"tests\":[{\"caseKey\":\"positive\",\"input\":{\"x\":7},\"expectedStdout\":\"7\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zero\",\"input\":{\"x\":0},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"negative\",\"input\":{\"x\":-9},\"expectedStdout\":\"-9\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.echo\",\"version\":\"1.0.0\",\"title\":\"变量输出参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"exampleInput\":{\"x\":7},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int x = 7;\\n    printf(\\\"%d\\\\n\\\", x);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.x\",\"inputKey\":\"x\",\"targetName\":\"x\",\"targetKind\":\"scalar\",\"from\":\"field\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"},{\"id\":\"block.c.unary\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-01\"}},\"inputSpec\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\",\"title\":\"普通整数x\",\"fields\":[{\"key\":\"x\",\"kind\":\"integer\",\"min\":-999,\"max\":999}],\"relations\":[]},\"judgeProfile\":{\"id\":\"judge.c.echo\",\"version\":\"1.0.0\",\"title\":\"输入读取输出检查\",\"rule\":\"input-read-output\",\"targetDescription\":\"真实声明并读取x，输出依赖输入，不打印固定答案。\"}}",
+      "requestBytes": 1754,
+      "responseBytes": 7150
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "ee23338f-0554-479d-8eaf-5b6d75ebf043",
+      "responseOperationId": "ee23338f-0554-479d-8eaf-5b6d75ebf043",
+      "catalogJson": null,
+      "requestBytes": 708,
+      "responseBytes": 3990
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "2ba1286f-bb5b-40f0-aa1e-544674213e64",
+      "responseOperationId": "2ba1286f-bb5b-40f0-aa1e-544674213e64",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.echo\",\"version\":\"1.1.0\",\"title\":\"输出输入变量\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.variables-output\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.variables\",\"version\":\"1.0.0\"},{\"id\":\"knowledge.c.output\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.echo\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.echo\",\"version\":\"1.0.0\"},\"prompt\":\"保留输入源变量x（-999到999），用输出积木读取x，输出它的十进制整数和一个换行，不要加提示文字。例：x=7输出7并换行，x=0输出0，x=-9输出-9。必须实际声明、读取输入变量，不能打印固定答案。所有测试正常结束且main返回0。思路：先找到输入声明，再把变量读取放进printf的%d参数。\",\"tests\":[{\"caseKey\":\"positive\",\"input\":{\"x\":7},\"expectedStdout\":\"7\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zero\",\"input\":{\"x\":0},\"expectedStdout\":\"0\\n\",\"expectedExitCode\":0},{\"caseKey\":\"negative\",\"input\":{\"x\":-9},\"expectedStdout\":\"-9\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.echo\",\"version\":\"1.0.0\",\"title\":\"变量输出参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"exampleInput\":{\"x\":7},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int x = 7;\\n    printf(\\\"%d\\\\n\\\", x);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.x\",\"inputKey\":\"x\",\"targetName\":\"x\",\"targetKind\":\"scalar\",\"from\":\"field\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"},{\"id\":\"block.c.unary\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-01\"}},\"inputSpec\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\",\"title\":\"普通整数x\",\"fields\":[{\"key\":\"x\",\"kind\":\"integer\",\"min\":-999,\"max\":999}],\"relations\":[]},\"judgeProfile\":{\"id\":\"judge.c.echo\",\"version\":\"1.0.0\",\"title\":\"输入读取输出检查\",\"rule\":\"input-read-output\",\"targetDescription\":\"真实声明并读取x，输出依赖输入，不打印固定答案。\"}}",
+      "requestBytes": 1761,
+      "responseBytes": 7319
+    }
+  ],
+  "runs": [
+    {
+      "identity": {
+        "contextId": "dad9476a-8143-49c1-b52b-a00978b98089",
+        "contextRevision": 7,
+        "runId": "473d1f8d-4256-4998-90bd-0d8644a7c04d",
+        "sourceRevision": 1,
+        "submissionId": "803e206e-1c3c-48f5-bb6b-13bc98cba1a5",
+        "testCaseKey": "positive"
+      },
+      "terminal": {
+        "cursor": 5,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n7"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "positive",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n5"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n5"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n5"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n5"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          }
+        ],
+        "coverage": [],
+        "observations": [],
+        "profileRef": {
+          "id": "judge.c.echo",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "dad9476a-8143-49c1-b52b-a00978b98089",
+        "contextRevision": 7,
+        "runId": "fbe8fa91-6e71-4440-850d-80b89320b648",
+        "sourceRevision": 2,
+        "submissionId": "803e206e-1c3c-48f5-bb6b-13bc98cba1a5",
+        "testCaseKey": "zero"
+      },
+      "terminal": {
+        "cursor": 5,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n7"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "zero",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n5"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n5"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n5"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n5"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          }
+        ],
+        "coverage": [],
+        "observations": [],
+        "profileRef": {
+          "id": "judge.c.echo",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "dad9476a-8143-49c1-b52b-a00978b98089",
+        "contextRevision": 7,
+        "runId": "c1209cb6-9f69-4759-a6e6-fb521350cb2e",
+        "sourceRevision": 3,
+        "submissionId": "803e206e-1c3c-48f5-bb6b-13bc98cba1a5",
+        "testCaseKey": "negative"
+      },
+      "terminal": {
+        "cursor": 5,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n8"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "negative",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n6"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n6"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n6"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n6"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              4
+            ]
+          }
+        ],
+        "coverage": [],
+        "observations": [],
+        "profileRef": {
+          "id": "judge.c.echo",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    }
+  ]
+}

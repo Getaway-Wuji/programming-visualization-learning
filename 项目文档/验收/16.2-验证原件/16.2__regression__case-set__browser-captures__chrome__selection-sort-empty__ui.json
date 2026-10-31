@@ -1,0 +1,86 @@
+{
+  "captureVersion": "08.4-browser-capture@1",
+  "evidenceLevel": "production-ui-real-worker",
+  "key": "selection-sort-empty",
+  "caseId": "case.c.selection-sort",
+  "project": "chrome",
+  "browserVersion": "156.0.8078.76",
+  "route": "#/visualize/case.c.selection-sort",
+  "displayedSource": "#include <stdio.h>\nint main(void) {\n    int n = 0;\n    int values[1] = {0};\n    for (int i = 0; i < n - 1; i = i + 1) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j = j + 1) {\n            if (values[j] < values[minIndex]) {\n                minIndex = j;\n            }\n        }\n        if (minIndex != i) {\n            int temp = values[i];\n            values[i] = values[minIndex];\n            values[minIndex] = temp;\n        }\n    }\n    for (int k = 0; k < n; k = k + 1) {\n        if (k > 0) {\n            printf(\" \");\n        }\n        printf(\"%d\", values[k]);\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "readOnly": true,
+  "values": {
+    "values": []
+  },
+  "stdout": "\n",
+  "terminal": "completed",
+  "steps": 17,
+  "identity": {
+    "contextId": "42194131-58c6-4a72-9938-ed0d1343425f",
+    "contextRevision": 2,
+    "runId": "2f6343d6-7a2b-4c77-a080-9c9c3486cc79",
+    "sourceRevision": 2,
+    "submissionId": "c0913957-ff58-4523-a22a-24bad463bac9",
+    "testCaseKey": null
+  },
+  "sourceKind": "public-content-original",
+  "initialCursor": 0,
+  "initialView": {
+    "cursor": 0,
+    "viewCursor": 0,
+    "status": "ready",
+    "kind": "",
+    "output": "",
+    "events": "本步读写与比较本步没有读写或比较观测。",
+    "scalars": [],
+    "arrays": [],
+    "counters": {
+      "comparisons": "0",
+      "scalarWrites": "0",
+      "arrayWrites": "0",
+      "swaps": "0"
+    },
+    "marks": [],
+    "terminalMarkCount": 0
+  },
+  "walk": null,
+  "rates": [],
+  "replay": null,
+  "storage": {
+    "storeNames": [
+      "achievements",
+      "aliases",
+      "appearance",
+      "appearanceAssets",
+      "avatar",
+      "dailyFacts",
+      "editHistory",
+      "goals",
+      "knowledgeMarks",
+      "ledger",
+      "meta",
+      "progress",
+      "receipts",
+      "reviewCards",
+      "settings"
+    ],
+    "beforeSha256": "996e7738b36231941a4708ee3405425278658a9ccfc606c885582be46b235318",
+    "afterSha256": "996e7738b36231941a4708ee3405425278658a9ccfc606c885582be46b235318",
+    "unchanged": true,
+    "scope": "native-fifteen-stores+localStorage+sessionStorage"
+  },
+  "worker": {
+    "kind": "execute",
+    "moduleSeen": true,
+    "responseOk": true,
+    "terminated": true,
+    "operationId": "c36dbc97-7309-4e23-bf4e-e14a3292ec4c",
+    "responseOperationId": "c36dbc97-7309-4e23-bf4e-e14a3292ec4c",
+    "url": "http://127.0.0.1:4178/assets/execution.worker-FvddZkgL.js"
+  },
+  "requestByteLength": 1824,
+  "resultByteLength": 26734,
+  "requestSha256": "29ef486f7d9bd7b25167e13c8ae21089cc201f3a6e3711e0e80cfef263ccd573",
+  "resultSha256": "bf2670036670a70e64cde6434453f5d5bb06d73e567a94ea41d28ae5b28e8472",
+  "catalogSha256": "f17cdb08c4bbc5e1e3b602a25e427a71b719ef3b59fb88a2b33d4bab0c9f267f",
+  "sourceSha256": "c56349364ce283698bd97cd1446349150f29a9848d1bacc3215f70a5f8287f47"
+}

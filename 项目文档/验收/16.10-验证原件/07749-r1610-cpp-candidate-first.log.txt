@@ -1,0 +1,648 @@
+
+Running 14 tests using 1 worker
+
+  x   1 [chrome] › tests\browser\bucket-sort.spec.ts:215:5 › actual 桶排序 default: source, sorted output, deltas and reverse state (5.7s)
+  x   2 [chrome] › tests\browser\classics.spec.ts:185:5 › actual hanoi n3: exact source, input, current values, output and reverse (5.6s)
+  x   3 [chrome] › tests\browser\classics.spec.ts:185:5 › actual gcd default: exact source, input, current values, output and reverse (5.7s)
+  x   4 [chrome] › tests\browser\classics.spec.ts:185:5 › actual prime default: exact source, input, current values, output and reverse (5.6s)
+  x   5 [chrome] › tests\browser\classics.spec.ts:185:5 › actual palindrome default: exact source, input, current values, output and reverse (5.6s)
+  x   6 [chrome] › tests\browser\iterative-sorts.spec.ts:121:5 › actual 插入排序 default: source, sorted output, deltas and reverse state (5.7s)
+  x   7 [chrome] › tests\browser\iterative-sorts.spec.ts:121:5 › actual 希尔排序 default: source, sorted output, deltas and reverse state (5.6s)
+  x   8 [chrome] › tests\browser\iterative-sorts.spec.ts:121:5 › actual 计数排序 default: source, sorted output, deltas and reverse state (5.7s)
+  x   9 [chrome] › tests\browser\linked-nodes.spec.ts:264:5 › actual list default: source, pointer commit states, output and reverse (5.7s)
+  x  10 [chrome] › tests\browser\linked-nodes.spec.ts:264:5 › actual bst default: source, pointer commit states, output and reverse (5.6s)
+  x  11 [chrome] › tests\browser\recursive-sorts.spec.ts:143:5 › actual 归并排序 default: source, sorted output, deltas and reverse state (5.6s)
+  x  12 [chrome] › tests\browser\recursive-sorts.spec.ts:143:5 › actual 快速排序 default: source, sorted output, deltas and reverse state (5.6s)
+  x  13 [chrome] › tests\browser\structures.spec.ts:139:5 › actual stack default: source, encoding, commit order, residuals and reverse (5.7s)
+  x  14 [chrome] › tests\browser\structures.spec.ts:139:5 › actual circular-queue default: source, encoding, commit order, residuals and reverse (5.7s)
+
+
+  1) [chrome] › tests\browser\bucket-sort.spec.ts:215:5 › actual 桶排序 default: source, sorted output, deltas and reverse state 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      27 | async function ready(p: Page, spec = sortCases[0]) {
+      28 |   await p.goto(`/#/algorithms/${spec.id}`);
+    > 29 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      30 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      31 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      32 |   await p.evaluate(() => {
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\bucket-sort.spec.ts:29:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\bucket-sort.spec.ts:219:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\bucket-sort-actual-桶排序-def-e69c8-ut-deltas-and-reverse-state-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\bucket-sort-actual-桶排序-def-e69c8-ut-deltas-and-reverse-state-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\bucket-sort-actual-桶排序-def-e69c8-ut-deltas-and-reverse-state-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\bucket-sort-actual-桶排序-def-e69c8-ut-deltas-and-reverse-state-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › tests\browser\classics.spec.ts:185:5 › actual hanoi n3: exact source, input, current values, output and reverse 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      21 | async function ready(p: Page, spec = specs[0]) {
+      22 |   await p.goto('/#/classics/' + spec.id);
+    > 23 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      24 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      25 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      26 |   await p.evaluate(() =>
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\classics.spec.ts:23:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\classics.spec.ts:189:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\classics-actual-hanoi-n3-e-d3c80-t-values-output-and-reverse-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\classics-actual-hanoi-n3-e-d3c80-t-values-output-and-reverse-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\classics-actual-hanoi-n3-e-d3c80-t-values-output-and-reverse-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\classics-actual-hanoi-n3-e-d3c80-t-values-output-and-reverse-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chrome] › tests\browser\classics.spec.ts:185:5 › actual gcd default: exact source, input, current values, output and reverse 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      21 | async function ready(p: Page, spec = specs[0]) {
+      22 |   await p.goto('/#/classics/' + spec.id);
+    > 23 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      24 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      25 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      26 |   await p.evaluate(() =>
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\classics.spec.ts:23:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\classics.spec.ts:189:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\classics-actual-gcd-defaul-c1a71-t-values-output-and-reverse-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\classics-actual-gcd-defaul-c1a71-t-values-output-and-reverse-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\classics-actual-gcd-defaul-c1a71-t-values-output-and-reverse-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\classics-actual-gcd-defaul-c1a71-t-values-output-and-reverse-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chrome] › tests\browser\classics.spec.ts:185:5 › actual prime default: exact source, input, current values, output and reverse 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      21 | async function ready(p: Page, spec = specs[0]) {
+      22 |   await p.goto('/#/classics/' + spec.id);
+    > 23 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      24 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      25 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      26 |   await p.evaluate(() =>
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\classics.spec.ts:23:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\classics.spec.ts:189:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\classics-actual-prime-defa-7699b-t-values-output-and-reverse-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\classics-actual-prime-defa-7699b-t-values-output-and-reverse-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\classics-actual-prime-defa-7699b-t-values-output-and-reverse-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\classics-actual-prime-defa-7699b-t-values-output-and-reverse-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [chrome] › tests\browser\classics.spec.ts:185:5 › actual palindrome default: exact source, input, current values, output and reverse 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      21 | async function ready(p: Page, spec = specs[0]) {
+      22 |   await p.goto('/#/classics/' + spec.id);
+    > 23 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      24 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      25 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      26 |   await p.evaluate(() =>
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\classics.spec.ts:23:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\classics.spec.ts:189:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\classics-actual-palindrome-3b5a6-t-values-output-and-reverse-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\classics-actual-palindrome-3b5a6-t-values-output-and-reverse-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\classics-actual-palindrome-3b5a6-t-values-output-and-reverse-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\classics-actual-palindrome-3b5a6-t-values-output-and-reverse-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [chrome] › tests\browser\iterative-sorts.spec.ts:121:5 › actual 插入排序 default: source, sorted output, deltas and reverse state 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      28 | async function ready(p: Page, spec = sortCases[0]) {
+      29 |   await p.goto(`/#/algorithms/${spec.id}`);
+    > 30 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      31 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      32 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      33 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\iterative-sorts.spec.ts:30:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\iterative-sorts.spec.ts:125:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-插入排-10d89-ut-deltas-and-reverse-state-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-插入排-10d89-ut-deltas-and-reverse-state-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-插入排-10d89-ut-deltas-and-reverse-state-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-插入排-10d89-ut-deltas-and-reverse-state-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [chrome] › tests\browser\iterative-sorts.spec.ts:121:5 › actual 希尔排序 default: source, sorted output, deltas and reverse state 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      28 | async function ready(p: Page, spec = sortCases[0]) {
+      29 |   await p.goto(`/#/algorithms/${spec.id}`);
+    > 30 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      31 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      32 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      33 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\iterative-sorts.spec.ts:30:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\iterative-sorts.spec.ts:125:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-希尔排-da786-ut-deltas-and-reverse-state-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-希尔排-da786-ut-deltas-and-reverse-state-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-希尔排-da786-ut-deltas-and-reverse-state-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-希尔排-da786-ut-deltas-and-reverse-state-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [chrome] › tests\browser\iterative-sorts.spec.ts:121:5 › actual 计数排序 default: source, sorted output, deltas and reverse state 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      28 | async function ready(p: Page, spec = sortCases[0]) {
+      29 |   await p.goto(`/#/algorithms/${spec.id}`);
+    > 30 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      31 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      32 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      33 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\iterative-sorts.spec.ts:30:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\iterative-sorts.spec.ts:125:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-计数排-b3502-ut-deltas-and-reverse-state-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-计数排-b3502-ut-deltas-and-reverse-state-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-计数排-b3502-ut-deltas-and-reverse-state-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\iterative-sorts-actual-计数排-b3502-ut-deltas-and-reverse-state-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [chrome] › tests\browser\linked-nodes.spec.ts:264:5 › actual list default: source, pointer commit states, output and reverse 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      21 | async function ready(p: Page, spec = specs[0]) {
+      22 |   await p.goto('/#/nodes/' + spec.id);
+    > 23 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      24 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      25 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      26 |   await p.evaluate(() =>
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\linked-nodes.spec.ts:23:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\linked-nodes.spec.ts:268:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\linked-nodes-actual-list-d-90f7c-t-states-output-and-reverse-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\linked-nodes-actual-list-d-90f7c-t-states-output-and-reverse-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\linked-nodes-actual-list-d-90f7c-t-states-output-and-reverse-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\linked-nodes-actual-list-d-90f7c-t-states-output-and-reverse-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [chrome] › tests\browser\linked-nodes.spec.ts:264:5 › actual bst default: source, pointer commit states, output and reverse 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      21 | async function ready(p: Page, spec = specs[0]) {
+      22 |   await p.goto('/#/nodes/' + spec.id);
+    > 23 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      24 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      25 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      26 |   await p.evaluate(() =>
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\linked-nodes.spec.ts:23:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\linked-nodes.spec.ts:268:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\linked-nodes-actual-bst-de-7a092-t-states-output-and-reverse-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\linked-nodes-actual-bst-de-7a092-t-states-output-and-reverse-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\linked-nodes-actual-bst-de-7a092-t-states-output-and-reverse-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\linked-nodes-actual-bst-de-7a092-t-states-output-and-reverse-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [chrome] › tests\browser\recursive-sorts.spec.ts:143:5 › actual 归并排序 default: source, sorted output, deltas and reverse state 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      28 | async function ready(p: Page, spec = sortCases[0]) {
+      29 |   await p.goto(`/#/algorithms/${spec.id}`);
+    > 30 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      31 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      32 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      33 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\recursive-sorts.spec.ts:30:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\recursive-sorts.spec.ts:147:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\recursive-sorts-actual-归并排-9aedf-ut-deltas-and-reverse-state-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\recursive-sorts-actual-归并排-9aedf-ut-deltas-and-reverse-state-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\recursive-sorts-actual-归并排-9aedf-ut-deltas-and-reverse-state-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\recursive-sorts-actual-归并排-9aedf-ut-deltas-and-reverse-state-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [chrome] › tests\browser\recursive-sorts.spec.ts:143:5 › actual 快速排序 default: source, sorted output, deltas and reverse state 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        13 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      28 | async function ready(p: Page, spec = sortCases[0]) {
+      29 |   await p.goto(`/#/algorithms/${spec.id}`);
+    > 30 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      31 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      32 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      33 | }
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\recursive-sorts.spec.ts:30:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\recursive-sorts.spec.ts:147:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\recursive-sorts-actual-快速排-d8fa5-ut-deltas-and-reverse-state-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\recursive-sorts-actual-快速排-d8fa5-ut-deltas-and-reverse-state-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\recursive-sorts-actual-快速排-d8fa5-ut-deltas-and-reverse-state-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\recursive-sorts-actual-快速排-d8fa5-ut-deltas-and-reverse-state-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [chrome] › tests\browser\structures.spec.ts:139:5 › actual stack default: source, encoding, commit order, residuals and reverse 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      22 | async function ready(p: Page, spec = specs[0]) {
+      23 |   await p.goto('/#/structures/' + spec.id);
+    > 24 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      25 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      26 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      27 |   await p.evaluate(() =>
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\structures.spec.ts:24:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\structures.spec.ts:143:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\structures-actual-stack-de-f3d71-order-residuals-and-reverse-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\structures-actual-stack-de-f3d71-order-residuals-and-reverse-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\structures-actual-stack-de-f3d71-order-residuals-and-reverse-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\structures-actual-stack-de-f3d71-order-residuals-and-reverse-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) [chrome] › tests\browser\structures.spec.ts:139:5 › actual circular-queue default: source, encoding, commit order, residuals and reverse 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.app-shell')
+    Expected: "ready"
+    Received: "unsaved"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.app-shell') with timeout 5000ms
+      - waiting for locator('.app-shell')
+        - locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="loading" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+        - unexpected value "loading"
+        12 × locator resolved to <div data-nav-open="false" data-sidebar="expanded" class="app-shell p05-app" data-workbench-mode="standard" data-review-storage-status="failed" data-learning-goal-status="loading" data-learning-reading-status="ready" data-learning-profile-status="ready" data-learning-reward-status="loading" data-learning-storage-status="unsaved" data-learning-practice-status="failed" data-achievement-storage-status="failed">…</div>
+           - unexpected value "unsaved"
+
+
+      22 | async function ready(p: Page, spec = specs[0]) {
+      23 |   await p.goto('/#/structures/' + spec.id);
+    > 24 |   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+         |                                         ^
+      25 |   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
+      26 |   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+      27 |   await p.evaluate(() =>
+        at ready (D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\structures.spec.ts:24:41)
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\structures.spec.ts:143:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\structures-actual-circular-0f591-order-residuals-and-reverse-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\r1610-cpp-candidate-first-output\structures-actual-circular-0f591-order-residuals-and-reverse-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\r1610-cpp-candidate-first-output\structures-actual-circular-0f591-order-residuals-and-reverse-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\r1610-cpp-candidate-first-output\structures-actual-circular-0f591-order-residuals-and-reverse-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14 failed
+    [chrome] › tests\browser\bucket-sort.spec.ts:215:5 › actual 桶排序 default: source, sorted output, deltas and reverse state 
+    [chrome] › tests\browser\classics.spec.ts:185:5 › actual hanoi n3: exact source, input, current values, output and reverse 
+    [chrome] › tests\browser\classics.spec.ts:185:5 › actual gcd default: exact source, input, current values, output and reverse 
+    [chrome] › tests\browser\classics.spec.ts:185:5 › actual prime default: exact source, input, current values, output and reverse 
+    [chrome] › tests\browser\classics.spec.ts:185:5 › actual palindrome default: exact source, input, current values, output and reverse 
+    [chrome] › tests\browser\iterative-sorts.spec.ts:121:5 › actual 插入排序 default: source, sorted output, deltas and reverse state 
+    [chrome] › tests\browser\iterative-sorts.spec.ts:121:5 › actual 希尔排序 default: source, sorted output, deltas and reverse state 
+    [chrome] › tests\browser\iterative-sorts.spec.ts:121:5 › actual 计数排序 default: source, sorted output, deltas and reverse state 
+    [chrome] › tests\browser\linked-nodes.spec.ts:264:5 › actual list default: source, pointer commit states, output and reverse 
+    [chrome] › tests\browser\linked-nodes.spec.ts:264:5 › actual bst default: source, pointer commit states, output and reverse 
+    [chrome] › tests\browser\recursive-sorts.spec.ts:143:5 › actual 归并排序 default: source, sorted output, deltas and reverse state 
+    [chrome] › tests\browser\recursive-sorts.spec.ts:143:5 › actual 快速排序 default: source, sorted output, deltas and reverse state 
+    [chrome] › tests\browser\structures.spec.ts:139:5 › actual stack default: source, encoding, commit order, residuals and reverse 
+    [chrome] › tests\browser\structures.spec.ts:139:5 › actual circular-queue default: source, encoding, commit order, residuals and reverse 
+[WebServer] (node:14328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:56032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:50996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:16088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14608) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:32904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:32932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:58948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:53984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:58292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:56648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

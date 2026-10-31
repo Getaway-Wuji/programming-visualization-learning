@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.2.0",
+  "id": "catalog.cpp.bucket-sort",
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "case.cpp.bucket-sort",
+      "version": "1.0.0",
+      "programId": "program.cpp.bucket-sort",
+      "programVersion": "1.0.0",
+      "language": "cpp",
+      "title": "桶排序",
+      "description": "将有限域整数依序放入五个桶，在桶内插入排序，再按桶序写回原数组。",
+      "objectives": ["核对加20后整除10的真实桶映射", "区分物理30槽、逻辑数量和写后尚未计数的原子步骤", "观察桶内移动、按桶合并及完整状态回退"],
+      "min": -20,
+      "max": 29,
+      "maxItems": 30,
+      "defaultInput": [7, -3, 0, 5, -3, 2, 9],
+      "variant": "固定五个宽10闭区间桶；依序追加，每桶30槽；严格大于key才右移，稳定桶内插入；按桶序回填，桶数据保留至main结束。",
+      "complexity": "O(n+B+Σmᵦ²)，B=5；最坏所有项同桶为O(n²+B)，不承诺任意分布线性。原计数含循环、输入和初始化。",
+      "extraSpace": "bucketData[150]与bucketSizes[5]共155个int=620教学字节，另有常数标量；values[30]原输入另占120字节。每桶30槽独立，不借空桶容量。",
+      "sourceFile": "content/algorithms/cpp/bucket-sort-1.0.0.cpp",
+      "knowledgeConcepts": ["数组", "整数区间映射", "桶排序", "插入排序", "辅助空间"],
+      "sourceOrigin": "project-original",
+      "bucketLayout": {
+        "bucketCount": 5,
+        "bucketCapacity": 30,
+        "width": 10,
+        "ranges": [[-20, -11], [-10, -1], [0, 9], [10, 19], [20, 29]],
+        "dataObject": "bucketData",
+        "sizesObject": "bucketSizes"
+      },
+      "phases": [
+        {"id": "setup", "title": "准备原数组", "explanation": "n等于真实输入项数，values物理容量30；零初始化不代表已有输入。"},
+        {"id": "input", "title": "读入有限域整数", "explanation": "cin只读取原n项；允许−20～29，域外或超过30项在执行前提示。"},
+        {"id": "buckets", "title": "建立五桶物理存储", "explanation": "未初始化的bucketData[150]分成五段，每段30槽；bucketSizes[5]单独清零，保存真实逻辑数量，辅助数组共620教学字节。未用槽不是输入零。"},
+        {"id": "scatter", "title": "分配到真实桶", "explanation": "bucket=(values[i]+20)/10，域内分子0..49，结果0..4；写入bucket×30+当前数量后，再单独递增数量。两步之间显示已写但尚未计数的槽。"},
+        {"id": "sort", "title": "选择桶并取出key", "explanation": "依桶0..4逐桶处理；base=桶号×30，暂存桶内一项为key，j从其左侧开始。空桶和单项无需移动。"},
+        {"id": "shift", "title": "桶内比较并右移", "explanation": "先检查j>=0，再读取本桶base+j；严格大于key才右移。槽值重复与暂存key是实际中间态，不提前显示排序答案。"},
+        {"id": "place", "title": "将key写回本桶", "explanation": "把key写到base+j+1；同值写入也计数组写。相等项不会被严格大于条件越过。"},
+        {"id": "merge", "title": "按桶顺序合并", "explanation": "按桶0..4和各桶实际数量读取，逐项写回values；bucketData和bucketSizes继续保留，不称作剩余数量。"},
+        {"id": "output", "title": "输出并结束", "explanation": "输出真实values。main返回时自动对象离开作用域；后退恢复桶、计数、原数组及完整分配状态。"}
+      ],
+      "boundarySamples": [[], [29], [-20, 29], [-20, -11, -10, -1, 0, 9, 10, 19, 20, 29], [5, 5, -15, -15], [29, 19, 9, -1, -11, -20]]
+    }
+  ]
+}

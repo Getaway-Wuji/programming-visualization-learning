@@ -1,0 +1,184 @@
+{
+  "formatVersion": "1.0.0",
+  "formatId": "urn:c-viz:current-snapshot:1.0.0",
+  "snapshotId": "513f0f25-efa6-4d16-a861-7509a3b8133a",
+  "capturedAt": "2026-10-31T07:54:08.320Z",
+  "presentation": {
+    "mode": "memory",
+    "scope": "complete-current-state",
+    "image": "reflowed-state-picture",
+    "selectionAndPaginationExcluded": true
+  },
+  "virtualAddresses": "educational-not-host-addresses",
+  "currentState": {
+    "allocator": {
+      "liveBytes": 0,
+      "nextAddress": 4096,
+      "nextFrame": 1,
+      "nextObject": 1,
+      "nextScope": 1
+    },
+    "control": {
+      "activeFrameId": null,
+      "inputCursor": 0,
+      "nextNodeId": "n7",
+      "returnValue": null
+    },
+    "counters": {
+      "arrayWrites": 0,
+      "comparisons": 0,
+      "scalarWrites": 0,
+      "swaps": 0
+    },
+    "frames": [],
+    "objects": [],
+    "output": "",
+    "scopes": []
+  },
+  "currentStep": null,
+  "executionOutcome": {
+    "byteRange": {
+      "end": 29,
+      "start": 27
+    },
+    "code": "E_NULL_POINTER",
+    "cursor": 3,
+    "returnValue": null,
+    "status": "error"
+  },
+  "terminalAtCursor": null,
+  "origin": {
+    "kind": "memory-observation",
+    "id": "null",
+    "title": "空指针",
+    "caseRef": null,
+    "programRef": null,
+    "packageRef": null,
+    "definitionVersion": {
+      "scheme": "source-sha256",
+      "value": "a0a316079f68046bfa51cf349f8d98bf15450c8b54ecc29e9465d825f4c11f82"
+    }
+  },
+  "runtime": {
+    "domain": "p1-memory",
+    "language": "c",
+    "subset": null,
+    "engine": {
+      "buildId": "4f3cb075dc0b7da3a0afc9dd96f178b6a1b71184f125c726ddf0b81384f6b3a7",
+      "id": "engine.rust.memory",
+      "version": "0.1.0"
+    },
+    "identity": {
+      "runId": "50a3aecf-d820-4d72-9815-592654f56499",
+      "sourceRevision": "2fb0f198-6c01-4253-99df-fd80403cd9ed"
+    },
+    "versions": {
+      "execution": "1.3.0",
+      "step": "1.2.0",
+      "diagnostic": "1.2.0",
+      "integerEncoding": "1.0.0",
+      "judge": null
+    }
+  },
+  "source": {
+    "text": "int main(){int* p=0;return *p;}",
+    "encoding": "UTF-8",
+    "sourceRevision": "2fb0f198-6c01-4253-99df-fd80403cd9ed",
+    "sha256": "a0a316079f68046bfa51cf349f8d98bf15450c8b54ecc29e9465d825f4c11f82",
+    "nodeMap": [
+      {
+        "byteRange": {
+          "end": 19,
+          "start": 18
+        },
+        "kind": "expression",
+        "nodeId": "n1"
+      },
+      {
+        "byteRange": {
+          "end": 20,
+          "start": 11
+        },
+        "kind": "declaration",
+        "nodeId": "n2"
+      },
+      {
+        "byteRange": {
+          "end": 29,
+          "start": 28
+        },
+        "kind": "expression",
+        "nodeId": "n3"
+      },
+      {
+        "byteRange": {
+          "end": 29,
+          "start": 27
+        },
+        "kind": "expression",
+        "nodeId": "n4"
+      },
+      {
+        "byteRange": {
+          "end": 30,
+          "start": 20
+        },
+        "kind": "return",
+        "nodeId": "n5"
+      },
+      {
+        "byteRange": {
+          "end": 31,
+          "start": 10
+        },
+        "kind": "block",
+        "nodeId": "n6"
+      },
+      {
+        "byteRange": {
+          "end": 31,
+          "start": 0
+        },
+        "kind": "function",
+        "nodeId": "n7"
+      }
+    ],
+    "blockMap": [],
+    "bindingMap": [],
+    "resolvedBindings": []
+  },
+  "input": [],
+  "types": [
+    {
+      "byteSize": 4,
+      "fields": [],
+      "kind": "int",
+      "name": "int",
+      "pointeeType": null
+    },
+    {
+      "byteSize": 8,
+      "fields": [],
+      "kind": "pointer",
+      "name": "int*",
+      "pointeeType": "int"
+    }
+  ],
+  "position": {
+    "cursor": 0,
+    "length": 3,
+    "stepKind": null,
+    "paused": true,
+    "atTerminal": false,
+    "executed": {
+      "raw": null,
+      "range": null,
+      "description": "初始状态，尚未完成源码步骤"
+    },
+    "highlighted": {
+      "reason": "initial",
+      "range": null
+    },
+    "terminalRange": null
+  }
+}

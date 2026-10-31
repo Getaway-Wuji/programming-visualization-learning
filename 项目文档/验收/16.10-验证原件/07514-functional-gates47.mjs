@@ -1,0 +1,19 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const dir='.artifacts/16.10',read=p=>readFileSync(p),sha=b=>createHash('sha256').update(b).digest('hex');
+const json=p=>JSON.parse(read(p).toString().replace(/^\uFEFF/,'')),proof=path=>({path,bytes:read(path).length,sha256:sha(read(path))});
+const labels=['r1610-core47-first','r1610-native47-second','r1610-cpp-formal47-first','r1610-combined47-first'];
+const flatten=suites=>suites.flatMap(s=>[...(s.specs??[]),...flatten(s.suites??[])]);
+const passed=new Map(),reports=[];
+for(const label of labels){const path=dir+'/'+label+'.json',r=json(path);assert.equal(Number(read(dir+'/'+label+'.exit').toString()),0,label);assert.deepEqual(r.errors,[]);assert.equal(r.stats.unexpected+r.stats.skipped+r.stats.flaky,0,label);reports.push({...proof(path),stats:r.stats});for(const spec of flatten(r.suites)){assert.equal(spec.ok,true,spec.title);assert.equal(spec.tests.length,1);const t=spec.tests[0];assert.equal(t.projectName,'chrome');assert.equal(t.results.length,1);assert.equal(t.results[0].retry,0);assert.equal(t.results[0].status,'passed');const key=spec.file.split(/[\\/]/).at(-1)+':'+spec.title;assert.equal(passed.has(key),false,key);passed.set(key,{report:label,file:spec.file,title:spec.title});}}
+assert.equal(passed.size,281);
+const units=json(dir+'/r1610-units-tenth.json');assert.equal(units.numTotalTests,1841);assert.equal(units.numPassedTests,1841);assert.equal(units.numFailedTests+units.numPendingTests,0);
+const releasePath='content/c/p0/blockly-release-1.0.47.json',release=json(releasePath);assert.equal(release.files.length,299);
+for(const f of release.files){assert.equal(sha(read(f.path)),f.sha256,f.path);assert.equal(sha(read(dir+'/clean-workspace/'+f.path)),f.sha256,f.path);}
+const engines=json(dir+'/inherited-engines47.json');for(const f of [...engines.protectedFiles,...engines.wasm])assert.equal(sha(read(f.path)),f.sha256,f.path);
+for(const f of engines.wasm)assert.equal(sha(read(dir+'/clean-workspace/'+f.path)),f.sha256,f.path);
+assert.equal(sha(read('web/src/content/p05-course-release.generated.ts')),sha(read(dir+'/clean-workspace/web/src/content/p05-course-release.generated.ts')));assert.ok(read('web/src/content/p05-course-release.generated.ts').toString().includes('registered: true'));
+const quota=json(dir+'/r1610-quota47-first.json');assert.equal(quota.stats.expected,1);assert.equal(quota.stats.unexpected+quota.stats.skipped+quota.stats.flaky,0);
+const result={task:'16.10',atUtc:new Date().toISOString(),registration:proof(releasePath),sources:299,frontend:{passed:1841,report:proof(dir+'/r1610-units-tenth.json'),semanticAdapter:'Memory Bug semantic unit has controlled now and timers; real Rust/full inverse remain. Actual deadlines separately verified by native browser.'},browser:{uniquePassed:281,retries:0,skipped:0,browser:'Chrome156.0.8078.76',theme:'minimal; one preserved theme-switch flow also uses cute',reports,passed:[...passed.values()],separateBatches:true},quotaRegression:{report:proof(dir+'/r1610-quota47-first.json'),beforeFailures:['r1610-core46-first','r1610-failure46-first'],after:'Actual original event/one10-point reward/repeat pass and durable saved UI agree.'},rust:{passed:engines.rustPassed,originalIgnored:engines.originalIgnored,fullSuiteRerun:false,proof:proof(dir+'/inherited-engines47.json')},unchangedThreeWasm:engines.wasm,performanceStatus:'Qualified formal47 performance separately required; functional proof alone is not overall P1 acceptance.'};
+writeFileSync(dir+'/functional-gates47.json',JSON.stringify(result,null,2)+'\n',{flag:'wx'});console.log({frontend:1841,browserUnique:281,formal47:true});

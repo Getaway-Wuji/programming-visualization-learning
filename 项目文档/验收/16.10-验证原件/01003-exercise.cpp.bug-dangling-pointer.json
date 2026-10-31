@@ -1,0 +1,960 @@
+{
+  "captures": [
+    {
+      "request": {
+        "bug": {
+          "caseKey": "negative",
+          "exerciseId": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          -9
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "cf6961c1-81a4-483a-8fe5-333012d7affe",
+        "source": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p;\n  {\n    int value = x;\n    p = &value;\n  }\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "1"
+      },
+      "moduleSeen": true,
+      "operationId": "4f299170-30b7-4250-9c12-5168ec901f3b",
+      "timing": {
+        "postMessageAt": 371.30000001192093,
+        "responseAt": 390.09999999403954,
+        "terminatedAt": 393.30000001192093,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": {
+          "end": 129,
+          "start": 127
+        },
+        "code": "E_DANGLING_POINTER",
+        "cursor": 9,
+        "returnValue": null,
+        "status": "error"
+      },
+      "verdict": {
+        "caseKey": "negative",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": false
+          },
+          {
+            "id": "stdout-exact",
+            "met": false
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": false
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "unmet",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 972
+      },
+      "steps": 9,
+      "completeness": "prefix",
+      "raw": {
+        "file": "exercise.cpp.bug-dangling-pointer-0.json.gz",
+        "bytes": 10220,
+        "sha256": "e3de742a0387b457a117c49ada988b0a2c14718e4e9acaaa232900854f351938"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "negative",
+          "exerciseId": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          -9
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "c447cf60-c853-4016-aee3-afafb114986d",
+        "source": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "81d8c994-d0c1-41ef-987c-18a993946ad3",
+      "timing": {
+        "postMessageAt": 673.7000000178814,
+        "responseAt": 682.7000000178814,
+        "terminatedAt": 684.2000000178814,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 10,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "negative",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 951
+      },
+      "steps": 10,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-dangling-pointer-1.json.gz",
+        "bytes": 10359,
+        "sha256": "73edcacc15acc5fedf35fe054ed2ef2eeb840f6af72665ea7a1a7404fcf3628d"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "zero",
+          "exerciseId": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          0
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "d77c8a17-53cd-4d0e-ad95-4f07315abd8b",
+        "source": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "2ba36d20-6f1a-4ba2-ba75-cf270688ad39",
+      "timing": {
+        "postMessageAt": 685.8000000119209,
+        "responseAt": 698.2000000178814,
+        "terminatedAt": 699.3000000119209,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 10,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "zero",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 949
+      },
+      "steps": 10,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-dangling-pointer-2.json.gz",
+        "bytes": 10350,
+        "sha256": "639b13150a3c5d8ebaccab56b749c60160d381556ba053b3e0d086b8c3f776d6"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "positive",
+          "exerciseId": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          7
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "9c351414-6527-473c-98cf-c8ec1637f584",
+        "source": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "eac723b8-4378-4a22-b600-e1912a628fde",
+      "timing": {
+        "postMessageAt": 700.4000000059605,
+        "responseAt": 710.7000000178814,
+        "terminatedAt": 711.7000000178814,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 10,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "positive",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 950
+      },
+      "steps": 10,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-dangling-pointer-3.json.gz",
+        "bytes": 10354,
+        "sha256": "f4dc61e94e8096f7c9deeeca4ab1553cef126646f85f39e6a60fef2fc5b35a3e"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "boundary",
+          "exerciseId": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          999
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "1c80adf2-2570-44aa-8175-8561bd371276",
+        "source": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "1e2101db-ac5a-499b-b39f-b190d66d585c",
+      "timing": {
+        "postMessageAt": 712.7000000178814,
+        "responseAt": 725,
+        "terminatedAt": 725.9000000059605,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 10,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "boundary",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 954
+      },
+      "steps": 10,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-dangling-pointer-4.json.gz",
+        "bytes": 10364,
+        "sha256": "dfc48ea5d3f416db99172e537ea0e6c92360d8dbf067bef9d3dc18b6106107bd"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "negative",
+          "exerciseId": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          -9
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "c162394e-3ce9-4fa8-b9ee-c7e3919bce57",
+        "source": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "82844256-a746-467b-9f9b-2e372ec20241",
+      "timing": {
+        "postMessageAt": 840.3000000119209,
+        "responseAt": 849.7000000178814,
+        "terminatedAt": 850.5999999940395,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 10,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "negative",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 951
+      },
+      "steps": 10,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-dangling-pointer-5.json.gz",
+        "bytes": 10359,
+        "sha256": "2dc1a5aedaac83493e20a7ce0abbfc2e64e88f1953ac7b5fbf6f0911ae4a839a"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "zero",
+          "exerciseId": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          0
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "575b0fb8-75a7-47ea-921d-40e15bd6dd3f",
+        "source": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "a92e1327-e699-45da-9cc2-c4f075a40bcb",
+      "timing": {
+        "postMessageAt": 851.7000000178814,
+        "responseAt": 860.7000000178814,
+        "terminatedAt": 861.5999999940395,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0.09999999403953552
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 10,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "zero",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 949
+      },
+      "steps": 10,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-dangling-pointer-6.json.gz",
+        "bytes": 10350,
+        "sha256": "14536ab9ff016677339fc3cd62be7255b971eeb5b87b875f7f3f779e04478ebb"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "positive",
+          "exerciseId": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          7
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "0d172d1d-7ed1-418e-92fe-7d11f8e12710",
+        "source": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "04908d03-5e89-4ef7-a1c2-de81f8b2771f",
+      "timing": {
+        "postMessageAt": 862.7000000178814,
+        "responseAt": 871.8000000119209,
+        "terminatedAt": 872.7000000178814,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 10,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "positive",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 950
+      },
+      "steps": 10,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-dangling-pointer-7.json.gz",
+        "bytes": 10354,
+        "sha256": "98a812d7dcc1726a2148e38b0db99dd2d18d090c4e1909678d3fbb685d8c5f7c"
+      }
+    },
+    {
+      "request": {
+        "bug": {
+          "caseKey": "boundary",
+          "exerciseId": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "diagnosticVersion": "1.2.0",
+        "dslVersion": "1.2.0",
+        "engineId": "engine.rust.memory",
+        "execVersion": "1.3.0",
+        "input": [
+          999
+        ],
+        "integerEncoding": "1.0.0",
+        "language": "cpp",
+        "runId": "16865393-80e8-42bc-ab91-03d3f06d8c18",
+        "source": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "sourceRevision": "2"
+      },
+      "moduleSeen": true,
+      "operationId": "1ecc070e-9f69-4100-a09e-7d2d23d6c20f",
+      "timing": {
+        "postMessageAt": 873.9000000059605,
+        "responseAt": 880.8000000119209,
+        "terminatedAt": 881.7000000178814,
+        "requestGetterCalls": 0,
+        "responseGetterCalls": 0,
+        "requestFirstArrayAt": null,
+        "responseFirstArrayAt": null,
+        "requestFirstArrayMs": null,
+        "responseFirstArrayMs": null,
+        "requestCopyMs": 0,
+        "responseCopyMs": 0.09999999403953552
+      },
+      "terminal": {
+        "byteRange": null,
+        "code": null,
+        "cursor": 10,
+        "returnValue": 0,
+        "status": "completed"
+      },
+      "verdict": {
+        "caseKey": "boundary",
+        "checks": [
+          {
+            "id": "exit-zero",
+            "met": true
+          },
+          {
+            "id": "stdout-exact",
+            "met": true
+          },
+          {
+            "id": "input-consumed",
+            "met": true
+          },
+          {
+            "id": "teaching-target",
+            "met": true
+          }
+        ],
+        "exerciseRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "registryRef": {
+          "id": "bug-catalog.cpp.memory-loop",
+          "version": "1.0.0"
+        },
+        "status": "met",
+        "version": "1.0.0"
+      },
+      "stats": {
+        "fuelUsed": 954
+      },
+      "steps": 10,
+      "completeness": "complete",
+      "raw": {
+        "file": "exercise.cpp.bug-dangling-pointer-8.json.gz",
+        "bytes": 10364,
+        "sha256": "7a897ae5c0a9724b38d08b6f3b462a92c77e00c88774117da693339514d5c1b0"
+      }
+    }
+  ],
+  "budgets": [
+    {
+      "operationId": "4f299170-30b7-4250-9c12-5168ec901f3b",
+      "remainingMs": 981,
+      "at": 371.2000000178814,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "81d8c994-d0c1-41ef-987c-18a993946ad3",
+      "remainingMs": 999,
+      "at": 673.5999999940395,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "2ba36d20-6f1a-4ba2-ba75-cf270688ad39",
+      "remainingMs": 987,
+      "at": 685.7000000178814,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "eac723b8-4378-4a22-b600-e1912a628fde",
+      "remainingMs": 972,
+      "at": 700.4000000059605,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "1e2101db-ac5a-499b-b39f-b190d66d585c",
+      "remainingMs": 960,
+      "at": 712.7000000178814,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "82844256-a746-467b-9f9b-2e372ec20241",
+      "remainingMs": 998,
+      "at": 840.3000000119209,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "a92e1327-e699-45da-9cc2-c4f075a40bcb",
+      "remainingMs": 987,
+      "at": 851.7000000178814,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "04908d03-5e89-4ef7-a1c2-de81f8b2771f",
+      "remainingMs": 976,
+      "at": 862.7000000178814,
+      "wasmPages": 19
+    },
+    {
+      "operationId": "1ecc070e-9f69-4100-a09e-7d2d23d6c20f",
+      "remainingMs": 965,
+      "at": 873.9000000059605,
+      "wasmPages": 19
+    }
+  ],
+  "observations": {
+    "brokenElapsedMs": 41,
+    "repairedAcceptedMs": 42.69999998807907
+  },
+  "rows": {
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T06:30:15.152Z",
+        "lastAt": "2026-10-31T06:30:15.307Z"
+      }
+    ],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.cpp.bug-dangling-pointer",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T06:30:15.152Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "d33c588a-5151-4931-be08-aad34e6ebea0",
+        "occurredAt": "2026-10-31T06:30:15.307Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 6
+      },
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.cpp.bug-dangling-pointer",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "eventId": "fca0a927-3b99-471d-8b3b-9f54c0993e16",
+        "occurredAt": "2026-10-31T06:30:15.152Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 4
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "5424911c-00a9-4ddb-a294-431064a28f5f",
+        "writerId": "cab96ccd-de1d-497b-bb85-db3307d10e73",
+        "generation": "22e9af95-1449-4770-89b5-f7eb1dc2f746",
+        "captureVersion": 2,
+        "createdAt": "2026-10-31T06:30:15.041Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int value = x;\n  int *p = &value;\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 2
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "920baeea-9537-4f70-8608-61de955b291e",
+        "writerId": "cab96ccd-de1d-497b-bb85-db3307d10e73",
+        "generation": "22e9af95-1449-4770-89b5-f7eb1dc2f746",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T06:30:14.707Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.bug-dangling-pointer",
+            "version": "1.0.0"
+          },
+          "mode": "correction"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "code",
+        "codeText": "#include <iostream>\nint main() {\n  int x;\n  std::cin >> x;\n  int *p;\n  {\n    int value = x;\n    p = &value;\n  }\n  std::cout << *p << \"\\n\";\n  return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[]}}",
+        "inputJson": "{\"caseKey\":\"negative\",\"input\":[-9]}",
+        "state": "unmapped",
+        "restoredFrom": null,
+        "sequence": 1
+      }
+    ]
+  }
+}

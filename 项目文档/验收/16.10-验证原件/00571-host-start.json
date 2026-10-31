@@ -1,0 +1,100 @@
+{
+  "collectedAtUtc": "2026-10-31T10:34:41.2582626Z",
+  "methods": [
+    "CIM ComputerSystem/OperatingSystem/Processor/VideoController",
+    "GetSystemPowerStatus",
+    "powercfg /getactivescheme",
+    "QueryDisplayConfig QDC_ONLY_ACTIVE_PATHS",
+    "File VersionInfo"
+  ],
+  "manufacturer": "LENOVO",
+  "model": "83KY",
+  "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+  "cores": 24,
+  "logicalProcessors": 24,
+  "physicalMemoryBytes": 33752997888,
+  "visibleMemoryKiB": 32961912,
+  "os": {
+    "build": "26300",
+    "version": "10.0.26300",
+    "caption": "Microsoft Windows 11 专业版",
+    "architecture": "64 位",
+    "frozenBuild": "26200",
+    "buildChanged": true
+  },
+  "power": {
+    "batteryPercent": 99,
+    "acLineStatus": 1,
+    "schemeGuid": "381b4222-f694-41f0-9685-ff5bb260df2e",
+    "scheme": "电源方案 GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (平衡)",
+    "settingsChanged": false
+  },
+  "display": {
+    "activeDisplays": [
+      {
+        "source": {
+          "adapterLowPart": 81688,
+          "adapterHighPart": 0,
+          "id": 0,
+          "modeInfoIndex": 1,
+          "widthPixels": 2560,
+          "heightPixels": 1440,
+          "positionX": 0,
+          "positionY": 0
+        },
+        "target": {
+          "adapterLowPart": 81688,
+          "adapterHighPart": 0,
+          "id": 8448,
+          "modeInfoIndex": 0,
+          "widthPixels": 2560,
+          "heightPixels": 1440,
+          "outputTechnology": 5,
+          "rotation": 1,
+          "scaling": 1
+        },
+        "numerator": 59951,
+        "denominator": 1000,
+        "hz": 59.951,
+        "active": true
+      }
+    ],
+    "browserRenderer": "Recorded by each actual browser sample",
+    "settingsChanged": false,
+    "activeRefreshRates": [
+      {
+        "numerator": 59951,
+        "denominator": 1000,
+        "hz": 59.951
+      }
+    ],
+    "controllers": [
+      {
+        "Name": "MuMu Virtual Display Adapter",
+        "CurrentHorizontalResolution": null,
+        "CurrentVerticalResolution": null,
+        "CurrentRefreshRate": null
+      },
+      {
+        "Name": "Intel(R) Graphics",
+        "CurrentHorizontalResolution": 2560,
+        "CurrentVerticalResolution": 1600,
+        "CurrentRefreshRate": 240
+      },
+      {
+        "Name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+        "CurrentHorizontalResolution": 2560,
+        "CurrentVerticalResolution": 1440,
+        "CurrentRefreshRate": 59
+      }
+    ],
+    "activePathCount": 1,
+    "exact60ModeProven": false
+  },
+  "browserFileVersions": {
+    "chrome": "156.0.8078.76",
+    "firefox": "158.0",
+    "edge": "156.0.4314.50"
+  },
+  "boundary": "Read-only conditions at collection time. Active display identity is the QueryDisplayConfig source/target adapter LUID and ID path, not an EDID serial. Pixel dimensions come from source desktop and target signal active modes, not CSS viewport or millimetres. Per-sample viewport/focus/renderer are separate. Other user applications were not closed or inspected; no claim that every host process is idle. CurrentRefreshRate is rounded; rational activeRefreshRates are authoritative for this snapshot. Endpoint snapshots alone cannot exclude transient changes that return to the same state between captures."
+}

@@ -3,7 +3,7 @@ import { protocolAssert as ensure } from './protocol';
 
 interface Frame {
   object: boolean;
-  phase: 'key-or-end' | 'key' | 'colon' | 'value-or-end' | 'value' | 'comma-or-end';
+  phase: 'key-or-end' | 'key' | 'value-or-end' | 'value' | 'comma-or-end';
   previous: string;
   count: number;
 }
@@ -14,6 +14,11 @@ const hex = (code: number) =>
 // Reset lastIndex on every invocation, including interleaved decode generators.
 // eslint-disable-next-line no-control-regex -- Canonical JSON forbids raw C0 controls.
 const simpleString = /[^"\\\u0000-\u001f\ud800-\udfff]{0,32768}"/y;
+// Bounded exact spellings of common scalar records. Every key/punctuation is
+// fixed and sorted; the integer alternatives are shortest safe <=15 digits.
+// Other objects (including legal16-digit integers) retain the scalar scanner.
+const smallScalarRecord =
+  /\{(?:"end":(?:0|[1-9][0-9]{0,14}),"start":(?:0|[1-9][0-9]{0,14})|"arrayWrites":(?:0|[1-9][0-9]{0,14}),"comparisons":(?:0|[1-9][0-9]{0,14}),"scalarWrites":(?:0|[1-9][0-9]{0,14}),"swaps":(?:0|[1-9][0-9]{0,14})|"index":(?:0|[1-9][0-9]{0,14}),"value":(?:null|0|-?[1-9][0-9]{0,14})|"iteration":(?:0|[1-9][0-9]{0,14}),"nodeId":"n[1-9][0-9]{0,14}","stage":"(?:block|init|condition|body|update)"|(?:"edge":"(?:start|whole|end)",)?"kind":"source","nodeId":"n[1-9][0-9]{0,14}")\}/y;
 
 export interface JsonShape {
   containers: number;
@@ -35,8 +40,21 @@ export function* precheckJson(text: string): Generator<void, JsonShape, unknown>
       checkedAt = at;
       yield;
     }
-    const frame = stack[stack.length - 1],
-      character = text.charCodeAt(at);
+    const frame = stack[stack.length - 1];
+    let character = text.charCodeAt(at);
+    // Consume a separator and the following field in the same dispatch. All
+    // punctuation/key/value checks remain; only redundant loop turns disappear.
+    if (frame?.phase === 'comma-or-end') {
+      if (character === (frame.object ? 125 : 93)) {
+        at++;
+        stack.pop();
+        if (!stack.length) finished = true;
+        continue;
+      }
+      ensure(character === 44, 'E_PROTOCOL_INVALID');
+      character = text.charCodeAt(++at);
+      frame.phase = frame.object ? 'key' : 'value';
+    }
     if (frame?.phase === 'key-or-end' || frame?.phase === 'key') {
       if (character === 125 && frame.phase === 'key-or-end') {
         at++;
@@ -49,7 +67,8 @@ export function* precheckJson(text: string): Generator<void, JsonShape, unknown>
         end = text.indexOf('"', start);
       ensure(end > start && end - start <= 96 && frame.count++ < 32_768, 'E_PROTOCOL_INVALID');
       const key = text.slice(start, end);
-      at = end + 1;
+      ensure(text.charCodeAt(end + 1) === 58, 'E_PROTOCOL_INVALID');
+      at = end + 2;
       // Protocol and parameter keys are ASCII identifiers. Validate each
       // spelling once; subsequent keys still undergo sorted/unique checks.
       if (!checkedKeys.has(key)) {
@@ -58,26 +77,8 @@ export function* precheckJson(text: string): Generator<void, JsonShape, unknown>
       }
       ensure(key > frame.previous, 'E_PROTOCOL_INVALID');
       frame.previous = key;
-      frame.phase = 'colon';
-      continue;
-    }
-    if (frame?.phase === 'colon') {
-      ensure(character === 58, 'E_PROTOCOL_INVALID');
-      at++;
       frame.phase = 'value';
-      continue;
-    }
-    if (frame?.phase === 'comma-or-end') {
-      if (character === (frame.object ? 125 : 93)) {
-        at++;
-        stack.pop();
-        if (!stack.length) finished = true;
-        continue;
-      }
-      ensure(character === 44, 'E_PROTOCOL_INVALID');
-      at++;
-      frame.phase = frame.object ? 'key' : 'value';
-      continue;
+      character = text.charCodeAt(at);
     }
     if (frame?.phase === 'value-or-end' && character === 93) {
       at++;
@@ -92,6 +93,14 @@ export function* precheckJson(text: string): Generator<void, JsonShape, unknown>
     if (character === 123 || character === 91) {
       ensure(stack.length < 32, 'E_PROTOCOL_INVALID');
       containers++;
+      if (character === 123) {
+        smallScalarRecord.lastIndex = at;
+        if (smallScalarRecord.test(text)) {
+          at = smallScalarRecord.lastIndex;
+          if (!stack.length) finished = true;
+          continue;
+        }
+      }
       const next =
         frames[stack.length] ??
         (frames[stack.length] = { object: false, phase: 'value', previous: '', count: 0 });

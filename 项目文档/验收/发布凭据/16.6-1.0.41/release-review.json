@@ -1,0 +1,30 @@
+{
+  "task": "16.6",
+  "latestSourceAt": "2026-10-31T03:26:43.902Z",
+  "contract": "ALG-CASE-01 1.2.0",
+  "scope": "One real C++ integer bucket sort,5 fixed bins over-20..29,0..30 input values,5 independent30-slot segments in uninitialized bucketData[150], zeroed bucketSizes[5], stable per-bucket insertion and ordered copyback. Existing Algorithm P1 exact-source execution and same-cursor state, actual pending append before size increment, physical620byte auxiliary arrays and virtual layout. No frontend classification/sorting, pointers, heap, protocol/engine/budget/SAVE/learning changes.",
+  "frontend": 94,
+  "candidateUniquePassed": 28,
+  "visual": {
+    "path": ".artifacts/16.6/visual.json",
+    "sha256": "350a53f304a99d8fd5cd121aa38e378c4ebfb2175a415b496daa147573776336"
+  },
+  "failureReportsPreserved": [
+    "unit-engine-first"
+  ],
+  "registrationSetupFailure": {
+    "reports": [
+      "r166-register-41",
+      "r166-register-41-second"
+    ],
+    "reason": "Build rewrote the byte-identical inherited prepared-sources projection4 seconds after the unit run started. The Git opening baseline excludes this generated file; the frozen1.0.40 source SHA proves no content change. Both rejected attempts are preserved, and the source remains fully pinned in the257-file registration."
+  },
+  "byteIdenticalRegeneration": {
+    "path": "web/src/generated/prepared-sources.ts",
+    "sha256": "08ffd4edbca5774a47a75d7ca87c333dd6f713839316e724690df8a5f00aed56",
+    "predecessor40Sha256": "08ffd4edbca5774a47a75d7ca87c333dd6f713839316e724690df8a5f00aed56",
+    "regeneratedAt": "2026-10-31T03:27:36.603Z"
+  },
+  "initializationClarification": "Initial zero-initialized data was valid but same-value writes do not always generate cell deltas. Unused data slots now remain uninitialized, ensuring every first append including zero has its actual null-to-value change; every read stays within the initialized logical prefix. Source/budget/domain/capacity otherwise unchanged.",
+  "formalCurrentCoursePending": true
+}

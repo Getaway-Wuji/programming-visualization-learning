@@ -1,7 +1,7 @@
-/** SAVE-01 6.0.0. Learning/appearance projection; history, marks and schedules are separate partitions. */
+/** SAVE-01 7.0.0. Challenge receipts and signed, once-per-question ledger entries. */
 export const DB_NAME = 'c-viz-learning';
-export const DB_VERSION = 6;
-export const SCHEMA_VERSION = '6.0.0';
+export const DB_VERSION = 7;
+export const SCHEMA_VERSION = '7.0.0';
 export const CORE_STORE_NAMES = [
   'meta',
   'settings',
@@ -131,7 +131,7 @@ export interface ContentEventResults {
   'case.view-confirmed': 'confirmed';
 }
 export type ContentEventType = keyof ContentEventResults;
-export type EventType = ContentEventType | 'daily-goal.achieved';
+export type EventType = ContentEventType | 'daily-goal.achieved' | 'challenge.answered';
 export type ResultCategory =
   | 'wrong-answer'
   | 'teaching-goal-unmet'
@@ -174,7 +174,8 @@ export type RewardSourceId =
   | 'reward.exercise.first-pass'
   | 'reward.lesson.first-completion'
   | 'reward.case.first-view'
-  | 'reward.daily-goal.once';
+  | 'reward.daily-goal.once'
+  | 'reward.challenge.first-answer';
 interface LedgerBase {
   sourceId: RewardSourceId;
   subjectId: string;
@@ -204,6 +205,7 @@ export type ContentReceipt = {
 }[ContentEventType];
 export type Receipt =
   | ContentReceipt
+  | (ReceiptBase & import('../challenges/authority').ChallengeEvent)
   | (ReceiptBase & {
       eventType: 'daily-goal.achieved';
       result: 'achieved';

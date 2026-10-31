@@ -1,0 +1,99 @@
+
+ RUN  v5.0.4 D:/Files/Downloads/编程可视化教学平台
+
+ ❯ tests/unit/classics.test.ts (44 tests | 5 failed) 374ms
+   ✓ hanoi 0: actual C++, scalar/array truth and all atomic reverse 21ms
+   × hanoi 1: actual C++, scalar/array truth and all atomic reverse 11ms
+   × hanoi 2: actual C++, scalar/array truth and all atomic reverse 28ms
+   × hanoi 3: actual C++, scalar/array truth and all atomic reverse 22ms
+   × hanoi 4: actual C++, scalar/array truth and all atomic reverse 34ms
+   × hanoi 5: actual C++, scalar/array truth and all atomic reverse 64ms
+   ✓ hanoi strict count/domain only and genuine missing-input prefix 4ms
+   ✓ gcd 84,-30: actual C++, scalar/array truth and all atomic reverse 6ms
+   ✓ gcd 0,0: actual C++, scalar/array truth and all atomic reverse 3ms
+   ✓ gcd 0,-999: actual C++, scalar/array truth and all atomic reverse 4ms
+   ✓ gcd 999,0: actual C++, scalar/array truth and all atomic reverse 3ms
+   ✓ gcd -84,-30: actual C++, scalar/array truth and all atomic reverse 7ms
+   ✓ gcd 987,610: actual C++, scalar/array truth and all atomic reverse 19ms
+   ✓ gcd 997,991: actual C++, scalar/array truth and all atomic reverse 6ms
+   ✓ gcd 7,7: actual C++, scalar/array truth and all atomic reverse 3ms
+   ✓ gcd -999,999: actual C++, scalar/array truth and all atomic reverse 4ms
+   ✓ gcd 1,999: actual C++, scalar/array truth and all atomic reverse 5ms
+   ✓ gcd strict count/domain only and genuine missing-input prefix 1ms
+   ✓ prime 97: actual C++, scalar/array truth and all atomic reverse 6ms
+   ✓ prime -999: actual C++, scalar/array truth and all atomic reverse 2ms
+   ✓ prime 0: actual C++, scalar/array truth and all atomic reverse 2ms
+   ✓ prime 1: actual C++, scalar/array truth and all atomic reverse 2ms
+   ✓ prime 2: actual C++, scalar/array truth and all atomic reverse 3ms
+   ✓ prime 961: actual C++, scalar/array truth and all atomic reverse 15ms
+   ✓ prime 997: actual C++, scalar/array truth and all atomic reverse 16ms
+   ✓ prime 999: actual C++, scalar/array truth and all atomic reverse 5ms
+   ✓ prime 3: actual C++, scalar/array truth and all atomic reverse 3ms
+   ✓ prime 4: actual C++, scalar/array truth and all atomic reverse 4ms
+   ✓ prime 49: actual C++, scalar/array truth and all atomic reverse 7ms
+   ✓ prime 121: actual C++, scalar/array truth and all atomic reverse 7ms
+   ✓ prime strict count/domain only and genuine missing-input prefix 1ms
+   ✓ palindrome 121: actual C++, scalar/array truth and all atomic reverse 6ms
+   ✓ palindrome -121: actual C++, scalar/array truth and all atomic reverse 3ms
+   ✓ palindrome 0: actual C++, scalar/array truth and all atomic reverse 3ms
+   ✓ palindrome 9: actual C++, scalar/array truth and all atomic reverse 4ms
+   ✓ palindrome 100: actual C++, scalar/array truth and all atomic reverse 5ms
+   ✓ palindrome 101: actual C++, scalar/array truth and all atomic reverse 6ms
+   ✓ palindrome 123: actual C++, scalar/array truth and all atomic reverse 5ms
+   ✓ palindrome 999: actual C++, scalar/array truth and all atomic reverse 5ms
+   ✓ palindrome -999: actual C++, scalar/array truth and all atomic reverse 3ms
+   ✓ palindrome 1: actual C++, scalar/array truth and all atomic reverse 3ms
+   ✓ palindrome 10: actual C++, scalar/array truth and all atomic reverse 4ms
+   ✓ palindrome 909: actual C++, scalar/array truth and all atomic reverse 5ms
+   ✓ palindrome strict count/domain only and genuine missing-input prefix 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/classics.test.ts > hanoi 1: actual C++, scalar/array truth and all atomic reverse
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/unit/classics.test.ts:84:36
+     82|         if (spec.kind === 'hanoi') {
+     83|           const view = hanoiView(state, result.types);
+     84|           expect(view.layoutIssue).toBe(false);
+       |                                    ^
+     85|           if (view.positions) positionsId = view.positions.id;
+     86|           for (const scope of state.scopes)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/unit/classics.test.ts > hanoi 2: actual C++, scalar/array truth and all atomic reverse
+ FAIL  tests/unit/classics.test.ts > hanoi 3: actual C++, scalar/array truth and all atomic reverse
+ FAIL  tests/unit/classics.test.ts > hanoi 4: actual C++, scalar/array truth and all atomic reverse
+ FAIL  tests/unit/classics.test.ts > hanoi 5: actual C++, scalar/array truth and all atomic reverse
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/unit/classics.test.ts:84:36
+     82|         if (spec.kind === 'hanoi') {
+     83|           const view = hanoiView(state, result.types);
+     84|           expect(view.layoutIssue).toBe(false);
+       |                                    ^
+     85|           if (view.positions) positionsId = view.positions.id;
+     86|           for (const scope of state.scopes)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 39 passed (44)
+   Start at  13:36:58
+   Duration  703ms (tests 69%, transform 22%, import 9%, worker 1%)
+
+JSON report written to D:/Files/Downloads/编程可视化教学平台/.artifacts/16.9/r169-unit-engine-first.json

@@ -1,0 +1,89 @@
+.classic-workspace {
+  font-variant-numeric: tabular-nums;
+}
+.classic-workspace p {
+  overflow-wrap: anywhere;
+}
+.classic-workspace pre {
+  font-family: Consolas, monospace;
+}
+.classic-input {
+  display: grid;
+  gap: 8px;
+  margin-block: 16px 20px;
+}
+.classic-input > label {
+  font-weight: 600;
+}
+.classic-input > textarea {
+  width: 100%;
+  min-height: 58px;
+  padding: 10px 12px;
+  border: 1px solid var(--p05-control, var(--line));
+  border-radius: 8px;
+  color: var(--p05-text, inherit);
+  background: var(--p05-surface, var(--surface));
+  font:
+    14px/1.6 Consolas,
+    monospace;
+  resize: vertical;
+}
+.classic-input > p,
+.classic-input .inline-actions {
+  margin: 0;
+}
+.classic-input select {
+  max-width: 100%;
+  padding: 6px;
+}
+.hanoi-pegs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-block: 12px;
+}
+.hanoi-peg {
+  min-width: 0;
+  min-height: 190px;
+  border-bottom: 3px solid var(--p05-border, var(--line));
+  text-align: center;
+}
+.hanoi-peg h4 {
+  font-weight: 500;
+  margin: 8px 0;
+}
+.hanoi-peg ol {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  min-height: 130px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.hanoi-peg li {
+  height: 24px;
+  line-height: 24px;
+  min-width: 40px;
+  border: 1px solid var(--p05-accent, var(--accent));
+  border-radius: 4px;
+  background: var(--p05-surface, var(--surface));
+  font-size: 13px;
+}
+.classic-slot {
+  display: inline-block;
+  margin: 4px 8px 4px 0;
+}
+.classic-output {
+  max-height: 240px;
+  overflow: auto;
+}
+.classic-stage:focus-visible {
+  outline: 2px solid var(--p05-accent, currentColor);
+  outline-offset: -2px;
+}
+.classic-workspace > nav {
+  margin-top: 20px;
+}

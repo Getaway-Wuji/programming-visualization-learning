@@ -1,0 +1,170 @@
+
+Running 36 tests using 1 worker
+
+  ok  1 [chrome] › tests\browser\editor-history.spec.ts:10:1 › 13.4 native partition: atomic count/byte eviction, two writers, faults, corruption and clear barrier (3.4s)
+  ok  2 [chrome] › tests\browser\editor-history.spec.ts:85:1 › 13.4 native DB2 migration preserves the eleven old projections; damaged known meta is clearable and future meta is untouched (357ms)
+  x   3 [chrome] › tests\browser\editor-history.spec.ts:181:1 › 13.4 real editor: code history survives refresh, invalid drafts stay exact, old Rust runs clear and current locks still apply (5.4s)
+  x   4 [chrome] › tests\browser\editor-history.spec.ts:232:1 › 13.4 native block value/add/delete and drag endpoints restore exact canvas and remain usable at three widths (5.6s)
+  x   5 [chrome] › tests\browser\editor-history.spec.ts:361:1 › 13.4 production save failure stays visible, explicit retry preserves IDs and clear removes history across tabs (5.6s)
+  ok  6 [chrome] › tests\browser\recovery.spec.ts:68:1 › invalid display/avatar rows stay in native IDB while valid learning remains visible; confirmed local reset preserves every unrelated row (865ms)
+  ok  7 [chrome] › tests\browser\recovery.spec.ts:94:1 › invalid progress and receipts are isolated without erasure and pause learning writes (569ms)
+  ok  8 [chrome] › tests\browser\recovery.spec.ts:115:1 › an invalid ledger marks total points uncertain and cannot be converted into an empty or repaired reward history (448ms)
+  ok  9 [chrome] › tests\browser\recovery.spec.ts:133:1 › known eleven-store archives with invalid or missing meta can be explicitly cleared into a fresh generation (645ms)
+  ok 10 [chrome] › tests\browser\recovery.spec.ts:153:1 › unknown semantic and future physical versions refuse this client clear and preserve every native row (593ms)
+  ok 11 [chrome] › tests\browser\recovery.spec.ts:172:1 › native quota and permission API faults leave provisional learning unsaved and retry the original command without extra rights (496ms)
+  ok 12 [chrome] › tests\browser\recovery.spec.ts:213:1 › a new-day goal-open failure retries the original trusted occurrence without inventing a goal version or changing the date (356ms)
+  ok 13 [chrome] › tests\browser\recovery.spec.ts:249:1 › an unavailable open permits clearly temporary learning without rebinding its facts when storage returns (452ms)
+  ok 14 [chrome] › tests\browser\recovery.spec.ts:295:1 › aborting after native learning writes and after clear writes preserves the entire previous eleven-store archive (517ms)
+  ok 15 [chrome] › tests\browser\recovery.spec.ts:336:1 › two actual same-origin pages merge same and different synthetic facts without dropped rows or duplicate first rewards (597ms)
+  ok 16 [chrome] › tests\browser\recovery.spec.ts:385:1 › clear invalidates an in-flight command and queued local settings immediately, then prevents every old operation from restoring data (350ms)
+  ok 17 [chrome] › tests\browser\recovery.spec.ts:426:1 › a peer that misses every notification still rejects its pre-clear command instead of rebinding it to the new generation (497ms)
+  ok 18 [chrome] › tests\browser\recovery.spec.ts:557:1 › real production BroadcastChannel updates a peer without focus refresh and discards its old draft after another page clears (1.7s)
+  ok 19 [chrome] › tests\browser\recovery.spec.ts:623:1 › a production peer clear invalidates a pending real WASM download and its late network completion cannot revive the old check (1.6s)
+  ok 20 [chrome] › tests\browser\recovery.spec.ts:709:1 › production clear confirmation cancels without writes, then confirmed clear restores defaults in a fresh generation across refresh (1.1s)
+  ok 21 [chrome] › tests\browser\recovery.spec.ts:743:1 › production home visibly marks a corrupt ledger total as unconfirmed instead of displaying zero points (677ms)
+  ok 22 [chrome] › tests\browser\recovery.spec.ts:783:1 › production singleton reset requires its own confirmation and leaves all unrelated stored settings and learning rows unchanged (1.3s)
+  ok 23 [chrome] › tests\browser\recovery.spec.ts:862:1 › actual isolated browser contexts keep native IDB through refresh and discard that isolated profile when the context closes (898ms)
+  ok 24 [chrome] › tests\browser\storage.spec.ts:120:1 › new native IndexedDB has twelve out-of-line stores, one saved default set and a nondestructive availability probe (359ms)
+  ok 25 [chrome] › tests\browser\storage.spec.ts:168:1 › synthetic receipt and unique reward survive refresh and closing/reopening a page without producing new facts (580ms)
+  ok 26 [chrome] › tests\browser\storage.spec.ts:212:1 › same receipt retries return the original revision and different IDs cannot duplicate the stable reward key (320ms)
+  ok 27 [chrome] › tests\browser\storage.spec.ts:232:1 › reusing an event ID with changed subject version, learning revision, occurrence time or goal version is rejected without changes (365ms)
+  ok 28 [chrome] › tests\browser\storage.spec.ts:257:1 › a real transaction aborted after a successful receipt request rolls back all stores and reports unsaved, then exact retry succeeds (321ms)
+  ok 29 [chrome] › tests\browser\storage.spec.ts:288:1 › injected quota and storage-disabled API faults are unsaved and never erase existing data (347ms)
+  ok 30 [chrome] › tests\browser\storage.spec.ts:312:1 › writing with a stale generation fails even without an invalidation notification (298ms)
+  ok 31 [chrome] › tests\browser\storage.spec.ts:332:1 › unknown semantic versions, invalid meta and missing meta preserve the native archive instead of reinitializing it (425ms)
+  ok 32 [chrome] › tests\browser\storage.spec.ts:358:1 › versionchange closes the current connection, and future physical versions remain intact and reject the old client (380ms)
+  ok 33 [chrome] › tests\browser\storage.spec.ts:378:1 › a queued native open can be cancelled while another connection blocks deletion, and late open does not leak a connection (307ms)
+  ok 34 [chrome] › tests\browser\storage.spec.ts:391:1 › frozen synthetic reference 0.9 migrates atomically to SAVE1 without inventing day facts, receipts or completion rewards (308ms)
+  ok 35 [chrome] › tests\browser\storage.spec.ts:440:1 › interrupting reference migration after a native row request succeeds preserves every original row and supports controlled retry (303ms)
+  ok 36 [chrome] › tests\browser\storage.spec.ts:470:1 › invalid reference predecessors reject without rewriting the original native rows (369ms)
+
+
+  1) [chrome] › tests\browser\editor-history.spec.ts:181:1 › 13.4 real editor: code history survives refresh, invalid drafts stay exact, old Rust runs clear and current locks still apply 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('practice-execution')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('practice-execution') with timeout 5000ms
+      - waiting for getByTestId('practice-execution')
+
+
+      157 | async function open(page: Page) {
+      158 |   await page.goto('/#/practice/exercise.c.first-output');
+    > 159 |   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+          |                             ^
+      160 |   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
+      161 |   await readyHistory(page);
+      162 |   await history(page).locator('summary').click();
+        at open (D:\Files\Downloads\编程可视化教学平台\tests\browser\editor-history.spec.ts:159:29)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\editor-history.spec.ts:185:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-real-e-4d040-d-current-locks-still-apply-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-real-e-4d040-d-current-locks-still-apply-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-real-e-4d040-d-current-locks-still-apply-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-real-e-4d040-d-current-locks-still-apply-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chrome] › tests\browser\editor-history.spec.ts:232:1 › 13.4 native block value/add/delete and drag endpoints restore exact canvas and remain usable at three widths 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('practice-execution')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('practice-execution') with timeout 5000ms
+      - waiting for getByTestId('practice-execution')
+
+
+      157 | async function open(page: Page) {
+      158 |   await page.goto('/#/practice/exercise.c.first-output');
+    > 159 |   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+          |                             ^
+      160 |   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
+      161 |   await readyHistory(page);
+      162 |   await history(page).locator('summary').click();
+        at open (D:\Files\Downloads\编程可视化教学平台\tests\browser\editor-history.spec.ts:159:29)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\editor-history.spec.ts:235:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-native-cdabe-main-usable-at-three-widths-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-native-cdabe-main-usable-at-three-widths-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-native-cdabe-main-usable-at-three-widths-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-native-cdabe-main-usable-at-three-widths-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chrome] › tests\browser\editor-history.spec.ts:361:1 › 13.4 production save failure stays visible, explicit retry preserves IDs and clear removes history across tabs 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByTestId('practice-execution')
+    Expected: "ready"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" getByTestId('practice-execution') with timeout 5000ms
+      - waiting for getByTestId('practice-execution')
+
+
+      157 | async function open(page: Page) {
+      158 |   await page.goto('/#/practice/exercise.c.first-output');
+    > 159 |   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+          |                             ^
+      160 |   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
+      161 |   await readyHistory(page);
+      162 |   await history(page).locator('summary').click();
+        at open (D:\Files\Downloads\编程可视化教学平台\tests\browser\editor-history.spec.ts:159:29)
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\editor-history.spec.ts:379:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-produc-9ec53-removes-history-across-tabs-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-produc-9ec53-removes-history-across-tabs-chrome\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-produc-9ec53-removes-history-across-tabs-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\16.1\storage-legacy-candidate-output\editor-history-13-4-produc-9ec53-removes-history-across-tabs-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chrome] › tests\browser\editor-history.spec.ts:181:1 › 13.4 real editor: code history survives refresh, invalid drafts stay exact, old Rust runs clear and current locks still apply 
+    [chrome] › tests\browser\editor-history.spec.ts:232:1 › 13.4 native block value/add/delete and drag endpoints restore exact canvas and remain usable at three widths 
+    [chrome] › tests\browser\editor-history.spec.ts:361:1 › 13.4 production save failure stays visible, explicit retry preserves IDs and clear removes history across tabs 
+  33 passed (49.7s)
+[WebServer] (node:49400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:22004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:50448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

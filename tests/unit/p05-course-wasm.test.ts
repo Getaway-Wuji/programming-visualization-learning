@@ -114,9 +114,13 @@ describe('P0.5 real WASM producer and closed browser protocol consumer', () => {
     30000,
   );
   it('writes a public-fixture-only receipt of all actual producer/consumer checks', () => {
-    mkdirSync('.artifacts/P0.5-09', { recursive: true });
+    const directory = `.artifacts/${process.env.TASK_EVIDENCE_TASK ?? 'P0.5-09'}`;
+    mkdirSync(directory, { recursive: true });
+    const receipt = process.env.TASK_EVIDENCE_TASK
+      ? `${directory}/course-wasm-execution-${process.env.TASK_EVIDENCE_LABEL ?? Date.now()}.json`
+      : `${directory}/course-wasm-execution.json`;
     writeFileSync(
-      '.artifacts/P0.5-09/course-wasm-execution.json',
+      receipt,
       JSON.stringify({ producer: 'actual-rust-wasm', userData: false, records }, null, 2) + '\n',
     );
     expect(records.length).toBeGreaterThanOrEqual(172);

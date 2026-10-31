@@ -252,6 +252,8 @@ async function saveCase(page: Page) {
 async function openPractice(page: Page) {
   await page.goto(`/#/practice/${exerciseId}`);
   await expect(practicePanel(page)).toHaveAttribute('data-state', 'ready');
+  await expect.poll(async () => (await snapshot(page)).settings.goalTemplate).not.toBeNull();
+  await localReady(page);
   await showPracticeBlocks(page);
   await expect(blockWorkspace(page)).toBeVisible();
   await localReady(page);
@@ -466,7 +468,12 @@ test('a real exercise first pass awards ten and confirmed lesson completion adds
   expect(completed.ledger).toHaveLength(3);
   await openPractice(page);
   await submitPractice(page, 'unmet');
-  expect(await snapshot(page)).toEqual(completed);
+  const failedAgain = await snapshot(page);
+  expect(failedAgain.ledger).toEqual(completed.ledger);
+  expect(failedAgain.dailyFacts).toEqual(completed.dailyFacts);
+  expect(
+    failedAgain.progress.filter((row) => row.eventType !== 'exercise.attempt-evaluated'),
+  ).toEqual(completed.progress.filter((row) => row.eventType !== 'exercise.attempt-evaluated'));
   await correctStarter(page, exerciseId);
   await submitPractice(page);
   await savedPass(page);
@@ -478,7 +485,20 @@ test('a real exercise first pass awards ten and confirmed lesson completion adds
   await page.reload();
   await expect(practicePanel(page)).toHaveAttribute('data-state', 'ready');
   await localReady(page);
-  expect(await snapshot(page)).toEqual(repeated);
+  const reloaded = await snapshot(page);
+  for (const store of [
+    'progress',
+    'dailyFacts',
+    'ledger',
+    'receipts',
+    'goals',
+    'aliases',
+    'settings',
+    'avatar',
+    'appearance',
+    'appearanceAssets',
+  ] as const)
+    expect(reloaded[store]).toEqual(repeated[store]);
   await evidence(testInfo, 'exercise-ten-lesson-twenty-repeat', {
     wrong,
     passed,

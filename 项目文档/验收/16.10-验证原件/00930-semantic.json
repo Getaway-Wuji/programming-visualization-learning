@@ -1,0 +1,82 @@
+{
+  "request": {
+    "analysisVersion": "1.0.0",
+    "identity": {
+      "contextId": "ee1a87d6-b4cb-4c7a-85ee-9149a1cf8495",
+      "contextRevision": 3,
+      "documentRevision": 2,
+      "editId": "d87cd45d-ac34-40e2-aabe-5a527c8f33a8",
+      "operationId": "42b41a79-ff73-4d32-9cb8-686ddd508ad1"
+    },
+    "input": {
+      "random": null,
+      "specRef": {
+        "id": "input.c.scalar-x",
+        "version": "1.0.0"
+      },
+      "values": {
+        "x": 7
+      }
+    },
+    "kind": "analysisRequest",
+    "refs": {
+      "packageRef": {
+        "id": "content.c.p05",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.c.echo",
+        "version": "1.0.0"
+      },
+      "subsetRef": {
+        "id": "subset.c.p0",
+        "version": "1.0.0"
+      }
+    },
+    "sourceText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    // 中文😀：保留原稿\nprintf(\"%d\\n\", missing); return 0;\n}\n"
+  },
+  "result": {
+    "analysisVersion": "1.0.0",
+    "diagnostics": [
+      {
+        "code": "E_NAME_INVALID",
+        "details": {
+          "expected": "object declared and visible before this reference"
+        },
+        "location": {
+          "byteRange": {
+            "end": 106,
+            "start": 99
+          },
+          "kind": "source"
+        },
+        "origin": "rust",
+        "severity": "error",
+        "stage": "semantic"
+      }
+    ],
+    "identity": {
+      "contextId": "ee1a87d6-b4cb-4c7a-85ee-9149a1cf8495",
+      "contextRevision": 3,
+      "documentRevision": 2,
+      "editId": "d87cd45d-ac34-40e2-aabe-5a527c8f33a8",
+      "operationId": "42b41a79-ff73-4d32-9cb8-686ddd508ad1"
+    },
+    "kind": "analysisResult",
+    "refs": {
+      "packageRef": {
+        "id": "content.c.p05",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.c.echo",
+        "version": "1.0.0"
+      },
+      "subsetRef": {
+        "id": "subset.c.p0",
+        "version": "1.0.0"
+      }
+    },
+    "status": "invalid"
+  }
+}

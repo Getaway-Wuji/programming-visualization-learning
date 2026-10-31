@@ -1,0 +1,40 @@
+
+Running 1 test using 1 worker
+
+  x  1 tests\browser\phase2-performance.spec.ts:217:1 › P1 current production navigation and maximum-scale real execution use qualified HTTPS network and unchanged deadlines (59.3s)
+
+
+  1) tests\browser\phase2-performance.spec.ts:217:1 › P1 current production navigation and maximum-scale real execution use qualified HTTPS network and unchanged deadlines 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 8
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "error": "TimeoutError: page.waitForFunction: Timeout 10000ms exceeded.",
+    +     "id": "practice",
+    +     "index": 1,
+    +     "navigation": true,
+    +   },
+    + ]
+
+      345 |     write('measurements', report);
+      346 |   }
+    > 347 |   expect(report.failures).toEqual([]);
+          |                           ^
+      348 |   expect(report.qualification.satisfied).toBe(true);
+      349 |   expect(report.navigation.every((r: any) => r.passed)).toBe(true);
+      350 |   expect(report.execution.every((r: any) => r.valid && r.elapsedMs <= r.acceptedThresholdMs)).toBe(
+        at D:\Files\Downloads\编程可视化教学平台\.artifacts\16.10\clean-workspace\tests\browser\phase2-performance.spec.ts:347:27
+
+    Error Context: tests\.artifacts\16.10\r1610-perf-pilot-third-output\phase2-performance-P1-curr-a65ab-ork-and-unchanged-deadlines\error-context.md
+
+  1 failed
+    tests\browser\phase2-performance.spec.ts:217:1 › P1 current production navigation and maximum-scale real execution use qualified HTTPS network and unchanged deadlines 
+[WebServer] (node:17356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:52096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

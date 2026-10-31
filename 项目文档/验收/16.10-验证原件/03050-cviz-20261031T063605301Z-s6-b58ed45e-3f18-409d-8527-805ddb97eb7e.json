@@ -1,0 +1,453 @@
+{
+  "formatVersion": "1.0.0",
+  "formatId": "urn:c-viz:current-snapshot:1.0.0",
+  "snapshotId": "b58ed45e-3f18-409d-8527-805ddb97eb7e",
+  "capturedAt": "2026-10-31T06:36:05.301Z",
+  "presentation": {
+    "mode": "memory",
+    "scope": "complete-current-state",
+    "image": "reflowed-state-picture",
+    "selectionAndPaginationExcluded": true
+  },
+  "virtualAddresses": "educational-not-host-addresses",
+  "currentState": {
+    "allocator": {
+      "liveBytes": 8,
+      "nextAddress": 4108,
+      "nextFrame": 3,
+      "nextObject": 3,
+      "nextScope": 3
+    },
+    "control": {
+      "activeFrameId": "f1",
+      "inputCursor": 0,
+      "nextNodeId": "n5",
+      "returnValue": {
+        "byteOffset": 0,
+        "lowerBound": 0,
+        "objectId": "o2",
+        "pointeeType": "int",
+        "upperBound": 4
+      }
+    },
+    "counters": {
+      "arrayWrites": 0,
+      "comparisons": 0,
+      "scalarWrites": 1,
+      "swaps": 0
+    },
+    "frames": [
+      {
+        "callNodeId": null,
+        "functionName": "main",
+        "functionNodeId": "n14",
+        "id": "f1",
+        "parentFrameId": null,
+        "scopeIds": [
+          "s1"
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "alive": true,
+        "baseAddress": 4096,
+        "byteLength": 8,
+        "cells": [],
+        "declarationNodeId": "n9",
+        "frameId": "f1",
+        "id": "o1",
+        "length": 1,
+        "name": "p",
+        "scopeId": "s1",
+        "storage": "automatic",
+        "typeName": "int*",
+        "zeroInitialized": false
+      },
+      {
+        "alive": false,
+        "baseAddress": 4104,
+        "byteLength": 4,
+        "cells": [],
+        "declarationNodeId": "n2",
+        "frameId": "f2",
+        "id": "o2",
+        "length": 1,
+        "name": "local",
+        "scopeId": "s2",
+        "storage": "automatic",
+        "typeName": "int",
+        "zeroInitialized": false
+      }
+    ],
+    "output": "",
+    "scopes": [
+      {
+        "aliases": [],
+        "frameId": "f1",
+        "id": "s1",
+        "nodeId": "n13",
+        "objectIds": [
+          "o1"
+        ]
+      }
+    ]
+  },
+  "currentStep": {
+    "changes": [
+      {
+        "after": {
+          "alive": false,
+          "baseAddress": 4104,
+          "byteLength": 4,
+          "cells": [],
+          "declarationNodeId": "n2",
+          "frameId": "f2",
+          "id": "o2",
+          "length": 1,
+          "name": "local",
+          "scopeId": "s2",
+          "storage": "automatic",
+          "typeName": "int",
+          "zeroInitialized": false
+        },
+        "before": {
+          "alive": true,
+          "baseAddress": 4104,
+          "byteLength": 4,
+          "cells": [
+            {
+              "byteOffset": 0,
+              "value": 7
+            }
+          ],
+          "declarationNodeId": "n2",
+          "frameId": "f2",
+          "id": "o2",
+          "length": 1,
+          "name": "local",
+          "scopeId": "s2",
+          "storage": "automatic",
+          "typeName": "int",
+          "zeroInitialized": false
+        },
+        "id": "o2",
+        "index": 1,
+        "op": "record",
+        "table": "objects"
+      },
+      {
+        "after": null,
+        "before": {
+          "aliases": [],
+          "frameId": "f2",
+          "id": "s2",
+          "nodeId": "n6",
+          "objectIds": [
+            "o2"
+          ]
+        },
+        "id": "s2",
+        "index": 1,
+        "op": "record",
+        "table": "scopes"
+      },
+      {
+        "after": null,
+        "before": {
+          "callNodeId": "n8",
+          "functionName": "escape",
+          "functionNodeId": "n7",
+          "id": "f2",
+          "parentFrameId": "f1",
+          "scopeIds": [
+            "s2"
+          ]
+        },
+        "id": "f2",
+        "index": 1,
+        "op": "record",
+        "table": "frames"
+      },
+      {
+        "after": {
+          "activeFrameId": "f1",
+          "inputCursor": 0,
+          "nextNodeId": "n5",
+          "returnValue": {
+            "byteOffset": 0,
+            "lowerBound": 0,
+            "objectId": "o2",
+            "pointeeType": "int",
+            "upperBound": 4
+          }
+        },
+        "before": {
+          "activeFrameId": "f2",
+          "inputCursor": 0,
+          "nextNodeId": "n2",
+          "returnValue": null
+        },
+        "op": "control"
+      },
+      {
+        "after": {
+          "liveBytes": 8,
+          "nextAddress": 4108,
+          "nextFrame": 3,
+          "nextObject": 3,
+          "nextScope": 3
+        },
+        "before": {
+          "liveBytes": 12,
+          "nextAddress": 4108,
+          "nextFrame": 3,
+          "nextObject": 3,
+          "nextScope": 3
+        },
+        "op": "allocator"
+      }
+    ],
+    "kind": "function.return",
+    "nodeId": "n5",
+    "seq": 6
+  },
+  "executionOutcome": {
+    "byteRange": {
+      "end": 113,
+      "start": 111
+    },
+    "code": "E_DANGLING_POINTER",
+    "cursor": 7,
+    "returnValue": null,
+    "status": "error"
+  },
+  "terminalAtCursor": null,
+  "origin": {
+    "kind": "memory-observation",
+    "id": "scope",
+    "title": "作用域与悬空引用",
+    "caseRef": null,
+    "programRef": null,
+    "packageRef": null,
+    "definitionVersion": {
+      "scheme": "source-sha256",
+      "value": "4ffff3942afdfacdc91bedd67bb7a14c51ac6230e1d4c646178fb41f29a56b7f"
+    }
+  },
+  "runtime": {
+    "domain": "p1-memory",
+    "language": "c",
+    "subset": null,
+    "engine": {
+      "buildId": "4f3cb075dc0b7da3a0afc9dd96f178b6a1b71184f125c726ddf0b81384f6b3a7",
+      "id": "engine.rust.memory",
+      "version": "0.1.0"
+    },
+    "identity": {
+      "runId": "48cc8112-d177-4064-996e-8f4e8c4704f9",
+      "sourceRevision": "8f5bef67-883a-4d35-8e4e-7ac871701643"
+    },
+    "versions": {
+      "execution": "1.3.0",
+      "step": "1.2.0",
+      "diagnostic": "1.2.0",
+      "integerEncoding": "1.0.0",
+      "judge": null
+    }
+  },
+  "source": {
+    "text": "int* escape(void) {\n    int local = 7;\n    return &local;\n}\nint main(void) {\n    int* p = escape();\n    return *p;\n}\n",
+    "encoding": "UTF-8",
+    "sourceRevision": "8f5bef67-883a-4d35-8e4e-7ac871701643",
+    "sha256": "4ffff3942afdfacdc91bedd67bb7a14c51ac6230e1d4c646178fb41f29a56b7f",
+    "nodeMap": [
+      {
+        "byteRange": {
+          "end": 37,
+          "start": 36
+        },
+        "kind": "expression",
+        "nodeId": "n1"
+      },
+      {
+        "byteRange": {
+          "end": 38,
+          "start": 24
+        },
+        "kind": "declaration",
+        "nodeId": "n2"
+      },
+      {
+        "byteRange": {
+          "end": 56,
+          "start": 51
+        },
+        "kind": "expression",
+        "nodeId": "n3"
+      },
+      {
+        "byteRange": {
+          "end": 56,
+          "start": 50
+        },
+        "kind": "expression",
+        "nodeId": "n4"
+      },
+      {
+        "byteRange": {
+          "end": 57,
+          "start": 43
+        },
+        "kind": "return",
+        "nodeId": "n5"
+      },
+      {
+        "byteRange": {
+          "end": 59,
+          "start": 18
+        },
+        "kind": "block",
+        "nodeId": "n6"
+      },
+      {
+        "byteRange": {
+          "end": 59,
+          "start": 0
+        },
+        "kind": "function",
+        "nodeId": "n7"
+      },
+      {
+        "byteRange": {
+          "end": 98,
+          "start": 90
+        },
+        "kind": "call",
+        "nodeId": "n8"
+      },
+      {
+        "byteRange": {
+          "end": 99,
+          "start": 81
+        },
+        "kind": "declaration",
+        "nodeId": "n9"
+      },
+      {
+        "byteRange": {
+          "end": 113,
+          "start": 112
+        },
+        "kind": "expression",
+        "nodeId": "n10"
+      },
+      {
+        "byteRange": {
+          "end": 113,
+          "start": 111
+        },
+        "kind": "expression",
+        "nodeId": "n11"
+      },
+      {
+        "byteRange": {
+          "end": 114,
+          "start": 104
+        },
+        "kind": "return",
+        "nodeId": "n12"
+      },
+      {
+        "byteRange": {
+          "end": 116,
+          "start": 75
+        },
+        "kind": "block",
+        "nodeId": "n13"
+      },
+      {
+        "byteRange": {
+          "end": 116,
+          "start": 60
+        },
+        "kind": "function",
+        "nodeId": "n14"
+      }
+    ],
+    "blockMap": [],
+    "bindingMap": [],
+    "resolvedBindings": []
+  },
+  "input": [],
+  "types": [
+    {
+      "byteSize": 4,
+      "fields": [],
+      "kind": "int",
+      "name": "int",
+      "pointeeType": null
+    },
+    {
+      "byteSize": 8,
+      "fields": [],
+      "kind": "pointer",
+      "name": "int*",
+      "pointeeType": "int"
+    }
+  ],
+  "position": {
+    "cursor": 6,
+    "length": 7,
+    "stepKind": "function.return",
+    "paused": true,
+    "atTerminal": false,
+    "executed": {
+      "raw": {
+        "end": 57,
+        "start": 43
+      },
+      "range": {
+        "byteRange": {
+          "start": 43,
+          "end": 57
+        },
+        "utf16Range": {
+          "start": 43,
+          "end": 57
+        },
+        "start": {
+          "line": 3,
+          "column": 5
+        },
+        "end": {
+          "line": 3,
+          "column": 19
+        }
+      },
+      "description": "第 3 行，第 5 列"
+    },
+    "highlighted": {
+      "reason": "executed-step",
+      "range": {
+        "byteRange": {
+          "start": 43,
+          "end": 57
+        },
+        "utf16Range": {
+          "start": 43,
+          "end": 57
+        },
+        "start": {
+          "line": 3,
+          "column": 5
+        },
+        "end": {
+          "line": 3,
+          "column": 19
+        }
+      }
+    },
+    "terminalRange": null
+  }
+}

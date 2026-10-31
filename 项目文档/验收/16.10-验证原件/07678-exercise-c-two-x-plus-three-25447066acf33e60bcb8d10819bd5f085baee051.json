@@ -1,0 +1,530 @@
+{
+  "label": "exercise.c.two-x-plus-three",
+  "browser": "chrome",
+  "phase": "passed",
+  "sync": "synced",
+  "source": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int result = ((2 * x) + 3);\n    printf(\"%d\\n\", result);\n    return 0;\n}\n",
+  "archive": {
+    "achievements": [],
+    "aliases": [],
+    "appearance": [
+      {
+        "preset": "minimal",
+        "themeOverrides": {
+          "minimal": {
+            "accentColor": null
+          },
+          "cute": {
+            "accentColor": null
+          },
+          "glass": {
+            "accentColor": null
+          },
+          "soft": {
+            "accentColor": null
+          },
+          "cool": {
+            "accentColor": null
+          },
+          "tech": {
+            "accentColor": null
+          }
+        },
+        "blockWorkspace": "show",
+        "layout": {
+          "sidebar": "expanded",
+          "workbenchMode": "standard",
+          "splitRatios": {
+            "practice": 50,
+            "visualize": 35,
+            "review": 35
+          }
+        },
+        "background": {
+          "assetId": null,
+          "visible": false,
+          "fit": "cover",
+          "position": "center",
+          "overlayOpacity": 75
+        }
+      }
+    ],
+    "appearanceAssets": [],
+    "avatar": [
+      {
+        "presetId": "avatar.basic.01",
+        "accentColor": "#168A72"
+      }
+    ],
+    "dailyFacts": [
+      {
+        "eventType": "exercise.passed",
+        "subjectRef": {
+          "id": "exercise.c.two-x-plus-three",
+          "version": "1.1.0"
+        },
+        "canonicalSubjectId": "exercise.c.two-x-plus-three",
+        "occurredAt": "2026-10-31T09:47:37.574Z",
+        "localDate": "2026-10-31"
+      }
+    ],
+    "editHistory": [
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "4c5268d6-91b5-4e2c-a536-a1790a031201",
+        "writerId": "e7a0439d-4cf6-425a-b4ca-4373c16d704b",
+        "generation": "0ec2bda9-4dd5-4b36-a231-9310b87e055a",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:47:36.943Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.two-x-plus-three",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.two-x-plus-three",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "initial",
+        "documentRevision": 1,
+        "authority": "blocks",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"lesson.main\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 1
+      },
+      {
+        "historyVersion": "1.0.0",
+        "entryId": "5cf3a100-be19-42c8-aa1c-149572d6127e",
+        "writerId": "e7a0439d-4cf6-425a-b4ca-4373c16d704b",
+        "generation": "0ec2bda9-4dd5-4b36-a231-9310b87e055a",
+        "captureVersion": 1,
+        "createdAt": "2026-10-31T09:47:37.195Z",
+        "scope": {
+          "packageRef": {
+            "id": "content.c.p05",
+            "version": "1.0.0"
+          },
+          "exerciseRef": {
+            "id": "exercise.c.two-x-plus-three",
+            "version": "1.1.0"
+          },
+          "programRef": {
+            "id": "program.c.two-x-plus-three",
+            "version": "1.0.0"
+          },
+          "mode": "independent"
+        },
+        "reason": "code",
+        "documentRevision": 2,
+        "authority": "code",
+        "codeText": "#include <stdio.h>\nint main(void) {\n    int x = 7;\n    int result = ((2 * x) + 3);\n    printf(\"%d\\n\", result);\n    return 0;\n}\n",
+        "workspaceJson": "{\"blocks\":{\"languageVersion\":0,\"blocks\":[{\"type\":\"cv_main\",\"id\":\"block.code.14\",\"x\":0,\"y\":0,\"inputs\":{\"BODY\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"lesson.block.1\",\"editable\":false,\"extraState\":{\"binding\":{\"bindingKey\":\"param.x\",\"name\":\"x\",\"targetKind\":\"scalar\"}},\"fields\":{\"NAME\":\"x\",\"INITIALIZE\":false},\"next\":{\"block\":{\"type\":\"cv_declare\",\"id\":\"block.code.9\",\"extraState\":{\"hasInitial\":true},\"fields\":{\"NAME\":\"result\",\"INITIALIZE\":true},\"inputs\":{\"INITIAL\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.8\",\"fields\":{\"OP\":\"+\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_arithmetic\",\"id\":\"block.code.6\",\"fields\":{\"OP\":\"*\"},\"inputs\":{\"LEFT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.4\",\"fields\":{\"VALUE\":\"2\"}}},\"RIGHT\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.5\",\"fields\":{\"NAME\":\"x\"}}}}}},\"RIGHT\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.7\",\"fields\":{\"VALUE\":\"3\"}}}}}}},\"next\":{\"block\":{\"type\":\"cv_print\",\"id\":\"block.code.11\",\"extraState\":{\"arguments\":1},\"fields\":{\"FORMAT\":\"%d\\\\n\"},\"inputs\":{\"ARG0\":{\"block\":{\"type\":\"cv_variable\",\"id\":\"block.code.10\",\"fields\":{\"NAME\":\"result\"}}}},\"next\":{\"block\":{\"type\":\"cv_return\",\"id\":\"block.code.13\",\"inputs\":{\"VALUE\":{\"block\":{\"type\":\"cv_integer\",\"id\":\"block.code.12\",\"fields\":{\"VALUE\":\"0\"}}}}}}}}}}}}}}]}}",
+        "inputJson": "{\"random\":null,\"specRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"values\":{\"x\":7}}",
+        "state": "synced",
+        "restoredFrom": null,
+        "sequence": 2
+      }
+    ],
+    "goals": [
+      {
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "targets": {
+          "exercise": 1,
+          "lesson": 1,
+          "case": 0
+        },
+        "achievedAt": null
+      }
+    ],
+    "knowledgeMarks": [],
+    "ledger": [
+      {
+        "sourceId": "reward.exercise.first-pass",
+        "subjectId": "exercise.c.two-x-plus-three",
+        "localDate": "2026-10-31",
+        "occurredAt": "2026-10-31T09:47:37.574Z",
+        "status": "posted",
+        "points": 10,
+        "policyRef": {
+          "id": "reward.policy.p0",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "meta": [
+      {
+        "schemaVersion": "7.0.0",
+        "dbVersion": 7,
+        "generation": "0ec2bda9-4dd5-4b36-a231-9310b87e055a",
+        "revision": 5,
+        "timeZone": "Asia/Shanghai",
+        "createdAt": "2026-10-31T09:47:36.711Z",
+        "activePackageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        }
+      }
+    ],
+    "progress": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "subjectRef": {
+          "id": "exercise.c.two-x-plus-three",
+          "version": "1.1.0"
+        },
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "learningRevision": 1,
+        "firstAt": "2026-10-31T09:47:37.574Z",
+        "lastAt": "2026-10-31T09:47:37.574Z"
+      }
+    ],
+    "receipts": [
+      {
+        "eventType": "exercise.passed",
+        "result": "passed",
+        "packageRef": {
+          "id": "content.c.p05",
+          "version": "1.0.0"
+        },
+        "subjectRef": {
+          "id": "exercise.c.two-x-plus-three",
+          "version": "1.1.0"
+        },
+        "learningRevision": 1,
+        "eventId": "9514090c-ca53-4e6e-b941-b3f1e9560fd5",
+        "occurredAt": "2026-10-31T09:47:37.574Z",
+        "localDate": "2026-10-31",
+        "goalVersion": 1,
+        "committedRevision": 5
+      }
+    ],
+    "reviewCards": [],
+    "settings": [
+      {
+        "theme": "light",
+        "reducedMotion": "system",
+        "playbackRate": 1,
+        "goalTemplate": {
+          "revision": 1,
+          "targets": {
+            "exercise": 1,
+            "lesson": 1,
+            "case": 0
+          }
+        }
+      }
+    ]
+  },
+  "captures": [
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "a089e19f-22cd-4ded-8f01-fa0fcee24bf4",
+      "responseOperationId": "a089e19f-22cd-4ded-8f01-fa0fcee24bf4",
+      "catalogJson": null,
+      "requestBytes": 622,
+      "responseBytes": 2726
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "b0af3714-1c38-4a0c-b3f2-a241aa7e6035",
+      "responseOperationId": "b0af3714-1c38-4a0c-b3f2-a241aa7e6035",
+      "catalogJson": null,
+      "requestBytes": 687,
+      "responseBytes": 5600
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "0661cf42-3666-425e-81e6-dfb1731de35c",
+      "responseOperationId": "0661cf42-3666-425e-81e6-dfb1731de35c",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.two-x-plus-three\",\"version\":\"1.1.0\",\"title\":\"两倍加三\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.expressions\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.expressions\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.two-x-plus-three\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.two-x-plus-three\",\"version\":\"1.0.0\"},\"prompt\":\"保留输入源x，计算它的两倍加三并输出一行整数。例：7→17，0→3，-9→-15（每个结果后均有换行）。必须实际执行与x有关的乘法和加法，可用临时变量或等价顺序；不要写2*(x+3)，也不要打印常量。输入域-999到999，结果不按输入域截断。所有测试正常结束且返回0。思路：先乘2，再加3，最后输出。\",\"tests\":[{\"caseKey\":\"positive\",\"input\":{\"x\":7},\"expectedStdout\":\"17\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zero\",\"input\":{\"x\":0},\"expectedStdout\":\"3\\n\",\"expectedExitCode\":0},{\"caseKey\":\"negative\",\"input\":{\"x\":-9},\"expectedStdout\":\"-15\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.two-x-plus-three\",\"version\":\"1.0.0\",\"title\":\"两倍加三参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"exampleInput\":{\"x\":7},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int x = 7;\\n    int result = (2 * x) + 3;\\n    printf(\\\"%d\\\\n\\\", result);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.x\",\"inputKey\":\"x\",\"targetName\":\"x\",\"targetKind\":\"scalar\",\"from\":\"field\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.arithmetic\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"},{\"id\":\"block.c.unary\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-02\"}},\"inputSpec\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\",\"title\":\"普通整数x\",\"fields\":[{\"key\":\"x\",\"kind\":\"integer\",\"min\":-999,\"max\":999}],\"relations\":[]},\"judgeProfile\":{\"id\":\"judge.c.two-x-plus-three\",\"version\":\"1.0.0\",\"title\":\"乘加目标检查\",\"rule\":\"multiply-add-output\",\"targetDescription\":\"实际执行与输入相关的乘法及加法，允许等价顺序。\"}}",
+      "requestBytes": 2136,
+      "responseBytes": 9680
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "f0f47c17-d1b1-439b-ab8b-62db35338f78",
+      "responseOperationId": "f0f47c17-d1b1-439b-ab8b-62db35338f78",
+      "catalogJson": null,
+      "requestBytes": 687,
+      "responseBytes": 5600
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "cfbe6c1e-f5df-4547-aaaf-679ddad01df1",
+      "responseOperationId": "cfbe6c1e-f5df-4547-aaaf-679ddad01df1",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.two-x-plus-three\",\"version\":\"1.1.0\",\"title\":\"两倍加三\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.expressions\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.expressions\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.two-x-plus-three\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.two-x-plus-three\",\"version\":\"1.0.0\"},\"prompt\":\"保留输入源x，计算它的两倍加三并输出一行整数。例：7→17，0→3，-9→-15（每个结果后均有换行）。必须实际执行与x有关的乘法和加法，可用临时变量或等价顺序；不要写2*(x+3)，也不要打印常量。输入域-999到999，结果不按输入域截断。所有测试正常结束且返回0。思路：先乘2，再加3，最后输出。\",\"tests\":[{\"caseKey\":\"positive\",\"input\":{\"x\":7},\"expectedStdout\":\"17\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zero\",\"input\":{\"x\":0},\"expectedStdout\":\"3\\n\",\"expectedExitCode\":0},{\"caseKey\":\"negative\",\"input\":{\"x\":-9},\"expectedStdout\":\"-15\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.two-x-plus-three\",\"version\":\"1.0.0\",\"title\":\"两倍加三参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"exampleInput\":{\"x\":7},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int x = 7;\\n    int result = (2 * x) + 3;\\n    printf(\\\"%d\\\\n\\\", result);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.x\",\"inputKey\":\"x\",\"targetName\":\"x\",\"targetKind\":\"scalar\",\"from\":\"field\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.arithmetic\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"},{\"id\":\"block.c.unary\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-02\"}},\"inputSpec\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\",\"title\":\"普通整数x\",\"fields\":[{\"key\":\"x\",\"kind\":\"integer\",\"min\":-999,\"max\":999}],\"relations\":[]},\"judgeProfile\":{\"id\":\"judge.c.two-x-plus-three\",\"version\":\"1.0.0\",\"title\":\"乘加目标检查\",\"rule\":\"multiply-add-output\",\"targetDescription\":\"实际执行与输入相关的乘法及加法，允许等价顺序。\"}}",
+      "requestBytes": 2131,
+      "responseBytes": 9661
+    },
+    {
+      "kind": "analyze-code",
+      "moduleSeen": true,
+      "operationId": "a3bc00dc-0d74-4078-93ff-9d99dfc990e8",
+      "responseOperationId": "a3bc00dc-0d74-4078-93ff-9d99dfc990e8",
+      "catalogJson": null,
+      "requestBytes": 689,
+      "responseBytes": 5801
+    },
+    {
+      "kind": "execute",
+      "moduleSeen": true,
+      "operationId": "9dd69a82-fa4d-48fe-94d7-b2d2c193bfa2",
+      "responseOperationId": "9dd69a82-fa4d-48fe-94d7-b2d2c193bfa2",
+      "catalogJson": "{\"packageRef\":{\"id\":\"content.c.p05\",\"version\":\"1.0.0\"},\"subject\":{\"id\":\"exercise.c.two-x-plus-three\",\"version\":\"1.1.0\",\"title\":\"两倍加三\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"lessonRef\":{\"id\":\"lesson.c.expressions\",\"version\":\"1.1.0\"},\"learningRevision\":1,\"acceptedPriorVersions\":[\"1.0.1\"],\"knowledgeRefs\":[{\"id\":\"knowledge.c.expressions\",\"version\":\"1.0.0\"}],\"programRef\":{\"id\":\"program.c.two-x-plus-three\",\"version\":\"1.0.0\"},\"judgeRef\":{\"id\":\"judge.c.two-x-plus-three\",\"version\":\"1.0.0\"},\"prompt\":\"保留输入源x，计算它的两倍加三并输出一行整数。例：7→17，0→3，-9→-15（每个结果后均有换行）。必须实际执行与x有关的乘法和加法，可用临时变量或等价顺序；不要写2*(x+3)，也不要打印常量。输入域-999到999，结果不按输入域截断。所有测试正常结束且返回0。思路：先乘2，再加3，最后输出。\",\"tests\":[{\"caseKey\":\"positive\",\"input\":{\"x\":7},\"expectedStdout\":\"17\\n\",\"expectedExitCode\":0},{\"caseKey\":\"zero\",\"input\":{\"x\":0},\"expectedStdout\":\"3\\n\",\"expectedExitCode\":0},{\"caseKey\":\"negative\",\"input\":{\"x\":-9},\"expectedStdout\":\"-15\\n\",\"expectedExitCode\":0}],\"rewardRef\":{\"id\":\"reward.exercise.first-pass\",\"version\":\"1.0.0\"}},\"program\":{\"id\":\"program.c.two-x-plus-three\",\"version\":\"1.0.0\",\"title\":\"两倍加三参考\",\"languageRef\":{\"id\":\"lang.c\",\"version\":\"1.0.0\"},\"subsetRef\":{\"id\":\"subset.c.p0\",\"version\":\"1.0.0\"},\"inputRef\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\"},\"exampleInput\":{\"x\":7},\"sourceExample\":\"#include <stdio.h>\\nint main(void) {\\n    int x = 7;\\n    int result = (2 * x) + 3;\\n    printf(\\\"%d\\\\n\\\", result);\\n    return 0;\\n}\\n\",\"bindings\":[{\"bindingKey\":\"param.x\",\"inputKey\":\"x\",\"targetName\":\"x\",\"targetKind\":\"scalar\",\"from\":\"field\"}],\"blockRefs\":[{\"id\":\"block.c.main\",\"version\":\"1.0.0\"},{\"id\":\"block.c.integer\",\"version\":\"1.0.0\"},{\"id\":\"block.c.declare-int\",\"version\":\"1.0.0\"},{\"id\":\"block.c.read-variable\",\"version\":\"1.0.0\"},{\"id\":\"block.c.arithmetic\",\"version\":\"1.0.0\"},{\"id\":\"block.c.printf\",\"version\":\"1.0.0\"},{\"id\":\"block.c.return\",\"version\":\"1.0.0\"},{\"id\":\"block.c.unary\",\"version\":\"1.0.0\"}],\"reference\":{\"document\":\"../架构决策/01.3-正反样例清单.md\",\"locator\":\"REF-02\"}},\"inputSpec\":{\"id\":\"input.c.scalar-x\",\"version\":\"1.0.0\",\"title\":\"普通整数x\",\"fields\":[{\"key\":\"x\",\"kind\":\"integer\",\"min\":-999,\"max\":999}],\"relations\":[]},\"judgeProfile\":{\"id\":\"judge.c.two-x-plus-three\",\"version\":\"1.0.0\",\"title\":\"乘加目标检查\",\"rule\":\"multiply-add-output\",\"targetDescription\":\"实际执行与输入相关的乘法及加法，允许等价顺序。\"}}",
+      "requestBytes": 2139,
+      "responseBytes": 9852
+    }
+  ],
+  "runs": [
+    {
+      "identity": {
+        "contextId": "1d13f3b1-2c1d-4a80-bf94-4e293e813c5d",
+        "contextRevision": 3,
+        "runId": "3d0aa10d-9004-4b1f-bd39-4dea5c57dd9d",
+        "sourceRevision": 1,
+        "submissionId": "539b17a0-f02f-4094-9666-f5ad9a0a423b",
+        "testCaseKey": "positive"
+      },
+      "terminal": {
+        "cursor": 7,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n13"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "positive",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          }
+        ],
+        "coverage": [],
+        "observations": [],
+        "profileRef": {
+          "id": "judge.c.two-x-plus-three",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "1d13f3b1-2c1d-4a80-bf94-4e293e813c5d",
+        "contextRevision": 3,
+        "runId": "ee408111-ad7a-42e8-85fb-8f904997e962",
+        "sourceRevision": 2,
+        "submissionId": "539b17a0-f02f-4094-9666-f5ad9a0a423b",
+        "testCaseKey": "zero"
+      },
+      "terminal": {
+        "cursor": 7,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n13"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "zero",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n11"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          }
+        ],
+        "coverage": [],
+        "observations": [],
+        "profileRef": {
+          "id": "judge.c.two-x-plus-three",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    },
+    {
+      "identity": {
+        "contextId": "1d13f3b1-2c1d-4a80-bf94-4e293e813c5d",
+        "contextRevision": 3,
+        "runId": "2ddf73e5-7cad-4a0b-8791-058363933f19",
+        "sourceRevision": 3,
+        "submissionId": "539b17a0-f02f-4094-9666-f5ad9a0a423b",
+        "testCaseKey": "negative"
+      },
+      "terminal": {
+        "cursor": 7,
+        "diagnostics": [],
+        "exitCode": 0,
+        "location": {
+          "edge": "whole",
+          "kind": "source",
+          "nodeId": "n14"
+        },
+        "status": "completed"
+      },
+      "judgeResult": {
+        "caseKey": "negative",
+        "checks": [
+          {
+            "diagnosticCodes": [],
+            "key": "input-bindings",
+            "nodeIds": [
+              "n12"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "stdout-exact",
+            "nodeIds": [
+              "n12"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "exit-zero",
+            "nodeIds": [
+              "n12"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          },
+          {
+            "diagnosticCodes": [],
+            "key": "teaching-target",
+            "nodeIds": [
+              "n12"
+            ],
+            "status": "met",
+            "stepSeqs": [
+              6
+            ]
+          }
+        ],
+        "coverage": [],
+        "observations": [],
+        "profileRef": {
+          "id": "judge.c.two-x-plus-three",
+          "version": "1.0.0"
+        },
+        "status": "met"
+      }
+    }
+  ]
+}

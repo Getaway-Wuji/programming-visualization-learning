@@ -1,0 +1,289 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "catalog.cpp.linked-nodes",
+  "version": "1.0.0",
+  "inputEncoding": {
+    "version": "1.0.0",
+    "maxEncodedItems": 30,
+    "maxDraftChars": 1024
+  },
+  "cases": [
+    {
+      "id": "case.cpp.singly-linked-list",
+      "version": "1.0.0",
+      "programId": "program.cpp.singly-linked-list",
+      "programVersion": "1.0.0",
+      "language": "cpp",
+      "kind": "list",
+      "title": "单链表",
+      "description": "沿真实指针逐步核对位置插入、断链删除与遍历，分清存活节点和释放墓碑。",
+      "defaultDraft": "插 0 7\n插 1 -3\n插 1 0\n遍历\n删 0\n遍历",
+      "syntax": "插 位置 值 / 删 位置 / 遍历",
+      "variant": "容量7；位置从0开始，插入[0,size]、删除[0,size)，重复值允许；先检查位置，再检查满。",
+      "complexity": "位置插删和遍历O(n)，已定位处改链O(1)；轨迹编码/校验与播放时间不属于此算法复杂度。",
+      "extraSpace": "每个存活Node为12教学字节，最多7个；常数临时指针，遍历不递归。墓碑/轨迹开销另计。",
+      "knowledgeConcepts": [
+        "指针",
+        "单链表",
+        "位置插入",
+        "断链删除",
+        "对象生命周期"
+      ],
+      "boundaryDrafts": [
+        {
+          "id": "empty",
+          "title": "空序列",
+          "draft": "[]"
+        },
+        {
+          "id": "positions",
+          "title": "头中尾插删",
+          "draft": "插 0 7\n插 1 -3\n插 1 0\n遍历\n删 1\n删 1\n删 0\n遍历"
+        },
+        {
+          "id": "full",
+          "title": "容量7、满与位置优先级（30槽）",
+          "draft": "插 0 -3\n插 1 -2\n插 2 -1\n插 3 0\n插 4 1\n插 5 2\n插 6 3\n插 7 99\n插 8 1\n删 0\n遍历"
+        },
+        {
+          "id": "range",
+          "title": "空删、负位置与大位置",
+          "draft": "删 0\n插 -1 3\n插 1 3\n插 0 -999\n插 999 2\n删 999\n遍历"
+        },
+        {
+          "id": "reuse",
+          "title": "中间删除后重新分配",
+          "draft": "插 0 -3\n插 1 -2\n插 2 -1\n插 3 0\n插 4 1\n插 5 2\n插 6 3\n删 3\n插 3 0\n遍历"
+        }
+      ],
+      "capacity": 7,
+      "min": -999,
+      "max": 999,
+      "objectives": [
+        "按真实指针核对连接、入口与当前游标",
+        "区分未初始化/空/有效/悬空和存活/墓碑",
+        "回退恢复全部节点、帧、输出与计数"
+      ],
+      "sourceFile": "content/algorithms/cpp/singly-linked-list-1.0.0.cpp",
+      "sourceOrigin": "project-original",
+      "phases": [
+        {
+          "id": "types",
+          "title": "声明Node布局",
+          "explanation": "字段类型/字节偏移由当前结果types确定，教学地址不是宿主ABI。"
+        },
+        {
+          "id": "traverse",
+          "title": "沿当前next遍历",
+          "explanation": "C++逐个读取真实next和value输出，不按界面草稿预演。"
+        },
+        {
+          "id": "setup",
+          "title": "建立入口与操作计数",
+          "explanation": "head/root和size/consumed/processed/outcome依次声明初始化，未声明值不补0。"
+        },
+        {
+          "id": "read",
+          "title": "读取下一命令",
+          "explanation": "cin游标先按实际读取移动，源码consumed独立赋值之间可暂时不同。"
+        },
+        {
+          "id": "insert",
+          "title": "检查并处理插入",
+          "explanation": "链表先检查位置再容量；BST先真实查重再容量。拒绝仍消费全部参数，继续下一条。"
+        },
+        {
+          "id": "allocate",
+          "title": "分配真实动态节点",
+          "explanation": "new Node{}建立实际heap对象及0/typed-null默认槽，尚未连接到入口的存活Node仍可查看。"
+        },
+        {
+          "id": "link",
+          "title": "更新真实指针连接",
+          "explanation": "先完成节点字段/next或left/right、head/root的真实赋值，再独立更新size；中间态不提前补齐。"
+        },
+        {
+          "id": "remove",
+          "title": "定位并断开目标节点",
+          "explanation": "按零起始位置沿真实next寻找前驱；先将入口或前驱连接改向目标的next，目标暂仍存活。"
+        },
+        {
+          "id": "release",
+          "title": "释放真实节点",
+          "explanation": "delete使对象成为无值槽的墓碑，已有局部或字段指针可暂时悬空；不能解引用或显示旧值。"
+        },
+        {
+          "id": "visit",
+          "title": "输出所选遍历",
+          "explanation": "实际C++函数按当前节点连接产生LIST/PRE/IN/POST输出；当前输出与完整结果分开。"
+        },
+        {
+          "id": "invalid",
+          "title": "未知内部编码停止",
+          "explanation": "界面编码不会产生此分支；受控原始非法码输出INVALID并return1，不假称正常清理。"
+        },
+        {
+          "id": "advance",
+          "title": "完成一条命令",
+          "explanation": "processed递增表示本条已完整处理，包含FULL/RANGE/DUP/MISS等业务结果；不代表都插入成功。"
+        },
+        {
+          "id": "cleanup",
+          "title": "清理剩余动态节点",
+          "explanation": "真实释放按源码进行，入口/局部可能短暂指向墓碑；每个连接、对象生命期和分配器都能后退恢复。"
+        },
+        {
+          "id": "finish",
+          "title": "输出END并返回",
+          "explanation": "END表示本序列程序正常走到末尾，不代表每条业务操作成功；自动对象在main离开时死亡。"
+        }
+      ]
+    },
+    {
+      "id": "case.cpp.binary-search-tree",
+      "version": "1.0.0",
+      "programId": "program.cpp.binary-search-tree",
+      "programVersion": "1.0.0",
+      "language": "cpp",
+      "kind": "bst",
+      "title": "二叉搜索树（BST）",
+      "description": "沿真实左右指针观察插入与查找，用同一游标核对前中后序递归和释放。",
+      "defaultDraft": "插 4\n插 2\n插 6\n插 1\n插 3\n插 5\n插 7\n查 5\n前序\n中序\n后序",
+      "syntax": "插 值 / 查 值 / 前序 / 中序 / 后序",
+      "variant": "容量7；严格小值在左、大值在右，重复值DUP拒绝；先查重再判满。只插入/查找及三遍历，不含树删除或平衡。",
+      "complexity": "插入/查找O(h)，最坏偏斜h=n；遍历与清理O(n)，递归辅助O(h)。轨迹和播放开销另计。",
+      "extraSpace": "每个存活Node为20教学字节，最多7个；最坏递归链含空孩子不超过8帧，受原32帧/组合深256等预算限制。",
+      "knowledgeConcepts": [
+        "指针",
+        "二叉搜索树",
+        "递归",
+        "三种遍历",
+        "对象生命周期"
+      ],
+      "boundaryDrafts": [
+        {
+          "id": "empty",
+          "title": "空树查找与三遍历",
+          "draft": "查 0\n前序\n中序\n后序"
+        },
+        {
+          "id": "full",
+          "title": "满树拒重优先、未找到与三遍历",
+          "draft": "插 4\n插 2\n插 6\n插 1\n插 3\n插 5\n插 7\n插 4\n插 8\n查 7\n查 999\n前序\n中序\n后序"
+        },
+        {
+          "id": "ascending",
+          "title": "升序最坏偏斜",
+          "draft": "插 1\n插 2\n插 3\n插 4\n插 5\n插 6\n插 7\n前序\n中序\n后序"
+        },
+        {
+          "id": "descending",
+          "title": "降序最坏偏斜",
+          "draft": "插 7\n插 6\n插 5\n插 4\n插 3\n插 2\n插 1\n前序\n中序\n后序"
+        },
+        {
+          "id": "duplicates",
+          "title": "端点、重复与查找",
+          "draft": "插 0\n插 -999\n插 999\n插 0\n查 -999\n查 1\n前序\n中序\n后序"
+        }
+      ],
+      "capacity": 7,
+      "min": -999,
+      "max": 999,
+      "objectives": [
+        "按真实指针核对连接、入口与当前游标",
+        "区分未初始化/空/有效/悬空和存活/墓碑",
+        "回退恢复全部节点、帧、输出与计数"
+      ],
+      "sourceFile": "content/algorithms/cpp/binary-search-tree-1.0.0.cpp",
+      "sourceOrigin": "project-original",
+      "phases": [
+        {
+          "id": "types",
+          "title": "声明Node布局",
+          "explanation": "字段类型/字节偏移由当前结果types确定，教学地址不是宿主ABI。"
+        },
+        {
+          "id": "find",
+          "title": "沿BST实际路径查找",
+          "explanation": "Rust比较真实节点值，并按left/right移动current；空指针返回未找到。"
+        },
+        {
+          "id": "allocate",
+          "title": "分配真实动态节点",
+          "explanation": "new Node{}建立实际heap对象及0/typed-null默认槽，尚未连接到入口的存活Node仍可查看。"
+        },
+        {
+          "id": "link",
+          "title": "更新真实指针连接",
+          "explanation": "先完成节点字段/next或left/right、head/root的真实赋值，再独立更新size；中间态不提前补齐。"
+        },
+        {
+          "id": "preorder",
+          "title": "前序递归：根左右",
+          "explanation": "当前真实调用帧与cout定位根、左、右，不在前端生成遍历答案。"
+        },
+        {
+          "id": "inorder",
+          "title": "中序递归：左根右",
+          "explanation": "当前真实调用帧与cout定位左、根、右；按已冻结拒重BST语义输出。"
+        },
+        {
+          "id": "postorder",
+          "title": "后序递归：左右根",
+          "explanation": "当前真实调用帧与cout定位左、右、根；返回后回到实际调用者。"
+        },
+        {
+          "id": "release",
+          "title": "释放真实节点",
+          "explanation": "delete使对象成为无值槽的墓碑，已有局部或字段指针可暂时悬空；不能解引用或显示旧值。"
+        },
+        {
+          "id": "setup",
+          "title": "建立入口与操作计数",
+          "explanation": "head/root和size/consumed/processed/outcome依次声明初始化，未声明值不补0。"
+        },
+        {
+          "id": "read",
+          "title": "读取下一命令",
+          "explanation": "cin游标先按实际读取移动，源码consumed独立赋值之间可暂时不同。"
+        },
+        {
+          "id": "insert",
+          "title": "检查并处理插入",
+          "explanation": "链表先检查位置再容量；BST先真实查重再容量。拒绝仍消费全部参数，继续下一条。"
+        },
+        {
+          "id": "search",
+          "title": "查找并报告实际结果",
+          "explanation": "contains在真实节点连接上比较并返回，主程序据实际返回值输出FOUND/MISS，不由界面计算。"
+        },
+        {
+          "id": "visit",
+          "title": "输出所选遍历",
+          "explanation": "实际C++函数按当前节点连接产生LIST/PRE/IN/POST输出；当前输出与完整结果分开。"
+        },
+        {
+          "id": "invalid",
+          "title": "未知内部编码停止",
+          "explanation": "界面编码不会产生此分支；受控原始非法码输出INVALID并return1，不假称正常清理。"
+        },
+        {
+          "id": "advance",
+          "title": "完成一条命令",
+          "explanation": "processed递增表示本条已完整处理，包含FULL/RANGE/DUP/MISS等业务结果；不代表都插入成功。"
+        },
+        {
+          "id": "cleanup",
+          "title": "清理剩余动态节点",
+          "explanation": "真实释放按源码进行，入口/局部可能短暂指向墓碑；每个连接、对象生命期和分配器都能后退恢复。"
+        },
+        {
+          "id": "finish",
+          "title": "输出END并返回",
+          "explanation": "END表示本序列程序正常走到末尾，不代表每条业务操作成功；自动对象在main离开时死亡。"
+        }
+      ]
+    }
+  ]
+}

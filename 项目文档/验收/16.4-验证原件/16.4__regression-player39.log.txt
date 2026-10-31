@@ -1,0 +1,21 @@
+
+Running 12 tests using 1 worker
+
+  ok  1 [chrome] › tests\browser\player-controls.spec.ts:106:1 › preparation leaves controls disabled and a checked real Rust run starts at the initial cursor (1.3s)
+  ok  2 [chrome] › tests\browser\player-controls.spec.ts:129:1 › single-step boundaries, terminal state and replay use one accepted trajectory (1.8s)
+  ok  3 [chrome] › tests\browser\player-controls.spec.ts:167:1 › repeated play and pause never multiply timers and a paused cursor remains stable (3.7s)
+  ok  4 [chrome] › tests\browser\player-controls.spec.ts:195:1 › all six speeds control the next real step and a speed change replaces the pending timer (3.3s)
+  ok  5 [chrome] › tests\browser\player-controls.spec.ts:235:1 › space and left or right arrows work in the focused workspace and stay scoped to it (1.0s)
+  ok  6 [chrome] › tests\browser\player-controls.spec.ts:266:1 › source, input, select and button focus retain their native keyboard semantics (986ms)
+  ok  7 [chrome] › tests\browser\player-controls.spec.ts:303:1 › editing, a replacement execution and reload synchronously discard old playback (2.8s)
+  ok  8 [chrome] › tests\browser\player-controls.spec.ts:334:1 › leaving a playing page and returning through browser history cannot revive its run (1.8s)
+  ok  9 [chrome] › tests\browser\player-controls.spec.ts:358:1 › a document becoming hidden pauses playback and returning does not restart it (2.6s)
+  ok 10 [chrome] › tests\browser\player-controls.spec.ts:399:1 › a genuine Rust failure prefix remains playable and reaches its failed tail (1.6s)
+  ok 11 [chrome] › tests\browser\player-controls.spec.ts:447:1 › a real Worker load failure has no playable trajectory and a new execution recovers (892ms)
+  ok 12 [chrome] › tests\browser\player-controls.spec.ts:469:1 › a real result crossing its deadline during initial player rendering cannot resurrect its trace (1.5s)
+
+  12 passed (27.3s)
+[WebServer] (node:33944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:52376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

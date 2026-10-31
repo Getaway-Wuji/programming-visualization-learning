@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type {} from './harness/execution';
 import { observeExceptionMetadata } from './performance-exception-observer';
+import { waitForPhase2Archive } from './phase2-ready';
 
 const wasmPattern = /\/assets\/c_viz_wasm_bg-[^/]+\.wasm$/;
 
@@ -126,7 +127,7 @@ test('a genuine dead loop naturally reaches a bounded resource terminal and a no
   });
 });
 
-test('cold Module download cancellation settles within 100ms without a Worker or late creation', async ({
+test('cold Module download cancellation settles within 100ms and terminates its unposted Worker without late creation', async ({
   page,
 }, info) => {
   await observeExceptionMetadata(page);
@@ -171,7 +172,14 @@ test('cold Module download cancellation settles within 100ms without a Worker or
   let outcome: Awaited<typeof opening> | undefined;
   try {
     await requested;
-    expect(await page.evaluate(() => window.__performanceExceptionAudit.workers)).toEqual([]);
+    const waiting = await page.evaluate(() => window.__performanceExceptionAudit.workers);
+    expect(waiting).toHaveLength(1);
+    expect(waiting[0]).toMatchObject({
+      postedAt: null,
+      moduleId: null,
+      responseAt: null,
+      terminatedAt: null,
+    });
     cancelled = await page.evaluate(() => {
       const handledAt = performance.now();
       window.executionChecks.cancel();
@@ -196,7 +204,10 @@ test('cold Module download cancellation settles within 100ms without a Worker or
   expect(cancelled).toMatchObject({ activeWorkers: 0, cachedModules: 0 });
   expect(outcome!.settledAt - cancelled!.handledAt).toBeLessThanOrEqual(100);
   expect(cancelled!.stableAt - cancelled!.handledAt).toBeLessThanOrEqual(100);
-  expect(await page.evaluate(() => window.__performanceExceptionAudit.workers)).toEqual([]);
+  const stopped = await page.evaluate(() => window.__performanceExceptionAudit.workers);
+  expect(stopped).toHaveLength(1);
+  expect(stopped[0]).toMatchObject({ postedAt: null, moduleId: null, responseAt: null });
+  expect(stopped[0].terminatedAt).not.toBeNull();
   await page.evaluate(() => window.executionChecks.open());
   expect(await page.evaluate(() => window.executionChecks.run())).toMatchObject({
     producer: 'rust',
@@ -392,6 +403,11 @@ test('a failed inner Blockly lazy module reaches the page boundary and an explic
     await route.fulfill({ status: 404, contentType: 'text/javascript', body: 'missing' });
   });
   await page.goto('/#/practice/exercise.c.echo');
+  await waitForPhase2Archive(page);
+  await page
+    .getByTestId('block-workspace-preference')
+    .getByRole('combobox', { name: '积木显示', exact: true })
+    .selectOption('show');
   await expect(page.getByRole('alert')).toContainText('页面加载失败');
   // Browsers may retry a failed module fetch. Every attempt is faulted and
   // they must all address the same inner lazy module.
