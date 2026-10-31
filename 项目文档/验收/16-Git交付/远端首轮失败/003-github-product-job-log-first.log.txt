@@ -1,0 +1,252 @@
+﻿2026-10-31T11:50:05.8982436Z Current runner version: '2.338.2'
+2026-10-31T11:50:05.9024582Z ##[group]Runner Image Provisioner
+2026-10-31T11:50:05.9026168Z Hosted Compute Agent
+2026-10-31T11:50:05.9027153Z Version: 20261021.618
+2026-10-31T11:50:05.9028205Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-31T11:50:05.9029472Z Build Date: 2026-10-21T00:45:21Z
+2026-10-31T11:50:05.9030732Z Worker ID: {12a0baea-a590-4693-8210-c2faca252cac}
+2026-10-31T11:50:05.9031874Z Region: eastus
+2026-10-31T11:50:05.9032630Z Cloud: Azure
+2026-10-31T11:50:05.9033324Z ##[endgroup]
+2026-10-31T11:50:05.9035648Z ##[group]Operating System
+2026-10-31T11:50:05.9036691Z Microsoft Windows Server 2025
+2026-10-31T11:50:05.9037667Z 10.0.26100
+2026-10-31T11:50:05.9038734Z Datacenter
+2026-10-31T11:50:05.9039472Z ##[endgroup]
+2026-10-31T11:50:05.9040256Z ##[group]Runner Image
+2026-10-31T11:50:05.9041296Z Image: windows-2025-vs2026
+2026-10-31T11:50:05.9042350Z Version: 20261021.278.1
+2026-10-31T11:50:05.9048755Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+2026-10-31T11:50:05.9056743Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+2026-10-31T11:50:05.9061751Z ##[endgroup]
+2026-10-31T11:50:05.9067185Z ##[group]GITHUB_TOKEN Permissions
+2026-10-31T11:50:05.9078310Z Contents: read
+2026-10-31T11:50:05.9079720Z Metadata: read
+2026-10-31T11:50:05.9084620Z ##[endgroup]
+2026-10-31T11:50:05.9096425Z Secret source: Actions
+2026-10-31T11:50:05.9103537Z Cache mode: write
+2026-10-31T11:50:05.9105010Z Prepare workflow directory
+2026-10-31T11:50:06.0156923Z Prepare all required actions
+2026-10-31T11:50:06.0289829Z Getting action download info
+2026-10-31T11:50:06.1940570Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-31T11:50:07.2933690Z Complete job name: build
+2026-10-31T11:50:07.5504624Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-31T11:50:07.5536875Z with:
+2026-10-31T11:50:07.5538204Z   repository: Getaway-Wuji/programming-visualization-learning
+2026-10-31T11:50:07.5546725Z   token: ***
+2026-10-31T11:50:07.5547414Z   ssh-strict: true
+2026-10-31T11:50:07.5548084Z   ssh-user: git
+2026-10-31T11:50:07.5548784Z   persist-credentials: true
+2026-10-31T11:50:07.5549571Z   clean: true
+2026-10-31T11:50:07.5550262Z   sparse-checkout-cone-mode: true
+2026-10-31T11:50:07.5551112Z   fetch-depth: 1
+2026-10-31T11:50:07.5551781Z   fetch-tags: false
+2026-10-31T11:50:07.5552472Z   show-progress: true
+2026-10-31T11:50:07.5553173Z   lfs: false
+2026-10-31T11:50:07.5553806Z   submodules: false
+2026-10-31T11:50:07.5554527Z   set-safe-directory: true
+2026-10-31T11:50:07.5555341Z   allow-unsafe-pr-checkout: false
+2026-10-31T11:50:07.5556623Z env:
+2026-10-31T11:50:07.5557607Z   CARGO_HOME: C:\Users\Spring\.cargo
+2026-10-31T11:50:07.5558559Z ##[endgroup]
+2026-10-31T11:50:10.0691618Z Syncing repository: Getaway-Wuji/programming-visualization-learning
+2026-10-31T11:50:10.0724696Z ##[group]Getting Git version info
+2026-10-31T11:50:10.0740311Z Working directory is 'D:\a\programming-visualization-learning\programming-visualization-learning'
+2026-10-31T11:50:10.0893466Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-31T11:50:10.0906115Z git version 2.56.0.windows.2
+2026-10-31T11:50:10.2860343Z ##[endgroup]
+2026-10-31T11:50:10.4249730Z Temporarily overriding HOME='D:\a\_temp\b92e356e-5aca-419e-892c-a9ea1a4f4ec8' before making global git config changes
+2026-10-31T11:50:10.4265688Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-31T11:50:10.4269170Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\programming-visualization-learning\programming-visualization-learning
+2026-10-31T11:50:10.4274399Z Deleting the contents of 'D:\a\programming-visualization-learning\programming-visualization-learning'
+2026-10-31T11:50:10.4282244Z ##[group]Determining repository object format
+2026-10-31T11:50:10.4284038Z ##[endgroup]
+2026-10-31T11:50:10.4285793Z ##[group]Initializing the repository
+2026-10-31T11:50:10.4287854Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\programming-visualization-learning\programming-visualization-learning
+2026-10-31T11:50:10.4290843Z Initialized empty Git repository in D:/a/programming-visualization-learning/programming-visualization-learning/.git/
+2026-10-31T11:50:10.4297193Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/Getaway-Wuji/programming-visualization-learning
+2026-10-31T11:50:10.4988227Z ##[endgroup]
+2026-10-31T11:50:10.4989170Z ##[group]Disabling automatic garbage collection
+2026-10-31T11:50:10.5001973Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-31T11:50:10.5545943Z ##[endgroup]
+2026-10-31T11:50:10.5547064Z ##[group]Setting up auth
+2026-10-31T11:50:10.5548001Z Removing SSH command configuration
+2026-10-31T11:50:10.5557969Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-31T11:50:10.5995884Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-31T11:50:12.6163477Z Removing HTTP extra header
+2026-10-31T11:50:12.6166811Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-31T11:50:12.6429043Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-31T11:50:13.3207695Z Removing includeIf entries pointing to credentials config files
+2026-10-31T11:50:13.3234763Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-31T11:50:13.3652764Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-31T11:50:14.0188450Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-5ed8420f-da78-4402-99c2-235de1ff1d17.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-31T11:50:14.0665267Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/programming-visualization-learning/programming-visualization-learning/.git.path D:\a\_temp\git-credentials-5ed8420f-da78-4402-99c2-235de1ff1d17.config
+2026-10-31T11:50:14.1110336Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/programming-visualization-learning/programming-visualization-learning/.git/worktrees/*.path D:\a\_temp\git-credentials-5ed8420f-da78-4402-99c2-235de1ff1d17.config
+2026-10-31T11:50:14.1562802Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-5ed8420f-da78-4402-99c2-235de1ff1d17.config
+2026-10-31T11:50:14.2059700Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-5ed8420f-da78-4402-99c2-235de1ff1d17.config
+2026-10-31T11:50:14.2694613Z ##[endgroup]
+2026-10-31T11:50:14.2711479Z ##[group]Fetching the repository
+2026-10-31T11:50:14.2714576Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ddb2410f2a2202f36c279a836f4dcbd4109766fb:refs/remotes/origin/main
+2026-10-31T11:50:25.8164942Z From https://github.com/Getaway-Wuji/programming-visualization-learning
+2026-10-31T11:50:25.8167525Z  * [new ref]         ddb2410f2a2202f36c279a836f4dcbd4109766fb -> origin/main
+2026-10-31T11:50:25.8321672Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/main
+2026-10-31T11:50:25.8667864Z   origin/main
+2026-10-31T11:50:25.8723128Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/main
+2026-10-31T11:50:25.9115120Z ddb2410f2a2202f36c279a836f4dcbd4109766fb
+2026-10-31T11:50:25.9156892Z ##[endgroup]
+2026-10-31T11:50:25.9168613Z ##[group]Determining the checkout info
+2026-10-31T11:50:25.9170336Z ##[endgroup]
+2026-10-31T11:50:25.9172434Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-31T11:50:25.9623326Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-31T11:50:26.0023195Z ##[group]Checking out the ref
+2026-10-31T11:50:26.0068556Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2026-10-31T11:50:27.1101644Z Updating files:  15% (2381/15168)
+2026-10-31T11:50:27.1687109Z Updating files:  16% (2427/15168)
+2026-10-31T11:50:27.2666071Z Updating files:  17% (2579/15168)
+2026-10-31T11:50:27.3269405Z Updating files:  18% (2731/15168)
+2026-10-31T11:50:27.4102291Z Updating files:  19% (2882/15168)
+2026-10-31T11:50:27.4905491Z Updating files:  20% (3034/15168)
+2026-10-31T11:50:27.5919953Z Updating files:  21% (3186/15168)
+2026-10-31T11:50:27.7797615Z Updating files:  22% (3337/15168)
+2026-10-31T11:50:27.8553767Z Updating files:  23% (3489/15168)
+2026-10-31T11:50:27.9041923Z Updating files:  24% (3641/15168)
+2026-10-31T11:50:27.9940539Z Updating files:  25% (3792/15168)
+2026-10-31T11:50:28.0610359Z Updating files:  26% (3944/15168)
+2026-10-31T11:50:28.0779233Z Updating files:  27% (4096/15168)
+2026-10-31T11:50:28.1616670Z Updating files:  27% (4126/15168)
+2026-10-31T11:50:28.2549720Z Updating files:  28% (4248/15168)
+2026-10-31T11:50:28.3057484Z Updating files:  29% (4399/15168)
+2026-10-31T11:50:28.3546208Z Updating files:  30% (4551/15168)
+2026-10-31T11:50:28.4000973Z Updating files:  31% (4703/15168)
+2026-10-31T11:50:28.4497394Z Updating files:  32% (4854/15168)
+2026-10-31T11:50:28.4949337Z Updating files:  33% (5006/15168)
+2026-10-31T11:50:28.5401297Z Updating files:  34% (5158/15168)
+2026-10-31T11:50:28.5984936Z Updating files:  35% (5309/15168)
+2026-10-31T11:50:28.6469937Z Updating files:  36% (5461/15168)
+2026-10-31T11:50:28.6985460Z Updating files:  37% (5613/15168)
+2026-10-31T11:50:28.7790986Z Updating files:  38% (5764/15168)
+2026-10-31T11:50:28.8687875Z Updating files:  39% (5916/15168)
+2026-10-31T11:50:28.9519586Z Updating files:  40% (6068/15168)
+2026-10-31T11:50:29.0340744Z Updating files:  41% (6219/15168)
+2026-10-31T11:50:29.0933028Z Updating files:  42% (6371/15168)
+2026-10-31T11:50:29.1624211Z Updating files:  42% (6422/15168)
+2026-10-31T11:50:29.2294182Z Updating files:  43% (6523/15168)
+2026-10-31T11:50:29.2705297Z Updating files:  44% (6674/15168)
+2026-10-31T11:50:29.3088013Z Updating files:  45% (6826/15168)
+2026-10-31T11:50:29.3507206Z Updating files:  46% (6978/15168)
+2026-10-31T11:50:29.3937238Z Updating files:  47% (7129/15168)
+2026-10-31T11:50:29.4285607Z Updating files:  48% (7281/15168)
+2026-10-31T11:50:29.4675932Z Updating files:  49% (7433/15168)
+2026-10-31T11:50:29.5007968Z Updating files:  50% (7584/15168)
+2026-10-31T11:50:29.5358209Z Updating files:  51% (7736/15168)
+2026-10-31T11:50:29.5724474Z Updating files:  52% (7888/15168)
+2026-10-31T11:50:29.6074120Z Updating files:  53% (8040/15168)
+2026-10-31T11:50:29.6443000Z Updating files:  54% (8191/15168)
+2026-10-31T11:50:29.6993041Z Updating files:  55% (8343/15168)
+2026-10-31T11:50:29.7311027Z Updating files:  56% (8495/15168)
+2026-10-31T11:50:29.7690685Z Updating files:  57% (8646/15168)
+2026-10-31T11:50:29.8067580Z Updating files:  58% (8798/15168)
+2026-10-31T11:50:29.8472405Z Updating files:  59% (8950/15168)
+2026-10-31T11:50:29.8882286Z Updating files:  60% (9101/15168)
+2026-10-31T11:50:29.9252671Z Updating files:  61% (9253/15168)
+2026-10-31T11:50:29.9633921Z Updating files:  62% (9405/15168)
+2026-10-31T11:50:30.0056393Z Updating files:  63% (9556/15168)
+2026-10-31T11:50:30.0443227Z Updating files:  64% (9708/15168)
+2026-10-31T11:50:30.0856800Z Updating files:  65% (9860/15168)
+2026-10-31T11:50:30.0884808Z Updating files:  66% (10011/15168)
+2026-10-31T11:50:30.1273277Z Updating files:  66% (10021/15168)
+2026-10-31T11:50:30.1684364Z Updating files:  67% (10163/15168)
+2026-10-31T11:50:30.2378083Z Updating files:  68% (10315/15168)
+2026-10-31T11:50:30.3065418Z Updating files:  69% (10466/15168)
+2026-10-31T11:50:30.3482000Z Updating files:  70% (10618/15168)
+2026-10-31T11:50:30.3943305Z Updating files:  71% (10770/15168)
+2026-10-31T11:50:30.4770223Z Updating files:  72% (10921/15168)
+2026-10-31T11:50:30.5560305Z Updating files:  73% (11073/15168)
+2026-10-31T11:50:30.5961787Z Updating files:  74% (11225/15168)
+2026-10-31T11:50:30.6000747Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-a-case-ledger-quot-90304-ry-after-input-invalidation-chrome__attachments__case-ledger-quota-real-run-6bff838ed57fe6008be756e098e8bfed4dc7373e.json: Filename too long
+2026-10-31T11:50:30.6020451Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-a-case-ledger-quot-90304-ry-after-input-invalidation-chrome__attachments__native-case-quota-and-original-retry-18d5198d00e6cade269042ddc28d1ea895c0e295.json: Filename too long
+2026-10-31T11:50:30.6028292Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-a-native-second-le-80a94-ries-the-original-operation-chrome__attachments__native-ledger-atomic-quota-and-original-retry-728fbc6040cdadd34e75b9038d8a161e904f9800.json: Filename too long
+2026-10-31T11:50:30.6035900Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-a-real-complete-ad-3c7ba-lay-refresh-and-another-run-chrome__attachments__case-explicit-first-and-repeat-31b91701a66ef3c2b079bc70b8828b1d79498bfa.json: Filename too long
+2026-10-31T11:50:30.6042810Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-a-real-complete-ad-3c7ba-lay-refresh-and-another-run-chrome__attachments__case-first-real-run-93a9b251b1ef8a63b8aa4331f072eba293a24602.json: Filename too long
+2026-10-31T11:50:30.6050120Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-a-real-complete-ad-3c7ba-lay-refresh-and-another-run-chrome__attachments__case-repeat-real-run-36979567776b5ecd9a5c2d8312a5cb0440cd1681.json: Filename too long
+2026-10-31T11:50:30.6057328Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-a-real-exercise-fi-84cbb-refresh-preserve-the-ledger-chrome__attachments__exercise-ten-lesson-twenty-repeat-f4a8fcd33d2316e3fd9aa5dea15b2b055766aa16.json: Filename too long
+2026-10-31T11:50:30.6064462Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-clearing-from-anot-a9b0c-ents-old-generation-revival-chrome__attachments__case-before-clear-real-run-e9d01316043e8a1311204c1c3961a766e3e2d377.json: Filename too long
+2026-10-31T11:50:30.6072026Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-clearing-from-anot-a9b0c-ents-old-generation-revival-chrome__attachments__native-case-clear-generation-barrier-97619721d3643cb3cadba86b3a09a590624d92b9.json: Filename too long
+2026-10-31T11:50:30.6079183Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-input-changes-rese-bcbdd-cannot-award-viewing-points-chrome__attachments__case-after-input-change-9533db5bb88308948f2d068ddd3f96d39f508f53.json: Filename too long
+2026-10-31T11:50:30.6086244Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-input-changes-rese-bcbdd-cannot-award-viewing-points-chrome__attachments__case-before-input-change-3129b34242cbd39dbd5b79a6b35f4a8c39304356.json: Filename too long
+2026-10-31T11:50:30.6094063Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-input-changes-rese-bcbdd-cannot-award-viewing-points-chrome__attachments__input-invalidation-cancel-and-deadline-30aa90d99c339b7b3e75a78533779ee0c691cfd3.json: Filename too long
+2026-10-31T11:50:30.6102639Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-one-pixel-of-trace-e41f3-ll-missing-adjacent-viewing-chrome__attachments__one-pixel-cannot-complete-viewing-1ea1a1037c3f077dc61e2db091bf43c0f24f1a70.json: Filename too long
+2026-10-31T11:50:30.6110193Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-one-pixel-of-trace-e41f3-ll-missing-adjacent-viewing-chrome__attachments__one-pixel-real-run-c45e330cb34249f6a4f94fe618341558ea5f97eb.json: Filename too long
+2026-10-31T11:50:30.6117146Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-one-pixel-of-trace-e41f3-ll-missing-adjacent-viewing-chrome__attachments__one-pixel-requires-visible-adjacent-rewatch-a9ac73bec5c863aa161b2e5702679dca1c47e0a5.json: Filename too long
+2026-10-31T11:50:30.6123963Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-the-points-detail--64749-top-tablet-and-phone-widths-chrome__attachments__points-detail-responsive-d96cc9076185a635064268927de5cfb02df862d5.json: Filename too long
+2026-10-31T11:50:30.6131384Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-the-reviewed-indep-7e10f-urse-reading-is-unavailable-chrome__attachments__independent-case-reading-failure-history-e730377a2b86596e4bec8b34edafcd30b826870c.json: Filename too long
+2026-10-31T11:50:30.6138668Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-the-reviewed-indep-7e10f-urse-reading-is-unavailable-chrome__attachments__independent-case-with-reading-failure-8c3c34d71504e18fcd219c904e731bda33382229.json: Filename too long
+2026-10-31T11:50:30.6145391Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-two-real-case-page-1f63c-one-five-point-first-reward-chrome__attachments__concurrent-case-a-fe116e83fc4f169f35a185505caf69334073235b.json: Filename too long
+2026-10-31T11:50:30.6151841Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-two-real-case-page-1f63c-one-five-point-first-reward-chrome__attachments__concurrent-case-b-0b0b73c18a711aa792fdc149fbbcdc3db50c3186.json: Filename too long
+2026-10-31T11:50:30.6158914Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-two-real-case-page-1f63c-one-five-point-first-reward-chrome__attachments__native-concurrent-case-first-5ee99e959ce55234a17ecbc539ab937802a651ec.json: Filename too long
+2026-10-31T11:50:30.6165882Z ##[error]error: unable to create file 项目文档/验收/16.2-验证原件/16.2__regression-formal-output__rewards-two-real-exercise--fa6ec--one-ten-point-first-reward-chrome__attachments__native-concurrent-exercise-first-cbb1868cfaf9de4a70b0d8feede204999ef40ace.json: Filename too long
+2026-10-31T11:50:30.6700164Z Updating files:  75% (11376/15168)
+2026-10-31T11:50:30.7341011Z Updating files:  76% (11528/15168)
+2026-10-31T11:50:30.8374052Z Updating files:  77% (11680/15168)
+2026-10-31T11:50:30.9323636Z Updating files:  78% (11832/15168)
+2026-10-31T11:50:31.0167208Z Updating files:  79% (11983/15168)
+2026-10-31T11:50:31.1023545Z Updating files:  80% (12135/15168)
+2026-10-31T11:50:31.1101453Z Updating files:  80% (12268/15168)
+2026-10-31T11:50:31.2042011Z Updating files:  81% (12287/15168)
+2026-10-31T11:50:31.2604401Z Updating files:  82% (12438/15168)
+2026-10-31T11:50:31.3370407Z Updating files:  83% (12590/15168)
+2026-10-31T11:50:31.3878470Z Updating files:  84% (12742/15168)
+2026-10-31T11:50:31.4546256Z Updating files:  85% (12893/15168)
+2026-10-31T11:50:31.5186953Z Updating files:  86% (13045/15168)
+2026-10-31T11:50:31.6016098Z Updating files:  87% (13197/15168)
+2026-10-31T11:50:31.6673770Z Updating files:  88% (13348/15168)
+2026-10-31T11:50:31.7207739Z Updating files:  89% (13500/15168)
+2026-10-31T11:50:31.7878593Z Updating files:  90% (13652/15168)
+2026-10-31T11:50:31.8456608Z Updating files:  91% (13803/15168)
+2026-10-31T11:50:31.9208595Z Updating files:  92% (13955/15168)
+2026-10-31T11:50:31.9984849Z Updating files:  93% (14107/15168)
+2026-10-31T11:50:32.0536840Z Updating files:  94% (14258/15168)
+2026-10-31T11:50:32.1166594Z Updating files:  95% (14410/15168)
+2026-10-31T11:50:32.1343282Z Updating files:  95% (14518/15168)
+2026-10-31T11:50:32.1882605Z Updating files:  96% (14562/15168)
+2026-10-31T11:50:32.2421229Z Updating files:  97% (14713/15168)
+2026-10-31T11:50:32.3192063Z Updating files:  98% (14865/15168)
+2026-10-31T11:50:32.3756148Z Updating files:  99% (15017/15168)
+2026-10-31T11:50:32.3756744Z Updating files: 100% (15168/15168)
+2026-10-31T11:50:32.3758009Z Updating files: 100% (15168/15168), done.
+2026-10-31T11:50:32.4117140Z Switched to a new branch 'main'
+2026-10-31T11:50:32.4119064Z branch 'main' set up to track 'origin/main'.
+2026-10-31T11:50:32.4803914Z ##[error]The process 'C:\Program Files\Git\bin\git.exe' failed with exit code 1
+2026-10-31T11:50:32.5368566Z Post job cleanup.
+2026-10-31T11:50:32.7922942Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-31T11:50:32.8305220Z git version 2.56.0.windows.2
+2026-10-31T11:50:32.8385176Z Temporarily overriding HOME='D:\a\_temp\58ce26b2-9d1a-4d92-80e9-63ea9920e0cc' before making global git config changes
+2026-10-31T11:50:32.8386605Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-31T11:50:32.8396488Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\programming-visualization-learning\programming-visualization-learning
+2026-10-31T11:50:32.8803009Z Removing SSH command configuration
+2026-10-31T11:50:32.8815495Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-31T11:50:32.9244454Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-31T11:50:33.6782111Z Removing HTTP extra header
+2026-10-31T11:50:33.6794160Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-31T11:50:33.7211739Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-31T11:50:34.3453062Z Removing includeIf entries pointing to credentials config files
+2026-10-31T11:50:34.3466048Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-31T11:50:34.3856524Z includeif.gitdir:D:/a/programming-visualization-learning/programming-visualization-learning/.git.path
+2026-10-31T11:50:34.3859991Z includeif.gitdir:D:/a/programming-visualization-learning/programming-visualization-learning/.git/worktrees/*.path
+2026-10-31T11:50:34.3861673Z includeif.gitdir:/github/workspace/.git.path
+2026-10-31T11:50:34.3862887Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-31T11:50:34.3908795Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/programming-visualization-learning/programming-visualization-learning/.git.path
+2026-10-31T11:50:34.4260937Z D:\a\_temp\git-credentials-5ed8420f-da78-4402-99c2-235de1ff1d17.config
+2026-10-31T11:50:34.4319131Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/programming-visualization-learning/programming-visualization-learning/.git.path D\:\\a\\_temp\\git\-credentials\-5ed8420f\-da78\-4402\-99c2\-235de1ff1d17\.config
+2026-10-31T11:50:34.4752676Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/programming-visualization-learning/programming-visualization-learning/.git/worktrees/*.path
+2026-10-31T11:50:34.5119658Z D:\a\_temp\git-credentials-5ed8420f-da78-4402-99c2-235de1ff1d17.config
+2026-10-31T11:50:34.5306236Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/programming-visualization-learning/programming-visualization-learning/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-5ed8420f\-da78\-4402\-99c2\-235de1ff1d17\.config
+2026-10-31T11:50:34.5719000Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-31T11:50:34.6071218Z /github/runner_temp/git-credentials-5ed8420f-da78-4402-99c2-235de1ff1d17.config
+2026-10-31T11:50:34.6571302Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-5ed8420f\-da78\-4402\-99c2\-235de1ff1d17\.config
+2026-10-31T11:50:34.6970868Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-31T11:50:34.7337071Z /github/runner_temp/git-credentials-5ed8420f-da78-4402-99c2-235de1ff1d17.config
+2026-10-31T11:50:34.7388050Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-5ed8420f\-da78\-4402\-99c2\-235de1ff1d17\.config
+2026-10-31T11:50:34.7796266Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-31T11:50:35.4243850Z Removing credentials config 'D:\a\_temp\git-credentials-5ed8420f-da78-4402-99c2-235de1ff1d17.config'
+2026-10-31T11:50:35.4475356Z Cleaning up orphan processes

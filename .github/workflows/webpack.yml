@@ -22,6 +22,8 @@ jobs:
       run:
         shell: pwsh
     steps:
+      - name: Enable Git long paths for immutable evidence
+        run: git config --global core.longpaths true
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, Node 24
       - name: Check committed release archives
         run: node scripts/check-release-archives.mjs
