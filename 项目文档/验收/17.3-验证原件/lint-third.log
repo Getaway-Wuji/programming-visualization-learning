@@ -1,0 +1,50 @@
+
+D:\Files\Downloads\编程可视化教学平台\scripts\custom-code-release-inputs.mjs
+  20:3  error  Unexpected comma in middle of array  no-sparse-arrays
+
+D:\Files\Downloads\编程可视化教学平台\web\src\custom-code\CustomCodePage.tsx
+  32:5   error  Error: Cannot modify local variables after render completes
+
+This argument is a function which may reassign or mutate `lifecycle` after render, which can cause inconsistent behavior on subsequent renders. Consider using state instead.
+
+D:\Files\Downloads\编程可视化教学平台\web\src\custom-code\CustomCodePage.tsx:32:5
+  30 |   const epoch = learning.sessionEpoch;
+  31 |   const load = useCallback(
+> 32 |     async (replace = false) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |       const token = ++lifecycle.value;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 34 |       const context = service.editorHistoryContext();
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 58 |       }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 59 |     },
+     | ^^^^^^ This function may (indirectly) reassign or modify `lifecycle` after render
+  60 |     [service, controller, lifecycle],
+  61 |   );
+  62 |   useEffect(() => {
+
+D:\Files\Downloads\编程可视化教学平台\web\src\custom-code\CustomCodePage.tsx:33:23
+  31 |   const load = useCallback(
+  32 |     async (replace = false) => {
+> 33 |       const token = ++lifecycle.value;
+     |                       ^^^^^^^^^ This modifies `lifecycle`
+  34 |       const context = service.editorHistoryContext();
+  35 |       const before = edits.current;
+  36 |       if (!context) {  react-hooks/immutability
+  33:23  error  Error: This value cannot be modified
+
+Modifying a value returned from 'useState()', which should not be modified directly. Use the setter function to update instead.
+
+D:\Files\Downloads\编程可视化教学平台\web\src\custom-code\CustomCodePage.tsx:33:23
+  31 |   const load = useCallback(
+  32 |     async (replace = false) => {
+> 33 |       const token = ++lifecycle.value;
+     |                       ^^^^^^^^^ `lifecycle` cannot be modified
+  34 |       const context = service.editorHistoryContext();
+  35 |       const before = edits.current;
+  36 |       if (!context) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/immutability
+
+✖ 3 problems (3 errors, 0 warnings)
+

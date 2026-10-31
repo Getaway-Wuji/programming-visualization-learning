@@ -1,0 +1,171 @@
+{
+  "id": "CHANGE-17.3",
+  "status": "accepted",
+  "purpose": "C custom workbench and one source-only local draft",
+  "fromVersions": {
+    "save": "7.0.0",
+    "physicalDb": 7
+  },
+  "toVersions": {
+    "save": "8.0.0",
+    "physicalDb": 8,
+    "customDraft": "1.0.0"
+  },
+  "changedFields": [
+    {
+      "contractId": "SAVE-01",
+      "path": "/meta/schemaVersion",
+      "change": "8.0.0 and dbVersion8, meta revision+1 on each known predecessor; preserve all old rows."
+    },
+    {
+      "contractId": "SAVE-01",
+      "path": "/physicalStores/customDrafts",
+      "change": "One bounded current C source record, explicit save, no input/trace."
+    },
+    {
+      "contractId": "SAVE-TX-01",
+      "path": "custom-draft-cas",
+      "change": "Independent draft revision with meta generation/package and service epoch/lease barriers."
+    },
+    {
+      "contractId": "EXEC-01",
+      "path": "workbench-owner",
+      "change": "UI consumes unchanged EXEC1.4/STEP1.3/DIAG1.3 and invalidates old source/input runs."
+    }
+  ],
+  "compatibility": {
+    "classification": "new-storage-version-explicit-migration",
+    "oldConsumer": "Old DB version readers close on versionchange; no downgrade or clear fallback.",
+    "oldData": "Preserve all fifteen stores, identities, rewards and old releases.",
+    "newConsumer": "Accept exact draft1 with strict shape/UTF8 bytes/current-key/CAS; bad draft partition is read-only.",
+    "rollback": "Keep DB8 reader or stop writes; never clear to downgrade."
+  },
+  "impactGroups": [
+    "storage",
+    "execution"
+  ],
+  "affectedTasks": [
+    "04.1",
+    "04.2",
+    "04.3",
+    "07.1",
+    "08.1",
+    "08.2",
+    "08.3",
+    "09.3",
+    "09.4",
+    "11.1",
+    "11.2",
+    "11.3",
+    "11.4",
+    "12.5",
+    "13.4",
+    "15.1",
+    "15.2",
+    "15.3",
+    "15.4",
+    "16.1",
+    "17.3",
+    "17.4",
+    "19.4",
+    "20.1",
+    "20.2",
+    "20.4",
+    "21.3"
+  ],
+  "requiredOwnerRoles": [
+    "save",
+    "transactions",
+    "migration",
+    "execution",
+    "trace",
+    "content",
+    "learning",
+    "fixtures",
+    "coordination"
+  ],
+  "owners": {
+    "save": "root",
+    "transactions": "root",
+    "migration": "root",
+    "execution": "root",
+    "trace": "root",
+    "content": "root",
+    "learning": "root",
+    "fixtures": "root",
+    "coordination": "root"
+  },
+  "fixtureIndex": "17.3-共享样例索引.json",
+  "fixtureIds": [
+    "custom.controller",
+    "custom.browser",
+    "custom.schema"
+  ],
+  "migration": "DB1—7 known recipes to8; new empty store and meta-only upgrade; unknown future abort.",
+  "requiredEvidence": [
+    "real draft failures/CAS/clear and native upgrade",
+    "actual C Worker and source/input/breakpoint identities",
+    "old registered lesson completion and C/CPP regression",
+    "types/lint/format/build and unchanged old engines"
+  ],
+  "approvals": [
+    {
+      "role": "save",
+      "owner": "root",
+      "decision": "accepted",
+      "evidence": "../验收/17.3-C工作台验收.md"
+    },
+    {
+      "role": "transactions",
+      "owner": "root",
+      "decision": "accepted",
+      "evidence": "../验收/17.3-C工作台验收.md"
+    },
+    {
+      "role": "migration",
+      "owner": "root",
+      "decision": "accepted",
+      "evidence": "../验收/17.3-C工作台验收.md"
+    },
+    {
+      "role": "execution",
+      "owner": "root",
+      "decision": "accepted",
+      "evidence": "../验收/17.3-C工作台验收.md"
+    },
+    {
+      "role": "trace",
+      "owner": "root",
+      "decision": "accepted",
+      "evidence": "../验收/17.3-C工作台验收.md"
+    },
+    {
+      "role": "content",
+      "owner": "root",
+      "decision": "accepted",
+      "evidence": "../验收/17.3-C工作台验收.md"
+    },
+    {
+      "role": "learning",
+      "owner": "root",
+      "decision": "accepted",
+      "evidence": "../验收/17.3-C工作台验收.md"
+    },
+    {
+      "role": "fixtures",
+      "owner": "root",
+      "decision": "accepted",
+      "evidence": "../验收/17.3-C工作台验收.md"
+    },
+    {
+      "role": "coordination",
+      "owner": "root",
+      "decision": "accepted",
+      "evidence": "../验收/17.3-C工作台验收.md"
+    }
+  ],
+  "actualEvidence": [
+    "../验收/17.3-验证原件/index.json",
+    "../验收/发布凭据/17.3-1.0.51/index.json"
+  ]
+}

@@ -19,7 +19,7 @@ export function SortArray({
   const values = Array.from({ length }, (_, index) => slotValue(object, index)),
     writes = writtenSlots(step, object);
   const scale = Math.max(1, ...values.map((value) => Math.abs(value ?? 0)));
-  const style = { '--array-cell-min': '56px', '--array-plot-height': '72px' } as CSSProperties;
+  const style = { '--array-cell-min': '56px', '--array-plot-height': '120px' } as CSSProperties;
   return (
     <section
       className="trace-array"
@@ -75,7 +75,7 @@ export function SortArray({
                         height:
                           value === null
                             ? '16px'
-                            : `${Math.max(2, (Math.abs(value) / scale) * 30)}px`,
+                            : `${Math.max(2, (Math.abs(value) / scale) * 52)}px`,
                       }}
                     />
                   </span>

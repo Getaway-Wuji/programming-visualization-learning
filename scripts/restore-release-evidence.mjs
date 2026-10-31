@@ -86,48 +86,60 @@ for (const release of [
   '1.0.45',
   '1.0.46',
   '1.0.47',
+  '1.0.48',
+  '1.0.49',
+  '1.0.50',
+  '1.0.51',
+  '1.0.52',
 ]) {
   const successor = `content/c/p0/blockly-release-${release}.json`;
   if (!existsSync(resolve(root, successor))) continue;
-  const task = ['1.0.45', '1.0.46', '1.0.47'].includes(release)
-    ? '16.10'
-    : release === '1.0.44'
-      ? '16.9'
-      : release === '1.0.43'
-        ? '16.8'
-        : release === '1.0.42'
-          ? '16.7'
-          : release === '1.0.41'
-            ? '16.6'
-            : release === '1.0.40'
-              ? '16.5'
-              : release === '1.0.39'
-                ? '16.4'
-                : release === '1.0.38'
-                  ? '16.3'
-                  : ['1.0.36', '1.0.37'].includes(release)
-                    ? '16.2'
-                    : release === '1.0.35'
-                      ? '16.1'
-                      : ['1.0.30', '1.0.31', '1.0.32', '1.0.33', '1.0.34'].includes(release)
-                        ? '15.4'
-                        : ['1.0.28', '1.0.29'].includes(release)
-                          ? '15.3'
-                          : ['1.0.26', '1.0.27'].includes(release)
-                            ? '15.2'
-                            : release === '1.0.25'
-                              ? '15.1'
-                              : release === '1.0.24'
-                                ? '14.4'
-                                : ['1.0.22', '1.0.23'].includes(release)
-                                  ? '14.3'
-                                  : release === '1.0.21'
-                                    ? '14.1'
-                                    : release === '1.0.20'
-                                      ? '13.5'
-                                      : release === '1.0.19'
-                                        ? '13.4'
-                                        : '13.3';
+  const task =
+    release === '1.0.52'
+      ? '17.4'
+      : ['1.0.50', '1.0.51'].includes(release)
+        ? '17.3'
+        : ['1.0.48', '1.0.49'].includes(release)
+          ? 'UI-20261031'
+          : ['1.0.45', '1.0.46', '1.0.47'].includes(release)
+            ? '16.10'
+            : release === '1.0.44'
+              ? '16.9'
+              : release === '1.0.43'
+                ? '16.8'
+                : release === '1.0.42'
+                  ? '16.7'
+                  : release === '1.0.41'
+                    ? '16.6'
+                    : release === '1.0.40'
+                      ? '16.5'
+                      : release === '1.0.39'
+                        ? '16.4'
+                        : release === '1.0.38'
+                          ? '16.3'
+                          : ['1.0.36', '1.0.37'].includes(release)
+                            ? '16.2'
+                            : release === '1.0.35'
+                              ? '16.1'
+                              : ['1.0.30', '1.0.31', '1.0.32', '1.0.33', '1.0.34'].includes(release)
+                                ? '15.4'
+                                : ['1.0.28', '1.0.29'].includes(release)
+                                  ? '15.3'
+                                  : ['1.0.26', '1.0.27'].includes(release)
+                                    ? '15.2'
+                                    : release === '1.0.25'
+                                      ? '15.1'
+                                      : release === '1.0.24'
+                                        ? '14.4'
+                                        : ['1.0.22', '1.0.23'].includes(release)
+                                          ? '14.3'
+                                          : release === '1.0.21'
+                                            ? '14.1'
+                                            : release === '1.0.20'
+                                              ? '13.5'
+                                              : release === '1.0.19'
+                                                ? '13.4'
+                                                : '13.3';
   const nextArchive = `项目文档/验收/发布凭据/${task}-${release}`;
   const nextIndex = json(`${nextArchive}/index.json`);
   assert.equal(nextIndex.registration.path, successor);
@@ -138,6 +150,7 @@ for (const release of [
     Object.values(nextRegistration.evidence).map(({ path, sha256 }) => ({ path, sha256 })),
   );
   const nextFiles = nextIndex.files.map((entry) => {
+    const compressedJson = ['1.0.48', '1.0.49', '1.0.50', '1.0.51', '1.0.52'].includes(release);
     // The immutable 33 UI-lint receipt is JSON with a .log suffix.
     const jsonLog =
       ['1.0.33', '1.0.34'].includes(release) &&
@@ -145,10 +158,17 @@ for (const release of [
     assert.match(
       entry.path,
       new RegExp(
-        `^\\.artifacts/${task.replace('.', '\\.')}\\/[A-Za-z0-9_.-]+\\.${jsonLog ? 'log' : 'json'}$`,
+        `^\\.artifacts/${task.replace('.', '\\.')}\\/[A-Za-z0-9_.-]+\\.${jsonLog ? 'log' : compressedJson ? 'json\\.gz' : 'json'}$`,
       ),
     );
-    assert.match(entry.file, jsonLog ? /^ui-lint-vector-final\.log$/ : /^[A-Za-z0-9_.-]+\.json$/);
+    assert.match(
+      entry.file,
+      jsonLog
+        ? /^ui-lint-vector-final\.log$/
+        : compressedJson
+          ? /^[A-Za-z0-9_.-]+\.json\.gz$/
+          : /^[A-Za-z0-9_.-]+\.json$/,
+    );
     const bytes = read(`${nextArchive}/${entry.file}`);
     assert.equal(sha(bytes), entry.sha256);
     if (jsonLog) JSON.parse(bytes.toString('utf8'));

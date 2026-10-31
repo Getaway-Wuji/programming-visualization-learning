@@ -1,0 +1,233 @@
+{
+  "id": "CHANGE-17.2",
+  "status": "accepted",
+  "purpose": "Isolated C scanf and C++ bounded ASCII strings, genuine advanced algorithm execution and reversible state.",
+  "fromVersions": {
+    "exec": [
+      "1.0.0",
+      "1.1.0",
+      "1.2.0",
+      "1.3.0"
+    ],
+    "step": [
+      "1.0.0",
+      "1.1.0",
+      "1.2.0"
+    ],
+    "diagnostic": [
+      "1.0.0",
+      "1.1.0",
+      "1.2.0"
+    ],
+    "integer": "1.0.0"
+  },
+  "toVersions": {
+    "exec": "1.4.0",
+    "step": "1.3.0",
+    "diagnostic": "1.3.0",
+    "integer": "1.0.0"
+  },
+  "changedFields": [
+    {
+      "contractId": "EXEC-01",
+      "path": "/$defs/request/input",
+      "change": "Tagged integers or bounded ASCII lines; exact advanced engine, unmodified source, new execute_advanced."
+    },
+    {
+      "contractId": "STEP-01",
+      "path": "/trace/steps",
+      "change": "String objects/cell values; atomic scanf/getline writes with cursor; original reversible state operations and checkpoints."
+    },
+    {
+      "contractId": "DIAG-01",
+      "path": "/terminal",
+      "change": "E_INPUT_KIND and E_STRING_BOUNDS; original failures and source locations."
+    },
+    {
+      "contractId": "DEC-P2-001",
+      "path": "bounded-advanced",
+      "change": "ASCII characters and string value operations; 2 lines x 30 bytes, same original ceilings; C and C++ static separation."
+    }
+  ],
+  "compatibility": {
+    "classification": "explicit-new-protocol-branch",
+    "oldConsumer": "Reject EXEC1.4/STEP1.3/DIAG1.3; unchanged old engines/schemas/learning state.",
+    "newConsumer": "Exact advanced engine/buildId with EXEC1.4/STEP1.3/DIAG1.3/INT1.0; strict values, identity, source ranges and full inverse validation.",
+    "content": "Public QA sources only; no content release or new learning fact.",
+    "mapping": "Original source byte positions; no source rewriting or C++ to C translation.",
+    "storage": "SAVE7/DB7/15store unchanged, no persistence or migration."
+  },
+  "impactGroups": [
+    "execution",
+    "budget-semantics"
+  ],
+  "affectedTasks": [
+    "03.1",
+    "03.3",
+    "05.1",
+    "05.2",
+    "05.3",
+    "06.1",
+    "06.2",
+    "06.3",
+    "06.4",
+    "07.1",
+    "07.2",
+    "07.3",
+    "08.1",
+    "08.2",
+    "08.3",
+    "08.4",
+    "09.3",
+    "09.4",
+    "10.2",
+    "10.3",
+    "11.4",
+    "11.5",
+    "12.1",
+    "12.2",
+    "12.3",
+    "12.4",
+    "12.5",
+    "13.1",
+    "13.2",
+    "13.4",
+    "14.1",
+    "14.2",
+    "16.1",
+    "16.2",
+    "16.3",
+    "16.4",
+    "16.5",
+    "16.6",
+    "16.7",
+    "16.8",
+    "16.9",
+    "16.10",
+    "17.1",
+    "17.2",
+    "17.3",
+    "17.4",
+    "18.1",
+    "18.2",
+    "18.3",
+    "18.4",
+    "18.5",
+    "19.2",
+    "19.4",
+    "19.5",
+    "20.1",
+    "20.2",
+    "20.3",
+    "20.4",
+    "21.1",
+    "21.2",
+    "21.4"
+  ],
+  "requiredOwnerRoles": [
+    "budget",
+    "diagnostics",
+    "encoding",
+    "execution",
+    "fixtures",
+    "judge",
+    "semantics",
+    "trace"
+  ],
+  "owners": {
+    "execution": "root",
+    "trace": "root",
+    "fixtures": "root",
+    "judge": "root",
+    "semantics": "root",
+    "budget": "root",
+    "encoding": "root",
+    "diagnostics": "root"
+  },
+  "fixtureIndex": "17.2-共享样例索引.json",
+  "fixtureIds": [
+    "advanced.eratos",
+    "advanced.euler",
+    "advanced.input",
+    "advanced.kadane",
+    "advanced.kmp",
+    "advanced.lis",
+    "advanced.strings",
+    "advanced.static-errors",
+    "advanced.budgets-restore"
+  ],
+  "oldData": "Invalidate transient run before source/input/language changes. Retain all accepted learning history and original reward keys.",
+  "migration": "None; no learning/storage schema change.",
+  "rollback": "Disable advanced branch, retain matching old engines/content and all learning records. Never clear browser data.",
+  "requiredEvidence": [
+    "new native execution and inherited compatibility",
+    "real Chrome Worker production/consumer and cancellation",
+    "Schema on actual WASM packets",
+    "original sources and WASM unchanged",
+    "types/lint/format/production build"
+  ],
+  "approvals": [
+    {
+      "role": "budget",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-31",
+      "evidence": "../验收/17.2-解释器增量验收.md"
+    },
+    {
+      "role": "diagnostics",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-31",
+      "evidence": "../验收/17.2-解释器增量验收.md"
+    },
+    {
+      "role": "encoding",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-31",
+      "evidence": "../验收/17.2-解释器增量验收.md"
+    },
+    {
+      "role": "execution",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-31",
+      "evidence": "../验收/17.2-解释器增量验收.md"
+    },
+    {
+      "role": "fixtures",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-31",
+      "evidence": "../验收/17.2-解释器增量验收.md"
+    },
+    {
+      "role": "judge",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-31",
+      "evidence": "../验收/17.2-解释器增量验收.md"
+    },
+    {
+      "role": "semantics",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-31",
+      "evidence": "../验收/17.2-解释器增量验收.md"
+    },
+    {
+      "role": "trace",
+      "owner": "root",
+      "decision": "accepted",
+      "date": "2026-10-31",
+      "evidence": "../验收/17.2-解释器增量验收.md"
+    }
+  ],
+  "actualEvidence": [
+    {
+      "scope": "actual tests, strict packets, build and legacy compatibility",
+      "path": "../验收/17.2-验证原件/index.json"
+    }
+  ]
+}

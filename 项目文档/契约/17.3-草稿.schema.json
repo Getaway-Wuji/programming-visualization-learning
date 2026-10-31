@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:c-viz:custom-draft:1.0.0",
+  "title": "One bounded C source draft in SAVE8",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "draftVersion",
+    "generation",
+    "revision",
+    "source",
+    "updatedAt"
+  ],
+  "properties": {
+    "draftVersion": {
+      "const": "1.0.0"
+    },
+    "generation": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "source": {
+      "type": "string",
+      "maxLength": 32768
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

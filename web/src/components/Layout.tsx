@@ -13,6 +13,7 @@ const navigation = [
   { to: '/', label: '学习首页', icon: 'home' },
   { to: '/courses', label: 'C 语言课程', icon: 'book' },
   { to: '/cases', label: '算法与演示', icon: 'chart' },
+  { to: '/custom-code', label: 'C 代码工作台', icon: 'code' },
   { to: '/compilation', label: '编译流程', icon: 'code' },
   { to: '/notebook', label: '错题与陌生点', icon: 'book' },
   { to: '/reviews', label: '今日复习', icon: 'book' },
@@ -86,7 +87,8 @@ export function Layout({ children }: { children: ReactNode }) {
     location.pathname.startsWith('/classics/') ||
     location.pathname === '/memory' ||
     location.pathname === '/compare';
-  const toolRoute = caseRoute || location.pathname.startsWith('/practice/');
+  const toolRoute =
+    location.pathname === '/custom-code' || caseRoute || location.pathname.startsWith('/practice/');
   const focused = toolRoute && workbench.layout.workbenchMode === 'focus';
   const collapsed = focused || workbench.layout.sidebar === 'collapsed';
   return (

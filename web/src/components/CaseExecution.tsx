@@ -52,7 +52,7 @@ const labels: Record<string, string> = {
 
 export function CaseExecution({ id, children }: { id: string; children?: ReactNode }) {
   const { service, state: learningState } = useLearning();
-  const [player] = useState(() => new PlayerController());
+  const [player] = useState(() => new PlayerController(1, 'key'));
   const traceVisible = useRef(true);
   const playerSnapshot = useSyncExternalStore(player.subscribe, player.getSnapshot);
   const traceVisibility = useCallback(
@@ -136,8 +136,8 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
             visibleWidth < Math.min(bounds.width, 240) * 0.75
           )
             return;
-          watch.present(playerSnapshot.view);
-          setCoverage(watch.progress());
+          watch.present(playerSnapshot.view, playerSnapshot.detail);
+          setCoverage(watch.progress(playerSnapshot.detail));
         });
       });
     };
@@ -155,7 +155,7 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
       window.removeEventListener('resize', observe);
       document.removeEventListener('visibilitychange', observe);
     };
-  }, [watch, player, playerSnapshot.view]);
+  }, [watch, player, playerSnapshot.view, playerSnapshot.detail]);
 
   function resetWatch() {
     setChallengeRun(null);
@@ -400,9 +400,10 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
           request,
           final,
           () => current.token === token && service.getState().sessionEpoch === epoch,
+          true,
         );
         setWatch(viewing);
-        setCoverage(viewing.progress());
+        setCoverage(viewing.progress(player.getSnapshot().detail));
         setChallengeRun(
           createChallengeSession(
             catalog,
@@ -632,8 +633,9 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
                 <header className="panel-heading">
                   <h3>当前步骤画面</h3>
                 </header>
-                <PlayerControls controller={player} snapshot={playerSnapshot} />
+                <PlayerControls controller={player} snapshot={playerSnapshot} showDetail />
                 <BasicTraceView
+                  compact={playerSnapshot.detail === 'key'}
                   view={playerSnapshot.view}
                   result={result}
                   input={preparedInput?.values ?? {}}
@@ -729,12 +731,13 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
           data-total={coverage.total}
           aria-live="polite"
         >
-          已逐步查看 {coverage.seen} / {coverage.total} 步
+          已查看 {coverage.seen} / {coverage.total}{' '}
+          {playerSnapshot.detail === 'key' ? '个关键步骤' : '个步骤'}
           {coverage.complete ? '，完整观看已就绪。' : '。请从初始状态逐步前进或播放至结束。'}
         </p>
         <p className="muted">
           请让当前变量或数组画面保持可见。首次确认获得 5
-          分。暂停和后退保留本次覆盖；更换输入、重新运行或刷新需重新观看。练习复盘不计案例奖励。
+          分。按顺序看完关键步骤即可确认；全部步骤可查看中间细节。暂停和后退保留覆盖；更换输入、重新运行或刷新需重新观看。
         </p>
         <button
           type="button"

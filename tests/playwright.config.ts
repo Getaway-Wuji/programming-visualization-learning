@@ -7,6 +7,7 @@ export default defineConfig({
   // Independent interpreter/migration harnesses use their own runners on 4181 / 4182 / 4188.
   testIgnore: [
     '**/phase2-performance.spec.ts',
+    '**/advanced-engine.spec.ts',
     '**/algorithm-engine.spec.ts',
     '**/memory-engine.spec.ts',
     '**/notebook-migration.spec.ts',

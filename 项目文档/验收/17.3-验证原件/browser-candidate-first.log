@@ -1,0 +1,64 @@
+[WebServer] (node:57380) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+(node:8504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chrome] › tests\browser\custom-code.spec.ts:7:1 › arbitrary C source executes, input edits invalidate, all three views share the cursor (1.2s)
+  ok 2 [chrome] › tests\browser\custom-code.spec.ts:12:1 › invalid original draft saves, refresh restores only source, later valid source recovers (1.1s)
+  ok 3 [chrome] › tests\browser\custom-code.spec.ts:15:1 › line breakpoints pause and source edits clear them; input changes retain them (2.0s)
+  ok 4 [chrome] › tests\browser\custom-code.spec.ts:18:1 › runtime error and budget limit locate honest prefixes, fresh run recovers (1.7s)
+  ok 5 [chrome] › tests\browser\custom-code.spec.ts:21:1 › save quota failure preserves text, retry works and two tabs cannot overwrite (1.4s)
+  x  6 [chrome] › tests\browser\custom-code.spec.ts:24:1 › clearing in settings removes saved draft and invalidates old execution across tabs (6.2s)
+(node:36928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [chrome] › tests\browser\custom-code.spec.ts:27:1 › saving and running do not mint learning facts, and narrow layout keeps input accessible (987ms)
+
+
+  1) [chrome] › tests\browser\custom-code.spec.ts:24:1 › clearing in settings removes saved draft and invalidates old execution across tabs 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('learning-save-status')
+    Expected substring: "本地数据已清除"
+    Received string:    "课程更新尚未就绪当前课程版本尚未完成发布，暂不能保存新的学习结果。原学习档案已保留，无需清除数据或修改存储权限；更新可用后重新读取即可继续。重新读取档案当前处于临时模式。已保存的档案仍保留。请等待课程版本更新后再重试。"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByTestId('learning-save-status') with timeout 5000ms
+      - waiting for getByTestId('learning-save-status')
+        14 × locator resolved to <div data-save-status="unsaved" data-testid="learning-save-status">…</div>
+           - unexpected value "课程更新尚未就绪当前课程版本尚未完成发布，暂不能保存新的学习结果。原学习档案已保留，无需清除数据或修改存储权限；更新可用后重新读取即可继续。重新读取档案当前处于临时模式。已保存的档案仍保留。请等待课程版本更新后再重试。"
+
+
+      23 | });
+      24 | test('clearing in settings removes saved draft and invalidates old execution across tabs',async({page,context})=>{
+    > 25 |  await ready(page);await source(page,'int main(){return 123;}');await page.getByRole('button',{name:'保存草稿',exact:true}).click();await expect(page.getByTestId('custom-save-status')).toContainText('已保存');await run(page);const settings=await context.newPage();await settings.goto('/#/settings?panel=data');await settings.getByRole('button',{name:'清除本地数据',exact:true}).click();await settings.getByRole('dialog').getByRole('button',{name:'确认清除',exact:true}).click();await expect(settings.getByTestId('learning-save-status')).toContainText('本地数据已清除');await expect(page.getByTestId('custom-code-page')).toHaveAttribute('data-status','idle');expect((await rows(page)).customDrafts).toEqual([]);await page.reload();await expect(page.getByRole('textbox',{name:'C 代码'})).not.toHaveValue('int main(){return 123;}');
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^
+      26 | });
+      27 | test('saving and running do not mint learning facts, and narrow layout keeps input accessible',async({page})=>{
+      28 |  await ready(page);const before=await rows(page);await source(page,'int main(){return 9;}');await page.getByRole('button',{name:'保存草稿',exact:true}).click();await expect(page.getByTestId('custom-save-status')).toContainText('已保存');await run(page);const after=await rows(page);for(const n of ['ledger','progress','receipts','dailyFacts','achievements'])expect(after[n]).toEqual(before[n]);await page.setViewportSize({width:390,height:844});await page.getByRole('tab',{name:'代码与输入',exact:true}).click();await expect(page.getByRole('textbox',{name:'整数输入'})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+        at D:\Files\Downloads\编程可视化教学平台\tests\browser\custom-code.spec.ts:25:521
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\browser-test-output\custom-code-clearing-in-se-50afd-s-old-execution-across-tabs-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .artifacts\browser-test-output\custom-code-clearing-in-se-50afd-s-old-execution-across-tabs-chrome\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .artifacts\browser-test-output\custom-code-clearing-in-se-50afd-s-old-execution-across-tabs-chrome\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    .artifacts\browser-test-output\custom-code-clearing-in-se-50afd-s-old-execution-across-tabs-chrome\trace.zip
+    Usage:
+
+        npx playwright show-trace .artifacts\browser-test-output\custom-code-clearing-in-se-50afd-s-old-execution-across-tabs-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chrome] › tests\browser\custom-code.spec.ts:24:1 › clearing in settings removes saved draft and invalidates old execution across tabs 
+  6 passed (20.1s)

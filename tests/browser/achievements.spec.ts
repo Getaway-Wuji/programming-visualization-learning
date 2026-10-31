@@ -40,11 +40,8 @@ test('15.4 common empty or unreviewed achievements stay honest without learning 
   expect(await native(page)).toEqual(before);
   await page.goto('/#/');
   await achievementReady(page);
-  await expect(page.getByTestId('achievement-summary')).toContainText('0 / 3 枚已解锁');
-  await page
-    .getByTestId('achievement-summary')
-    .getByRole('link', { name: '查看成就与条件 →', exact: true })
-    .click();
+  await expect(page.getByTestId('achievement-summary')).toHaveCount(0);
+  await page.getByRole('link', { name: '学习成就', exact: true }).click();
   await expect(page.getByTestId('achievement-total')).toHaveText('0 / 3');
 });
 test('15.4 common three widths expose fixed conditions and next actions', async ({ page }) => {

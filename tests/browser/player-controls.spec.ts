@@ -17,6 +17,7 @@ async function open(page: Page, caseId = 'case.c.assignment') {
   await page.goto(`/#/visualize/${caseId}`);
   await expect(page.getByTestId('input-panel')).toBeVisible();
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+  await page.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
 }
 
 async function emptyPreparedPlayer(page: Page, expectedExecutions: number) {
@@ -61,6 +62,7 @@ async function accepted(
 ): Promise<ExecuteResult> {
   await run(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', status);
+  await page.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
   await expect(controls(page)).toHaveAttribute('data-player-status', 'ready');
   await cursor(page, 0);
   const worker = await observedExecute(page);

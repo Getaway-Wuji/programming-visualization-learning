@@ -18,7 +18,6 @@ import {
 import '../learning/rewards.css';
 import { bugQuestions } from '../bugs/content';
 import { KnowledgeMap } from '../knowledge/KnowledgeMap';
-import { AchievementSummary } from '../achievements/react';
 import { ReviewDueSummary } from '../review-scheduler/react';
 
 const panels = {
@@ -200,9 +199,6 @@ export function HomePage() {
       </div>
       <LearningSaveStatus />
       <div className="home-composition">
-        <ReviewDueSummary />
-        <AchievementSummary />
-        <KnowledgeMap />
         <section className="study-feature">
           <div className="feature-copy">
             <span className="eyeline">
@@ -367,6 +363,7 @@ export function HomePage() {
             </Link>
           </div>
         </section>
+        <ReviewDueSummary />
         <section className="study-explore">
           <div>
             <div className="module-title">
@@ -402,6 +399,7 @@ export function HomePage() {
             </Link>
           </div>
         </section>
+        <KnowledgeMap />
       </div>
       {panel && (
         <HomePanel key={panel} panel={panel} dismiss={() => setSearch({}, { replace: true })} />

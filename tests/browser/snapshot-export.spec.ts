@@ -32,6 +32,7 @@ async function runCase(p: Page, id = 'bubble-sort') {
   await expect(formatButton(p, 'json')).toBeDisabled();
   await p.getByRole('button', { name: '运行示例', exact: true }).click();
   await expect(formatButton(p, 'json')).toBeEnabled();
+  await p.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
 }
 async function runMemory(p: Page, id = 'nodes') {
   await ready(p, `memory?example=${id}&view=memory`);

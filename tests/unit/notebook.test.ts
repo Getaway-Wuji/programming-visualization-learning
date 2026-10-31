@@ -124,8 +124,8 @@ describe('15.2 isolated mark record and migration', () => {
     const before = structuredClone(old);
     expect(upgradeV3Meta(old)).toEqual({
       ...old,
-      schemaVersion: '7.0.0',
-      dbVersion: 7,
+      schemaVersion: '8.0.0',
+      dbVersion: 8,
       revision: 9,
     });
     expect(old).toEqual(before);

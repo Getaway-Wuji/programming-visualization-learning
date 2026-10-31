@@ -15,6 +15,7 @@ import { assertCaseViewFact, createCaseViewSession } from '../../web/src/learnin
 import { readVerifiedFact } from '../../web/src/learning/authority';
 import type { VerifiedFact } from '../../web/src/learning/authority';
 import { PlayerModel } from '../../web/src/player/model';
+import { keyStepCursors } from '../../web/src/player/key-steps';
 
 function canonical(value: unknown): string {
   if (value === null || typeof value !== 'object') return JSON.stringify(value);
@@ -87,6 +88,57 @@ describe('11.1 reviewed case authorization, observed results and rendered covera
       module: readFileSync(new URL('../../web/src/generated/c_viz_wasm_bg.wasm', import.meta.url)),
     }),
   );
+
+  it('credits only sequentially rendered key stops; jumping to the tail and stale runs cannot confirm', async () => {
+    const { request, result } = await run('case.c.bubble-sort', { values: [3, 2, 1] });
+    let current = true;
+    const viewed = createCaseViewSession(
+      caseExecutionCatalog(request.subjectRef!.id)!,
+      request,
+      result,
+      () => current,
+      true,
+    );
+    const model = player(result),
+      stops = keyStepCursors(result);
+    expect(stops.length).toBeLessThan(result.trace!.steps.length);
+    viewed.present(model.snapshot(), 'key');
+    model.seek(result.trace!.steps.length);
+    viewed.present(model.snapshot(), 'key');
+    expect(viewed.progress('key').seen).toBe(0);
+    expect(() => viewed.issue()).toThrow();
+    for (const cursor of stops) {
+      model.seek(cursor);
+      viewed.present(model.snapshot(), 'key');
+    }
+    expect(viewed.progress('key')).toEqual({
+      seen: stops.length - 1,
+      total: stops.length - 1,
+      complete: true,
+    });
+    const fact = viewed.issue();
+    expect(viewed.issue()).toBe(fact);
+    current = false;
+    expect(() => viewed.issue()).toThrow();
+  });
+
+  it('full-step playback can complete the same key coverage without crediting hidden states', async () => {
+    const { request, result } = await run();
+    const viewed = createCaseViewSession(
+      caseExecutionCatalog(request.subjectRef!.id)!,
+      request,
+      result,
+      () => true,
+      true,
+    );
+    const model = player(result);
+    for (let cursor = 0; cursor <= result.trace!.steps.length; cursor++) {
+      model.seek(cursor);
+      viewed.present(model.snapshot(), 'all');
+    }
+    expect(viewed.progress('key').complete).toBe(true);
+    expect(viewed.progress('key').total).toBe(keyStepCursors(result).length - 1);
+  });
 
   it('bundles exactly seven reviewed case/program/input projections with only case-view authority', () => {
     const source = JSON.parse(

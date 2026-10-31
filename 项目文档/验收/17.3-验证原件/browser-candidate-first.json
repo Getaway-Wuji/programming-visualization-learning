@@ -1,0 +1,476 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/browser/custom-code.spec.ts",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project=chrome",
+      "--reporter",
+      "list,json"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/advanced-engine.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/advanced-engine.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/advanced-engine.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/advanced-engine.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "custom-code.spec.ts",
+      "file": "custom-code.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "arbitrary C source executes, input edits invalidate, all three views share the cursor",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1229,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T14:40:21.972Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1a0f2aed9a4fa07f0e48-4e1a240316661e77e181",
+          "file": "custom-code.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "invalid original draft saves, refresh restores only source, later valid source recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1063,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T14:40:24.193Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1a0f2aed9a4fa07f0e48-f341b9dabca5182d5f83",
+          "file": "custom-code.spec.ts",
+          "line": 12,
+          "column": 1
+        },
+        {
+          "title": "line breakpoints pause and source edits clear them; input changes retain them",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1979,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T14:40:25.263Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1a0f2aed9a4fa07f0e48-6945f11f1beda9363062",
+          "file": "custom-code.spec.ts",
+          "line": 15,
+          "column": 1
+        },
+        {
+          "title": "runtime error and budget limit locate honest prefixes, fresh run recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1698,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T14:40:27.249Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1a0f2aed9a4fa07f0e48-35cad7670c53f4fbd50e",
+          "file": "custom-code.spec.ts",
+          "line": 18,
+          "column": 1
+        },
+        {
+          "title": "save quota failure preserves text, retry works and two tabs cannot overwrite",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1356,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T14:40:28.954Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1a0f2aed9a4fa07f0e48-79981169c2141fafa71d",
+          "file": "custom-code.spec.ts",
+          "line": 21,
+          "column": 1
+        },
+        {
+          "title": "clearing in settings removes saved draft and invalidates old execution across tabs",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6155,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"本地数据已清除\"\u001b[39m\nReceived string:    \u001b[31m\"课程更新尚未就绪当前课程版本尚未完成发布，暂不能保存新的学习结果。原学习档案已保留，无需清除数据或修改存储权限；更新可用后重新读取即可继续。重新读取档案当前处于临时模式。已保存的档案仍保留。请等待课程版本更新后再重试。\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-save-status=\"unsaved\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"课程更新尚未就绪当前课程版本尚未完成发布，暂不能保存新的学习结果。原学习档案已保留，无需清除数据或修改存储权限；更新可用后重新读取即可继续。重新读取档案当前处于临时模式。已保存的档案仍保留。请等待课程版本更新后再重试。\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"本地数据已清除\"\u001b[39m\nReceived string:    \u001b[31m\"课程更新尚未就绪当前课程版本尚未完成发布，暂不能保存新的学习结果。原学习档案已保留，无需清除数据或修改存储权限；更新可用后重新读取即可继续。重新读取档案当前处于临时模式。已保存的档案仍保留。请等待课程版本更新后再重试。\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-save-status=\"unsaved\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"课程更新尚未就绪当前课程版本尚未完成发布，暂不能保存新的学习结果。原学习档案已保留，无需清除数据或修改存储权限；更新可用后重新读取即可继续。重新读取档案当前处于临时模式。已保存的档案仍保留。请等待课程版本更新后再重试。\"\u001b[22m\n\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\custom-code.spec.ts:25:521",
+                    "location": {
+                      "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\custom-code.spec.ts",
+                      "column": 521,
+                      "line": 25
+                    },
+                    "snippet": "  23 | });\n  24 | test('clearing in settings removes saved draft and invalidates old execution across tabs',async({page,context})=>{\n> 25 |  await ready(page);await source(page,'int main(){return 123;}');await page.getByRole('button',{name:'保存草稿',exact:true}).click();await expect(page.getByTestId('custom-save-status')).toContainText('已保存');await run(page);const settings=await context.newPage();await settings.goto('/#/settings?panel=data');await settings.getByRole('button',{name:'清除本地数据',exact:true}).click();await settings.getByRole('dialog').getByRole('button',{name:'确认清除',exact:true}).click();await expect(settings.getByTestId('learning-save-status')).toContainText('本地数据已清除');await expect(page.getByTestId('custom-code-page')).toHaveAttribute('data-status','idle');expect((await rows(page)).customDrafts).toEqual([]);await page.reload();await expect(page.getByRole('textbox',{name:'C 代码'})).not.toHaveValue('int main(){return 123;}');\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^\n  26 | });\n  27 | test('saving and running do not mint learning facts, and narrow layout keeps input accessible',async({page})=>{\n  28 |  await ready(page);const before=await rows(page);await source(page,'int main(){return 9;}');await page.getByRole('button',{name:'保存草稿',exact:true}).click();await expect(page.getByTestId('custom-save-status')).toContainText('已保存');await run(page);const after=await rows(page);for(const n of ['ledger','progress','receipts','dailyFacts','achievements'])expect(after[n]).toEqual(before[n]);await page.setViewportSize({width:390,height:844});await page.getByRole('tab',{name:'代码与输入',exact:true}).click();await expect(page.getByRole('textbox',{name:'整数输入'})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\custom-code.spec.ts",
+                        "column": 521,
+                        "line": 25
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('learning-save-status')\nExpected substring: \u001b[32m\"本地数据已清除\"\u001b[39m\nReceived string:    \u001b[31m\"课程更新尚未就绪当前课程版本尚未完成发布，暂不能保存新的学习结果。原学习档案已保留，无需清除数据或修改存储权限；更新可用后重新读取即可继续。重新读取档案当前处于临时模式。已保存的档案仍保留。请等待课程版本更新后再重试。\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByTestId('learning-save-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('learning-save-status')\u001b[22m\n\u001b[2m    14 × locator resolved to <div data-save-status=\"unsaved\" data-testid=\"learning-save-status\">…</div>\u001b[22m\n\u001b[2m       - unexpected value \"课程更新尚未就绪当前课程版本尚未完成发布，暂不能保存新的学习结果。原学习档案已保留，无需清除数据或修改存储权限；更新可用后重新读取即可继续。重新读取档案当前处于临时模式。已保存的档案仍保留。请等待课程版本更新后再重试。\"\u001b[22m\n\n\n  23 | });\n  24 | test('clearing in settings removes saved draft and invalidates old execution across tabs',async({page,context})=>{\n> 25 |  await ready(page);await source(page,'int main(){return 123;}');await page.getByRole('button',{name:'保存草稿',exact:true}).click();await expect(page.getByTestId('custom-save-status')).toContainText('已保存');await run(page);const settings=await context.newPage();await settings.goto('/#/settings?panel=data');await settings.getByRole('button',{name:'清除本地数据',exact:true}).click();await settings.getByRole('dialog').getByRole('button',{name:'确认清除',exact:true}).click();await expect(settings.getByTestId('learning-save-status')).toContainText('本地数据已清除');await expect(page.getByTestId('custom-code-page')).toHaveAttribute('data-status','idle');expect((await rows(page)).customDrafts).toEqual([]);await page.reload();await expect(page.getByRole('textbox',{name:'C 代码'})).not.toHaveValue('int main(){return 123;}');\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^\n  26 | });\n  27 | test('saving and running do not mint learning facts, and narrow layout keeps input accessible',async({page})=>{\n  28 |  await ready(page);const before=await rows(page);await source(page,'int main(){return 9;}');await page.getByRole('button',{name:'保存草稿',exact:true}).click();await expect(page.getByTestId('custom-save-status')).toContainText('已保存');await run(page);const after=await rows(page);for(const n of ['ledger','progress','receipts','dailyFacts','achievements'])expect(after[n]).toEqual(before[n]);await page.setViewportSize({width:390,height:844});await page.getByRole('tab',{name:'代码与输入',exact:true}).click();await expect(page.getByRole('textbox',{name:'整数输入'})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);\n    at D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\custom-code.spec.ts:25:521"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T14:40:30.317Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\custom-code-clearing-in-se-50afd-s-old-execution-across-tabs-chrome\\test-failed-1.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\custom-code-clearing-in-se-50afd-s-old-execution-across-tabs-chrome\\test-failed-2.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\custom-code-clearing-in-se-50afd-s-old-execution-across-tabs-chrome\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output\\custom-code-clearing-in-se-50afd-s-old-execution-across-tabs-chrome\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser\\custom-code.spec.ts",
+                    "column": 521,
+                    "line": 25
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "1a0f2aed9a4fa07f0e48-9f8f181b140a41418371",
+          "file": "custom-code.spec.ts",
+          "line": 24,
+          "column": 1
+        },
+        {
+          "title": "saving and running do not mint learning facts, and narrow layout keeps input accessible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 987,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T14:40:37.564Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1a0f2aed9a4fa07f0e48-0d62e3c59d2ad77005da",
+          "file": "custom-code.spec.ts",
+          "line": 27,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-31T14:40:21.084Z",
+    "duration": 20137.682,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

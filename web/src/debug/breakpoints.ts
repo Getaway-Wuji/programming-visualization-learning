@@ -1,3 +1,4 @@
+import type { AdvancedResult } from '../engine/advanced-protocol';
 import type { MemoryResult } from '../engine/memory-protocol';
 
 /** Source coordinates only. No C/C++ evaluation or algorithm reconstruction. */
@@ -14,7 +15,7 @@ export function sourceLines(source: string) {
   });
 }
 
-export function stepVisits(source: string, result: MemoryResult) {
+export function stepVisits(source: string, result: MemoryResult | AdvancedResult) {
   const lines = sourceLines(source);
   const nodes = new Map(result.nodeMap.map((node) => [node.nodeId, node]));
   const controls = result.nodeMap

@@ -1,0 +1,55 @@
+
+ RUN  v5.0.4 D:/Files/Downloads/编程可视化教学平台
+
+ ✓ tests/unit/challenges.test.ts (17 tests) 204ms
+ ✓ tests/unit/storage-model.test.ts (75 tests) 211ms
+ ✓ tests/unit/review-scheduler.test.ts (35 tests) 34ms
+ ✓ tests/unit/achievements.test.ts (31 tests) 24ms
+ ✓ tests/unit/notebook.test.ts (20 tests) 22ms
+ ❯ tests/unit/custom-code.test.ts (6 tests | 1 failed) 33ms
+   ✓ C workbench full reverse and view changes never request another execution 17ms
+   ✓ late result is discarded after source revision and input invalidation 2ms
+   ✓ one scheduler pauses on line visit, retains input breakpoints and clears source breakpoints 4ms
+   ✓ failed execution has no previous trajectory and next run can recover 2ms
+   ✓ draft records preserve invalid source, reject unexpected persisted data and bound UTF8 bytes 3ms
+   × SAVE7 migration keeps meta identity and other fields, rejects future without mutation 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/custom-code.test.ts > SAVE7 migration keeps meta identity and other fields, rejects future without mutation
+AssertionError: expected null to deeply equal { schemaVersion: '8.0.0', …(6) }
+
+- Expected:
+{
+  "activePackageRef": {},
+  "createdAt": undefined,
+  "dbVersion": 8,
+  "generation": undefined,
+  "revision": 1,
+  "schemaVersion": "8.0.0",
+  "timeZone": undefined,
+}
+
++ Received:
+null
+
+ ❯ tests/unit/custom-code.test.ts:128:33
+    126|   };
+    127|   const original = structuredClone(before);
+    128|   expect(upgradeV7Meta(before)).toEqual({
+       |                                 ^
+    129|     ...before,
+    130|     schemaVersion: '8.0.0',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 183 passed (184)
+   Start at  22:44:28
+   Duration  1.95s (tests 50%, transform 26%, import 22%, worker 2%)
+
+    Isolate  6 workers spawned · ~142ms startup each (spawn + environment, per file)
+             at least ~712ms faster with isolate: false — reuses workers across files instead of one per file
+
+JSON report written to D:/Files/Downloads/编程可视化教学平台/.artifacts/17.3/unit-directed.json

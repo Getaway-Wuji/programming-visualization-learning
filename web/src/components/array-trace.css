@@ -1,5 +1,12 @@
 /* Array positions follow the trace order. A shared scale is calculated once per
    array in BasicTraceView; wrapping never rescales an individual row. */
+.trace-details {
+  margin-block: 12px;
+}
+.trace-details > summary {
+  cursor: pointer;
+  padding-block: 8px;
+}
 .basic-trace-view .trace-array {
   min-width: 0;
   margin-top: 12px;
@@ -82,8 +89,8 @@
   width: 100%;
   min-height: 0;
   color: var(--p05-text, inherit);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   line-height: 22px;
   font-variant-numeric: tabular-nums;
   text-align: center;

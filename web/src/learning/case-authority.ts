@@ -16,6 +16,7 @@ import type {
 } from '../engine/protocol';
 import { engineBuild } from '../generated/engine-build';
 import type { PlayerSnapshot } from '../player/model';
+import { keyStepCursors, type StepDetail } from '../player/key-steps';
 import { StorageError } from '../storage/errors';
 import { createLearningAuthority, type VerifiedFact } from './authority';
 import { sameRef } from './catalog';
@@ -158,8 +159,8 @@ export interface CaseViewProgress {
 }
 export interface CaseViewSession {
   /** Called by the renderer only after this real state has been committed to the DOM. */
-  present(view: PlayerSnapshot): void;
-  progress(): CaseViewProgress;
+  present(view: PlayerSnapshot, detail?: StepDetail): void;
+  progress(detail?: StepDetail): CaseViewProgress;
   /** An explicit user confirmation is required before calling this method. */
   issue(): VerifiedFact;
 }
@@ -171,6 +172,7 @@ export function createCaseViewSession(
   request: ExecuteRequest,
   result: ExecuteResult,
   current: () => boolean,
+  keyCoverage = false,
 ): CaseViewSession {
   const reviewed = caseExecutionCatalog(catalog.subject.id);
   requireCase(reviewed && canonical(catalog) === canonical(reviewed) && current());
@@ -214,14 +216,22 @@ export function createCaseViewSession(
   );
   checkResultRule(reviewed, request, result);
   const total = result.trace!.steps.length;
+  const required = keyCoverage
+    ? keyStepCursors(result)
+    : Array.from({ length: total + 1 }, (_, i) => i);
+  const positions = new Map(required.map((cursor, index) => [cursor, index]));
   const seen = new Set<number>();
+  const allSeen = new Set<number>();
   let initialPresented = false;
   let previousCursor: number | null = null;
   let confirmed: VerifiedFact | undefined;
-  const complete = () => current() && initialPresented && seen.size === total;
+  const complete = () =>
+    current() &&
+    initialPresented &&
+    (allSeen.size === total || (keyCoverage && seen.size === required.length - 1));
   const authority = createLearningAuthority(caseLearningCatalog(), () => complete(), true);
   return {
-    present(view) {
+    present(view, detail = 'all') {
       if (
         !current() ||
         !view.identity ||
@@ -236,11 +246,30 @@ export function createCaseViewSession(
       )
         return;
       if (view.cursor === 0) initialPresented = true;
+      const at = positions.get(view.cursor);
+      const previous = previousCursor === null ? undefined : positions.get(previousCursor);
       if (initialPresented && previousCursor !== null && view.cursor === previousCursor + 1)
+        allSeen.add(view.cursor);
+      if (
+        initialPresented &&
+        previousCursor !== null &&
+        at !== undefined &&
+        at > 0 &&
+        (view.cursor === previousCursor + 1 ||
+          (keyCoverage && detail === 'key' && previous === at - 1))
+      )
         seen.add(view.cursor);
       previousCursor = view.cursor;
     },
-    progress: () => ({ seen: seen.size, total, complete: complete() }),
+    progress: (detail = 'all') => {
+      const selectedSeen = keyCoverage && detail === 'key' ? seen.size : allSeen.size;
+      const selectedTotal = keyCoverage && detail === 'key' ? required.length - 1 : total;
+      return {
+        seen: selectedSeen,
+        total: selectedTotal,
+        complete: current() && initialPresented && selectedSeen === selectedTotal,
+      };
+    },
     issue() {
       requireCase(complete());
       if (confirmed) return confirmed;

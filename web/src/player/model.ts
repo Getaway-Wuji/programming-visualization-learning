@@ -96,10 +96,16 @@ export class PlayerModel {
   }
 
   /** Stale queued callbacks cannot move a paused, sought or replaced run. */
-  tick(token: symbol): boolean {
+  tick(token: symbol, target = (this.cursor ?? 0) + 1): boolean {
     if (token !== this.playbackToken || this.status !== 'playing' || this.cursor === null)
       return false;
-    this.move(this.cursor + 1);
+    if (
+      !Number.isInteger(target) ||
+      target <= this.cursor ||
+      target > this.result!.trace!.steps.length
+    )
+      return false;
+    this.move(target);
     if (this.cursor === this.result!.trace!.steps.length) {
       this.status = this.tailStatus();
       this.playbackToken = Symbol();

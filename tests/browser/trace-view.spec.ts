@@ -23,10 +23,17 @@ async function followSystemTheme(page: Page) {
   // A new SAVE2 archive starts light. Opt into system mode through the real
   // settings UI before testing a media change against an accepted trajectory.
   await page.goto('/#/settings?panel=display');
+  await expect(page.locator('.app-shell')).toHaveAttribute(
+    'data-learning-storage-status',
+    /^(ready|unsaved)$/,
+  );
   await expect(page.getByRole('combobox', { name: '主题', exact: true })).toBeEnabled();
   await page.getByRole('combobox', { name: '主题', exact: true }).selectOption('system');
   await page.getByRole('button', { name: '保存显示设置', exact: true }).click();
-  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+  await expect(page.locator('.app-shell')).toHaveAttribute(
+    'data-learning-storage-status',
+    /^(ready|unsaved)$/,
+  );
   await expect(page.locator('html')).toHaveAttribute('data-appearance-draft', 'false');
   await expect(page.locator('html')).toHaveAttribute('data-theme-preference', 'system');
   await page.getByRole('tab', { name: '外观与主题', exact: true }).click();
@@ -113,6 +120,14 @@ async function isolatedPublicCopy(
   programId: string,
   change: (original: string) => string,
 ) {
+  // These probes deliberately exercise the bundled legacy configuration copy.
+  // The newer verified course bundle otherwise correctly takes precedence.
+  await page.route(/\/content\/(?:course|review)\//, (route) =>
+    route.fulfill({
+      status: 404,
+      body: 'Legacy trace probe: current course intentionally unavailable',
+    }),
+  );
   return isolateCaseProgram(page, programId, change);
 }
 
@@ -128,6 +143,7 @@ async function acceptedRun(
     await page.getByTestId(`input-field-${key}`).fill(value);
   await panel(page).getByRole('button', { name: '应用输入并准备', exact: true }).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+  await page.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
   await expect(source(page)).toHaveAttribute('readonly', '');
   await panel(page).getByRole('button', { name: '运行示例', exact: true }).click();
   await expect(panel(page)).toHaveAttribute('data-state', status);

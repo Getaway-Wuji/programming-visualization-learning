@@ -3,6 +3,7 @@ import {
   DB_VERSION,
   STORE_NAMES,
   ALL_STORE_NAMES,
+  V7_STORE_NAMES,
   SCHEMA_VERSION,
   createMeta,
   defaultSettings,
@@ -29,6 +30,8 @@ import { upgradeV3Meta } from './v3-migration';
 import { upgradeV4Meta } from './v4-migration';
 import { upgradeV5Meta } from './v5-migration';
 import { upgradeV6Meta } from './v6-migration';
+import { upgradeV7Meta } from './v7-migration';
+import { customDraftTransaction, type CustomDraftWrite } from './custom-draft';
 import { achievementsTransaction, type AchievementSourceReader } from './achievements';
 import type { AchievementEvidence } from '../achievements/model';
 import { reviewCardsTransaction, type ReviewSourceReader } from './review-cards';
@@ -302,6 +305,9 @@ export class StorageClient {
       record,
       updateOnly,
     }) as Promise<EditorHistorySave>;
+  }
+  customDraft(context: EditorHistoryContext, write?: CustomDraftWrite) {
+    return customDraftTransaction(this.connection(), context, write);
   }
   async read(): Promise<StorageSnapshot> {
     const recovery = await this.readRecovery();
@@ -996,6 +1002,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                 finish();
               };
             }
+            db.createObjectStore('customDrafts');
             return;
           }
           if (event.oldVersion === 2) {
@@ -1037,6 +1044,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                 tx.abort();
               }
             };
+            db.createObjectStore('customDrafts');
             return;
           }
           if (event.oldVersion === 3) {
@@ -1078,6 +1086,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                 tx.abort();
               }
             };
+            db.createObjectStore('customDrafts');
             return;
           }
           if (event.oldVersion === 4) {
@@ -1118,6 +1127,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                 tx.abort();
               }
             };
+            db.createObjectStore('customDrafts');
             return;
           }
           if (event.oldVersion === 5) {
@@ -1157,17 +1167,18 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                 tx.abort();
               }
             };
+            db.createObjectStore('customDrafts');
             return;
           }
           if (event.oldVersion === 6) {
             const db = request.result,
               tx = request.transaction!;
             if (
-              db.objectStoreNames.length !== ALL_STORE_NAMES.length ||
-              ALL_STORE_NAMES.some((name) => !db.objectStoreNames.contains(name))
+              db.objectStoreNames.length !== V7_STORE_NAMES.length ||
+              V7_STORE_NAMES.some((name) => !db.objectStoreNames.contains(name))
             )
               throw new StorageError('S_MIGRATION_UNSUPPORTED');
-            for (const name of ALL_STORE_NAMES) {
+            for (const name of V7_STORE_NAMES) {
               const store = tx.objectStore(name);
               if (store.keyPath !== null || store.autoIncrement || store.indexNames.length)
                 throw new StorageError('S_MIGRATION_UNSUPPORTED');
@@ -1194,6 +1205,45 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                 tx.abort();
               }
             };
+            db.createObjectStore('customDrafts');
+            return;
+          }
+          if (event.oldVersion === 7) {
+            const db = request.result,
+              tx = request.transaction!;
+            if (
+              db.objectStoreNames.length !== V7_STORE_NAMES.length ||
+              V7_STORE_NAMES.some((name) => !db.objectStoreNames.contains(name))
+            )
+              throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            for (const name of V7_STORE_NAMES) {
+              const store = tx.objectStore(name);
+              if (store.keyPath !== null || store.autoIncrement || store.indexNames.length)
+                throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            }
+            const values = tx.objectStore('meta').getAll();
+            values.onsuccess = () => {
+              try {
+                for (const value of values.result) upgradeV7Meta(value);
+                const keys = tx.objectStore('meta').getAllKeys();
+                keys.onsuccess = () => {
+                  try {
+                    const next =
+                      values.result.length === 1 && keys.result[0] === 'current'
+                        ? upgradeV7Meta(values.result[0])
+                        : null;
+                    if (next) tx.objectStore('meta').put(next, 'current');
+                  } catch (error) {
+                    failure = error;
+                    tx.abort();
+                  }
+                };
+              } catch (error) {
+                failure = error;
+                tx.abort();
+              }
+            };
+            db.createObjectStore('customDrafts');
             return;
           }
           if (event.oldVersion !== 0) throw new StorageError('S_MIGRATION_UNSUPPORTED');

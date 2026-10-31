@@ -64,6 +64,37 @@ afterEach(() => {
 });
 
 describe('08.2 single scheduler over validated real Rust traces', () => {
+  it('key playback restores exact full states and changing detail cancels its pending tick', () => {
+    const controller = loaded(),
+      all = loaded();
+    controller.setDetail('key');
+    const cursors = [0];
+    while (controller.getSnapshot().view.cursor! < completed.trace!.steps.length) {
+      controller.step(1);
+      const view = controller.getSnapshot().view;
+      all.seek(view.cursor!);
+      expect(view.state).toEqual(all.getSnapshot().view.state);
+      cursors.push(view.cursor!);
+    }
+    expect(cursors.length).toBeLessThan(completed.trace!.steps.length + 1);
+    for (const cursor of cursors.slice(0, -1).reverse()) {
+      controller.step(-1);
+      all.seek(cursor);
+      expect(controller.getSnapshot().view).toEqual(all.getSnapshot().view);
+    }
+    controller.play();
+    controller.setDetail('all');
+    const paused = controller.getSnapshot();
+    vi.advanceTimersByTime(BASE_STEP_MS * 2);
+    expect(controller.getSnapshot()).toBe(paused);
+    controller.step(1);
+    expect(controller.getSnapshot().view.cursor).toBe(1);
+    controller.setAdvanceGuard(() => false);
+    controller.setDetail('key');
+    expect(controller.getSnapshot().detail).toBe('all');
+    controller.play();
+    expect(vi.getTimerCount()).toBe(0);
+  });
   it('caches snapshots and publishes once per mutation, with detachable subscriptions', () => {
     const controller = new PlayerController();
     const { getSnapshot, subscribe } = controller;

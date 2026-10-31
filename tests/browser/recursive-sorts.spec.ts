@@ -30,6 +30,8 @@ async function ready(p: Page, spec = sortCases[0]) {
   await p.goto(`/#/algorithms/${spec.id}`);
   await waitForPhase2Archive(p);
   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
+  // Raw cursor assertions explicitly use the retained full-detail mode.
+  await p.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
 }
 async function run(p: Page, values: number[]) {
   await p.getByTestId('sort-input').fill(values.length ? values.join(' ') : '[]');

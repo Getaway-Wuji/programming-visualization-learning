@@ -28,9 +28,11 @@ export class AlgorithmPlayer {
   play() {
     this.playing = Boolean(this.result?.trace && this.cursor < this.result.trace.steps.length);
   }
-  tick() {
+  tick(target = this.cursor + 1) {
     if (!this.playing || !this.result?.trace) return false;
-    const next = this.cursor + 1;
+    const next = target;
+    if (!Number.isInteger(next) || next <= this.cursor || next > this.result.trace.steps.length)
+      return false;
     this.seek(next);
     this.playing = next < this.result.trace.steps.length;
     return true;

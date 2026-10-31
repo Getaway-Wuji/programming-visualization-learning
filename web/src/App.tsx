@@ -32,6 +32,7 @@ const ReviewPage = lazy(() =>
   import('./pages/Workspaces').then((module) => ({ default: module.ReviewPage })),
 );
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const CustomCodePage = lazy(() => import('./custom-code/CustomCodePage'));
 const MemoryPage = lazy(() => import('./pages/MemoryPage'));
 const ComparisonPage = lazy(() => import('./comparison/ComparisonPage'));
 const AlgorithmPage = lazy(() => import('./algorithms/AlgorithmPage'));
@@ -92,6 +93,7 @@ function AppRoutes() {
             <Route path="/structures/:structureId" element={<StructurePage />} />
             <Route path="/nodes/:nodeCaseId" element={<NodeCasePage />} />
             <Route path="/classics/:classicId" element={<ClassicPage />} />
+            <Route path="/custom-code" element={<CustomCodePage />} />
             <Route path="/memory" element={<MemoryPage />} />
             <Route path="/compilation" element={<CompilationPage />} />
             <Route path="/bugs" element={<BugPage />} />

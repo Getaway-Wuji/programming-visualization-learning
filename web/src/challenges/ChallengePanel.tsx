@@ -5,6 +5,7 @@ import type { PlayerController, PlayerControllerSnapshot } from '../player/contr
 import { readChallengeFact, type ChallengeFact, type ChallengeSession } from './authority';
 import { challengeSource, kindLabels, type AnswerKind } from './content';
 import { explainStep, stepPosition } from './explanation';
+import { keyStepCursors, nextStepCursor } from '../player/key-steps';
 import './challenges.css';
 
 interface AnswerState {
@@ -60,7 +61,11 @@ export function ChallengePanel({
     : undefined;
   const answer = item ? answers.get(item.question.ref.id) : undefined;
   const event = answer ? readChallengeFact(answer.fact) : null;
-  const next = cursor !== null ? result?.trace?.steps[cursor] : undefined;
+  const nextCursor =
+    cursor !== null && result && mode === 'teaching' && snapshot.detail === 'key'
+      ? nextStepCursor(keyStepCursors(result), cursor, 1) - 1
+      : cursor;
+  const next = nextCursor !== null ? result?.trace?.steps[nextCursor] : undefined;
   const completed = cursor !== null && cursor > 0 ? result?.trace?.steps[cursor - 1] : undefined;
   async function saveAnswer(fact: ChallengeFact, id: string) {
     const run = session,
@@ -132,7 +137,8 @@ export function ChallengePanel({
           )}
           {next && result && (
             <p>
-              下一步：{kindLabels[next.kind]} · {stepPosition(next, result, source)}。
+              下一步{snapshot.detail === 'key' ? '（关键步骤）' : ''}：{kindLabels[next.kind]} ·{' '}
+              {stepPosition(next, result, source)}。
             </p>
           )}
           {!result?.trace && <p>运行后可逐步查看说明，并在预测挑战中选择下一步。</p>}

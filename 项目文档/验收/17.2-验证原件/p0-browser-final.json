@@ -1,0 +1,303 @@
+{
+  "config": {
+    "argv": [
+      "D:\\Files\\Downloads\\编程可视化教学平台\\.tools\\node-v24.21.0-win-x64\\node.exe",
+      "D:\\Files\\Downloads\\编程可视化教学平台\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/browser/execution.spec.ts",
+      "--config",
+      "tests/playwright.config.ts",
+      "--project=chrome",
+      "--grep",
+      "all seven public cases|changed public source|visible case runs",
+      "--reporter",
+      "list,json"
+    ],
+    "configFile": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\playwright.config.ts",
+    "rootDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chrome",
+        "name": "chrome",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/advanced-engine.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "edge",
+        "name": "edge",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/advanced-engine.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Files/Downloads/编程可视化教学平台/.artifacts/browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-automation",
+        "name": "firefox-automation",
+        "testDir": "D:/Files/Downloads/编程可视化教学平台/tests/browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/advanced-engine.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Files\\Downloads\\编程可视化教学平台\\.artifacts\\browser-test-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chrome",
+        "testDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "snapshotDir": "D:\\Files\\Downloads\\编程可视化教学平台\\tests\\browser",
+        "testIgnore": [
+          "**/phase2-performance.spec.ts",
+          "**/advanced-engine.spec.ts",
+          "**/algorithm-engine.spec.ts",
+          "**/memory-engine.spec.ts",
+          "**/notebook-migration.spec.ts",
+          "**/scheduler-migration.spec.ts",
+          "**/achievement-migration.spec.ts",
+          "**/challenge-migration.spec.ts"
+        ],
+        "testMatch": "**/*.spec.ts",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4178",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "deviceScaleFactor": 1,
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "channel": "chrome"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chrome"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve-checks.mjs",
+      "cwd": "D:\\Files\\Downloads\\编程可视化教学平台\\",
+      "port": 4178,
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "execution.spec.ts",
+      "file": "execution.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "all seven public cases return real Rust trajectories with their displayed source and no judge or learning claim",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 801,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T14:24:16.890Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "seven-real-public-cases",
+                      "contentType": "application/json",
+                      "body": "eyJvYnNlcnZhdGlvbnMiOlt7ImlkIjoiY2FzZS5jLmFzc2lnbm1lbnQiLCJpZGVudGl0eSI6eyJjb250ZXh0SWQiOiI4M2IzMjU5Yi0zY2IxLTRjYWMtYjFhNS0wMjQwNGRhMjlkM2IiLCJjb250ZXh0UmV2aXNpb24iOjEsInJ1bklkIjoiY2UzYWE2ZmYtM2U0YS00MDBiLWJlZDUtY2MxZjVjOWE5YTQ5Iiwic291cmNlUmV2aXNpb24iOjEsInN1Ym1pc3Npb25JZCI6ImY0ODNlYTk0LTM5ZTEtNDFkMC1hNDIzLTI3NTNiNmNiNDdiZSIsInRlc3RDYXNlS2V5IjpudWxsfSwicHJvZHVjZXIiOiJydXN0Iiwic3RhdHVzIjoiY29tcGxldGVkIiwiZXhpdENvZGUiOjAsImNvZGVzIjpbXSwiY3Vyc29yIjo2LCJzdGVwcyI6NiwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJub2RlQ291bnQiOjEzLCJiaW5kaW5nQ291bnQiOjEsIm91dHB1dCI6IjVcbiIsInN0YXRzIjp7ImZ1ZWxVc2VkIjozMjcyLCJtYXhBc3REZXB0aCI6MiwibWF4U3ludGF4RGVwdGgiOjIsInBlYWtWaXJ0dWFsQnl0ZXMiOjQsInJ1c3RNaWNyb3MiOjcwMDB9LCJqdWRnZSI6bnVsbH0seyJpZCI6ImNhc2UuYy5icmFuY2giLCJpZGVudGl0eSI6eyJjb250ZXh0SWQiOiIzYmRmMzhmNi1iZWVlLTRkODYtYjcyZC0zZTY5ZjNjMWU5MzYiLCJjb250ZXh0UmV2aXNpb24iOjEsInJ1bklkIjoiNzdjOTA0MjQtYjZkZC00OWMyLWIyYWQtOTgxOWVmYTI3NzM1Iiwic291cmNlUmV2aXNpb24iOjEsInN1Ym1pc3Npb25JZCI6IjY1YjJjODc5LWE4ZDYtNDI4Yy1iMzk4LTVmMGU4OGE1MmQ4ZCIsInRlc3RDYXNlS2V5IjpudWxsfSwicHJvZHVjZXIiOiJydXN0Iiwic3RhdHVzIjoiY29tcGxldGVkIiwiZXhpdENvZGUiOjAsImNvZGVzIjpbXSwiY3Vyc29yIjo4LCJzdGVwcyI6OCwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJub2RlQ291bnQiOjE2LCJiaW5kaW5nQ291bnQiOjEsIm91dHB1dCI6IjBcbiIsInN0YXRzIjp7ImZ1ZWxVc2VkIjozNzU3LCJtYXhBc3REZXB0aCI6MiwibWF4U3ludGF4RGVwdGgiOjQsInBlYWtWaXJ0dWFsQnl0ZXMiOjQsInJ1c3RNaWNyb3MiOjEwMDB9LCJqdWRnZSI6bnVsbH0seyJpZCI6ImNhc2UuYy5sb29wcyIsImlkZW50aXR5Ijp7ImNvbnRleHRJZCI6IjNkNzQ1ZmNkLTUzMDgtNGQ0MS1hYWU4LWNlYjgxM2I2YWY0ZiIsImNvbnRleHRSZXZpc2lvbiI6MSwicnVuSWQiOiJjNTBmZmJlZi1jODc4LTQ3YzgtODkwMS1lMmJjYjYxZTE2YTQiLCJzb3VyY2VSZXZpc2lvbiI6MSwic3VibWlzc2lvbklkIjoiYWFkODU4YWYtZDY4Ny00MTJkLWJhZjUtNTBkN2QzMjhlYzEyIiwidGVzdENhc2VLZXkiOm51bGx9LCJwcm9kdWNlciI6InJ1c3QiLCJzdGF0dXMiOiJjb21wbGV0ZWQiLCJleGl0Q29kZSI6MCwiY29kZXMiOltdLCJjdXJzb3IiOjY3LCJzdGVwcyI6NjcsImNvbXBsZXRlbmVzcyI6ImNvbXBsZXRlIiwibm9kZUNvdW50Ijo0OSwiYmluZGluZ0NvdW50IjoxLCJvdXRwdXQiOiIxNVxuMTVcbiIsInN0YXRzIjp7ImZ1ZWxVc2VkIjoxMjk3MCwibWF4QXN0RGVwdGgiOjIsIm1heFN5bnRheERlcHRoIjozLCJwZWFrVmlydHVhbEJ5dGVzIjoyMCwicnVzdE1pY3JvcyI6MzAwMH0sImp1ZGdlIjpudWxsfSx7ImlkIjoiY2FzZS5jLmFycmF5LXRyYXZlcnNhbCIsImlkZW50aXR5Ijp7ImNvbnRleHRJZCI6ImIzNDkzYjY1LTEzY2QtNGQwMy1iZGU1LWNhMzlhYjM3NTA3NCIsImNvbnRleHRSZXZpc2lvbiI6MSwicnVuSWQiOiIxYzM2YWM4Yi0zNTYwLTQ4OTMtODFjOC0zMzZlMzI0MWZmNzkiLCJzb3VyY2VSZXZpc2lvbiI6MSwic3VibWlzc2lvbklkIjoiMWNjZTg5NGMtNmJiMi00NWZjLTg4ZWYtMzNmNmVkN2I0YTg3IiwidGVzdENhc2VLZXkiOm51bGx9LCJwcm9kdWNlciI6InJ1c3QiLCJzdGF0dXMiOiJjb21wbGV0ZWQiLCJleGl0Q29kZSI6MCwiY29kZXMiOltdLCJjdXJzb3IiOjI5LCJzdGVwcyI6MjksImNvbXBsZXRlbmVzcyI6ImNvbXBsZXRlIiwibm9kZUNvdW50IjozNSwiYmluZGluZ0NvdW50IjoyLCJvdXRwdXQiOiI0XG4iLCJzdGF0cyI6eyJmdWVsVXNlZCI6Nzg2OCwibWF4QXN0RGVwdGgiOjMsIm1heFN5bnRheERlcHRoIjo0LCJwZWFrVmlydHVhbEJ5dGVzIjoyNCwicnVzdE1pY3JvcyI6MTAwMH0sImp1ZGdlIjpudWxsfSx7ImlkIjoiY2FzZS5jLmJ1YmJsZS1zb3J0IiwiaWRlbnRpdHkiOnsiY29udGV4dElkIjoiZGU5OGU4MWYtMGMxNC00ZTk5LThhYzQtNmE3MTE4MThkZThkIiwiY29udGV4dFJldmlzaW9uIjoxLCJydW5JZCI6ImZiZWQxMWE3LWJjN2UtNDhmOC05OWUzLTRiMjAyYTBhNjE3NyIsInNvdXJjZVJldmlzaW9uIjoxLCJzdWJtaXNzaW9uSWQiOiIyYjZjOTA2OS1iZTliLTRkNjUtOTA2NC1jYTJjMzc4YjIzYWIiLCJ0ZXN0Q2FzZUtleSI6bnVsbH0sInByb2R1Y2VyIjoicnVzdCIsInN0YXR1cyI6ImNvbXBsZXRlZCIsImV4aXRDb2RlIjowLCJjb2RlcyI6W10sImN1cnNvciI6ODYsInN0ZXBzIjo4NiwiY29tcGxldGVuZXNzIjoiY29tcGxldGUiLCJub2RlQ291bnQiOjk1LCJiaW5kaW5nQ291bnQiOjIsIm91dHB1dCI6IjEgMiAzXG4iLCJzdGF0cyI6eyJmdWVsVXNlZCI6MjA2ODAsIm1heEFzdERlcHRoIjo0LCJtYXhTeW50YXhEZXB0aCI6OCwicGVha1ZpcnR1YWxCeXRlcyI6MjgsInJ1c3RNaWNyb3MiOjMwMDB9LCJqdWRnZSI6bnVsbH0seyJpZCI6ImNhc2UuYy5zZWxlY3Rpb24tc29ydCIsImlkZW50aXR5Ijp7ImNvbnRleHRJZCI6ImNhZGU5YWM4LTAwYmYtNDUzOC1iZjMzLTA4MzU1YjdmZTg5MiIsImNvbnRleHRSZXZpc2lvbiI6MSwicnVuSWQiOiI4MzJmZmZhMi00Yzk0LTQ2OGItYmYzNS1kZDNlNTE4Mzg4NmQiLCJzb3VyY2VSZXZpc2lvbiI6MSwic3VibWlzc2lvbklkIjoiMTBlOTNkOGQtNjRkNC00MDNhLTk1MzctMWNhMDMyYzEzY2MxIiwidGVzdENhc2VLZXkiOm51bGx9LCJwcm9kdWNlciI6InJ1c3QiLCJzdGF0dXMiOiJjb21wbGV0ZWQiLCJleGl0Q29kZSI6MCwiY29kZXMiOltdLCJjdXJzb3IiOjk4LCJzdGVwcyI6OTgsImNvbXBsZXRlbmVzcyI6ImNvbXBsZXRlIiwibm9kZUNvdW50IjoxMDIsImJpbmRpbmdDb3VudCI6Miwib3V0cHV0IjoiMSAyIDNcbiIsInN0YXRzIjp7ImZ1ZWxVc2VkIjoyMzExOCwibWF4QXN0RGVwdGgiOjMsIm1heFN5bnRheERlcHRoIjo4LCJwZWFrVmlydHVhbEJ5dGVzIjoyOCwicnVzdE1pY3JvcyI6MjAwMH0sImp1ZGdlIjpudWxsfSx7ImlkIjoiY2FzZS5jLmJpbmFyeS1zZWFyY2gtZmlyc3QiLCJpZGVudGl0eSI6eyJjb250ZXh0SWQiOiIxZGIzMDY2Ny1hOTQ2LTRmZTYtODQyNy1mZjY3YjMwNDI2YTYiLCJjb250ZXh0UmV2aXNpb24iOjEsInJ1bklkIjoiOTNmZTdkZTktMGRkZS00NzlhLWE1ZGEtZThkYTdiMGViNzlhIiwic291cmNlUmV2aXNpb24iOjEsInN1Ym1pc3Npb25JZCI6ImE1YmQwZDEwLTIyOTUtNGFmMS1hMjc1LTE0NjdmZmYzNDBjZSIsInRlc3RDYXNlS2V5IjpudWxsfSwicHJvZHVjZXIiOiJydXN0Iiwic3RhdHVzIjoiY29tcGxldGVkIiwiZXhpdENvZGUiOjAsImNvZGVzIjpbXSwiY3Vyc29yIjo1MSwic3RlcHMiOjUxLCJjb21wbGV0ZW5lc3MiOiJjb21wbGV0ZSIsIm5vZGVDb3VudCI6NzAsImJpbmRpbmdDb3VudCI6Mywib3V0cHV0IjoiMVxuIiwic3RhdHMiOnsiZnVlbFVzZWQiOjE0NzkzLCJtYXhBc3REZXB0aCI6NCwibWF4U3ludGF4RGVwdGgiOjgsInBlYWtWaXJ0dWFsQnl0ZXMiOjQ0LCJydXN0TWljcm9zIjoyMDAwfSwianVkZ2UiOm51bGx9XSwiYXVkaXQiOnsid29ya2VycyI6W3sia2luZCI6InByZXBhcmUtY2FzZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6MSwicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MH0seyJraW5kIjoiZXhlY3V0ZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6MSwicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MX0seyJraW5kIjoicHJlcGFyZS1jYXNlIiwidGVybWluYXRlZCI6dHJ1ZSwibW9kdWxlIjoyLCJyZXNwb25zZXMiOjEsInJ1c3RSZXN1bHRzIjowfSx7ImtpbmQiOiJleGVjdXRlIiwidGVybWluYXRlZCI6dHJ1ZSwibW9kdWxlIjoyLCJyZXNwb25zZXMiOjEsInJ1c3RSZXN1bHRzIjoxfSx7ImtpbmQiOiJwcmVwYXJlLWNhc2UiLCJ0ZXJtaW5hdGVkIjp0cnVlLCJtb2R1bGUiOjMsInJlc3BvbnNlcyI6MSwicnVzdFJlc3VsdHMiOjB9LHsia2luZCI6ImV4ZWN1dGUiLCJ0ZXJtaW5hdGVkIjp0cnVlLCJtb2R1bGUiOjMsInJlc3BvbnNlcyI6MSwicnVzdFJlc3VsdHMiOjF9LHsia2luZCI6InByZXBhcmUtY2FzZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6NCwicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MH0seyJraW5kIjoiZXhlY3V0ZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6NCwicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MX0seyJraW5kIjoicHJlcGFyZS1jYXNlIiwidGVybWluYXRlZCI6dHJ1ZSwibW9kdWxlIjo1LCJyZXNwb25zZXMiOjEsInJ1c3RSZXN1bHRzIjowfSx7ImtpbmQiOiJleGVjdXRlIiwidGVybWluYXRlZCI6dHJ1ZSwibW9kdWxlIjo1LCJyZXNwb25zZXMiOjEsInJ1c3RSZXN1bHRzIjoxfSx7ImtpbmQiOiJwcmVwYXJlLWNhc2UiLCJ0ZXJtaW5hdGVkIjp0cnVlLCJtb2R1bGUiOjYsInJlc3BvbnNlcyI6MSwicnVzdFJlc3VsdHMiOjB9LHsia2luZCI6ImV4ZWN1dGUiLCJ0ZXJtaW5hdGVkIjp0cnVlLCJtb2R1bGUiOjYsInJlc3BvbnNlcyI6MSwicnVzdFJlc3VsdHMiOjF9LHsia2luZCI6InByZXBhcmUtY2FzZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6NywicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MH0seyJraW5kIjoiZXhlY3V0ZSIsInRlcm1pbmF0ZWQiOnRydWUsIm1vZHVsZSI6NywicmVzcG9uc2VzIjoxLCJydXN0UmVzdWx0cyI6MX1dLCJtYXhBY3RpdmUiOjF9fQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-5380d9136a03f8683a92",
+          "file": "execution.spec.ts",
+          "line": 215,
+          "column": 1
+        },
+        {
+          "title": "changed public source changes the result while Rust runtime errors keep an honest prefix and the next run recovers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 455,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T14:24:18.549Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-7336149547f4e3778467",
+          "file": "execution.spec.ts",
+          "line": 267,
+          "column": 1
+        },
+        {
+          "title": "the visible case runs the exact read-only source and exposes real terminal, steps, output and ready playback",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chrome",
+              "projectName": "chrome",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 904,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-31T14:24:19.012Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "976411efdbe58574e9cb-c566b5d0df0a68dddcf5",
+          "file": "execution.spec.ts",
+          "line": 494,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-31T14:24:15.855Z",
+    "duration": 5720.215999999999,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -110,28 +110,9 @@ export function CasesPage() {
         description="选择案例、输入数据，运行实际源码并逐步查看变化。原C案例完整观看后主动确认可获首次奖励；新增C++观察不计积分。"
       />
       <CatalogSample kind="case" />
-      <p>
-        <Link className="button" to="/compare">
-          打开同数据双算法对比
-        </Link>{' '}
-        分别运行冒泡与选择排序，统一回放并核对真实比较、交换和写入计数。
+      <p className="muted">
+        建议按顺序学习：基础语法演示 → 排序与查找 → 数据结构 → 经典问题与进阶观察。
       </p>
-      <p>
-        <Link className="button" to="/memory?example=hanoi&view=stack">
-          打开递归与调用栈
-        </Link>{' '}
-        用汉诺塔与快速排序观察函数进入、返回及局部状态，点击源码行号设置断点。
-      </p>
-      <p>
-        <Link className="button" to="/memory">
-          打开内存观察
-        </Link>{' '}
-        逐步查看指针、对象与教学地址。
-      </p>
-      <AlgorithmCatalog />
-      <StructureCatalog />
-      <NodeCaseCatalog />
-      <ClassicCatalog />
       {(['demo', 'algorithm'] as const).map((kind) => (
         <section key={kind}>
           <div className="section-heading">
@@ -164,6 +145,33 @@ export function CasesPage() {
           </div>
         </section>
       ))}
+      <AlgorithmCatalog />
+      <p>
+        <Link className="button" to="/compare">
+          打开同数据双算法对比
+        </Link>{' '}
+        比较冒泡与选择排序，或归并与快速排序。
+      </p>
+      <StructureCatalog />
+      <NodeCaseCatalog />
+      <ClassicCatalog />
+      <section aria-labelledby="advanced-observation-title">
+        <div className="section-heading">
+          <h2 id="advanced-observation-title">进阶观察 · 内存与调用栈</h2>
+        </div>
+        <p>
+          <Link className="text-link" to="/memory">
+            打开内存观察 →
+          </Link>{' '}
+          逐步查看指针、对象与教学地址。
+        </p>
+        <p>
+          <Link className="text-link" to="/memory?example=hanoi&view=stack">
+            打开递归与调用栈 →
+          </Link>{' '}
+          观察函数进入、返回及局部状态，点击源码行号设置断点。
+        </p>
+      </section>
     </div>
   );
 }

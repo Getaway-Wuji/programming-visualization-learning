@@ -1,3 +1,4 @@
+import { StepDetailControl } from '../components/StepDetailControl';
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Link, useParams } from 'react-router';
 import { Breadcrumbs, MissingPage, PageHeading } from '../components/Ui';
@@ -24,7 +25,7 @@ import './nodes.css';
 
 function NodeCaseWorkspace({ spec }: { spec: NodeCase }) {
   const { service } = useLearning(),
-    [controller] = useState(() => new NodeCaseController()),
+    [controller] = useState(() => new NodeCaseController(undefined, 'key')),
     snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot),
     { view, result, request, status } = snapshot;
   const [mode, setMode] = useState<'graph' | 'memory' | 'stack'>('graph');
@@ -300,16 +301,22 @@ function NodeCaseWorkspace({ spec }: { spec: NodeCase }) {
                   ))}
                 </select>
               </label>
+              <StepDetailControl
+                detail={snapshot.detail}
+                onChange={(detail) => controller.setDetail(detail)}
+              />
               <label className="sort-seek">
-                步骤 {view.cursor} / {view.length}
+                {snapshot.detail === 'key'
+                  ? `关键步骤 ${snapshot.keyPosition} / ${snapshot.keyLength}`
+                  : `步骤 ${view.cursor} / ${view.length}`}
                 <input
                   type="range"
                   aria-label="节点执行步骤"
                   min={0}
-                  max={view.length || 1}
-                  value={view.cursor}
+                  max={(snapshot.detail === 'key' ? snapshot.keyLength : view.length) || 1}
+                  value={snapshot.detail === 'key' ? snapshot.keyPosition : view.cursor}
                   disabled={!active}
-                  onChange={(e) => controller.seek(Number(e.target.value))}
+                  onChange={(e) => controller.seekDisplayed(Number(e.target.value))}
                 />
               </label>
               <span role="status">

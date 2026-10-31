@@ -220,7 +220,7 @@ describe('16.1 true trace teaching and closed first-answer accounting', () => {
     const s = archive();
     const old = { ...s.meta, schemaVersion: '6.0.0', dbVersion: 6 };
     const upgraded = upgradeV6Meta(old);
-    expect(upgraded).toEqual({ ...old, schemaVersion: '7.0.0', dbVersion: 7, revision: 1 });
+    expect(upgraded).toEqual({ ...old, schemaVersion: '8.0.0', dbVersion: 8, revision: 1 });
     expect(upgradeV6Meta({ ...old, extra: 'private' })).toBeNull();
     expect(() => upgradeV6Meta({ ...old, schemaVersion: '8.0.0' })).toThrow('S_VERSION_UNKNOWN');
   });

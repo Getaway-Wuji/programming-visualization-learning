@@ -97,8 +97,9 @@ describe('SAVE-01 model and store keys', () => {
       'knowledgeMarks',
       'reviewCards',
       'achievements',
+      'customDrafts',
     ]);
-    expect([DB_NAME, DB_VERSION, SCHEMA_VERSION]).toEqual(['c-viz-learning', 7, '7.0.0']);
+    expect([DB_NAME, DB_VERSION, SCHEMA_VERSION]).toEqual(['c-viz-learning', 8, '8.0.0']);
     expect(STORE_NAMES).toEqual([
       'meta',
       'settings',
@@ -192,8 +193,8 @@ describe('closed storage validation', () => {
       assertLegacySnapshot(before);
       expect(upgraded.meta).toEqual({
         ...before.meta,
-        dbVersion: 7,
-        schemaVersion: '7.0.0',
+        dbVersion: 8,
+        schemaVersion: '8.0.0',
         revision: before.meta.revision + 1,
       });
       for (const store of CORE_STORE_NAMES)
@@ -544,8 +545,8 @@ describe('strict production SAVE1 to SAVE3 recipe', () => {
       expect(next.settings.theme).toBe(theme);
       expect(next.meta).toEqual({
         ...before.meta,
-        schemaVersion: '7.0.0',
-        dbVersion: 7,
+        schemaVersion: '8.0.0',
+        dbVersion: 8,
         revision: before.meta.revision + 1,
       });
       for (const store of CORE_STORE_NAMES)

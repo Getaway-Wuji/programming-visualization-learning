@@ -1,3 +1,4 @@
+import { StepDetailControl } from '../components/StepDetailControl';
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Link, useParams } from 'react-router';
 import { Breadcrumbs, MissingPage, PageHeading } from '../components/Ui';
@@ -21,7 +22,7 @@ import './algorithms.css';
 
 function SortWorkspace({ spec }: { spec: SortCase }) {
   const { service } = useLearning();
-  const [controller] = useState(() => new SortController());
+  const [controller] = useState(() => new SortController(undefined, 'key'));
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot),
     { view, result, request, status } = snapshot;
   const [draft, setDraft] = useState(spec.defaultInput.join(' '));
@@ -267,16 +268,22 @@ function SortWorkspace({ spec }: { spec: SortCase }) {
                   ))}
                 </select>
               </label>
+              <StepDetailControl
+                detail={snapshot.detail}
+                onChange={(detail) => controller.setDetail(detail)}
+              />
               <label className="sort-seek">
-                步骤 {view.cursor} / {view.length}
+                {snapshot.detail === 'key'
+                  ? `关键步骤 ${snapshot.keyPosition} / ${snapshot.keyLength}`
+                  : `步骤 ${view.cursor} / ${view.length}`}
                 <input
                   type="range"
                   aria-label="C++排序执行步骤"
                   min={0}
-                  max={view.length || 1}
-                  value={view.cursor}
+                  max={(snapshot.detail === 'key' ? snapshot.keyLength : view.length) || 1}
+                  value={snapshot.detail === 'key' ? snapshot.keyPosition : view.cursor}
                   disabled={!active}
-                  onChange={(event) => controller.seek(Number(event.target.value))}
+                  onChange={(event) => controller.seekDisplayed(Number(event.target.value))}
                 />
               </label>
               <span role="status">
@@ -293,6 +300,7 @@ function SortWorkspace({ spec }: { spec: SortCase }) {
                   </p>
                 </section>
                 <SortState
+                  compact={snapshot.detail === 'key'}
                   view={view}
                   result={result!}
                   inputLength={request?.input.length ?? 0}

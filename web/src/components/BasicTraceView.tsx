@@ -1,5 +1,5 @@
 import { useLayoutEffect, useMemo, useRef } from 'react';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { InputBinding, InputValues } from '../content/types';
 import type { ExecuteResult } from '../engine/protocol';
 import type { PlayerSnapshot } from '../player/model';
@@ -7,16 +7,37 @@ import { presentTrace, valueText } from '../player/presentation';
 import { commitPlayerFrame } from '../player/performance';
 import './array-trace.css';
 
+function TraceDetails({
+  compact,
+  label,
+  children,
+}: {
+  compact: boolean;
+  label: string;
+  children: ReactNode;
+}) {
+  return compact ? (
+    <details className="trace-details">
+      <summary>{label}</summary>
+      {children}
+    </details>
+  ) : (
+    children
+  );
+}
+
 export function BasicTraceView({
   view,
   result,
   input,
   bindings,
+  compact = false,
 }: {
   view: PlayerSnapshot;
   result: ExecuteResult | undefined;
   input: InputValues;
   bindings: readonly InputBinding[];
+  compact?: boolean;
 }) {
   const element = useRef<HTMLDivElement>(null);
   const presentedRun = useRef<string | null>(null);
@@ -91,52 +112,54 @@ export function BasicTraceView({
           交换 <strong>{counters.swaps}</strong>
         </span>
       </div>
-      <section className="step-section" aria-label="当前变量">
-        <h4>变量</h4>
-        {scalars.length === 0 ? (
-          <p className="muted">当前没有存活变量。</p>
-        ) : (
-          <ul className="variable-grid">
-            {scalars.map((object) => {
-              const cell = object.cells[0];
-              return (
-                <li
-                  key={object.id}
-                  className="variable-value"
-                  data-testid="trace-variable"
-                  data-object-id={object.id}
-                  data-name={object.name}
-                  data-scope-id={object.scopeId}
-                  data-value={cell.value ?? 'uninitialized'}
-                  data-read={cell.read}
-                  data-write={cell.written}
-                >
-                  <span>
-                    <strong>{object.name}</strong>{' '}
-                    <small>
-                      {object.id} · {object.scopeId}
-                    </small>
-                  </span>
-                  <b>{valueText(cell.value)}</b>
-                  {(cell.read || cell.written) && (
-                    <span className="access-label">
-                      {[cell.read ? '读' : '', cell.written ? '写' : '']
-                        .filter(Boolean)
-                        .join(' / ')}
+      <TraceDetails compact={compact && arrays.length > 0} label="查看当前变量">
+        <section className="step-section" aria-label="当前变量">
+          <h4>变量</h4>
+          {scalars.length === 0 ? (
+            <p className="muted">当前没有存活变量。</p>
+          ) : (
+            <ul className="variable-grid">
+              {scalars.map((object) => {
+                const cell = object.cells[0];
+                return (
+                  <li
+                    key={object.id}
+                    className="variable-value"
+                    data-testid="trace-variable"
+                    data-object-id={object.id}
+                    data-name={object.name}
+                    data-scope-id={object.scopeId}
+                    data-value={cell.value ?? 'uninitialized'}
+                    data-read={cell.read}
+                    data-write={cell.written}
+                  >
+                    <span>
+                      <strong>{object.name}</strong>{' '}
+                      <small>
+                        {object.id} · {object.scopeId}
+                      </small>
                     </span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </section>
+                    <b>{valueText(cell.value)}</b>
+                    {(cell.read || cell.written) && (
+                      <span className="access-label">
+                        {[cell.read ? '读' : '', cell.written ? '写' : '']
+                          .filter(Boolean)
+                          .join(' / ')}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+      </TraceDetails>
       <section className="step-section" aria-label="当前数组">
         <h4>数组</h4>
         {arrays.length === 0 && <p className="muted">当前没有存活数组。</p>}
         {arrays.map((object) => {
           const scale = Math.max(1, ...object.cells.map((cell) => Math.abs(cell.value ?? 0)));
-          const barHeight = object.cells.length > 7 ? 32 : 44;
+          const barHeight = object.cells.length > 7 ? 44 : 60;
           const labelDigits = Math.max(
             4,
             ...object.cells.map((cell) => (cell.value === null ? 0 : String(cell.value).length)),
@@ -236,23 +259,29 @@ export function BasicTraceView({
           本步离开作用域：{presentation.retired.join('、')}；后退可恢复。
         </p>
       )}
-      <section className="step-section" aria-label="当前步骤的读写与比较" data-testid="step-events">
-        <h4>本步读写与比较</h4>
-        {presentation.events.length === 0 ? (
-          <p className="muted">本步没有读写或比较观测。</p>
-        ) : (
-          <ul>
-            {presentation.events.map((event, i) => (
-              <li key={i}>{event}</li>
-            ))}
-          </ul>
-        )}
-        {presentation.eventCount > presentation.events.length && (
-          <p className="muted">
-            当前展示前 {presentation.events.length} / {presentation.eventCount} 条观测。
-          </p>
-        )}
-      </section>
+      <TraceDetails compact={compact} label="查看本步读写与比较">
+        <section
+          className="step-section"
+          aria-label="当前步骤的读写与比较"
+          data-testid="step-events"
+        >
+          <h4>本步读写与比较</h4>
+          {presentation.events.length === 0 ? (
+            <p className="muted">本步没有读写或比较观测。</p>
+          ) : (
+            <ul>
+              {presentation.events.map((event, i) => (
+                <li key={i}>{event}</li>
+              ))}
+            </ul>
+          )}
+          {presentation.eventCount > presentation.events.length && (
+            <p className="muted">
+              当前展示前 {presentation.events.length} / {presentation.eventCount} 条观测。
+            </p>
+          )}
+        </section>
+      </TraceDetails>
       <section className="step-section" aria-label="当前步骤输出">
         <h4>截至当前步骤的输出</h4>
         <pre

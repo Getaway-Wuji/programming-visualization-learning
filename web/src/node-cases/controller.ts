@@ -1,3 +1,9 @@
+import {
+  keyStepCursors,
+  keyStepPosition,
+  nextStepCursor,
+  type StepDetail,
+} from '../player/key-steps';
 import { MemoryExecutionClient, memoryRequest } from '../engine/memory-client';
 import { MemoryPlayer } from '../engine/memory-player';
 import type { MemoryRequest, MemoryResult } from '../engine/memory-protocol';
@@ -14,18 +20,26 @@ export class NodeCaseController {
   private error = '';
   private rate = 1;
   private runs = 0;
+  private stops: readonly number[] = [0];
   private current: ReturnType<NodeCaseController['snapshot']>;
-  constructor(private readonly client = new MemoryExecutionClient()) {
+  constructor(
+    private readonly client = new MemoryExecutionClient(),
+    private detail: StepDetail = 'all',
+  ) {
     this.current = this.snapshot();
   }
   private snapshot() {
+    const view = this.player.snapshot();
     return {
-      view: this.player.snapshot(),
+      view,
       result: this.result,
       request: this.request,
       status: this.status,
       error: this.error,
       rate: this.rate,
+      detail: this.detail,
+      keyPosition: keyStepPosition(this.stops, view.cursor),
+      keyLength: this.stops.length - 1,
       runs: this.runs,
     };
   }
@@ -50,6 +64,7 @@ export class NodeCaseController {
     this.clearTimer();
     this.client.invalidate();
     this.player.invalidate();
+    this.stops = [0];
     this.request = null;
     this.result = null;
     this.status = 'idle';
@@ -70,6 +85,7 @@ export class NodeCaseController {
       if (generation !== this.generation) return;
       this.result = result;
       this.player.accept(result);
+      this.stops = keyStepCursors(result);
       this.status = result.trace ? 'ready' : 'rejected';
       this.publish();
     } catch (error) {
@@ -97,7 +113,12 @@ export class NodeCaseController {
     if (this.player.seek(cursor)) this.publish();
   }
   step(delta: -1 | 1) {
-    if (this.current.view.state) this.seek(this.current.view.cursor + delta);
+    if (this.current.view.state)
+      this.seek(
+        this.detail === 'key'
+          ? nextStepCursor(this.stops, this.current.view.cursor, delta)
+          : this.current.view.cursor + delta,
+      );
   }
   play() {
     this.clearTimer();
@@ -107,7 +128,9 @@ export class NodeCaseController {
       schedule = this.schedule;
     const tick = () => {
       if (generation !== this.generation || schedule !== this.schedule) return;
-      this.player.tick();
+      this.player.tick(
+        this.detail === 'key' ? nextStepCursor(this.stops, this.current.view.cursor, 1) : undefined,
+      );
       this.publish();
       if (generation === this.generation && schedule === this.schedule && this.current.view.playing)
         this.timer = setTimeout(tick, 500 / this.rate);
@@ -120,6 +143,16 @@ export class NodeCaseController {
   }
   replay() {
     this.seek(0);
+  }
+  setDetail(detail: StepDetail) {
+    if ((detail !== 'key' && detail !== 'all') || detail === this.detail) return;
+    this.clearTimer();
+    this.player.pause();
+    this.detail = detail;
+    this.publish();
+  }
+  seekDisplayed(position: number) {
+    this.seek(this.detail === 'key' ? (this.stops[position] ?? -1) : position);
   }
   setRate(rate: number) {
     if (![0.25, 0.5, 1, 1.5, 2, 4].includes(rate)) return;

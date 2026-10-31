@@ -13,9 +13,11 @@ const statusLabels = {
 export function PlayerControls({
   controller,
   snapshot,
+  showDetail = false,
 }: {
   controller: PlayerController;
   snapshot: ReturnType<PlayerController['getSnapshot']>;
+  showDetail?: boolean;
 }) {
   const { view, rate } = snapshot;
   const available = view.cursor !== null && view.length > 0;
@@ -77,9 +79,25 @@ export function PlayerControls({
           ))}
         </select>
       </label>
+      {showDetail && (
+        <label className="muted">
+          显示{' '}
+          <select
+            aria-label="步骤显示"
+            value={snapshot.detail}
+            disabled={snapshot.detailLocked}
+            onChange={(event) => controller.setDetail(event.target.value as 'key' | 'all')}
+          >
+            <option value="key">关键步骤</option>
+            <option value="all">全部步骤</option>
+          </select>
+        </label>
+      )}
       <div className="player-progress">
         <span data-testid="player-cursor">
-          步骤 {view.cursor ?? '—'} / {view.length}
+          {showDetail && snapshot.detail === 'key'
+            ? `关键步骤 ${snapshot.keyPosition} / ${snapshot.keyLength}`
+            : `步骤 ${view.cursor ?? '—'} / ${view.length}`}
         </span>
         <span role="status">{statusLabels[view.status]}</span>
       </div>

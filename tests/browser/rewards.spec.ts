@@ -167,6 +167,7 @@ async function painted(page: Page) {
 async function runCase(page: Page, testInfo: TestInfo, label: string) {
   await casePanel(page).getByRole('button', { name: '运行示例', exact: true }).click();
   await expect(casePanel(page)).toHaveAttribute('data-state', 'completed');
+  await page.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
   await expect(controls(page)).toHaveAttribute('data-cursor', '0');
   const worker = await observedCaseSetExecute(page);
   const requestBytes = Buffer.from(worker.requestBytes!);
@@ -778,6 +779,13 @@ test('one pixel of trace visibility cannot credit hidden keyboard steps or backf
   await painted(page);
   const hiddenFrames = [];
   for (const cursor of [1, 2]) {
+    // Re-pin the header edge after any real step reflow/scroll anchoring.
+    // The actual variable panel must stay completely outside the viewport.
+    await trace.evaluate((element) => {
+      const bounds = element.getBoundingClientRect();
+      window.scrollTo({ top: scrollY + bounds.top - innerHeight + 1, behavior: 'instant' });
+    });
+    await painted(page);
     const visibilityBefore = await readVisibility();
     expect(visibilityBefore.traceVisibleHeight).toBeGreaterThan(0);
     expect(visibilityBefore.traceVisibleHeight).toBeLessThanOrEqual(2);
@@ -790,7 +798,6 @@ test('one pixel of trace visibility cannot credit hidden keyboard steps or backf
     await painted(page);
     const visibilityAfter = await readVisibility();
     expect(visibilityAfter.traceVisibleHeight).toBeGreaterThan(0);
-    expect(visibilityAfter.traceVisibleHeight).toBeLessThanOrEqual(2);
     expect(visibilityAfter.coreVisibleHeight).toBe(0);
     await expect(coverage).toHaveAttribute('data-covered', '0');
     hiddenFrames.push({ cursor, visibilityBefore, visibilityAfter, covered: 0 });

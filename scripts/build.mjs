@@ -8,6 +8,7 @@ if (p05) runNode('scripts/restore-release-evidence.mjs');
 runNode('scripts/build-wasm.mjs');
 runNode('scripts/build-algorithm-wasm.mjs');
 runNode('scripts/build-memory-wasm.mjs');
+runNode('scripts/build-advanced-wasm.mjs');
 runNode('scripts/build-content.mjs');
 runNode('scripts/build-appearance.mjs');
 runNode('scripts/build-teaching-presentation.mjs');

@@ -1,3 +1,4 @@
+import type { CustomDraftWrite } from '../storage/custom-draft';
 import { achievementPassSources, type AchievementEvidence } from '../achievements/model';
 import { readChallengeFact, type ChallengeFact } from '../challenges/authority';
 import { prepareChallengeAnswer, type ChallengeReceiptSummary } from '../challenges/domain';
@@ -480,6 +481,12 @@ export class LearningService {
     if (!sameRef(context.activePackageRef, current.activePackageRef))
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
   }
+  customDraft = async (context: EditorHistoryContext, write?: CustomDraftWrite) => {
+    this.checkEditorHistory(context);
+    const result = await this.storage().customDraft(context, write);
+    this.checkEditorHistory(context);
+    return result;
+  };
   readEditorHistory = async (context: EditorHistoryContext) => {
     this.checkEditorHistory(context);
     const result = await this.storage().readEditorHistory(context);
@@ -1959,6 +1966,7 @@ export function createLearningService() {
   return {
     recordChallengeAnswer: service.recordChallengeAnswer,
     editorHistoryContext: service.editorHistoryContext,
+    customDraft: service.customDraft,
     readEditorHistory: service.readEditorHistory,
     saveEditorHistory: service.saveEditorHistory,
     readKnowledgeMarks: service.readKnowledgeMarks,
