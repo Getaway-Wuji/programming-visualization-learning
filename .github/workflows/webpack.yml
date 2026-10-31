@@ -14,11 +14,17 @@ jobs:
   build:
     runs-on: windows-latest
     timeout-minutes: 30
+    env:
+      # Frozen WASM receipts include Rust dependency source paths. Reproduce that
+      # historical build input on this disposable runner; keep every hash check.
+      CARGO_HOME: 'C:\Users\Spring\.cargo'
     defaults:
       run:
         shell: pwsh
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, Node 24
+      - name: Check committed release archives
+        run: node scripts/check-release-archives.mjs
       - name: Prepare the project tools
         run: pwsh -NoProfile -File scripts/setup.ps1
       - name: Install locked dependencies
