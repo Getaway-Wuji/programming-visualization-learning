@@ -69,7 +69,11 @@ export class CustomCodeController {
     this.error = '';
     this.publish();
   }
-  async execute(source: string, language: AdvancedRequest['language'], input: number[]) {
+  async execute(
+    source: string,
+    language: AdvancedRequest['language'],
+    input: number[] | AdvancedRequest['input'],
+  ) {
     this.setSource(source, language);
     this.invalidate();
     const generation = this.generation;
@@ -78,7 +82,11 @@ export class CustomCodeController {
     this.publish();
     try {
       const result = await this.client.execute(
-        advancedRequest(source, language, { kind: 'integers', values: input }),
+        advancedRequest(
+          source,
+          language,
+          Array.isArray(input) ? { kind: 'integers', values: input } : input,
+        ),
       );
       if (generation !== this.generation) return;
       this.result = result;

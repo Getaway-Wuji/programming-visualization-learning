@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "task": "18.2",
+  "checkedAtLocal": "2026-11-01",
+  "timeZone": "Asia/Shanghai",
+  "method": "逐一读取官方公开题目描述与Terms页面；仅登记必要事实，未读取或导入Solutions/Editorial，未批量抓取题库。",
+  "sources": [
+    {
+      "problemNumber": 1,
+      "title": "Two Sum",
+      "url": "https://leetcode.com/problems/two-sum/description/",
+      "facts": "整数数组中找两个不同位置，其和等于target；承诺恰好一组解，返回下标顺序不限。长度2..10000，元素/目标各−10^9..10^9。",
+      "teachingScope": "长度2..12，元素/目标各−999..999，完整main+标准流，按i<j输出；实际源码检查唯一性，不满足时返回1。",
+      "independentDefault": {"values": [4, 1, 8, 6], "target": 9, "stdout": "1 2\n"}
+    },
+    {
+      "problemNumber": 283,
+      "title": "Move Zeroes",
+      "url": "https://leetcode.com/problems/move-zeroes/description/",
+      "facts": "原地把零移到末尾，保留非零元素的相对顺序，不复制整个数组。长度1..10000，元素−2^31..2^31−1。",
+      "teachingScope": "长度1..12、−999..999，稳定压缩后补零，输出整个结果序列；空输入拒绝。",
+      "independentDefault": {"values": [0, 4, -2, 0, 4], "stdout": "4 -2 4 0 0\n"}
+    },
+    {
+      "problemNumber": 35,
+      "title": "Search Insert Position",
+      "url": "https://leetcode.com/problems/search-insert-position/description/",
+      "facts": "严格升序互异数组，命中返回原位置，否则返回保持顺序的插入位置，要求O(log n)搜索。长度1..10000，元素/目标各−10000..10000。",
+      "teachingScope": "长度1..12，元素/目标各−999..999；拒绝乱序和重复，采用半开区间二分；搜索核心O(log n)，完整输入读取O(n)。",
+      "independentDefault": {"values": [-5, 0, 7, 11], "target": 3, "stdout": "2\n"}
+    }
+  ],
+  "rights": {
+    "termsUrl": "https://leetcode.com/terms/",
+    "observed": "条款说明题目/软件/解答等内容受权利与限制约束；未找到给本项目的书面再发布授权。",
+    "authorization": "not-confirmed",
+    "use": "保留原题号/标题/链接并独立概括必要事实；代码、讲解、示例原创，不导入大段题面/题解/图片，不把公开可读推断为授权。",
+    "runtimeDependency": false
+  }
+}

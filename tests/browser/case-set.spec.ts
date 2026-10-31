@@ -404,13 +404,14 @@ async function prepareRun(page: Page, sample: CaseSetSample): Promise<Run> {
   const states = sample.walk
     ? statesFromChanges(result)
     : [structuredClone(result.trace!.initialState)];
+  await controls(page).getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
   const initialView = await readFrame(page);
   const run = { worker, request, result, states, finalOutput, initialView };
   assertFrame(run, initialView, 0);
   return run;
 }
 
-/** Exact raw records from all fifteen current stores, plus both browser key/value stores. */
+/** Exact DB8 records and keys from all sixteen stores, plus browser key/value stores. */
 async function storageSnapshot(page: Page) {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -437,9 +438,23 @@ async function storageSnapshot(page: Page) {
           }),
         ),
       );
+      const storeKeys = Object.fromEntries(
+        await Promise.all(
+          names.map(async (name) => {
+            const keys = await new Promise<IDBValidKey[]>((resolve, reject) => {
+              const request = tx.objectStore(name).getAllKeys();
+              request.onsuccess = () => resolve(request.result);
+              request.onerror = () => reject(request.error);
+            });
+            return [name, keys];
+          }),
+        ),
+      );
       await done;
       return {
+        database: { name: db.name, version: db.version, storeNames: names },
         stores,
+        storeKeys,
         local: Object.entries(localStorage).sort(),
         session: Object.entries(sessionStorage).sort(),
       };
@@ -509,6 +524,17 @@ async function playAtAllRates(page: Page, run: Run) {
     const initial = await readFrame(page);
     assertFrame(run, initial, 0);
     expect(initial.status).toBe('playing');
+    const periodMs = Math.ceil(500 / rate);
+    await button(page, '暂停').click();
+    const paused = await readFrame(page);
+    assertFrame(run, paused, 0);
+    expect(paused.status).toBe('paused');
+    await page.clock.runFor(periodMs * 2);
+    expect(await readFrame(page)).toEqual(paused);
+    await button(page, '播放').click();
+    const resumed = await readFrame(page);
+    assertFrame(run, resumed, 0);
+    expect(resumed.status).toBe('playing');
     await page.evaluate(() => {
       const audit = window.__caseSetAudit;
       audit.observer?.disconnect();
@@ -524,7 +550,6 @@ async function playAtAllRates(page: Page, run: Run) {
         characterData: true,
       });
     });
-    const periodMs = Math.ceil(500 / rate);
     await page.clock.runFor(periodMs * length + 20);
     const frames = await page.evaluate(() => {
       window.__caseSetAudit.observer?.disconnect();
@@ -540,6 +565,13 @@ async function playAtAllRates(page: Page, run: Run) {
     rates.push({
       rate,
       periodMs,
+      pause: {
+        cursor: paused.cursor,
+        status: paused.status,
+        heldMs: periodMs * 2,
+        unchanged: true,
+      },
+      resumed: true,
       cursors: frames.map((frame) => frame.cursor),
       endCursor: end.cursor,
       endStatus: end.status,
@@ -558,6 +590,7 @@ async function saveCapture(
   before: Awaited<ReturnType<typeof storageSnapshot>>,
   walk: Awaited<ReturnType<typeof walkAndRecover>> | null,
   rates: Awaited<ReturnType<typeof playAtAllRates>>,
+  captureKey = sample.key,
 ) {
   const after = await storageSnapshot(page);
   expect(Object.keys(before.stores).sort()).toEqual([
@@ -566,6 +599,7 @@ async function saveCapture(
     'appearance',
     'appearanceAssets',
     'avatar',
+    'customDrafts',
     'dailyFacts',
     'editHistory',
     'goals',
@@ -577,6 +611,12 @@ async function saveCapture(
     'reviewCards',
     'settings',
   ]);
+  expect(before.database).toEqual({
+    name: 'c-viz-learning',
+    version: 8,
+    storeNames: Object.keys(before.stores).sort(),
+  });
+  expect(Object.keys(before.storeKeys).sort()).toEqual(before.database.storeNames);
   expect(after).toEqual(before);
   const requestBytes = Buffer.from(run.worker.requestBytes!);
   const resultBytes = Buffer.from(run.worker.responseBytes!);
@@ -590,9 +630,10 @@ async function saveCapture(
   expect(values).toEqual(sample.values);
   expect(steps).toBe(run.result.trace!.steps.length);
   const ui = {
-    captureVersion: '08.4-browser-capture@1',
+    captureVersion: '18-block-quality-browser-capture@1',
     evidenceLevel: 'production-ui-real-worker',
     key: sample.key,
+    captureKey,
     caseId: sample.caseId,
     project: testInfo.project.name,
     browserVersion: page.context().browser()?.version(),
@@ -611,11 +652,13 @@ async function saveCapture(
     rates,
     replay: walk ? { cycles: rates.length, initialRestored: true, noNewExecution: true } : null,
     storage: {
+      databaseName: before.database.name,
+      databaseVersion: before.database.version,
       storeNames: Object.keys(before.stores),
       beforeSha256: sha256(JSON.stringify(before)),
       afterSha256: sha256(JSON.stringify(after)),
       unchanged: true,
-      scope: 'native-fifteen-stores+localStorage+sessionStorage',
+      scope: 'native-DB8-sixteen-stores-records-and-keys+localStorage+sessionStorage',
     },
     worker: {
       kind: run.worker.kind,
@@ -633,12 +676,14 @@ async function saveCapture(
     catalogSha256: sha256(run.worker.catalogJson!),
     sourceSha256: sha256(displayedSource),
   };
-  const target = join(captureRoot, testInfo.project.name, sample.key);
+  const target = join(captureRoot, testInfo.project.name, captureKey);
   await mkdir(target, { recursive: true });
   await writeFile(join(target, 'request.json'), requestBytes);
   await writeFile(join(target, 'result.json'), resultBytes);
   await writeFile(join(target, 'catalog.json'), run.worker.catalogJson!);
   await writeFile(join(target, 'source.c'), displayedSource);
+  await writeFile(join(target, 'storage-before.json'), JSON.stringify(before, null, 2) + '\n');
+  await writeFile(join(target, 'storage-after.json'), JSON.stringify(after, null, 2) + '\n');
   await writeFile(join(target, 'ui.json'), JSON.stringify(ui, null, 2) + '\n');
   await testInfo.attach(sample.key, { body: JSON.stringify(ui), contentType: 'application/json' });
 }
@@ -727,6 +772,7 @@ test('binary input refuses unsorted and invalid drafts before preparing, preserv
   const recovered = await prepareRun(page, sample);
   expect(recovered.request.input.values.values).toEqual([-2, 0, 0, 4, 8]);
   expect(await storageSnapshot(page)).toEqual(before);
+  await saveCapture(page, recovered, sample, testInfo, before, null, [], 'binary-input-recovery');
   await testInfo.attach('08.4-binary-input-rejection-and-recovery', {
     body: JSON.stringify({
       rejected,
@@ -746,7 +792,7 @@ test('all four demonstration and three algorithm catalog links open the correct 
   page,
 }, testInfo) => {
   await page.goto('/#/cases');
-  await expect(page.locator('.case-card .card-link')).toHaveCount(7);
+  await expect(page.locator('.case-card a[href^="#/visualize/case.c."]')).toHaveCount(7);
   const visited = [];
   for (const caseId of caseSetIds) {
     const link = page.locator(`.case-card a[href="#/visualize/${caseId}"]`);

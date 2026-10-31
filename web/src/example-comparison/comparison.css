@@ -1,0 +1,124 @@
+.solution-page {
+  min-width: 0;
+}
+.solution-page h2 {
+  font-size: 20px;
+}
+.solution-controls {
+  margin: 24px 0;
+}
+.solution-controls select,
+.solution-lane select {
+  padding: 7px;
+  font: inherit;
+  color: var(--p05-text);
+  background: var(--p05-surface);
+  max-width: 100%;
+}
+/* Two equal columns plus one24px gutter close the existing canvas; tablet/phone stack. */
+.solution-lanes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.solution-lane {
+  min-width: 0;
+  padding: 20px;
+  background: var(--p05-surface);
+}
+.solution-lane p {
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.solution-counters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.solution-counters dt {
+  font-size: 14px;
+}
+.solution-counters dd {
+  margin: 8px 0;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+.solution-observation {
+  max-height: 420px;
+  overflow: auto;
+  margin: 16px 0;
+}
+.solution-arrays h3 {
+  font-size: 16px;
+  margin: 16px 0 8px;
+}
+.solution-arrays ol {
+  display: flex;
+  gap: 6px;
+  padding: 0;
+  overflow-x: auto;
+  list-style: none;
+}
+.solution-arrays li {
+  display: grid;
+  gap: 4px;
+  min-width: 56px;
+  text-align: center;
+  padding: 8px;
+  background: var(--p05-bg, var(--p05-surface));
+  font-variant-numeric: tabular-nums;
+}
+.solution-arrays small {
+  font-size: 12px;
+}
+.solution-code summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.solution-page .sort-source pre {
+  max-height: 360px;
+  overflow: auto;
+  padding: 12px;
+  font:
+    14px/24px Consolas,
+    monospace;
+  background: var(--p05-bg, var(--p05-surface));
+}
+.solution-page .sort-source textarea {
+  width: 100%;
+  font:
+    14px/24px Consolas,
+    monospace;
+}
+.solution-reasoning {
+  margin: 32px 0;
+}
+.solution-reasoning table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.solution-reasoning th,
+.solution-reasoning td {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.solution-reasoning th:first-child {
+  width: 100px;
+}
+@media (max-width: 1000px) {
+  .solution-lanes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .solution-lane {
+    padding: 16px;
+  }
+  .solution-reasoning table {
+    min-width: 600px;
+  }
+}

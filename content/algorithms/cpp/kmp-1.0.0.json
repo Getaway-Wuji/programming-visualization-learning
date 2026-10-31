@@ -1,0 +1,253 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "catalog.cpp.kmp",
+  "version": "1.0.0",
+  "packageRef": {
+    "id": "content.c.p05",
+    "version": "1.0.0"
+  },
+  "learningAuthority": false,
+  "case": {
+    "id": "case.cpp.kmp",
+    "version": "1.0.0",
+    "programRef": {
+      "id": "program.cpp.kmp",
+      "version": "1.0.0"
+    },
+    "language": "cpp",
+    "engine": "engine.rust.advanced",
+    "sourceFile": "content/algorithms/cpp/kmp-1.0.0.cpp",
+    "prerequisiteLessonRef": {
+      "id": "lesson.c.nested-loops",
+      "version": "1.0.0"
+    },
+    "knowledgeRefs": [
+      {
+        "id": "knowledge.c.loops",
+        "version": "1.0.0"
+      },
+      {
+        "id": "knowledge.c.variables",
+        "version": "1.0.0"
+      }
+    ],
+    "title": "KMP字符串匹配",
+    "topic": "保留已知前缀，失配时回退模式指针",
+    "statement": "先构造模式的最长真前后缀长度表，再在文本中查找首个完整匹配，返回从0开始的位置。",
+    "platformConstraints": "文本与模式各0～30个可打印ASCII字节（空格至~）。空字段是空串，空格按原样参与匹配；空模式返回0，未匹配返回−1。字符位置与字节下标在此范围内一致。",
+    "defaults": {
+      "text": "ababcabcabababd",
+      "pattern": "ababd"
+    },
+    "strategy": "prefix存长度，失配沿真实已知前缀继续",
+    "explanation": [
+      "prefix[i]表示pattern[0..i]最长真前缀同时为后缀的长度；真前缀不含整个片段，因此prefix[0]=0，且prefix[i]不超过i。这里不是使用−1哨兵的next表。",
+      "建表时buildIndex指向待计算项，border是当前候选前后缀长度。字符失配且border>0时，实际执行border=prefix[border−1]；找到可延续的相等字符后再增长，随后写入prefix[buildIndex]。未来槽保持未初始化。",
+      "匹配时textIndex逐项前进，matched记录已匹配的模式前缀长度。失配只沿prefix[matched−1]回退matched，保留已知字符关系，不把文本指针退回重扫。matched等于模式长度时，首个起点为textIndex−m+1。",
+      "空模式单独返回0，空文本与非空模式返回−1。存在重叠或多个匹配时只返回首个；重复前后缀仍影响建表和匹配中的候选回退。所有字符、prefix、指针与高亮来自当前真实执行，不由前端重新计算。"
+    ],
+    "complexity": "建表O(m)，匹配O(n)，含输入读取/值复制总O(n+m)；prefix额外O(m)，输入字符串O(n+m)。",
+    "derivation": "建表指针最多前进m−1次，每次border增长最多1，所有回退可摊到此前增长；匹配中文本只前进n次，matched增长与回退同样累计O(n)。固定prefix[30]是有界教学容量，按一般规模为O(m)；不是每次失配重扫整个前缀。",
+    "pitfalls": [
+      "prefix是长度；回退下标为matched−1或border−1，不能写成prefix[matched]形成停滞。",
+      "必须先检查模式为空，避免读取pattern[0]；空格不是缺失输入，也不应被trim。",
+      "字节索引仅在本可打印ASCII域与字符位置一致；不支持Unicode字符、字素或多字节中文输入。",
+      "未计算prefix槽不补0；程序退出会销毁局部对象，后退可恢复。"
+    ],
+    "reviewQuestion": "为什么失配后可以保留prefix[matched−1]个字符，而文本指针不必退回？",
+    "samples": [
+      {
+        "key": "empty-both",
+        "text": "",
+        "pattern": "",
+        "expectedIndex": 0,
+        "expectedStdout": "0\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "empty-text",
+        "text": "",
+        "pattern": "a",
+        "expectedIndex": -1,
+        "expectedStdout": "-1\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "empty-pattern",
+        "text": "abc",
+        "pattern": "",
+        "expectedIndex": 0,
+        "expectedStdout": "0\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "single-hit",
+        "text": "a",
+        "pattern": "a",
+        "expectedIndex": 0,
+        "expectedStdout": "0\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "single-miss",
+        "text": "a",
+        "pattern": "b",
+        "expectedIndex": -1,
+        "expectedStdout": "-1\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "head",
+        "text": "abcde",
+        "pattern": "abc",
+        "expectedIndex": 0,
+        "expectedStdout": "0\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "tail",
+        "text": "abcde",
+        "pattern": "cde",
+        "expectedIndex": 2,
+        "expectedStdout": "2\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "default-middle",
+        "text": "ababcabcabababd",
+        "pattern": "ababd",
+        "expectedIndex": 10,
+        "expectedStdout": "10\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "missing",
+        "text": "abc",
+        "pattern": "d",
+        "expectedIndex": -1,
+        "expectedStdout": "-1\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "pattern-longer",
+        "text": "abc",
+        "pattern": "abcd",
+        "expectedIndex": -1,
+        "expectedStdout": "-1\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "exact",
+        "text": "abab",
+        "pattern": "abab",
+        "expectedIndex": 0,
+        "expectedStdout": "0\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "overlap-first",
+        "text": "ababab",
+        "pattern": "abab",
+        "expectedIndex": 0,
+        "expectedStdout": "0\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "repeated-border",
+        "text": "aaaaab",
+        "pattern": "aaab",
+        "expectedIndex": 2,
+        "expectedStdout": "2\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "multiple-fallback",
+        "text": "ababababac",
+        "pattern": "ababac",
+        "expectedIndex": 4,
+        "expectedStdout": "4\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "near-end-miss",
+        "text": "aaaaa",
+        "pattern": "aaab",
+        "expectedIndex": -1,
+        "expectedStdout": "-1\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "repeated-candidate",
+        "text": "baaaaa",
+        "pattern": "aaa",
+        "expectedIndex": 1,
+        "expectedStdout": "1\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "embedded-spaces",
+        "text": "a b c",
+        "pattern": "b ",
+        "expectedIndex": 2,
+        "expectedStdout": "2\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "spaces-only",
+        "text": "   ",
+        "pattern": " ",
+        "expectedIndex": 0,
+        "expectedStdout": "0\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "spaces-empty-pattern",
+        "text": "   ",
+        "pattern": "",
+        "expectedIndex": 0,
+        "expectedStdout": "0\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "printable-ends",
+        "text": " ~\"\\<>[]{}!?0Az",
+        "pattern": "?0A",
+        "expectedIndex": 11,
+        "expectedStdout": "11\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "quotes-backslash",
+        "text": "x\"\\?y",
+        "pattern": "\"\\?",
+        "expectedIndex": 1,
+        "expectedStdout": "1\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "maximum-exact",
+        "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "pattern": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expectedIndex": 0,
+        "expectedStdout": "0\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "maximum-tail",
+        "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+        "pattern": "aaaaaaaaaaaaaab",
+        "expectedIndex": 15,
+        "expectedStdout": "15\n",
+        "expectedReturn": 0
+      },
+      {
+        "key": "maximum-fallback-miss",
+        "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaac",
+        "pattern": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+        "expectedIndex": -1,
+        "expectedStdout": "-1\n",
+        "expectedReturn": 0
+      }
+    ]
+  }
+}

@@ -1,0 +1,834 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "catalog.language-migration",
+  "version": "1.0.0",
+  "packageRef": {
+    "id": "content.c.p05",
+    "version": "1.0.0"
+  },
+  "languageOrder": ["c", "cpp", "python", "java"],
+  "languages": [
+    {
+      "id": "c",
+      "label": "C",
+      "reference": "C11 · WG14 N1570草案参照",
+      "bridge": "从C出发，先看C++的bool、对象与复制，再学Python的绑定和Java的引用类型。",
+      "defaultTarget": "cpp",
+      "sourceRefs": [
+        {
+          "label": "WG14 N1570",
+          "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf",
+          "sections": "6.2.5/6.3.1.2/6.5.5/6.5.16/6.8.4/6.8.5/6.9.1/7.1.1"
+        }
+      ]
+    },
+    {
+      "id": "cpp",
+      "label": "C++",
+      "reference": "C++17 · WG21 N4659草案参照",
+      "bridge": "已有C++时，先对照Python的整数与名字绑定，再读Java的固定类型和引用；C++算法继续使用原真实案例。",
+      "defaultTarget": "python",
+      "sourceRefs": [
+        {
+          "label": "WG21 N4659",
+          "url": "https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/n4659.pdf",
+          "sections": "expr.mul / stmt.if / stmt.for / dcl.fct / array.overview / string.classes"
+        }
+      ]
+    },
+    {
+      "id": "python",
+      "label": "Python",
+      "reference": "Python3.13 · 官方语言与库文档",
+      "bridge": "已有Python时，接着读Java的静态类型与UTF-16索引；阅读当前C++算法时先回看固定类型、循环界限和对象复制。",
+      "defaultTarget": "java",
+      "sourceRefs": [
+        {
+          "label": "内置类型",
+          "url": "https://docs.python.org/3.13/library/stdtypes.html",
+          "sections": "数值、真假、序列、str"
+        },
+        {
+          "label": "赋值语句",
+          "url": "https://docs.python.org/3.13/reference/simple_stmts.html#assignment-statements",
+          "sections": "名字绑定/可变对象"
+        },
+        {
+          "label": "控制流与函数",
+          "url": "https://docs.python.org/3.13/tutorial/controlflow.html",
+          "sections": "range / 函数定义与参数"
+        }
+      ]
+    },
+    {
+      "id": "java",
+      "label": "Java",
+      "reference": "Java SE21 · JLS与String API",
+      "bridge": "已有Java时，为读当前C++算法先回看C++的值类型与数组；再按C→C++→Python→Java复查差异，不表示已经完成任何课程。",
+      "defaultTarget": "cpp",
+      "sourceRefs": [
+        {
+          "label": "JLS类型",
+          "url": "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html",
+          "sections": "4.2 / 4.3 / 4.12"
+        },
+        {
+          "label": "JLS数组",
+          "url": "https://docs.oracle.com/javase/specs/jls/se21/html/jls-10.html",
+          "sections": "数组对象/引用/长度"
+        },
+        {
+          "label": "JLS语句",
+          "url": "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html",
+          "sections": "14.9 / 14.14"
+        },
+        {
+          "label": "JLS表达式",
+          "url": "https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html",
+          "sections": "15.12.4.5 / 15.17.2"
+        },
+        {
+          "label": "String API",
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html",
+          "sections": "UTF-16 / length / charAt"
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "integers",
+      "title": "整数与除法",
+      "question": "负整数相除时，为什么不能直接替换运算符？",
+      "caution": "先看数值类型、除法取整方向和余数；不要把平台int32诊断当成四种语言共同的标准规则。",
+      "lessonRef": {
+        "id": "lesson.c.quotient-remainder",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.expressions",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.output",
+          "version": "1.0.0"
+        }
+      ],
+      "reviewQuestion": "负整数相除时，为什么不能直接替换运算符？",
+      "snippets": {
+        "c": {
+          "context": "C11 · 函数体片段，放在main内部。",
+          "code": "int q = -7 / 3;\nint r = -7 % 3;",
+          "notes": [
+            "整数除法向零取整：本例q为−2、r为−1。除数0或商不可表示时不适用这个例子。",
+            "标准int的宽度取决于实现，有符号溢出未定义；本平台受限int32诊断是另一个教学执行约定。"
+          ],
+          "steps": [
+            {
+              "label": "看整数类型",
+              "lines": [1],
+              "explanation": "int明确声明整数类型；标准C并不保证int恰为32位。"
+            },
+            {
+              "label": "看商的取整",
+              "lines": [1],
+              "explanation": "本例−7/3向零取整为−2，不是向下取整的−3。"
+            },
+            {
+              "label": "看余数关系",
+              "lines": [2],
+              "explanation": "此处余数为−1，满足商×除数+余数=被除数；这是预写数学说明。"
+            }
+          ]
+        },
+        "cpp": {
+          "context": "C++17 · 函数体片段，放在main内部。",
+          "code": "int q = -7 / 3;\nint r = -7 % 3;",
+          "notes": [
+            "本例整型/与%得到−2和−1；换成浮点操作数会改变除法含义。",
+            "标准int不保证固定32位，有符号溢出未定义；不要从这两行推广到所有C++数值类型。"
+          ],
+          "steps": [
+            {
+              "label": "看静态类型",
+              "lines": [1],
+              "explanation": "此处仍用int，读C++时先看操作数类型。"
+            },
+            {
+              "label": "看整数除法",
+              "lines": [1],
+              "explanation": "整型商向零取整，本例q为−2。"
+            },
+            {
+              "label": "看配套余数",
+              "lines": [2],
+              "explanation": "本例r为−1；不能只把Python的//换成/而保留所有负数结论。"
+            }
+          ]
+        },
+        "python": {
+          "context": "Python3.13 · 模块级片段，缩进是语法。",
+          "code": "q = -7 // 3\nr = -7 % 3",
+          "notes": [
+            "Python整数任意精度，仍受可用资源限制；普通/是真除法，//才是向下整除。",
+            "本例q为−3、r为2，与C/C++/Java的负数商余不同。"
+          ],
+          "steps": [
+            {
+              "label": "看名字绑定",
+              "lines": [1],
+              "explanation": "变量名不声明固定int宽度；此处字面量建立整数对象。"
+            },
+            {
+              "label": "看向下整除",
+              "lines": [1],
+              "explanation": "//向负无穷方向取整，本例q为−3。"
+            },
+            {
+              "label": "看余数",
+              "lines": [2],
+              "explanation": "本例r为2；q×3+r仍等于−7，不能照搬向零取整的余数。"
+            }
+          ]
+        },
+        "java": {
+          "context": "Java SE21 · 方法体片段，放在类的main方法内部。",
+          "code": "int q = -7 / 3;\nint r = -7 % 3;",
+          "notes": [
+            "Java int为32位有符号整数，整数除法向零，本例为−2和−1。",
+            "整数溢出规则不同于C/C++；除数0抛异常，不是一个可正常除法的输入。"
+          ],
+          "steps": [
+            {
+              "label": "看固定类型",
+              "lines": [1],
+              "explanation": "int为32位；不要把C实现相关的int宽度直接移植到Java解释。"
+            },
+            {
+              "label": "看向零取整",
+              "lines": [1],
+              "explanation": "本例q为−2，与Python的向下整除不同。"
+            },
+            {
+              "label": "看余数和边界",
+              "lines": [2],
+              "explanation": "本例r为−1；边界和异常要按Java规则读，不能只看表面运算符。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "conditions",
+      "title": "条件与真假",
+      "question": "哪些值能直接写进条件，哪些必须先作比较？",
+      "caution": "四段都表达区间判断；它们的括号、块结构和条件类型要求仍有差异。",
+      "lessonRef": {
+        "id": "lesson.c.boolean-logic",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.expressions",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.conditions",
+          "version": "1.0.0"
+        }
+      ],
+      "reviewQuestion": "哪些值能直接写进条件，哪些必须先作比较？",
+      "snippets": {
+        "c": {
+          "context": "C11 · 函数体片段，放在main内部。",
+          "code": "int x = 2;\nint inside = 0;\nif (x > 0 && x < 5) { inside = 1; }",
+          "notes": [
+            "&&短路且产生0或1，条件把零看作假、非零看作真。",
+            "不要用0 < x < 5表达数学链式比较；C会先求出前一比较的整数结果。"
+          ],
+          "steps": [
+            {
+              "label": "看初始化",
+              "lines": [1, 2],
+              "explanation": "先建立x和inside；此处用整数记录真假。"
+            },
+            {
+              "label": "看区间条件",
+              "lines": [3],
+              "explanation": "两个关系用&&组合；右侧仅在左侧为真时求值。"
+            },
+            {
+              "label": "看块与真假",
+              "lines": [3],
+              "explanation": "花括号界定语句块；整数条件按零/非零判断。"
+            }
+          ]
+        },
+        "cpp": {
+          "context": "C++17 · 函数体片段，放在main内部。",
+          "code": "int x = 2;\nbool inside = false;\nif (x > 0 && x < 5) { inside = true; }",
+          "notes": [
+            "使用bool/true/false表达真假；整数可按零/非零转换为bool。",
+            "&&短路。这里的内建整数比较不是Python式链式比较。"
+          ],
+          "steps": [
+            {
+              "label": "看bool",
+              "lines": [1, 2],
+              "explanation": "inside显式是bool，真假字面量与整数标志区别开。"
+            },
+            {
+              "label": "看短路组合",
+              "lines": [3],
+              "explanation": "关系表达式用&&连接；先判断左侧。"
+            },
+            {
+              "label": "看块",
+              "lines": [3],
+              "explanation": "花括号保留；改语言时不能只替换关键字而忽略类型。"
+            }
+          ]
+        },
+        "python": {
+          "context": "Python3.13 · 模块级片段，缩进是语法。",
+          "code": "x = 2\ninside = False\nif 0 < x < 5:\n    inside = True",
+          "notes": [
+            "Python支持链式比较，本例含上下界的判断按链式比较规则解释。",
+            "空序列、数值0等有假值；and/or可能返回操作数，不能一律当成bool结果。"
+          ],
+          "steps": [
+            {
+              "label": "看名字",
+              "lines": [1, 2],
+              "explanation": "真假字面量是True/False，首字母大写。"
+            },
+            {
+              "label": "看链式条件",
+              "lines": [3],
+              "explanation": "0 < x < 5是Python支持的链式比较语法。"
+            },
+            {
+              "label": "看缩进块",
+              "lines": [4],
+              "explanation": "冒号开启语句组，缩进决定此赋值属于if。"
+            }
+          ]
+        },
+        "java": {
+          "context": "Java SE21 · 方法体片段，放在类的main方法内部。",
+          "code": "int x = 2;\nboolean inside = false;\nif (x > 0 && x < 5) { inside = true; }",
+          "notes": [
+            "if要求boolean或可拆箱的Boolean；不能把整数x直接作为条件。",
+            "&&短路，&&两侧需要布尔表达式；本例用比较产生boolean。"
+          ],
+          "steps": [
+            {
+              "label": "看boolean",
+              "lines": [1, 2],
+              "explanation": "Java使用boolean而不是C++的bool。"
+            },
+            {
+              "label": "看条件类型",
+              "lines": [3],
+              "explanation": "x>0和x<5都是boolean表达式；if(x)不是此处的合法替代。"
+            },
+            {
+              "label": "看块与短路",
+              "lines": [3],
+              "explanation": "花括号保留，右侧条件仅在左侧为真时求值。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "loops",
+      "title": "计数循环",
+      "question": "如何看清循环的起点、终点和变化量？",
+      "caution": "这里是阅读标注，不是循环迭代动画；sum的说明来自预写推导，不是执行输出。",
+      "lessonRef": {
+        "id": "lesson.c.loops",
+        "version": "1.1.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.loops",
+          "version": "1.0.0"
+        }
+      ],
+      "reviewQuestion": "如何看清循环的起点、终点和变化量？",
+      "snippets": {
+        "c": {
+          "context": "C11 · 函数体片段，放在main内部。",
+          "code": "int sum = 0;\nfor (int i = 0; i < 3; i = i + 1) {\n    sum = sum + i;\n}",
+          "notes": [
+            "i依次取0、1、2，条件i<3不包含3；进入循环前可能一次都不执行。",
+            "循环声明的i作用域不延伸到for之后。"
+          ],
+          "steps": [
+            {
+              "label": "看初始化",
+              "lines": [1, 2],
+              "explanation": "sum从0开始，i在for初始化处声明。"
+            },
+            {
+              "label": "看条件和更新",
+              "lines": [2],
+              "explanation": "先检查i<3，循环体后再执行i=i+1。"
+            },
+            {
+              "label": "看循环体",
+              "lines": [3, 4],
+              "explanation": "花括号内累加；用边界推导0、1、2，不伪造实时变量。"
+            }
+          ]
+        },
+        "cpp": {
+          "context": "C++17 · 函数体片段，放在main内部。",
+          "code": "int sum = 0;\nfor (int i = 0; i < 3; ++i) {\n    sum += i;\n}",
+          "notes": [
+            "本例++i每轮将i加一；+=把值累加回sum，不能据此推断所有表达式求值顺序。",
+            "循环边界不包含3；读取陌生C++算法先找到循环不变量和下标上界。"
+          ],
+          "steps": [
+            {
+              "label": "看初值",
+              "lines": [1, 2],
+              "explanation": "sum与i各自声明为整数。"
+            },
+            {
+              "label": "看更新写法",
+              "lines": [2],
+              "explanation": "++i是本例的循环更新，条件仍是i<3。"
+            },
+            {
+              "label": "看累加",
+              "lines": [3, 4],
+              "explanation": "sum+=i在此等价于把sum+i再存回sum。"
+            }
+          ]
+        },
+        "python": {
+          "context": "Python3.13 · 模块级片段，缩进是语法。",
+          "code": "total = 0\nfor i in range(3):\n    total += i",
+          "notes": [
+            "range(3)表示0、1、2，停止值3不包含在序列内，不等于C样式三段for。",
+            "非空循环后名字i通常仍绑定最后值；零轮循环不会凭空给i初值。"
+          ],
+          "steps": [
+            {
+              "label": "看总和初值",
+              "lines": [1],
+              "explanation": "total名字先绑定整数0。"
+            },
+            {
+              "label": "看迭代范围",
+              "lines": [2],
+              "explanation": "for从range取得值；range的停止值不包含在内。"
+            },
+            {
+              "label": "看缩进体",
+              "lines": [3],
+              "explanation": "缩进内逐项累加；不是把C的花括号简单删除。"
+            }
+          ]
+        },
+        "java": {
+          "context": "Java SE21 · 方法体片段，放在类的main方法内部。",
+          "code": "int sum = 0;\nfor (int i = 0; i < 3; i++) {\n    sum += i;\n}",
+          "notes": [
+            "这是Java的基本for形式；i++更新整数，i<3产生boolean。",
+            "本例i的作用域限于for；增强for是另一种形式，不在这段中混用。"
+          ],
+          "steps": [
+            {
+              "label": "看静态声明",
+              "lines": [1, 2],
+              "explanation": "sum和i均为int。"
+            },
+            {
+              "label": "看循环头",
+              "lines": [2],
+              "explanation": "初始化、布尔条件、更新由分号分开。"
+            },
+            {
+              "label": "看体与作用域",
+              "lines": [3, 4],
+              "explanation": "循环体使用花括号；此处循环外不能继续用声明于循环头的i。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "arrays",
+      "title": "数组与复制",
+      "question": "把一组数据赋给另一个名字，究竟复制了什么？",
+      "caution": "先分清数组对象、元素复制与引用别名；这四段有意呈现不同语义。",
+      "lessonRef": {
+        "id": "lesson.c.array-update",
+        "version": "1.1.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.arrays",
+          "version": "1.0.0"
+        }
+      ],
+      "reviewQuestion": "把一组数据赋给另一个名字，究竟复制了什么？",
+      "snippets": {
+        "c": {
+          "context": "C11 · 函数体片段，放在main内部。",
+          "code": "int values[3] = {2, 4, 6};\nint copy[3];\nfor (int i = 0; i < 3; i = i + 1) {\n    copy[i] = values[i];\n}\ncopy[0] = 9;",
+          "notes": [
+            "C数组不能用copy=values整体赋值；本例明确逐元素复制。",
+            "修改copy[0]不改values[0]；越界访问不是语言自动检查的安全操作。"
+          ],
+          "steps": [
+            {
+              "label": "看固定容量",
+              "lines": [1, 2],
+              "explanation": "两个独立的3元素数组，copy尚未由这行写入元素。"
+            },
+            {
+              "label": "看逐元素复制",
+              "lines": [3, 4, 5],
+              "explanation": "循环把每个整数元素写到另一个数组，不是绑定同一数组。"
+            },
+            {
+              "label": "看修改对象",
+              "lines": [6],
+              "explanation": "最后修改的是copy；values的第一个元素仍为2。"
+            }
+          ]
+        },
+        "cpp": {
+          "context": "C++17 · 需#include <array>，片段置于main；std::array仅静态参照。",
+          "code": "std::array<int, 3> values{2, 4, 6};\nauto copy = values;\ncopy[0] = 9;",
+          "notes": [
+            "这里std::array<int,3>按值复制；不是所有C++类型都自动深复制。",
+            "大小固定为3；此处operator[]不检查越界。std::array未接入当前教学解释器。"
+          ],
+          "steps": [
+            {
+              "label": "看容器类型",
+              "lines": [1],
+              "explanation": "模板参数给出元素类型与固定大小，区别于原生数组声明。"
+            },
+            {
+              "label": "看值复制",
+              "lines": [2],
+              "explanation": "copy是独立std::array，复制其整数元素。"
+            },
+            {
+              "label": "看元素更新",
+              "lines": [3],
+              "explanation": "修改copy[0]不改values[0]；若容器里是指针，复制指针不等于深复制所指对象。"
+            }
+          ]
+        },
+        "python": {
+          "context": "Python3.13 · 模块级片段，缩进是语法。",
+          "code": "values = [2, 4, 6]\ncopy = values\ncopy[0] = 9",
+          "notes": [
+            "赋值让两个名字引用同一个list，最后values[0]也变为9。",
+            "需要独立外层列表可用values.copy()；这是浅复制，嵌套对象仍可能共享。"
+          ],
+          "steps": [
+            {
+              "label": "看列表对象",
+              "lines": [1],
+              "explanation": "list是可变容器，不声明固定元素类型或固定长度。"
+            },
+            {
+              "label": "看别名",
+              "lines": [2],
+              "explanation": "copy=values没有复制列表对象。"
+            },
+            {
+              "label": "看共享修改",
+              "lines": [3],
+              "explanation": "通过copy改元素，另一个名字values也能观察到同一修改。"
+            }
+          ]
+        },
+        "java": {
+          "context": "Java SE21 · 方法体片段，放在类的main方法内部。",
+          "code": "int[] values = {2, 4, 6};\nint[] copy = values;\ncopy[0] = 9;",
+          "notes": [
+            "数组变量保存引用，赋值复制引用，最后values[0]也为9。",
+            "数组长度创建后固定；clone可复制外层数组，引用元素仍可能共享；越界会抛异常。"
+          ],
+          "steps": [
+            {
+              "label": "看数组引用",
+              "lines": [1],
+              "explanation": "int[]变量引用一个3元素数组对象。"
+            },
+            {
+              "label": "看引用复制",
+              "lines": [2],
+              "explanation": "copy与values指向同一个数组，没有复制三个整数。"
+            },
+            {
+              "label": "看共享更新",
+              "lines": [3],
+              "explanation": "修改通过同一个数组对象发生；Java并非把对象本身按C++值类型复制。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "strings",
+      "title": "字符串与索引",
+      "question": "字符串长度和下标，数的是哪一种单元？",
+      "caution": "主片段只用ASCII。C/C++字节或char单元、Python码点、Java UTF-16单元不能当作一般Unicode字符位置。",
+      "lessonRef": {
+        "id": "lesson.c.logical-length-guards",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.arrays",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.conditions",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.input",
+          "version": "1.0.0"
+        }
+      ],
+      "reviewQuestion": "字符串长度和下标，数的是哪一种单元？",
+      "snippets": {
+        "c": {
+          "context": "C11 · 函数体片段，放在main内部。",
+          "code": "char text[] = \"cat\";\nint slots = sizeof text;\nchar second = text[1];",
+          "notes": [
+            "数组含c、a、t和结尾空字符，共4个char槽；sizeof数整个数组容量，不是文本逻辑长度。",
+            "C字符串以空字符终止；char/字节与多字节字符不是同一概念，编码与实现有关。"
+          ],
+          "steps": [
+            {
+              "label": "看字符数组",
+              "lines": [1],
+              "explanation": "字符串字面量初始化可修改字符数组，包含结尾空字符。"
+            },
+            {
+              "label": "看容量",
+              "lines": [2],
+              "explanation": "此处sizeof text为4个C字节；char的位宽由实现规定。"
+            },
+            {
+              "label": "看下标单元",
+              "lines": [3],
+              "explanation": "下标1取第二个char，本例为a；不推广成任意Unicode字符。"
+            }
+          ]
+        },
+        "cpp": {
+          "context": "C++17 · 需#include <string>，片段置于main。",
+          "code": "std::string text = \"cat\";\nauto units = text.size();\nchar second = text[1];",
+          "notes": [
+            "size为3个char单元，不计结尾终止符；operator[]按char单元索引。",
+            "std::string不自动按Unicode码点索引；本平台KMP另外限定可打印ASCII，两者不能混为完整字符串支持。"
+          ],
+          "steps": [
+            {
+              "label": "看字符串对象",
+              "lines": [1],
+              "explanation": "std::string是对象，不等同于原生char数组。"
+            },
+            {
+              "label": "看逻辑大小",
+              "lines": [2],
+              "explanation": "本例size为3，区别于C例子的sizeof数组容量4。"
+            },
+            {
+              "label": "看char索引",
+              "lines": [3],
+              "explanation": "下标1是a；多字节编码时一个可见字符可能占多个char单元。"
+            }
+          ]
+        },
+        "python": {
+          "context": "Python3.13 · 模块级片段，缩进是语法。",
+          "code": "text = \"cat\"\nunits = len(text)\nsecond = text[1]",
+          "notes": [
+            "str是不可变的Unicode码点序列，len按码点计数，下标结果仍是str。",
+            "码点数不等于用户看到的字形数，组合字符可能由多个码点组成；不能text[1]=...原地改写。"
+          ],
+          "steps": [
+            {
+              "label": "看str",
+              "lines": [1],
+              "explanation": "text引用不可变str对象。"
+            },
+            {
+              "label": "看码点长度",
+              "lines": [2],
+              "explanation": "本例len为3；这里计数单位不是UTF-8字节。"
+            },
+            {
+              "label": "看索引返回",
+              "lines": [3],
+              "explanation": "本例返回长度1的str：a，不是Java的char或C++的char。"
+            }
+          ]
+        },
+        "java": {
+          "context": "Java SE21 · 方法体片段，放在类的main方法内部。",
+          "code": "String text = \"cat\";\nint units = text.length();\nchar second = text.charAt(1);",
+          "notes": [
+            "String不可变，length和charAt以UTF-16代码单元为单位。",
+            "补充平面码点用两个char单元，charAt可能只返回代理项；不等于按码点/字形取字符。"
+          ],
+          "steps": [
+            {
+              "label": "看String对象",
+              "lines": [1],
+              "explanation": "String是引用类型，字符串内容不可原地修改。"
+            },
+            {
+              "label": "看UTF-16长度",
+              "lines": [2],
+              "explanation": "本例length为3；非ASCII内容不保证等于Python的码点数。"
+            },
+            {
+              "label": "看charAt",
+              "lines": [3],
+              "explanation": "charAt(1)取一个16位char单元；本例为a。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "functions",
+      "title": "函数与参数",
+      "question": "看见一次调用，怎样判断参数与外层名字的关系？",
+      "caution": "先读定义和调用位置，再看传值/对象共享；原C作用域课只是准备，不是新增函数练习。",
+      "lessonRef": {
+        "id": "lesson.c.scope-shadowing",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.variables",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.output",
+          "version": "1.0.0"
+        }
+      ],
+      "reviewQuestion": "看见一次调用，怎样判断参数与外层名字的关系？",
+      "snippets": {
+        "c": {
+          "context": "C11 · 完整函数定义与main入口片段。",
+          "code": "int increment(int value) {\n    return value + 1;\n}\nint main(void) {\n    int original = 4;\n    int next = increment(original);\n    return 0;\n}",
+          "notes": [
+            "本例整型参数按值传入，value是局部形参；original仍为4。",
+            "数组形参会调整为指针，不可由本例推断“传数组会复制整个数组”。"
+          ],
+          "steps": [
+            {
+              "label": "看定义",
+              "lines": [1, 2, 3],
+              "explanation": "返回类型与形参类型写在定义里。"
+            },
+            {
+              "label": "看调用",
+              "lines": [5, 6],
+              "explanation": "original的整数值交给形参，返回值保存为next。"
+            },
+            {
+              "label": "看作用域",
+              "lines": [1, 6],
+              "explanation": "value属于函数调用内，本例不会修改外层original。"
+            }
+          ]
+        },
+        "cpp": {
+          "context": "C++17 · 完整函数定义与main入口片段。",
+          "code": "int increment(int value) {\n    return value + 1;\n}\nint main() {\n    int original = 4;\n    int next = increment(original);\n    return 0;\n}",
+          "notes": [
+            "本例int形参按值传递；引用参数T&是另一种显式声明。",
+            "不要仅凭函数调用语法判断对象是否复制：须继续读参数类型、引用和对象规则。"
+          ],
+          "steps": [
+            {
+              "label": "看形参声明",
+              "lines": [1, 2, 3],
+              "explanation": "此处是int value，没有引用声明。"
+            },
+            {
+              "label": "看实参",
+              "lines": [5, 6],
+              "explanation": "按值传入original的整数值。"
+            },
+            {
+              "label": "看返回与外层",
+              "lines": [2, 6],
+              "explanation": "返回新整数，本例original仍为4，不等于所有C++参数都按同一对象共享规则工作。"
+            }
+          ]
+        },
+        "python": {
+          "context": "Python3.13 · 模块级片段，缩进是语法。",
+          "code": "def increment(value):\n    return value + 1\noriginal = 4\nnext_value = increment(original)",
+          "notes": [
+            "调用把局部形参名字绑定到传入对象；本例整数不可变，计算产生新整数。",
+            "重绑定形参不会重绑定外层名字；修改共享可变对象的内容则可能被调用者观察到。"
+          ],
+          "steps": [
+            {
+              "label": "看函数定义",
+              "lines": [1, 2],
+              "explanation": "def和缩进界定函数体；没有固定整型形参声明。"
+            },
+            {
+              "label": "看绑定",
+              "lines": [3, 4],
+              "explanation": "调用时value绑定传入的整数对象。"
+            },
+            {
+              "label": "看返回",
+              "lines": [2, 4],
+              "explanation": "本例返回新值，original仍为4；不要称为所有对象都深复制。"
+            }
+          ]
+        },
+        "java": {
+          "context": "Java SE21 · 类内static方法及main入口；不是顶层函数。",
+          "code": "class MigrationExample {\n    static int increment(int value) {\n        return value + 1;\n    }\n    public static void main(String[] args) {\n        int original = 4;\n        int next = increment(original);\n    }\n}",
+          "notes": [
+            "Java方法参数按值传递；本例复制int值，original仍为4。",
+            "对象参数复制的是引用值；能改共享对象内容，不代表能用形参重赋值替换调用者的变量。"
+          ],
+          "steps": [
+            {
+              "label": "看所属类与方法",
+              "lines": [1, 2, 3, 4],
+              "explanation": "本例方法属于类，static方法可由同类static入口调用。"
+            },
+            {
+              "label": "看入口调用",
+              "lines": [5, 6, 7],
+              "explanation": "main中传入original的整数值。"
+            },
+            {
+              "label": "看参数规则",
+              "lines": [2, 7],
+              "explanation": "int值被复制；Java对象引用值也按值传递，不叫按引用传递。"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

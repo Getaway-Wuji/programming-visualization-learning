@@ -12,6 +12,7 @@ import { useReviews } from '../review-scheduler/react';
 const navigation = [
   { to: '/', label: '学习首页', icon: 'home' },
   { to: '/courses', label: 'C 语言课程', icon: 'book' },
+  { to: '/advanced', label: '进阶课程', icon: 'book' },
   { to: '/cases', label: '算法与演示', icon: 'chart' },
   { to: '/custom-code', label: 'C 代码工作台', icon: 'code' },
   { to: '/compilation', label: '编译流程', icon: 'code' },
@@ -88,7 +89,11 @@ export function Layout({ children }: { children: ReactNode }) {
     location.pathname === '/memory' ||
     location.pathname === '/compare';
   const toolRoute =
-    location.pathname === '/custom-code' || caseRoute || location.pathname.startsWith('/practice/');
+    location.pathname === '/custom-code' ||
+    caseRoute ||
+    location.pathname.startsWith('/practice/') ||
+    location.pathname.startsWith('/advanced/examples/') ||
+    location.pathname.startsWith('/advanced/algorithms/');
   const focused = toolRoute && workbench.layout.workbenchMode === 'focus';
   const collapsed = focused || workbench.layout.sidebar === 'collapsed';
   return (

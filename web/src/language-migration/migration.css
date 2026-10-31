@@ -1,0 +1,175 @@
+.migration-page {
+  color: var(--p05-text);
+}
+.migration-boundary {
+  padding: 12px 16px;
+  background: var(--p05-surface);
+  border-left: 3px solid var(--p05-accent);
+  line-height: 1.7;
+}
+/* Three controls use the full canvas: 3 equal tracks + two16px gaps. Code uses2 tracks +24px. */
+.migration-selectors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.migration-selectors label {
+  display: grid;
+  gap: 8px;
+}
+.migration-selectors select {
+  width: 100%;
+  min-height: 40px;
+  color: var(--p05-text);
+  background: var(--p05-surface);
+  border: 1px solid var(--p05-border);
+  border-radius: 6px;
+  padding: 8px;
+}
+.migration-page h2 {
+  font-size: 20px;
+  margin: 0 0 12px;
+}
+.migration-page h3 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.migration-page h4 {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+.migration-page p,
+.migration-page li {
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.migration-order {
+  margin-bottom: 12px;
+}
+.migration-order summary {
+  cursor: pointer;
+  padding: 8px 0;
+}
+.migration-order ol {
+  display: flex;
+  gap: 12px 32px;
+  padding-left: 24px;
+  flex-wrap: wrap;
+}
+.migration-order li[aria-current] {
+  font-weight: 700;
+}
+.migration-playback {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.migration-playback span {
+  font-variant-numeric: tabular-nums;
+}
+.migration-code-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  padding: 20px;
+  background: var(--p05-surface);
+  border: 1px solid var(--p05-border);
+  border-radius: 8px;
+}
+.migration-snippet {
+  min-width: 0;
+}
+.migration-snippet h3 span {
+  display: block;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 8px;
+}
+.migration-context {
+  font-size: 14px;
+}
+.migration-snippet pre {
+  overflow: auto;
+  padding: 12px;
+  background: var(--p05-bg, var(--p05-surface));
+  border: 1px solid var(--p05-border);
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.7;
+  tab-size: 4;
+}
+.migration-snippet code > span {
+  white-space: pre;
+}
+.migration-snippet mark {
+  color: var(--p05-text);
+  background: color-mix(in srgb, var(--p05-accent-raw) 12%, var(--p05-surface));
+  outline: 1px solid var(--p05-accent);
+}
+.migration-annotation {
+  margin-top: 16px;
+}
+.migration-annotation p {
+  margin: 0;
+}
+.migration-snippet ul {
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+.migration-snippet li + li {
+  margin-top: 8px;
+}
+.migration-caution {
+  margin-top: 16px;
+}
+.migration-followup {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 24px 0;
+}
+.migration-followup section {
+  min-width: 0;
+}
+.migration-sources {
+  margin: 24px 0;
+}
+.migration-sources summary {
+  cursor: pointer;
+  padding: 12px 0;
+}
+@media (max-width: 900px) {
+  .migration-code-pair,
+  .migration-followup {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .migration-selectors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .migration-selectors label:last-child {
+    grid-column: 1 / -1;
+  }
+  .migration-selectors select {
+    min-height: 44px;
+  }
+  .migration-code-pair {
+    padding: 16px;
+  }
+  .migration-playback .button {
+    min-height: 44px;
+  }
+  .migration-page h2 {
+    font-size: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .migration-page * {
+    scroll-behavior: auto;
+  }
+}

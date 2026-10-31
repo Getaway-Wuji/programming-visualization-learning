@@ -1,0 +1,398 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "LANG-MIGRATION-01-1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "packageRef",
+    "languageOrder",
+    "languages",
+    "topics"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "const": "catalog.language-migration"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "packageRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {
+          "const": "content.c.p05"
+        },
+        "version": {
+          "const": "1.0.0"
+        }
+      }
+    },
+    "languageOrder": {
+      "const": ["c", "cpp", "python", "java"]
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "reference", "bridge", "defaultTarget", "sourceRefs"],
+        "properties": {
+          "id": {
+            "enum": ["c", "cpp", "python", "java"]
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reference": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bridge": {
+            "type": "string",
+            "minLength": 1
+          },
+          "defaultTarget": {
+            "enum": ["c", "cpp", "python", "java"]
+          },
+          "sourceRefs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["label", "url", "sections"],
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "url": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sections": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "minItems": 1,
+            "maxItems": 5
+          }
+        }
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "question",
+          "caution",
+          "lessonRef",
+          "knowledgeRefs",
+          "reviewQuestion",
+          "snippets"
+        ],
+        "properties": {
+          "id": {
+            "enum": ["integers", "conditions", "loops", "arrays", "strings", "functions"]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "caution": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lessonRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "version"],
+            "properties": {
+              "id": {
+                "enum": [
+                  "lesson.c.quotient-remainder",
+                  "lesson.c.boolean-logic",
+                  "lesson.c.loops",
+                  "lesson.c.array-update",
+                  "lesson.c.logical-length-guards",
+                  "lesson.c.scope-shadowing"
+                ]
+              },
+              "version": {
+                "enum": ["1.0.0", "1.1.0"]
+              }
+            }
+          },
+          "knowledgeRefs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "version"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "version": {
+                  "const": "1.0.0"
+                }
+              }
+            },
+            "minItems": 1,
+            "maxItems": 4
+          },
+          "reviewQuestion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "snippets": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["c", "cpp", "python", "java"],
+            "properties": {
+              "c": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["context", "code", "notes", "steps"],
+                "properties": {
+                  "context": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "code": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "notes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["label", "lines", "explanation"],
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "lines": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 24
+                          },
+                          "minItems": 1,
+                          "maxItems": 24
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "minItems": 3,
+                    "maxItems": 3
+                  }
+                }
+              },
+              "cpp": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["context", "code", "notes", "steps"],
+                "properties": {
+                  "context": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "code": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "notes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["label", "lines", "explanation"],
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "lines": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 24
+                          },
+                          "minItems": 1,
+                          "maxItems": 24
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "minItems": 3,
+                    "maxItems": 3
+                  }
+                }
+              },
+              "python": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["context", "code", "notes", "steps"],
+                "properties": {
+                  "context": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "code": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "notes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["label", "lines", "explanation"],
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "lines": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 24
+                          },
+                          "minItems": 1,
+                          "maxItems": 24
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "minItems": 3,
+                    "maxItems": 3
+                  }
+                }
+              },
+              "java": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["context", "code", "notes", "steps"],
+                "properties": {
+                  "context": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "code": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "notes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["label", "lines", "explanation"],
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "lines": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 24
+                          },
+                          "minItems": 1,
+                          "maxItems": 24
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "minItems": 3,
+                    "maxItems": 3
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "minItems": 6,
+      "maxItems": 6
+    }
+  }
+}

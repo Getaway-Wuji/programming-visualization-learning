@@ -1,0 +1,119 @@
+.example-catalog {
+  margin: 32px 0;
+}
+.example-page {
+  min-width: 0;
+}
+.example-page .custom-output {
+  font-family: Consolas, monospace;
+}
+.example-domain {
+  max-width: 100ch;
+  line-height: 1.7;
+}
+.example-input {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px;
+  gap: 16px;
+  align-items: end;
+  margin: 20px 0;
+}
+.example-input label {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.example-input input,
+.example-input select,
+.example-stage select {
+  min-width: 0;
+  max-width: 100%;
+  padding: 8px 10px;
+  font: inherit;
+  color: var(--p05-text);
+  background: var(--p05-surface);
+  border: 1px solid var(--p05-control);
+  border-radius: 6px;
+}
+.example-input .inline-actions {
+  margin: 0;
+  min-height: 40px;
+}
+.example-input p {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.example-reading {
+  border: 1px solid var(--p05-border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+.example-reading summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+/* Main reading + source/preparation rail share one 24px gutter on the full existing canvas. */
+.example-reading-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.7fr);
+  gap: 24px;
+  margin-top: 20px;
+}
+.example-reading p,
+.example-reading li {
+  line-height: 1.75;
+}
+.example-reading-grid > section {
+  min-width: 0;
+}
+.example-code,
+.example-stage {
+  padding: 20px;
+  min-width: 0;
+}
+.example-code h2,
+.example-stage h2 {
+  font-size: 20px;
+  margin: 0 0 16px;
+}
+.example-array ol {
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+}
+.example-array li {
+  display: grid;
+  gap: 4px;
+  flex: 0 0 72px;
+  padding: 8px;
+  border: 1px solid var(--p05-border);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.example-array small {
+  font-size: 12px;
+}
+.example-array strong {
+  font-size: 16px;
+}
+.example-page a:not(.button) {
+  text-underline-offset: 4px;
+}
+@media (max-width: 900px) {
+  .example-reading-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .example-input {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .example-code,
+  .example-stage,
+  .example-reading {
+    padding: 16px;
+  }
+}

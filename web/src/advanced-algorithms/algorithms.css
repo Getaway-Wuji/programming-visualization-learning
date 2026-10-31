@@ -1,0 +1,58 @@
+.sieve-page {
+  min-width: 0;
+}
+.sieve-page .example-input {
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 0.5fr);
+}
+.advanced-array-state h3 {
+  font-size: 18px;
+}
+.advanced-array-state h4 {
+  font-size: 16px;
+  margin: 20px 0 8px;
+}
+/* Same64px cells and8px gap across corresponding arrays; wrap within the existing pane. */
+.advanced-array-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+}
+.advanced-array-grid li {
+  display: grid;
+  gap: 4px;
+  padding: 8px 4px;
+  text-align: center;
+  background: var(--p05-bg, var(--p05-surface));
+  font-variant-numeric: tabular-nums;
+}
+.advanced-array-grid li[data-marked='true'] {
+  background: color-mix(in srgb, var(--p05-accent-raw) 12%, var(--p05-surface));
+}
+.advanced-array-grid small {
+  font-size: 12px;
+}
+.advanced-array-grid strong {
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+.algorithm-counters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 20px 0;
+}
+.algorithm-counters dt {
+  font-size: 14px;
+}
+.algorithm-counters dd {
+  margin: 8px 0;
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 700px) {
+  .sieve-page .example-input {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

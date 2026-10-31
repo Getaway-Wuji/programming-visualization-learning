@@ -1,3 +1,4 @@
+import { KmpCatalog } from '../advanced-algorithms/KmpCatalog';
 import { Link, useParams } from 'react-router';
 import { Breadcrumbs, MissingPage, PageHeading } from '../components/Ui';
 import { Icon } from '../components/Icon';
@@ -13,6 +14,7 @@ import { AlgorithmCatalog } from '../algorithms/AlgorithmCatalog';
 import { StructureCatalog } from '../structures/StructureCatalog';
 import { NodeCaseCatalog } from '../node-cases/NodeCaseCatalog';
 import { ClassicCatalog } from '../classics/ClassicCatalog';
+import { AdvancedAlgorithmCatalog } from '../advanced-algorithms/AdvancedAlgorithmCatalog';
 
 export function CoursePage() {
   const { chapterId } = useParams();
@@ -56,6 +58,17 @@ export function CoursePage() {
             )}
             {!selected && <ReconstructionCatalog />}
             {!selected && <BugCatalogLink />}
+            {!selected && (
+              <p>
+                <Link className="text-link" to="/advanced">
+                  进入进阶课程：复用基础进度，连接真实C++案例 →
+                </Link>
+                {' · '}
+                <Link className="text-link" to="/advanced/migration">
+                  语言迁移与语法对照
+                </Link>
+              </p>
+            )}
             <div className="course-grid">
               {visible.map((chapter) => (
                 <section className="card chapter-card" key={chapter.id}>
@@ -155,6 +168,8 @@ export function CasesPage() {
       <StructureCatalog />
       <NodeCaseCatalog />
       <ClassicCatalog />
+      <AdvancedAlgorithmCatalog />
+      <KmpCatalog />
       <section aria-labelledby="advanced-observation-title">
         <div className="section-heading">
           <h2 id="advanced-observation-title">进阶观察 · 内存与调用栈</h2>

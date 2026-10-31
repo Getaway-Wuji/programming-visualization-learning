@@ -1,0 +1,379 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EXAMPLE-COURSE-01 1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "version", "packageRef", "examples"],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "const": "catalog.advanced.examples"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "packageRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$",
+          "maxLength": 96
+        },
+        "version": {
+          "const": "1.0.0"
+        }
+      }
+    },
+    "examples": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "caseRef",
+          "solutionRef",
+          "programRef",
+          "language",
+          "engine",
+          "title",
+          "topic",
+          "source",
+          "originalConstraints",
+          "statement",
+          "platformConstraints",
+          "minItems",
+          "maxItems",
+          "min",
+          "max",
+          "hasTarget",
+          "strictlyIncreasing",
+          "prerequisiteLessonRef",
+          "knowledgeRefs",
+          "strategy",
+          "explanation",
+          "complexity",
+          "derivation",
+          "pitfalls",
+          "reviewQuestion",
+          "sourceFile",
+          "defaults",
+          "samples"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "version": {
+            "const": "1.0.0"
+          },
+          "caseRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "version"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$",
+                "maxLength": 96
+              },
+              "version": {
+                "const": "1.0.0"
+              }
+            }
+          },
+          "solutionRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "version"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$",
+                "maxLength": 96
+              },
+              "version": {
+                "const": "1.0.0"
+              }
+            }
+          },
+          "programRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "version"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$",
+                "maxLength": 96
+              },
+              "version": {
+                "const": "1.0.0"
+              }
+            }
+          },
+          "language": {
+            "const": "cpp"
+          },
+          "engine": {
+            "const": "engine.rust.advanced"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "topic": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "provider",
+              "problemNumber",
+              "title",
+              "url",
+              "checkedAt",
+              "termsUrl",
+              "authorization",
+              "use"
+            ],
+            "properties": {
+              "provider": {
+                "const": "LeetCode"
+              },
+              "problemNumber": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10000
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 3000
+              },
+              "url": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 3000
+              },
+              "checkedAt": {
+                "const": "2026-11-01"
+              },
+              "termsUrl": {
+                "const": "https://leetcode.com/terms/"
+              },
+              "authorization": {
+                "const": "not-confirmed"
+              },
+              "use": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 3000
+              }
+            }
+          },
+          "originalConstraints": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "platformConstraints": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "minItems": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "maxItems": {
+            "const": 12
+          },
+          "min": {
+            "const": -999
+          },
+          "max": {
+            "const": 999
+          },
+          "hasTarget": {
+            "type": "boolean"
+          },
+          "strictlyIncreasing": {
+            "type": "boolean"
+          },
+          "prerequisiteLessonRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "version"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$",
+                "maxLength": 96
+              },
+              "version": {
+                "const": "1.0.0"
+              }
+            }
+          },
+          "knowledgeRefs": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "version"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$",
+                  "maxLength": 96
+                },
+                "version": {
+                  "const": "1.0.0"
+                }
+              }
+            }
+          },
+          "strategy": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "explanation": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 3000
+            }
+          },
+          "complexity": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "derivation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "pitfalls": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 3000
+            }
+          },
+          "reviewQuestion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "sourceFile": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 3000
+          },
+          "defaults": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["values"],
+            "properties": {
+              "values": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 12,
+                "uniqueItems": false,
+                "items": {
+                  "type": "integer",
+                  "minimum": -999,
+                  "maximum": 999
+                }
+              },
+              "target": {
+                "type": "integer",
+                "minimum": -999,
+                "maximum": 999
+              }
+            }
+          },
+          "samples": {
+            "type": "array",
+            "minItems": 6,
+            "maxItems": 12,
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["key", "values", "expectedStdout", "expectedReturn"],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 3000
+                },
+                "values": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 12,
+                  "uniqueItems": false,
+                  "items": {
+                    "type": "integer",
+                    "minimum": -999,
+                    "maximum": 999
+                  }
+                },
+                "target": {
+                  "type": "integer",
+                  "minimum": -999,
+                  "maximum": 999
+                },
+                "expectedStdout": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 3000
+                },
+                "expectedReturn": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

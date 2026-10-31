@@ -1,0 +1,998 @@
+{
+  "task": "18.4",
+  "date": "2026-11-01",
+  "status": "accepted",
+  "release": "1.0.57",
+  "sources": 374,
+  "registrationSha256": "1c5f67744d3064f27c4159cdef1e14e846f562d68030b1863410f64ba52b391c",
+  "content": {
+    "cases": 4,
+    "publicSamples": 44,
+    "actualRustWasmExecutions": 44,
+    "maxSteps": 4130,
+    "maxResultBytes": 3122267,
+    "allSieveBounds": 31,
+    "independentShortSequences": 121,
+    "learningAuthority": false,
+    "catalogCounts": {
+      "srsAccepted": 21,
+      "srsTotal": 22,
+      "formalCases": 25,
+      "c": 7,
+      "cpp": 18,
+      "classicExamplesSeparately": 3,
+      "solutionsSeparately": 6
+    }
+  },
+  "unit": {
+    "passed": 1988,
+    "failed": 0,
+    "skipped": 0,
+    "workers": 1
+  },
+  "candidateChrome": {
+    "startTime": "2026-10-31T18:45:32.170Z",
+    "duration": 68927.383,
+    "expected": 63,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "formalChrome": {
+    "startTime": "2026-10-31T18:59:18.109Z",
+    "duration": 222315.73799999998,
+    "expected": 174,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "formalPerFile": {
+    "advanced-course-learning.spec.ts": 3,
+    "advanced-course.spec.ts": 9,
+    "comparison.spec.ts": 14,
+    "custom-code.spec.ts": 1,
+    "example-solutions.spec.ts": 38,
+    "examples.spec.ts": 28,
+    "p05-course.spec.ts": 1,
+    "recursive-comparison.spec.ts": 19,
+    "sieve-sequences-regression.spec.ts": 7,
+    "sieve-sequences.spec.ts": 54
+  },
+  "quality": {
+    "typecheck": 0,
+    "lint": 0,
+    "format": 0,
+    "contentFormat": 0
+  },
+  "build": {
+    "candidate": "build-candidate57-final.log actual exit0",
+    "formal": "build-formal57.log actual exit0",
+    "fourWasmShaUnchanged": true
+  },
+  "receipts": {
+    "indexes": 42,
+    "receipts": 314,
+    "validation": "restore-release-evidence actual exit0; local only, no Git-tracked/remote CI claim"
+  },
+  "qaArchive": {
+    "files": 650,
+    "archiveBytes": 74966492,
+    "allArchiveRawAndSourceShaVerified": true
+  },
+  "oldQa": [
+    {
+      "task": "18.1",
+      "files": 167,
+      "archiveRawAndOriginalSourceShaUnchanged": true
+    },
+    {
+      "task": "18.2",
+      "files": 185,
+      "archiveRawAndOriginalSourceShaUnchanged": true
+    },
+    {
+      "task": "18.3",
+      "files": 435,
+      "archiveRawAndOriginalSourceShaUnchanged": true
+    }
+  ],
+  "relativeLinks": 20,
+  "visual": {
+    "style": "Framed sheet",
+    "seed": 625120833,
+    "kept": "existing palette and fonts",
+    "widths": [
+      1440,
+      768,
+      390
+    ],
+    "fourPages": "0FAIL/0WARN",
+    "sourceUiLint": "0FAIL/0WARN",
+    "viewed": {
+      "finalInspector": 24,
+      "candidateRealRuns": 12,
+      "formalRealRuns": 12
+    },
+    "score": {
+      "design": 8,
+      "usability": 8,
+      "creativity": 7,
+      "content": 9,
+      "weighted": 7.9
+    },
+    "actualCapture": {
+      "note": "Actual C++ Rust/WASM runs, source highlight and real projected arrays at the same cursor; reading expanded, only scroll and blur, no CSS or image edits.",
+      "records": [
+        {
+          "slug": "eratosthenes-sieve",
+          "width": 1440,
+          "length": 430,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "279",
+          "arrays": [
+            {
+              "name": "composite",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "1",
+                "1",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1"
+              ]
+            },
+            {
+              "name": "marks",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "2",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "2",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "2",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "3"
+              ]
+            }
+          ],
+          "highlight": "443"
+        },
+        {
+          "slug": "eratosthenes-sieve",
+          "width": 768,
+          "length": 430,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "279",
+          "arrays": [
+            {
+              "name": "composite",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "1",
+                "1",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1"
+              ]
+            },
+            {
+              "name": "marks",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "2",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "2",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "2",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "3"
+              ]
+            }
+          ],
+          "highlight": "443"
+        },
+        {
+          "slug": "eratosthenes-sieve",
+          "width": 390,
+          "length": 430,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "279",
+          "arrays": [
+            {
+              "name": "composite",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "1",
+                "1",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1"
+              ]
+            },
+            {
+              "name": "marks",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "2",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "2",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "2",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "3"
+              ]
+            }
+          ],
+          "highlight": "443"
+        },
+        {
+          "slug": "euler-sieve",
+          "width": 1440,
+          "length": 793,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "515",
+          "arrays": [
+            {
+              "name": "composite",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "1",
+                "1",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1"
+              ]
+            },
+            {
+              "name": "marks",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1"
+              ]
+            },
+            {
+              "name": "primes",
+              "extent": "8",
+              "present": "true",
+              "values": [
+                "2",
+                "3",
+                "5",
+                "7",
+                "11",
+                "13",
+                "17",
+                "19"
+              ]
+            }
+          ],
+          "highlight": "327"
+        },
+        {
+          "slug": "euler-sieve",
+          "width": 768,
+          "length": 793,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "515",
+          "arrays": [
+            {
+              "name": "composite",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "1",
+                "1",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1"
+              ]
+            },
+            {
+              "name": "marks",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1"
+              ]
+            },
+            {
+              "name": "primes",
+              "extent": "8",
+              "present": "true",
+              "values": [
+                "2",
+                "3",
+                "5",
+                "7",
+                "11",
+                "13",
+                "17",
+                "19"
+              ]
+            }
+          ],
+          "highlight": "327"
+        },
+        {
+          "slug": "euler-sieve",
+          "width": 390,
+          "length": 793,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "515",
+          "arrays": [
+            {
+              "name": "composite",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "1",
+                "1",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1"
+              ]
+            },
+            {
+              "name": "marks",
+              "extent": "31",
+              "present": "true",
+              "values": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1"
+              ]
+            },
+            {
+              "name": "primes",
+              "extent": "8",
+              "present": "true",
+              "values": [
+                "2",
+                "3",
+                "5",
+                "7",
+                "11",
+                "13",
+                "17",
+                "19"
+              ]
+            }
+          ],
+          "highlight": "327"
+        },
+        {
+          "slug": "maximum-subarray",
+          "width": 1440,
+          "length": 164,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "106",
+          "arrays": [
+            {
+              "name": "values",
+              "extent": "9",
+              "present": "true",
+              "values": [
+                "-2",
+                "1",
+                "-3",
+                "4",
+                "-1",
+                "2",
+                "1",
+                "-5",
+                "4"
+              ]
+            },
+            {
+              "name": "ending",
+              "extent": "9",
+              "present": "true",
+              "values": [
+                "-2",
+                "1",
+                "-2",
+                "4",
+                "未初始化",
+                "未初始化",
+                "未初始化",
+                "未初始化",
+                "未初始化"
+              ]
+            }
+          ],
+          "highlight": "353"
+        },
+        {
+          "slug": "maximum-subarray",
+          "width": 768,
+          "length": 164,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "106",
+          "arrays": [
+            {
+              "name": "values",
+              "extent": "9",
+              "present": "true",
+              "values": [
+                "-2",
+                "1",
+                "-3",
+                "4",
+                "-1",
+                "2",
+                "1",
+                "-5",
+                "4"
+              ]
+            },
+            {
+              "name": "ending",
+              "extent": "9",
+              "present": "true",
+              "values": [
+                "-2",
+                "1",
+                "-2",
+                "4",
+                "未初始化",
+                "未初始化",
+                "未初始化",
+                "未初始化",
+                "未初始化"
+              ]
+            }
+          ],
+          "highlight": "353"
+        },
+        {
+          "slug": "maximum-subarray",
+          "width": 390,
+          "length": 164,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "106",
+          "arrays": [
+            {
+              "name": "values",
+              "extent": "9",
+              "present": "true",
+              "values": [
+                "-2",
+                "1",
+                "-3",
+                "4",
+                "-1",
+                "2",
+                "1",
+                "-5",
+                "4"
+              ]
+            },
+            {
+              "name": "ending",
+              "extent": "9",
+              "present": "true",
+              "values": [
+                "-2",
+                "1",
+                "-2",
+                "4",
+                "未初始化",
+                "未初始化",
+                "未初始化",
+                "未初始化",
+                "未初始化"
+              ]
+            }
+          ],
+          "highlight": "353"
+        },
+        {
+          "slug": "strict-lis",
+          "width": 1440,
+          "length": 346,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "224",
+          "arrays": [
+            {
+              "name": "values",
+              "extent": "8",
+              "present": "true",
+              "values": [
+                "10",
+                "9",
+                "2",
+                "5",
+                "3",
+                "7",
+                "101",
+                "18"
+              ]
+            },
+            {
+              "name": "dp",
+              "extent": "8",
+              "present": "true",
+              "values": [
+                "1",
+                "1",
+                "1",
+                "2",
+                "2",
+                "3",
+                "未初始化",
+                "未初始化"
+              ]
+            }
+          ],
+          "highlight": "362"
+        },
+        {
+          "slug": "strict-lis",
+          "width": 768,
+          "length": 346,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "224",
+          "arrays": [
+            {
+              "name": "values",
+              "extent": "8",
+              "present": "true",
+              "values": [
+                "10",
+                "9",
+                "2",
+                "5",
+                "3",
+                "7",
+                "101",
+                "18"
+              ]
+            },
+            {
+              "name": "dp",
+              "extent": "8",
+              "present": "true",
+              "values": [
+                "1",
+                "1",
+                "1",
+                "2",
+                "2",
+                "3",
+                "未初始化",
+                "未初始化"
+              ]
+            }
+          ],
+          "highlight": "362"
+        },
+        {
+          "slug": "strict-lis",
+          "width": 390,
+          "length": 346,
+          "scrollY": 0,
+          "overflow": false,
+          "skipLinkBottom": -27,
+          "cursor": "224",
+          "arrays": [
+            {
+              "name": "values",
+              "extent": "8",
+              "present": "true",
+              "values": [
+                "10",
+                "9",
+                "2",
+                "5",
+                "3",
+                "7",
+                "101",
+                "18"
+              ]
+            },
+            {
+              "name": "dp",
+              "extent": "8",
+              "present": "true",
+              "values": [
+                "1",
+                "1",
+                "1",
+                "2",
+                "2",
+                "3",
+                "未初始化",
+                "未初始化"
+              ]
+            }
+          ],
+          "highlight": "362"
+        }
+      ]
+    },
+    "note": "Phone arrays/readings require vertical scroll; long source lines use pane-local horizontal scroll; no image or CSS edits for evidence."
+  },
+  "inherited": "543 Rust/original ignored1 and prior full budget/performance matrices inherited only through unchanged sources/four WASM hashes, not rerun as fresh full suite; new four algorithms actual executions and full atomic reversal separately verified.",
+  "audit": {
+    "at": "2026-10-31T19:04:27.758Z",
+    "head": "ec5b8a136413fb6519a0f03af2988ffc7d77a83a",
+    "trackedAndExternalBaseline": 16463,
+    "baselineChanged": [
+      "web/src/advanced-course/AdvancedCoursePage.tsx",
+      "README.md",
+      "scripts/build-p05-course.mjs",
+      "scripts/restore-release-evidence.mjs",
+      "web/src/App.tsx",
+      "web/src/components/Layout.tsx",
+      "web/src/content/p05-course-release.generated.ts",
+      "web/src/pages/CatalogPages.tsx",
+      "项目守则.md",
+      "项目文档/任务进度与交接.md",
+      "项目文档/开发路线与依赖.md",
+      "项目文档/算法目录覆盖表.md",
+      "项目文档/需求覆盖与范围裁决.md"
+    ],
+    "deleted": [],
+    "protectedExternal": 16,
+    "protectedChanged": [],
+    "frozenChecked": 15014,
+    "frozenChanged": [],
+    "staged": "",
+    "aheadBehind": "0\t0",
+    "status": " M README.md\n M scripts/build-p05-course.mjs\n M scripts/restore-release-evidence.mjs\n M web/src/App.tsx\n M web/src/components/Layout.tsx\n M web/src/content/p05-course-release.generated.ts\n M web/src/pages/CatalogPages.tsx\n M 项目守则.md\n M 项目文档/交接/2026-10-31-GitHub-Actions构建修复-交接.md\n M 项目文档/任务进度与交接.md\n M 项目文档/开发路线与依赖.md\n M 项目文档/算法目录覆盖表.md\n M 项目文档/需求覆盖与范围裁决.md\n?? .taste-skill/direction.json\n?? content/advanced/\n?? content/algorithms/cpp/eratosthenes-sieve-1.0.0.cpp\n?? content/algorithms/cpp/euler-sieve-1.0.0.cpp\n?? content/algorithms/cpp/maximum-subarray-1.0.0.cpp\n?? content/algorithms/cpp/sieve-sequences-1.0.0.json\n?? content/algorithms/cpp/sieve-sequences-1.0.0.schema.json\n?? content/algorithms/cpp/strict-lis-1.0.0.cpp\n?? content/c/p0/blockly-release-1.0.53.json\n?? content/c/p0/blockly-release-1.0.54.json\n?? content/c/p0/blockly-release-1.0.55.json\n?? content/c/p0/blockly-release-1.0.56.json\n?? content/c/p0/blockly-release-1.0.57.json\n?? scripts/advanced-course-content.mjs\n?? scripts/advanced-course-release-inputs.mjs\n?? scripts/example-solutions-content.mjs\n?? scripts/example-solutions-release-inputs.mjs\n?? scripts/examples-content.mjs\n?? scripts/examples-release-inputs.mjs\n?? scripts/register-advanced-course-53.mjs\n?? scripts/register-example-solutions-55.mjs\n?? scripts/register-example-solutions-56.mjs\n?? scripts/register-examples-54.mjs\n?? scripts/register-sieve-sequences-57.mjs\n?? scripts/sieve-sequences-content.mjs\n?? scripts/sieve-sequences-release-inputs.mjs\n?? tests/browser/advanced-course-learning.spec.ts\n?? tests/browser/advanced-course.spec.ts\n?? tests/browser/example-solutions.spec.ts\n?? tests/browser/examples.spec.ts\n?? tests/browser/sieve-sequences-regression.spec.ts\n?? tests/browser/sieve-sequences.spec.ts\n?? tests/unit/advanced-course.test.ts\n?? tests/unit/example-solutions.test.ts\n?? tests/unit/examples.test.ts\n?? tests/unit/sieve-sequences.test.ts\n?? web/src/advanced-algorithms/\n?? web/src/advanced-course/\n?? web/src/example-comparison/\n?? web/src/examples/\n?? 项目文档/交付/18.1-进阶课程使用说明.md\n?? 项目文档/交付/18.2-经典例题使用说明.md\n?? 项目文档/交付/18.3-同题两解使用说明.md\n?? 项目文档/交付/18.4-筛法与序列使用说明.md\n?? 项目文档/交接/18.1-交接.md\n?? 项目文档/交接/18.2-交接.md\n?? 项目文档/交接/18.3-交接.md\n?? 项目文档/交接/18.4-交接.md\n?? 项目文档/交接/2026-10-31-CI修复同步与临时副本清理-交接.md\n?? 项目文档/交接/2026-10-31-GitHub-Actions失败排查-交接.md\n?? 项目文档/契约/18.1-进阶编排与精确引用.md\n?? 项目文档/契约/18.2-经典例题与来源契约.md\n?? 项目文档/契约/18.3-多解法与同题对比契约.md\n?? 项目文档/契约/18.4-筛法序列案例与投影契约.md\n?? 项目文档/架构决策/18.1-课程编排与统一学习记录.md\n?? 项目文档/架构决策/18.2-经典例题来源与执行范围.md\n?? 项目文档/架构决策/18.3-同题方案与统一对比范围.md\n?? 项目文档/架构决策/18.4-筛法与序列范围及预算.md\n?? 项目文档/验收/18.1-最终复核.json\n?? 项目文档/验收/18.1-进阶课程与记录复用验收.md\n?? 项目文档/验收/18.1-验证原件/\n?? 项目文档/验收/18.2-最终复核.json\n?? 项目文档/验收/18.2-来源核验.json\n?? 项目文档/验收/18.2-经典例题与来源验收.md\n?? 项目文档/验收/18.2-验证原件/\n?? 项目文档/验收/18.3-同题多解法与对比验收.md\n?? 项目文档/验收/18.3-最终复核.json\n?? 项目文档/验收/18.3-验证原件/\n?? 项目文档/验收/18.4-界面复核.md\n?? 项目文档/验收/18.4-筛法与序列验收.md\n?? 项目文档/验收/2026-10-31-CI修复同步与清理/\n?? 项目文档/验收/发布凭据/18.1-1.0.53/\n?? 项目文档/验收/发布凭据/18.2-1.0.54/\n?? 项目文档/验收/发布凭据/18.3-1.0.55/\n?? 项目文档/验收/发布凭据/18.3-1.0.56/\n?? 项目文档/验收/发布凭据/18.4-1.0.57/\n"
+  },
+  "limitations": [
+    "Chrome/minimal only",
+    "Old immutable case-set tests still assert15 stores and fail on current DB8/16; supplementary seven representative-input checks do not replace the historical full boundary matrix. Historical QA maintenance deferred to coordinator.",
+    "No fresh full performance/physical60fps or six-theme acceptance",
+    "No new learning authority/general C++ editor/language21 loop",
+    "No external deployment/Actions/Git write",
+    "18.5/18.6/21 unclaimed"
+  ]
+}

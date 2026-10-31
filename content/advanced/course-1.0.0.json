@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "course.advanced.bridge",
+  "version": "1.0.0",
+  "packageRef": {
+    "id": "content.c.p05",
+    "version": "1.0.0"
+  },
+  "chapters": [
+    {
+      "id": "chapter.advanced.bounds-order",
+      "title": "边界与有序性",
+      "lessonRefs": [
+        {
+          "id": "lesson.c.logical-length-guards",
+          "version": "1.0.0"
+        },
+        {
+          "id": "lesson.c.adjacent-order",
+          "version": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "chapter.advanced.state-decomposition",
+      "title": "状态与递归分解",
+      "lessonRefs": [
+        {
+          "id": "lesson.c.array-extrema",
+          "version": "1.0.0"
+        },
+        {
+          "id": "lesson.c.nested-loops",
+          "version": "1.0.0"
+        }
+      ]
+    }
+  ],
+  "lessons": [
+    {
+      "lessonRef": {
+        "id": "lesson.c.logical-length-guards",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.arrays",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.conditions",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.input",
+          "version": "1.0.0"
+        }
+      ],
+      "caseRef": {
+        "id": "case.cpp.insertion-sort",
+        "version": "1.0.0"
+      },
+      "title": "先守住逻辑边界，再移动元素",
+      "explanation": [
+        "数组容量回答“能存多少”，逻辑长度回答“这次有多少数据”。插入排序先保持左侧有序，再把当前值暂存到key，从右向左移动较大的元素，最后填入空位。",
+        "读取values[j]之前先判断j >= 0。短路顺序使空数组和插入最左侧都能安全停止；同值不向右移，才能保留原先顺序。观察源码中的key、j和写入位置，区分暂存值与被覆盖的数组格。"
+      ],
+      "complexity": "最坏O(n²)，已排序O(n)；额外空间O(1)。",
+      "derivation": "第i轮至多移动i个元素，1+2+…+(n−1)=n(n−1)/2。已有序时每轮只做一次边界与大小检查；key和下标数量不随n增长。",
+      "boundaries": [
+        "输入0～30项，整数−999～999；[]表示逻辑空数组。",
+        "检查空数组、单项、同值、逆序；空容量占位不参与排序。"
+      ],
+      "reviewQuestion": "如果先读values[j]再判断j >= 0，插入到最左侧时会发生什么？"
+    },
+    {
+      "lessonRef": {
+        "id": "lesson.c.adjacent-order",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.arrays",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.sorting",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.conditions",
+          "version": "1.0.0"
+        }
+      ],
+      "caseRef": {
+        "id": "case.cpp.counting-sort",
+        "version": "1.0.0"
+      },
+      "title": "用相邻顺序检查计数回填",
+      "explanation": [
+        "非递减允许相等：每对相邻元素满足前项≤后项。计数排序将值映射到频次桶，再按桶下标从小到大回填；这个顺序提供了相邻关系成立的理由。",
+        "本案例把−20～20映射到0～40。检查原值与下标的偏移，并观察重复元素的频次怎样逐次减到0。它按频次直接回填数值，没有保存原记录身份，因此不能据此宣称稳定地排序带附加字段的记录。"
+      ],
+      "complexity": "O(n+K)时间，O(K)额外空间；本案例K=41。",
+      "derivation": "清零K个桶、扫描n项，再遍历K个桶并总计写回n项，所以是O(n+K)。K固定41时随n线性增长，但不能忽略值域扩大带来的空间和清零成本。",
+      "boundaries": [
+        "整数范围−20～20，最多30项；越域输入明确拒绝。",
+        "比较全同值、两端值和空数组，区分元素个数与频次数组容量。"
+      ],
+      "reviewQuestion": "频次总和为什么必须等于输入的逻辑长度？"
+    },
+    {
+      "lessonRef": {
+        "id": "lesson.c.array-extrema",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.arrays",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.loops",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.conditions",
+          "version": "1.0.0"
+        }
+      ],
+      "caseRef": {
+        "id": "case.cpp.quick-sort",
+        "version": "1.0.0"
+      },
+      "title": "从扫描状态走向分区不变量",
+      "explanation": [
+        "扫描最小值时，只保留已看部分的候选；快速排序分区则维护“已确认不大于pivot的左段”和“尚未检查的右段”。两者都要说清循环开始时哪些事实已经成立。",
+        "本案例用末项为pivot的Lomuto分区。每次检查决定是否扩展左段，最后将pivot放在分界点。它递归较短一段、循环处理较长一段，用实际调用栈观察这与同时递归两段的区别。"
+      ],
+      "complexity": "平均O(n log n)、最坏O(n²)时间；本实现递归栈O(log n)。",
+      "derivation": "平衡分区约log n层，每层扫描O(n)项；末项pivot遇有序或全同值可能反复只缩小一项，扫描和成为二次量级。较短段的长度每次至多减半，因此栈深O(log n)，这项优化不消除最坏时间。",
+      "boundaries": [
+        "输入0～30项，整数−999～999；不承诺稳定排序。",
+        "用有序、逆序、全同值看不均衡分区；用空数组检查递归入口。"
+      ],
+      "reviewQuestion": "为什么较短段递归限制栈深，却没有把最坏时间变成O(n log n)？"
+    },
+    {
+      "lessonRef": {
+        "id": "lesson.c.nested-loops",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.loops",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.variables",
+          "version": "1.0.0"
+        }
+      ],
+      "caseRef": {
+        "id": "case.cpp.merge-sort",
+        "version": "1.0.0"
+      },
+      "title": "按层数工作，而非只数循环",
+      "explanation": [
+        "嵌套循环的工作量由各轮实际范围决定，不能只看有几层语法。归并排序把闭区间分成两半，再把两个已排序段合并；每次递归范围缩小，每层总共合并约n项。",
+        "查看共享scratch数组、左右游标和写回位置。相等时先取左侧维持稳定性；两个区间都包含端点，mid和mid+1不能遗漏或重复。调用栈、数组与源码由同一次真实执行同步呈现。"
+      ],
+      "complexity": "O(n log n)时间；O(n)辅助数组与O(log n)调用栈。",
+      "derivation": "区间不断减半形成O(log n)层，每层合并O(n)项，因此时间O(n log n)。整个运行复用一份scratch，不是每个节点各保留一个n长数组；n=0或1时直接返回。",
+      "boundaries": [
+        "输入0～30项，整数−999～999；scratch属于真实虚拟内存。",
+        "空、单项、重复值和奇数长度都要检查；教学地址不是宿主地址。"
+      ],
+      "reviewQuestion": "如果每层都合并n项，为什么总时间不是O(n²)？"
+    }
+  ]
+}

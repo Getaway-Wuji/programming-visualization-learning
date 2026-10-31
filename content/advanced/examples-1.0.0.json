@@ -1,0 +1,368 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "catalog.advanced.examples",
+  "version": "1.0.0",
+  "packageRef": {
+    "id": "content.c.p05",
+    "version": "1.0.0"
+  },
+  "examples": [
+    {
+      "id": "example.cpp.two-sum",
+      "version": "1.0.0",
+      "caseRef": {
+        "id": "case.cpp.example-two-sum",
+        "version": "1.0.0"
+      },
+      "solutionRef": {
+        "id": "solution.cpp.two-sum-enumeration",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.cpp.example-two-sum-enumeration",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "engine": "engine.rust.advanced",
+      "title": "两数之和：枚举不重复的下标对",
+      "topic": "枚举与输入承诺",
+      "source": {
+        "provider": "LeetCode",
+        "problemNumber": 1,
+        "title": "Two Sum",
+        "url": "https://leetcode.com/problems/two-sum/description/",
+        "checkedAt": "2026-11-01",
+        "termsUrl": "https://leetcode.com/terms/",
+        "authorization": "not-confirmed",
+        "use": "原始题号/链接与必要事实；本站中文概括、讲解、代码及示例独立编写，不导入题解或整段原文。"
+      },
+      "originalConstraints": "原题长度2～10⁴，元素和target均在−10⁹～10⁹；恰好一组有效下标，不能重复使用同一个位置，下标输出顺序不限。",
+      "statement": "从两个不同位置各取一个数，使它们的和等于目标。输出这两个位置的0基下标。相同数值可以来自不同位置，位置不能相同。",
+      "platformConstraints": "本页长度2～12，整数和目标均为−999～999；只有恰好一对解时展示答案，下标固定按i<j输出。无解或多解由实际C++程序拒绝，不代表原题包含这些输入。",
+      "minItems": 2,
+      "maxItems": 12,
+      "min": -999,
+      "max": 999,
+      "hasTarget": true,
+      "strictlyIncreasing": false,
+      "prerequisiteLessonRef": {
+        "id": "lesson.c.nested-loops",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.loops",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.variables",
+          "version": "1.0.0"
+        }
+      ],
+      "strategy": "双重枚举",
+      "explanation": [
+        "外层确定第一个位置i，内层从i+1开始。这样既不会把同一位置用两次，也不会同时检查(i,j)和(j,i)。",
+        "每当和等于target就增加matches，并保存找到的两个下标。最终仅当matches为1时输出；这一步把原题的“恰好一组解”承诺变成可观察的检查。",
+        "例如[4,1,8,6]、target=9时，位置1和2对应1+8。不要把输出的下标误当作两个数值。"
+      ],
+      "complexity": "时间O(n²)，额外空间O(1)；固定输入数组不算额外辅助数组。",
+      "derivation": "要检查n(n−1)/2个不同下标对。计数和保存答案都只用固定数量的整数；本页同时检查唯一性，因此不会在首次找到后直接跳过剩余候选。",
+      "pitfalls": [
+        "不同位置可以恰好有相同数值。",
+        "无解、多解不在原题承诺内；本页显示输入约定不满足并返回1，仍可回放真实检查过程。"
+      ],
+      "reviewQuestion": "为什么内层从i+1开始，既能覆盖所有答案又能防止使用同一位置？",
+      "sourceFile": "content/advanced/example-two-sum-1.0.0.cpp",
+      "defaults": {
+        "values": [4, 1, 8, 6],
+        "target": 9
+      },
+      "samples": [
+        {
+          "key": "middle-pair",
+          "values": [4, 1, 8, 6],
+          "target": 9,
+          "expectedStdout": "1 2\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "equal-values",
+          "values": [5, 5],
+          "target": 10,
+          "expectedStdout": "0 1\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "negative",
+          "values": [-6, -2, 4],
+          "target": -8,
+          "expectedStdout": "0 1\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "limit-values",
+          "values": [-999, 999],
+          "target": 0,
+          "expectedStdout": "0 1\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "no-solution",
+          "values": [1, 3],
+          "target": 9,
+          "expectedStdout": "INVALID_INPUT\n",
+          "expectedReturn": 1
+        },
+        {
+          "key": "ambiguous",
+          "values": [2, 2, 2],
+          "target": 4,
+          "expectedStdout": "INVALID_INPUT\n",
+          "expectedReturn": 1
+        },
+        {
+          "key": "max-length",
+          "values": [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 700, 999],
+          "target": 3,
+          "expectedStdout": "0 1\n",
+          "expectedReturn": 0
+        }
+      ]
+    },
+    {
+      "id": "example.cpp.move-zeroes",
+      "version": "1.0.0",
+      "caseRef": {
+        "id": "case.cpp.example-move-zeroes",
+        "version": "1.0.0"
+      },
+      "solutionRef": {
+        "id": "solution.cpp.move-zeroes-compact",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.cpp.example-move-zeroes-compact",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "engine": "engine.rust.advanced",
+      "title": "移动零：保留非零元素的先后次序",
+      "topic": "数组压缩与稳定性",
+      "source": {
+        "provider": "LeetCode",
+        "problemNumber": 283,
+        "title": "Move Zeroes",
+        "url": "https://leetcode.com/problems/move-zeroes/description/",
+        "checkedAt": "2026-11-01",
+        "termsUrl": "https://leetcode.com/terms/",
+        "authorization": "not-confirmed",
+        "use": "原始题号/链接与必要事实；本站中文概括、讲解、代码及示例独立编写，不导入题解或整段原文。"
+      },
+      "originalConstraints": "原题长度1～10⁴，元素范围−2³¹～2³¹−1；原地移动全部零到末尾，非零元素相对顺序保持，不能复制整个数组。",
+      "statement": "把数组里的非零元素按原顺序收拢到前部，再把剩余位置写成零。原数组长度不变，输出移动后的整个序列。",
+      "platformConstraints": "本页长度1～12，整数−999～999。使用同一个values数组原地写入，不复制输入数组；空数组在运行前拒绝。",
+      "minItems": 1,
+      "maxItems": 12,
+      "min": -999,
+      "max": 999,
+      "hasTarget": false,
+      "strictlyIncreasing": false,
+      "prerequisiteLessonRef": {
+        "id": "lesson.c.logical-length-guards",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.arrays",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.conditions",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.input",
+          "version": "1.0.0"
+        }
+      ],
+      "strategy": "稳定压缩后补零",
+      "explanation": [
+        "read扫描每个输入位置，write指向下一个应放非零值的位置。遇到非零时写到values[write]，再推进write；遇到零只推进扫描。",
+        "因为write永远不超过read，写入不会破坏尚未读取的后续元素。扫描顺序也使非零元素的相对次序保持。",
+        "扫描结束后，write之前都是按序保留的非零值；把[write,n)写成0。比如[0,4,-2,0,4]会变成[4,-2,4,0,0]。"
+      ],
+      "complexity": "时间O(n)，额外空间O(1)。",
+      "derivation": "第一遍读取n项，第二遍至多补n个零，输出再读取n项，总工作量是n的常数倍。read/write/i是固定数量的标量，不分配第二份数组。",
+      "pitfalls": [
+        "不能直接排序：排序会改变非零元素原有顺序。",
+        "写入同值也是实际写操作；真实轨迹不会因画面看似没变而跳过。"
+      ],
+      "reviewQuestion": "为什么write≤read能保证压缩时不覆盖未来还需要读取的数据？",
+      "sourceFile": "content/advanced/example-move-zeroes-1.0.0.cpp",
+      "defaults": {
+        "values": [0, 4, -2, 0, 4]
+      },
+      "samples": [
+        {
+          "key": "mixed",
+          "values": [0, 4, -2, 0, 4],
+          "expectedStdout": "4 -2 4 0 0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "one-zero",
+          "values": [0],
+          "expectedStdout": "0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "one-value",
+          "values": [-7],
+          "expectedStdout": "-7\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "all-zero",
+          "values": [0, 0, 0],
+          "expectedStdout": "0 0 0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "no-zero",
+          "values": [8, -3, 8],
+          "expectedStdout": "8 -3 8\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "max-length",
+          "values": [0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6],
+          "expectedStdout": "1 2 3 4 5 6 0 0 0 0 0 0\n",
+          "expectedReturn": 0
+        }
+      ]
+    },
+    {
+      "id": "example.cpp.search-insert",
+      "version": "1.0.0",
+      "caseRef": {
+        "id": "case.cpp.example-search-insert",
+        "version": "1.0.0"
+      },
+      "solutionRef": {
+        "id": "solution.cpp.search-insert-binary",
+        "version": "1.0.0"
+      },
+      "programRef": {
+        "id": "program.cpp.example-search-insert-binary",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "engine": "engine.rust.advanced",
+      "title": "搜索插入位置：缩小半开区间",
+      "topic": "二分边界与不变量",
+      "source": {
+        "provider": "LeetCode",
+        "problemNumber": 35,
+        "title": "Search Insert Position",
+        "url": "https://leetcode.com/problems/search-insert-position/description/",
+        "checkedAt": "2026-11-01",
+        "termsUrl": "https://leetcode.com/terms/",
+        "authorization": "not-confirmed",
+        "use": "原始题号/链接与必要事实；本站中文概括、讲解、代码及示例独立编写，不导入题解或整段原文。"
+      },
+      "originalConstraints": "原题长度1～10⁴，元素与target均为−10⁴～10⁴；数组严格升序且元素互异，要求O(log n)时间。找到时返回原位置，否则返回保持有序的插入位置。",
+      "statement": "给定严格递增的整数数组，找到第一个不小于目标的位置。如果目标比所有元素都大，位置就是数组长度。这个位置既能表示命中，也能表示插入。",
+      "platformConstraints": "本页长度1～12，整数和目标均为−999～999；输入必须严格递增且互异，乱序或重复不会被静默排序。输出一个0基位置，范围0～n。",
+      "minItems": 1,
+      "maxItems": 12,
+      "min": -999,
+      "max": 999,
+      "hasTarget": true,
+      "strictlyIncreasing": true,
+      "prerequisiteLessonRef": {
+        "id": "lesson.c.binary-search-first",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.binary-search",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.arrays",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.conditions",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.loops",
+          "version": "1.0.0"
+        }
+      ],
+      "strategy": "半开区间二分",
+      "explanation": [
+        "初始候选区间为[left,right)=[0,n)。left之前的元素都小于target；right及之后的位置已无需继续检查。",
+        "取mid=left+(right-left)/2。values[mid]<target时令left=mid+1；否则令right=mid。两条路径都严格缩短区间，也不会访问values[n]。",
+        "当left==right时，候选区间为空，边界就是答案。对[-5,0,7,11]、target=3，边界停在2；目标大于全部元素时停在4。"
+      ],
+      "complexity": "二分搜索核心O(log n)；含输入读取的完整演示O(n)，额外空间O(1)。",
+      "derivation": "每轮将候选区间缩小到原来约一半，经过对数轮后长度为0。只保存left/right/mid/target等标量；读取输入与打印不计入二分核心的搜索复杂度。",
+      "pitfalls": [
+        "right可以等于n，但只有mid会被用来读取数组，且始终小于right。",
+        "本例要求互异严格升序；输入重复时不把一般lower_bound扩展冒称为本例完整原题条件。"
+      ],
+      "reviewQuestion": "为什么用right=mid，而不是mid−1，仍能保证循环结束？",
+      "sourceFile": "content/advanced/example-search-insert-1.0.0.cpp",
+      "defaults": {
+        "values": [-5, 0, 7, 11],
+        "target": 3
+      },
+      "samples": [
+        {
+          "key": "middle-gap",
+          "values": [-5, 0, 7, 11],
+          "target": 3,
+          "expectedStdout": "2\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "hit",
+          "values": [-5, 0, 7, 11],
+          "target": 7,
+          "expectedStdout": "2\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "before-first",
+          "values": [-5, 0, 7, 11],
+          "target": -8,
+          "expectedStdout": "0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "after-last",
+          "values": [-5, 0, 7, 11],
+          "target": 20,
+          "expectedStdout": "4\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "single",
+          "values": [3],
+          "target": 4,
+          "expectedStdout": "1\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "max-length",
+          "values": [-999, -100, -50, -20, -5, 0, 3, 8, 20, 50, 100, 999],
+          "target": 999,
+          "expectedStdout": "11\n",
+          "expectedReturn": 0
+        }
+      ]
+    }
+  ]
+}

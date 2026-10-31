@@ -1,0 +1,205 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "catalog.advanced.multi-solutions",
+  "version": "1.0.0",
+  "examples": [
+    {
+      "exampleRef": {
+        "id": "example.cpp.two-sum",
+        "version": "1.0.0"
+      },
+      "solutions": [
+        {
+          "solutionRef": {
+            "id": "solution.cpp.two-sum-enumeration",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.example-two-sum-enumeration",
+            "version": "1.0.0"
+          },
+          "sourceFile": "content/advanced/example-two-sum-1.0.0.cpp",
+          "title": "双重枚举",
+          "strategy": "外层确定第一个位置i，内层从i+1开始。这样既不会把同一位置用两次，也不会同时检查(i,j)和(j,i)。",
+          "time": "最坏 O(n²)，已含唯一性检查",
+          "space": "额外 O(1)，只保存计数与两个答案下标",
+          "derivation": "对所有i<j访问n(n−1)/2个下标对；为核验恰好一组解，命中后仍继续枚举。输入读取O(n)，由二次枚举主导。values是输入存储，不作为辅助空间。",
+          "suitable": "小输入、直接核对不同下标对、希望少用辅助存储。",
+          "cautions": "不能使用同一下标两次，也不能命中即返回而漏掉多解。渐进二次不代表当前12项规模必然比排序慢。"
+        },
+        {
+          "solutionRef": {
+            "id": "solution.cpp.two-sum-merge-pointers",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.example-two-sum-merge-pointers",
+            "version": "1.0.0"
+          },
+          "sourceFile": "content/advanced/example-two-sum-merge-pointers-1.0.0.cpp",
+          "title": "归并索引后双指针",
+          "strategy": "先排原下标，再从两端缩小候选区间；对相等值成段计数。",
+          "time": "最坏 O(n log n)，已含唯一性检查与输入读取",
+          "space": "额外 O(n)；order与scratch各12槽，共96教学字节，另有常数标量",
+          "derivation": "自底向上归并有⌈log₂n⌉轮，每轮合并和拷回至多n个下标；双指针每次使边界向内，重复值也只按段扫描一次。总O(n log n)+O(n)。原values保持原顺序，两个索引数组形成O(n)辅助空间，无递归栈。",
+          "suitable": "需要保留原下标、理解排序预处理与线性扫描的组合，或n较大时比较渐进增长。",
+          "cautions": "排序只改order，不改原values；命中不能立即返回，要累计所有下标对。两端相同值m项有m(m−1)/2对，异值段为两段长度乘积。小规模下排序与辅助写入可能比枚举更多。"
+        }
+      ],
+      "supplementalSamples": [
+        {
+          "key": "all-equal-ambiguous",
+          "values": [3, 3, 3],
+          "target": 6,
+          "expectedStdout": "INVALID_INPUT\n",
+          "expectedReturn": 1
+        },
+        {
+          "key": "disjoint-pairs",
+          "values": [1, 2, 3, 4],
+          "target": 5,
+          "expectedStdout": "INVALID_INPUT\n",
+          "expectedReturn": 1
+        },
+        {
+          "key": "original-endpoints",
+          "values": [999, 0, -999],
+          "target": 0,
+          "expectedStdout": "0 2\n",
+          "expectedReturn": 0
+        }
+      ]
+    },
+    {
+      "exampleRef": {
+        "id": "example.cpp.move-zeroes",
+        "version": "1.0.0"
+      },
+      "solutions": [
+        {
+          "solutionRef": {
+            "id": "solution.cpp.move-zeroes-compact",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.example-move-zeroes-compact",
+            "version": "1.0.0"
+          },
+          "sourceFile": "content/advanced/example-move-zeroes-1.0.0.cpp",
+          "title": "稳定压缩后补零",
+          "strategy": "read扫描每个输入位置，write指向下一个应放非零值的位置。遇到非零时写到values[write]，再推进write；遇到零只推进扫描。",
+          "time": "最坏 O(n)，完整读取与输出也是O(n)",
+          "space": "额外 O(1)，常数个读写游标，无完整数组副本",
+          "derivation": "第一轮按原顺序写所有非零，第二轮补齐剩余零。算法核心总n次数组写（含同位置/同值写）；输入读取另外计入真实状态计数。两轮合计O(n)，额外空间O(1)。",
+          "suitable": "想直接用已处理前缀推导稳定性，或希望算法核心写入次数固定为n。",
+          "cautions": "write只在非零分支递增；压缩后必须把尾部补零。辅助空间排除输入本身，不能拿物理固定容量推断任意规模O(1)存储。"
+        },
+        {
+          "solutionRef": {
+            "id": "solution.cpp.move-zeroes-swap",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.example-move-zeroes-swap",
+            "version": "1.0.0"
+          },
+          "sourceFile": "content/advanced/example-move-zeroes-swap-1.0.0.cpp",
+          "title": "非零前移并原地交换",
+          "strategy": "write前保持已确认非零前缀；read遇非零时与前方零槽交换，同位置跳过。",
+          "time": "最坏 O(n)，完整读取与输出也是O(n)",
+          "space": "额外 O(1)，仅write/read/temp等常数标量，无完整数组副本",
+          "derivation": "read访问n项，write只随非零递增，因此一次扫描O(n)。write<read时，write槽必为0，交换不会打乱已写非零顺序；每次实际交换有两次数组写。同位置不写，无零或全零时算法核心可零次数组写。",
+          "suitable": "希望一次扫描完成，或无零/前方没有空洞时避免无意义写入；同时观察稳定性不变量。",
+          "cautions": "只有非零且write!=read才交换。两次写入是一组算法交换，但当前引擎交换指标未标注，显示其真实0；应查看数组写计数。交错零时可能比压缩补零写得更多。"
+        }
+      ],
+      "supplementalSamples": [
+        {
+          "key": "leading-zeroes",
+          "values": [0, 0, 5, -1],
+          "expectedStdout": "5 -1 0 0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "alternating-equal",
+          "values": [4, 0, 4, 0],
+          "expectedStdout": "4 4 0 0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "extreme-zeroes",
+          "values": [-999, 0, 999, 0],
+          "expectedStdout": "-999 999 0 0\n",
+          "expectedReturn": 0
+        }
+      ]
+    },
+    {
+      "exampleRef": {
+        "id": "example.cpp.search-insert",
+        "version": "1.0.0"
+      },
+      "solutions": [
+        {
+          "solutionRef": {
+            "id": "solution.cpp.search-insert-binary",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.example-search-insert-binary",
+            "version": "1.0.0"
+          },
+          "sourceFile": "content/advanced/example-search-insert-1.0.0.cpp",
+          "title": "半开区间二分",
+          "strategy": "初始候选区间为[left,right)=[0,n)。left之前的元素都小于target；right及之后的位置已无需继续检查。",
+          "time": "搜索核心最坏 O(log n)；完整stdin演示 O(n)",
+          "space": "额外 O(1)，只有left/right/middle等常数标量",
+          "derivation": "始终保留半开候选[left,right)，right从n开始；每轮缩到一半，left==right时即插入位置。搜索O(log n)，输入读取O(n)；没有辅助数组。",
+          "suitable": "习惯半开区间与数组长度n，想让未命中和尾插自然统一在left。",
+          "cautions": "right=n不可直接索引；循环必须left<right，右缩为middle。不能把闭区间的right=middle−1混进本方案。"
+        },
+        {
+          "solutionRef": {
+            "id": "solution.cpp.search-insert-closed",
+            "version": "1.0.0"
+          },
+          "programRef": {
+            "id": "program.cpp.example-search-insert-closed",
+            "version": "1.0.0"
+          },
+          "sourceFile": "content/advanced/example-search-insert-closed-1.0.0.cpp",
+          "title": "闭区间二分与候选位置",
+          "strategy": "在[left,right]内找第一个不小于target的位置，answer初始为n。",
+          "time": "搜索核心最坏 O(log n)；完整stdin演示 O(n)",
+          "space": "额外 O(1)，只有left/right/middle/answer等常数标量",
+          "derivation": "每轮舍弃至少中点所在的一半候选，left<=right终止前最多O(log n)次；命中或更大值都记录answer并继续向左。输入n项需O(n)，不包含在核心搜索复杂度中；没有辅助数组。",
+          "suitable": "习惯闭区间语义，或要明确记录目前最靠左的可行候选；与半开区间对照检查边界。",
+          "cautions": "right必须初始化为n−1；右缩到middle−1而非middle，否则可能死循环。未找到候选时answer=n；半开区间方案则最终返回left。两者都要求原数组严格递增。"
+        }
+      ],
+      "supplementalSamples": [
+        {
+          "key": "first-hit",
+          "values": [-999, 0, 999],
+          "target": -999,
+          "expectedStdout": "0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "last-hit",
+          "values": [-999, 0, 999],
+          "target": 999,
+          "expectedStdout": "2\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "single-hit",
+          "values": [0],
+          "target": 0,
+          "expectedStdout": "0\n",
+          "expectedReturn": 0
+        }
+      ]
+    }
+  ]
+}

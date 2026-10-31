@@ -1,0 +1,130 @@
+.advanced-course {
+  color: var(--p05-text);
+}
+.advanced-heading {
+  margin: 20px 0 24px;
+}
+.advanced-heading h1 {
+  font-size: 28px;
+  line-height: 1.35;
+  margin: 0 0 12px;
+}
+.advanced-heading p {
+  margin: 0;
+}
+.advanced-rule {
+  margin: 16px 0 24px;
+  max-width: 90ch;
+  line-height: 1.7;
+}
+.advanced-chapters {
+  display: grid;
+  gap: 32px;
+}
+.advanced-chapter-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.advanced-chapter-heading h2,
+.advanced-detail h2,
+.advanced-next h2 {
+  font-size: 20px;
+  margin: 0 0 12px;
+}
+.advanced-chapter-heading span {
+  font-variant-numeric: tabular-nums;
+}
+.advanced-lesson-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.advanced-lesson-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--p05-border);
+}
+.advanced-lesson-list h3 {
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+.advanced-lesson-list p {
+  margin: 0;
+}
+.advanced-lesson-list > li > span {
+  flex-shrink: 0;
+}
+.advanced-course a:not(.button) {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.advanced-next {
+  margin-top: 32px;
+}
+/* Two columns share the full existing canvas: remaining width + 320px + one 24px gutter. */
+.advanced-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
+  gap: 24px;
+}
+.advanced-detail article,
+.advanced-detail aside {
+  min-width: 0;
+}
+.advanced-detail section {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--p05-surface);
+  border: 1px solid var(--p05-border);
+  border-radius: 8px;
+}
+.advanced-detail p,
+.advanced-detail li {
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+.advanced-detail ul {
+  padding-left: 22px;
+}
+.advanced-detail summary {
+  cursor: pointer;
+  padding: 12px 0;
+}
+.advanced-detail .sample-source {
+  overflow: auto;
+  max-height: 480px;
+}
+.advanced-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 24px;
+}
+@media (max-width: 900px) {
+  .advanced-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .advanced-detail aside {
+    grid-row: 1;
+  }
+}
+@media (max-width: 600px) {
+  .advanced-lesson-list li {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .advanced-heading h1 {
+    font-size: 24px;
+  }
+  .advanced-detail section {
+    padding: 16px;
+  }
+}

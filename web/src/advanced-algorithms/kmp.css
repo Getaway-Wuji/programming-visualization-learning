@@ -1,0 +1,40 @@
+.kmp-input > p,
+.kmp-input > .inline-actions {
+  grid-column: 1 / -1;
+}
+.kmp-input input {
+  white-space: pre;
+}
+.kmp-input small {
+  font-size: 13px;
+}
+.kmp-state h4 {
+  margin: 20px 0 8px;
+}
+.kmp-state [data-current='true'] {
+  outline: 2px solid var(--p05-accent-raw);
+  outline-offset: -2px;
+}
+.kmp-character-grid small {
+  font-size: 12px;
+}
+.kmp-scalars {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.kmp-scalars dt {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.kmp-scalars dd {
+  margin: 8px 0;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 700px) {
+  .kmp-scalars {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

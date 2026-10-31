@@ -1,0 +1,583 @@
+{
+  "task": "18.5",
+  "date": "2026-11-01",
+  "status": "accepted",
+  "release": "1.0.58",
+  "sources": 386,
+  "registrationSha256": "7d833bd1a55a84313829d84641de79e496a8b70f55355d187c537768e4b6f538",
+  "content": {
+    "cases": 1,
+    "publicSamples": 24,
+    "actualRustWasmExecutions": 24,
+    "maxSteps": 883,
+    "maxResultBytes": 579403,
+    "independentShortPairs": 225,
+    "actualBuildFallbacks": 28,
+    "actualMatchingFallbacks": 29,
+    "input": "two raw printable ASCII0x20..0x7e lines0..30 bytes each, missing not empty",
+    "emptyPattern": 0,
+    "noMatch": -1,
+    "match": "first0based index",
+    "prefix": "longest proper prefix also suffix length; no-1sentinel",
+    "learningAuthority": false,
+    "catalogCounts": {
+      "srsAccepted": 22,
+      "srsTotal": 22,
+      "formalCases": 26,
+      "c": 7,
+      "cpp": 19,
+      "classicExamplesSeparately": 3,
+      "solutionsSeparately": 6
+    }
+  },
+  "unit": {
+    "passed": 2033,
+    "failed": 0,
+    "skipped": 0,
+    "runtimeErrors": 0,
+    "workers": 1
+  },
+  "candidateChrome": {
+    "startTime": "2026-10-31T19:54:01.962Z",
+    "duration": 99766.38900000001,
+    "expected": 97,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "formalChrome": {
+    "startTime": "2026-10-31T19:56:14.351Z",
+    "duration": 248824.355,
+    "expected": 208,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "formalPerFile": {
+    "advanced-course-learning.spec.ts": 3,
+    "advanced-course.spec.ts": 9,
+    "comparison.spec.ts": 14,
+    "custom-code.spec.ts": 1,
+    "example-solutions.spec.ts": 38,
+    "examples.spec.ts": 28,
+    "kmp.spec.ts": 34,
+    "p05-course.spec.ts": 1,
+    "recursive-comparison.spec.ts": 19,
+    "sieve-sequences-regression.spec.ts": 7,
+    "sieve-sequences.spec.ts": 54
+  },
+  "quality": {
+    "typecheck": 0,
+    "lint": 0,
+    "format": 0,
+    "contentFormat": 0
+  },
+  "build": {
+    "candidate": "build-candidate58-reviewed-r3.log actual exit0",
+    "formal": "build-formal58.log actual exit0",
+    "fourWasmShaUnchanged": true
+  },
+  "receipts": {
+    "indexes": 43,
+    "receipts": 317,
+    "validation": "restore-release-evidence actual exit0; local only, no Git-tracked or remote CI claim"
+  },
+  "qaArchive": {
+    "files": 328,
+    "archiveBytes": 40240905,
+    "allArchiveRawAndSourceShaVerified": true
+  },
+  "oldQa": [
+    {
+      "task": "18.1",
+      "files": 167,
+      "archiveRawAndOriginalSourceShaUnchanged": true
+    },
+    {
+      "task": "18.2",
+      "files": 185,
+      "archiveRawAndOriginalSourceShaUnchanged": true
+    },
+    {
+      "task": "18.3",
+      "files": 435,
+      "archiveRawAndOriginalSourceShaUnchanged": true
+    },
+    {
+      "task": "18.4",
+      "files": 650,
+      "archiveRawAndOriginalSourceShaUnchanged": true
+    }
+  ],
+  "relativeLinks": 20,
+  "visual": {
+    "style": "Framed sheet",
+    "seed": 625120833,
+    "kept": "existing palette and fonts",
+    "widths": [
+      1440,
+      768,
+      390
+    ],
+    "inspector": "0FAIL/0WARN",
+    "sourceUiLint": "0FAIL/0WARN",
+    "viewed": {
+      "finalInspector": 6,
+      "candidateRealRuns": 5,
+      "formalRealRuns": 5
+    },
+    "score": {
+      "design": 8,
+      "usability": 8,
+      "creativity": 7,
+      "content": 9,
+      "weighted": 7.9
+    },
+    "actualCapture": {
+      "browser": "156.0.8078.76",
+      "note": "Actual maximum input KMP at90% real cursor during matching fallback; original reading expanded. No CSS/image edits, only pane choice, scroll and blur.",
+      "records": [
+        {
+          "width": 1440,
+          "pane": "state",
+          "length": 883,
+          "scrollY": 0,
+          "overflow": false,
+          "cursor": "794",
+          "phase": "2",
+          "scalars": [
+            {
+              "name": "phase",
+              "value": "2"
+            },
+            {
+              "name": "n",
+              "value": "30"
+            },
+            {
+              "name": "m",
+              "value": "30"
+            },
+            {
+              "name": "built",
+              "value": "30"
+            },
+            {
+              "name": "buildIndex",
+              "value": "30"
+            },
+            {
+              "name": "border",
+              "value": "0"
+            },
+            {
+              "name": "textIndex",
+              "value": "29"
+            },
+            {
+              "name": "matched",
+              "value": "20"
+            },
+            {
+              "name": "answer",
+              "value": "-1"
+            }
+          ],
+          "prefix": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "0"
+          ],
+          "highlight": "910"
+        },
+        {
+          "width": 768,
+          "pane": "state",
+          "length": 883,
+          "scrollY": 0,
+          "overflow": false,
+          "cursor": "794",
+          "phase": "2",
+          "scalars": [
+            {
+              "name": "phase",
+              "value": "2"
+            },
+            {
+              "name": "n",
+              "value": "30"
+            },
+            {
+              "name": "m",
+              "value": "30"
+            },
+            {
+              "name": "built",
+              "value": "30"
+            },
+            {
+              "name": "buildIndex",
+              "value": "30"
+            },
+            {
+              "name": "border",
+              "value": "0"
+            },
+            {
+              "name": "textIndex",
+              "value": "29"
+            },
+            {
+              "name": "matched",
+              "value": "20"
+            },
+            {
+              "name": "answer",
+              "value": "-1"
+            }
+          ],
+          "prefix": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "0"
+          ],
+          "highlight": "910"
+        },
+        {
+          "width": 768,
+          "pane": "source",
+          "length": 883,
+          "scrollY": 0,
+          "overflow": false,
+          "cursor": "794",
+          "phase": "2",
+          "scalars": [
+            {
+              "name": "phase",
+              "value": "2"
+            },
+            {
+              "name": "n",
+              "value": "30"
+            },
+            {
+              "name": "m",
+              "value": "30"
+            },
+            {
+              "name": "built",
+              "value": "30"
+            },
+            {
+              "name": "buildIndex",
+              "value": "30"
+            },
+            {
+              "name": "border",
+              "value": "0"
+            },
+            {
+              "name": "textIndex",
+              "value": "29"
+            },
+            {
+              "name": "matched",
+              "value": "20"
+            },
+            {
+              "name": "answer",
+              "value": "-1"
+            }
+          ],
+          "prefix": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "0"
+          ],
+          "highlight": "910"
+        },
+        {
+          "width": 390,
+          "pane": "state",
+          "length": 883,
+          "scrollY": 0,
+          "overflow": false,
+          "cursor": "794",
+          "phase": "2",
+          "scalars": [
+            {
+              "name": "phase",
+              "value": "2"
+            },
+            {
+              "name": "n",
+              "value": "30"
+            },
+            {
+              "name": "m",
+              "value": "30"
+            },
+            {
+              "name": "built",
+              "value": "30"
+            },
+            {
+              "name": "buildIndex",
+              "value": "30"
+            },
+            {
+              "name": "border",
+              "value": "0"
+            },
+            {
+              "name": "textIndex",
+              "value": "29"
+            },
+            {
+              "name": "matched",
+              "value": "20"
+            },
+            {
+              "name": "answer",
+              "value": "-1"
+            }
+          ],
+          "prefix": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "0"
+          ],
+          "highlight": "910"
+        },
+        {
+          "width": 390,
+          "pane": "source",
+          "length": 883,
+          "scrollY": 0,
+          "overflow": false,
+          "cursor": "794",
+          "phase": "2",
+          "scalars": [
+            {
+              "name": "phase",
+              "value": "2"
+            },
+            {
+              "name": "n",
+              "value": "30"
+            },
+            {
+              "name": "m",
+              "value": "30"
+            },
+            {
+              "name": "built",
+              "value": "30"
+            },
+            {
+              "name": "buildIndex",
+              "value": "30"
+            },
+            {
+              "name": "border",
+              "value": "0"
+            },
+            {
+              "name": "textIndex",
+              "value": "29"
+            },
+            {
+              "name": "matched",
+              "value": "20"
+            },
+            {
+              "name": "answer",
+              "value": "-1"
+            }
+          ],
+          "prefix": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "0"
+          ],
+          "highlight": "910"
+        }
+      ]
+    },
+    "note": "Expanded mobile reading and30character/prefix slots require vertical scroll; long C++ uses pane-local horizontal/vertical scroll. No CSS or image edits to evidence."
+  },
+  "inherited": "543 Rust/original ignored1 and old full budget/performance matrices inherited only through unchanged sources/fourWASM SHA, not rerun as fresh fullsuite. Actual KMP/atomic reversal independently verified.",
+  "audit": {
+    "at": "2026-10-31T20:00:50.605Z",
+    "head": "ec5b8a136413fb6519a0f03af2988ffc7d77a83a",
+    "trackedAndExternalBaseline": 17144,
+    "baselineChanged": [
+      "web/src/advanced-algorithms/AdvancedAlgorithmPage.tsx",
+      "web/src/advanced-algorithms/AlgorithmReading.tsx",
+      "web/src/advanced-course/AdvancedCoursePage.tsx",
+      "README.md",
+      "scripts/build-p05-course.mjs",
+      "scripts/restore-release-evidence.mjs",
+      "web/src/App.tsx",
+      "web/src/content/p05-course-release.generated.ts",
+      "web/src/custom-code/controller.ts",
+      "web/src/pages/CatalogPages.tsx",
+      "项目守则.md",
+      "项目文档/任务进度与交接.md",
+      "项目文档/开发路线与依赖.md",
+      "项目文档/算法目录覆盖表.md",
+      "项目文档/需求覆盖与范围裁决.md"
+    ],
+    "deleted": [],
+    "protectedExternal": 16,
+    "protectedChanged": [],
+    "frozenChecked": 15681,
+    "frozenChanged": [],
+    "staged": "",
+    "aheadBehind": "0\t0",
+    "status": " M README.md\n M scripts/build-p05-course.mjs\n M scripts/restore-release-evidence.mjs\n M web/src/App.tsx\n M web/src/components/Layout.tsx\n M web/src/content/p05-course-release.generated.ts\n M web/src/custom-code/controller.ts\n M web/src/pages/CatalogPages.tsx\n M 项目守则.md\n M 项目文档/交接/2026-10-31-GitHub-Actions构建修复-交接.md\n M 项目文档/任务进度与交接.md\n M 项目文档/开发路线与依赖.md\n M 项目文档/算法目录覆盖表.md\n M 项目文档/需求覆盖与范围裁决.md\n?? .taste-skill/direction.json\n?? content/advanced/\n?? content/algorithms/cpp/eratosthenes-sieve-1.0.0.cpp\n?? content/algorithms/cpp/euler-sieve-1.0.0.cpp\n?? content/algorithms/cpp/kmp-1.0.0.cpp\n?? content/algorithms/cpp/kmp-1.0.0.json\n?? content/algorithms/cpp/kmp-1.0.0.schema.json\n?? content/algorithms/cpp/maximum-subarray-1.0.0.cpp\n?? content/algorithms/cpp/sieve-sequences-1.0.0.json\n?? content/algorithms/cpp/sieve-sequences-1.0.0.schema.json\n?? content/algorithms/cpp/strict-lis-1.0.0.cpp\n?? content/c/p0/blockly-release-1.0.53.json\n?? content/c/p0/blockly-release-1.0.54.json\n?? content/c/p0/blockly-release-1.0.55.json\n?? content/c/p0/blockly-release-1.0.56.json\n?? content/c/p0/blockly-release-1.0.57.json\n?? content/c/p0/blockly-release-1.0.58.json\n?? scripts/advanced-course-content.mjs\n?? scripts/advanced-course-release-inputs.mjs\n?? scripts/example-solutions-content.mjs\n?? scripts/example-solutions-release-inputs.mjs\n?? scripts/examples-content.mjs\n?? scripts/examples-release-inputs.mjs\n?? scripts/kmp-content.mjs\n?? scripts/kmp-release-inputs.mjs\n?? scripts/register-advanced-course-53.mjs\n?? scripts/register-example-solutions-55.mjs\n?? scripts/register-example-solutions-56.mjs\n?? scripts/register-examples-54.mjs\n?? scripts/register-kmp-58.mjs\n?? scripts/register-sieve-sequences-57.mjs\n?? scripts/sieve-sequences-content.mjs\n?? scripts/sieve-sequences-release-inputs.mjs\n?? tests/browser/advanced-course-learning.spec.ts\n?? tests/browser/advanced-course.spec.ts\n?? tests/browser/example-solutions.spec.ts\n?? tests/browser/examples.spec.ts\n?? tests/browser/kmp.spec.ts\n?? tests/browser/sieve-sequences-regression.spec.ts\n?? tests/browser/sieve-sequences.spec.ts\n?? tests/unit/advanced-course.test.ts\n?? tests/unit/example-solutions.test.ts\n?? tests/unit/examples.test.ts\n?? tests/unit/kmp.test.ts\n?? tests/unit/sieve-sequences.test.ts\n?? web/src/advanced-algorithms/\n?? web/src/advanced-course/\n?? web/src/example-comparison/\n?? web/src/examples/\n?? 项目文档/交付/18.1-进阶课程使用说明.md\n?? 项目文档/交付/18.2-经典例题使用说明.md\n?? 项目文档/交付/18.3-同题两解使用说明.md\n?? 项目文档/交付/18.4-筛法与序列使用说明.md\n?? 项目文档/交付/18.5-KMP使用说明.md\n?? 项目文档/交接/18.1-交接.md\n?? 项目文档/交接/18.2-交接.md\n?? 项目文档/交接/18.3-交接.md\n?? 项目文档/交接/18.4-交接.md\n?? 项目文档/交接/18.5-交接.md\n?? 项目文档/交接/2026-10-31-CI修复同步与临时副本清理-交接.md\n?? 项目文档/交接/2026-10-31-GitHub-Actions失败排查-交接.md\n?? 项目文档/契约/18.1-进阶编排与精确引用.md\n?? 项目文档/契约/18.2-经典例题与来源契约.md\n?? 项目文档/契约/18.3-多解法与同题对比契约.md\n?? 项目文档/契约/18.4-筛法序列案例与投影契约.md\n?? 项目文档/契约/18.5-KMP内容与真实状态投影.md\n?? 项目文档/架构决策/18.1-课程编排与统一学习记录.md\n?? 项目文档/架构决策/18.2-经典例题来源与执行范围.md\n?? 项目文档/架构决策/18.3-同题方案与统一对比范围.md\n?? 项目文档/架构决策/18.4-筛法与序列范围及预算.md\n?? 项目文档/架构决策/18.5-KMP范围输入与预算.md\n?? 项目文档/验收/18.1-最终复核.json\n?? 项目文档/验收/18.1-进阶课程与记录复用验收.md\n?? 项目文档/验收/18.1-验证原件/\n?? 项目文档/验收/18.2-最终复核.json\n?? 项目文档/验收/18.2-来源核验.json\n?? 项目文档/验收/18.2-经典例题与来源验收.md\n?? 项目文档/验收/18.2-验证原件/\n?? 项目文档/验收/18.3-同题多解法与对比验收.md\n?? 项目文档/验收/18.3-最终复核.json\n?? 项目文档/验收/18.3-验证原件/\n?? 项目文档/验收/18.4-最终复核.json\n?? 项目文档/验收/18.4-界面复核.md\n?? 项目文档/验收/18.4-筛法与序列验收.md\n?? 项目文档/验收/18.4-验证原件/\n?? 项目文档/验收/18.5-KMP内容与真实匹配验收.md\n?? 项目文档/验收/18.5-界面复核.md\n?? 项目文档/验收/2026-10-31-CI修复同步与清理/\n?? 项目文档/验收/发布凭据/18.1-1.0.53/\n?? 项目文档/验收/发布凭据/18.2-1.0.54/\n?? 项目文档/验收/发布凭据/18.3-1.0.55/\n?? 项目文档/验收/发布凭据/18.3-1.0.56/\n?? 项目文档/验收/发布凭据/18.4-1.0.57/\n?? 项目文档/验收/发布凭据/18.5-1.0.58/\n"
+  },
+  "limitations": [
+    "Chrome/minimal only",
+    "Old immutable case-set tests still assert15stores and directly fail currentDB8/16; seven currentDB8/allsteps representative C inputs do not replace full historical boundary matrix. HistoricalQA maintenance deferred to coordinator.",
+    "No fresh full performance/physical60fps or six-theme acceptance; original500ms grouped deviation kept",
+    "No new learning authority/general C++ editor/Unicode/language21 loop",
+    "No external deployment/Actions/Git write",
+    "18.6 and21 unclaimed"
+  ]
+}

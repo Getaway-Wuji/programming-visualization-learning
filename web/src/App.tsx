@@ -33,6 +33,12 @@ const ReviewPage = lazy(() =>
 );
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const CustomCodePage = lazy(() => import('./custom-code/CustomCodePage'));
+const AdvancedCoursePage = lazy(() => import('./advanced-course/AdvancedCoursePage'));
+const LanguageMigrationPage = lazy(() => import('./language-migration/LanguageMigrationPage'));
+const ExamplePage = lazy(() => import('./examples/ExamplePage'));
+const KmpPage = lazy(() => import('./advanced-algorithms/KmpPage'));
+const AdvancedAlgorithmPage = lazy(() => import('./advanced-algorithms/AdvancedAlgorithmPage'));
+const ExampleComparisonPage = lazy(() => import('./example-comparison/ExampleComparisonPage'));
 const MemoryPage = lazy(() => import('./pages/MemoryPage'));
 const ComparisonPage = lazy(() => import('./comparison/ComparisonPage'));
 const AlgorithmPage = lazy(() => import('./algorithms/AlgorithmPage'));
@@ -84,6 +90,18 @@ function AppRoutes() {
             <Route path="/" element={<HomePage />} />
             <Route path="/courses" element={<CoursePage />} />
             <Route path="/courses/:chapterId" element={<CoursePage />} />
+            <Route path="/advanced" element={<AdvancedCoursePage />} />
+            <Route path="/advanced/migration" element={<LanguageMigrationPage />} />
+            <Route path="/advanced/examples" element={<ExamplePage />} />
+            <Route path="/advanced/algorithms" element={<AdvancedAlgorithmPage />} />
+            <Route path="/advanced/algorithms/case.cpp.kmp" element={<KmpPage />} />
+            <Route path="/advanced/algorithms/:caseId" element={<AdvancedAlgorithmPage />} />
+            <Route path="/advanced/examples/:exampleId" element={<ExamplePage />} />
+            <Route
+              path="/advanced/examples/:exampleId/compare"
+              element={<ExampleComparisonPage />}
+            />
+            <Route path="/advanced/:lessonId" element={<AdvancedCoursePage />} />
             <Route path="/lessons/:lessonId" element={<LessonPage />} />
             <Route path="/practice/:exerciseId" element={<PracticePage />} />
             <Route path="/practice/:exerciseId/review" element={<ReviewPage />} />

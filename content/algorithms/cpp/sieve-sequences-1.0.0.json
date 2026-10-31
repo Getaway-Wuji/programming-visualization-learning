@@ -1,0 +1,544 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "catalog.cpp.sieve-sequences",
+  "version": "1.0.0",
+  "packageRef": {
+    "id": "content.c.p05",
+    "version": "1.0.0"
+  },
+  "learningAuthority": false,
+  "cases": [
+    {
+      "id": "case.cpp.eratosthenes-sieve",
+      "version": "1.0.0",
+      "programRef": {
+        "id": "program.cpp.eratosthenes-sieve",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "engine": "engine.rust.advanced",
+      "sourceFile": "content/algorithms/cpp/eratosthenes-sieve-1.0.0.cpp",
+      "prerequisiteLessonRef": {
+        "id": "lesson.c.nested-loops",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.loops",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.variables",
+          "version": "1.0.0"
+        }
+      ],
+      "arrays": [
+        {
+          "name": "composite",
+          "label": "候选与排除",
+          "extent": "bound"
+        },
+        {
+          "name": "marks",
+          "label": "真实标记次数",
+          "extent": "bound"
+        }
+      ],
+      "title": "埃氏筛",
+      "topic": "逐步排除合数",
+      "inputKind": "bound",
+      "statement": "给出包含端点的上界，按素数的倍数逐步排除合数，输出不超过上界的全部素数。",
+      "platformConstraints": "上界0～30，包含上界；0和1不是素数。只读取一个整数，输出升序素数；没有素数时仅换行。",
+      "defaults": {
+        "values": [30]
+      },
+      "strategy": "从p²开始筛未排除候选的倍数",
+      "explanation": [
+        "composite初始清零，程序显式把0和1设为1。筛选中0只表示尚未排除的候选，不能提前当作已证明素数。",
+        "从p=2开始，只要p²不超过上界，若p尚未排除，就把p²、p²+p……标记为合数。比p²小的p倍数已由更小素因子处理。",
+        "marks在每次真实标记时递增，所以12、30等可能被不同素数重复标记；观察次数与“是否合数”是两件事。最后扫描输出所有未排除的2以上整数。"
+      ],
+      "complexity": "核心O(U log log U)，完整清零/扫描/输出另有O(U)；额外O(U)。",
+      "derivation": "只对素数p筛倍数，工作量由U乘素数倒数和主导，为O(U log log U)；数组清零与最后扫描O(U)。本教学源composite与marks各31槽，逻辑辅助随U线性增长，不因固定容量宣称一般空间O(1)。",
+      "pitfalls": [
+        "0/1显式排除，不计合数核心标记。",
+        "mark为0在中间步骤只能叫候选；最终筛选结束才可读素数结果。",
+        "起点p²、条件p*p<=U都包含边界，25等平方数不能遗漏。"
+      ],
+      "reviewQuestion": "为什么可以从p²开始，而不是从2p重新标记？",
+      "samples": [
+        {
+          "key": "upper-0",
+          "values": [0],
+          "expectedStdout": "\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-1",
+          "values": [1],
+          "expectedStdout": "\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-2",
+          "values": [2],
+          "expectedStdout": "2\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-4",
+          "values": [4],
+          "expectedStdout": "2 3\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-9",
+          "values": [9],
+          "expectedStdout": "2 3 5 7\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-10",
+          "values": [10],
+          "expectedStdout": "2 3 5 7\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-17",
+          "values": [17],
+          "expectedStdout": "2 3 5 7 11 13 17\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-25",
+          "values": [25],
+          "expectedStdout": "2 3 5 7 11 13 17 19 23\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-29",
+          "values": [29],
+          "expectedStdout": "2 3 5 7 11 13 17 19 23 29\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-30",
+          "values": [30],
+          "expectedStdout": "2 3 5 7 11 13 17 19 23 29\n",
+          "expectedReturn": 0
+        }
+      ]
+    },
+    {
+      "id": "case.cpp.euler-sieve",
+      "version": "1.0.0",
+      "programRef": {
+        "id": "program.cpp.euler-sieve",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "engine": "engine.rust.advanced",
+      "sourceFile": "content/algorithms/cpp/euler-sieve-1.0.0.cpp",
+      "prerequisiteLessonRef": {
+        "id": "lesson.c.nested-loops",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.loops",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.variables",
+          "version": "1.0.0"
+        }
+      ],
+      "arrays": [
+        {
+          "name": "composite",
+          "label": "候选与排除",
+          "extent": "bound"
+        },
+        {
+          "name": "marks",
+          "label": "真实标记次数",
+          "extent": "bound"
+        },
+        {
+          "name": "primes",
+          "label": "已生成素数前缀",
+          "extent": "count"
+        }
+      ],
+      "title": "欧拉筛",
+      "topic": "每个合数只标记一次",
+      "inputKind": "bound",
+      "statement": "按从小到大的顺序生成素数表，使用最小素因子规则，让每个合数只在核心筛选中标记一次。",
+      "platformConstraints": "上界0～30，包含上界；0和1不是素数。primes只有前count项有效，后续未初始化槽不作为素数。",
+      "defaults": {
+        "values": [30]
+      },
+      "strategy": "按最小素因子分工，遇整除立即停止",
+      "explanation": [
+        "i未被排除时，把i写入primes[count]后再增加count。primes中的有效前缀按生成顺序自然递增。",
+        "依次用已生成的素数p标记i*p；乘积超过上界立即停止。标记后若i能整除p，也立即停止，不再使用更大的素数。",
+        "停止规则让每个合数m只由“最小素因子p × m/p”这一对生成。marks来自程序实际递增，所有2以上合数最终都应为1；0/1只是边界排除。"
+      ],
+      "complexity": "核心O(U)，含初始化与输出仍O(U)；额外O(U)。",
+      "derivation": "每个合数在核心中恰好生成一次，外层至多U次，检查后停止的额外迭代也是O(U)。composite/marks/primes各31槽；按一般规模是线性辅助空间。",
+      "pitfalls": [
+        "整除后的break不能移到标记之前，否则会漏掉i*p。",
+        "primes必须先写再增加count，只能读取已生成的有效前缀。",
+        "“一次”指核心合数标记，不包含0/1边界赋值或数组初始化。"
+      ],
+      "reviewQuestion": "为什么i遇到第一个能整除自己的素数后，不再用更大的素数？",
+      "samples": [
+        {
+          "key": "upper-0",
+          "values": [0],
+          "expectedStdout": "\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-1",
+          "values": [1],
+          "expectedStdout": "\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-2",
+          "values": [2],
+          "expectedStdout": "2\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-4",
+          "values": [4],
+          "expectedStdout": "2 3\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-9",
+          "values": [9],
+          "expectedStdout": "2 3 5 7\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-10",
+          "values": [10],
+          "expectedStdout": "2 3 5 7\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-17",
+          "values": [17],
+          "expectedStdout": "2 3 5 7 11 13 17\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-25",
+          "values": [25],
+          "expectedStdout": "2 3 5 7 11 13 17 19 23\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-29",
+          "values": [29],
+          "expectedStdout": "2 3 5 7 11 13 17 19 23 29\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "upper-30",
+          "values": [30],
+          "expectedStdout": "2 3 5 7 11 13 17 19 23 29\n",
+          "expectedReturn": 0
+        }
+      ]
+    },
+    {
+      "id": "case.cpp.maximum-subarray",
+      "version": "1.0.0",
+      "programRef": {
+        "id": "program.cpp.maximum-subarray",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "engine": "engine.rust.advanced",
+      "sourceFile": "content/algorithms/cpp/maximum-subarray-1.0.0.cpp",
+      "prerequisiteLessonRef": {
+        "id": "lesson.c.array-extrema",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.arrays",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.loops",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.conditions",
+          "version": "1.0.0"
+        }
+      ],
+      "arrays": [
+        {
+          "name": "values",
+          "label": "原始序列",
+          "extent": "input"
+        },
+        {
+          "name": "ending",
+          "label": "以本项结尾的最大和",
+          "extent": "input"
+        }
+      ],
+      "title": "最大连续子序列和",
+      "topic": "保留以当前位置结尾的最优和",
+      "inputKind": "sequence",
+      "statement": "在非空输入中选择一个非空连续片段，使元素和最大。空序列单独约定结果为0。",
+      "platformConstraints": "0～30项、每项−999～999；空序列写[]。非空必须选非空子段，全负数返回最大的负数；最大绝对和29970。",
+      "defaults": {
+        "values": [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+      },
+      "strategy": "负前缀重启，ending保存每项真实递推",
+      "explanation": [
+        "ending[i]表示以i结尾的最大非空连续和，answer保存目前全部结尾的最大值。n=0直接保留0，n>0先从values[0]初始化。",
+        "如果之前的current为负，延续只会拖低和，于是从本项重启；否则把本项接到当前片段后。随后把真实current写到ending[i]。",
+        "全负输入也从第一项初始化，而不是把非空答案固定为0。ending是教学源真实保留的状态数组，前端不根据原输入补算。"
+      ],
+      "complexity": "时间O(n)；本教学实现额外O(n)，含ending状态数组。",
+      "derivation": "读取和递推各扫描一次，打印一个结果，总O(n)。values为输入数组，额外ending[30]保留每项递推，因此实际辅助O(n)；只保留current/answer时可优化为O(1)，本源没有采用该省略。",
+      "pitfalls": [
+        "连续片段不能跳过中间元素。",
+        "非空全负数必须返回负数，空序列的0不能套到非空情形。",
+        "状态展示数组也是真实空间开销，不把本实现写成额外O(1)。"
+      ],
+      "reviewQuestion": "为什么负current可以舍弃，而answer仍要保留过去的最佳值？",
+      "samples": [
+        {
+          "key": "empty",
+          "values": [],
+          "expectedStdout": "0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "negative-one",
+          "values": [-7],
+          "expectedStdout": "-7\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "zero",
+          "values": [0],
+          "expectedStdout": "0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "positive-one",
+          "values": [8],
+          "expectedStdout": "8\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "all-negative",
+          "values": [-5, -1, -7],
+          "expectedStdout": "-1\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "all-zero",
+          "values": [0, 0, 0],
+          "expectedStdout": "0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "mixed",
+          "values": [-2, 1, -3, 4, -1, 2, 1, -5, 4],
+          "expectedStdout": "6\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "prefix",
+          "values": [4, 2, -8, 1],
+          "expectedStdout": "6\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "suffix",
+          "values": [-8, 1, 2, 3],
+          "expectedStdout": "6\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "max-positive",
+          "values": [
+            999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999,
+            999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999
+          ],
+          "expectedStdout": "29970\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "max-negative",
+          "values": [
+            -999, -999, -999, -999, -999, -999, -999, -999, -999, -999, -999, -999, -999, -999,
+            -999, -999, -999, -999, -999, -999, -999, -999, -999, -999, -999, -999, -999, -999,
+            -999, -999
+          ],
+          "expectedStdout": "-999\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "extreme-alternating",
+          "values": [-999, 999, -999, 999],
+          "expectedStdout": "999\n",
+          "expectedReturn": 0
+        }
+      ]
+    },
+    {
+      "id": "case.cpp.strict-lis",
+      "version": "1.0.0",
+      "programRef": {
+        "id": "program.cpp.strict-lis",
+        "version": "1.0.0"
+      },
+      "language": "cpp",
+      "engine": "engine.rust.advanced",
+      "sourceFile": "content/algorithms/cpp/strict-lis-1.0.0.cpp",
+      "prerequisiteLessonRef": {
+        "id": "lesson.c.nested-loops",
+        "version": "1.0.0"
+      },
+      "knowledgeRefs": [
+        {
+          "id": "knowledge.c.loops",
+          "version": "1.0.0"
+        },
+        {
+          "id": "knowledge.c.variables",
+          "version": "1.0.0"
+        }
+      ],
+      "arrays": [
+        {
+          "name": "values",
+          "label": "原始序列",
+          "extent": "input"
+        },
+        {
+          "name": "dp",
+          "label": "以本项结束的严格LIS长度",
+          "extent": "input"
+        }
+      ],
+      "title": "最长上升子序列",
+      "topic": "严格上升，不要求连续",
+      "inputKind": "sequence",
+      "statement": "按原下标顺序选若干元素，使数值严格递增。输出最长长度，空序列长度为0。",
+      "platformConstraints": "0～30项、每项−999～999；空序列写[]。允许跳过元素但不能重排；相等值不能让长度增加。",
+      "defaults": {
+        "values": [10, 9, 2, 5, 3, 7, 101, 18]
+      },
+      "strategy": "枚举前驱，用dp记录以本项结束的长度",
+      "explanation": [
+        "dp[i]只表示以当前位置i结束的最长严格上升子序列长度。非空时至少能选择自己，因此本项best初始为1。",
+        "枚举j<i，只有values[j]<values[i]才允许从dp[j]+1转移；依次保留最大的候选，写入dp[i]后再更新answer。",
+        "子序列可以不连续，但下标顺序必须保持。重复值不满足严格小于；所有值相同或严格递减时，非空结果为1。"
+      ],
+      "complexity": "时间O(n²)，额外O(n)；空输入输出0。",
+      "derivation": "前驱检查总数n(n−1)/2，外层初始化/写回与输入O(n)，因此总体O(n²)。额外dp[30]保存各结尾长度，为逻辑O(n)；未采用二分优化，不声称O(n log n)。",
+      "pitfalls": [
+        "把<改成<=会变成非下降子序列，重复值的答案不同。",
+        "子序列不是连续子段，也不能先排序原数组。",
+        "dp[i]是本项结尾的答案，最终answer是所有dp的最大值。"
+      ],
+      "reviewQuestion": "为什么必须同时满足j<i和values[j]<values[i]？",
+      "samples": [
+        {
+          "key": "empty",
+          "values": [],
+          "expectedStdout": "0\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "negative-one",
+          "values": [-7],
+          "expectedStdout": "1\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "all-zero",
+          "values": [0, 0, 0],
+          "expectedStdout": "1\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "equal",
+          "values": [2, 2, 2],
+          "expectedStdout": "1\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "max-increasing",
+          "values": [
+            -15, -14, -13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6,
+            7, 8, 9, 10, 11, 12, 13, 14
+          ],
+          "expectedStdout": "30\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "max-decreasing",
+          "values": [
+            30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9,
+            8, 7, 6, 5, 4, 3, 2, 1
+          ],
+          "expectedStdout": "1\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "mixed",
+          "values": [10, 9, 2, 5, 3, 7, 101, 18],
+          "expectedStdout": "4\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "duplicate",
+          "values": [1, 2, 2, 3],
+          "expectedStdout": "3\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "negative",
+          "values": [-5, -3, -4, -1],
+          "expectedStdout": "3\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "extremes",
+          "values": [-999, 0, 999],
+          "expectedStdout": "3\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "max-equal",
+          "values": [
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
+          ],
+          "expectedStdout": "1\n",
+          "expectedReturn": 0
+        },
+        {
+          "key": "gaps",
+          "values": [3, 1, 4, 2, 5],
+          "expectedStdout": "3\n",
+          "expectedReturn": 0
+        }
+      ]
+    }
+  ]
+}

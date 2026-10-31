@@ -1,0 +1,327 @@
+{
+  "task": "18.6",
+  "date": "2026-11-01",
+  "status": "accepted",
+  "release": "1.0.59",
+  "sources": 394,
+  "registrationSha256": "faf913da11d769fbb1285b50c2c39f59e77d0ad195724f919ea7c8f957ca9b99",
+  "content": {
+    "topics": 6,
+    "languages": 4,
+    "snippets": 24,
+    "annotations": 72,
+    "orderedPairs": 12,
+    "learningAuthority": false,
+    "executionAuthority": false
+  },
+  "languageReferences": [
+    "C11 publicWG14N1570 draft",
+    "C++17 publicWG21N4659 draft",
+    "Python3.13",
+    "JavaSE21 JLS/API"
+  ],
+  "staticOnly": {
+    "compiledOrExecutedSnippets": 0,
+    "newWorkersFromTeaching": 0,
+    "steps": "authored0..3 reading annotation cursor, notStepDSL",
+    "intervalMs": 1200,
+    "scope": "six topics;24original snippets;72authored annotations;12ordered pairs;existing language changes actual content/default target/bridge;offline after initial bundle load"
+  },
+  "learning": {
+    "newEntities": 0,
+    "newRewards": 0,
+    "newStores": 0,
+    "save": "SAVE8/DB8/16stores unchanged",
+    "originalLessons": 6,
+    "exactKnowledgeAndRequiredExerciseRefs": true
+  },
+  "unit": {
+    "passed": 2057,
+    "failed": 0,
+    "skipped": 0,
+    "failedSuites": 0,
+    "workers": 1
+  },
+  "candidateChrome": {
+    "startTime": "2026-10-31T20:26:08.187Z",
+    "duration": 39176.479,
+    "expected": 42,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "formalChrome": {
+    "startTime": "2026-10-31T20:27:18.824Z",
+    "duration": 259580.108,
+    "expected": 241,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "formalPerFile": {
+    "advanced-course-learning.spec.ts": 3,
+    "advanced-course.spec.ts": 9,
+    "comparison.spec.ts": 14,
+    "custom-code.spec.ts": 1,
+    "example-solutions.spec.ts": 38,
+    "examples.spec.ts": 28,
+    "kmp.spec.ts": 34,
+    "language-migration.spec.ts": 33,
+    "p05-course.spec.ts": 1,
+    "recursive-comparison.spec.ts": 19,
+    "sieve-sequences-regression.spec.ts": 7,
+    "sieve-sequences.spec.ts": 54
+  },
+  "quality": {
+    "typecheck": 0,
+    "lint": 0,
+    "format": 0,
+    "contentFormat": 0
+  },
+  "build": {
+    "candidate": "build-candidate59-reviewed.log actual exit0",
+    "formal": "build-formal59.log actual exit0",
+    "fourWasmShaUnchanged": true
+  },
+  "receipts": {
+    "indexes": 44,
+    "receipts": 320,
+    "validation": "restore-release-evidence actual exit0, local only"
+  },
+  "qaArchive": {
+    "files": 250,
+    "archiveBytes": 22540346,
+    "allArchiveRawAndSourceShaVerified": true
+  },
+  "oldQa": [
+    {
+      "task": "18.1",
+      "files": 167,
+      "archiveRawAndSourceShaUnchanged": true
+    },
+    {
+      "task": "18.2",
+      "files": 185,
+      "archiveRawAndSourceShaUnchanged": true
+    },
+    {
+      "task": "18.3",
+      "files": 435,
+      "archiveRawAndSourceShaUnchanged": true
+    },
+    {
+      "task": "18.4",
+      "files": 650,
+      "archiveRawAndSourceShaUnchanged": true
+    },
+    {
+      "task": "18.5",
+      "files": 328,
+      "archiveRawAndSourceShaUnchanged": true
+    }
+  ],
+  "relativeLinks": 23,
+  "visual": {
+    "style": "Framed sheet",
+    "seed": 625120833,
+    "redraws": 0,
+    "widths": [
+      1440,
+      768,
+      390
+    ],
+    "inspector": "0FAIL/0WARN",
+    "sourceUiLint": "0FAIL/0WARN",
+    "viewed": {
+      "finalInspector": 6,
+      "candidateStaticAnnotations": 6,
+      "formalStaticAnnotations": 6
+    },
+    "score": {
+      "design": 8,
+      "usability": 8,
+      "creativity": 7,
+      "content": 9,
+      "weighted": 7.9
+    },
+    "captures": {
+      "browser": "156.0.8078.76",
+      "provenance": "Authored static code and reading annotations, never a program execution.",
+      "records": [
+        {
+          "width": 1440,
+          "topic": "arrays",
+          "overflow": false,
+          "scrollY": 0,
+          "known": "java",
+          "target": "cpp",
+          "cursor": "3",
+          "code": [
+            "int[] values = {2, 4, 6};\nint[] copy = values;\ncopy[0] = 9;",
+            "std::array<int, 3> values{2, 4, 6};\nauto copy = values;\ncopy[0] = 9;"
+          ],
+          "highlights": [
+            [
+              3
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        {
+          "width": 1440,
+          "topic": "strings",
+          "overflow": false,
+          "scrollY": 0,
+          "known": "java",
+          "target": "cpp",
+          "cursor": "3",
+          "code": [
+            "String text = \"cat\";\nint units = text.length();\nchar second = text.charAt(1);",
+            "std::string text = \"cat\";\nauto units = text.size();\nchar second = text[1];"
+          ],
+          "highlights": [
+            [
+              3
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        {
+          "width": 768,
+          "topic": "arrays",
+          "overflow": false,
+          "scrollY": 0,
+          "known": "java",
+          "target": "cpp",
+          "cursor": "3",
+          "code": [
+            "int[] values = {2, 4, 6};\nint[] copy = values;\ncopy[0] = 9;",
+            "std::array<int, 3> values{2, 4, 6};\nauto copy = values;\ncopy[0] = 9;"
+          ],
+          "highlights": [
+            [
+              3
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        {
+          "width": 768,
+          "topic": "strings",
+          "overflow": false,
+          "scrollY": 0,
+          "known": "java",
+          "target": "cpp",
+          "cursor": "3",
+          "code": [
+            "String text = \"cat\";\nint units = text.length();\nchar second = text.charAt(1);",
+            "std::string text = \"cat\";\nauto units = text.size();\nchar second = text[1];"
+          ],
+          "highlights": [
+            [
+              3
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        {
+          "width": 390,
+          "topic": "arrays",
+          "overflow": false,
+          "scrollY": 0,
+          "known": "java",
+          "target": "cpp",
+          "cursor": "3",
+          "code": [
+            "int[] values = {2, 4, 6};\nint[] copy = values;\ncopy[0] = 9;",
+            "std::array<int, 3> values{2, 4, 6};\nauto copy = values;\ncopy[0] = 9;"
+          ],
+          "highlights": [
+            [
+              3
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        {
+          "width": 390,
+          "topic": "strings",
+          "overflow": false,
+          "scrollY": 0,
+          "known": "java",
+          "target": "cpp",
+          "cursor": "3",
+          "code": [
+            "String text = \"cat\";\nint units = text.length();\nchar second = text.charAt(1);",
+            "std::string text = \"cat\";\nauto units = text.size();\nchar second = text[1];"
+          ],
+          "highlights": [
+            [
+              3
+            ],
+            [
+              3
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "inherited": "543 Rust/original ignored1 and full historical budget/performance matrices only through unchanged source/fourWASM SHA, not freshly rerun; current original208 representative browser checks independently rerun.",
+  "audit": {
+    "at": "2026-10-31T20:32:13.046Z",
+    "head": "ec5b8a136413fb6519a0f03af2988ffc7d77a83a",
+    "trackedAndExternalBaseline": 17499,
+    "baselineChanged": [
+      "web/src/advanced-course/AdvancedCoursePage.tsx",
+      "README.md",
+      "scripts/build-p05-course.mjs",
+      "scripts/restore-release-evidence.mjs",
+      "web/src/App.tsx",
+      "web/src/content/p05-course-release.generated.ts",
+      "web/src/pages/CatalogPages.tsx",
+      "项目守则.md",
+      "项目文档/任务进度与交接.md",
+      "项目文档/开发路线与依赖.md",
+      "项目文档/需求覆盖与范围裁决.md"
+    ],
+    "deleted": [],
+    "protectedExternal": 16,
+    "protectedChanged": [],
+    "frozenChecked": 16023,
+    "frozenChanged": [],
+    "staged": "",
+    "aheadBehind": "0\t0",
+    "status": " M README.md\n M scripts/build-p05-course.mjs\n M scripts/restore-release-evidence.mjs\n M web/src/App.tsx\n M web/src/components/Layout.tsx\n M web/src/content/p05-course-release.generated.ts\n M web/src/custom-code/controller.ts\n M web/src/pages/CatalogPages.tsx\n M 项目守则.md\n M 项目文档/交接/2026-10-31-GitHub-Actions构建修复-交接.md\n M 项目文档/任务进度与交接.md\n M 项目文档/开发路线与依赖.md\n M 项目文档/算法目录覆盖表.md\n M 项目文档/需求覆盖与范围裁决.md\n?? .taste-skill/direction.json\n?? content/advanced/\n?? content/algorithms/cpp/eratosthenes-sieve-1.0.0.cpp\n?? content/algorithms/cpp/euler-sieve-1.0.0.cpp\n?? content/algorithms/cpp/kmp-1.0.0.cpp\n?? content/algorithms/cpp/kmp-1.0.0.json\n?? content/algorithms/cpp/kmp-1.0.0.schema.json\n?? content/algorithms/cpp/maximum-subarray-1.0.0.cpp\n?? content/algorithms/cpp/sieve-sequences-1.0.0.json\n?? content/algorithms/cpp/sieve-sequences-1.0.0.schema.json\n?? content/algorithms/cpp/strict-lis-1.0.0.cpp\n?? content/c/p0/blockly-release-1.0.53.json\n?? content/c/p0/blockly-release-1.0.54.json\n?? content/c/p0/blockly-release-1.0.55.json\n?? content/c/p0/blockly-release-1.0.56.json\n?? content/c/p0/blockly-release-1.0.57.json\n?? content/c/p0/blockly-release-1.0.58.json\n?? content/c/p0/blockly-release-1.0.59.json\n?? scripts/advanced-course-content.mjs\n?? scripts/advanced-course-release-inputs.mjs\n?? scripts/example-solutions-content.mjs\n?? scripts/example-solutions-release-inputs.mjs\n?? scripts/examples-content.mjs\n?? scripts/examples-release-inputs.mjs\n?? scripts/kmp-content.mjs\n?? scripts/kmp-release-inputs.mjs\n?? scripts/language-migration-content.mjs\n?? scripts/language-migration-release-inputs.mjs\n?? scripts/register-advanced-course-53.mjs\n?? scripts/register-example-solutions-55.mjs\n?? scripts/register-example-solutions-56.mjs\n?? scripts/register-examples-54.mjs\n?? scripts/register-kmp-58.mjs\n?? scripts/register-language-migration-59.mjs\n?? scripts/register-sieve-sequences-57.mjs\n?? scripts/sieve-sequences-content.mjs\n?? scripts/sieve-sequences-release-inputs.mjs\n?? tests/browser/advanced-course-learning.spec.ts\n?? tests/browser/advanced-course.spec.ts\n?? tests/browser/example-solutions.spec.ts\n?? tests/browser/examples.spec.ts\n?? tests/browser/kmp.spec.ts\n?? tests/browser/language-migration.spec.ts\n?? tests/browser/sieve-sequences-regression.spec.ts\n?? tests/browser/sieve-sequences.spec.ts\n?? tests/unit/advanced-course.test.ts\n?? tests/unit/example-solutions.test.ts\n?? tests/unit/examples.test.ts\n?? tests/unit/kmp.test.ts\n?? tests/unit/language-migration.test.ts\n?? tests/unit/sieve-sequences.test.ts\n?? web/src/advanced-algorithms/\n?? web/src/advanced-course/\n?? web/src/example-comparison/\n?? web/src/examples/\n?? web/src/language-migration/\n?? 项目文档/交付/18.1-进阶课程使用说明.md\n?? 项目文档/交付/18.2-经典例题使用说明.md\n?? 项目文档/交付/18.3-同题两解使用说明.md\n?? 项目文档/交付/18.4-筛法与序列使用说明.md\n?? 项目文档/交付/18.5-KMP使用说明.md\n?? 项目文档/交付/18.6-语言迁移使用说明.md\n?? 项目文档/交接/18.1-交接.md\n?? 项目文档/交接/18.2-交接.md\n?? 项目文档/交接/18.3-交接.md\n?? 项目文档/交接/18.4-交接.md\n?? 项目文档/交接/18.5-交接.md\n?? 项目文档/交接/18.6-交接.md\n?? 项目文档/交接/2026-10-31-CI修复同步与临时副本清理-交接.md\n?? 项目文档/交接/2026-10-31-GitHub-Actions失败排查-交接.md\n?? 项目文档/契约/18.1-进阶编排与精确引用.md\n?? 项目文档/契约/18.2-经典例题与来源契约.md\n?? 项目文档/契约/18.3-多解法与同题对比契约.md\n?? 项目文档/契约/18.4-筛法序列案例与投影契约.md\n?? 项目文档/契约/18.5-KMP内容与真实状态投影.md\n?? 项目文档/契约/18.6-语言迁移内容与教学标注.md\n?? 项目文档/架构决策/18.1-课程编排与统一学习记录.md\n?? 项目文档/架构决策/18.2-经典例题来源与执行范围.md\n?? 项目文档/架构决策/18.3-同题方案与统一对比范围.md\n?? 项目文档/架构决策/18.4-筛法与序列范围及预算.md\n?? 项目文档/架构决策/18.5-KMP范围输入与预算.md\n?? 项目文档/架构决策/18.6-静态语言迁移范围与版本.md\n?? 项目文档/验收/18.1-最终复核.json\n?? 项目文档/验收/18.1-进阶课程与记录复用验收.md\n?? 项目文档/验收/18.1-验证原件/\n?? 项目文档/验收/18.2-最终复核.json\n?? 项目文档/验收/18.2-来源核验.json\n?? 项目文档/验收/18.2-经典例题与来源验收.md\n?? 项目文档/验收/18.2-验证原件/\n?? 项目文档/验收/18.3-同题多解法与对比验收.md\n?? 项目文档/验收/18.3-最终复核.json\n?? 项目文档/验收/18.3-验证原件/\n?? 项目文档/验收/18.4-最终复核.json\n?? 项目文档/验收/18.4-界面复核.md\n?? 项目文档/验收/18.4-筛法与序列验收.md\n?? 项目文档/验收/18.4-验证原件/\n?? 项目文档/验收/18.5-KMP内容与真实匹配验收.md\n?? 项目文档/验收/18.5-最终复核.json\n?? 项目文档/验收/18.5-界面复核.md\n?? 项目文档/验收/18.5-验证原件/\n?? 项目文档/验收/18.6-来源与语义核验.md\n?? 项目文档/验收/18.6-界面复核.md\n?? 项目文档/验收/18.6-静态语言迁移验收.md\n?? 项目文档/验收/2026-10-31-CI修复同步与清理/\n?? 项目文档/验收/发布凭据/18.1-1.0.53/\n?? 项目文档/验收/发布凭据/18.2-1.0.54/\n?? 项目文档/验收/发布凭据/18.3-1.0.55/\n?? 项目文档/验收/发布凭据/18.3-1.0.56/\n?? 项目文档/验收/发布凭据/18.4-1.0.57/\n?? 项目文档/验收/发布凭据/18.5-1.0.58/\n?? 项目文档/验收/发布凭据/18.6-1.0.59/\n"
+  },
+  "stats": {
+    "original": "79/88",
+    "main": "79/98",
+    "p2": "10/19",
+    "task18Subitems": "6/6",
+    "p05": "9/9",
+    "language21": "0/10",
+    "algorithms": "22/22",
+    "formalCases": "26:7C/19CPP",
+    "classics": "3examples/6solutions separately"
+  },
+  "limitations": [
+    "static code semantically checked against primary sources, notcompiled/executed or newlanguage support",
+    "Chrome/minimal only; controlled visibility/clock not physical-device performance evidence",
+    "No fresh physical60fps/fullperformance/five-other-theme/otherbrowser/remoteActions acceptance",
+    "Oldcase-set15store assertions unchanged and directly failDB8/16; seven current representative C inputs do not replace historical fullboundarymatrix",
+    "Offline after initial bundle load only, no firstload/refresh guarantee",
+    "No new learning authority/storage/upload/generalCPP/Python/Java21 loop",
+    "Coordinator must separately dispatch blockQA maintenance/full18 review/Git;19 and21 unclaimed"
+  ]
+}
