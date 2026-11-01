@@ -104,79 +104,88 @@ for (const release of [
   '1.0.63',
   '1.0.64',
   '1.0.65',
+  '1.0.66',
+  '1.0.67',
+  '1.0.68',
 ]) {
   const successor = `content/c/p0/blockly-release-${release}.json`;
   if (!existsSync(resolve(root, successor))) continue;
   const task =
-    release === '1.0.65'
-      ? '19.4'
-      : release === '1.0.64'
-        ? '19.2'
-        : ['1.0.60', '1.0.61', '1.0.62', '1.0.63'].includes(release)
-          ? '19.1'
-          : release === '1.0.59'
-            ? '18.6'
-            : release === '1.0.58'
-              ? '18.5'
-              : release === '1.0.57'
-                ? '18.4'
-                : ['1.0.55', '1.0.56'].includes(release)
-                  ? '18.3'
-                  : release === '1.0.54'
-                    ? '18.2'
-                    : release === '1.0.53'
-                      ? '18.1'
-                      : release === '1.0.52'
-                        ? '17.4'
-                        : ['1.0.50', '1.0.51'].includes(release)
-                          ? '17.3'
-                          : ['1.0.48', '1.0.49'].includes(release)
-                            ? 'UI-20261031'
-                            : ['1.0.45', '1.0.46', '1.0.47'].includes(release)
-                              ? '16.10'
-                              : release === '1.0.44'
-                                ? '16.9'
-                                : release === '1.0.43'
-                                  ? '16.8'
-                                  : release === '1.0.42'
-                                    ? '16.7'
-                                    : release === '1.0.41'
-                                      ? '16.6'
-                                      : release === '1.0.40'
-                                        ? '16.5'
-                                        : release === '1.0.39'
-                                          ? '16.4'
-                                          : release === '1.0.38'
-                                            ? '16.3'
-                                            : ['1.0.36', '1.0.37'].includes(release)
-                                              ? '16.2'
-                                              : release === '1.0.35'
-                                                ? '16.1'
-                                                : [
-                                                      '1.0.30',
-                                                      '1.0.31',
-                                                      '1.0.32',
-                                                      '1.0.33',
-                                                      '1.0.34',
-                                                    ].includes(release)
-                                                  ? '15.4'
-                                                  : ['1.0.28', '1.0.29'].includes(release)
-                                                    ? '15.3'
-                                                    : ['1.0.26', '1.0.27'].includes(release)
-                                                      ? '15.2'
-                                                      : release === '1.0.25'
-                                                        ? '15.1'
-                                                        : release === '1.0.24'
-                                                          ? '14.4'
-                                                          : ['1.0.22', '1.0.23'].includes(release)
-                                                            ? '14.3'
-                                                            : release === '1.0.21'
-                                                              ? '14.1'
-                                                              : release === '1.0.20'
-                                                                ? '13.5'
-                                                                : release === '1.0.19'
-                                                                  ? '13.4'
-                                                                  : '13.3';
+    release === '1.0.68'
+      ? '20.2'
+      : ['1.0.66', '1.0.67'].includes(release)
+        ? '20.1'
+        : release === '1.0.65'
+          ? '19.4'
+          : release === '1.0.64'
+            ? '19.2'
+            : ['1.0.60', '1.0.61', '1.0.62', '1.0.63'].includes(release)
+              ? '19.1'
+              : release === '1.0.59'
+                ? '18.6'
+                : release === '1.0.58'
+                  ? '18.5'
+                  : release === '1.0.57'
+                    ? '18.4'
+                    : ['1.0.55', '1.0.56'].includes(release)
+                      ? '18.3'
+                      : release === '1.0.54'
+                        ? '18.2'
+                        : release === '1.0.53'
+                          ? '18.1'
+                          : release === '1.0.52'
+                            ? '17.4'
+                            : ['1.0.50', '1.0.51'].includes(release)
+                              ? '17.3'
+                              : ['1.0.48', '1.0.49'].includes(release)
+                                ? 'UI-20261031'
+                                : ['1.0.45', '1.0.46', '1.0.47'].includes(release)
+                                  ? '16.10'
+                                  : release === '1.0.44'
+                                    ? '16.9'
+                                    : release === '1.0.43'
+                                      ? '16.8'
+                                      : release === '1.0.42'
+                                        ? '16.7'
+                                        : release === '1.0.41'
+                                          ? '16.6'
+                                          : release === '1.0.40'
+                                            ? '16.5'
+                                            : release === '1.0.39'
+                                              ? '16.4'
+                                              : release === '1.0.38'
+                                                ? '16.3'
+                                                : ['1.0.36', '1.0.37'].includes(release)
+                                                  ? '16.2'
+                                                  : release === '1.0.35'
+                                                    ? '16.1'
+                                                    : [
+                                                          '1.0.30',
+                                                          '1.0.31',
+                                                          '1.0.32',
+                                                          '1.0.33',
+                                                          '1.0.34',
+                                                        ].includes(release)
+                                                      ? '15.4'
+                                                      : ['1.0.28', '1.0.29'].includes(release)
+                                                        ? '15.3'
+                                                        : ['1.0.26', '1.0.27'].includes(release)
+                                                          ? '15.2'
+                                                          : release === '1.0.25'
+                                                            ? '15.1'
+                                                            : release === '1.0.24'
+                                                              ? '14.4'
+                                                              : ['1.0.22', '1.0.23'].includes(
+                                                                    release,
+                                                                  )
+                                                                ? '14.3'
+                                                                : release === '1.0.21'
+                                                                  ? '14.1'
+                                                                  : release === '1.0.20'
+                                                                    ? '13.5'
+                                                                    : release === '1.0.19'
+                                                                      ? '13.4'
+                                                                      : '13.3';
   const nextArchive = `项目文档/验收/发布凭据/${task}-${release}`;
   const nextIndex = json(`${nextArchive}/index.json`);
   assert.equal(nextIndex.registration.path, successor);
@@ -206,6 +215,9 @@ for (const release of [
       '1.0.63',
       '1.0.64',
       '1.0.65',
+      '1.0.66',
+      '1.0.67',
+      '1.0.68',
     ].includes(release);
     // The immutable 33 UI-lint receipt is JSON with a .log suffix.
     const jsonLog =

@@ -1,5 +1,8 @@
 import type {} from './harness/editor-history';
+import { mkdir } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
+const captureFolder = `.artifacts/${process.env.TASK_EVIDENCE_TASK ?? '17.3'}/custom-code/${process.env.TASK_EVIDENCE_LABEL ?? 'local'}`;
+test.beforeAll(() => mkdir(captureFolder, { recursive: true }));
 async function ready(page: Page) {
   await page.goto('/#/custom-code');
   await expect(page.getByRole('heading', { name: 'C 代码工作台', exact: true })).toBeVisible();
@@ -344,10 +347,10 @@ test('real editor and result remain accessible at desktop, tablet and phone widt
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
-    await page.screenshot({ path: `.artifacts/17.3/view-${width}-result.png`, fullPage: true });
+    await page.screenshot({ path: `${captureFolder}/view-${width}-result.png`, fullPage: true });
     if (width < 1000) {
       await page.getByRole('tab', { name: '代码与输入', exact: true }).click();
-      await page.screenshot({ path: `.artifacts/17.3/view-${width}-code.png`, fullPage: true });
+      await page.screenshot({ path: `${captureFolder}/view-${width}-code.png`, fullPage: true });
     }
   }
 });

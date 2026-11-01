@@ -13,6 +13,8 @@ import { AchievementProvider } from './achievements/react';
 const AchievementsPage = lazy(() => import('./achievements/AchievementsPage'));
 import { ReviewProvider } from './review-scheduler/react';
 import { AiProvider } from './ai-debug/react';
+import { NotesProvider } from './study-notes/session';
+const NotesPage = lazy(() => import('./study-notes/NotesPage'));
 const ReviewsPage = lazy(() => import('./review-scheduler/ReviewsPage'));
 const NotebookPage = lazy(() => import('./review-notebook/NotebookPage'));
 const WeaknessPage = lazy(() => import('./weaknesses/WeaknessPage'));
@@ -122,6 +124,7 @@ function AppRoutes() {
             <Route path="/visualize/:caseId" element={<VisualizePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/notebook" element={<NotebookPage />} />
+            <Route path="/study-notes" element={<NotesPage />} />
             <Route path="/weaknesses" element={<WeaknessPage />} />
             <Route path="/generated-practice" element={<GeneratedPracticePage />} />
             <Route path="/reviews" element={<ReviewsPage />} />
@@ -145,7 +148,9 @@ export function App() {
                 <HashRouter>
                   <AiProvider>
                     <PracticeProvider>
-                      <AppRoutes />
+                      <NotesProvider>
+                        <AppRoutes />
+                      </NotesProvider>
                     </PracticeProvider>
                   </AiProvider>
                 </HashRouter>

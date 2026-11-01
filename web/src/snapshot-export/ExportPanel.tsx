@@ -1,8 +1,11 @@
 import { useLayoutEffect, useState, useSyncExternalStore } from 'react';
 import { SnapshotExporter } from './controller';
 import type { SnapshotPort } from './types';
+import { useNoteSnapshots } from '../study-notes/session';
+import { Link } from 'react-router';
 import './snapshot-export.css';
 export function ExportPanel({ port, available }: { port: SnapshotPort; available: boolean }) {
+  const { tray } = useNoteSnapshots();
   const subscribe = port.subscribe;
   const [exporter] = useState(() => new SnapshotExporter(port));
   const status = useSyncExternalStore(exporter.subscribe, exporter.getSnapshot);
@@ -44,6 +47,16 @@ export function ExportPanel({ port, available }: { port: SnapshotPort; available
         >
           下载快照图片（PNG）
         </button>
+        <button
+          className="button button-small"
+          disabled={!available || busy}
+          onClick={() => void exporter.export('json', tray.add)}
+        >
+          加入本次笔记
+        </button>
+        <Link className="text-link" to="/study-notes">
+          查看学习笔记
+        </Link>
         {busy && (
           <button className="button button-small" onClick={exporter.cancel}>
             取消导出

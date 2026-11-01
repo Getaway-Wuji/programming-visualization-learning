@@ -1,8 +1,14 @@
 import { copyCurrentDocument, captureKey, encodeSnapshot } from './document';
 import { downloadSnapshot, renderSnapshotPng, waitFor } from './browser';
-import { SNAPSHOT_LIMITS, SnapshotError, type SnapshotFormat, type SnapshotPort } from './types';
+import {
+  SNAPSHOT_LIMITS,
+  SnapshotError,
+  type SnapshotDocument,
+  type SnapshotFormat,
+  type SnapshotPort,
+} from './types';
 interface ExportStatus {
-  phase: 'idle' | 'capturing' | 'download-started' | 'cancelled' | 'failed';
+  phase: 'idle' | 'capturing' | 'download-started' | 'collected' | 'cancelled' | 'failed';
   message: string;
   filename: string;
   format: SnapshotFormat | null;
@@ -84,7 +90,10 @@ export class SnapshotExporter {
     this.publish();
   }
   cancel = () => this.stop('SNAPSHOT_CANCELLED');
-  async export(format: SnapshotFormat): Promise<void> {
+  async export(
+    format: SnapshotFormat,
+    receive?: (document: SnapshotDocument) => void,
+  ): Promise<void> {
     this.cancel();
     let record: ReturnType<SnapshotPort['read']>;
     try {
@@ -154,6 +163,17 @@ export class SnapshotExporter {
         document.origin.definitionVersion.value = document.source.sha256;
       const bytes = encodeSnapshot(document);
       check();
+      if (receive) {
+        receive(document);
+        this.state = {
+          phase: 'collected',
+          message: '已加入本次笔记。刷新或清除学习数据会丢弃临时快照；请到学习笔记勾选预览。',
+          filename: '',
+          format,
+        };
+        this.publish();
+        return;
+      }
       const blob =
         format === 'json'
           ? new Blob([bytes], { type: 'application/json;charset=utf-8' })
@@ -182,7 +202,10 @@ export class SnapshotExporter {
         this.state = {
           phase:
             code === 'SNAPSHOT_CHANGED' || code === 'SNAPSHOT_CANCELLED' ? 'cancelled' : 'failed',
-          message: messages[code],
+          message:
+            receive && error instanceof Error && !(error instanceof SnapshotError)
+              ? error.message
+              : messages[code],
           filename: '',
           format,
         };

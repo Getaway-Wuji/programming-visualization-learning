@@ -96,7 +96,7 @@ test('13.4 native DB2 migration preserves the eleven old projections; damaged kn
         ok: true,
         value: {
           ...before,
-          meta: { ...before.meta, schemaVersion: '7.0.0', dbVersion: 7, revision: 8 },
+          meta: { ...before.meta, schemaVersion: '9.0.0', dbVersion: 9, revision: 8 },
         },
       });
       expect(await page.evaluate(() => window.historyHarness.history())).toEqual({

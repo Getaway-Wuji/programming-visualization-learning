@@ -256,6 +256,33 @@ export class StorageClient {
     if (this.closed) throw new StorageError('S_STORAGE_UNAVAILABLE');
     return this.db;
   }
+  /** Final read-only revision gate. The action runs synchronously while meta is locked. */
+  atSavedRevision(generation: string, revision: number, action: () => void): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let failure: unknown;
+      let performed = false;
+      const tx = this.connection().transaction(['meta'], 'readonly');
+      tx.onabort = () => reject(storageError(failure ?? tx.error ?? new StorageError('S_ABORTED')));
+      tx.onerror = () => {
+        failure ??= tx.error;
+      };
+      tx.oncomplete = () => (performed ? resolve() : reject(new StorageError('S_ABORTED')));
+      const request = tx.objectStore('meta').get('current');
+      request.onsuccess = () => {
+        try {
+          const meta: unknown = request.result;
+          checkedMeta(meta);
+          if (meta.generation !== generation) throw new StorageError('S_GENERATION_STALE');
+          if (meta.revision !== revision) throw new StorageError('S_REVISION_CONFLICT');
+          action();
+          performed = true;
+        } catch (error) {
+          failure = error;
+          tx.abort();
+        }
+      };
+    });
+  }
   readEditorHistory(context: EditorHistoryContext): Promise<EditorSnapshot[]> {
     return editorHistoryTransaction(this.connection(), context) as Promise<EditorSnapshot[]>;
   }

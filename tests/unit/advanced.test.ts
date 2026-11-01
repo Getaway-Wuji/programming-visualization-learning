@@ -151,7 +151,12 @@ test('bounded input rejects wrong kinds, oversized data and non-ASCII', async ()
   expect(result.terminal.code).toBe('E_STRING_BOUNDS');
 });
 test('public evidence packets are retained for independent Schema verification', () => {
-  mkdirSync('.artifacts/17.2', { recursive: true });
-  writeFileSync('.artifacts/17.2/packets.json', JSON.stringify(records));
+  const directory = `.artifacts/${process.env.TASK_EVIDENCE_TASK ?? '17.2'}`;
+  const label = process.env.TASK_EVIDENCE_LABEL ?? `local-${Date.now()}`;
+  expect(label).toMatch(/^[A-Za-z0-9_.-]+$/);
+  mkdirSync(directory, { recursive: true });
+  writeFileSync(`${directory}/advanced-packets-${label}.json`, JSON.stringify(records), {
+    flag: 'wx',
+  });
   expect(records.length).toBeGreaterThan(15);
 });

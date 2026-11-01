@@ -659,7 +659,7 @@ async function saveCapture(
       beforeSha256: sha256(JSON.stringify(before)),
       afterSha256: sha256(JSON.stringify(after)),
       unchanged: true,
-      scope: 'native-DB8-sixteen-stores-records-and-keys+localStorage+sessionStorage',
+      scope: 'native-DB9-seventeen-stores-records-and-keys+localStorage+sessionStorage',
     },
     worker: {
       kind: run.worker.kind,

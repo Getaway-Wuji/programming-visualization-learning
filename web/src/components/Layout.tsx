@@ -17,6 +17,7 @@ const navigation = [
   { to: '/custom-code', label: 'C 代码工作台', icon: 'code' },
   { to: '/compilation', label: '编译流程', icon: 'code' },
   { to: '/notebook', label: '错题与陌生点', icon: 'book' },
+  { to: '/study-notes', label: '学习笔记', icon: 'book' },
   { to: '/reviews', label: '今日复习', icon: 'book' },
   { to: '/achievements', label: '学习成就', icon: 'book' },
   { to: '/settings', label: '本地设置', icon: 'settings' },

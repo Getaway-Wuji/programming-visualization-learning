@@ -271,6 +271,28 @@ export class LearningService {
     { context: EditorHistoryContext; evidence: AchievementEvidence }
   >();
   getState = (): LearningServiceState => this.state;
+  withSavedNotesRevision = async (
+    stamp: { generation: string; revision: number; epoch: number },
+    action: () => void,
+  ): Promise<void> => {
+    const check = () => {
+      if (
+        this.disposed ||
+        this.state.sessionEpoch !== stamp.epoch ||
+        this.state.status !== 'ready' ||
+        this.state.temporary ||
+        this.state.pendingCount ||
+        this.state.snapshot?.meta.generation !== stamp.generation ||
+        this.state.snapshot.meta.revision !== stamp.revision
+      )
+        throw new StorageError('S_REVISION_CONFLICT');
+    };
+    check();
+    await this.storage().atSavedRevision(stamp.generation, stamp.revision, () => {
+      check();
+      action();
+    });
+  };
   recordChallengeAnswer = (
     fact: ChallengeFact,
     expectedEpoch: number,
@@ -2008,6 +2030,7 @@ export function createLearningService() {
     refresh: service.refresh,
     dispose: service.dispose,
     getState: service.getState,
+    withSavedNotesRevision: service.withSavedNotesRevision,
     subscribe: service.subscribe,
     saveDisplay: service.saveDisplay,
     saveAppearance: service.saveAppearance,

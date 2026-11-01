@@ -22,7 +22,7 @@ let request: ExecuteRequest,
   rustMs = 0;
 const evidence = fileURLToPath(
   new URL(
-    `../../.artifacts/${process.env.TASK_EVIDENCE_TASK ? `${process.env.TASK_EVIDENCE_TASK}/regression/execution-performance` : '07.2'}/`,
+    `../../.artifacts/${process.env.TASK_EVIDENCE_TASK ? `${process.env.TASK_EVIDENCE_TASK}/regression/execution-performance/${process.env.TASK_EVIDENCE_LABEL ?? Date.now()}` : `07.2/local-${Date.now()}`}/`,
     import.meta.url,
   ),
 );

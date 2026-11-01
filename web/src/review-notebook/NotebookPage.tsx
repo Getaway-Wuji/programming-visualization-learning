@@ -39,6 +39,9 @@ export default function NotebookPage() {
         description="把真实练习中的困难留下来，也可以主动标记还不熟悉的知识。"
       />
       <LearningSaveStatus />
+      <Link className="text-link" to="/study-notes">
+        选择记录并整理学习笔记 →
+      </Link>
       <Link className="text-link" to="/weaknesses">
         查看薄弱点与学习依据 →
       </Link>

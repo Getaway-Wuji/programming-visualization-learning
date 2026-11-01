@@ -175,7 +175,8 @@ test('16.1 formal replay, modes, input changes, reload and a new day cannot re-s
   await answer(page, true);
   await expect(feedback(page)).toContainText('本次不再加扣分');
   expect((await native(page)).ledger).toEqual(before.ledger);
-  await page.clock.setFixedTime(new Date('2026-11-01T03:00:00.000Z'));
+  const nextDay = await page.evaluate(() => Date.now() + 24 * 60 * 60 * 1000);
+  await page.clock.setFixedTime(new Date(nextDay));
   await run(page);
   await ready(page);
   await answer(page, true);
