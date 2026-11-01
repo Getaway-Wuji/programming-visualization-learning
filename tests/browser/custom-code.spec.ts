@@ -322,8 +322,8 @@ test('native DB1 through DB7 upgrades preserve old partitions and add the draft 
     for (const name of Object.keys(old).filter((n) => n !== 'meta' && n !== 'customDrafts'))
       expect(after[name], `v${version}/${name}`).toEqual(old[name]);
     expect(after.meta[0]).toMatchObject({
-      schemaVersion: '8.0.0',
-      dbVersion: 8,
+      schemaVersion: '9.0.0',
+      dbVersion: 9,
       generation: (old.meta[0] as { generation: string }).generation,
     });
   }

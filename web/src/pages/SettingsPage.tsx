@@ -7,11 +7,13 @@ import type { Avatar, Settings } from '../storage/model';
 import { AvatarPicture } from '../learning/profile-components';
 import { AppearanceSettings } from '../appearance/AppearanceSettings';
 import { SavedBlockWorkspacePreference } from '../appearance/BlockWorkspacePreference';
+import { AiSettings } from '../ai-debug/Settings';
 
 const tabs = [
   { id: 'appearance', label: '外观与主题' },
   { id: 'avatar', label: '基础形象' },
   { id: 'display', label: '显示设置' },
+  { id: 'ai', label: 'AI解释（可选）' },
   { id: 'data', label: '本地数据' },
 ] as const;
 
@@ -34,7 +36,7 @@ function LocalDataConfirmation({
     clear: {
       title: '确认清除本地数据',
       description:
-        '这会清除当前浏览器中的学习进度、练习记录、积分账本及防重记录、每日目标与打卡、形象、显示设置、外观偏好与背景资源、编辑历史、C工作台草稿，以及当前临时内容与待保存操作。清除后无法在本平台找回这些记录。',
+        '这会清除当前浏览器中的学习进度、练习记录、积分账本及防重记录、每日目标与打卡、形象、显示设置、外观偏好与背景资源、编辑历史、C工作台草稿与薄弱点依据，以及当前临时内容与待保存操作。清除后无法在本平台找回这些记录。',
       button: '确认清除',
     },
     settings: {
@@ -533,6 +535,7 @@ function SettingsContent() {
               )}
             </>
           )}
+          {selected === 'ai' && <AiSettings />}
           {selected === 'data' && (
             <>
               <h2>本地数据与保存</h2>
@@ -618,7 +621,7 @@ function SettingsContent() {
               )}
               <h3>清除本地数据</h3>
               <p className="notice">
-                清除会移除学习进度、练习记录、积分账本及防重记录、每日目标与打卡、形象、显示设置和C工作台草稿，并丢弃当前临时内容与待保存操作。清除后无法在本平台找回。
+                清除会移除学习进度、练习记录、积分账本及防重记录、每日目标与打卡、形象、显示设置和C工作台草稿与薄弱点依据，并丢弃当前临时内容与待保存操作。清除后无法在本平台找回。
               </p>
               {!canClear && !busy && (
                 <p className="muted">

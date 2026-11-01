@@ -610,10 +610,11 @@ async function saveCapture(
     'receipts',
     'reviewCards',
     'settings',
+    'weaknesses',
   ]);
   expect(before.database).toEqual({
     name: 'c-viz-learning',
-    version: 8,
+    version: 9,
     storeNames: Object.keys(before.stores).sort(),
   });
   expect(Object.keys(before.storeKeys).sort()).toEqual(before.database.storeNames);

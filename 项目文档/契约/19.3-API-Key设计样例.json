@@ -1,0 +1,383 @@
+{
+  "label": "DESIGN SCHEMA FIXTURES ONLY / NO MODEL CALL / NO CREDENTIAL / NOT AI ACCEPTANCE",
+  "modelCalls": 0,
+  "credentialVerificationCalls": 0,
+  "newRustRuns": 0,
+  "factEvidence": "Read-only reuse of three original19.3 authored public C actual-Rust packets, identical source and facts; responses are hypothetical, never from API.",
+  "sensitiveHeaderValuesIncluded": false,
+  "examples": [
+    {
+      "id": "pointer",
+      "evidence": {
+        "path": ".artifacts/19.3/actual-rust/pointer.json.gz",
+        "sha256": "e19167c5d29c5324a011cfd0deb3bfdb8df8725268163168b384b00e4a155d33"
+      },
+      "request": {
+        "aiVersion": "2.0.0",
+        "kind": "explain.request",
+        "requestId": "57ef6d90-0ec0-4fdf-9d2f-3ce745cb9185",
+        "context": {
+          "contextId": "54629840-a5fd-49ec-a858-1b7de05739b0",
+          "runRef": {
+            "engineId": "engine.rust.advanced",
+            "buildId": "ec2a4c3390303b3575d1ae29f77f122ce499ca235a560ee50159968e24fe30db",
+            "execVersion": "1.4.0",
+            "dslVersion": "1.3.0",
+            "diagnosticVersion": "1.3.0",
+            "language": "c",
+            "runId": "8fe6f395-5f16-48fc-8165-6fdf523cdd02",
+            "sourceRevision": "a22e55f5-bbc3-4946-afed-53d82d0ba524"
+          },
+          "inputRevision": "fda2a230-7a30-4fd3-bcc9-af4f7c3bdb3b",
+          "cursor": 4,
+          "traceAvailable": true,
+          "snippets": [
+            {
+              "snippetId": "s1",
+              "byteRange": {
+                "start": 0,
+                "end": 84
+              },
+              "firstLine": 1,
+              "text": "#include <stdio.h>\nint main(){int *p=0;int value=*p;printf(\"%d\\n\",value);return 0;}\n"
+            }
+          ],
+          "facts": [
+            {
+              "factId": "f1",
+              "kind": "diagnostic",
+              "code": "E_NULL_POINTER",
+              "byteRange": {
+                "end": 51,
+                "start": 49
+              }
+            },
+            {
+              "factId": "f2",
+              "kind": "step",
+              "step": 4,
+              "stepKind": "object.declare",
+              "nodeId": "n5",
+              "byteRange": {
+                "end": 52,
+                "start": 39
+              }
+            },
+            {
+              "factId": "f3",
+              "kind": "state",
+              "atCursor": 4,
+              "objectId": "o1",
+              "frameId": "f1",
+              "byteOffset": 0,
+              "name": "p",
+              "typeName": "int*",
+              "alive": true,
+              "value": {
+                "byteOffset": 0,
+                "lowerBound": 0,
+                "objectId": null,
+                "pointeeType": "int",
+                "upperBound": 0
+              }
+            }
+          ]
+        },
+        "configRevision": "0dd789b7-9858-4ff2-abbd-273fa0965832",
+        "confirmationId": "c456fd4a-715c-49cb-9d5c-4d2423a961c9",
+        "provider": {
+          "providerId": "openai",
+          "model": "gpt-5.4-mini-2026-03-17"
+        }
+      },
+      "hypotheticalResponse": {
+        "aiVersion": "2.0.0",
+        "kind": "explain.response",
+        "requestId": "57ef6d90-0ec0-4fdf-9d2f-3ce745cb9185",
+        "contextId": "54629840-a5fd-49ec-a858-1b7de05739b0",
+        "runRef": {
+          "engineId": "engine.rust.advanced",
+          "buildId": "ec2a4c3390303b3575d1ae29f77f122ce499ca235a560ee50159968e24fe30db",
+          "execVersion": "1.4.0",
+          "dslVersion": "1.3.0",
+          "diagnosticVersion": "1.3.0",
+          "language": "c",
+          "runId": "8fe6f395-5f16-48fc-8165-6fdf523cdd02",
+          "sourceRevision": "a22e55f5-bbc3-4946-afed-53d82d0ba524"
+        },
+        "inputRevision": "fda2a230-7a30-4fd3-bcc9-af4f7c3bdb3b",
+        "cursor": 4,
+        "producer": "provider-api-adapter",
+        "content": {
+          "summary": "设计占位：本内容非模型调用所得。",
+          "explanations": [
+            {
+              "factIds": [
+                "f1"
+              ],
+              "text": "设计协议示意，请对照引用的真实Rust事实；不能将此文本作为AI验收证据。"
+            }
+          ],
+          "suggestions": [],
+          "limitations": "没有调用任何模型。"
+        },
+        "timing": {
+          "elapsedMs": 1
+        },
+        "configRevision": "0dd789b7-9858-4ff2-abbd-273fa0965832",
+        "confirmationId": "c456fd4a-715c-49cb-9d5c-4d2423a961c9",
+        "provider": {
+          "providerId": "openai",
+          "configVersion": "2.0.0",
+          "requestedModel": "gpt-5.4-mini-2026-03-17",
+          "returnedModel": "gpt-5.4-mini-2026-03-17"
+        }
+      }
+    },
+    {
+      "id": "loop",
+      "evidence": {
+        "path": ".artifacts/19.3/actual-rust/loop.json.gz",
+        "sha256": "c6b2a4b583f40dc2dba1b015b21dace3761b40198aa0be2982b1b3324fc31678"
+      },
+      "request": {
+        "aiVersion": "2.0.0",
+        "kind": "explain.request",
+        "requestId": "27adadbc-24ee-4c95-b913-79b2182ab105",
+        "context": {
+          "contextId": "dcf37cbc-617b-4459-85ec-5f1ea10b7192",
+          "runRef": {
+            "engineId": "engine.rust.advanced",
+            "buildId": "ec2a4c3390303b3575d1ae29f77f122ce499ca235a560ee50159968e24fe30db",
+            "execVersion": "1.4.0",
+            "dslVersion": "1.3.0",
+            "diagnosticVersion": "1.3.0",
+            "language": "c",
+            "runId": "a5f6b2f7-7ecc-4f5b-aa6a-b7b4c1c68848",
+            "sourceRevision": "0e2b8e56-c0ff-4e62-b6a4-32ef41373fc7"
+          },
+          "inputRevision": "133d0773-d03e-4969-957a-2b061bc4c5a4",
+          "cursor": 13,
+          "traceAvailable": true,
+          "snippets": [
+            {
+              "snippetId": "s1",
+              "byteRange": {
+                "start": 0,
+                "end": 84
+              },
+              "firstLine": 1,
+              "text": "#include <stdio.h>\nint main(){int i=0;while(i<3){i=i+2;}printf(\"%d\\n\",i);return 0;}\n"
+            }
+          ],
+          "facts": [
+            {
+              "factId": "f1",
+              "kind": "step",
+              "step": 13,
+              "stepKind": "output.append",
+              "nodeId": "n14",
+              "byteRange": {
+                "end": 73,
+                "start": 56
+              }
+            },
+            {
+              "factId": "f2",
+              "kind": "state",
+              "atCursor": 13,
+              "objectId": "o1",
+              "frameId": "f1",
+              "byteOffset": 0,
+              "name": "i",
+              "typeName": "int",
+              "alive": true,
+              "value": 4
+            }
+          ]
+        },
+        "configRevision": "0dd789b7-9858-4ff2-abbd-273fa0965832",
+        "confirmationId": "c456fd4a-715c-49cb-9d5c-4d2423a961c9",
+        "provider": {
+          "providerId": "openai",
+          "model": "gpt-5.4-mini-2026-03-17"
+        }
+      },
+      "hypotheticalResponse": {
+        "aiVersion": "2.0.0",
+        "kind": "explain.response",
+        "requestId": "27adadbc-24ee-4c95-b913-79b2182ab105",
+        "contextId": "dcf37cbc-617b-4459-85ec-5f1ea10b7192",
+        "runRef": {
+          "engineId": "engine.rust.advanced",
+          "buildId": "ec2a4c3390303b3575d1ae29f77f122ce499ca235a560ee50159968e24fe30db",
+          "execVersion": "1.4.0",
+          "dslVersion": "1.3.0",
+          "diagnosticVersion": "1.3.0",
+          "language": "c",
+          "runId": "a5f6b2f7-7ecc-4f5b-aa6a-b7b4c1c68848",
+          "sourceRevision": "0e2b8e56-c0ff-4e62-b6a4-32ef41373fc7"
+        },
+        "inputRevision": "133d0773-d03e-4969-957a-2b061bc4c5a4",
+        "cursor": 13,
+        "producer": "provider-api-adapter",
+        "content": {
+          "summary": "设计占位：本内容非模型调用所得。",
+          "explanations": [
+            {
+              "factIds": [
+                "f1"
+              ],
+              "text": "设计协议示意，请对照引用的真实Rust事实；不能将此文本作为AI验收证据。"
+            }
+          ],
+          "suggestions": [],
+          "limitations": "没有调用任何模型。"
+        },
+        "timing": {
+          "elapsedMs": 1
+        },
+        "configRevision": "0dd789b7-9858-4ff2-abbd-273fa0965832",
+        "confirmationId": "c456fd4a-715c-49cb-9d5c-4d2423a961c9",
+        "provider": {
+          "providerId": "openai",
+          "configVersion": "2.0.0",
+          "requestedModel": "gpt-5.4-mini-2026-03-17",
+          "returnedModel": "gpt-5.4-mini-2026-03-17"
+        }
+      }
+    },
+    {
+      "id": "syntax",
+      "evidence": {
+        "path": ".artifacts/19.3/actual-rust/syntax.json.gz",
+        "sha256": "30ee7baaf7f5756dd7eb53fba56796abe6765d16d6c48d36a7b9287a2b49a7e6"
+      },
+      "request": {
+        "aiVersion": "2.0.0",
+        "kind": "explain.request",
+        "requestId": "e4982e70-f6eb-4c78-ab82-1a2b4aa3eb31",
+        "context": {
+          "contextId": "e1a4156b-7413-42ad-900f-41bf98289c23",
+          "runRef": {
+            "engineId": "engine.rust.advanced",
+            "buildId": "ec2a4c3390303b3575d1ae29f77f122ce499ca235a560ee50159968e24fe30db",
+            "execVersion": "1.4.0",
+            "dslVersion": "1.3.0",
+            "diagnosticVersion": "1.3.0",
+            "language": "c",
+            "runId": "df5cb984-37f6-41c2-8068-6a7ea7e3834e",
+            "sourceRevision": "64df5050-68d2-45f2-88a1-9e677408c82a"
+          },
+          "inputRevision": "bae9deec-b944-4780-9196-9785f0d6b103",
+          "cursor": null,
+          "traceAvailable": false,
+          "snippets": [
+            {
+              "snippetId": "s1",
+              "byteRange": {
+                "start": 0,
+                "end": 12
+              },
+              "firstLine": 1,
+              "text": "int main( {\n"
+            }
+          ],
+          "facts": [
+            {
+              "factId": "f1",
+              "kind": "diagnostic",
+              "code": "E_UNSUPPORTED_SYNTAX",
+              "byteRange": {
+                "end": 11,
+                "start": 10
+              }
+            }
+          ]
+        },
+        "configRevision": "0dd789b7-9858-4ff2-abbd-273fa0965832",
+        "confirmationId": "c456fd4a-715c-49cb-9d5c-4d2423a961c9",
+        "provider": {
+          "providerId": "openai",
+          "model": "gpt-5.4-mini-2026-03-17"
+        }
+      },
+      "hypotheticalResponse": {
+        "aiVersion": "2.0.0",
+        "kind": "explain.response",
+        "requestId": "e4982e70-f6eb-4c78-ab82-1a2b4aa3eb31",
+        "contextId": "e1a4156b-7413-42ad-900f-41bf98289c23",
+        "runRef": {
+          "engineId": "engine.rust.advanced",
+          "buildId": "ec2a4c3390303b3575d1ae29f77f122ce499ca235a560ee50159968e24fe30db",
+          "execVersion": "1.4.0",
+          "dslVersion": "1.3.0",
+          "diagnosticVersion": "1.3.0",
+          "language": "c",
+          "runId": "df5cb984-37f6-41c2-8068-6a7ea7e3834e",
+          "sourceRevision": "64df5050-68d2-45f2-88a1-9e677408c82a"
+        },
+        "inputRevision": "bae9deec-b944-4780-9196-9785f0d6b103",
+        "cursor": null,
+        "producer": "provider-api-adapter",
+        "content": {
+          "summary": "设计占位：本内容非模型调用所得。",
+          "explanations": [
+            {
+              "factIds": [
+                "f1"
+              ],
+              "text": "设计协议示意，请对照引用的真实Rust事实；不能将此文本作为AI验收证据。"
+            }
+          ],
+          "suggestions": [],
+          "limitations": "没有调用任何模型。"
+        },
+        "timing": {
+          "elapsedMs": 1
+        },
+        "configRevision": "0dd789b7-9858-4ff2-abbd-273fa0965832",
+        "confirmationId": "c456fd4a-715c-49cb-9d5c-4d2423a961c9",
+        "provider": {
+          "providerId": "openai",
+          "configVersion": "2.0.0",
+          "requestedModel": "gpt-5.4-mini-2026-03-17",
+          "returnedModel": "gpt-5.4-mini-2026-03-17"
+        }
+      }
+    }
+  ],
+  "configCheck": {
+    "aiVersion": "2.0.0",
+    "kind": "config.check",
+    "requestId": "df956626-9bde-430c-a39a-c23fca6f8c27",
+    "configRevision": "0dd789b7-9858-4ff2-abbd-273fa0965832",
+    "provider": {
+      "providerId": "deepseek",
+      "model": "deepseek-flash"
+    }
+  },
+  "hypotheticalConfigChecked": {
+    "aiVersion": "2.0.0",
+    "kind": "config.checked",
+    "requestId": "df956626-9bde-430c-a39a-c23fca6f8c27",
+    "configRevision": "0dd789b7-9858-4ff2-abbd-273fa0965832",
+    "provider": {
+      "providerId": "deepseek",
+      "model": "deepseek-flash"
+    },
+    "verified": true,
+    "code": null
+  },
+  "disabledStatus": {
+    "aiVersion": "2.0.0",
+    "kind": "ai.status",
+    "enabled": false,
+    "provider": null,
+    "configRevision": null,
+    "hasApiKey": false,
+    "verified": false,
+    "state": "disabled",
+    "code": null
+  }
+}

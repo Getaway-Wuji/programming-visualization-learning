@@ -1,0 +1,23 @@
+{
+  "id": "CHANGE-19.3",
+  "status": "accepted-design-only",
+  "decision": "DEC-P2-011",
+  "contracts": {"aiExplain": "1.0.0", "aiData": "1.0.0"},
+  "purpose": "Optional local-only AI plan, closed minimal context and reference contracts, configuration/process/data boundaries and explicit genuine-model gates for19.4/19.5.",
+  "productImplementation": false,
+  "modelInstalledOrRunning": false,
+  "productModelCalls": 0,
+  "compatibility": {
+    "productRelease": "1.0.64/420 sources unchanged, no successor product release",
+    "execution": "All five original WASM and EXEC/STEP/DIAG semantics/1000ms budget unchanged; model is not an interpreter or learning authority.",
+    "storage": "SAVE9/DB9/17store unchanged; no AI messages, context, switches or results persisted in learner archive.",
+    "newBoundary": "Only explicit per-request preview confirmation may later send bounded current code/facts outside the browser to owned processes on the same device; not currently implemented or enabled.",
+    "externalTransfer": "Disabled, no cloud fallback; future remote provider requires a revised decision and separate explicit external destination/data/retention/cost preview.",
+    "credentials": "No model API key. Server-only ephemeral channel secret never placed in frontend/VITE/URL/storage/build/logs; no account or Codex credential reuse.",
+    "content": "Current C workbench only, no new language/exercise/catalog/reward scope.",
+    "untrustedModel": "Only plain text and existing selected fact references, no code replacement/execution, HTML/URL loading, fabricated steps or authorization."
+  },
+  "futureAffectedInterfaces": ["Optional server-side same-origin forwarding and a separately owned Rust AI proxy", "C workbench accepted read-only snapshot and invalidation hooks", "Schema/UTF8 bounds/correlation/fact reference validation", "Owned Windows process-tree cancellation and nonpersistent logging audit"],
+  "verification": "项目文档/验收/19.3-AI方案与数据边界验收.md",
+  "next": "19.4 remains unclaimed; requires authorized installation and actual selected-model evidence."
+}

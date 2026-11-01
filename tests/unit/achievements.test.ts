@@ -219,8 +219,8 @@ describe('SAVE5 to SAVE6 meta migration', () => {
     const before = old();
     expect(upgradeV5Meta(before)).toEqual({
       ...before,
-      schemaVersion: '8.0.0',
-      dbVersion: 8,
+      schemaVersion: '9.0.0',
+      dbVersion: 9,
       revision: 9,
     });
     expect(before).toEqual(old());

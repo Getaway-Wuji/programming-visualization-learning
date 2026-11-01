@@ -9,6 +9,8 @@ runNode('scripts/build-wasm.mjs');
 runNode('scripts/build-algorithm-wasm.mjs');
 runNode('scripts/build-memory-wasm.mjs');
 runNode('scripts/build-advanced-wasm.mjs');
+runNode('scripts/build-practice-generator-wasm.mjs');
+runNode('scripts/build-ai-schema.mjs');
 runNode('scripts/build-content.mjs');
 runNode('scripts/build-appearance.mjs');
 runNode('scripts/build-teaching-presentation.mjs');
@@ -19,5 +21,6 @@ if (p05) {
   runNode('scripts/build-p05-course.mjs');
 }
 runNode('node_modules/vite/bin/vite.js', ['build', '--config', 'vite.config.ts']);
+runNode('scripts/prepare-ai-gateway.mjs');
 runNode('node_modules/vite/bin/vite.js', ['build', '--config', 'tests/browser.vite.config.ts']);
 runNode('scripts/artifacts.mjs');

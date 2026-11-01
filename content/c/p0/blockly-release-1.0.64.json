@@ -1,0 +1,1792 @@
+{
+  "releaseVersion": "1.0.64",
+  "library": "blockly",
+  "libraryVersion": "13.4.0",
+  "acceptanceGate": "10.3-real-blockly-rust-playback",
+  "reviewedAtUtc": "2026-10-31T22:52:19.657Z",
+  "blockTypes": [
+    "cv_main",
+    "cv_integer",
+    "cv_declare",
+    "cv_variable",
+    "cv_assign",
+    "cv_unary",
+    "cv_arithmetic",
+    "cv_compare",
+    "cv_logic",
+    "cv_if",
+    "cv_while",
+    "cv_for",
+    "cv_break",
+    "cv_continue",
+    "cv_array_declare",
+    "cv_array_read",
+    "cv_array_write",
+    "cv_print",
+    "cv_return",
+    "cv_scope"
+  ],
+  "files": [
+    {
+      "path": "web/src/blocks/model.ts",
+      "sha256": "aa167809c0634cd1518aa0d08269465b202db103d4b792f6996caadc604ac6f1"
+    },
+    {
+      "path": "web/src/blocks/generator.ts",
+      "sha256": "3cf82571678602e1a416f40a37351be4d1d4c3027b5e844f71e37786ef52fec6"
+    },
+    {
+      "path": "web/src/blocks/starters.ts",
+      "sha256": "e4ac127e5a6a28b4bb4c8ab6224ee6b340e69707fe7a3246e8209b0f03ac3f46"
+    },
+    {
+      "path": "web/src/blocks/definitions.ts",
+      "sha256": "e3c53e0801a97bfc34b39e1e4e02a690d60c47fa3ef9f8d018108eed6fe2b122"
+    },
+    {
+      "path": "web/src/blocks/workspace.ts",
+      "sha256": "4168939ecb34eab15d0fdd5cf676aaf4d8fb087848d080d6e034e1d8fb74b393"
+    },
+    {
+      "path": "web/src/blocks/BlockWorkspace.tsx",
+      "sha256": "3f3c0d348acb887d9a5ae7951c1ec2bde7b303e9693a6cf1d850b8f9b81b21a6"
+    },
+    {
+      "path": "web/src/blocks/blocks.css",
+      "sha256": "0d1b7596373f5389202cded2f183811f678b76e1c909f26bc893f4b504f6b88a"
+    },
+    {
+      "path": "web/src/practice/session.ts",
+      "sha256": "3e18350ff0cc5eee362b025f1c0f0c88c38cc4638d74d7a38c03ec3b033f8b75"
+    },
+    {
+      "path": "web/src/practice/react.tsx",
+      "sha256": "998594959a51b9d4dd4c89a5aa703bcef95a5cce55ad91ad58cb09a5b87d1bd3"
+    },
+    {
+      "path": "web/src/practice/block-location.ts",
+      "sha256": "92e8683658baee9190fe1b235cabc8f05f755aa70fe99aa59d50fbc0b3c75eec"
+    },
+    {
+      "path": "web/src/components/PracticeExecution.tsx",
+      "sha256": "4afcff6514c47a757520d3fcf371ede2da0f14eb120ee2a588f78b9cdad84276"
+    },
+    {
+      "path": "web/src/styles.css",
+      "sha256": "db6e6f6395637ed50b3febf25ece6b434d909b541c90db33fdacfc14134debd6"
+    },
+    {
+      "path": "web/src/blocks/interaction.ts",
+      "sha256": "3857310f28dda2a469264eb518df2c6822df502a5912c7aa0a1f41b43665bfa9"
+    },
+    {
+      "path": "web/src/blocks/block-interaction.css",
+      "sha256": "4915a50f0522420ff8d15238871be3ec550f141ba0b10e3c29942eadd6c5fec1"
+    },
+    {
+      "path": "web/src/components/PracticeGuidance.tsx",
+      "sha256": "71cd1864c7fd2bc946299fc649a25cf99f8cd463f972c39ee0b1684b3c3c4955"
+    },
+    {
+      "path": "web/src/components/practice-experience.css",
+      "sha256": "7673201b31559466c5cf90bee792f96563f4fdb59af113dd40035628bf4ef220"
+    },
+    {
+      "path": "web/src/components/LessonCompletion.tsx",
+      "sha256": "0797ebf14701e9b514ac80f39f08a581b086d92e7213298e8ce0edb785a2539f"
+    },
+    {
+      "path": "web/src/components/practice-progress.css",
+      "sha256": "81539a620f029d69245b9e976b644695b6e1464d1c04590b69b460e454ec8075"
+    },
+    {
+      "path": "web/src/learning/completion.ts",
+      "sha256": "c1322ced14e3912cd6ae6cfcf0b665b948e617f2cec7af3dbc552dccd7bd46b9"
+    },
+    {
+      "path": "web/src/pages/LessonPage.tsx",
+      "sha256": "1a9a991630b87d47b90e161bb46dbd43984ee920837b9779fcdac775dccd3563"
+    },
+    {
+      "path": "web/src/blocks/analysis-types.ts",
+      "sha256": "2ded5395d246621107710149154a056b443d7197f0c6712dd3875d029d9c9d75"
+    },
+    {
+      "path": "web/src/blocks/reverse.ts",
+      "sha256": "1a2074b3a4a3d95538b26e337e5dddf28bce6c2783f9727671bcd4c626219984"
+    },
+    {
+      "path": "web/src/blocks/source-patch.ts",
+      "sha256": "96f13f19d1ed4ed2b2e133b2c950880b22e6488feb0d13f6867d9153abd6442d"
+    },
+    {
+      "path": "web/src/engine/analysis-client.ts",
+      "sha256": "5b9b8c293f867d6f329619a055bb3e2a27f8f59a6284b70a5e9eb9dd05186b9c"
+    },
+    {
+      "path": "web/src/engine/analysis-protocol.ts",
+      "sha256": "f351fab95c8c041b129a0d6e53512f587916704e554e5b93c1b60c442785d88c"
+    },
+    {
+      "path": "web/src/engine/analysis.worker.ts",
+      "sha256": "704de8eb1291b0b6f2736ff9e2d968ce96fa2ec6e07e2c6d2431ecaee9fbbfa1"
+    },
+    {
+      "path": "web/src/practice/edit-document.ts",
+      "sha256": "f23f00bd44a1777317e1f0077d7023c85cb29ff90f2a583065648017bf42e484"
+    },
+    {
+      "path": "web/src/components/DraftCodeEditor.tsx",
+      "sha256": "0c6029317b5299a1f1c4680886c0fbe46e801d474a10fd58978792c8ff021430"
+    },
+    {
+      "path": "web/src/components/draft-code-editor.css",
+      "sha256": "d10b391a5333cf104050bd782a55a5e6300758a8342b2abdf9f253f08d3f331f"
+    },
+    {
+      "path": "web/src/appearance/BlockWorkspacePreference.tsx",
+      "sha256": "8b8022f8e8f8d36b57a5c2b5b012d44695de533a0a23a0692739e87e5c8a5846"
+    },
+    {
+      "path": "web/src/appearance/block-workspace-preference.css",
+      "sha256": "956474da1cb0e1d9521159ec19ac01e1b96c2563005fd71b9371bc71577ba3ef"
+    },
+    {
+      "path": "web/src/content/teaching-presentation.ts",
+      "sha256": "17c74a5fadc1aa87eef25057a8c2f3fda001daf3fbd1050ec2abebc60182550b"
+    },
+    {
+      "path": "content/c/presentation/teaching-presentation-1.0.0.json",
+      "sha256": "282bd8e6b9ded3a3da96966f65a81be3a3906e6b1777bbf1ffe378bc0c5af2f9"
+    },
+    {
+      "path": "web/src/workbench/Workbench.tsx",
+      "sha256": "5f6c63986cfcc75ffc9312ce61b312c598d74be60fc017c20f5204742c90b3e8"
+    },
+    {
+      "path": "web/src/workbench/workbench.css",
+      "sha256": "dac55001761039024d25a376b0ca8c50f84ad58f40c590cb82eb9a25e0f6144b"
+    },
+    {
+      "path": "web/src/pages/SettingsPage.tsx",
+      "sha256": "14ecbb21c9819c6d20c6040d560d9cc3d863d9f010dfcfd6993bd9d335179a1b"
+    },
+    {
+      "path": "content/c/p05/course-1.0.0.json",
+      "sha256": "85fd3d38faf4f677e50c860d30a0390b84f2d092a77fdcd08036a4d4e5a57948"
+    },
+    {
+      "path": "content/c/p05/practice-guidance-1.0.0.json",
+      "sha256": "5f440e46269cb5d522112bc6ccc4de7e24c6d9e84b954d56f772a5eac835a7a6"
+    },
+    {
+      "path": "content/goals/p0-1.1.0.json",
+      "sha256": "1dffd5429a658217b27efd10c6dd4a29c1d312854f60cda3c097ae4e5f6011ee"
+    },
+    {
+      "path": "content/learning/p05-predecessors-1.0.0.json",
+      "sha256": "819079dfaa056c654802bb97312cd55f7eb50643636891f0a93620169046427a"
+    },
+    {
+      "path": "web/src/content/types.ts",
+      "sha256": "b2f1be69f730f3f9fafa4c9b36dceae0d3eec1848d16dce59d77f74e6d237623"
+    },
+    {
+      "path": "web/src/content/course-bundle.ts",
+      "sha256": "d37ff261498461be5ee63aa17ea8cc2815a2ad108f7f7c5f004b80613169a0ce"
+    },
+    {
+      "path": "web/src/content/validator.mjs",
+      "sha256": "6c42bbadac94bdc9a01a70a6241690db45d98565b02f6ba670d8031ba79e232a"
+    },
+    {
+      "path": "web/src/content/validator-p05.mjs",
+      "sha256": "805cec0f5e485b41450ef77d08b9c5b755d4f778d4ffdf9c8a5bf5468de2a129"
+    },
+    {
+      "path": "web/src/content/schema-p05.mjs",
+      "sha256": "7e249ab5449c2ba6661737fb04c255c8956fb975ba97466da8994dbc710f4d26"
+    },
+    {
+      "path": "web/src/content/reading.ts",
+      "sha256": "9d3037997fd1c9ca65bfe140d26df28e6cdcca5c1aa142dc0346082534fd0fe3"
+    },
+    {
+      "path": "web/src/content/practice.ts",
+      "sha256": "f53d16914d44120bbbfdbeb23bbd60bb057fbe8ee5071b9ee591ab3ae86c8c98"
+    },
+    {
+      "path": "web/src/content/course-learning.ts",
+      "sha256": "5c9e647afa96c9aa69baf3dd11b5e5dfb07e741e8ed724bf250a25ae47fe3e31"
+    },
+    {
+      "path": "web/src/content/case-learning.ts",
+      "sha256": "76f21a868a81b98d26a8564389c428ca1537dc30cfad03bd9bb0698dfdcf717b"
+    },
+    {
+      "path": "web/src/engine/protocol.ts",
+      "sha256": "c172c929838ac971bcabf2764611b9f1a505ef521cf66160b6db3b666f02233a"
+    },
+    {
+      "path": "web/src/engine/execution-json.ts",
+      "sha256": "93680a2a441735850be5540d8d09f2e9f6f0731d2f1399f00af21529da50b228"
+    },
+    {
+      "path": "web/src/engine/execution.worker.ts",
+      "sha256": "b8b08779ba5e32f3645e584eded22a1e99c808c12dc74eaf0c3aab3852e128bd"
+    },
+    {
+      "path": "web/src/engine/execution-client.ts",
+      "sha256": "57a2473eb7f4e1bbe98d231a39a5380a36904ab9f4dc6833e681cdf206630944"
+    },
+    {
+      "path": "web/src/engine/trace-validation.ts",
+      "sha256": "be7cd26907cb5904397e881fd88fbaed0f7caddf903a4a2dd4653c8c528c635f"
+    },
+    {
+      "path": "web/src/engine/prepared-source.ts",
+      "sha256": "6c1ae924731b575bf395b22e91ad81262fb367c1bf250c7c022e3a414988b690"
+    },
+    {
+      "path": "web/src/generated/prepared-sources.ts",
+      "sha256": "08ffd4edbca5774a47a75d7ca87c333dd6f713839316e724690df8a5f00aed56"
+    },
+    {
+      "path": "scripts/build-prepared-sources.mjs",
+      "sha256": "92f230c3faee0aee3853c014c3f6c4c49dcfb1e3ba7aab116de19d33ba1e1d71"
+    },
+    {
+      "path": "web/src/engine/execution-p05-schema.generated.ts",
+      "sha256": "60a4c231dcfc3d90ac349d3d35d0a19f958cf8dd7cfec2d29e4cd41b1b7e4be1"
+    },
+    {
+      "path": "web/src/practice/submission.ts",
+      "sha256": "1663863f3f2785f7a7d44b20a009214a8ccd5425ef552c7113bffe34261b94d8"
+    },
+    {
+      "path": "web/src/navigation.ts",
+      "sha256": "f4334f3137728f661d9c9d7b67f4c50ad689b59cbe376a0d57cec18ca6f91f5d"
+    },
+    {
+      "path": "web/src/components/CourseReading.tsx",
+      "sha256": "8f7b3618af0b8263fe383b44a115b81cffe9b0c6b908d84ebe78b586286d84c8"
+    },
+    {
+      "path": "web/src/components/CaseExecution.tsx",
+      "sha256": "e8cdc6e27df777815ab5a1b748bf9401580528e3f65e96778ab4e40675be84d6"
+    },
+    {
+      "path": "web/src/learning/domain.ts",
+      "sha256": "0bd26c5d32e6bbae9b2470c1e33131c37bfab34a20e03dfd7cc950abfca1c83f"
+    },
+    {
+      "path": "web/src/learning/service.ts",
+      "sha256": "8dd9608f0a940b706be7ec38b9032d2d54b76abc8d5079124e2b2a73d0349186"
+    },
+    {
+      "path": "web/src/learning/goals.ts",
+      "sha256": "b27988601599cba30a810bff8c5824f37dabc0aa10a8a8d599ad0461af90eee6"
+    },
+    {
+      "path": "web/src/learning/reviewed-release.ts",
+      "sha256": "544a930c9db06223ec5c0cf9ab23b42d377f24e191ed4cbdae987750f110cf59"
+    },
+    {
+      "path": "web/src/learning/react.tsx",
+      "sha256": "ff1b85c49d1ed183b22f923e6983d8415b01f29880d5c05436d434295b869c46"
+    },
+    {
+      "path": "web/src/learning/profile-components.tsx",
+      "sha256": "888d9d02955974a7dfaadbfbe01f2226a007d4ba561e56533b0b26418c5155b2"
+    },
+    {
+      "path": "web/src/storage/client.ts",
+      "sha256": "1ea1ac9e90c6a36f9cbe952bd07f6b93eaacda79d1991f04029eae41094bb4a3"
+    },
+    {
+      "path": "web/src/storage/recovery.ts",
+      "sha256": "c8de26c6e9b387b11820bcd958984f9434f41fd5bc553714cb896f349191f187"
+    },
+    {
+      "path": "项目文档/契约/P0.5-09-内容结构-1.1.0.schema.json",
+      "sha256": "467de8215b4d88ca69d0f462a3cc6c099eace3e7b6d6b9d740c1d785e66813ab"
+    },
+    {
+      "path": "项目文档/契约/P0.5-09-执行与判题-1.1.0.schema.json",
+      "sha256": "e29ce24e97dfc1e980e52f1166a05eb006298b153721f137c6a73238875f6c40"
+    },
+    {
+      "path": "scripts/build-p05-course.mjs",
+      "sha256": "cc948ab641f4572823baeec47cbc25760177123c3726150d1e6a8038a67f3a3d"
+    },
+    {
+      "path": "scripts/build-p05-predecessor.mjs",
+      "sha256": "b39a325c85d7cfd4adb5afd7eb06a9a288d9ba39f45a28d0f35c10ac7d0018d0"
+    },
+    {
+      "path": "scripts/p05-09-release-inputs.mjs",
+      "sha256": "191df0da7f99f35fa0fcdd91f1526eed0702297b773cdc972df40c78598e7ee2"
+    },
+    {
+      "path": "web/src/blocks/block-kinds.ts",
+      "sha256": "8e0e0f12c86749808fb550836848c847c4c103f3f6e47e299dae2a80b8d4629e"
+    },
+    {
+      "path": "web/src/blocks/permissions.ts",
+      "sha256": "06f4102bd7124bede6b7df864455eb311dc7239495ec3cd8572cfca6ba3add8c"
+    },
+    {
+      "path": "web/src/blocks/BlockPermissions.tsx",
+      "sha256": "69f3b057e7aa525c0c80a9af6c0a57f60f12f4d71de0ba1085fb626261916e90"
+    },
+    {
+      "path": "web/src/blocks/block-permissions.css",
+      "sha256": "29f4b011db15f851d28f23a99339fe7eb39592990acf35b2f84a5c4158e1151c"
+    },
+    {
+      "path": "content/c/permissions/block-permissions-1.0.0.json",
+      "sha256": "ebec383557e996d02fa59581fc039dafd76791571a3f4eaf7eea2243f28cc391"
+    },
+    {
+      "path": "scripts/block-permission-release-inputs.mjs",
+      "sha256": "5f10ae9a7dae764658ad6edce64eb393ebd3125016e7d19a49d89242ffbd68b3"
+    },
+    {
+      "path": "scripts/restore-release-evidence.mjs",
+      "sha256": "cee8649e83c54420a3b9394b41c2ae6f4a95bba5a3b049c7c1ce4105ccd822a8"
+    },
+    {
+      "path": "web/src/storage/model.ts",
+      "sha256": "caf13e969d4fce75b036150a439da50191768a4930d3895388662d9003a02da4"
+    },
+    {
+      "path": "web/src/storage/validation.ts",
+      "sha256": "639a32c8b91c43ae44efee2ba97d413ce05633d806786b0e32302c9dc21c4b80"
+    },
+    {
+      "path": "web/src/storage/errors.ts",
+      "sha256": "ca0ee511eb77b1f4ed05d75245a196bbc5d6b556d2dcc3e137556a3e6b34a874"
+    },
+    {
+      "path": "web/src/storage/v1-migration.ts",
+      "sha256": "672724cbe290990d3dcd24dc57d0f741bc0f09c925b37b63b0eda4e8dcc6fb75"
+    },
+    {
+      "path": "web/src/storage/editor-history.ts",
+      "sha256": "7202635f92234b1f498e5edea4f04fde6a9d8a0b2df3e089376ec6bf70cd65d2"
+    },
+    {
+      "path": "web/src/storage/v2-migration.ts",
+      "sha256": "ce506b6e343d9b0193dfa3180d7b723c92b215929ef7ddc9a3ccb2d5f1ddc0e0"
+    },
+    {
+      "path": "web/src/blocks/history-workspace.ts",
+      "sha256": "c0b668c6702f85bf72d2f24107e453fe033bd46ff91616db79ad7ca1b3f538ae"
+    },
+    {
+      "path": "web/src/practice/history.ts",
+      "sha256": "55a8792b483a3805b1517e3e1ee4e94d2cc05a9216717d89fbfdb7596887fb83"
+    },
+    {
+      "path": "web/src/practice/EditorHistory.tsx",
+      "sha256": "4b43a4e6f3574513011195d1749c29a81081c973c53997e54dd2edc44b4c8d9a"
+    },
+    {
+      "path": "web/src/practice/editor-history.css",
+      "sha256": "1694f45e8c8407bf130c71f9b0ddbeeec585fdb98c50a4f3c073859487785070"
+    },
+    {
+      "path": "scripts/editor-history-release-inputs.mjs",
+      "sha256": "2b540876f9ef0da1e479e0e8e1fb157a8f88a734e492cc096ebaed0b065f57b4"
+    },
+    {
+      "path": "项目文档/契约/13.4-存档结构3.0.0.schema.json",
+      "sha256": "7380c04f1647eed072ac7fe53e7dd9f29590cc2044f89f22af0dcce70a2f61a3"
+    },
+    {
+      "path": "content/c/reconstruction/questions-1.0.0.json",
+      "sha256": "2ba7b42541ea7c601022f2971ba7a73c929aded2f90270c80f3c9a5e6780b12b"
+    },
+    {
+      "path": "web/src/practice/reconstruction.ts",
+      "sha256": "f48e2842e868383f09af916ebd79a11fa66333eb0ab8cd07e4c3baf810c2bb16"
+    },
+    {
+      "path": "web/src/practice/ReconstructionPanel.tsx",
+      "sha256": "dadbd045d29bc6fa3ff090571302741fe860a23d8e1b2d7241598347f5b2e00d"
+    },
+    {
+      "path": "web/src/practice/reconstruction.css",
+      "sha256": "36e4654331b2f3e60db56c6138cf74052085749e21b3e0262d277b6f5b5bdbe4"
+    },
+    {
+      "path": "web/src/practice/answer.ts",
+      "sha256": "a65e37be23bcf9555464bd3ff5cb95e82d30d1bcfc3e5ba5dabdb377ccd6856a"
+    },
+    {
+      "path": "web/src/pages/CatalogPages.tsx",
+      "sha256": "e08334af890a99c98ab219dd6796d6e7d0c958d048c1fd627ce85fd4b1f1ffaa"
+    },
+    {
+      "path": "scripts/reconstruction-release-inputs.mjs",
+      "sha256": "d930938c41a1d9c3121cb31451de203c5ae0fe0446fa42a581794f94a800e702"
+    },
+    {
+      "path": "web/src/diagnostics/messages.ts",
+      "sha256": "69321763e510c5982526807d48338ce26f921283e63e80aa03733f2ac9aa3637"
+    },
+    {
+      "path": "web/src/diagnostics/presentation.ts",
+      "sha256": "bbf2aa77aa4c0f38e8fc70e8cc09ad1c38355b33fcba3b151c4593cd584e0da3"
+    },
+    {
+      "path": "web/src/diagnostics/DiagnosticPanel.tsx",
+      "sha256": "6ca16bbb9d8d625eff07366f9b8fa2f63cf8cf6a00b32dc30dd28ec006266257"
+    },
+    {
+      "path": "web/src/diagnostics/diagnostics.css",
+      "sha256": "116324fdbb06364445f3187c8903b443b7d48ca334628a0d1904f44a22a62aca"
+    },
+    {
+      "path": "web/src/components/SourcePanel.tsx",
+      "sha256": "c2f6a760f0c3ececa94a1098ecc7c2dd5127842245f0067493b83326bb1cac0a"
+    },
+    {
+      "path": "web/src/pages/MemoryPage.tsx",
+      "sha256": "8ad61d4d0d41110f2a5b6ec0447fc15fd9b79832990c97aa53fefa0a10444f45"
+    },
+    {
+      "path": "scripts/diagnostics-release-inputs.mjs",
+      "sha256": "fb7e4a7397b4f79f88cd6444b464a32b50f1299bb3337582ea1545067761cbb8"
+    },
+    {
+      "path": "content/c/bugs/questions-1.0.0.json",
+      "sha256": "6a11fbe8e727d61a3059bd37a17b95427bad365713888225eb69e96f141a172b"
+    },
+    {
+      "path": "web/src/bugs/content.ts",
+      "sha256": "e7c6ddf7c366b4e92be1bade0484646df9109fcb13870702ddd07ff35bfc66f0"
+    },
+    {
+      "path": "web/src/bugs/source.ts",
+      "sha256": "3ec994117fc223dbc525c90e454120ccdc867869757f1470505cdff5b93de10f"
+    },
+    {
+      "path": "web/src/bugs/BugPanel.tsx",
+      "sha256": "f126e17fd6dd16d44863dca7ce165b25eae3a492f17e1c41b9aaaae1151d5a8f"
+    },
+    {
+      "path": "web/src/bugs/bugs.css",
+      "sha256": "82ea4eb7af971635c2709aa6bf37279d9795d030d0e98feda5f4dea9d5b788e6"
+    },
+    {
+      "path": "web/src/App.tsx",
+      "sha256": "dd9f7c3a2eb1868953960689434492c88e1d59e117ae4946c5169ec9f5c02b74"
+    },
+    {
+      "path": "web/src/components/Layout.tsx",
+      "sha256": "7c876fb9525a80bd0e2a05b8091f27c3b762d7471de48408037eec4489dd9bb3"
+    },
+    {
+      "path": "web/src/pages/Workspaces.tsx",
+      "sha256": "085b64d098a393227cf59b835badb44c79fdc9c81ab3d878d96049a0bbb6b56e"
+    },
+    {
+      "path": "web/src/pages/HomePage.tsx",
+      "sha256": "b7f29ca247cf3941d6a320ca46beb0c40152d3f229e853b2662a737ccc5cfc7e"
+    },
+    {
+      "path": "scripts/bug-release-inputs.mjs",
+      "sha256": "9dd4baedaa70af334fd826e9d7f6d458a4f8ff30afaf6136c691bc4d19f6e1e6"
+    },
+    {
+      "path": "content/cpp/bugs/questions-1.0.0.json",
+      "sha256": "781db995e547d3b59a19cf7edd1601d9c3d5391f026c0400a73c64acf7dd110f"
+    },
+    {
+      "path": "web/src/memory-bugs/content.ts",
+      "sha256": "f21c8acf9663c5b81d2bf1034a1d7ce15e0a5ac10099f0abaf0cdaa493daff65"
+    },
+    {
+      "path": "web/src/memory-bugs/protocol.ts",
+      "sha256": "dcc16cd4bd486020389282acaa933807b4006c96b13395c8fd5044f4f93f1985"
+    },
+    {
+      "path": "web/src/memory-bugs/authority.ts",
+      "sha256": "fdbb5ad4ed99b747c699aa99560d4f65364bdfb6c112f1ef5d670662640e583e"
+    },
+    {
+      "path": "web/src/memory-bugs/history.ts",
+      "sha256": "1965ca82d25828369d07b005aff1c15861c278d6d85676deb53eef94777fe8ec"
+    },
+    {
+      "path": "web/src/memory-bugs/session.ts",
+      "sha256": "c141cfab840a29d941fb9495c20540d8583c4385f44a9c92faba7bd40a4f023c"
+    },
+    {
+      "path": "web/src/memory-bugs/worker.ts",
+      "sha256": "8c66e829c728d404255b06fe9ce9b54864a0c21728008cec498fc40517180e81"
+    },
+    {
+      "path": "web/src/memory-bugs/MemoryBugPage.tsx",
+      "sha256": "66bbd09ae75adca3cc67fdc0dbb456d7d44bc1d648674ffe8bee78a4f9a9b021"
+    },
+    {
+      "path": "web/src/memory-bugs/memory-bugs.css",
+      "sha256": "ec8a882f470aee40e78cc1cd06c73b6e2e7d300efcd140b6fe460a9a7fdea910"
+    },
+    {
+      "path": "engine/memory/Cargo.toml",
+      "sha256": "f79d9cdfbb5d1e423443f3776fbc8f0f9b4c548a1b2328b754e224314c59750d"
+    },
+    {
+      "path": "engine/memory/src/lib.rs",
+      "sha256": "c244c233a651263ddb57578faa642044930ff74a493ab36ead98fa3aff614d15"
+    },
+    {
+      "path": "engine/memory/src/bug.rs",
+      "sha256": "ae9fb959b4cc6a3309f42f7a676b1645ec752241726da244460b3d6345c4dae3"
+    },
+    {
+      "path": "engine/memory/src/runtime.rs",
+      "sha256": "381a02819a245cdf0067b4191514ab1378428ee5a58d9b5f79e8c891d0083c70"
+    },
+    {
+      "path": "engine/memory/src/syntax.rs",
+      "sha256": "8ba447d6184ab1a5a1779dfd99c6e20306f8be8f2537c458e33e6316c3a23555"
+    },
+    {
+      "path": "engine/memory-wasm/Cargo.toml",
+      "sha256": "0388ce3eb01b282188eb0268afd685f1f2f9a54bbd95f5a6b1f6b19b4fc5cc48"
+    },
+    {
+      "path": "engine/memory-wasm/src/lib.rs",
+      "sha256": "01a41ecc9e56783c20220344dd629044d613f5d71ce23462cc09aaf77b7a43a3"
+    },
+    {
+      "path": "web/src/engine/memory-client.ts",
+      "sha256": "64ea9badae41d481872d54d2d6a2afeb2531cc804e71954ac06b520cdd214c4e"
+    },
+    {
+      "path": "web/src/engine/memory-module.ts",
+      "sha256": "5f3d93187962e87e73803c9866f177251bec09e5237c92fb3695fc122b7d19dd"
+    },
+    {
+      "path": "web/src/engine/memory-protocol.ts",
+      "sha256": "71ab17d01aaa0e5f93e13485336283dc0b6244cef1616e06560fef7005a2f3b0"
+    },
+    {
+      "path": "web/src/engine/memory-player.ts",
+      "sha256": "e587e83af2ec910ef713a488172edd851831e261c892d8aa13066542c2b57ba8"
+    },
+    {
+      "path": "web/src/engine/memory-worker.ts",
+      "sha256": "c3a896f23ce6df0c45f41b6b7d3868ee0823ab17eba7eb244877b665d1edeff3"
+    },
+    {
+      "path": "web/src/memory/controller.ts",
+      "sha256": "c6be77039c510bf8b0b2bfb6849ed81f3a834dd8abaa2a5c9489d0466f56c900"
+    },
+    {
+      "path": "web/src/memory/MemoryPanel.tsx",
+      "sha256": "1df2b359df28a2c10540f6b354be8fad223727753157f5d34952ea96007aaa6f"
+    },
+    {
+      "path": "web/src/memory/presentation.ts",
+      "sha256": "e2cb65d0108213c8d1340b989afd62ccd3864599898324d7115a05a14f08aa75"
+    },
+    {
+      "path": "web/src/debug/DebugSource.tsx",
+      "sha256": "8cb773edab290318f6a7ec890f38fb48d78f1bbf30c6d35f811263681d801e66"
+    },
+    {
+      "path": "web/src/debug/breakpoints.ts",
+      "sha256": "e8ab389270d553265b8973785ed68cc3dc8ef0b3c63eee663121260f3707a056"
+    },
+    {
+      "path": "scripts/build-memory-wasm.mjs",
+      "sha256": "4c46fb25f9db025ff8f08d0339eec8c67e4d424cfb5ebc976753437fe6214b29"
+    },
+    {
+      "path": "scripts/memory-bug-release-inputs.mjs",
+      "sha256": "a3fd7c1e5717089943518a8b58f495f9f9fafcaf3000f71e46a9a47277be81d9"
+    },
+    {
+      "path": "content/c/knowledge/map-1.0.0.json",
+      "sha256": "2dc428907e4f96e7d68d555d401d06ed95f1bc88c4f7ff1bba4efbf2d1ef84fb"
+    },
+    {
+      "path": "web/src/knowledge/model.ts",
+      "sha256": "b80590fa08faaa3cb0dd6dca9ef42c10a95a9fa4203eef9ff60f519abe703fec"
+    },
+    {
+      "path": "web/src/knowledge/KnowledgeMap.tsx",
+      "sha256": "6e878b740dff19e648665c84f134b4967965f5ac9d7427072935f9c6c5974e6f"
+    },
+    {
+      "path": "web/src/knowledge/knowledge.css",
+      "sha256": "3437a2be300764e8a839e723da87ca905c4ccaa61e0758688dcb8faaf29118af"
+    },
+    {
+      "path": "scripts/knowledge-release-inputs.mjs",
+      "sha256": "f2245343e7bd23907ca2200d2b9bac26a8683e9cfc53764c9208e46988fac060"
+    },
+    {
+      "path": "web/src/storage/v3-migration.ts",
+      "sha256": "47a8ed28e0cb3d822ea1867cc98fc257375b06801cd34e151191e5e88fab0189"
+    },
+    {
+      "path": "web/src/storage/knowledge-marks.ts",
+      "sha256": "50016027d70b2b0de5747caef6bb7f4dbe956fccd5a31749e9e2ecc1d4ca4da9"
+    },
+    {
+      "path": "web/src/learning/authority.ts",
+      "sha256": "a9dd78407d200332f83f283a6dced78435523ca4576126a919e0fa899b4eb597"
+    },
+    {
+      "path": "web/src/learning/attempt-authority.ts",
+      "sha256": "998edbac36639a979213e07f73ed7607b220f88a63c9cf17d7eba2c2ec2b9ae1"
+    },
+    {
+      "path": "web/src/review-notebook/marks.tsx",
+      "sha256": "39221aaac7a372c249fa45d5d17f6a21b6a61284ed07e40682bdd3a23809e26b"
+    },
+    {
+      "path": "web/src/review-notebook/model.ts",
+      "sha256": "d083422699c184bb9afba6bb6966c036e129a46c4265e28ffc06ffcaed401a6c"
+    },
+    {
+      "path": "web/src/review-notebook/NotebookPage.tsx",
+      "sha256": "880d665c6746e9d890cb2a8655ae79effc59f0be8e3371cb5517db5909000fc8"
+    },
+    {
+      "path": "web/src/review-notebook/notebook.css",
+      "sha256": "810de53560abb50f1258cb521594d280acf102fddd56c189c7d2e2f388e3b43f"
+    },
+    {
+      "path": "项目文档/契约/15.2-存档结构4.0.0.schema.json",
+      "sha256": "c97dca6b2839ecd466622a20127d634a91d8ea378b46363afff3207ef2b4ee44"
+    },
+    {
+      "path": "scripts/notebook-release-inputs.mjs",
+      "sha256": "14b4ac4f54516911d321b1d81f6552de0061e049475a79e5a2593c5eca9c47a5"
+    },
+    {
+      "path": "web/src/review-scheduler/model.ts",
+      "sha256": "457b23a5082daa9674709c5404bc1f586f745f5d8946c265811ee3d2455b96f7"
+    },
+    {
+      "path": "web/src/review-scheduler/sources.ts",
+      "sha256": "778dd618cc81462170118b359c29721a8029b30bdd930ad5ba71ef189e6afa8d"
+    },
+    {
+      "path": "web/src/review-scheduler/react.tsx",
+      "sha256": "30a1599a2986bbf0ea3e7766e17044f933b320c126f8552977e3751b5cd93f12"
+    },
+    {
+      "path": "web/src/review-scheduler/ReviewsPage.tsx",
+      "sha256": "f5d45d31ac246f3ad542d9778790026f7f6e69796bbe2b2d2827ac79d8ecbc99"
+    },
+    {
+      "path": "web/src/review-scheduler/reviews.css",
+      "sha256": "a538f79144ca04f3b11c7d22056d6357d23d34e3b0941dc76be2c0d3bdf4ff99"
+    },
+    {
+      "path": "web/src/storage/review-cards.ts",
+      "sha256": "36404da66a62adcfc72f479e2a8b8c018a11667c0207a89d0b142245281076ac"
+    },
+    {
+      "path": "web/src/storage/v4-migration.ts",
+      "sha256": "f36a08469b00d865a333c3c40d9091ea5906aaf33098c06092b24d62058fa474"
+    },
+    {
+      "path": "项目文档/契约/15.3-存档结构5.0.0.schema.json",
+      "sha256": "8cec0614da2f5ba3ad7c8d817b15f1f2da8fd76c9921158b4a3d5fe35b511515"
+    },
+    {
+      "path": "项目文档/契约/15.3-复习卡片1.0.0.schema.json",
+      "sha256": "759c762cc1e1130a8a65067be541ba19705e2a3b2f4e2ec619f50cb62dd32832"
+    },
+    {
+      "path": "scripts/scheduler-release-inputs.mjs",
+      "sha256": "d3f3f798ad4e2b93e1b64e2f9275c991c51f15595a952ad2ea368e1c4e46b4b3"
+    },
+    {
+      "path": "web/src/components/Icon.tsx",
+      "sha256": "577ca7fe6d5462104e3e4b820ab6fbd64908c7587d62a4b8308773becc132ab6"
+    },
+    {
+      "path": "web/src/engine/module.ts",
+      "sha256": "7baa2c55441d56b6042f50d4d05af246c02f3306697578f86f5275b606de7858"
+    },
+    {
+      "path": "web/src/memory/memory.css",
+      "sha256": "6424ed84a032480a2b8f3e5eab067829e1e9323d67cfe01d650929cf3743a368"
+    },
+    {
+      "path": "web/src/stack/examples.ts",
+      "sha256": "fe325c1c0895e931d14e051fa3673d116c0f6d5d2a572c454b663fd3b9d98c6b"
+    },
+    {
+      "path": "web/src/stack/StackPanel.tsx",
+      "sha256": "fbbefb81d2c748b238baa887c2cbef6330a66e28e7b0171b69aa6aefab1e28fc"
+    },
+    {
+      "path": "web/src/stack/presentation.ts",
+      "sha256": "4d76415353a2a85f2c38315805cc898f2c0a58283ddb46acc9b2b7e48fbdbde1"
+    },
+    {
+      "path": "web/src/stack/stack.css",
+      "sha256": "fa4480fec56074ca3299e3edfb0493b3f753279fe8cf6882d0dbe75576149cae"
+    },
+    {
+      "path": "shared/fixtures/p1/functions.c",
+      "sha256": "f8c101f8465ec4167027267c3f4eff70266444c2697ba4c6993df5ab17928677"
+    },
+    {
+      "path": "shared/fixtures/p1/hanoi.cpp",
+      "sha256": "4f318bed066cd20faa9f1908c3e7561fa7a1c718c1a640d3b094bf5ff5f2b88e"
+    },
+    {
+      "path": "content/achievements/catalog-1.0.0.json",
+      "sha256": "9cc6d2ddd89b89ad9cf11c533d753b7716a8f1f95960957557d10b5e35084303"
+    },
+    {
+      "path": "web/src/achievements/model.ts",
+      "sha256": "e6390378232262448a7cbf251bfefb069169279c1d70cd4452548be6771bbb6a"
+    },
+    {
+      "path": "web/src/achievements/observation.ts",
+      "sha256": "6878adff274d5c52eeca766b67acc135e07c08fecca45e55a1728f7d07ebfbd2"
+    },
+    {
+      "path": "web/src/achievements/react.tsx",
+      "sha256": "c9533ef2450f1b37cbccfc234ae2c3668162dd4923c5ad5b1efa2f00ddfaf0b5"
+    },
+    {
+      "path": "web/src/achievements/AchievementsPage.tsx",
+      "sha256": "b2427fc85aa2db4ed374c3d26c267293dac09c383774692cb31a53b8191ef929"
+    },
+    {
+      "path": "web/src/achievements/achievements.css",
+      "sha256": "3f9996a6b0dbd2c8c00eb16eb83258289a9e30eda53e933a51f7344895bf963f"
+    },
+    {
+      "path": "web/src/storage/achievements.ts",
+      "sha256": "655b2a07c241b557c8edc1a27a10e132b0f45b7ec1f8365a5f26d39fa5aaf212"
+    },
+    {
+      "path": "web/src/storage/v5-migration.ts",
+      "sha256": "d668566aa5af8438618f912fc48698de35399d5585ad1b1cb710cad3210aa04f"
+    },
+    {
+      "path": "项目文档/契约/15.4-存档结构6.0.0.schema.json",
+      "sha256": "bc75155fbe05e9d977492bcc931603db66045dd4e6989664a75df4c8474d957a"
+    },
+    {
+      "path": "项目文档/契约/15.4-成就1.0.0.schema.json",
+      "sha256": "7ab8f317d4cffd38d2de6a35a6631be4c0f26d6ae435628a9ac1ea4af3bca71b"
+    },
+    {
+      "path": "scripts/achievement-release-inputs.mjs",
+      "sha256": "4dbc3e6610d7b66fdb21f1fc0d8c6049592aa83eb802ccdd260508fee578e082"
+    },
+    {
+      "path": "content/challenges/cases-1.0.0.json",
+      "sha256": "cdd817f9543fbbeb9dd2a70fb1d60d476396d02936acd235af3c0fe257d3a745"
+    },
+    {
+      "path": "content/rewards/challenge-1.0.0.json",
+      "sha256": "01cf432dc622ebf5b68427242001b0c69a49ce5a25b9f01bff4f33a519ffe703"
+    },
+    {
+      "path": "web/src/challenges/content.ts",
+      "sha256": "a13a593d2b8bf2539a7aec7494b59ef62bba1a61e351097be28b3241773127b2"
+    },
+    {
+      "path": "web/src/challenges/rules.ts",
+      "sha256": "6b0991372c10585b9736e82184e2b1069f59dc98121991f61550751672a59fe0"
+    },
+    {
+      "path": "web/src/challenges/authority.ts",
+      "sha256": "8a0fbba52f5a7465e94c1d2a75a8bea8c96b71673493c44d1c8eaa036cb976ed"
+    },
+    {
+      "path": "web/src/challenges/domain.ts",
+      "sha256": "92cb0e38cfd4a94a5c91d7928d1eb6127591b919804207cebd92d393bff3a5dd"
+    },
+    {
+      "path": "web/src/challenges/explanation.ts",
+      "sha256": "28b6b34aa1d908dc27ce333bf49d8223d9ce9befabd7cedc3c126580df3dbfdd"
+    },
+    {
+      "path": "web/src/challenges/ChallengePanel.tsx",
+      "sha256": "35d328d317bf750a55d00e01c76e42c748b0abeb671a5ac17f7a4a3c87e63017"
+    },
+    {
+      "path": "web/src/challenges/challenges.css",
+      "sha256": "fddb7b698a0c09ecf70f0e40286270e21d0233f7b2a70ed80bf5ce5b397a7147"
+    },
+    {
+      "path": "web/src/storage/v6-migration.ts",
+      "sha256": "31147e6976d9b59f55818e0a207d9ee70c64ffe9981c0dc8ccd50e120cf6804b"
+    },
+    {
+      "path": "web/src/player/controller.ts",
+      "sha256": "d88b53e56fa3af7ba3ec182b550fa043e620584a965f12bf2f2033ae80ddba8a"
+    },
+    {
+      "path": "项目文档/契约/16.1-存档结构7.0.0.schema.json",
+      "sha256": "90cd29e6322b75388744f1e03de6876e2e49ac943c16bd8d224635bf65d92a9d"
+    },
+    {
+      "path": "scripts/challenge-release-inputs.mjs",
+      "sha256": "34c833716a4e30232b8acdf649449caf248a6481dd6d1dcba2c5d259d1db1dea"
+    },
+    {
+      "path": "web/src/comparison/content.ts",
+      "sha256": "12fd9f510397a6ee53c36de55cb3acb5592bab8bfc66b00ba30ac4fde57ac63b"
+    },
+    {
+      "path": "web/src/comparison/controller.ts",
+      "sha256": "1afb3d33ad9987bf2d372adec70bc70192ee1188dcb4bf261d0b0db2369ba0c0"
+    },
+    {
+      "path": "web/src/comparison/ComparisonPage.tsx",
+      "sha256": "d76c58701c62d800109e8eae2ac338bb7cdd95cb607226f7c6c42a910dc6b0ed"
+    },
+    {
+      "path": "web/src/comparison/comparison.css",
+      "sha256": "97cc42fb78fb1f6fdd743864f78c05b7a794a00612a6d14876a7be65a8ec64f9"
+    },
+    {
+      "path": "项目文档/契约/16.2-双算法对比生命周期.md",
+      "sha256": "dc1201de4d405fb20b42ded6362f7c2510296a22acadbb4baba881264abe01cf"
+    },
+    {
+      "path": "scripts/comparison-release-inputs.mjs",
+      "sha256": "988d35e76c32553fa2c6ce817fbcb237f84e87a13d4767e724c773769e0e8632"
+    },
+    {
+      "path": "web/src/snapshot-export/types.ts",
+      "sha256": "632812bd14243819017be73401cdc6af6cef6e1dfa955f24a268e096a2bd7a27"
+    },
+    {
+      "path": "web/src/snapshot-export/document.ts",
+      "sha256": "3f94c03e7637d142733654ce229763f1c9cc7eaefd3df54e8dd68c267bae0c61"
+    },
+    {
+      "path": "web/src/snapshot-export/layout.ts",
+      "sha256": "368fc66dd491c8eba3b351fa8f500aeeb91ec63b4c8123f35415c36f89c31bef"
+    },
+    {
+      "path": "web/src/snapshot-export/png.ts",
+      "sha256": "950cf0af7070dfeb9984ce485bfbbaa4e352b50373bd13ec5d26a8d496b7b559"
+    },
+    {
+      "path": "web/src/snapshot-export/browser.ts",
+      "sha256": "c9eec553c456baad8108194d1c3d690a560db74a0b3c3c1ff2d94d6f81ef61ea"
+    },
+    {
+      "path": "web/src/snapshot-export/controller.ts",
+      "sha256": "c612514bcde7199914b8de4cc5a3bb4fcce84ea605de686f7bd92fa276155b13"
+    },
+    {
+      "path": "web/src/snapshot-export/ExportPanel.tsx",
+      "sha256": "92e535f2499603b9e8d680f01b2edbebc16da4dab80b43b00dabe7efabcb7bc9"
+    },
+    {
+      "path": "web/src/snapshot-export/snapshot-export.css",
+      "sha256": "9dea18512db06c58f36acef21725cc9a3db4bffc43a59bf234209d7a001811b9"
+    },
+    {
+      "path": "项目文档/契约/16.3-当前快照格式与捕获生命周期.md",
+      "sha256": "096e6bbd39a100aeae87b01e0e089139027e98d947b5e395a00f041a7a07dbea"
+    },
+    {
+      "path": "scripts/snapshot-release-inputs.mjs",
+      "sha256": "5b3687ccf68c8f6fe772d46b70721c108154b360b5d5a7af1aaebbcc0a59f922"
+    },
+    {
+      "path": "web/src/algorithms/AlgorithmCatalog.tsx",
+      "sha256": "af02f9b5a52b2622d7c08b4d3ac1ff5ecb07d1fa34e34d5d79b7149651cfc7bd"
+    },
+    {
+      "path": "web/src/algorithms/AlgorithmPage.tsx",
+      "sha256": "f5719dc14cfe49e269b51f375d87009984f02d786ff473b5ab9c14fe7f4ae23d"
+    },
+    {
+      "path": "web/src/algorithms/algorithms.css",
+      "sha256": "f8728a9def7f450e9ac85462cdaa4450fca1dc5d0a55aee94b52f958a156928e"
+    },
+    {
+      "path": "web/src/algorithms/content.ts",
+      "sha256": "e5455399b943c6826d7db61a99e433ead51d47c71dad14b2204a9cbac976b164"
+    },
+    {
+      "path": "web/src/algorithms/controller.ts",
+      "sha256": "050fd1d5f068390fe1e26b38414faf80bf627397b8844010edf0994b6e7da6ab"
+    },
+    {
+      "path": "web/src/algorithms/presentation.ts",
+      "sha256": "4dc7aa57c437fe82192efc959ec716986a1aa973aa3772fa464c517003ef184e"
+    },
+    {
+      "path": "web/src/algorithms/types.ts",
+      "sha256": "0600deabcdcdd9cd8cb3a38efeed617195f8882c95e44db8f6a8d79dbaf2d598"
+    },
+    {
+      "path": "web/src/engine/algorithm-client.ts",
+      "sha256": "78fb0b16e5715e1f1d8907f7b3b704c20e322da1de67e53b5d342c0ab98f261d"
+    },
+    {
+      "path": "web/src/engine/algorithm-module.ts",
+      "sha256": "365892e6147fd84ce3bb04296eda7d0f7691d38c187b86b976252c7465b1b757"
+    },
+    {
+      "path": "web/src/engine/algorithm-worker.ts",
+      "sha256": "876b728ff2502397eeda622ffc8a79c58073422007ebe69324b72ff40cb7d26c"
+    },
+    {
+      "path": "web/src/engine/algorithm-protocol.ts",
+      "sha256": "8d0753180c1c25119a7b6350eda3c6f53aaa02506ec22e7e72d49a3f462bd6ff"
+    },
+    {
+      "path": "web/src/engine/algorithm-player.ts",
+      "sha256": "d811960f3998fe03e0e6b3297ae7f3444fb26248d74c468a7b00e85ad71e0614"
+    },
+    {
+      "path": "content/algorithms/cpp/iterative-sorts-1.0.0.json",
+      "sha256": "77a0e7774ce364f89dd3855b24f125cc0252c555faead6072d91c3c65a74a499"
+    },
+    {
+      "path": "content/algorithms/cpp/insertion-sort-1.0.0.cpp",
+      "sha256": "9daeae3074fdd187d85c64886395b90981038a378f164558a592812e008b3a94"
+    },
+    {
+      "path": "content/algorithms/cpp/shell-sort-1.0.0.cpp",
+      "sha256": "a5002d8efe94bdcba5bfb2832b5bc06d3b6874e7284d6c369b2aaf49e92bb655"
+    },
+    {
+      "path": "content/algorithms/cpp/counting-sort-1.0.0.cpp",
+      "sha256": "24a73ca920974374324f65cddbe7b9ac1bfd13a533eb490f4442122004fc024a"
+    },
+    {
+      "path": "scripts/iterative-sort-content.mjs",
+      "sha256": "04db55115adc3aec3a0b4bcbee66410e4575bd17f274bff14d3fc54794964b0b"
+    },
+    {
+      "path": "scripts/iterative-sort-release-inputs.mjs",
+      "sha256": "489b2f876b2bc9d71b8b03dbb2a7abd82f098c458de3ae3f884aa26bd09c2841"
+    },
+    {
+      "path": "项目文档/契约/16.4-C++排序案例与教学标注.md",
+      "sha256": "fb61ab245c922bea3496010216d24045cf78b3c64de672e465f7af02c9a45556"
+    },
+    {
+      "path": "web/src/algorithms/SortArray.tsx",
+      "sha256": "ddb3891cfab5b918de14b95b0c2d3f69084eaf795f3777def1972c655e7de928"
+    },
+    {
+      "path": "web/src/algorithms/SortState.tsx",
+      "sha256": "81bddcd8ebe6656da86075eb19ef92228d6f948b2e9be8dc2215e02220d80681"
+    },
+    {
+      "path": "web/src/algorithms/SortSource.tsx",
+      "sha256": "6a6309c180c2587060a492305e9394d929292bfd9fa1c1a18207ba340d19973f"
+    },
+    {
+      "path": "web/src/algorithms/pair-controller.ts",
+      "sha256": "61a80e167369bea6ac9b63184104b481665f162e02b480979330b060a613c1a3"
+    },
+    {
+      "path": "web/src/algorithms/RecursiveComparisonPage.tsx",
+      "sha256": "682dcd861d20d986f9b0de06f641dd1f538e66c0afe2e998010b53b688a15b48"
+    },
+    {
+      "path": "content/algorithms/cpp/recursive-sorts-1.0.0.json",
+      "sha256": "6bbe6125b3a6ccd9af4962955e0a14c65e5d3654759ccbd6ef5eaf524775c7b7"
+    },
+    {
+      "path": "content/algorithms/cpp/merge-sort-1.0.0.cpp",
+      "sha256": "be88958fab9c561a31f9e13a20cc5b51a987adc1f05beedb1444789b9abd1c9b"
+    },
+    {
+      "path": "content/algorithms/cpp/quick-sort-1.0.0.cpp",
+      "sha256": "75903a3b38588548c623670d9b4c3b9a2e722f5720c2165aa8fe617be44d461c"
+    },
+    {
+      "path": "scripts/recursive-sort-content.mjs",
+      "sha256": "79f2dda2450d8a9c7d750d2e52f9881b4954bb754c06b5cccf90f2797e468c76"
+    },
+    {
+      "path": "scripts/recursive-sort-release-inputs.mjs",
+      "sha256": "c6ad95531b8db710253e753e6bd00b19cf329e8c348d967739c6efe3fc8697e9"
+    },
+    {
+      "path": "项目文档/契约/16.5-C++递归案例与配对对比.md",
+      "sha256": "54517c9a2629a19ba66486c8a7ca21763cc3c5d775e9da732fa0536e3c42c528"
+    },
+    {
+      "path": "content/algorithms/cpp/bucket-sort-1.0.0.json",
+      "sha256": "37015b465124d7a8faa4c34233ba19fe657151077c35efc0ffad06015d3c37fc"
+    },
+    {
+      "path": "content/algorithms/cpp/bucket-sort-1.0.0.cpp",
+      "sha256": "d446a3e838834bc396f5ac52d0d14a004e9993f81f35815ccb9c1817c09c0725"
+    },
+    {
+      "path": "web/src/algorithms/BucketState.tsx",
+      "sha256": "51cf1d07602b6355e9f75d2fdd3107ace8e42aadc187e447c4a4890f2abb2bd6"
+    },
+    {
+      "path": "web/src/algorithms/bucket-presentation.ts",
+      "sha256": "36056743cffd247462a65f6233ab522433c5501495ecf883c3722faf2bf53c1d"
+    },
+    {
+      "path": "scripts/bucket-sort-content.mjs",
+      "sha256": "537a649b5b967b3e85472e6204e109cb619b48b095629ededda92cf05da60663"
+    },
+    {
+      "path": "scripts/bucket-sort-release-inputs.mjs",
+      "sha256": "ef6749f18a7fc6e76c36813257005700c8086950c019d5fc95a35d410b2ca5db"
+    },
+    {
+      "path": "项目文档/契约/16.6-C++桶案例与槽位投影.md",
+      "sha256": "9b12387b37d67cded81aa311b7c1fb2ea017981c8c2109c86ed1ab7b1203c955"
+    },
+    {
+      "path": "content/algorithms/cpp/stack-queue-1.0.0.json",
+      "sha256": "eff0862beeb86e3133eb07b6da940ada4158ec5b5a087b016f2c91c75663e71b"
+    },
+    {
+      "path": "content/algorithms/cpp/array-stack-1.0.0.cpp",
+      "sha256": "9ef15b6a0c5febad7c9a9d34904e19a6222cedaf60fc87a30123e4735b3da44c"
+    },
+    {
+      "path": "content/algorithms/cpp/circular-queue-1.0.0.cpp",
+      "sha256": "05f389c6a23d76d84fb7e330af2d42b0e18bfc2b3d6e971a4e5a896a92b1f9df"
+    },
+    {
+      "path": "web/src/structures/content.ts",
+      "sha256": "0157ed473dbc71a6e7508c312b1f516b09a0919286edf6266b1e55a834541dec"
+    },
+    {
+      "path": "web/src/structures/controller.ts",
+      "sha256": "95b8c94873121cfee7938a4eafeab7ea23ff2453f2856d95c679d9f0969ddbca"
+    },
+    {
+      "path": "web/src/structures/presentation.ts",
+      "sha256": "0e272e1ec0f7dbb952c3dd602a1e661f4293a2458bcf34d02d9a8bc62da557a4"
+    },
+    {
+      "path": "web/src/structures/StructureState.tsx",
+      "sha256": "d9c6a01e486403cf2bfd9b2b5c7d96cb6fee5ef735a4c28a33fdb3565d283ad2"
+    },
+    {
+      "path": "web/src/structures/StructureCatalog.tsx",
+      "sha256": "b5f2d435d4a21021388de94d9f5dd6c504fbab08b4b20abf06041db7c00f1649"
+    },
+    {
+      "path": "web/src/structures/StructurePage.tsx",
+      "sha256": "ca2a7ce4a6043687a84a6701d56f3565a8af9b87a0850565484e051792a7e9dd"
+    },
+    {
+      "path": "web/src/structures/structures.css",
+      "sha256": "b60b3ba82c8f05efa67b21e64d3e1504c02b04d3e7b56269de9d6acafc6ca7df"
+    },
+    {
+      "path": "scripts/structures-content.mjs",
+      "sha256": "9c27a0c3a4b728a8cd445a47d453c0a1a68d07460eecdf2e7b417a835d7706af"
+    },
+    {
+      "path": "scripts/structures-release-inputs.mjs",
+      "sha256": "c996e758b824dca9a2f7100bb0a2e66623ffc33b06c159413b040f38b1edaa9b"
+    },
+    {
+      "path": "项目文档/契约/16.7-C++结构案例与操作编码.md",
+      "sha256": "fb70cb25195aaba553318d05f3ccded9e74562ef29b8226c0cb43c6e98114216"
+    },
+    {
+      "path": "content/algorithms/cpp/linked-nodes-1.0.0.json",
+      "sha256": "2719a50656d28d0c31b6172ac1e5ba288643811d612d40eebe2318eb498a9777"
+    },
+    {
+      "path": "content/algorithms/cpp/singly-linked-list-1.0.0.cpp",
+      "sha256": "51b3ba0a11d94905e52ea0634955f11f48a5854524ba191b03ecebacc553e690"
+    },
+    {
+      "path": "content/algorithms/cpp/binary-search-tree-1.0.0.cpp",
+      "sha256": "a6df7cad29dc3d50c03eb473aeca8e03e6b11627a715e1045c5e11e99f6eee6c"
+    },
+    {
+      "path": "web/src/node-cases/content.ts",
+      "sha256": "4a625bd532c2434ffd203832fb4513e8b025960dedb5284889fb7867afcd89e2"
+    },
+    {
+      "path": "web/src/node-cases/controller.ts",
+      "sha256": "df2df6ace585d0d4de6b7f88e0bddc0e6381c3017b6c8cb7999c9f886f8397a2"
+    },
+    {
+      "path": "web/src/node-cases/presentation.ts",
+      "sha256": "034098375ea77d06ded6dcc8877f792f08fd683861f800f0e30d8c7c5d85017e"
+    },
+    {
+      "path": "web/src/node-cases/NodeGraph.tsx",
+      "sha256": "5364f1f1a77d2c4083fea900467ddb3befaf4716a04e96a8c9814e1b979b3086"
+    },
+    {
+      "path": "web/src/node-cases/NodeCaseCatalog.tsx",
+      "sha256": "0aa38cff65e9b45df3be080a3c574dfe6b538a1252dbe8e887cae9c0378b4fc6"
+    },
+    {
+      "path": "web/src/node-cases/NodeCasePage.tsx",
+      "sha256": "06d9dda74b836ba58a0e42aa002918f4f25f6fca60081edf46b84090938ecea8"
+    },
+    {
+      "path": "web/src/node-cases/nodes.css",
+      "sha256": "4c1f388cdb1349b3c37dc5236f14ddb636f4bea4bc18b6d87ddd013a2d058ade"
+    },
+    {
+      "path": "scripts/linked-nodes-content.mjs",
+      "sha256": "e4872bbd2ff2bfcecc541b972fa616f75be7fd17b1a7cad07f926872c86c5a4a"
+    },
+    {
+      "path": "scripts/linked-nodes-release-inputs.mjs",
+      "sha256": "fc068cafc34142176c36f8762c27cb4a53e892013ce886f7990f6604b12311ab"
+    },
+    {
+      "path": "项目文档/契约/16.8-C++节点案例与真实指针投影.md",
+      "sha256": "c431edf9c108e59837cc2f1c23de65ca436da5754ae129e44921a6fff6c7218b"
+    },
+    {
+      "path": "content/algorithms/cpp/classics-1.0.0.json",
+      "sha256": "262d2b76cc3e9eb17f39325f331a834824118223938f5a40a530d319da1441b3"
+    },
+    {
+      "path": "content/algorithms/cpp/hanoi-1.0.0.cpp",
+      "sha256": "c902c0d56ca2044dc931f108edc45d5e04daa9ec426d3cc66969e21707345728"
+    },
+    {
+      "path": "content/algorithms/cpp/euclidean-gcd-1.0.0.cpp",
+      "sha256": "1ccfa03e437fbee81376dceecd78941a21b0849be8139cf25d6da2132888c66b"
+    },
+    {
+      "path": "content/algorithms/cpp/trial-division-prime-1.0.0.cpp",
+      "sha256": "de40b9116c73d350441d839f443ddec90002d7d102cde0467957ae9ccf096669"
+    },
+    {
+      "path": "content/algorithms/cpp/palindrome-number-1.0.0.cpp",
+      "sha256": "d5228551264bba5c60466313b34bfd37907be49dd2175ba4ae72187e2f3e6964"
+    },
+    {
+      "path": "web/src/classics/content.ts",
+      "sha256": "7a5bfe22d311b1c107ee07774ee4504382ddcc79875dced09203a2f3b17e02fc"
+    },
+    {
+      "path": "web/src/classics/controller.ts",
+      "sha256": "1a7b9abd8c601c90913775fb472d328593874ceb7231b280e92c105187e88c01"
+    },
+    {
+      "path": "web/src/classics/presentation.ts",
+      "sha256": "b5d4a3d6cec2066095e942037954440e64861805969502e45e012d3bd6ee3600"
+    },
+    {
+      "path": "web/src/classics/ClassicState.tsx",
+      "sha256": "9b86506df09c806fdb9609190a047d09ba8893b590fbbfcc708e8591d7af7796"
+    },
+    {
+      "path": "web/src/classics/ClassicCatalog.tsx",
+      "sha256": "0fa1d534222399057911cf2bf6dca041af833206ecd6558ec8328d8d194f8df7"
+    },
+    {
+      "path": "web/src/classics/ClassicPage.tsx",
+      "sha256": "0730ccbec3387831c007178444f8dd6c7c533a727cdea2cdb5e69cc48b676451"
+    },
+    {
+      "path": "web/src/classics/classics.css",
+      "sha256": "f191e1af17112416f467f2f10e945c3d7014343b20d649a3434b63e2a274886e"
+    },
+    {
+      "path": "scripts/classics-content.mjs",
+      "sha256": "d1e2f63de6be06cce59ef293c42f567162c729a8e82013eda124385aa69932de"
+    },
+    {
+      "path": "scripts/classics-release-inputs.mjs",
+      "sha256": "34252ccf8048d6d4e83d4b1ad64ef627169d320fe597f813f5e1ee1639386afa"
+    },
+    {
+      "path": "项目文档/契约/16.9-C++经典案例与汉诺塔存储.md",
+      "sha256": "a343590d3d9b571c06038030089a73ca0c5c7dca3ec19f71f2dde1bfb232a073"
+    },
+    {
+      "path": "scripts/phase2-release-inputs.mjs",
+      "sha256": "9b09d59c1d3835a2d7ac65e1625a27c1fffb0090e9e7b3db9a585b940086a1c6"
+    },
+    {
+      "path": "web/src/player/key-steps.ts",
+      "sha256": "949ee6c7182c8b8e89d0356f9324982b22a8a4acba7329f5e6a990e0899c66e1"
+    },
+    {
+      "path": "web/src/components/StepDetailControl.tsx",
+      "sha256": "98c234efe9f1572eeade52f3a82d1873839cf8f8f7861d30303301a76708cc69"
+    },
+    {
+      "path": "scripts/ui-feedback-release-inputs.mjs",
+      "sha256": "1fbf67e1a4d4b9074953ee95efaefccbdfd15287863220b5a6bdfed65738b433"
+    },
+    {
+      "path": "web/src/storage/custom-draft.ts",
+      "sha256": "15edab2671e3a6044c029ad59c1d5822ce2f43e31512447bc4d851dbaccd1320"
+    },
+    {
+      "path": "web/src/storage/v7-migration.ts",
+      "sha256": "b5839024c14c16da8d187cce3b5ea7c2e1159eb62f3deb5a0926b467328405bc"
+    },
+    {
+      "path": "web/src/custom-code/CustomCodePage.tsx",
+      "sha256": "baa492b3c61cee43aed0f0ca11ff4d645368174bee29cb7952cba03427de12eb"
+    },
+    {
+      "path": "web/src/custom-code/controller.ts",
+      "sha256": "e584a76fe5c8432c1983ebb47a0d474b8fe1762077aa1caa89c42e9769b929ac"
+    },
+    {
+      "path": "web/src/custom-code/Views.tsx",
+      "sha256": "2e51421a67f5bb15ac923273d4e2e64ebdbf9ccf9dddec5bc01e23b4711c87ff"
+    },
+    {
+      "path": "web/src/custom-code/custom-code.css",
+      "sha256": "978c2d400fb90d9233ec2e3ff99d1fdb3dd3b8190a31bce8c343bf7525f37556"
+    },
+    {
+      "path": "scripts/custom-code-release-inputs.mjs",
+      "sha256": "7d0153c2ae11bb16b098f83e5f88640106d1aae088609e75ce8704596e2c0bfb"
+    },
+    {
+      "path": "web/src/engine/advanced-client.ts",
+      "sha256": "b5f9ff758c07ea66e3e7fa376a66e2234a01145d190f2e3bedb71e224b2f53af"
+    },
+    {
+      "path": "web/src/engine/advanced-module.ts",
+      "sha256": "d02e0bae05cde102d3e0f22dc76bea631212980bc3db85609f52f1f2463090cf"
+    },
+    {
+      "path": "web/src/engine/advanced-worker.ts",
+      "sha256": "b99f71de9adf86649c961a287c9cfe7c67d0442e57a595df6a4f552a0b236e6c"
+    },
+    {
+      "path": "web/src/engine/advanced-protocol.ts",
+      "sha256": "b8cfc52e4ef70a1b8ac36209f31c79514ba8dc37d6995588e3627d000384bcc1"
+    },
+    {
+      "path": "web/src/engine/advanced-player.ts",
+      "sha256": "e9a75ba4700376d3138fb1c4035d3c702121fd2e6cf660b0fbd759a5ec6e8c3c"
+    },
+    {
+      "path": "web/src/generated/advanced/engine-build.ts",
+      "sha256": "3f41bc67201c9a7571ff7b8ec1042864cd2b5c86b17bd49872c819ca807fe41e"
+    },
+    {
+      "path": "web/src/generated/advanced/c_viz_advanced.js",
+      "sha256": "1228c0801a7c6262285933c5ace45629be110c80221cebdafa1d9eb9f94d3d49"
+    },
+    {
+      "path": "web/src/generated/advanced/c_viz_advanced_bg.wasm",
+      "sha256": "ec2a4c3390303b3575d1ae29f77f122ce499ca235a560ee50159968e24fe30db"
+    },
+    {
+      "path": "engine/advanced/Cargo.toml",
+      "sha256": "c71dc3194b90024c886531db1edd02ad7f94714bc280076f52c51c6538c52562"
+    },
+    {
+      "path": "engine/advanced/src/bug.rs",
+      "sha256": "ae9fb959b4cc6a3309f42f7a676b1645ec752241726da244460b3d6345c4dae3"
+    },
+    {
+      "path": "engine/advanced/src/lib.rs",
+      "sha256": "c244c233a651263ddb57578faa642044930ff74a493ab36ead98fa3aff614d15"
+    },
+    {
+      "path": "engine/advanced/src/runtime.rs",
+      "sha256": "9345d4ab65296354dd3d9ac60fbc0f5ebbb87e4957b7f54069bc07968062fd24"
+    },
+    {
+      "path": "engine/advanced/src/syntax.rs",
+      "sha256": "c6670e0efeda20ed9b4560560758ac31946f499da3c54ed83c51a5342a3a996c"
+    },
+    {
+      "path": "engine/advanced/tests/advanced.rs",
+      "sha256": "854ea484218b20997b95c4413b33b9af0235b07b6fde6eb5564073b51895c5a3"
+    },
+    {
+      "path": "engine/advanced/tests/inherited.rs",
+      "sha256": "cf6fa2271f389867b041be772750f8c083e0df1b4f050c6eddb33c8b99b81f3c"
+    },
+    {
+      "path": "engine/advanced-wasm/Cargo.toml",
+      "sha256": "ff42f82d11e4cba6b78b854c9e8ea0ddd81daa40aeb2babd21e1d4006bc78fc1"
+    },
+    {
+      "path": "engine/advanced-wasm/src/lib.rs",
+      "sha256": "c21d8ecf065a7aa958700537bb1a667f52322dcb4808873edcb2daa068caf380"
+    },
+    {
+      "path": "scripts/build-advanced-wasm.mjs",
+      "sha256": "b73a3596112dba4c1c5ee192f82a351f96a80b153b2974b9a26af87a21a1f5fc"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "45c5834f16fe2fa14696232ddc9a850e315075fe74602d614170ed42cec6d3b1"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "2519e071f4c4c9eb8226ee6d69cd01067b0eaafc1a3de80562298344b054380c"
+    },
+    {
+      "path": "content/advanced/course-1.0.0.json",
+      "sha256": "a5f3eca7cf3247b0e0356b2c5510cd5a6adbcbcbbeecb49429bc98056712235e"
+    },
+    {
+      "path": "content/advanced/course-1.0.0.schema.json",
+      "sha256": "10b5b2b7f3cc061396ad1a6291dc348c15b7a1faf6c7d17cb61477d606147c31"
+    },
+    {
+      "path": "web/src/advanced-course/model.ts",
+      "sha256": "ce9c234f82fbd8ff12dca9153b46904b58d5de6078dc50d00d82cee430f2706a"
+    },
+    {
+      "path": "web/src/advanced-course/AdvancedCoursePage.tsx",
+      "sha256": "47824515090307a5718682a1ffd22210770d6986feb4229bf92bb9578edb2a2c"
+    },
+    {
+      "path": "web/src/advanced-course/advanced-course.css",
+      "sha256": "f353490d15e4282074aa3dd6580a7530cf721651aaeb8b4363143b033f254b6a"
+    },
+    {
+      "path": "scripts/advanced-course-content.mjs",
+      "sha256": "33444998ee727a8e0d0f1e0691525019718f4c150b19fa7d4564bb07f9af9cfc"
+    },
+    {
+      "path": "scripts/advanced-course-release-inputs.mjs",
+      "sha256": "3ef96af59a19e05b5692f12382fe5f8066a63c1f5ed1297f4aa4c38d226117a8"
+    },
+    {
+      "path": "content/advanced/examples-1.0.0.json",
+      "sha256": "d1de4d64efb36e2b532ef3f2bc8215864d5fe53e0cc1eb7b1c9dcb14c4c19975"
+    },
+    {
+      "path": "content/advanced/examples-1.0.0.schema.json",
+      "sha256": "05d60a0fa28935541fbe184af6bf38e3d580b4acb73ab8d38d2aeb8d9abba08d"
+    },
+    {
+      "path": "content/advanced/example-two-sum-1.0.0.cpp",
+      "sha256": "08cd8547429e73ef6e4f0fe106613ce3ec6101029cbfcdbe2e5578e808a69cc1"
+    },
+    {
+      "path": "content/advanced/example-move-zeroes-1.0.0.cpp",
+      "sha256": "3128e881c7cae81b5ea6fd07497385629200885f6811c0ea6a5ac73968bba0eb"
+    },
+    {
+      "path": "content/advanced/example-search-insert-1.0.0.cpp",
+      "sha256": "5213bda0e6bfdae78908648376a4b0c895487e8eb40784280f96cce6f0d3d4ba"
+    },
+    {
+      "path": "web/src/examples/content.ts",
+      "sha256": "3cb52d8d1b878445874afb5509e719fc7a6438ba7e7f73ee1226a1205e14197f"
+    },
+    {
+      "path": "web/src/examples/ExampleCatalog.tsx",
+      "sha256": "94e7482b4c7ad8ebf1630659a18d50ce32e26af5ad5b2ee87bd52e287d474322"
+    },
+    {
+      "path": "web/src/examples/ExamplePage.tsx",
+      "sha256": "19e4338aad154dd7f3b193328eeb5836b5f704682b0190d357d11eb6f30bfd02"
+    },
+    {
+      "path": "web/src/examples/examples.css",
+      "sha256": "c327da480824703a5cec9e8c09160c4180823faeef99e500bc695d2f3354feb8"
+    },
+    {
+      "path": "scripts/examples-content.mjs",
+      "sha256": "0b94ec0424d49eb8940cba948293fac11601a0549e7c02fa79ca96b074369daa"
+    },
+    {
+      "path": "scripts/examples-release-inputs.mjs",
+      "sha256": "7b3babea1c8030ac41d77d99cb51a7ff1e0e7cb2aaa65cf3718458c8b89fd9e2"
+    },
+    {
+      "path": "content/advanced/example-solutions-1.0.0.json",
+      "sha256": "9a2ca9a7ceb9da1840d519f81c7ba1227bf3c9eb23c2c05b54ac94dc05f087ca"
+    },
+    {
+      "path": "content/advanced/example-solutions-1.0.0.schema.json",
+      "sha256": "f6dba13069a1a406bcbee61a535f94be20bb9931e2f2bb1759316dde26705d6d"
+    },
+    {
+      "path": "content/advanced/example-two-sum-merge-pointers-1.0.0.cpp",
+      "sha256": "c5803d77e5341d69395c7ff00134e0d03d18263bfbbb0b7288829c2d7738c256"
+    },
+    {
+      "path": "content/advanced/example-move-zeroes-swap-1.0.0.cpp",
+      "sha256": "d22d281588ed11594f8a305497cbedb8fcc55ed118bb06412b59872f09cd4eb7"
+    },
+    {
+      "path": "content/advanced/example-search-insert-closed-1.0.0.cpp",
+      "sha256": "4ed491af41b60d3221ab7d272da0537da28ccbeb94944ba30641f11e775c9bee"
+    },
+    {
+      "path": "web/src/example-comparison/content.ts",
+      "sha256": "78280a859a31e263c27aca9c3d1699f3ed9642f6ae13f2bd5de36efdc902e3c6"
+    },
+    {
+      "path": "web/src/example-comparison/controller.ts",
+      "sha256": "2c987c7cc68a27f475c7bcbaccf6884b11c7c493c9ddf81245db3d0e000995fc"
+    },
+    {
+      "path": "web/src/example-comparison/ExampleComparisonPage.tsx",
+      "sha256": "0cb1dc2462bc74c970d4a640cc2ef310f343603acfafd278bd13330c2a33772d"
+    },
+    {
+      "path": "web/src/example-comparison/comparison.css",
+      "sha256": "d5be479a6b30c4925d939861523def925b39f091804647a5c12d1f5551de442f"
+    },
+    {
+      "path": "scripts/example-solutions-content.mjs",
+      "sha256": "92e8b1ed5a65e059b4039dc891fc5b089e9b9d067a6e577280877bb4c8f42bec"
+    },
+    {
+      "path": "scripts/example-solutions-release-inputs.mjs",
+      "sha256": "aed3d40733ca9d8c744beed32ad9367a266f2a2960c7cb53341055ff11aa83e2"
+    },
+    {
+      "path": "项目文档/契约/18.3-多解法与同题对比契约.md",
+      "sha256": "31972a15e67fe03d2c6f6b2a9f0d3b3bacae3e8727cf41d1b6c065295172b721"
+    },
+    {
+      "path": "content/algorithms/cpp/sieve-sequences-1.0.0.json",
+      "sha256": "877cad3d5b2471053b12ab21cec5ebe8558abe13873301680e4d1c2883576f77"
+    },
+    {
+      "path": "content/algorithms/cpp/sieve-sequences-1.0.0.schema.json",
+      "sha256": "dc029c7ca9b9c6acbcf38b89ae6f6807751523aed86d43f7fdfdda7d8536b001"
+    },
+    {
+      "path": "content/algorithms/cpp/eratosthenes-sieve-1.0.0.cpp",
+      "sha256": "2d9d2e055d77cf136b1cea1986e73c46a0f88bfc6e3f66b93713766e53dad9c0"
+    },
+    {
+      "path": "content/algorithms/cpp/euler-sieve-1.0.0.cpp",
+      "sha256": "30dc90f98a1bf8e820b878cbb99ef45c52d72e0c420cb7bfc10825a75f653577"
+    },
+    {
+      "path": "content/algorithms/cpp/maximum-subarray-1.0.0.cpp",
+      "sha256": "3b0ac5b56bb10516b0eea01dd2bb62fda3c40e125a8e4153d5416f98a1392057"
+    },
+    {
+      "path": "content/algorithms/cpp/strict-lis-1.0.0.cpp",
+      "sha256": "c556ec278f0246ef99f8af33b6f366f8149d6b12181a10902a41cc4de163f707"
+    },
+    {
+      "path": "web/src/advanced-algorithms/content.ts",
+      "sha256": "1dcfc6e374d407de035ed8c5ab5f7029738825a5e2e2e892b1c9101eb3513b5a"
+    },
+    {
+      "path": "web/src/advanced-algorithms/AdvancedAlgorithmCatalog.tsx",
+      "sha256": "6c9e0f9fd03e4997714004d2356b3ddc7a529d2e4c67c65d4b4cbb9c54b5078d"
+    },
+    {
+      "path": "web/src/advanced-algorithms/AdvancedAlgorithmPage.tsx",
+      "sha256": "9a9480b5f3b76a756550d4779aececbb129b8adec4abe2da61564aa0b069341c"
+    },
+    {
+      "path": "web/src/advanced-algorithms/AlgorithmReading.tsx",
+      "sha256": "3c836360a3c975de5399e0f462527ad63f5219e439939195ce48fb768fe7a16b"
+    },
+    {
+      "path": "web/src/advanced-algorithms/AlgorithmArrays.tsx",
+      "sha256": "884ea3a335e62a7e407e523817d03de4ecfd36f62f1d2b228e432fafe269ebb9"
+    },
+    {
+      "path": "web/src/advanced-algorithms/algorithms.css",
+      "sha256": "693ad477af8d44ded74e413483a87d6bb55d4197668be7cc48cd6d0188cf201c"
+    },
+    {
+      "path": "scripts/sieve-sequences-content.mjs",
+      "sha256": "75800e1477864f4119cc73efc96e790084eeefd16fb41eed9a6f849b5f043bdf"
+    },
+    {
+      "path": "scripts/sieve-sequences-release-inputs.mjs",
+      "sha256": "501edcd0c89321a5e20e14011cc3e8edc8bb8bccb86edb63e413474ebee201f1"
+    },
+    {
+      "path": "项目文档/契约/18.4-筛法序列案例与投影契约.md",
+      "sha256": "4ad116e5ec17a1b512fa113caae6bd35d5bc92a9e1ca3e22463aeea36efd2b7a"
+    },
+    {
+      "path": "content/algorithms/cpp/kmp-1.0.0.json",
+      "sha256": "4f545f016fd6e7d0e7f4b50813f73f7ac7c4c6f5c76394279d2b762677544d0c"
+    },
+    {
+      "path": "content/algorithms/cpp/kmp-1.0.0.schema.json",
+      "sha256": "c2989d17503f11e1b624abaee0325f819d8679b6dcbd76e717724a3719647638"
+    },
+    {
+      "path": "content/algorithms/cpp/kmp-1.0.0.cpp",
+      "sha256": "3bcaf3825ff90062810e6202a2e046bc67a1575ca83168fb58469583ca1bc39c"
+    },
+    {
+      "path": "web/src/advanced-algorithms/AlgorithmWorkbench.tsx",
+      "sha256": "32553523647402d819e87ce6fe38a510f365e60affd91b428870017c692d76b1"
+    },
+    {
+      "path": "web/src/advanced-algorithms/kmp-content.ts",
+      "sha256": "981af1ce5f4961df91c8426d998adebabf86d9723d1a44daa81aff7eadc259ba"
+    },
+    {
+      "path": "web/src/advanced-algorithms/KmpState.tsx",
+      "sha256": "b1f944c2f739d48832e54b6897f8a994e9b71e2c9cc86dfe37236dd550ae4bcb"
+    },
+    {
+      "path": "web/src/advanced-algorithms/KmpCatalog.tsx",
+      "sha256": "b012e82e131228f5c38580ef8866f5161da863004b068027c420c7c0b906cb97"
+    },
+    {
+      "path": "web/src/advanced-algorithms/KmpPage.tsx",
+      "sha256": "a150a456b174cc838d37f096cfc20c113365e072d06810eea3ad815a74429e5d"
+    },
+    {
+      "path": "web/src/advanced-algorithms/kmp.css",
+      "sha256": "6b1a5d2d9e5c2dd4693182418fc78d51265f1527bf25c05ed16f42b59f3d12b2"
+    },
+    {
+      "path": "scripts/kmp-content.mjs",
+      "sha256": "f851a8dfd4d7decb2edad18b42a30767fecddd16defd8d0dcc98e76130a53470"
+    },
+    {
+      "path": "scripts/kmp-release-inputs.mjs",
+      "sha256": "52567dab6f8aa066426f030ab0311b578ba7d15b8d412bd4d8740547bd3c3c2a"
+    },
+    {
+      "path": "项目文档/契约/18.5-KMP内容与真实状态投影.md",
+      "sha256": "55b67dbf2c66d187212656575a339a295f62eed23aa917420b2197ed78f6c080"
+    },
+    {
+      "path": "content/advanced/language-migration-1.0.0.json",
+      "sha256": "cdb27ab156659d5b5570ba39c449e82ef4adb810914e0f58d0137cf169021642"
+    },
+    {
+      "path": "content/advanced/language-migration-1.0.0.schema.json",
+      "sha256": "49318573e2a323a8a4546657806dc738ba2c4bbc54d657219fd88cb12397f5c1"
+    },
+    {
+      "path": "web/src/language-migration/model.ts",
+      "sha256": "959b95fdf29fd1c3d832dec0e24818ac2cc87aae6e171ca38764b9b33e8a6800"
+    },
+    {
+      "path": "web/src/language-migration/LanguageMigrationPage.tsx",
+      "sha256": "5c18eae59ac72a0965312fa798a23184e4a046ef46e480c5f7ffa272577545cb"
+    },
+    {
+      "path": "web/src/language-migration/migration.css",
+      "sha256": "cb137a5a6aa958ae11b4d22ed0c976d1b6dc06ffb1651f5f2da68663669fa93b"
+    },
+    {
+      "path": "scripts/language-migration-content.mjs",
+      "sha256": "a2542645c8e9e95b220a95349705ce315d345b8857a73401e7a3b2ee1f6409c7"
+    },
+    {
+      "path": "scripts/language-migration-release-inputs.mjs",
+      "sha256": "15118145f3eff4a74abb04d8dd1f020be521fe5a286eef42202e9f224031172a"
+    },
+    {
+      "path": "项目文档/契约/18.6-语言迁移内容与教学标注.md",
+      "sha256": "04f65dac03f9ce5b1ce473bada4311224172a85f89d521d4fc240b5dc96b02e0"
+    },
+    {
+      "path": "web/src/weaknesses/model.ts",
+      "sha256": "3d103455580f5eedd2c70f6a40c244109c5dd12855673ba3cc298689d7b149de"
+    },
+    {
+      "path": "web/src/weaknesses/WeaknessPage.tsx",
+      "sha256": "6d37e9b56debdc5fa2a6e8b71d128fcc9f35574421c11fe6e624da1d1a1351fc"
+    },
+    {
+      "path": "web/src/weaknesses/weaknesses.css",
+      "sha256": "c5146442d0d23ce0fc62562b42fd220e9d30d410fa4e1b502c432846087756d1"
+    },
+    {
+      "path": "web/src/storage/weaknesses.ts",
+      "sha256": "e26a0a48db3f8815ec43af381c57a430c85cf8f8adf6d60fa4c2e1b09767cbd9"
+    },
+    {
+      "path": "web/src/storage/v8-migration.ts",
+      "sha256": "76987ddab08dfca5c5c435a12f51caa6a97a84f91b49ebbb90a475387ab68440"
+    },
+    {
+      "path": "scripts/weakness-release-inputs.mjs",
+      "sha256": "f5a203a621ed2da10fc9982aade5262ae41ce38c41e7469c3ac918a5912bd9be"
+    },
+    {
+      "path": "项目文档/契约/19.1-薄弱证据与SAVE9.md",
+      "sha256": "dd9bb722bab5265194967530571b9425674ad8020d416430d98446f107b5df7a"
+    },
+    {
+      "path": "项目文档/契约/19.1-存档结构9.0.0.schema.json",
+      "sha256": "01fd37fa16201611bd3ed9963511ebf71f2c780f0000f8d23fa78849b79fe105"
+    },
+    {
+      "path": "engine/practice-generator/Cargo.toml",
+      "sha256": "3e26f831fd9ac30dce3fe695657b04502989af76c387ae9bd76440ba3c06cfd7"
+    },
+    {
+      "path": "engine/practice-generator/src/lib.rs",
+      "sha256": "0f955da581faa5cf488edeca11ac82a1b5bc859912ffdcd9c4c46bdf04d5a72f"
+    },
+    {
+      "path": "engine/practice-generator-wasm/Cargo.toml",
+      "sha256": "b0baa709b8a1b847a3fcceb06d28045841bfcedb88212f5762da080012559233"
+    },
+    {
+      "path": "engine/practice-generator-wasm/src/lib.rs",
+      "sha256": "8c50db70e1da8655e290d0a0e4c2701278ca8a432844c84bd9536ff09be2ddd3"
+    },
+    {
+      "path": "web/src/generated-practice/protocol.ts",
+      "sha256": "fc227e617a3febde1f36739503a7ed1a928acbbe5a6f11678b4ad1728c17fa8d"
+    },
+    {
+      "path": "web/src/generated-practice/client.ts",
+      "sha256": "8191d6eb1fb536a51e7e77d8206476e0d49e337f96ad102074efaf53563d80f8"
+    },
+    {
+      "path": "web/src/generated-practice/module.ts",
+      "sha256": "868bc492ff9a6b7cf038586319bc3696ff8dce141defb526011134bfa5b72290"
+    },
+    {
+      "path": "web/src/generated-practice/practice-worker.ts",
+      "sha256": "aa0193e3453cdc5e66835df2ad58d294414c91f4ebc828764f5c410d2e449a5c"
+    },
+    {
+      "path": "web/src/generated-practice/controller.ts",
+      "sha256": "fffc2996ee6d64c370d352f26a7a018e84a03a85f4e76b5b63ba7a82fc351a15"
+    },
+    {
+      "path": "web/src/generated-practice/GeneratedPracticePage.tsx",
+      "sha256": "80faaabd6865f5fca67192105072db621c96f63a9b584d927b4bacf8ca60581b"
+    },
+    {
+      "path": "web/src/generated-practice/practice.css",
+      "sha256": "5db5ecca4c861efef724af325ab7e725468b1a4cdca289d64fa055304cb8234a"
+    },
+    {
+      "path": "web/src/generated/practice/engine-build.ts",
+      "sha256": "012627faa06f39e114c0452751848c5ea4b71cedb177d8722b97f41e1f1a18e5"
+    },
+    {
+      "path": "scripts/build.mjs",
+      "sha256": "74f1000d6df30a225b8f21605984988f79968b36ff62f0d3a2f423f311b82484"
+    },
+    {
+      "path": "scripts/build-practice-generator-wasm.mjs",
+      "sha256": "90100c09f0da570c30a9d497f0e62b429a6f1d5f371bac4fe5e7ac2c382aecc0"
+    },
+    {
+      "path": "scripts/generated-practice-release-inputs.mjs",
+      "sha256": "fd0e4073ec4ee6c392118c36ae46fd94d57fc8923187eb32c372aea5ce71ec9a"
+    },
+    {
+      "path": "项目文档/架构决策/19.2-规则生成与临时加练闭环.md",
+      "sha256": "98f25512fe7d0d4bfcf9eb36587b1ceb56218fd0b097a66371340a00ace4e37b"
+    },
+    {
+      "path": "项目文档/契约/19.2-规则生成与真实验证契约.md",
+      "sha256": "4f4cba59c7abc14b24805ab8fe2f9f0f2cb0915211f0049c587686fdb069c969"
+    },
+    {
+      "path": "项目文档/契约/19.2-规则生成1.0.0.schema.json",
+      "sha256": "8dfd6da384863bdb59de2c88ef1f055c270a2ebe7fb80077fb8c6b9e54698bc1"
+    }
+  ],
+  "evidence": {
+    "unitfullrjson": {
+      "path": ".artifacts/19.2/unit-full-r2.json.gz",
+      "sha256": "7b669952370df44b9cca18a025972cf6f820ffd9e16639cdbfacfa88fbdabf07"
+    },
+    "browsercandidaterjson": {
+      "path": ".artifacts/19.2/browser-candidate-r4.json.gz",
+      "sha256": "ade548844f54d64bac5974fdefdb549d7df0b687d9478db6d8bbd1eb9057664e"
+    },
+    "releasereviewjson": {
+      "path": ".artifacts/19.2/release-review64.json.gz",
+      "sha256": "687111c4864b876d2c28c39db46b53066b84bc9be339c6f0678d03e8b6b297f4"
+    }
+  },
+  "fullContentPublication": false,
+  "reason": "2116 fixed-Node serial frontend units, 9 genuine Chrome candidate paths, full native/wasm clippy and workspace Rust tests, schema/40 real Worker packets, types/lint/format/full candidate build. Formal checks still required for task acceptance.",
+  "priorRegistration": {
+    "path": "content/c/p0/blockly-release-1.0.29.json",
+    "sha256": "f68baf2fc25a4f7664f5fd0fea9ee52a419ba11a5ad33696eb23533122cd08fd"
+  },
+  "registeredAt": "2026-11-01",
+  "supersedes": {
+    "version": "1.0.63",
+    "path": "content/c/p0/blockly-release-1.0.63.json",
+    "sha256": "b649c61abd9643d53d766757249e20aad2d1661e7e0273b63d6c5271c7d87ff6"
+  },
+  "scope": "19.2 independent temporary Rust-generated foundational C practice; three templates/two tiers, complete finite input domains, genuine same-source execution and inverse replay. No learning/reward authority or model.",
+  "evidenceFreshness": {
+    "latestSourceAt": "2026-10-31T22:50:38.267Z",
+    "frontendPassed": 2116,
+    "candidateUniquePassed": 9
+  },
+  "engine": {
+    "wasmSha256": "aed203f4fe30ccaafdb32d0c68c2a1f2634c10726c82977684d4e3d20228679d",
+    "wasmBytes": 1368307
+  },
+  "executionVersions": [
+    "1.0.0/1.0.0/1.0.0/1.0.0/1.0.0",
+    "1.1.0/1.0.0/1.0.0/1.1.0/1.0.0"
+  ],
+  "legacyGateMode": "P05_HIDE_COURSE_BUNDLE=1: actual old six-course fallback using the current frontend and Rust engine",
+  "supplementalReason": "Rust507 passed/1 original ignored inherited by protected source and all3 WASM SHA, not rerun. Immutable35–45 and prior receipts retained.",
+  "memoryEngine": {
+    "id": "engine.rust.memory",
+    "version": "0.1.0",
+    "companion": "BUG-MEMORY-01@1.0.0",
+    "wasmSha256": "4f3cb075dc0b7da3a0afc9dd96f178b6a1b71184f125c726ddf0b81384f6b3a7",
+    "wasmBytes": 466663
+  },
+  "algorithmEngine": {
+    "wasmSha256": "14be60eb14544c9be02f3818086b03db94596e6dc027336a8e2ffb84b49cfc0e",
+    "wasmBytes": 296707,
+    "execVersion": "1.2.0",
+    "dslVersion": "1.1.0",
+    "diagnosticVersion": "1.1.0"
+  },
+  "nodeEngine": {
+    "id": "engine.rust.memory",
+    "execVersion": "1.3.0",
+    "dslVersion": "1.2.0",
+    "diagnosticVersion": "1.2.0",
+    "wasmSha256": "4f3cb075dc0b7da3a0afc9dd96f178b6a1b71184f125c726ddf0b81384f6b3a7"
+  },
+  "classicEngine": {
+    "id": "engine.rust.memory",
+    "execVersion": "1.3.0",
+    "dslVersion": "1.2.0",
+    "diagnosticVersion": "1.2.0",
+    "wasmSha256": "4f3cb075dc0b7da3a0afc9dd96f178b6a1b71184f125c726ddf0b81384f6b3a7"
+  },
+  "advancedEngine": {
+    "id": "engine.rust.advanced",
+    "version": "0.1.0",
+    "wasmSha256": "ec2a4c3390303b3575d1ae29f77f122ce499ca235a560ee50159968e24fe30db"
+  },
+  "generatorEngine": {
+    "engineId": "engine.rust.practice-generator",
+    "engineVersion": "1.0.0",
+    "wasmBytes": 552150,
+    "wasmSha256": "d329caefcec9cee8b884a3b695b8a19e641078d49ba22f9bfe17d2b6f99df360"
+  }
+}

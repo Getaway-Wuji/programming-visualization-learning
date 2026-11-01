@@ -1,7 +1,7 @@
-/** SAVE-01 8.0.0. Challenge receipts and signed, once-per-question ledger entries. */
+/** SAVE-01 9.0.0. Local weakness summaries; original learning facts remain authoritative. */
 export const DB_NAME = 'c-viz-learning';
-export const DB_VERSION = 8;
-export const SCHEMA_VERSION = '8.0.0';
+export const DB_VERSION = 9;
+export const SCHEMA_VERSION = '9.0.0';
 export const CORE_STORE_NAMES = [
   'meta',
   'settings',
@@ -21,7 +21,8 @@ export const V7_STORE_NAMES = [
   'reviewCards',
   'achievements',
 ] as const;
-export const ALL_STORE_NAMES = [...V7_STORE_NAMES, 'customDrafts'] as const;
+export const V8_STORE_NAMES = [...V7_STORE_NAMES, 'customDrafts'] as const;
+export const ALL_STORE_NAMES = [...V8_STORE_NAMES, 'weaknesses'] as const;
 export type StoreName = (typeof STORE_NAMES)[number];
 export const COLLECTION_STORES = [
   'progress',

@@ -12,8 +12,11 @@ import { KnowledgeMarksProvider } from './review-notebook/marks';
 import { AchievementProvider } from './achievements/react';
 const AchievementsPage = lazy(() => import('./achievements/AchievementsPage'));
 import { ReviewProvider } from './review-scheduler/react';
+import { AiProvider } from './ai-debug/react';
 const ReviewsPage = lazy(() => import('./review-scheduler/ReviewsPage'));
 const NotebookPage = lazy(() => import('./review-notebook/NotebookPage'));
+const WeaknessPage = lazy(() => import('./weaknesses/WeaknessPage'));
+const GeneratedPracticePage = lazy(() => import('./generated-practice/GeneratedPracticePage'));
 
 const CoursePage = lazy(() =>
   import('./pages/CatalogPages').then((module) => ({ default: module.CoursePage })),
@@ -119,6 +122,8 @@ function AppRoutes() {
             <Route path="/visualize/:caseId" element={<VisualizePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/notebook" element={<NotebookPage />} />
+            <Route path="/weaknesses" element={<WeaknessPage />} />
+            <Route path="/generated-practice" element={<GeneratedPracticePage />} />
             <Route path="/reviews" element={<ReviewsPage />} />
             <Route path="/achievements" element={<AchievementsPage />} />
             <Route path="*" element={<MissingPage />} />
@@ -138,9 +143,11 @@ export function App() {
             <AppearanceProvider>
               <WorkbenchProvider>
                 <HashRouter>
-                  <PracticeProvider>
-                    <AppRoutes />
-                  </PracticeProvider>
+                  <AiProvider>
+                    <PracticeProvider>
+                      <AppRoutes />
+                    </PracticeProvider>
+                  </AiProvider>
                 </HashRouter>
               </WorkbenchProvider>
             </AppearanceProvider>

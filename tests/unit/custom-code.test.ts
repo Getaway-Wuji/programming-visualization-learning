@@ -132,8 +132,8 @@ test('SAVE7 migration keeps meta identity and other fields, rejects future witho
   const original = structuredClone(before);
   expect(upgradeV7Meta(before)).toEqual({
     ...before,
-    schemaVersion: '8.0.0',
-    dbVersion: 8,
+    schemaVersion: '9.0.0',
+    dbVersion: 9,
     revision: before.revision + 1,
   });
   expect(before).toEqual(original);

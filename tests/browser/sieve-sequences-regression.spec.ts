@@ -6,7 +6,7 @@ import { native } from './scheduler-helpers';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
 import { PlayerModel } from '../../web/src/player/model';
 
-/** Current DB8 regression, separate from the immutable pre-17 fifteen-store test. */
+/** Current DB9 regression, separate from the immutable pre-17 fifteen-store test. */
 for (const id of caseSetIds) {
   test(`18.4 current archive and genuine C case remain reversible: ${id}`, async ({
     page,
@@ -25,9 +25,10 @@ for (const id of caseSetIds) {
       db.close();
       return value;
     });
-    expect(storage.version).toBe(8);
-    expect(storage.stores).toHaveLength(16);
+    expect(storage.version).toBe(9);
+    expect(storage.stores).toHaveLength(17);
     expect(storage.stores).toContain('customDrafts');
+    expect(storage.stores).toContain('weaknesses');
     const before = await native(page),
       panel = page.getByTestId('case-execution');
     for (const [key, value] of Object.entries(sample.values))

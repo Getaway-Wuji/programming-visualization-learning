@@ -1,0 +1,107 @@
+{
+  "version": "2.0.0",
+  "designOnly": true,
+  "checkedOn": "2026-11-01",
+  "defaultProvider": null,
+  "arbitraryURLsAllowed": false,
+  "profiles": [
+    {
+      "providerId": "openai",
+      "label": "OpenAI 官方 API",
+      "model": "gpt-5.4-mini-2026-03-17",
+      "modelVersionPolicy": "dated snapshot; no automatic alias fallback",
+      "verify": {
+        "method": "GET",
+        "url": "https://api.openai.com/v1/models"
+      },
+      "explain": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions"
+      },
+      "returnedModels": [
+        "gpt-5.4-mini-2026-03-17"
+      ],
+      "parameters": {
+        "stream": false,
+        "n": 1,
+        "reasoning_effort": "none",
+        "max_completion_tokens": 768,
+        "store": false,
+        "response_format": {
+          "type": "json_schema",
+          "json_schema": {
+            "name": "cviz_explanation_v2",
+            "strict": true,
+            "schema": "GENERATE_FROM_CURRENT_MODEL_OUTPUT_WITH_FACT_ID_ENUM"
+          }
+        }
+      },
+      "sources": {
+        "model": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+        "api": "https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create",
+        "models": "https://developers.openai.com/api/reference/resources/models/methods/list",
+        "structured": "https://developers.openai.com/api/docs/guides/structured-outputs",
+        "retention": "https://developers.openai.com/api/docs/guides/your-data",
+        "pricing": "https://developers.openai.com/api/docs/pricing"
+      },
+      "retentionDisclosure": "API content is not used for training by default; abuse monitoring can retain content up to30 days with exceptions, and prompt caching has separate rules. store:false is not zero retention. No account-specific special controls assumed."
+    },
+    {
+      "providerId": "deepseek",
+      "label": "DeepSeek 官方 API",
+      "model": "deepseek-flash",
+      "observedVersion": "DeepSeek-V4.1-Flash-1017",
+      "modelVersionPolicy": "provider alias can change; no weight/version pin claim",
+      "verify": {
+        "method": "GET",
+        "url": "https://api.deepseek.com/models"
+      },
+      "explain": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions"
+      },
+      "returnedModels": [
+        "deepseek-flash",
+        "DeepSeek-V4.1-Flash-1017"
+      ],
+      "parameters": {
+        "stream": false,
+        "max_tokens": 768,
+        "thinking": {
+          "type": "disabled"
+        },
+        "response_format": {
+          "type": "json_object"
+        }
+      },
+      "sources": {
+        "model": "https://api-docs.deepseek.com/quick_start/pricing/",
+        "api": "https://api-docs.deepseek.com/api/create-chat-completion/",
+        "models": "https://api-docs.deepseek.com/api/list-models/",
+        "structured": "https://api-docs.deepseek.com/guides/json_mode/",
+        "thinking": "https://api-docs.deepseek.com/guides/thinking_mode/",
+        "retention": "https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html",
+        "pricing": "https://api-docs.deepseek.com/quick_start/pricing/"
+      },
+      "retentionDisclosure": "Public privacy policy does not establish a universal API zero-retention or fixed deletion guarantee. Disclose external transfer and applicable account/API terms; review those terms before19.4 production. Do not infer API rules from open weights or consumer chat."
+    }
+  ],
+  "common": {
+    "authorization": "Bearer provided only by the user, request-lifetime forwarding",
+    "keyInModelMessages": false,
+    "automaticRetries": 0,
+    "automaticFallback": false,
+    "tools": false,
+    "stream": false,
+    "deadlineMs": 60000,
+    "verifyDeadlineMs": 10000,
+    "maxConcurrent": 1,
+    "maxQueued": 0,
+    "appRequestBytes": 16384,
+    "providerRequestBytes": 6144,
+    "upstreamResponseBytes": 65536,
+    "modelContentBytes": 8192,
+    "appResponseBytes": 12288,
+    "productionInferenceVerified": false
+  }
+}

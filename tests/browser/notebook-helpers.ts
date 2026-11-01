@@ -97,12 +97,26 @@ async function openAnswer(page: Page, exerciseId: string) {
   await page.goto(`/#/practice/${exerciseId}`);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await ready(page);
+  await expect.poll(async () => (await archive(page)).settings.goalTemplate).not.toBeNull();
   // The normal auto preference can reveal code between checking and clicking
   // its expander. Select the public code-only view before editing instead.
   await page
     .getByTestId('block-workspace-preference')
     .getByRole('combobox', { name: '积木显示', exact: true })
     .selectOption('hide');
+  const preference = page.getByTestId('block-workspace-preference');
+  const preferenceStatus = page.getByTestId('block-preference-save-status');
+  await expect(preferenceStatus).toHaveAttribute('data-save-state', /^(saved|temporary)$/);
+  if ((await preferenceStatus.getAttribute('data-save-state')) === 'temporary') {
+    await expect(preferenceStatus).toContainText('其他页面已更新档案');
+    test.info().annotations.push({
+      type: 'setup-recovery',
+      description:
+        'Display preference CAS conflicted with source reconciliation; explicitly re-read and save once through the public control.',
+    });
+    await preference.getByRole('button', { name: '重新读取并保存选择', exact: true }).click();
+    await expect(preferenceStatus).toHaveAttribute('data-save-state', 'saved');
+  }
   await expect(page.getByTestId('practice-editor-layout')).toHaveAttribute(
     'data-blocks-visible',
     'no',

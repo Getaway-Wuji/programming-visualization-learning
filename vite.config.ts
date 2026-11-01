@@ -14,7 +14,11 @@ export default defineConfig(({ mode }) => {
     envDir: workspaceDir,
     base,
     plugins: [react()],
-    server: { port: 5173, strictPort: true },
+    server: {
+      port: 5173,
+      strictPort: true,
+      proxy: { [`${base}api/ai/v2`]: { target: 'http://127.0.0.1:4189', changeOrigin: false } },
+    },
     preview: { port: 4173, strictPort: true },
     build: { outDir: 'dist', emptyOutDir: true, sourcemap: false },
   };

@@ -4,6 +4,7 @@ import {
   STORE_NAMES,
   ALL_STORE_NAMES,
   V7_STORE_NAMES,
+  V8_STORE_NAMES,
   SCHEMA_VERSION,
   createMeta,
   defaultSettings,
@@ -31,6 +32,8 @@ import { upgradeV4Meta } from './v4-migration';
 import { upgradeV5Meta } from './v5-migration';
 import { upgradeV6Meta } from './v6-migration';
 import { upgradeV7Meta } from './v7-migration';
+import { upgradeV8Meta } from './v8-migration';
+import { weaknessesTransaction, type WeaknessReader } from './weaknesses';
 import { customDraftTransaction, type CustomDraftWrite } from './custom-draft';
 import { achievementsTransaction, type AchievementSourceReader } from './achievements';
 import type { AchievementEvidence } from '../achievements/model';
@@ -290,6 +293,17 @@ export class StorageClient {
   }
   async readKnowledgeMarks(context: EditorHistoryContext) {
     return (await knowledgeMarksTransaction(this.connection(), context)).rows;
+  }
+  async syncWeaknesses(context: EditorHistoryContext, derive: WeaknessReader, at: string) {
+    const result = await weaknessesTransaction(
+      this.connection(),
+      this.factory,
+      context,
+      derive,
+      at,
+    );
+    if (result.changed) this.broadcast(result.meta);
+    return result;
   }
   async saveKnowledgeMark(context: EditorHistoryContext, command: KnowledgeMarkCommand) {
     const result = await knowledgeMarksTransaction(this.connection(), context, command);
@@ -1003,6 +1017,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
               };
             }
             db.createObjectStore('customDrafts');
+            db.createObjectStore('weaknesses');
             return;
           }
           if (event.oldVersion === 2) {
@@ -1045,6 +1060,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
               }
             };
             db.createObjectStore('customDrafts');
+            db.createObjectStore('weaknesses');
             return;
           }
           if (event.oldVersion === 3) {
@@ -1087,6 +1103,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
               }
             };
             db.createObjectStore('customDrafts');
+            db.createObjectStore('weaknesses');
             return;
           }
           if (event.oldVersion === 4) {
@@ -1128,6 +1145,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
               }
             };
             db.createObjectStore('customDrafts');
+            db.createObjectStore('weaknesses');
             return;
           }
           if (event.oldVersion === 5) {
@@ -1168,6 +1186,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
               }
             };
             db.createObjectStore('customDrafts');
+            db.createObjectStore('weaknesses');
             return;
           }
           if (event.oldVersion === 6) {
@@ -1206,6 +1225,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
               }
             };
             db.createObjectStore('customDrafts');
+            db.createObjectStore('weaknesses');
             return;
           }
           if (event.oldVersion === 7) {
@@ -1244,6 +1264,45 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
               }
             };
             db.createObjectStore('customDrafts');
+            db.createObjectStore('weaknesses');
+            return;
+          }
+          if (event.oldVersion === 8) {
+            const db = request.result,
+              tx = request.transaction!;
+            if (
+              db.objectStoreNames.length !== V8_STORE_NAMES.length ||
+              V8_STORE_NAMES.some((name) => !db.objectStoreNames.contains(name))
+            )
+              throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            for (const name of V8_STORE_NAMES) {
+              const store = tx.objectStore(name);
+              if (store.keyPath !== null || store.autoIncrement || store.indexNames.length)
+                throw new StorageError('S_MIGRATION_UNSUPPORTED');
+            }
+            const values = tx.objectStore('meta').getAll(),
+              keys = tx.objectStore('meta').getAllKeys();
+            values.onsuccess = () => {
+              try {
+                for (const value of values.result) upgradeV8Meta(value);
+              } catch (error) {
+                failure = error;
+                tx.abort();
+              }
+            };
+            keys.onsuccess = () => {
+              try {
+                const next =
+                  values.result.length === 1 && keys.result[0] === 'current'
+                    ? upgradeV8Meta(values.result[0])
+                    : null;
+                if (next) tx.objectStore('meta').put(next, 'current');
+              } catch (error) {
+                failure = error;
+                tx.abort();
+              }
+            };
+            db.createObjectStore('weaknesses');
             return;
           }
           if (event.oldVersion !== 0) throw new StorageError('S_MIGRATION_UNSUPPORTED');

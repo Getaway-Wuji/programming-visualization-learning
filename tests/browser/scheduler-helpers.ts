@@ -112,9 +112,11 @@ export async function clear(p: Page) {
   await p.goto('/#/settings?panel=data');
   // Full clear is also valid for an unsaved/partially unavailable archive.
   await expect(p.getByRole('button', { name: '清除本地数据', exact: true })).toBeEnabled();
+  const generation = (await native(p)).meta.generation;
   await p.getByRole('button', { name: '清除本地数据', exact: true }).click();
   await p
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
+  await expect.poll(async () => (await native(p)).meta.generation).not.toBe(generation);
 }

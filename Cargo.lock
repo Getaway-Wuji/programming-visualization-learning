@@ -68,6 +68,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "c-viz-practice-generator"
+version = "0.1.0"
+dependencies = [
+ "c-viz-advanced",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "c-viz-practice-generator-wasm"
+version = "0.1.0"
+dependencies = [
+ "c-viz-practice-generator",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "c-viz-wasm"
 version = "0.1.0"
 dependencies = [

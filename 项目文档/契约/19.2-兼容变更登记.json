@@ -1,0 +1,32 @@
+{
+  "id": "CHANGE-19.2",
+  "status": "accepted",
+  "contractId": "GEN-PRACTICE-01",
+  "version": "1.0.0",
+  "decision": "DEC-P2-010",
+  "scope": "Three deterministic original C templates with two difficulty tiers, finite complete input domains, actual Rust reference validation and candidate execution, temporary non-scoring practice only.",
+  "compatibility": {
+    "classification": "isolated-new-protocol-and-wasm-branch",
+    "oldEngines": "All four original WASM bytes and original EXEC/STEP/DIAG protocols remain unchanged. Fifth WASM links the unchanged advanced interpreter library.",
+    "newConsumer": "Canonical closed bounded GEN1 requests, exact seed/template/problem/attempt/source identities, current Worker and original 1000ms deadline, original strict advanced trace decoder and full inverse state.",
+    "learning": "No catalog/course/exercise aliases, accepted learning credentials, events, rewards, achievement or weakness writes from generated practice.",
+    "storage": "SAVE9/DB9/17 stores unchanged; transient source and generated result discarded on refresh. Existing weakness service may independently refresh its source summary.",
+    "privacy": "Rust sees only knowledgeId, difficulty, seed, operation/request identity, plus current transient answer/source/input for grade or preview. No archive, summary, personal facts or model request."
+  },
+  "budgets": {
+    "deadlineMs": 1000,
+    "fuel": 1000000,
+    "atomicSteps": 20000,
+    "outputBytes": 16384,
+    "sourceBytes": 32768,
+    "requestBytes": 65536,
+    "resultBytes": 16777216,
+    "wasmPages": 2048,
+    "maxCases": 25,
+    "workersGlobally": 1,
+    "compiledModulesGlobally": 1
+  },
+  "replay": "Original EXEC1.4/STEP1.3/DIAG1.3/INT1 with fifth build hash, exact source and input. Pure trace consumption; frontend computes no algorithm or expected answer.",
+  "fallback": "Unconfirmed or unsupported weakness evidence is disclosed with links to original courses/review; default generic foundational practice never claims mastery or personalized model generation.",
+  "verification": "项目文档/验收/19.2-规则生成与真实作答验收.md"
+}

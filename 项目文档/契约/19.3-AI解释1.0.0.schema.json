@@ -1,0 +1,1607 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:c-viz:ai-explain-design:1.0.0",
+  "title": "19.3 closed AI design only, not runtime or actual-model evidence",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/request"
+    },
+    {
+      "$ref": "#/$defs/response"
+    },
+    {
+      "$ref": "#/$defs/error"
+    },
+    {
+      "$ref": "#/$defs/status"
+    },
+    {
+      "$ref": "#/$defs/profile"
+    },
+    {
+      "$ref": "#/$defs/cancel"
+    }
+  ],
+  "$defs": {
+    "runRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engineId",
+        "buildId",
+        "execVersion",
+        "dslVersion",
+        "diagnosticVersion",
+        "language",
+        "runId",
+        "sourceRevision"
+      ],
+      "properties": {
+        "engineId": {
+          "const": "engine.rust.advanced"
+        },
+        "buildId": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "execVersion": {
+          "const": "1.4.0"
+        },
+        "dslVersion": {
+          "const": "1.3.0"
+        },
+        "diagnosticVersion": {
+          "const": "1.3.0"
+        },
+        "language": {
+          "const": "c"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+        },
+        "sourceRevision": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contextId",
+        "runRef",
+        "inputRevision",
+        "cursor",
+        "traceAvailable",
+        "snippets",
+        "facts"
+      ],
+      "properties": {
+        "contextId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "runRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "engineId",
+            "buildId",
+            "execVersion",
+            "dslVersion",
+            "diagnosticVersion",
+            "language",
+            "runId",
+            "sourceRevision"
+          ],
+          "properties": {
+            "engineId": {
+              "const": "engine.rust.advanced"
+            },
+            "buildId": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "execVersion": {
+              "const": "1.4.0"
+            },
+            "dslVersion": {
+              "const": "1.3.0"
+            },
+            "diagnosticVersion": {
+              "const": "1.3.0"
+            },
+            "language": {
+              "const": "c"
+            },
+            "runId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+            },
+            "sourceRevision": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+            }
+          }
+        },
+        "inputRevision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "cursor": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20000
+            }
+          ]
+        },
+        "traceAvailable": {
+          "type": "boolean"
+        },
+        "snippets": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "snippetId",
+              "byteRange",
+              "firstLine",
+              "text"
+            ],
+            "properties": {
+              "snippetId": {
+                "enum": [
+                  "s1",
+                  "s2"
+                ]
+              },
+              "byteRange": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "start",
+                  "end"
+                ],
+                "properties": {
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 32768
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 32768
+                  }
+                }
+              },
+              "firstLine": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 32768
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 2048
+              }
+            }
+          }
+        },
+        "facts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "factId",
+                  "kind",
+                  "code",
+                  "byteRange"
+                ],
+                "properties": {
+                  "factId": {
+                    "type": "string",
+                    "pattern": "^f(?:[1-9]|1[0-2])$"
+                  },
+                  "kind": {
+                    "const": "diagnostic"
+                  },
+                  "code": {
+                    "type": "string",
+                    "pattern": "^E_[A-Z_]+$"
+                  },
+                  "byteRange": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "properties": {
+                          "start": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32768
+                          },
+                          "end": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32768
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "factId",
+                  "kind",
+                  "step",
+                  "stepKind",
+                  "nodeId",
+                  "byteRange"
+                ],
+                "properties": {
+                  "factId": {
+                    "type": "string",
+                    "pattern": "^f(?:[1-9]|1[0-2])$"
+                  },
+                  "kind": {
+                    "const": "step"
+                  },
+                  "step": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 20000
+                  },
+                  "stepKind": {
+                    "enum": [
+                      "advanced.allocate",
+                      "advanced.release",
+                      "pointer.write",
+                      "program.enter",
+                      "function.enter",
+                      "function.return",
+                      "program.return",
+                      "object.declare",
+                      "value.initialize",
+                      "value.write",
+                      "condition",
+                      "scope.enter",
+                      "scope.exit",
+                      "output.append",
+                      "input.read",
+                      "control.jump",
+                      "nop"
+                    ]
+                  },
+                  "nodeId": {
+                    "type": "string",
+                    "pattern": "^n[1-9][0-9]{0,14}$"
+                  },
+                  "byteRange": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "properties": {
+                          "start": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32768
+                          },
+                          "end": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32768
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "factId",
+                  "kind",
+                  "atCursor",
+                  "objectId",
+                  "frameId",
+                  "byteOffset",
+                  "name",
+                  "typeName",
+                  "alive",
+                  "value"
+                ],
+                "properties": {
+                  "factId": {
+                    "type": "string",
+                    "pattern": "^f(?:[1-9]|1[0-2])$"
+                  },
+                  "kind": {
+                    "const": "state"
+                  },
+                  "atCursor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 20000
+                  },
+                  "objectId": {
+                    "type": "string",
+                    "pattern": "^o[1-9][0-9]{0,14}$"
+                  },
+                  "frameId": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "string",
+                        "pattern": "^f[1-9][0-9]{0,14}$"
+                      }
+                    ]
+                  },
+                  "byteOffset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1048576
+                  },
+                  "name": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,95}$"
+                  },
+                  "typeName": {
+                    "type": "string",
+                    "maxLength": 96
+                  },
+                  "alive": {
+                    "type": "boolean"
+                  },
+                  "value": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "integer",
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "objectId",
+                          "byteOffset",
+                          "lowerBound",
+                          "upperBound",
+                          "pointeeType"
+                        ],
+                        "properties": {
+                          "objectId": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "pattern": "^o[1-9][0-9]{0,14}$"
+                              }
+                            ]
+                          },
+                          "byteOffset": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1048576
+                          },
+                          "lowerBound": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1048576
+                          },
+                          "upperBound": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1048576
+                          },
+                          "pointeeType": {
+                            "type": "string",
+                            "maxLength": 96
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "traceAvailable": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "cursor": {
+                "type": "null"
+              },
+              "facts": {
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "factId",
+                    "kind",
+                    "code",
+                    "byteRange"
+                  ],
+                  "properties": {
+                    "factId": {
+                      "type": "string",
+                      "pattern": "^f(?:[1-9]|1[0-2])$"
+                    },
+                    "kind": {
+                      "const": "diagnostic"
+                    },
+                    "code": {
+                      "type": "string",
+                      "pattern": "^E_[A-Z_]+$"
+                    },
+                    "byteRange": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "start",
+                            "end"
+                          ],
+                          "properties": {
+                            "start": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 32768
+                            },
+                            "end": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 32768
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "cursor": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20000
+              }
+            }
+          }
+        }
+      ]
+    },
+    "modelOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "explanations",
+        "suggestions",
+        "limitations"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "explanations": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "factIds",
+              "text"
+            ],
+            "properties": {
+              "factIds": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 3,
+                "items": {
+                  "type": "string",
+                  "pattern": "^f(?:[1-9]|1[0-2])$"
+                },
+                "uniqueItems": true
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            }
+          }
+        },
+        "suggestions": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "maxLength": 300
+          }
+        },
+        "limitations": {
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "requestId",
+        "kind",
+        "context"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "1.0.0"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "const": "explain.request"
+        },
+        "context": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contextId",
+            "runRef",
+            "inputRevision",
+            "cursor",
+            "traceAvailable",
+            "snippets",
+            "facts"
+          ],
+          "properties": {
+            "contextId": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            "runRef": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "engineId",
+                "buildId",
+                "execVersion",
+                "dslVersion",
+                "diagnosticVersion",
+                "language",
+                "runId",
+                "sourceRevision"
+              ],
+              "properties": {
+                "engineId": {
+                  "const": "engine.rust.advanced"
+                },
+                "buildId": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "execVersion": {
+                  "const": "1.4.0"
+                },
+                "dslVersion": {
+                  "const": "1.3.0"
+                },
+                "diagnosticVersion": {
+                  "const": "1.3.0"
+                },
+                "language": {
+                  "const": "c"
+                },
+                "runId": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+                },
+                "sourceRevision": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+                }
+              }
+            },
+            "inputRevision": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            "cursor": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20000
+                }
+              ]
+            },
+            "traceAvailable": {
+              "type": "boolean"
+            },
+            "snippets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "snippetId",
+                  "byteRange",
+                  "firstLine",
+                  "text"
+                ],
+                "properties": {
+                  "snippetId": {
+                    "enum": [
+                      "s1",
+                      "s2"
+                    ]
+                  },
+                  "byteRange": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "start",
+                      "end"
+                    ],
+                    "properties": {
+                      "start": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 32768
+                      },
+                      "end": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 32768
+                      }
+                    }
+                  },
+                  "firstLine": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 32768
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 2048
+                  }
+                }
+              }
+            },
+            "facts": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "factId",
+                      "kind",
+                      "code",
+                      "byteRange"
+                    ],
+                    "properties": {
+                      "factId": {
+                        "type": "string",
+                        "pattern": "^f(?:[1-9]|1[0-2])$"
+                      },
+                      "kind": {
+                        "const": "diagnostic"
+                      },
+                      "code": {
+                        "type": "string",
+                        "pattern": "^E_[A-Z_]+$"
+                      },
+                      "byteRange": {
+                        "oneOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "start",
+                              "end"
+                            ],
+                            "properties": {
+                              "start": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 32768
+                              },
+                              "end": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 32768
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "factId",
+                      "kind",
+                      "step",
+                      "stepKind",
+                      "nodeId",
+                      "byteRange"
+                    ],
+                    "properties": {
+                      "factId": {
+                        "type": "string",
+                        "pattern": "^f(?:[1-9]|1[0-2])$"
+                      },
+                      "kind": {
+                        "const": "step"
+                      },
+                      "step": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 20000
+                      },
+                      "stepKind": {
+                        "enum": [
+                          "advanced.allocate",
+                          "advanced.release",
+                          "pointer.write",
+                          "program.enter",
+                          "function.enter",
+                          "function.return",
+                          "program.return",
+                          "object.declare",
+                          "value.initialize",
+                          "value.write",
+                          "condition",
+                          "scope.enter",
+                          "scope.exit",
+                          "output.append",
+                          "input.read",
+                          "control.jump",
+                          "nop"
+                        ]
+                      },
+                      "nodeId": {
+                        "type": "string",
+                        "pattern": "^n[1-9][0-9]{0,14}$"
+                      },
+                      "byteRange": {
+                        "oneOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "start",
+                              "end"
+                            ],
+                            "properties": {
+                              "start": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 32768
+                              },
+                              "end": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 32768
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "factId",
+                      "kind",
+                      "atCursor",
+                      "objectId",
+                      "frameId",
+                      "byteOffset",
+                      "name",
+                      "typeName",
+                      "alive",
+                      "value"
+                    ],
+                    "properties": {
+                      "factId": {
+                        "type": "string",
+                        "pattern": "^f(?:[1-9]|1[0-2])$"
+                      },
+                      "kind": {
+                        "const": "state"
+                      },
+                      "atCursor": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 20000
+                      },
+                      "objectId": {
+                        "type": "string",
+                        "pattern": "^o[1-9][0-9]{0,14}$"
+                      },
+                      "frameId": {
+                        "oneOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^f[1-9][0-9]{0,14}$"
+                          }
+                        ]
+                      },
+                      "byteOffset": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1048576
+                      },
+                      "name": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,95}$"
+                      },
+                      "typeName": {
+                        "type": "string",
+                        "maxLength": 96
+                      },
+                      "alive": {
+                        "type": "boolean"
+                      },
+                      "value": {
+                        "oneOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "objectId",
+                              "byteOffset",
+                              "lowerBound",
+                              "upperBound",
+                              "pointeeType"
+                            ],
+                            "properties": {
+                              "objectId": {
+                                "oneOf": [
+                                  {
+                                    "type": "null"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "pattern": "^o[1-9][0-9]{0,14}$"
+                                  }
+                                ]
+                              },
+                              "byteOffset": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1048576
+                              },
+                              "lowerBound": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1048576
+                              },
+                              "upperBound": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1048576
+                              },
+                              "pointeeType": {
+                                "type": "string",
+                                "maxLength": 96
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "traceAvailable": {
+                    "const": false
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "cursor": {
+                    "type": "null"
+                  },
+                  "facts": {
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "factId",
+                        "kind",
+                        "code",
+                        "byteRange"
+                      ],
+                      "properties": {
+                        "factId": {
+                          "type": "string",
+                          "pattern": "^f(?:[1-9]|1[0-2])$"
+                        },
+                        "kind": {
+                          "const": "diagnostic"
+                        },
+                        "code": {
+                          "type": "string",
+                          "pattern": "^E_[A-Z_]+$"
+                        },
+                        "byteRange": {
+                          "oneOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "type": "object",
+                              "additionalProperties": false,
+                              "required": [
+                                "start",
+                                "end"
+                              ],
+                              "properties": {
+                                "start": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 32768
+                                },
+                                "end": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 32768
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "cursor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 20000
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "requestId",
+        "kind",
+        "contextId",
+        "runRef",
+        "inputRevision",
+        "cursor",
+        "producer",
+        "model",
+        "content",
+        "timing"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "1.0.0"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "const": "explain.response"
+        },
+        "contextId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "runRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "engineId",
+            "buildId",
+            "execVersion",
+            "dslVersion",
+            "diagnosticVersion",
+            "language",
+            "runId",
+            "sourceRevision"
+          ],
+          "properties": {
+            "engineId": {
+              "const": "engine.rust.advanced"
+            },
+            "buildId": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "execVersion": {
+              "const": "1.4.0"
+            },
+            "dslVersion": {
+              "const": "1.3.0"
+            },
+            "diagnosticVersion": {
+              "const": "1.3.0"
+            },
+            "language": {
+              "const": "c"
+            },
+            "runId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+            },
+            "sourceRevision": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+            }
+          }
+        },
+        "inputRevision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "cursor": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20000
+            }
+          ]
+        },
+        "producer": {
+          "const": "local-model-adapter"
+        },
+        "model": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "runtimeVersion",
+            "tag",
+            "manifestSha256"
+          ],
+          "properties": {
+            "runtimeVersion": {
+              "const": "0.40.13"
+            },
+            "tag": {
+              "const": "qwen2.5-coder:7b-instruct-q4_K_M"
+            },
+            "manifestSha256": {
+              "const": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364"
+            }
+          }
+        },
+        "content": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "summary",
+            "explanations",
+            "suggestions",
+            "limitations"
+          ],
+          "properties": {
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "explanations": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "factIds",
+                  "text"
+                ],
+                "properties": {
+                  "factIds": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^f(?:[1-9]|1[0-2])$"
+                    },
+                    "uniqueItems": true
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "suggestions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 300
+              }
+            },
+            "limitations": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        },
+        "timing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "elapsedMs"
+          ],
+          "properties": {
+            "elapsedMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 59999
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "requestId",
+        "kind",
+        "contextId",
+        "code"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "1.0.0"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "const": "explain.error"
+        },
+        "contextId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "code": {
+          "enum": [
+            "E_AI_DISABLED",
+            "E_AI_UNCONFIGURED",
+            "E_AI_UNAVAILABLE",
+            "E_AI_UNSUPPORTED_ORIGIN",
+            "E_AI_MODEL_MISMATCH",
+            "E_AI_BUSY",
+            "E_AI_CONTEXT_LIMIT",
+            "E_AI_INSUFFICIENT_CONTEXT",
+            "E_AI_CONTEXT_STALE",
+            "E_AI_PROTOCOL_INVALID",
+            "E_AI_INVALID_REFERENCE",
+            "E_AI_RESULT_LIMIT",
+            "E_AI_DEADLINE",
+            "E_AI_CANCELLED",
+            "E_AI_CANCEL_PENDING"
+          ]
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "kind",
+        "enabled",
+        "state",
+        "candidate",
+        "code"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "1.0.0"
+        },
+        "kind": {
+          "const": "ai.status"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "state": {
+          "enum": [
+            "disabled",
+            "unconfigured",
+            "unavailable",
+            "ready",
+            "busy"
+          ]
+        },
+        "candidate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "runtimeVersion",
+            "tag",
+            "manifestSha256"
+          ],
+          "properties": {
+            "runtimeVersion": {
+              "const": "0.40.13"
+            },
+            "tag": {
+              "const": "qwen2.5-coder:7b-instruct-q4_K_M"
+            },
+            "manifestSha256": {
+              "const": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364"
+            }
+          }
+        },
+        "code": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "enum": [
+                "E_AI_DISABLED",
+                "E_AI_UNCONFIGURED",
+                "E_AI_UNAVAILABLE",
+                "E_AI_UNSUPPORTED_ORIGIN",
+                "E_AI_MODEL_MISMATCH",
+                "E_AI_BUSY",
+                "E_AI_CONTEXT_LIMIT",
+                "E_AI_INSUFFICIENT_CONTEXT",
+                "E_AI_CONTEXT_STALE",
+                "E_AI_PROTOCOL_INVALID",
+                "E_AI_INVALID_REFERENCE",
+                "E_AI_RESULT_LIMIT",
+                "E_AI_DEADLINE",
+                "E_AI_CANCELLED",
+                "E_AI_CANCEL_PENDING"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "kind",
+        "enabled",
+        "adapter",
+        "frontendOrigin",
+        "proxyBind",
+        "runnerBind",
+        "runtimeVersion",
+        "runtimeExecutable",
+        "runtimeExecutableSha256",
+        "modelsDirectory",
+        "modelTag",
+        "manifestSha256",
+        "distributionSha256",
+        "cloudEnabled",
+        "debug",
+        "requestBodyLogs",
+        "pruneOnStart",
+        "maxConcurrent",
+        "maxQueued",
+        "deadlineMs",
+        "maxRequestBytes",
+        "maxProviderBytes",
+        "maxUpstreamBytes",
+        "maxModelContentBytes",
+        "maxResponseBytes",
+        "numCtx",
+        "numPredict",
+        "temperature",
+        "stream",
+        "keepAlive"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "1.0.0"
+        },
+        "kind": {
+          "const": "ai.profile"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "adapter": {
+          "const": "ollama-local-owned"
+        },
+        "frontendOrigin": {
+          "type": "string",
+          "pattern": "^http://(127\\.0\\.0\\.1|localhost):[1-9][0-9]{0,4}$"
+        },
+        "proxyBind": {
+          "const": "127.0.0.1:47831"
+        },
+        "runnerBind": {
+          "const": "127.0.0.1:47832"
+        },
+        "runtimeVersion": {
+          "const": "0.40.13"
+        },
+        "runtimeExecutable": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "maxLength": 512
+            }
+          ]
+        },
+        "runtimeExecutableSha256": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          ]
+        },
+        "modelsDirectory": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "maxLength": 512
+            }
+          ]
+        },
+        "modelTag": {
+          "const": "qwen2.5-coder:7b-instruct-q4_K_M"
+        },
+        "manifestSha256": {
+          "const": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364"
+        },
+        "distributionSha256": {
+          "const": "7afa38624fa62ee5d8293422d0ab084c1bb4603134c7f4dafce11a033b57cc19"
+        },
+        "cloudEnabled": {
+          "const": false
+        },
+        "debug": {
+          "const": false
+        },
+        "requestBodyLogs": {
+          "const": false
+        },
+        "pruneOnStart": {
+          "const": false
+        },
+        "maxConcurrent": {
+          "const": 1
+        },
+        "maxQueued": {
+          "const": 0
+        },
+        "deadlineMs": {
+          "const": 60000
+        },
+        "maxRequestBytes": {
+          "const": 16384
+        },
+        "maxProviderBytes": {
+          "const": 6144
+        },
+        "maxUpstreamBytes": {
+          "const": 65536
+        },
+        "maxModelContentBytes": {
+          "const": 8192
+        },
+        "maxResponseBytes": {
+          "const": 12288
+        },
+        "numCtx": {
+          "const": 16384
+        },
+        "numPredict": {
+          "const": 768
+        },
+        "temperature": {
+          "const": 0
+        },
+        "stream": {
+          "const": false
+        },
+        "keepAlive": {
+          "const": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "enabled": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "runtimeExecutable": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "modelsDirectory": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "runtimeExecutableSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "cancel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "requestId",
+        "kind",
+        "contextId"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "1.0.0"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "const": "explain.cancel"
+        },
+        "contextId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1446 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:c-viz:ai-explain-design:2.0.0",
+  "title": "19.3 API-key revision DESIGN ONLY, not runtime/model evidence",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/request"
+    },
+    {
+      "$ref": "#/$defs/response"
+    },
+    {
+      "$ref": "#/$defs/error"
+    },
+    {
+      "$ref": "#/$defs/cancel"
+    },
+    {
+      "$ref": "#/$defs/configCheck"
+    },
+    {
+      "$ref": "#/$defs/configChecked"
+    },
+    {
+      "$ref": "#/$defs/profile"
+    },
+    {
+      "$ref": "#/$defs/status"
+    }
+  ],
+  "$defs": {
+    "runRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engineId",
+        "buildId",
+        "execVersion",
+        "dslVersion",
+        "diagnosticVersion",
+        "language",
+        "runId",
+        "sourceRevision"
+      ],
+      "properties": {
+        "engineId": {
+          "const": "engine.rust.advanced"
+        },
+        "buildId": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "execVersion": {
+          "const": "1.4.0"
+        },
+        "dslVersion": {
+          "const": "1.3.0"
+        },
+        "diagnosticVersion": {
+          "const": "1.3.0"
+        },
+        "language": {
+          "const": "c"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+        },
+        "sourceRevision": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contextId",
+        "runRef",
+        "inputRevision",
+        "cursor",
+        "traceAvailable",
+        "snippets",
+        "facts"
+      ],
+      "properties": {
+        "contextId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "runRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "engineId",
+            "buildId",
+            "execVersion",
+            "dslVersion",
+            "diagnosticVersion",
+            "language",
+            "runId",
+            "sourceRevision"
+          ],
+          "properties": {
+            "engineId": {
+              "const": "engine.rust.advanced"
+            },
+            "buildId": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "execVersion": {
+              "const": "1.4.0"
+            },
+            "dslVersion": {
+              "const": "1.3.0"
+            },
+            "diagnosticVersion": {
+              "const": "1.3.0"
+            },
+            "language": {
+              "const": "c"
+            },
+            "runId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+            },
+            "sourceRevision": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+            }
+          }
+        },
+        "inputRevision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "cursor": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20000
+            }
+          ]
+        },
+        "traceAvailable": {
+          "type": "boolean"
+        },
+        "snippets": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "snippetId",
+              "byteRange",
+              "firstLine",
+              "text"
+            ],
+            "properties": {
+              "snippetId": {
+                "enum": [
+                  "s1",
+                  "s2"
+                ]
+              },
+              "byteRange": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "start",
+                  "end"
+                ],
+                "properties": {
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 32768
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 32768
+                  }
+                }
+              },
+              "firstLine": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 32768
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 2048
+              }
+            }
+          }
+        },
+        "facts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "factId",
+                  "kind",
+                  "code",
+                  "byteRange"
+                ],
+                "properties": {
+                  "factId": {
+                    "type": "string",
+                    "pattern": "^f(?:[1-9]|1[0-2])$"
+                  },
+                  "kind": {
+                    "const": "diagnostic"
+                  },
+                  "code": {
+                    "type": "string",
+                    "pattern": "^E_[A-Z_]+$"
+                  },
+                  "byteRange": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "properties": {
+                          "start": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32768
+                          },
+                          "end": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32768
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "factId",
+                  "kind",
+                  "step",
+                  "stepKind",
+                  "nodeId",
+                  "byteRange"
+                ],
+                "properties": {
+                  "factId": {
+                    "type": "string",
+                    "pattern": "^f(?:[1-9]|1[0-2])$"
+                  },
+                  "kind": {
+                    "const": "step"
+                  },
+                  "step": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 20000
+                  },
+                  "stepKind": {
+                    "enum": [
+                      "advanced.allocate",
+                      "advanced.release",
+                      "pointer.write",
+                      "program.enter",
+                      "function.enter",
+                      "function.return",
+                      "program.return",
+                      "object.declare",
+                      "value.initialize",
+                      "value.write",
+                      "condition",
+                      "scope.enter",
+                      "scope.exit",
+                      "output.append",
+                      "input.read",
+                      "control.jump",
+                      "nop"
+                    ]
+                  },
+                  "nodeId": {
+                    "type": "string",
+                    "pattern": "^n[1-9][0-9]{0,14}$"
+                  },
+                  "byteRange": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "start",
+                          "end"
+                        ],
+                        "properties": {
+                          "start": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32768
+                          },
+                          "end": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 32768
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "factId",
+                  "kind",
+                  "atCursor",
+                  "objectId",
+                  "frameId",
+                  "byteOffset",
+                  "name",
+                  "typeName",
+                  "alive",
+                  "value"
+                ],
+                "properties": {
+                  "factId": {
+                    "type": "string",
+                    "pattern": "^f(?:[1-9]|1[0-2])$"
+                  },
+                  "kind": {
+                    "const": "state"
+                  },
+                  "atCursor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 20000
+                  },
+                  "objectId": {
+                    "type": "string",
+                    "pattern": "^o[1-9][0-9]{0,14}$"
+                  },
+                  "frameId": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "string",
+                        "pattern": "^f[1-9][0-9]{0,14}$"
+                      }
+                    ]
+                  },
+                  "byteOffset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1048576
+                  },
+                  "name": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,95}$"
+                  },
+                  "typeName": {
+                    "type": "string",
+                    "maxLength": 96
+                  },
+                  "alive": {
+                    "type": "boolean"
+                  },
+                  "value": {
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "integer",
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "objectId",
+                          "byteOffset",
+                          "lowerBound",
+                          "upperBound",
+                          "pointeeType"
+                        ],
+                        "properties": {
+                          "objectId": {
+                            "oneOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string",
+                                "pattern": "^o[1-9][0-9]{0,14}$"
+                              }
+                            ]
+                          },
+                          "byteOffset": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1048576
+                          },
+                          "lowerBound": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1048576
+                          },
+                          "upperBound": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1048576
+                          },
+                          "pointeeType": {
+                            "type": "string",
+                            "maxLength": 96
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "traceAvailable": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "cursor": {
+                "type": "null"
+              },
+              "facts": {
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "factId",
+                    "kind",
+                    "code",
+                    "byteRange"
+                  ],
+                  "properties": {
+                    "factId": {
+                      "type": "string",
+                      "pattern": "^f(?:[1-9]|1[0-2])$"
+                    },
+                    "kind": {
+                      "const": "diagnostic"
+                    },
+                    "code": {
+                      "type": "string",
+                      "pattern": "^E_[A-Z_]+$"
+                    },
+                    "byteRange": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "start",
+                            "end"
+                          ],
+                          "properties": {
+                            "start": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 32768
+                            },
+                            "end": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 32768
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "cursor": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20000
+              }
+            }
+          }
+        }
+      ]
+    },
+    "modelOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "explanations",
+        "suggestions",
+        "limitations"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "explanations": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "factIds",
+              "text"
+            ],
+            "properties": {
+              "factIds": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 3,
+                "items": {
+                  "type": "string",
+                  "pattern": "^f(?:[1-9]|1[0-2])$"
+                },
+                "uniqueItems": true
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            }
+          }
+        },
+        "suggestions": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "maxLength": 300
+          }
+        },
+        "limitations": {
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+    "provider": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "providerId",
+            "model"
+          ],
+          "properties": {
+            "providerId": {
+              "const": "openai"
+            },
+            "model": {
+              "const": "gpt-5.4-mini-2026-03-17"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "providerId",
+            "model"
+          ],
+          "properties": {
+            "providerId": {
+              "const": "deepseek"
+            },
+            "model": {
+              "const": "deepseek-flash"
+            }
+          }
+        }
+      ]
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "requestId",
+        "configRevision",
+        "confirmationId",
+        "kind",
+        "provider",
+        "context"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "2.0.0"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "configRevision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "confirmationId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "const": "explain.request"
+        },
+        "provider": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "providerId",
+                "model"
+              ],
+              "properties": {
+                "providerId": {
+                  "const": "openai"
+                },
+                "model": {
+                  "const": "gpt-5.4-mini-2026-03-17"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "providerId",
+                "model"
+              ],
+              "properties": {
+                "providerId": {
+                  "const": "deepseek"
+                },
+                "model": {
+                  "const": "deepseek-flash"
+                }
+              }
+            }
+          ]
+        },
+        "context": {
+          "$ref": "#/$defs/context"
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "requestId",
+        "configRevision",
+        "confirmationId",
+        "kind",
+        "contextId",
+        "runRef",
+        "inputRevision",
+        "cursor",
+        "producer",
+        "provider",
+        "content",
+        "timing"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "2.0.0"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "configRevision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "confirmationId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "const": "explain.response"
+        },
+        "contextId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "runRef": {
+          "$ref": "#/$defs/runRef"
+        },
+        "inputRevision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "cursor": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20000
+            }
+          ]
+        },
+        "producer": {
+          "const": "provider-api-adapter"
+        },
+        "provider": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "providerId",
+                "configVersion",
+                "requestedModel",
+                "returnedModel"
+              ],
+              "properties": {
+                "providerId": {
+                  "const": "openai"
+                },
+                "configVersion": {
+                  "const": "2.0.0"
+                },
+                "requestedModel": {
+                  "const": "gpt-5.4-mini-2026-03-17"
+                },
+                "returnedModel": {
+                  "enum": [
+                    "gpt-5.4-mini-2026-03-17"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "providerId",
+                "configVersion",
+                "requestedModel",
+                "returnedModel"
+              ],
+              "properties": {
+                "providerId": {
+                  "const": "deepseek"
+                },
+                "configVersion": {
+                  "const": "2.0.0"
+                },
+                "requestedModel": {
+                  "const": "deepseek-flash"
+                },
+                "returnedModel": {
+                  "enum": [
+                    "deepseek-flash",
+                    "DeepSeek-V4.1-Flash-1017"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "content": {
+          "$ref": "#/$defs/modelOutput"
+        },
+        "timing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "elapsedMs"
+          ],
+          "properties": {
+            "elapsedMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 59999
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "requestId",
+        "configRevision",
+        "confirmationId",
+        "kind",
+        "contextId",
+        "code"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "2.0.0"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "configRevision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "confirmationId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "const": "explain.error"
+        },
+        "contextId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "code": {
+          "enum": [
+            "E_AI_DISABLED",
+            "E_AI_UNCONFIGURED",
+            "E_AI_UNAVAILABLE",
+            "E_AI_UNSUPPORTED_ORIGIN",
+            "E_AI_UNSUPPORTED_PROVIDER",
+            "E_AI_MODEL_MISMATCH",
+            "E_AI_AUTH",
+            "E_AI_PERMISSION",
+            "E_AI_QUOTA",
+            "E_AI_RATE_LIMIT",
+            "E_AI_NETWORK",
+            "E_AI_PROVIDER",
+            "E_AI_REFUSED",
+            "E_AI_BUSY",
+            "E_AI_CONTEXT_LIMIT",
+            "E_AI_INSUFFICIENT_CONTEXT",
+            "E_AI_CONTEXT_STALE",
+            "E_AI_PROTOCOL_INVALID",
+            "E_AI_INVALID_REFERENCE",
+            "E_AI_RESULT_LIMIT",
+            "E_AI_DEADLINE",
+            "E_AI_CANCELLED"
+          ]
+        }
+      }
+    },
+    "cancel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "requestId",
+        "configRevision",
+        "confirmationId",
+        "kind",
+        "contextId"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "2.0.0"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "configRevision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "confirmationId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "const": "explain.cancel"
+        },
+        "contextId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        }
+      }
+    },
+    "configCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "requestId",
+        "configRevision",
+        "kind",
+        "provider"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "2.0.0"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "configRevision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "const": "config.check"
+        },
+        "provider": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "providerId",
+                "model"
+              ],
+              "properties": {
+                "providerId": {
+                  "const": "openai"
+                },
+                "model": {
+                  "const": "gpt-5.4-mini-2026-03-17"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "providerId",
+                "model"
+              ],
+              "properties": {
+                "providerId": {
+                  "const": "deepseek"
+                },
+                "model": {
+                  "const": "deepseek-flash"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "configChecked": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "requestId",
+        "configRevision",
+        "kind",
+        "provider",
+        "verified",
+        "code"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "2.0.0"
+        },
+        "requestId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "configRevision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "kind": {
+          "const": "config.checked"
+        },
+        "provider": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "providerId",
+                "model"
+              ],
+              "properties": {
+                "providerId": {
+                  "const": "openai"
+                },
+                "model": {
+                  "const": "gpt-5.4-mini-2026-03-17"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "providerId",
+                "model"
+              ],
+              "properties": {
+                "providerId": {
+                  "const": "deepseek"
+                },
+                "model": {
+                  "const": "deepseek-flash"
+                }
+              }
+            }
+          ]
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "code": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "enum": [
+                "E_AI_DISABLED",
+                "E_AI_UNCONFIGURED",
+                "E_AI_UNAVAILABLE",
+                "E_AI_UNSUPPORTED_ORIGIN",
+                "E_AI_UNSUPPORTED_PROVIDER",
+                "E_AI_MODEL_MISMATCH",
+                "E_AI_AUTH",
+                "E_AI_PERMISSION",
+                "E_AI_QUOTA",
+                "E_AI_RATE_LIMIT",
+                "E_AI_NETWORK",
+                "E_AI_PROVIDER",
+                "E_AI_REFUSED",
+                "E_AI_BUSY",
+                "E_AI_CONTEXT_LIMIT",
+                "E_AI_INSUFFICIENT_CONTEXT",
+                "E_AI_CONTEXT_STALE",
+                "E_AI_PROTOCOL_INVALID",
+                "E_AI_INVALID_REFERENCE",
+                "E_AI_RESULT_LIMIT",
+                "E_AI_DEADLINE",
+                "E_AI_CANCELLED"
+              ]
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "verified": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "code": {
+                "const": null
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "code": {
+                "enum": [
+                  "E_AI_DISABLED",
+                  "E_AI_UNCONFIGURED",
+                  "E_AI_UNAVAILABLE",
+                  "E_AI_UNSUPPORTED_ORIGIN",
+                  "E_AI_UNSUPPORTED_PROVIDER",
+                  "E_AI_MODEL_MISMATCH",
+                  "E_AI_AUTH",
+                  "E_AI_PERMISSION",
+                  "E_AI_QUOTA",
+                  "E_AI_RATE_LIMIT",
+                  "E_AI_NETWORK",
+                  "E_AI_PROVIDER",
+                  "E_AI_REFUSED",
+                  "E_AI_BUSY",
+                  "E_AI_CONTEXT_LIMIT",
+                  "E_AI_INSUFFICIENT_CONTEXT",
+                  "E_AI_CONTEXT_STALE",
+                  "E_AI_PROTOCOL_INVALID",
+                  "E_AI_INVALID_REFERENCE",
+                  "E_AI_RESULT_LIMIT",
+                  "E_AI_DEADLINE",
+                  "E_AI_CANCELLED"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "kind",
+        "designOnly",
+        "enabled",
+        "provider",
+        "configRevision",
+        "hasApiKey",
+        "verified",
+        "state",
+        "keyLifetime",
+        "rememberKey",
+        "settingsPersisted",
+        "proxyRequired",
+        "arbitraryURLsAllowed",
+        "requestBodyLogs",
+        "responseBodyLogs",
+        "secretHeaderLogs",
+        "learningArchiveAccess"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "2.0.0"
+        },
+        "kind": {
+          "const": "ai.profile"
+        },
+        "designOnly": {
+          "const": true
+        },
+        "enabled": {
+          "const": false
+        },
+        "provider": {
+          "const": null
+        },
+        "configRevision": {
+          "const": null
+        },
+        "hasApiKey": {
+          "const": false
+        },
+        "verified": {
+          "const": false
+        },
+        "state": {
+          "const": "disabled"
+        },
+        "keyLifetime": {
+          "const": "current-tab-memory"
+        },
+        "rememberKey": {
+          "const": false
+        },
+        "settingsPersisted": {
+          "const": false
+        },
+        "proxyRequired": {
+          "const": true
+        },
+        "arbitraryURLsAllowed": {
+          "const": false
+        },
+        "requestBodyLogs": {
+          "const": false
+        },
+        "responseBodyLogs": {
+          "const": false
+        },
+        "secretHeaderLogs": {
+          "const": false
+        },
+        "learningArchiveAccess": {
+          "const": false
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aiVersion",
+        "kind",
+        "enabled",
+        "provider",
+        "configRevision",
+        "hasApiKey",
+        "verified",
+        "state",
+        "code"
+      ],
+      "properties": {
+        "aiVersion": {
+          "const": "2.0.0"
+        },
+        "kind": {
+          "const": "ai.status"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "provider": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "providerId",
+                    "model"
+                  ],
+                  "properties": {
+                    "providerId": {
+                      "const": "openai"
+                    },
+                    "model": {
+                      "const": "gpt-5.4-mini-2026-03-17"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "providerId",
+                    "model"
+                  ],
+                  "properties": {
+                    "providerId": {
+                      "const": "deepseek"
+                    },
+                    "model": {
+                      "const": "deepseek-flash"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "configRevision": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            }
+          ]
+        },
+        "hasApiKey": {
+          "type": "boolean"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "state": {
+          "enum": [
+            "disabled",
+            "checking",
+            "ready",
+            "busy",
+            "unavailable"
+          ]
+        },
+        "code": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "enum": [
+                "E_AI_DISABLED",
+                "E_AI_UNCONFIGURED",
+                "E_AI_UNAVAILABLE",
+                "E_AI_UNSUPPORTED_ORIGIN",
+                "E_AI_UNSUPPORTED_PROVIDER",
+                "E_AI_MODEL_MISMATCH",
+                "E_AI_AUTH",
+                "E_AI_PERMISSION",
+                "E_AI_QUOTA",
+                "E_AI_RATE_LIMIT",
+                "E_AI_NETWORK",
+                "E_AI_PROVIDER",
+                "E_AI_REFUSED",
+                "E_AI_BUSY",
+                "E_AI_CONTEXT_LIMIT",
+                "E_AI_INSUFFICIENT_CONTEXT",
+                "E_AI_CONTEXT_STALE",
+                "E_AI_PROTOCOL_INVALID",
+                "E_AI_INVALID_REFERENCE",
+                "E_AI_RESULT_LIMIT",
+                "E_AI_DEADLINE",
+                "E_AI_CANCELLED"
+              ]
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "enabled": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "hasApiKey": {
+                "const": true
+              },
+              "verified": {
+                "const": true
+              },
+              "provider": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "providerId",
+                      "model"
+                    ],
+                    "properties": {
+                      "providerId": {
+                        "const": "openai"
+                      },
+                      "model": {
+                        "const": "gpt-5.4-mini-2026-03-17"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "providerId",
+                      "model"
+                    ],
+                    "properties": {
+                      "providerId": {
+                        "const": "deepseek"
+                      },
+                      "model": {
+                        "const": "deepseek-flash"
+                      }
+                    }
+                  }
+                ]
+              },
+              "configRevision": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "state": {
+                "enum": [
+                  "ready",
+                  "busy",
+                  "unavailable"
+                ]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "disabled",
+                  "checking",
+                  "unavailable"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -90,7 +90,7 @@ const renamed: Alias = {
 };
 
 describe('SAVE-01 model and store keys', () => {
-  it('fixes eleven projected stores and four separate physical auxiliary stores with independent defaults', () => {
+  it('fixes eleven projected stores and six separate physical auxiliary stores with independent defaults', () => {
     expect(ALL_STORE_NAMES).toEqual([
       ...STORE_NAMES,
       'editHistory',
@@ -98,8 +98,9 @@ describe('SAVE-01 model and store keys', () => {
       'reviewCards',
       'achievements',
       'customDrafts',
+      'weaknesses',
     ]);
-    expect([DB_NAME, DB_VERSION, SCHEMA_VERSION]).toEqual(['c-viz-learning', 8, '8.0.0']);
+    expect([DB_NAME, DB_VERSION, SCHEMA_VERSION]).toEqual(['c-viz-learning', 9, '9.0.0']);
     expect(STORE_NAMES).toEqual([
       'meta',
       'settings',
@@ -193,8 +194,8 @@ describe('closed storage validation', () => {
       assertLegacySnapshot(before);
       expect(upgraded.meta).toEqual({
         ...before.meta,
-        dbVersion: 8,
-        schemaVersion: '8.0.0',
+        dbVersion: 9,
+        schemaVersion: '9.0.0',
         revision: before.meta.revision + 1,
       });
       for (const store of CORE_STORE_NAMES)
@@ -222,7 +223,7 @@ describe('closed storage validation', () => {
     it(`rejects frozen invalid snapshot ${scenario.id} with its dedicated code`, () => {
       const value: unknown = snapshot();
       if (scenario.path)
-        set(value, scenario.path, scenario.id === 'unknown-version' ? '9.0.0' : scenario.value);
+        set(value, scenario.path, scenario.id === 'unknown-version' ? '10.0.0' : scenario.value);
       else {
         const target = pointer(value, scenario.appendTo!);
         const source = pointer(value, scenario.copyFrom!);
@@ -545,8 +546,8 @@ describe('strict production SAVE1 to SAVE3 recipe', () => {
       expect(next.settings.theme).toBe(theme);
       expect(next.meta).toEqual({
         ...before.meta,
-        schemaVersion: '8.0.0',
-        dbVersion: 8,
+        schemaVersion: '9.0.0',
+        dbVersion: 9,
         revision: before.meta.revision + 1,
       });
       for (const store of CORE_STORE_NAMES)

@@ -1,0 +1,136 @@
+.generated-practice-page {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+.generated-practice-page .page-heading {
+  margin-bottom: 0;
+}
+.practice-scope {
+  margin: -8px 0 0;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+.practice-recommendation {
+  padding: 8px 0 24px;
+  border-bottom: 1px solid var(--line);
+}
+.practice-recommendation p {
+  margin-top: 0;
+}
+.practice-links,
+.practice-config,
+.practice-playback {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+.practice-links {
+  margin-top: 16px;
+  font-size: 14px;
+}
+.practice-config label,
+.practice-playback label {
+  display: grid;
+  gap: 8px;
+}
+.practice-config input,
+.practice-config select {
+  min-height: 42px;
+  width: 100%;
+}
+.practice-config label {
+  flex: 1 1 140px;
+}
+.practice-config + [role='status'] {
+  margin-top: 16px;
+  line-height: 1.8;
+}
+.practice-problem {
+  padding: 8px 0 8px 24px;
+  border-left: 3px solid var(--green);
+}
+.practice-problem p {
+  line-height: 1.85;
+}
+.practice-id {
+  overflow-wrap: anywhere;
+}
+.generated-practice-page details {
+  margin-top: 18px;
+}
+.generated-practice-page summary {
+  cursor: pointer;
+  padding: 8px 0;
+}
+.generated-practice-page pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.practice-editor-label {
+  display: grid;
+  gap: 10px;
+}
+.practice-editor-label textarea {
+  min-height: 300px;
+  resize: vertical;
+  width: 100%;
+  font-family: Consolas, 'Microsoft YaHei', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  padding: 16px;
+  tab-size: 2;
+}
+.practice-submit {
+  margin-top: 18px;
+}
+.practice-submit label {
+  flex: 0 1 180px;
+}
+.practice-results {
+  overflow-x: auto;
+  margin: 20px 0 32px;
+}
+.practice-results table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.practice-results th,
+.practice-results td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.practice-replay-source {
+  padding: 20px;
+  border: 1px solid var(--line);
+  margin: 20px 0;
+  font-family: Consolas, 'Microsoft YaHei', monospace;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.generated-practice-page mark {
+  background: var(--lime);
+  color: inherit;
+}
+@media (max-width: 600px) {
+  .practice-config {
+    align-items: stretch;
+    gap: 14px;
+  }
+  .practice-config label {
+    flex-basis: 100%;
+  }
+  .practice-config button {
+    flex: 1 1 140px;
+  }
+  .practice-problem {
+    padding-left: 16px;
+  }
+  .practice-results th,
+  .practice-results td {
+    padding: 8px;
+  }
+}

@@ -1,4 +1,6 @@
 import type { CustomDraftWrite } from '../storage/custom-draft';
+import { loadCoursePractice } from '../content/practice';
+import { deriveWeaknesses } from '../weaknesses/model';
 import { achievementPassSources, type AchievementEvidence } from '../achievements/model';
 import { readChallengeFact, type ChallengeFact } from '../challenges/authority';
 import { prepareChallengeAnswer, type ChallengeReceiptSummary } from '../challenges/domain';
@@ -425,6 +427,26 @@ export class LearningService {
   readKnowledgeMarks = async (context: EditorHistoryContext) => {
     if (context.epoch !== this.state.sessionEpoch) throw new StorageError('S_GENERATION_STALE');
     return this.storage().readKnowledgeMarks(context);
+  };
+  syncWeaknesses = async (context: EditorHistoryContext) => {
+    this.checkEditorHistory(context);
+    const reading = this.state.reading,
+      catalog = this.state.practiceCatalog;
+    if (!reading || !catalog || !this.state.capabilities.learning)
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    if (this.state.clockStatus === 'rollback') throw new StorageError('S_DATE_INVALID');
+    const practice = await loadCoursePractice();
+    this.checkEditorHistory(context);
+    const at = (this.options.clock ?? (() => new Date().toISOString()))();
+    const result = await this.storage().syncWeaknesses(
+      context,
+      (snapshot, marks) => deriveWeaknesses(snapshot, marks, catalog, reading, practice, at),
+      at,
+    );
+    this.checkEditorHistory(context);
+    if (result.changed) await this.refresh({ preserveOutcome: true });
+    this.checkEditorHistory(context);
+    return result.summary;
   };
   saveKnowledgeMark = async (context: EditorHistoryContext, command: KnowledgeMarkCommand) => {
     if (context.epoch !== this.state.sessionEpoch || this.disposed)
@@ -1970,6 +1992,7 @@ export function createLearningService() {
     readEditorHistory: service.readEditorHistory,
     saveEditorHistory: service.saveEditorHistory,
     readKnowledgeMarks: service.readKnowledgeMarks,
+    syncWeaknesses: service.syncWeaknesses,
     syncReviewCards: service.syncReviewCards,
     syncAchievements: service.syncAchievements,
     saveKnowledgeMark: service.saveKnowledgeMark,

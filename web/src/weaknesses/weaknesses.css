@@ -1,0 +1,73 @@
+/* At 1440: content 1160 = 736 + 24 + 400. Both columns use the existing shell's edges. */
+.weakness-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.84fr) minmax(280px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.weakness-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-bottom: 16px;
+}
+.weakness-layout[data-empty='yes'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.weakness-list,
+.weakness-evidence ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.weakness-list > li {
+  padding: 20px 0;
+  border-top: 1px solid var(--p05-border);
+}
+.weakness-list h3 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.weakness-list p,
+.weakness-rules p {
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.weakness-reasons {
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.weakness-evidence {
+  margin-top: 16px;
+}
+.weakness-evidence li {
+  padding: 12px 0;
+  border-top: 1px solid var(--p05-border);
+}
+.weakness-page summary {
+  min-height: 40px;
+  cursor: pointer;
+  padding: 8px 0;
+}
+.weakness-ref {
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.weakness-page .module-title {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.weakness-page label {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}
+@media (max-width: 1000px) {
+  .weakness-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

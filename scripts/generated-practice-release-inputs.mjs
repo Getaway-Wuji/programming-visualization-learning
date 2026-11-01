@@ -1,0 +1,26 @@
+import { weaknessPaths } from './weakness-release-inputs.mjs';
+export const generatedPracticePaths = [
+  ...new Set([
+    ...weaknessPaths,
+    'Cargo.toml',
+    'Cargo.lock',
+    'engine/practice-generator/Cargo.toml',
+    'engine/practice-generator/src/lib.rs',
+    'engine/practice-generator-wasm/Cargo.toml',
+    'engine/practice-generator-wasm/src/lib.rs',
+    'web/src/generated-practice/protocol.ts',
+    'web/src/generated-practice/client.ts',
+    'web/src/generated-practice/module.ts',
+    'web/src/generated-practice/practice-worker.ts',
+    'web/src/generated-practice/controller.ts',
+    'web/src/generated-practice/GeneratedPracticePage.tsx',
+    'web/src/generated-practice/practice.css',
+    'web/src/generated/practice/engine-build.ts',
+    'scripts/build.mjs',
+    'scripts/build-practice-generator-wasm.mjs',
+    'scripts/generated-practice-release-inputs.mjs',
+    '项目文档/架构决策/19.2-规则生成与临时加练闭环.md',
+    '项目文档/契约/19.2-规则生成与真实验证契约.md',
+    '项目文档/契约/19.2-规则生成1.0.0.schema.json',
+  ]),
+];

@@ -531,6 +531,7 @@ async function viewAndConfirmCase(page: Page, folder: string, label: string) {
     )
     .join('');
   expect(stdout).toBe('-5\n');
+  await controls.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
   const length = result.trace!.steps.length;
   expect(length).toBeGreaterThan(0);
   await expect(controls).toHaveAttribute('data-cursor', '0');
@@ -626,8 +627,8 @@ test('P05 fresh archive: 32 real code answers and 140 groups produce 32 confirme
   await ready(page);
   await expect(page.locator('[data-course-lesson]')).toHaveCount(32);
   const initial = await archive(page);
-  expect(initial.databaseVersion).toBe(7);
-  expect(initial.stores).toHaveLength(15);
+  expect(initial.databaseVersion).toBe(9);
+  expect(initial.stores).toHaveLength(17);
   expect(initial.data.meta.activePackageRef).toEqual(p05Package);
   for (const key of ['progress', 'receipts', 'ledger', 'dailyFacts', 'goals'] as const)
     expect(initial.data[key]).toEqual([]);

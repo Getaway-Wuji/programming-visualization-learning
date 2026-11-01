@@ -1,0 +1,36 @@
+{
+  "id": "CHANGE-19.3-API-KEY",
+  "decision": "DEC-P2-011 2.0.0",
+  "status": "accepted-design-only-revision",
+  "dispatch": "19.3-API-20261101-send1",
+  "replaces": "DEC-P2-011/AI-DATA-01/AI-EXPLAIN-01 1.0.0 local Ollama proposal, preserved as history",
+  "contracts": {
+    "aiExplain": "2.0.0",
+    "aiData": "2.0.0"
+  },
+  "userPriority": "Default disabled, settings opt-in only with user-provided API key",
+  "oldDownloadQuestion": "superseded, not approved",
+  "productImplementation": false,
+  "productRelease": "1.0.64/420 sources unchanged",
+  "storage": "SAVE9/DB9/17store unchanged; all AI settings/key transient per-tab, no new archive fields",
+  "execution": "All five WASM, real execution semantics and original budgets unchanged",
+  "breakingChanges": [
+    "User-key sensitive header and config verification",
+    "Fixed external official API destinations and providers",
+    "Explicit third-party retention/cost/transfer disclosure",
+    "Cancellation only aborts local transport/wait, not provider inference",
+    "New configRevision/confirmationId and API-model response metadata",
+    "Remove runner/version/manifest/num_ctx/keep_alive/Job Object dependencies"
+  ],
+  "keyBoundary": "User input only; no embedded/public/shared/build key, no key in JSON, URL, logs, screenshots, errors or storage; do not reuse Codex credentials",
+  "compatibility": "v2 same-origin endpoints accept only2.0.0; no implicit translation of old1.0.0 messages",
+  "countsUnchanged": {
+    "original": "82/88",
+    "main": "82/98",
+    "p2": "13/19",
+    "step19": "3/5",
+    "p05": "9/9",
+    "step21": "0/10"
+  },
+  "next": "Return to coordinator for separate19.4 implementation; build independent work before real-key gap; no key requested in chat now"
+}
