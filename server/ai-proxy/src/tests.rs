@@ -4,7 +4,7 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt};
 const SENTINEL: &str = "DESIGN_ONLY_NOT_A_REAL_KEY";
 fn fixtures() -> Value {
     serde_json::from_str(include_str!(
-        "../../../项目文档/契约/19.3-API-Key设计样例.json"
+        "../../../shared/contracts/19.3-API-Key设计样例.json"
     ))
     .unwrap()
 }

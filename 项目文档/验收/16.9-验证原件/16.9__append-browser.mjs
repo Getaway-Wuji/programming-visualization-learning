@@ -1,4 +1,0 @@
-import{readFileSync as read,appendFileSync as append}from'node:fs';
-const old=read('tests/browser/linked-nodes.spec.ts','utf8');let t=old.slice(old.indexOf('async function holdReply'),old.indexOf('for (const spec of specs)\n  for (const width'));
-t=t.replaceAll('nodeReplyHold','classicReplyHold').replaceAll('node-error','classic-error').replaceAll('node-output','classic-output').replaceAll('node-input','classic-input').replaceAll('运行C++节点操作','运行C++经典案例').replaceAll('节点播放速度','经典播放速度').replaceAll('动态节点执行观察','经典问题执行观察').replaceAll('二叉搜索树（BST）','辗转相除法求GCD');
-t=t.replaceAll("'插 0 4\\n遍历'","'2'").replaceAll("'插 0 2\\n遍历'","'2'").replaceAll('[1, 0, 2, 3]','[2]').replaceAll("'插 0 1\\n插 1 -1'","'1'").replaceAll("'插 0 3\\n插 1 1\\n遍历'","'3'");append('tests/browser/classics.spec.ts','\n'+t);console.log('Inherited real-reply lifecycle adapted; no fake result buffers.');

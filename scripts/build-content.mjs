@@ -6,15 +6,15 @@ import { format } from 'prettier';
 const root = new URL('../', import.meta.url);
 const frozen = [
   [
-    '项目文档/契约/02.1-内容结构.schema.json',
+    'shared/contracts/02.1-内容结构.schema.json',
     '696f241dbdc21baadfc1b37a252dd262d7ef6bc43827ea15538cca42f20bcf82',
   ],
   [
-    '项目文档/契约/02.1-内容样例.json',
+    'shared/contracts/02.1-内容样例.json',
     '0117b47ef6a0c9d9ea87b645a57ec401f9cad5002b4ee7ba7315ccdf5088e85c',
   ],
   [
-    '项目文档/契约/02.1-非法配置样例.json',
+    'shared/contracts/02.1-非法配置样例.json',
     '4f064b2478a95043774fd7b282997f52ce17182667693b78b5c908e932d8160f',
   ],
 ];

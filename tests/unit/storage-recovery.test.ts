@@ -20,7 +20,7 @@ import { assertSnapshot, validateSnapshot } from '../../web/src/storage/validati
 import { assertLegacySnapshot, upgradeV1Snapshot } from '../../web/src/storage/v1-migration';
 
 const samples = JSON.parse(
-  readFileSync(new URL('../../项目文档/契约/02.3-存档样例.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('../../shared/contracts/02.3-存档样例.json', import.meta.url), 'utf8'),
 ) as {
   snapshots: { snapshot: unknown }[];
 };

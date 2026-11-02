@@ -197,7 +197,7 @@ it('supplement adds only four identities and preserves every original byte and r
   ).toBe(32);
   expect(hasBugLearningSupplement(projection())).toBe(true);
   const candidate = JSON.parse(
-    readFileSync('web/public/content/review/p05-course-candidate.json', 'utf8'),
+    readFileSync('web/public/content/course/course-bundle-1.2.0.json', 'utf8'),
   );
   const originalReading = JSON.parse(
     readFileSync('web/public/content/reading/course-reading-1.1.0.json', 'utf8'),

@@ -21,8 +21,8 @@ runNode('node_modules/prettier/bin/prettier.cjs', [
   'shared/fixtures/README.md',
 ]);
 runNode('scripts/rust-check.mjs');
-runNode('项目文档/验收/02.4-共享资料检查.mjs');
-run('pwsh', ['-NoProfile', '-File', '项目文档/验收/02.4-Schema验证.ps1']);
+runNode('scripts/check-repository.mjs');
+run('pwsh', ['-NoProfile', '-File', 'scripts/check-schemas.ps1']);
 runNode('node_modules/vitest/vitest.mjs', ['run', '--config', 'tests/vitest.config.ts']);
 runNode('scripts/startup-check.mjs');
 runNode('node_modules/@playwright/test/cli.js', ['test', '--config', 'tests/playwright.config.ts']);

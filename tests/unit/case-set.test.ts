@@ -23,7 +23,7 @@ import { presentTrace } from '../../web/src/player/presentation';
 import { createSourceIndex, mapSourceLocation } from '../../web/src/player/source-location';
 
 const content = JSON.parse(
-  readFileSync(new URL('../../项目文档/契约/02.1-内容样例.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('../../shared/contracts/02.1-内容样例.json', import.meta.url), 'utf8'),
 ) as ContentPackage;
 const encoder = new TextEncoder();
 const decoder = new TextDecoder('utf-8', { fatal: true });
@@ -290,7 +290,7 @@ describe('08.4 seven public cases through the unchanged real Rust/WASM execution
   });
 });
 
-const archive = fileURLToPath(new URL('../../项目文档/验收/08.4-真实案例/', import.meta.url));
+const archive = fileURLToPath(new URL('../../tests/fixtures/cases/', import.meta.url));
 const representative = () => readCasePacket(join(archive, 'assignment-negative'));
 // Intentionally invalid public test copies, never replacement execution evidence.
 function alterCapturedResult(packet: CasePacket, mutate: (result: ExecuteResult) => void) {

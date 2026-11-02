@@ -43,7 +43,7 @@ const caseView = readJson('../../content/c/p0/case-view-1.0.1.json') as {
 const practice = readJson(
   '../../web/public/content/practice/course-practice-1.0.0.json',
 ) as CoursePractice;
-const fixture = readJson('../../项目文档/契约/02.1-内容样例.json') as ContentPackage;
+const fixture = readJson('../../shared/contracts/02.1-内容样例.json') as ContentPackage;
 const catalogs = [
   ...caseView.catalogs,
   ...practice.exercises.map((subject) => exerciseCatalog(practice, subject.id)),

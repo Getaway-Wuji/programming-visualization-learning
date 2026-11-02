@@ -31,7 +31,9 @@ import { migrateLegacyReference } from '../../web/src/storage/migrations';
 import { assertLegacySnapshot, upgradeV1Snapshot } from '../../web/src/storage/v1-migration';
 
 function frozenFile(name: string): unknown {
-  return JSON.parse(readFileSync(new URL(`../../项目文档/契约/${name}`, import.meta.url), 'utf8'));
+  return JSON.parse(
+    readFileSync(new URL(`../../shared/contracts/${name}`, import.meta.url), 'utf8'),
+  );
 }
 const sample = frozenFile('02.3-存档样例.json') as {
   snapshots: { id: string; snapshot: unknown }[];

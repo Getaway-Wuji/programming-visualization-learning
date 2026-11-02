@@ -1,7 +1,7 @@
 // Mechanical companion schema; original closed memory schema is never rewritten.
 import { readFileSync, writeFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-const source = JSON.parse(readFileSync('项目文档/契约/12.2-内存执行.schema.json', 'utf8'));
+const source = JSON.parse(readFileSync('shared/contracts/12.2-内存执行.schema.json', 'utf8'));
 const registry = JSON.parse(readFileSync('content/cpp/bugs/questions-1.0.0.json', 'utf8'));
 const object = (properties) => ({
   type: 'object',
@@ -67,7 +67,7 @@ schema.$defs.result.allOf = [
   },
 ];
 const output = JSON.stringify(schema, null, 2) + '\n',
-  path = '项目文档/契约/14.4-内存关卡.schema.json';
+  path = 'shared/contracts/14.4-内存关卡.schema.json';
 if (process.argv.includes('--check')) assert.equal(readFileSync(path, 'utf8'), output);
 else writeFileSync(path, output, { flag: 'wx' });
 console.log('BUG-MEMORY-01 companion schema matches; original EXEC/STEP/DIAG remain closed.');

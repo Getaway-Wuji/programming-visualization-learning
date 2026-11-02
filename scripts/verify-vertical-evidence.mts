@@ -324,7 +324,7 @@ export async function verifyVerticalPacket(
   assert.deepEqual(request.budgetRef, { id: 'budget.p0', version: '1.0.0' });
   const catalog = JSON.parse(packet.catalogText) as Catalog;
   const baseline = JSON.parse(
-    readFileSync(join(workspace, '项目文档/契约/02.1-内容样例.json'), 'utf8'),
+    readFileSync(join(workspace, 'shared/contracts/02.1-内容样例.json'), 'utf8'),
   ) as ContentPackage;
   const subject = baseline.cases.find((subject) => subject.id === item.caseId)!;
   const program = baseline.programs.find((program) => program.id === subject.programRef.id)!;
@@ -623,7 +623,7 @@ export async function verifyVerticalEvidence(root: string) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const root = resolve(process.argv[2] ?? join(workspace, '项目文档/验收/07.3-真实轨迹'));
+  const root = resolve(process.argv[2] ?? join(workspace, 'tests/fixtures/execution'));
   const report = await verifyVerticalEvidence(root);
   const output = resolve(
     process.argv[3] ?? join(workspace, '.artifacts/07.3/semantic-verification.json'),

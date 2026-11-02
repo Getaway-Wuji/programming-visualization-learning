@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { gunzipSync, crc32 } from 'node:zlib';
+import { crc32 } from 'node:zlib';
 import { describe, it, expect, vi } from 'vitest';
 import { createNotesZip } from '../../web/src/study-notes/zip';
 import { notesMarkdown, noteTitle, safeNoteFilename } from '../../web/src/study-notes/markdown';
@@ -9,17 +9,7 @@ import type { SnapshotDocument } from '../../web/src/snapshot-export/types';
 const at = '2026-11-01T01:00:00.000Z',
   uuid = '20200000-0000-4000-8000-000000000001';
 function realDocument() {
-  const index = JSON.parse(readFileSync('项目文档/验收/20.1-验证原件/index.json', 'utf8')) as {
-    files: { sourcePath: string; file: string }[];
-  };
-  const e = index.files.find(
-    (e) => e.sourcePath === '.artifacts/20.1/browser/r201-final67/snapshot-cpp.json.gz',
-  )!;
-  return (
-    JSON.parse(
-      gunzipSync(gunzipSync(readFileSync(`项目文档/验收/20.1-验证原件/${e.file}`))).toString(),
-    ) as { doc: SnapshotDocument }
-  ).doc;
+  return JSON.parse(readFileSync('tests/fixtures/snapshot/cpp.json', 'utf8')) as SnapshotDocument;
 }
 const entry = (): NoteEntry => ({
   id: 'one',

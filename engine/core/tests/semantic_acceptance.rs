@@ -533,7 +533,7 @@ fn preceding_lex_parse_encoding_size_and_depth_errors_keep_their_identity() {
 #[test]
 fn all_112_public_machine_sources_are_checked_with_their_original_allowed_diagnostics() {
     let fixture: Value = serde_json::from_str(include_str!(
-        "../../../项目文档/契约/02.4-语义与输入样例.json"
+        "../../../shared/contracts/02.4-语义与输入样例.json"
     ))
     .unwrap();
     assert_eq!(fixture["purpose"], "contract-fixture");
@@ -644,7 +644,7 @@ fn instantiate_public_inputs(program: &Value, input: &Value) -> String {
 #[test]
 fn all_24_frozen_exercise_inputs_are_visible_static_program_instances() {
     let content: Value =
-        serde_json::from_str(include_str!("../../../项目文档/契约/02.1-内容样例.json")).unwrap();
+        serde_json::from_str(include_str!("../../../shared/contracts/02.1-内容样例.json")).unwrap();
     assert_eq!(content["purpose"], "contract-fixture");
     let mut count = 0;
     let mut empty_arrays = 0;
@@ -699,7 +699,7 @@ fn all_24_frozen_exercise_inputs_are_visible_static_program_instances() {
 #[test]
 fn the_20_declared_block_kinds_and_their_operators_have_supported_static_examples() {
     let content: Value =
-        serde_json::from_str(include_str!("../../../项目文档/契约/02.1-内容样例.json")).unwrap();
+        serde_json::from_str(include_str!("../../../shared/contracts/02.1-内容样例.json")).unwrap();
     let mut blocks = 0;
     let mut probes = 0;
     for block in content["blocks"].as_array().unwrap() {
@@ -748,7 +748,7 @@ fn the_20_declared_block_kinds_and_their_operators_have_supported_static_example
 #[test]
 fn shared_source_with_authored_block_ranges_is_checked_without_using_fixture_execution() {
     let fixture: Value = serde_json::from_str(include_str!(
-        "../../../项目文档/契约/02.2-正常轨迹样例.json"
+        "../../../shared/contracts/02.2-正常轨迹样例.json"
     ))
     .unwrap();
     let mut programs = 0;

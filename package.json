@@ -17,8 +17,8 @@
     "format:check": "prettier --check package.json package-lock.json tsconfig.json tsconfig.web.json tsconfig.tools.json vite.config.ts eslint.config.mjs .prettierrc.json web/index.html web/src scripts/*.{mjs,mts} tests content/README.md shared/fixtures/README.md",
     "format": "prettier --write package.json package-lock.json tsconfig.json tsconfig.web.json tsconfig.tools.json vite.config.ts eslint.config.mjs .prettierrc.json web/index.html web/src scripts/*.{mjs,mts} tests content/README.md shared/fixtures/README.md",
     "test": "vitest run --config tests/vitest.config.ts",
-    "test:fixtures": "node 项目文档/验收/02.4-共享资料检查.mjs",
-    "test:schemas": "pwsh -NoProfile -File 项目文档/验收/02.4-Schema验证.ps1",
+    "test:fixtures": "vitest run --config tests/vitest.config.ts tests/unit/content-loader.test.ts",
+    "test:schemas": "pwsh -NoProfile -File scripts/check-schemas.ps1",
     "check:rust": "node scripts/rust-check.mjs",
     "build:wasm": "node scripts/build-wasm.mjs",
     "build:content": "node scripts/build-content.mjs",
@@ -29,7 +29,9 @@
     "test:startup": "node scripts/startup-check.mjs",
     "check": "node scripts/check.mjs",
     "ai:build": "cargo +1.99.0 build --manifest-path server/ai-proxy/Cargo.toml --release --locked",
-    "ai:serve": "node scripts/serve-ai.mjs"
+    "ai:serve": "node scripts/serve-ai.mjs",
+    "check:repository": "node scripts/check-repository.mjs",
+    "lock:build": "node scripts/build-inputs.mjs --write"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "6.0.3",

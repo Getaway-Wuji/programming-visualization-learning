@@ -13,7 +13,7 @@ import {
 import type { InputIssueCode, InputResult } from '../../web/src/engine/input-data';
 
 const content = JSON.parse(
-  readFileSync(new URL('../../项目文档/契约/02.1-内容样例.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('../../shared/contracts/02.1-内容样例.json', import.meta.url), 'utf8'),
 ) as ContentPackage;
 function spec(id: string): InputSpecEntity {
   return content.inputSpecs.find((item) => item.id === `input.c.${id}`)!;

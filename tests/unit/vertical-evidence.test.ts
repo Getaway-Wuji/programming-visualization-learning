@@ -11,7 +11,7 @@ import {
 import type { VerticalKey, VerticalPacket } from '../../scripts/verify-vertical-evidence.mjs';
 import type { ExecuteRequest, ExecuteResult } from '../../web/src/engine/protocol';
 
-const archive = fileURLToPath(new URL('../../项目文档/验收/07.3-真实轨迹/', import.meta.url));
+const archive = fileURLToPath(new URL('../../tests/fixtures/execution/', import.meta.url));
 const packet = (key: VerticalKey = 'assignment') => readVerticalPacket(join(archive, key));
 function canonical(value: unknown): string {
   if (value === null || typeof value !== 'object') return JSON.stringify(value);

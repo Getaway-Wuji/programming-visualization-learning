@@ -7,7 +7,7 @@ import { openBlockKeyboardEditor } from './block-ui';
 
 const wasmPattern = /\/assets\/c_viz_wasm_bg-[^/]+\.wasm$/;
 const frozenBytes = readFileSync(
-  new URL('../../项目文档/契约/02.1-内容样例.json', import.meta.url),
+  new URL('../../shared/contracts/02.1-内容样例.json', import.meta.url),
 );
 const frozen = JSON.parse(frozenBytes.toString('utf8')) as ContentPackage;
 const reviewedCourse = JSON.parse(

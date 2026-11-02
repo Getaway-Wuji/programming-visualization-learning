@@ -49,7 +49,7 @@ function finish<T>(generator: Generator<void, T, unknown>): T {
 describe('specialized protocol validation with real maximum-input Rust packets', () => {
   beforeAll(() => {
     const content = JSON.parse(
-      readFileSync(new URL('../../项目文档/契约/02.1-内容样例.json', import.meta.url), 'utf8'),
+      readFileSync(new URL('../../shared/contracts/02.1-内容样例.json', import.meta.url), 'utf8'),
     ) as ContentPackage;
     const subject = content.cases.find((value) => value.id === 'case.c.bubble-sort')!;
     const program = content.programs.find((value) => value.id === subject.programRef.id)!;
@@ -112,7 +112,7 @@ describe('specialized protocol validation with real maximum-input Rust packets',
   });
   it('keeps the generated validator exactly reproducible from the frozen schema', () => {
     const frozen = readFileSync(
-      new URL('../../项目文档/契约/02.2-执行与轨迹.schema.json', import.meta.url),
+      new URL('../../shared/contracts/02.2-执行与轨迹.schema.json', import.meta.url),
       'utf8',
     );
     expect(createHash('sha256').update(frozen).digest('hex')).toBe(FROZEN_EXEC_SCHEMA_SHA256);
@@ -207,7 +207,7 @@ describe('specialized protocol validation with real maximum-input Rust packets',
   it('carries all frozen legal fixture shapes through the generated schema without production provenance promotion', () => {
     for (const name of ['02.2-正常轨迹样例.json', '02.2-失败与超限轨迹样例.json']) {
       const value = JSON.parse(
-        readFileSync(new URL(`../../项目文档/契约/${name}`, import.meta.url), 'utf8'),
+        readFileSync(new URL(`../../shared/contracts/${name}`, import.meta.url), 'utf8'),
       ) as { fixtures: { result: SchemaValue }[] };
       for (const fixture of value.fixtures)
         expect(finish(validateResultSchema(fixture.result, () => {}))).toBe(true);

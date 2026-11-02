@@ -7,7 +7,7 @@ import { presentTrace, VISIBLE_CELLS, VISIBLE_OBJECTS } from '../../web/src/play
 import { initSync, prepare_input, execute_request } from '../../web/src/generated/c_viz_wasm';
 import { engineBuild } from '../../web/src/generated/engine-build';
 
-const root = new URL('../../项目文档/验收/07.3-真实轨迹/', import.meta.url);
+const root = new URL('../../tests/fixtures/execution/', import.meta.url);
 async function load(key = 'assignment') {
   const read = (file: string) => readFileSync(new URL(`${key}/${file}`, root));
   const request = JSON.parse(read('request.json').toString()) as ExecuteRequest;

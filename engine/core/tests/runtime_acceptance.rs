@@ -620,7 +620,7 @@ fn runtime_diagnostics_serialize_stable_codes_and_exact_utf8_failure_locations()
 #[test]
 fn all_public_machine_sources_execute_with_binding_setup_cases_left_to_the_adapter() {
     let fixture: Value = serde_json::from_str(include_str!(
-        "../../../项目文档/契约/02.4-语义与输入样例.json"
+        "../../../shared/contracts/02.4-语义与输入样例.json"
     ))
     .unwrap();
     assert_eq!(fixture["purpose"], "contract-fixture");

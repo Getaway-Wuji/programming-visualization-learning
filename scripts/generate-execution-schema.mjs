@@ -10,8 +10,8 @@ const original = fs.readFileSync(
   path.join(
     root,
     p05
-      ? '项目文档/契约/P0.5-09-执行与判题-1.1.0.schema.json'
-      : '项目文档/契约/02.2-执行与轨迹.schema.json',
+      ? 'shared/contracts/P0.5-09-执行与判题-1.1.0.schema.json'
+      : 'shared/contracts/02.2-执行与轨迹.schema.json',
   ),
   'utf8',
 );

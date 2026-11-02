@@ -1,5 +1,5 @@
 /** AST-MAP-01 boundary validation. It consumes Rust data, never parses C. */
-import schemaText from '../../../项目文档/契约/13.1-双向编辑.schema.json?raw';
+import schemaText from '../../../shared/contracts/13.1-双向编辑.schema.json?raw';
 import type {
   AnalysisNode,
   AnalysisRequest,

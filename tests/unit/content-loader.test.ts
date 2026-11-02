@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createContentRepository } from '../../web/src/content/repository';
 import { ContentError, MAX_CONTENT_BYTES, parseContent } from '../../web/src/content/validator.mjs';
 
-const fixtureUrl = new URL('../../项目文档/契约/02.1-内容样例.json', import.meta.url);
+const fixtureUrl = new URL('../../shared/contracts/02.1-内容样例.json', import.meta.url);
 const bytes = new Uint8Array(readFileSync(fixtureUrl));
 interface Operation {
   op: 'set' | 'append' | 'remove';
@@ -16,7 +16,7 @@ interface Scenario {
   expectedCode: string;
 }
 const bad = JSON.parse(
-  readFileSync(new URL('../../项目文档/契约/02.1-非法配置样例.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('../../shared/contracts/02.1-非法配置样例.json', import.meta.url), 'utf8'),
 ) as {
   scenarios: Scenario[];
   rawJsonScenarios: { id: string; rawJson: string; expectedCode: string }[];

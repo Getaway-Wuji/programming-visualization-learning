@@ -155,7 +155,7 @@ describe('08.3 original-source coordinate projection', () => {
   });
 
   it('maps all exact node edges from an accepted archived real Rust trace', async () => {
-    const base = new URL('../../项目文档/验收/07.3-真实轨迹/assignment/', import.meta.url);
+    const base = new URL('../../tests/fixtures/execution/assignment/', import.meta.url);
     const request = JSON.parse(
       readFileSync(new URL('request.json', base), 'utf8'),
     ) as ExecuteRequest;

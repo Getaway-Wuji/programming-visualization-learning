@@ -25,7 +25,7 @@ import { decodeResult, encodeRequest } from '../../web/src/engine/protocol';
 import type { ExecutionClient, PreparedSource } from '../../web/src/engine/execution-client';
 
 const content = JSON.parse(
-  readFileSync('web/public/content/practice/course-practice-1.1.0.json', 'utf8'),
+  readFileSync('web/public/content/practice/course-practice-1.2.0.json', 'utf8'),
 ) as CoursePractice;
 const encoder = new TextEncoder(),
   decoder = new TextDecoder();

@@ -69,10 +69,11 @@ export function embeddedExamples(content: CourseContentDraft): EmbeddedExample[]
 function checkSource(source: SourceReference) {
   assert.ok(source.document.trim() && source.locator.trim());
   assert.ok(!isAbsolute(source.document), 'Public source references use workspace-relative paths.');
-  // The 02.1 historical references name files below 项目文档; new editorial sources use root paths.
-  const filename = source.document.startsWith('../架构决策/')
-    ? resolve(workspace, '项目文档/契约', source.document)
-    : resolve(workspace, source.document);
+  // Preserve the old content reference while resolving its relocated programs.
+  const filename =
+    source.document === '../架构决策/01.3-正反样例清单.md'
+      ? resolve(workspace, 'shared/fixtures/reference-programs.md')
+      : resolve(workspace, source.document);
   const rel = relative(workspace, filename);
   assert.ok(rel && !rel.startsWith('..') && !isAbsolute(rel));
   assert.ok(existsSync(filename), `Source document must exist: ${source.document}`);
@@ -88,7 +89,7 @@ export function verifyCourseContent(bytes: Uint8Array = readFileSync(coursePath)
   assert.equal(content.purpose, 'publishable');
   assert.ok(content.packageVersion === '1.0.1');
   const original = parseContent(
-    readFileSync(resolve(workspace, '项目文档/契约/02.1-内容样例.json')),
+    readFileSync(resolve(workspace, 'shared/contracts/02.1-内容样例.json')),
   );
   const bumped: string[] = [];
   const unchanged: string[] = [];
@@ -158,7 +159,7 @@ export const referenceStdout: Readonly<Record<string, string>> = {
 };
 
 export function originalContent(): ContentPackage {
-  return parseContent(readFileSync(resolve(workspace, '项目文档/契约/02.1-内容样例.json')));
+  return parseContent(readFileSync(resolve(workspace, 'shared/contracts/02.1-内容样例.json')));
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const result = verifyCourseContent();

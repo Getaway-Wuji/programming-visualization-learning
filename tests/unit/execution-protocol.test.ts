@@ -17,7 +17,9 @@ interface Fixture {
 const fixtures = ['02.2-正常轨迹样例.json', '02.2-失败与超限轨迹样例.json'].flatMap(
   (name) =>
     (
-      JSON.parse(readFileSync(new URL(`../../项目文档/契约/${name}`, import.meta.url), 'utf8')) as {
+      JSON.parse(
+        readFileSync(new URL(`../../shared/contracts/${name}`, import.meta.url), 'utf8'),
+      ) as {
         fixtures: Fixture[];
       }
     ).fixtures,

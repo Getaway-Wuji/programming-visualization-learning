@@ -733,7 +733,7 @@ fn encoded_report_fields_and_final_fuel_equal_the_returned_core_result() {
 #[test]
 fn public_input_instantiation_binding_and_execution_share_the_same_run_meter() {
     let package: Value =
-        serde_json::from_str(include_str!("../../../项目文档/契约/02.1-内容样例.json")).unwrap();
+        serde_json::from_str(include_str!("../../../shared/contracts/02.1-内容样例.json")).unwrap();
     for id in ["program.c.bubble-sort", "program.c.selection-sort"] {
         let program = package["programs"]
             .as_array()

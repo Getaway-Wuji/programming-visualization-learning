@@ -14,8 +14,38 @@ node_modules/
 playwright-report/
 test-results/
 *.log
-# These immutable JSON receipts have a historical .log suffix and are build inputs.
-!/项目文档/验收/发布凭据/**/ui-lint-vector-final.log
 __pycache__/
 *.py[cod]
 
+
+# AI workspace state and working documents stay on this computer.
+/.agents/
+/.codex/
+/.taste-skill/
+**/AGENTS.md
+**/SKILL.md
+/skills-lock.json
+/项目守则.md
+/项目文档/
+/c++ 资源/
+*.pdf
+*.tmp
+*.bak
+*.tsbuildinfo
+# One-off authoring, coordination and evidence-generation tools.
+/scripts/*evidence*
+!/scripts/verify-vertical-evidence.mts
+/scripts/register-*
+/scripts/author-*
+/scripts/*-release-inputs.mjs
+/scripts/p05-0*
+/scripts/p05-10*
+/scripts/phase3-*
+/scripts/phase2-clean-source.mjs
+/scripts/check-release-archives.mjs
+/scripts/p1-contracts.mjs
+/scripts/p05-fixtures.mjs
+/scripts/memory-bug-schema-check.ps1
+
+/scripts/cbook-*/
+/scripts/**/evidence.*

@@ -1,6 +1,5 @@
 /** API transport is simulated here. Original Rust packets are read-only facts, not AI answers. */
 import { readFileSync } from 'node:fs';
-import { gunzipSync } from 'node:zlib';
 import { describe, expect, it, vi } from 'vitest';
 import { AiSession, supportedOrigin } from '../../web/src/ai-debug/session';
 import {
@@ -15,7 +14,7 @@ import {
 import { buildContext, validateOriginal, type ContextInput } from '../../web/src/ai-debug/context';
 import { providerPayload } from '../../web/src/ai-debug/projection';
 
-const fixtures = JSON.parse(readFileSync('项目文档/契约/19.3-API-Key设计样例.json', 'utf8'));
+const fixtures = JSON.parse(readFileSync('shared/contracts/19.3-API-Key设计样例.json', 'utf8'));
 const sentinel = 'DESIGN_ONLY_NOT_A_REAL_KEY';
 const json = (value: unknown, status = 200) =>
   new Response(canonical(value), { status, headers: { 'Content-Type': 'application/json' } });
@@ -69,7 +68,7 @@ function harness(explain: Explain = async (r) => json(response(r)), now = () => 
 }
 function original(index: number): ContextInput {
   const item = fixtures.examples[index];
-  const packet = JSON.parse(gunzipSync(readFileSync(item.evidence.path)).toString());
+  const packet = JSON.parse(readFileSync(`tests/fixtures/ai/${item.id}.json`, 'utf8'));
   return {
     source: packet.request.source,
     result: packet.result,

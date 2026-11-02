@@ -6,7 +6,7 @@ import type { ExecuteRequest, ExecuteResult } from '../../web/src/engine/protoco
 import { initSync, prepare_input, execute_request } from '../../web/src/generated/c_viz_wasm';
 import { engineBuild } from '../../web/src/generated/engine-build';
 
-const base = new URL('../../项目文档/验收/07.3-真实轨迹/', import.meta.url);
+const base = new URL('../../tests/fixtures/execution/', import.meta.url);
 const read = (key: string, file: string) => readFileSync(new URL(`${key}/${file}`, base));
 async function archive(key = 'assignment') {
   const request = JSON.parse(read(key, 'request.json').toString()) as ExecuteRequest;

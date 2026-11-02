@@ -19,7 +19,7 @@ const keys = [
   'search-duplicate',
 ];
 function packet(key = 'bubble-sort-mixed') {
-  const directory = new URL(`../../项目文档/验收/08.4-真实案例/${key}/`, import.meta.url);
+  const directory = new URL(`../../tests/fixtures/cases/${key}/`, import.meta.url);
   return {
     request: JSON.parse(readFileSync(new URL('request.json', directory), 'utf8')) as ExecuteRequest,
     result: JSON.parse(readFileSync(new URL('result.json', directory), 'utf8')) as ExecuteResult,

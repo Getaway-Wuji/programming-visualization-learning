@@ -10,7 +10,7 @@ import {
   type ExecuteResult,
 } from '../../web/src/engine/protocol';
 
-const base = resolve('项目文档/验收/07.3-真实轨迹');
+const base = resolve('tests/fixtures/execution');
 let request: ExecuteRequest;
 let completed: ExecuteResult;
 let failed: ExecuteResult;

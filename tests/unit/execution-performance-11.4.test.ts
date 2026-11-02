@@ -31,7 +31,7 @@ function measure<T>(work: () => T): { value: T; ms: number } {
 
 beforeAll(() => {
   const content = JSON.parse(
-    readFileSync(new URL('../../项目文档/契约/02.1-内容样例.json', import.meta.url), 'utf8'),
+    readFileSync(new URL('../../shared/contracts/02.1-内容样例.json', import.meta.url), 'utf8'),
   ) as ContentPackage;
   const subject = content.cases.find((item) => item.id === 'case.c.bubble-sort')!;
   const program = content.programs.find((item) => item.id === subject.programRef.id)!;

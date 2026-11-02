@@ -566,7 +566,7 @@ fn deeply_repeated_punctuation_is_scanned_without_recursive_syntax_work() {
 
 #[test]
 fn all_ten_frozen_reference_programs_are_lexed_from_the_original_markdown() {
-    let markdown = include_str!("../../../项目文档/架构决策/01.3-正反样例清单.md");
+    let markdown = include_str!("../../../shared/fixtures/reference-programs.md");
     let mut references = Vec::new();
     let mut lines = markdown.lines();
     while let Some(line) = lines.next() {
@@ -609,7 +609,7 @@ fn all_ten_frozen_reference_programs_are_lexed_from_the_original_markdown() {
 #[test]
 fn shared_machine_sources_pass_or_fail_only_their_selected_lexical_checks() {
     let fixture: Value = serde_json::from_str(include_str!(
-        "../../../项目文档/契约/02.4-语义与输入样例.json"
+        "../../../shared/contracts/02.4-语义与输入样例.json"
     ))
     .unwrap();
     assert_eq!(fixture["fixtureContractVersion"], "1.0.0");

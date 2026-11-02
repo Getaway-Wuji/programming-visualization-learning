@@ -786,7 +786,7 @@ fn broad_programs_do_not_spend_nesting_budget_per_statement() {
 #[test]
 fn original_shared_sources_are_consumed_without_claiming_execution_results() {
     let fixture: Value = serde_json::from_str(include_str!(
-        "../../../项目文档/契约/02.4-语义与输入样例.json"
+        "../../../shared/contracts/02.4-语义与输入样例.json"
     ))
     .unwrap();
     assert_eq!(fixture["purpose"], "contract-fixture");
@@ -861,7 +861,7 @@ fn original_shared_sources_are_consumed_without_claiming_execution_results() {
 
 #[test]
 fn all_ten_markdown_reference_programs_are_parsed_from_the_frozen_document() {
-    let markdown = include_str!("../../../项目文档/架构决策/01.3-正反样例清单.md");
+    let markdown = include_str!("../../../shared/fixtures/reference-programs.md");
     let mut lines = markdown.lines();
     let mut references = 0;
     while let Some(line) = lines.next() {

@@ -1,20 +1,9 @@
-import { notesDownloadPaths } from './notes-download-release-inputs.mjs';
-import { studyNotesPaths } from './study-notes-release-inputs.mjs';
-import { aiDebugPaths } from './ai-debug-release-inputs.mjs';
-import { weaknessPaths } from './weakness-release-inputs.mjs';
-import { generatedPracticePaths } from './generated-practice-release-inputs.mjs';
-import { languageMigrationPaths } from './language-migration-release-inputs.mjs';
+import { verifyBuildInputs } from './build-inputs.mjs';
 import { validateLanguageMigration } from './language-migration-content.mjs';
-import { kmpPaths } from './kmp-release-inputs.mjs';
 import { executeKmpSamples } from './kmp-content.mjs';
-import { sieveSequencePaths } from './sieve-sequences-release-inputs.mjs';
 import { executeSieveSequences } from './sieve-sequences-content.mjs';
-import { exampleSolutionsPaths } from './example-solutions-release-inputs.mjs';
 import { executeSolutionSamples } from './example-solutions-content.mjs';
-import { customCodePaths } from './custom-code-release-inputs.mjs';
-import { advancedCoursePaths } from './advanced-course-release-inputs.mjs';
 import { validateAdvancedCourse } from './advanced-course-content.mjs';
-import { examplesPaths } from './examples-release-inputs.mjs';
 import { executePublicExamples } from './examples-content.mjs';
 // Build-only projection and Rust analysis of public teaching material; never user data.
 import assert from 'node:assert/strict';
@@ -26,33 +15,11 @@ import { createServer } from 'vite';
 import { inspectContentDraft } from '../web/src/content/validator.mjs';
 import { schema as contentSchema } from '../web/src/content/schema-p05.mjs';
 import * as wasm from '../web/src/generated/c_viz_wasm.js';
-import { reviewedP05Paths } from './p05-09-release-inputs.mjs';
-import { blockPermissionPaths } from './block-permission-release-inputs.mjs';
-import { editorHistoryPaths } from './editor-history-release-inputs.mjs';
-import { reconstructionPaths } from './reconstruction-release-inputs.mjs';
-import { diagnosticsPaths } from './diagnostics-release-inputs.mjs';
-import { bugPaths } from './bug-release-inputs.mjs';
-import { memoryBugPaths } from './memory-bug-release-inputs.mjs';
-import { knowledgePaths } from './knowledge-release-inputs.mjs';
-import { notebookPaths } from './notebook-release-inputs.mjs';
-import { achievementPaths } from './achievement-release-inputs.mjs';
-import { schedulerPaths } from './scheduler-release-inputs.mjs';
-import { challengePaths } from './challenge-release-inputs.mjs';
-import { comparisonPaths } from './comparison-release-inputs.mjs';
-import { snapshotPaths } from './snapshot-release-inputs.mjs';
-import { iterativeSortPaths } from './iterative-sort-release-inputs.mjs';
 import { validateIterativeSorts } from './iterative-sort-content.mjs';
-import { recursiveSortPaths } from './recursive-sort-release-inputs.mjs';
 import { validateRecursiveSorts } from './recursive-sort-content.mjs';
-import { bucketSortPaths } from './bucket-sort-release-inputs.mjs';
 import { validateBucketSort } from './bucket-sort-content.mjs';
-import { structuresPaths } from './structures-release-inputs.mjs';
 import { validateStructures } from './structures-content.mjs';
-import { linkedNodesPaths } from './linked-nodes-release-inputs.mjs';
 import { validateLinkedNodes } from './linked-nodes-content.mjs';
-import { classicsPaths } from './classics-release-inputs.mjs';
-import { phase2Paths } from './phase2-release-inputs.mjs';
-import { uiFeedbackPaths } from './ui-feedback-release-inputs.mjs';
 import { validateClassics } from './classics-content.mjs';
 
 validateIterativeSorts();
@@ -95,7 +62,7 @@ const save = (path, value, immutable = false) => {
   return { file: path.replace(/^web\/public\//, ''), bytes: bytes.length, sha256: sha(bytes) };
 };
 const sourcePath = 'content/c/p05/course-1.0.0.json';
-assert.deepEqual(contentSchema, json('项目文档/契约/P0.5-09-内容结构-1.1.0.schema.json'));
+assert.deepEqual(contentSchema, json('shared/contracts/P0.5-09-内容结构-1.1.0.schema.json'));
 const source = JSON.parse(JSON.stringify(inspectContentDraft(read(sourcePath))));
 const sourceSha256 = sha(read(sourcePath));
 const oldCourse = json('content/c/p0/course-1.0.1.json');
@@ -285,368 +252,27 @@ try {
 const predecessor = json('content/learning/p05-predecessors-1.0.0.json');
 for (const item of predecessor.sources)
   assert.equal(sha(read(item.path)), item.sha256, `Predecessor changed: ${item.path}`);
-const permissionRelease = existsSync('content/c/p0/blockly-release-1.0.17.json');
 validateStructures();
 validateLinkedNodes();
 validateClassics();
-const releaseVersion = existsSync('content/c/p0/blockly-release-1.0.68.json')
-  ? '1.0.68'
-  : existsSync('content/c/p0/blockly-release-1.0.67.json')
-    ? '1.0.67'
-    : existsSync('content/c/p0/blockly-release-1.0.66.json')
-      ? '1.0.66'
-      : existsSync('content/c/p0/blockly-release-1.0.65.json')
-        ? '1.0.65'
-        : existsSync('content/c/p0/blockly-release-1.0.64.json')
-          ? '1.0.64'
-          : existsSync('content/c/p0/blockly-release-1.0.63.json')
-            ? '1.0.63'
-            : existsSync('content/c/p0/blockly-release-1.0.62.json')
-              ? '1.0.62'
-              : existsSync('content/c/p0/blockly-release-1.0.61.json')
-                ? '1.0.61'
-                : existsSync('content/c/p0/blockly-release-1.0.60.json')
-                  ? '1.0.60'
-                  : existsSync('content/c/p0/blockly-release-1.0.59.json')
-                    ? '1.0.59'
-                    : existsSync('content/c/p0/blockly-release-1.0.58.json')
-                      ? '1.0.58'
-                      : existsSync('content/c/p0/blockly-release-1.0.57.json')
-                        ? '1.0.57'
-                        : existsSync('content/c/p0/blockly-release-1.0.56.json')
-                          ? '1.0.56'
-                          : existsSync('content/c/p0/blockly-release-1.0.55.json')
-                            ? '1.0.55'
-                            : existsSync('content/c/p0/blockly-release-1.0.54.json')
-                              ? '1.0.54'
-                              : existsSync('content/c/p0/blockly-release-1.0.53.json')
-                                ? '1.0.53'
-                                : existsSync('content/c/p0/blockly-release-1.0.52.json')
-                                  ? '1.0.52'
-                                  : existsSync('content/c/p0/blockly-release-1.0.51.json')
-                                    ? '1.0.51'
-                                    : existsSync('content/c/p0/blockly-release-1.0.50.json')
-                                      ? '1.0.50'
-                                      : existsSync('content/c/p0/blockly-release-1.0.49.json')
-                                        ? '1.0.49'
-                                        : existsSync('content/c/p0/blockly-release-1.0.48.json')
-                                          ? '1.0.48'
-                                          : existsSync('content/c/p0/blockly-release-1.0.47.json')
-                                            ? '1.0.47'
-                                            : existsSync('content/c/p0/blockly-release-1.0.46.json')
-                                              ? '1.0.46'
-                                              : existsSync(
-                                                    'content/c/p0/blockly-release-1.0.45.json',
-                                                  )
-                                                ? '1.0.45'
-                                                : existsSync(
-                                                      'content/c/p0/blockly-release-1.0.44.json',
-                                                    )
-                                                  ? '1.0.44'
-                                                  : existsSync(
-                                                        'content/c/p0/blockly-release-1.0.43.json',
-                                                      )
-                                                    ? '1.0.43'
-                                                    : existsSync(
-                                                          'content/c/p0/blockly-release-1.0.42.json',
-                                                        )
-                                                      ? '1.0.42'
-                                                      : existsSync(
-                                                            'content/c/p0/blockly-release-1.0.41.json',
-                                                          )
-                                                        ? '1.0.41'
-                                                        : existsSync(
-                                                              'content/c/p0/blockly-release-1.0.40.json',
-                                                            )
-                                                          ? '1.0.40'
-                                                          : existsSync(
-                                                                'content/c/p0/blockly-release-1.0.39.json',
-                                                              )
-                                                            ? '1.0.39'
-                                                            : existsSync(
-                                                                  'content/c/p0/blockly-release-1.0.38.json',
-                                                                )
-                                                              ? '1.0.38'
-                                                              : existsSync(
-                                                                    'content/c/p0/blockly-release-1.0.37.json',
-                                                                  )
-                                                                ? '1.0.37'
-                                                                : existsSync(
-                                                                      'content/c/p0/blockly-release-1.0.36.json',
-                                                                    )
-                                                                  ? '1.0.36'
-                                                                  : existsSync(
-                                                                        'content/c/p0/blockly-release-1.0.35.json',
-                                                                      )
-                                                                    ? '1.0.35'
-                                                                    : existsSync(
-                                                                          'content/c/p0/blockly-release-1.0.34.json',
-                                                                        )
-                                                                      ? '1.0.34'
-                                                                      : existsSync(
-                                                                            'content/c/p0/blockly-release-1.0.33.json',
-                                                                          )
-                                                                        ? '1.0.33'
-                                                                        : existsSync(
-                                                                              'content/c/p0/blockly-release-1.0.32.json',
-                                                                            )
-                                                                          ? '1.0.32'
-                                                                          : existsSync(
-                                                                                'content/c/p0/blockly-release-1.0.31.json',
-                                                                              )
-                                                                            ? '1.0.31'
-                                                                            : existsSync(
-                                                                                  'content/c/p0/blockly-release-1.0.30.json',
-                                                                                )
-                                                                              ? '1.0.30'
-                                                                              : existsSync(
-                                                                                    'content/c/p0/blockly-release-1.0.29.json',
-                                                                                  )
-                                                                                ? '1.0.29'
-                                                                                : existsSync(
-                                                                                      'content/c/p0/blockly-release-1.0.28.json',
-                                                                                    )
-                                                                                  ? '1.0.28'
-                                                                                  : existsSync(
-                                                                                        'content/c/p0/blockly-release-1.0.27.json',
-                                                                                      )
-                                                                                    ? '1.0.27'
-                                                                                    : existsSync(
-                                                                                          'content/c/p0/blockly-release-1.0.26.json',
-                                                                                        )
-                                                                                      ? '1.0.26'
-                                                                                      : existsSync(
-                                                                                            'content/c/p0/blockly-release-1.0.25.json',
-                                                                                          )
-                                                                                        ? '1.0.25'
-                                                                                        : existsSync(
-                                                                                              'content/c/p0/blockly-release-1.0.24.json',
-                                                                                            )
-                                                                                          ? '1.0.24'
-                                                                                          : existsSync(
-                                                                                                'content/c/p0/blockly-release-1.0.23.json',
-                                                                                              )
-                                                                                            ? '1.0.23'
-                                                                                            : existsSync(
-                                                                                                  'content/c/p0/blockly-release-1.0.22.json',
-                                                                                                )
-                                                                                              ? '1.0.22'
-                                                                                              : existsSync(
-                                                                                                    'content/c/p0/blockly-release-1.0.21.json',
-                                                                                                  )
-                                                                                                ? '1.0.21'
-                                                                                                : existsSync(
-                                                                                                      'content/c/p0/blockly-release-1.0.20.json',
-                                                                                                    )
-                                                                                                  ? '1.0.20'
-                                                                                                  : existsSync(
-                                                                                                        'content/c/p0/blockly-release-1.0.19.json',
-                                                                                                      )
-                                                                                                    ? '1.0.19'
-                                                                                                    : existsSync(
-                                                                                                          'content/c/p0/blockly-release-1.0.18.json',
-                                                                                                        )
-                                                                                                      ? '1.0.18'
-                                                                                                      : permissionRelease
-                                                                                                        ? '1.0.17'
-                                                                                                        : '1.0.16';
+const releaseVersion = json('content/build/source-lock.json').releaseVersion;
 const registrationPath = `content/c/p0/blockly-release-${releaseVersion}.json`;
 const candidate = process.env.P05_REVIEW_CANDIDATE === '1';
 let registered = false;
-if (existsSync(registrationPath) && !candidate) {
+if (!candidate) {
   const registration = json(registrationPath);
+  verifyBuildInputs();
   assert.equal(registration.releaseVersion, releaseVersion);
-  assert.deepEqual(
-    registration.files.map((entry) => entry.path),
-    releaseVersion === '1.0.68'
-      ? notesDownloadPaths
-      : ['1.0.66', '1.0.67'].includes(releaseVersion)
-        ? studyNotesPaths
-        : releaseVersion === '1.0.65'
-          ? aiDebugPaths
-          : releaseVersion === '1.0.64'
-            ? generatedPracticePaths
-            : ['1.0.60', '1.0.61', '1.0.62', '1.0.63'].includes(releaseVersion)
-              ? weaknessPaths
-              : releaseVersion === '1.0.59'
-                ? languageMigrationPaths
-                : releaseVersion === '1.0.58'
-                  ? kmpPaths
-                  : releaseVersion === '1.0.57'
-                    ? sieveSequencePaths
-                    : ['1.0.55', '1.0.56'].includes(releaseVersion)
-                      ? exampleSolutionsPaths
-                      : releaseVersion === '1.0.54'
-                        ? examplesPaths
-                        : releaseVersion === '1.0.53'
-                          ? advancedCoursePaths
-                          : ['1.0.50', '1.0.51', '1.0.52'].includes(releaseVersion)
-                            ? customCodePaths
-                            : ['1.0.48', '1.0.49'].includes(releaseVersion)
-                              ? uiFeedbackPaths
-                              : ['1.0.45', '1.0.46', '1.0.47'].includes(releaseVersion)
-                                ? phase2Paths
-                                : releaseVersion === '1.0.44'
-                                  ? classicsPaths
-                                  : releaseVersion === '1.0.43'
-                                    ? linkedNodesPaths
-                                    : releaseVersion === '1.0.42'
-                                      ? structuresPaths
-                                      : releaseVersion === '1.0.41'
-                                        ? bucketSortPaths
-                                        : releaseVersion === '1.0.40'
-                                          ? recursiveSortPaths
-                                          : releaseVersion === '1.0.39'
-                                            ? iterativeSortPaths
-                                            : releaseVersion === '1.0.38'
-                                              ? snapshotPaths
-                                              : ['1.0.36', '1.0.37'].includes(releaseVersion)
-                                                ? comparisonPaths
-                                                : releaseVersion === '1.0.35'
-                                                  ? challengePaths
-                                                  : [
-                                                        '1.0.30',
-                                                        '1.0.31',
-                                                        '1.0.32',
-                                                        '1.0.33',
-                                                        '1.0.34',
-                                                      ].includes(releaseVersion)
-                                                    ? achievementPaths
-                                                    : ['1.0.28', '1.0.29'].includes(releaseVersion)
-                                                      ? schedulerPaths
-                                                      : ['1.0.26', '1.0.27'].includes(
-                                                            releaseVersion,
-                                                          )
-                                                        ? notebookPaths
-                                                        : releaseVersion === '1.0.25'
-                                                          ? knowledgePaths
-                                                          : releaseVersion === '1.0.24'
-                                                            ? memoryBugPaths
-                                                            : ['1.0.22', '1.0.23'].includes(
-                                                                  releaseVersion,
-                                                                )
-                                                              ? bugPaths
-                                                              : releaseVersion === '1.0.21'
-                                                                ? diagnosticsPaths
-                                                                : releaseVersion === '1.0.20'
-                                                                  ? reconstructionPaths
-                                                                  : releaseVersion === '1.0.19'
-                                                                    ? editorHistoryPaths
-                                                                    : permissionRelease
-                                                                      ? blockPermissionPaths
-                                                                      : reviewedP05Paths,
-  );
-  for (const entry of registration.files)
-    assert.equal(sha(read(entry.path)), entry.sha256, `Unreviewed source: ${entry.path}`);
-  assert.equal(registration.engine.wasmSha256, sha(wasmBytes));
-  if (
-    [
-      '1.0.24',
-      '1.0.25',
-      '1.0.26',
-      '1.0.27',
-      '1.0.28',
-      '1.0.29',
-      '1.0.30',
-      '1.0.31',
-      '1.0.32',
-      '1.0.33',
-      '1.0.34',
-      '1.0.35',
-      '1.0.36',
-      '1.0.37',
-      '1.0.38',
-      '1.0.39',
-      '1.0.40',
-      '1.0.41',
-      '1.0.42',
-      '1.0.43',
-      '1.0.44',
-      '1.0.45',
-      '1.0.46',
-      '1.0.47',
-      '1.0.48',
-      '1.0.49',
-      '1.0.50',
-      '1.0.51',
-      '1.0.52',
-      '1.0.53',
-      '1.0.54',
-      '1.0.55',
-      '1.0.56',
-      '1.0.57',
-      '1.0.58',
-      '1.0.59',
-      '1.0.60',
-      '1.0.61',
-      '1.0.62',
-      '1.0.63',
-      '1.0.64',
-      '1.0.65',
-      '1.0.66',
-      '1.0.67',
-      '1.0.68',
-    ].includes(releaseVersion)
-  )
-    assert.equal(
-      registration.memoryEngine.wasmSha256,
-      sha(read('web/src/generated/memory/c_viz_memory_bg.wasm')),
-    );
-  for (const proof of Object.values(registration.evidence))
-    if (proof.path && proof.sha256) assert.equal(sha(read(proof.path)), proof.sha256);
-  if (
-    [
-      '1.0.39',
-      '1.0.40',
-      '1.0.41',
-      '1.0.42',
-      '1.0.43',
-      '1.0.44',
-      '1.0.45',
-      '1.0.46',
-      '1.0.47',
-      '1.0.48',
-      '1.0.49',
-      '1.0.50',
-      '1.0.51',
-      '1.0.52',
-      '1.0.53',
-      '1.0.54',
-      '1.0.55',
-      '1.0.56',
-      '1.0.57',
-      '1.0.58',
-      '1.0.59',
-      '1.0.60',
-      '1.0.61',
-      '1.0.62',
-      '1.0.63',
-      '1.0.64',
-      '1.0.65',
-      '1.0.66',
-      '1.0.67',
-      '1.0.68',
-    ].includes(releaseVersion)
-  )
-    assert.equal(
-      registration.algorithmEngine.wasmSha256,
-      sha(read('web/src/generated/algorithm/c_viz_algorithm_bg.wasm')),
-    );
-  if (['1.0.64', '1.0.65', '1.0.66', '1.0.67', '1.0.68'].includes(releaseVersion)) {
-    assert.equal(
-      registration.generatorEngine.wasmSha256,
-      sha(read('web/src/generated/practice/c_viz_practice_bg.wasm')),
-    );
-    assert.equal(
-      registration.advancedEngine.wasmSha256,
-      sha(read('web/src/generated/advanced/c_viz_advanced_bg.wasm')),
-    );
-  }
+  for (const [key, path] of [
+    ['engine', 'c_viz_wasm_bg.wasm'],
+    ['memoryEngine', 'memory/c_viz_memory_bg.wasm'],
+    ['algorithmEngine', 'algorithm/c_viz_algorithm_bg.wasm'],
+    ['generatorEngine', 'practice/c_viz_practice_bg.wasm'],
+    ['advancedEngine', 'advanced/c_viz_advanced_bg.wasm'],
+  ])
+    assert.equal(registration[key].wasmSha256, sha(read(`web/src/generated/${path}`)));
   registered = true;
-} else if (!candidate)
-  throw new Error(
-    'P0.5 course is not registered. Use an explicit review candidate before acceptance.',
-  );
+}
 const learning = registered ? { ...catalog, purpose: 'course-practice' } : null;
 const bundle = {
   bundleVersion: '1.2.0',

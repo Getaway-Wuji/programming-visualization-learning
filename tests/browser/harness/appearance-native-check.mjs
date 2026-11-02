@@ -6,7 +6,7 @@ import process from 'node:process';
 // Isolated native IndexedDB infrastructure evidence. No C execution is claimed.
 const base = process.env.STORAGE_QA_URL ?? 'http://127.0.0.1:5183';
 const directory = process.env.STORAGE_QA_OUTPUT ?? '.artifacts/P0.5-02/storage-native';
-const fixture = JSON.parse(readFileSync('项目文档/契约/02.3-存档样例.json', 'utf8')).snapshots[1]
+const fixture = JSON.parse(readFileSync('shared/contracts/02.3-存档样例.json', 'utf8')).snapshots[1]
   .snapshot;
 mkdirSync(directory, { recursive: true });
 let failures = 0;

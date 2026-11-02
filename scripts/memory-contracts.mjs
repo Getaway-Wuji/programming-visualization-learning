@@ -259,7 +259,7 @@ const schema = {
   oneOf: [ref('request'), ref('result')],
   $defs: { request, result, state, trace },
 };
-const path = '项目文档/契约/12.2-内存执行.schema.json';
+const path = 'shared/contracts/12.2-内存执行.schema.json';
 const bytes = JSON.stringify(schema, null, 2) + '\n';
 if (process.argv.includes('--check')) assert.equal(readFileSync(path, 'utf8'), bytes);
 else writeFileSync(path, bytes);

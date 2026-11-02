@@ -34,7 +34,7 @@ const record = (value: unknown) => value as Record<string, SchemaValue>;
 function archived(key: string, file: string): SchemaValue {
   return JSON.parse(
     readFileSync(
-      new URL(`../../项目文档/验收/08.4-真实案例/${key}/${file}.json`, import.meta.url),
+      new URL(`../../tests/fixtures/cases/${key}/${file}.json`, import.meta.url),
       'utf8',
     ),
   ) as SchemaValue;
@@ -288,7 +288,7 @@ describe('11.4 statically disjoint oneOf dispatch preserves the frozen schema', 
   it('matches full decisions for all authored contract normal/error/limit fixtures', () => {
     for (const name of ['02.2-正常轨迹样例.json', '02.2-失败与超限轨迹样例.json']) {
       const fixtures = JSON.parse(
-        readFileSync(new URL(`../../项目文档/契约/${name}`, import.meta.url), 'utf8'),
+        readFileSync(new URL(`../../shared/contracts/${name}`, import.meta.url), 'utf8'),
       ) as { fixtures: { request: SchemaValue; result: SchemaValue }[] };
       for (const fixture of fixtures.fixtures) {
         expect(validateRequestSchema(fixture.request)).toBe(previousRequest(fixture.request));

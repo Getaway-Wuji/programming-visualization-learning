@@ -1,2 +1,0 @@
-import {spawnSync} from 'node:child_process';
-const r=spawnSync(process.execPath,['scripts/build.mjs'],{cwd:'.artifacts/16.10/delivery-workspace',windowsHide:true,stdio:'inherit',env:{...process.env,P05_REVIEW_CANDIDATE:'0'}});process.exitCode=r.status??1;

@@ -11,7 +11,7 @@ import { makeAdapterResult, type ExecuteRequest } from '../../web/src/engine/pro
 import type { ContentPackage } from '../../web/src/content/types';
 
 const content = JSON.parse(
-  readFileSync(new URL('../../项目文档/契约/02.1-内容样例.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('../../shared/contracts/02.1-内容样例.json', import.meta.url), 'utf8'),
 ) as ContentPackage;
 const subject = content.cases[0]!;
 const program = content.programs.find((item) => item.id === subject.programRef.id)!;

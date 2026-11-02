@@ -37,7 +37,7 @@ const storeNames = [
   'appearanceAssets',
 ];
 const referenceScenarios = JSON.parse(
-  readFileSync(new URL('../../项目文档/契约/02.3-迁移与并发场景.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('../../shared/contracts/02.3-迁移与并发场景.json', import.meta.url), 'utf8'),
 ) as {
   purpose: string;
   legacyFixture: {

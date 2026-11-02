@@ -10,7 +10,7 @@ use c_viz_core::source::ByteRange;
 use serde_json::{Value, json};
 
 fn content() -> Value {
-    serde_json::from_str(include_str!("../../../项目文档/契约/02.1-内容样例.json")).unwrap()
+    serde_json::from_str(include_str!("../../../shared/contracts/02.1-内容样例.json")).unwrap()
 }
 
 fn entities(id: &str) -> (Value, Value) {
@@ -166,7 +166,7 @@ fn changed_binary_inputs_preserve_first_match_missing_and_empty_semantics() {
 #[test]
 fn every_public_input_negative_is_rejected_before_execution() {
     let fixture: Value = serde_json::from_str(include_str!(
-        "../../../项目文档/契约/02.4-语义与输入样例.json"
+        "../../../shared/contracts/02.4-语义与输入样例.json"
     ))
     .unwrap();
     let mut count = 0;
@@ -196,7 +196,7 @@ fn every_public_input_negative_is_rejected_before_execution() {
 #[test]
 fn all_four_input_07_mapping_setups_are_rejected() {
     let fixture: Value = serde_json::from_str(include_str!(
-        "../../../项目文档/契约/02.4-语义与输入样例.json"
+        "../../../shared/contracts/02.4-语义与输入样例.json"
     ))
     .unwrap();
     let mut count = 0;

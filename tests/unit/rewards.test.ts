@@ -12,7 +12,7 @@ import type { LedgerEntry, StorageSnapshot } from '../../web/src/storage/model';
 
 const rawPolicy = JSON.parse(readFileSync('content/rewards/p0-1.0.0.json', 'utf8'));
 function pendingArchive(): StorageSnapshot {
-  const examples = JSON.parse(readFileSync('项目文档/契约/02.3-存档样例.json', 'utf8'));
+  const examples = JSON.parse(readFileSync('shared/contracts/02.3-存档样例.json', 'utf8'));
   const value = upgradeV1Snapshot(examples.snapshots[1].snapshot);
   value.ledger = value.ledger.map((entry) => ({
     ...entry,

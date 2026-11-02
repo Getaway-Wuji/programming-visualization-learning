@@ -3,7 +3,6 @@ import { existsSync } from 'node:fs';
 
 const p05 = existsSync('content/c/p05/course-1.0.0.json');
 if (p05) process.env.P05_COURSE_BUILD = '1';
-if (p05) runNode('scripts/restore-release-evidence.mjs');
 
 runNode('scripts/build-wasm.mjs');
 runNode('scripts/build-algorithm-wasm.mjs');

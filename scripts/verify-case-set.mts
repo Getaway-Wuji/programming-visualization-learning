@@ -213,7 +213,7 @@ export function verifyCaseExecution(
   expectedBuildId = sha256(readFileSync(join(workspace, 'web/src/generated/c_viz_wasm_bg.wasm'))),
 ) {
   const baseline = JSON.parse(
-    readFileSync(join(workspace, '项目文档/契约/02.1-内容样例.json'), 'utf8'),
+    readFileSync(join(workspace, 'shared/contracts/02.1-内容样例.json'), 'utf8'),
   ) as ContentPackage;
   const subject = baseline.cases.find((item) => item.id === sample.caseId)!;
   assert.ok(subject);

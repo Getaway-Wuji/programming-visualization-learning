@@ -3,7 +3,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import standalone from 'ajv/dist/standalone/index.js';
 import assert from 'node:assert/strict';
 import { format } from 'prettier';
-const schema = JSON.parse(readFileSync('项目文档/契约/19.3-AI解释2.0.0.schema.json', 'utf8'));
+const schema = JSON.parse(readFileSync('shared/contracts/19.3-AI解释2.0.0.schema.json', 'utf8'));
 const save = (path, text) => {
   if (!existsSync(path) || readFileSync(path, 'utf8') !== text) writeFileSync(path, text);
 };

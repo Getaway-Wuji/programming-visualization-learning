@@ -10,7 +10,7 @@ import { recordKey, type StorageSnapshot } from '../../web/src/storage/model';
 import { assertSnapshot } from '../../web/src/storage/validation';
 import { upgradeV1Snapshot } from '../../web/src/storage/v1-migration';
 
-const examples = JSON.parse(readFileSync('项目文档/契约/02.3-存档样例.json', 'utf8'));
+const examples = JSON.parse(readFileSync('shared/contracts/02.3-存档样例.json', 'utf8'));
 const catalog = createLearningCatalog({
   purpose: 'publishable',
   packageRef: { id: 'content.c.p0', version: '1.0.0' },

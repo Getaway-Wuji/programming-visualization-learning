@@ -153,7 +153,7 @@ function progress(
 describe('small validated learning catalog', () => {
   it('retains the shared fixture provenance and the exact six lessons/tests/seven cases', () => {
     const source = JSON.parse(
-      readFileSync('项目文档/契约/02.1-内容样例.json', 'utf8'),
+      readFileSync('shared/contracts/02.1-内容样例.json', 'utf8'),
     ) as ContentPackage;
     const result = catalogFromContent(source);
     expect(result.purpose).toBe('contract-fixture');

@@ -3,7 +3,7 @@ use serde_json::{Map, Value, json};
 use std::{collections::HashSet, fmt, sync::OnceLock};
 
 pub type Result<T> = std::result::Result<T, &'static str>;
-pub const SCHEMA: &str = include_str!("../../../项目文档/契约/19.3-AI解释2.0.0.schema.json");
+pub const SCHEMA: &str = include_str!("../../../shared/contracts/19.3-AI解释2.0.0.schema.json");
 pub const PROMPT: &str = include_str!("../../../shared/ai/system-prompt.txt");
 pub fn require(value: bool, code: &'static str) -> Result<()> {
     if value { Ok(()) } else { Err(code) }

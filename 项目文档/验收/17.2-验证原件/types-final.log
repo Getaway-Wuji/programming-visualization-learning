@@ -1,5 +1,0 @@
-tests/unit/advanced.test.ts(119,48): error TS2352: Conversion of type '{ readonly kind: "integers"; readonly values: readonly []; } | { readonly kind: "integers"; readonly values: readonly [-999]; }' to type '{ kind: "integers"; values: number[]; } | { kind: "lines"; values: string[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
-  Type '{ readonly kind: "integers"; readonly values: readonly [-999]; }' is not comparable to type '{ kind: "integers"; values: number[]; } | { kind: "lines"; values: string[]; }'.
-    Type '{ readonly kind: "integers"; readonly values: readonly [-999]; }' is not comparable to type '{ kind: "integers"; values: number[]; }'.
-      Types of property 'values' are incompatible.
-        The type 'readonly [-999]' is 'readonly' and cannot be assigned to the mutable type 'number[]'.

@@ -26,7 +26,7 @@ const decoder = new TextDecoder('utf-8', { fatal: true });
 const content = JSON.parse(
   readFileSync('web/public/content/practice/course-practice-1.0.0.json', 'utf8'),
 ) as CoursePractice;
-const fixtures = JSON.parse(readFileSync('项目文档/契约/13.1-结构与状态样例.json', 'utf8')) as {
+const fixtures = JSON.parse(readFileSync('shared/contracts/13.1-结构与状态样例.json', 'utf8')) as {
   schemaCases: { id: string; body: unknown }[];
 };
 const fixtureRequest = fixtures.schemaCases.find((item) => item.id === 'analysisRequest')!

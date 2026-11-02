@@ -17,7 +17,7 @@ fn meter() -> Meter {
     meter
 }
 fn package() -> Value {
-    serde_json::from_str(include_str!("../../../项目文档/契约/02.1-内容样例.json")).unwrap()
+    serde_json::from_str(include_str!("../../../shared/contracts/02.1-内容样例.json")).unwrap()
 }
 fn catalog(id: &str) -> Value {
     let package = package();

@@ -238,7 +238,7 @@ mod tests {
     #[test]
     fn frozen_shared_coordinate_vectors_use_the_original_source() {
         let scenarios: Value = serde_json::from_str(include_str!(
-            "../../../项目文档/契约/02.2-异常与恢复场景.json"
+            "../../../shared/contracts/02.2-异常与恢复场景.json"
         ))
         .unwrap();
 

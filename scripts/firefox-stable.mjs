@@ -979,7 +979,7 @@ try {
   await webdriver(`${route}/url`, 'POST', { url: 'http://127.0.0.1:4178/checks/' });
   await waitForUi(route, '#probe-status');
   const reference = JSON.parse(
-    readFileSync(join(workspaceDir, '项目文档/契约/02.3-迁移与并发场景.json'), 'utf8'),
+    readFileSync(join(workspaceDir, 'shared/contracts/02.3-迁移与并发场景.json'), 'utf8'),
   );
   assert.equal(reference.purpose, 'contract-fixture');
   const storageReply = await webdriver(`${route}/execute/async`, 'POST', {
