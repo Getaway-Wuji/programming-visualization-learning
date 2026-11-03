@@ -1,3 +1,7 @@
+import {
+  archivedMigrationSuccessor,
+  verifyCurrentResetAfterMigration,
+} from './migration-current-reset';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import { native, openAnswer, submit, achievementReady } from './achievement-helpers';
@@ -72,6 +76,15 @@ test('15.4 actual29 DB5 genuine bubble and pointer passes, marks, review and his
   expect(physicalBefore.version).toBe(5);
   expect(Object.keys(physicalBefore.stores)).toHaveLength(14);
   expect(before.receipts.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(2);
+  test.info().annotations.push({
+    type: 'historical-intermediate-and-current-reset',
+    description:
+      'Original migration assertions run against existing .artifacts/16.1/legacy34-dist; then actual formal73 DB10 RESET and genuine fresh C6 learning are independently verified.',
+  });
+  const historicalSuccessor = await archivedMigrationSuccessor(
+    page,
+    '.artifacts/16.1/legacy34-dist',
+  );
   await mkdir('.artifacts/15.4', { recursive: true });
   await writeFile(`.artifacts/15.4/migration-switch-${label}`, 'actual successor switch\n', {
     flag: 'wx',
@@ -114,4 +127,21 @@ test('15.4 actual29 DB5 genuine bubble and pointer passes, marks, review and his
   await page.reload();
   await achievementReady(page);
   expect((await native(page)).achievements).toEqual(after.achievements);
+  await historicalSuccessor.dispose();
+  const currentReset = await verifyCurrentResetAfterMigration(page, after);
+  await writeFile(
+    `.artifacts/21.6/migration-${label}-achievement.json`,
+    JSON.stringify(
+      {
+        historicalIntermediate: {
+          directory: historicalSuccessor.directory,
+          files: historicalSuccessor.files,
+        },
+        currentReset,
+      },
+      null,
+      2,
+    ),
+    { flag: 'wx' },
+  );
 });

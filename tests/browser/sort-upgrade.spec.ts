@@ -1,3 +1,4 @@
+import { C6_RESET_STORES } from '../../web/src/storage/c6-reset';
 import { fileURLToPath } from 'node:url';
 import { build, type Rollup } from 'vite';
 import { expect, test, type Page } from '@playwright/test';
@@ -237,149 +238,139 @@ async function presentCurrentFrame(page: Page) {
   );
 }
 
-function expectOldRowsAndBalance(before: StorageSnapshot, after: StorageSnapshot) {
-  for (const key of [
-    'settings',
-    'avatar',
-    'appearance',
-    'appearanceAssets',
-    'goals',
-    'aliases',
-    'dailyFacts',
-    'ledger',
-  ] as const)
-    expect(after[key]).toEqual(before[key]);
-  for (const old of before.progress) expect(after.progress).toContainEqual(old);
-  expect(after.ledger.reduce((sum, row) => sum + (row.points ?? 0), 0)).toBe(10);
-  expect(after.meta.generation).toBe(before.meta.generation);
-  expect(after.meta.timeZone).toBe(before.meta.timeZone);
-  expect(after.meta.createdAt).toBe(before.meta.createdAt);
-  expect(after.meta.activePackageRef).toEqual({ id: 'content.c.p0', version: '1.0.2' });
-}
-
 test('old rewarded sorting history survives the reviewed upgrade and genuine repeated confirmations without duplicate points or daily facts', async ({
   page,
 }, info) => {
   test.setTimeout(90000);
-  const fixture = await oldArchiveFixture(page);
-  expect(fixture.before.meta).toMatchObject({
-    revision: 0,
-    activePackageRef: { id: 'content.c.p0', version: '1.0.1' },
+  info.annotations.push({
+    type: 'current-contract',
+    description:
+      'Scope49: synthetic legacy fixture is cleared by approved RESET; only fresh native1.1.0 confirmations grant points.',
   });
+  const fixture = await oldArchiveFixture(page);
+  expect(fixture.kind).toBe('synthetic-legacy-archive-fixture');
   expect(fixture.before.progress).toHaveLength(2);
-  expect(fixture.before.dailyFacts).toHaveLength(2);
   expect(fixture.before.ledger).toHaveLength(2);
   expect(fixture.before.receipts).toEqual([]);
   await observeCaseSetExecution(page);
   await observeFormalWrites(page);
   const runs = [];
-  for (const [index, id] of ['case.c.bubble-sort', 'case.c.selection-sort'].entries()) {
-    await page.goto(`/#/visualize/${id}`);
-    await ready(page);
-    await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-    const history = page.locator(`[data-learning-subject="${id}"]`);
-    await expect(history).toBeVisible();
-    await expect(history).toContainText('当前内容兼容的历史记录：已确认观看');
-    if (index === 0) {
-      const upgraded = await snapshot(page);
-      expect(upgraded.meta).toEqual({
-        ...fixture.before.meta,
-        revision: 1,
-        activePackageRef: { id: 'content.c.p0', version: '1.0.2' },
-      });
-      expect({ ...upgraded, meta: fixture.before.meta }).toEqual(fixture.before);
-      const initializationWrites = await page.evaluate(() => window.__sortUpgradeWrites);
-      // Opening storage first probes writability with the unchanged meta. The
-      // separately controlled package CAS then writes exactly the new meta.
-      expect(initializationWrites.map((write) => write.store)).toEqual(['meta', 'meta']);
-      expect(initializationWrites.map((write) => write.value)).toEqual([
-        fixture.before.meta,
-        upgraded.meta,
-      ]);
-    }
-    await page.getByTestId('input-field-values').fill('[]');
-    await panel(page).getByRole('button', { name: '应用输入并准备', exact: true }).click();
-    await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-    await panel(page).getByRole('button', { name: '运行示例', exact: true }).click();
-    await expect(panel(page)).toHaveAttribute('data-state', 'completed');
-    const worker = await observedCaseSetExecute(page);
-    expect(worker).toMatchObject({ moduleSeen: true, responseOk: true, terminated: true });
-    expect(worker.responseOperationId).toBe(worker.operationId);
-    const request = JSON.parse(
-      Buffer.from(worker.requestBytes!).toString('utf8'),
-    ) as ExecuteRequest;
-    const result = await decodeResult(Uint8Array.from(worker.responseBytes!).buffer, request);
-    expect(request.subjectRef).toEqual({ id, version: '1.0.2' });
-    expect(request.packageRef).toEqual({ id: 'content.c.p0', version: '1.0.2' });
-    expect(request.learningRevision).toBe(1);
-    expect(request.input.values).toEqual({ values: [] });
-    expect(result.producer).toBe('rust');
-    expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0 });
-    expect(result.trace?.completeness).toBe('complete');
-    expect(result.identity).toEqual(request.identity);
-    await expect(
-      panel(page).getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
-    ).toHaveValue(request.source.text.replace(/\r\n?/gu, '\n'));
-    const length = result.trace!.steps.length;
-    await expect(controls(page)).toHaveAttribute('data-cursor', '0');
-    await expect(coverage(page)).toHaveAttribute('data-total', String(length));
-    await presentCurrentFrame(page);
-    for (let cursor = 1; cursor <= length; cursor++) {
-      await controls(page).getByRole('button', { name: '前进', exact: true }).click();
-      await expect(controls(page)).toHaveAttribute('data-cursor', String(cursor));
-      await expect(page.getByTestId('trace-view')).toHaveAttribute('data-cursor', String(cursor));
+  let reset: StorageSnapshot | null = null;
+  for (let round = 0; round < 2; round++)
+    for (const [index, id] of ['case.c.bubble-sort', 'case.c.selection-sort'].entries()) {
+      await page.goto(`/#/visualize/${id}`);
+      await ready(page);
+      await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+      if (round === 0 && index === 0) {
+        reset = await snapshot(page);
+        expect(reset.meta.generation).not.toBe(fixture.before.meta.generation);
+        expect(reset.meta.activePackageRef).toEqual({ id: 'content.c.primer6', version: '2.0.0' });
+        for (const key of [
+          'progress',
+          'receipts',
+          'ledger',
+          'dailyFacts',
+          'goals',
+          'aliases',
+        ] as const)
+          expect(reset[key]).toEqual([]);
+        expect(reset.avatar).toEqual(fixture.before.avatar);
+        expect(reset.appearance).toEqual(fixture.before.appearance);
+        const clears = await page.evaluate(() =>
+          window.__sortUpgradeWrites.filter((w) => w.mode === 'clear').map((w) => w.store),
+        );
+        expect([...new Set(clears)].sort()).toEqual([...C6_RESET_STORES].sort());
+      }
+      await page.getByTestId('input-field-values').fill('[]');
+      await panel(page).getByRole('button', { name: '应用输入并准备', exact: true }).click();
+      await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+      await panel(page).getByRole('button', { name: '运行示例', exact: true }).click();
+      await expect(panel(page)).toHaveAttribute('data-state', 'completed');
+      const worker = await observedCaseSetExecute(page);
+      expect(worker).toMatchObject({ moduleSeen: true, responseOk: true, terminated: true });
+      expect(worker.responseOperationId).toBe(worker.operationId);
+      const request = JSON.parse(
+        Buffer.from(worker.requestBytes!).toString('utf8'),
+      ) as ExecuteRequest;
+      const result = await decodeResult(Uint8Array.from(worker.responseBytes!).buffer, request);
+      expect(request.subjectRef).toEqual({ id, version: '1.1.0' });
+      expect(request.packageRef).toEqual({ id: 'content.c.p05', version: '1.0.0' });
+      expect(request.learningRevision).toBe(1);
+      expect(request.input.values).toEqual({ values: [] });
+      expect(result.producer).toBe('rust');
+      expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0 });
+      expect(result.trace?.completeness).toBe('complete');
+      expect(result.identity).toEqual(request.identity);
+      await expect(
+        panel(page).getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
+      ).toHaveValue(request.source.text.replace(/\r\n?/gu, '\n'));
+      await controls(page)
+        .getByRole('combobox', { name: '步骤显示', exact: true })
+        .selectOption('all');
+      const length = result.trace!.steps.length;
+      await expect(controls(page)).toHaveAttribute('data-cursor', '0');
+      await expect(coverage(page)).toHaveAttribute('data-total', String(length));
       await presentCurrentFrame(page);
-      await expect(coverage(page)).toHaveAttribute('data-covered', String(cursor));
+      const before = await snapshot(page);
+      for (let cursor = 1; cursor <= length; cursor++) {
+        await controls(page).getByRole('button', { name: '前进', exact: true }).click();
+        await expect(controls(page)).toHaveAttribute('data-cursor', String(cursor));
+        await expect(page.getByTestId('trace-view')).toHaveAttribute('data-cursor', String(cursor));
+        await presentCurrentFrame(page);
+        await expect(coverage(page)).toHaveAttribute('data-covered', String(cursor));
+      }
+      expect((await snapshot(page)).ledger).toEqual(before.ledger);
+      const confirmation = page.getByTestId('case-view-confirmation');
+      await expect(confirmation).toHaveAttribute('data-view-state', 'ready');
+      await confirmation.getByRole('button', { name: '确认已观看', exact: true }).click();
+      await expect(confirmation).toHaveAttribute('data-view-state', 'saved');
+      await ready(page);
+      const after = await snapshot(page);
+      expect(after.progress).toHaveLength(round === 0 ? index + 1 : 2);
+      expect(after.receipts).toHaveLength(round * 2 + index + 1);
+      expect(after.dailyFacts).toHaveLength(round === 0 ? index + 1 : 2);
+      expect(after.ledger).toHaveLength(round === 0 ? index + 1 : 2);
+      expect(after.ledger.reduce((sum, r) => sum + (r.points ?? 0), 0)).toBe(
+        round === 0 ? (index + 1) * 5 : 10,
+      );
+      expect(after.meta.generation).toBe(reset!.meta.generation);
+      expect(after.progress.every((p) => p.subjectRef.version === '1.1.0')).toBe(true);
+      expect(after.receipts.at(-1)).toMatchObject({
+        eventType: 'case.view-confirmed',
+        result: 'confirmed',
+        packageRef: request.packageRef,
+        learningRevision: 1,
+      });
+      await info.attach(`${round}-${id}-actual-packet`, {
+        body: JSON.stringify({
+          request: Buffer.from(worker.requestBytes!).toString('base64'),
+          response: Buffer.from(worker.responseBytes!).toString('base64'),
+          catalog: worker.catalogJson,
+        }),
+        contentType: 'application/json',
+      });
+      runs.push({
+        request,
+        steps: length,
+        fullyPresentedCursors: Array.from({ length: length + 1 }, (_, c) => c),
+        after,
+      });
     }
-    const confirmation = page.getByTestId('case-view-confirmation');
-    await expect(confirmation).toHaveAttribute('data-view-state', 'ready');
-    await confirmation.getByRole('button', { name: '确认已观看', exact: true }).click();
-    await expect(confirmation).toHaveAttribute('data-view-state', 'saved');
-    await ready(page);
-    const after = await snapshot(page);
-    expectOldRowsAndBalance(fixture.before, after);
-    expect(after.progress).toHaveLength(2 + index + 1);
-    expect(after.receipts).toHaveLength(index + 1);
-    const receipt = after.receipts.find((row) => row.subjectRef.id === id)!;
-    expect(receipt).toMatchObject({
-      eventType: 'case.view-confirmed',
-      result: 'confirmed',
-      subjectRef: request.subjectRef,
-      packageRef: request.packageRef,
-      learningRevision: 1,
-      localDate: fixture.localDate,
-    });
-    expect(after.progress).toContainEqual({
-      eventType: 'case.view-confirmed',
-      result: 'confirmed',
-      subjectRef: request.subjectRef,
-      packageRef: request.packageRef,
-      learningRevision: 1,
-      firstAt: receipt.occurredAt,
-      lastAt: receipt.occurredAt,
-    });
-    runs.push({
-      request,
-      result,
-      fullyPresentedCursors: Array.from({ length: length + 1 }, (_, cursor) => cursor),
-      after,
-    });
-  }
   const writes = await page.evaluate(() => window.__sortUpgradeWrites);
-  expect(writes.filter((write) => !['meta', 'progress', 'receipts'].includes(write.store))).toEqual(
-    [],
-  );
-  expect(writes.filter((write) => ['delete', 'clear'].includes(write.mode))).toEqual([]);
-  expect(writes.filter((write) => write.store === 'progress')).toHaveLength(2);
-  expect(writes.filter((write) => write.store === 'receipts')).toHaveLength(2);
+  expect(writes.filter((w) => w.mode === 'delete')).toEqual([]);
+  const earned = writes.filter((w) => w.store === 'receipts' && ['add', 'put'].includes(w.mode));
+  expect(earned).toHaveLength(4);
   expect(
     await page.evaluate(
-      () =>
-        window.__verticalObservation.workers.filter((worker) => worker.kind === 'execute').length,
+      () => window.__verticalObservation.workers.filter((w) => w.kind === 'execute').length,
     ),
-  ).toBe(2);
-  await info.attach('explicit-old-archive-fixture-and-genuine-sort-confirmations', {
-    body: JSON.stringify({ fixture, runs, writes, final: await snapshot(page) }),
+  ).toBe(4);
+  const final = await snapshot(page);
+  await page.reload();
+  await ready(page);
+  expect(await snapshot(page)).toEqual(final);
+  await info.attach('explicit-old-fixture-reset-and-genuine-sort-confirmations', {
+    body: JSON.stringify({ fixture, reset, runs, writes, final }),
     contentType: 'application/json',
   });
 });

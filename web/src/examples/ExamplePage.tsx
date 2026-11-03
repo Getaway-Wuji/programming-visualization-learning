@@ -14,6 +14,7 @@ import { ExampleCatalog } from './ExampleCatalog';
 import '../advanced-course/advanced-course.css';
 import '../custom-code/custom-code.css';
 import './examples.css';
+import { C6Foundation } from '../c6-learning/foundations';
 
 function ExampleWorkspace({ spec }: { spec: ExampleSpec }) {
   const { state: learning, service } = useLearning();
@@ -225,7 +226,9 @@ function ExampleWorkspace({ spec }: { spec: ExampleSpec }) {
             <p>本页采用完整main与标准流输入输出，教学范围更小；不是原站的完整评测环境。</p>
             <h3>复习与基础准备</h3>
             <p>{spec.reviewQuestion}</p>
-            {lesson ? (
+            {learning.c6 ? (
+              <C6Foundation prior={spec.prerequisiteLessonRef} />
+            ) : lesson ? (
               <>
                 <p>
                   <Link to={`/lessons/${lesson.id}`}>{lesson.title}</Link> ·{' '}

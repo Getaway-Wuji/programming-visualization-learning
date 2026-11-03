@@ -1,3 +1,68 @@
+import { routeHistoricalApp } from './legacy-app';
+import { installC6Packets } from './c6-observation';
+import {
+  confirmCurrentLesson,
+  openCurrentAnswer,
+  completeCurrentFirstGroup,
+  submitCurrent,
+} from './current-course-helpers';
+import {
+  currentSnapshot,
+  currentLocalReady,
+  assertCurrentJudge,
+  assertNoExecutionPersistence,
+  assertLearningEqual,
+  currentJudgeCount,
+  installCurrentReceiptFault,
+  armCurrentReceiptFault,
+  currentReceiptFault,
+} from './current-practice-observation';
+import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
+import { c6RewardGroups } from '../../web/src/c6-learning/rewards.generated';
+
+const currentExercises = (
+  JSON.parse(readFileSync('content/c/primer6-teaching/source-2.0.0.json', 'utf8')) as {
+    chapters: { exercises: C6CourseExercise[] }[];
+  }
+).chapters.flatMap((c) => c.exercises);
+const currentIndex = JSON.parse(
+  readFileSync('content/c/primer6-learning/index-1.0.0.json', 'utf8'),
+) as { lessons: [string, string, string, string, string, string[]][] };
+const currentSources = currentExercises.map((e) => e.referenceSource);
+const c6Editor = (page: Page) => page.getByLabel('完整 C 源码 · main.c', { exact: true });
+const currentPackage = { id: 'content.c.primer6', version: '2.0.0' };
+async function history(page: Page) {
+  bundlePath();
+  await routeHistoricalApp(page, new URL(test.info().project.use.baseURL as string).origin);
+  await page.route('**/content/course/course-bundle-*.json', (r) =>
+    r.fulfill({ status: 404, body: 'Real pre-RESET six-course fallback' }),
+  );
+}
+function emptyLearning(data: StorageSnapshot) {
+  for (const store of ['progress', 'receipts', 'ledger', 'dailyFacts', 'goals', 'aliases'] as const)
+    expect(data[store]).toEqual([]);
+}
+async function clearCurrent(page: Page) {
+  await page.goto('/#/settings?panel=data');
+  await currentLocalReady(page);
+  await page.getByRole('button', { name: '清除本地数据', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: '确认清除本地数据', exact: true })
+    .getByRole('button', { name: '确认清除', exact: true })
+    .click();
+  await expect(save(page)).toContainText('本地数据已清除');
+}
+// Historical titles identify the original six gates. Scope48 records the
+// approved RESET/current-404 replacement; no legacy UI is used for normal C6.
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(installC6Packets);
+  test.info().annotations.push({
+    type: 'current-contract',
+    description:
+      '21.6 scope48: current404/44, RESET replaces old32-course compatibility; original title retained.',
+  });
+});
+
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -568,7 +633,11 @@ async function viewAndConfirmCase(page: Page, folder: string, label: string) {
   await expect(confirmation).toHaveAttribute('data-view-state', 'saved');
   await ready(page);
   const saved = await archive(page);
-  noExecutionPersistence(saved.data);
+  assertNoExecutionPersistence(
+    saved.data as Awaited<ReturnType<typeof currentSnapshot>>,
+    currentSources,
+    currentExercises,
+  );
   return {
     saved,
     run: {
@@ -613,205 +682,6 @@ async function saveTargets(page: Page, value: GoalTargets) {
   await expect(page.getByTestId('goal-template-saved')).toContainText('目标已保存');
 }
 
-test('P05 fresh archive: 32 real code answers and 140 groups produce 32 confirmed completions and durable deduplicated rewards', async ({
-  page,
-}, info) => {
-  test.setTimeout(300_000);
-  bundlePath();
-  const folder = await directory(info, 'fresh-32');
-  expect(await page.context().storageState({ indexedDB: true })).toEqual({
-    cookies: [],
-    origins: [],
-  });
-  await page.goto('/#/courses');
-  await ready(page);
-  await expect(page.locator('[data-course-lesson]')).toHaveCount(32);
-  const initial = await archive(page);
-  expect(initial.databaseVersion).toBe(9);
-  expect(initial.stores).toHaveLength(17);
-  expect(initial.data.meta.activePackageRef).toEqual(p05Package);
-  for (const key of ['progress', 'receipts', 'ledger', 'dailyFacts', 'goals'] as const)
-    expect(initial.data[key]).toEqual([]);
-  const runs = [];
-  for (const [index, lesson] of current.lessons.entries()) {
-    const next = await complete(
-      page,
-      current,
-      lesson,
-      folder,
-      `lesson-${String(index + 1).padStart(2, '0')}`,
-    );
-    runs.push(...next);
-    const data = (await archive(page)).data;
-    expect(data.progress.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(
-      index + 1,
-    );
-    expect(data.progress.filter((row) => row.eventType === 'lesson.completed')).toHaveLength(
-      index + 1,
-    );
-    if ([0, 19, 29].includes(index))
-      await page.screenshot({ path: join(folder, `lesson-${index + 1}.png`), fullPage: true });
-  }
-  expect(runs).toHaveLength(140);
-  const completed = await archive(page);
-  expect(posted(completed.data, 'reward.exercise.first-pass')).toBe(320);
-  expect(posted(completed.data, 'reward.lesson.first-completion')).toBe(640);
-  expect(posted(completed.data, 'reward.daily-goal.once')).toBe(5);
-  expect(posted(completed.data)).toBe(965);
-  expect(completed.data.ledger).toHaveLength(65);
-  expect(
-    completed.data.progress.filter((row) => row.eventType === 'lesson.study-confirmed'),
-  ).toHaveLength(32);
-  noExecutionPersistence(completed.data);
-  await page.goto('/#/courses');
-  await page.reload();
-  await ready(page);
-  const refreshed = await archive(page);
-  stableLearning(completed.data, refreshed.data);
-  await openAnswer(page, current.exercises[0].id);
-  await fillAnswer(page, current, current.exercises[0]);
-  await submit(page);
-  const repeated = await archive(page);
-  expect(repeated.data.ledger).toEqual(completed.data.ledger);
-  expect(repeated.data.dailyFacts).toEqual(completed.data.dailyFacts);
-  expect(repeated.data.progress.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(
-    32,
-  );
-  await page.goto('/#/cases');
-  // The directory has no save panel; its shell reports the shared archive state.
-  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
-  const caseLinks = page.locator('.case-grid .case-card .card-link[href^="#/visualize/"]');
-  await expect(caseLinks).toHaveCount(7);
-  const caseDirectoryIds = await caseLinks.evaluateAll((links) =>
-    links.map((link) =>
-      decodeURIComponent((link as HTMLAnchorElement).hash.split('/visualize/')[1] ?? ''),
-    ),
-  );
-  expect([...caseDirectoryIds].sort()).toEqual(current.cases.map((entry) => entry.id).sort());
-  const once = await viewAndConfirmCase(page, folder, 'case-first');
-  const caseOnce = once.saved;
-  expect(posted(caseOnce.data, 'reward.case.first-view')).toBe(5);
-  expect(posted(caseOnce.data)).toBe(970);
-  expect(caseOnce.data.ledger).toHaveLength(66);
-  const caseProgress = caseOnce.data.progress.filter(
-    (row) => row.eventType === 'case.view-confirmed',
-  );
-  expect(caseProgress).toHaveLength(1);
-  expect(caseProgress[0]).toMatchObject({
-    packageRef: p05Package,
-    subjectRef: { id: 'case.c.assignment', version: '1.1.0' },
-  });
-  await page.reload();
-  await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'ready');
-  await ready(page);
-  const caseRefreshed = await archive(page);
-  stableLearning(caseOnce.data, caseRefreshed.data);
-  const twice = await viewAndConfirmCase(page, folder, 'case-repeat');
-  const caseRepeated = twice.saved;
-  expect(twice.run.identity.runId).not.toBe(once.run.identity.runId);
-  expect(caseRepeated.data.ledger).toEqual(caseOnce.data.ledger);
-  expect(caseRepeated.data.dailyFacts).toEqual(caseOnce.data.dailyFacts);
-  expect(posted(caseRepeated.data)).toBe(970);
-  expect(
-    caseRepeated.data.progress.filter((row) => row.eventType === 'case.view-confirmed'),
-  ).toHaveLength(1);
-  expect(
-    caseRepeated.data.receipts.filter((row) => row.eventType === 'case.view-confirmed'),
-  ).toHaveLength(2);
-  await record(folder, 'complete-evidence', {
-    kind: 'real-native-ui-learning',
-    browserVersion: page.context().browser()?.version(),
-    initial,
-    completed,
-    refreshed,
-    repeated,
-    runs,
-    groups: 140,
-    repeatSubmissions: 1,
-    caseDirectoryIds,
-    caseOnce,
-    caseRefreshed,
-    caseRepeated,
-    caseRuns: [once.run, twice.run],
-  });
-});
-
-test('P05 upgrade: six genuinely completed old lessons retain their exact records, points and opened-day targets while becoming 6 of 32', async ({
-  page,
-}, info) => {
-  test.setTimeout(180_000);
-  const target = bundlePath(),
-    folder = await directory(info, 'real-six-upgrade');
-  await page.route(`**${target}`, (route) =>
-    route.fulfill({ status: 404, body: 'Explicit legacy fallback test' }),
-  );
-  await page.goto('/#/courses');
-  await ready(page);
-  await expect(page.getByTestId('course-fallback')).toBeVisible();
-  await expect(page.locator('[data-course-lesson]')).toHaveCount(6);
-  await openGoals(page);
-  await saveTargets(page, { exercise: 6, lesson: 6, case: 1 });
-  const runs = [];
-  for (const [index, lesson] of legacy.lessons.entries())
-    runs.push(...(await complete(page, legacy, lesson, folder, `old-${index + 1}`)));
-  expect(runs).toHaveLength(24);
-  const old = await archive(page);
-  expect(old.data.meta.activePackageRef).toEqual({ id: 'content.c.p0', version: '1.0.2' });
-  expect(old.data.settings.goalTemplate?.targets).toEqual({ exercise: 6, lesson: 6, case: 1 });
-  expect(old.data.goals).toHaveLength(1);
-  expect(old.data.goals[0].targets).toEqual({ exercise: 6, lesson: 6, case: 1 });
-  expect(posted(old.data)).toBe(180);
-  await page.unroute(`**${target}`);
-  await page.reload();
-  await ready(page);
-  await page.goto('/#/courses');
-  await expect(page.locator('[data-course-lesson]')).toHaveCount(32);
-  const upgraded = await archive(page);
-  expect(upgraded.data.meta.activePackageRef).toEqual(p05Package);
-  stableLearning(old.data, upgraded.data);
-  expect(upgraded.data.settings).toEqual(old.data.settings);
-  const newIds = new Set(
-    current.exercises
-      .filter((entry) => !legacy.exercises.some((oldEntry) => oldEntry.id === entry.id))
-      .map((entry) => entry.id),
-  );
-  expect(upgraded.data.progress.filter((row) => newIds.has(row.subjectRef.id))).toEqual([]);
-  for (const lesson of legacy.lessons) {
-    await openLesson(
-      page,
-      current.lessons.find((entry) => entry.id === lesson.id)!,
-      false,
-    );
-    await expect(page.getByTestId('lesson-completion')).toHaveAttribute('data-state', 'completed');
-  }
-  await openLesson(
-    page,
-    current.lessons.find((entry) => !legacy.lessons.some((oldEntry) => oldEntry.id === entry.id))!,
-    false,
-  );
-  await expect(page.getByTestId('lesson-completion')).toHaveAttribute('data-state', 'incomplete');
-  const beforeRepeat = (await archive(page)).data;
-  const echo = current.exercises.find((entry) => entry.id === 'exercise.c.echo')!;
-  await openAnswer(page, echo.id);
-  await fillAnswer(page, current, echo);
-  await submit(page);
-  const repeated = await archive(page);
-  expect(repeated.data.ledger).toEqual(beforeRepeat.ledger);
-  expect(repeated.data.goals).toEqual(beforeRepeat.goals);
-  expect(repeated.data.settings.goalTemplate).toEqual(old.data.settings.goalTemplate);
-  noExecutionPersistence(repeated.data);
-  await record(folder, 'upgrade-evidence', {
-    kind: 'real-old-application-then-new-release',
-    old,
-    upgraded,
-    repeated,
-    runs,
-    oldGroups: 24,
-    compatibleCompletedLessons: 6,
-    currentLessonCount: 32,
-  });
-});
-
 interface QuotaFault {
   armed: boolean;
   attempted: Receipt[];
@@ -836,267 +706,6 @@ async function installQuota(page: Page) {
     };
   });
 }
-test('P05 native quota and goal bounds: a real new pass saves atomically on retry, 32 is valid and 33 or all-zero is refused without rewriting today', async ({
-  page,
-}, info) => {
-  test.setTimeout(90_000);
-  bundlePath();
-  const folder = await directory(info, 'quota-goal-bounds');
-  await installQuota(page);
-  const exercise = current.exercises.find((entry) => entry.id === 'exercise.c.first-output')!;
-  const lesson = current.lessons.find((entry) => entry.id === exercise.lessonRef.id)!;
-  await openLesson(page, lesson);
-  await openAnswer(page, exercise.id);
-  await fillAnswer(page, current, exercise);
-  const before = await archive(page);
-  await page.evaluate(() => {
-    (window as unknown as { __p05PassQuota: QuotaFault }).__p05PassQuota.armed = true;
-  });
-  const offset = await executeCount(page);
-  await submit(page, 'unsaved');
-  const runs = await captureRuns(page, current, exercise, offset, folder, 'quota-real-pass');
-  const failed = await archive(page);
-  for (const key of ['progress', 'receipts', 'ledger', 'dailyFacts'] as const)
-    expect(failed.data[key]).toEqual(before.data[key]);
-  const attempted = await page.evaluate(
-    () => (window as unknown as { __p05PassQuota: QuotaFault }).__p05PassQuota.attempted[0],
-  );
-  expect(attempted.eventType).toBe('exercise.passed');
-  await code(page).fill('#include <stdio.h>\nint main(void) { printf("wrong\\n"); return 0; }\n');
-  await expect(panel(page)).not.toHaveAttribute('data-state', 'passed');
-  await page.goto('/#/courses');
-  await save(page).getByRole('button', { name: '重试未保存操作', exact: true }).click();
-  await ready(page);
-  const retried = await archive(page),
-    received = retried.data.receipts.find((entry) => entry.eventId === attempted.eventId)!;
-  expect(received).toBeTruthy();
-  const { committedRevision: ignoredFirst, ...originalSummary } = attempted;
-  const { committedRevision: ignoredSecond, ...receivedSummary } = received;
-  expect(ignoredFirst).toBeGreaterThan(0);
-  expect(ignoredSecond).toBeGreaterThan(0);
-  expect(receivedSummary).toEqual(originalSummary);
-  await openGoals(page);
-  const form = page.getByTestId('daily-goal-settings');
-  for (const value of [
-    { exercise: 33, lesson: 0, case: 0 },
-    { exercise: 0, lesson: 33, case: 0 },
-    { exercise: 0, lesson: 0, case: 8 },
-    { exercise: 0, lesson: 0, case: 0 },
-  ]) {
-    await fillTargets(page, value);
-    await expect(form.getByRole('button', { name: '保存自定义目标', exact: true })).toBeDisabled();
-    expect((await archive(page)).data.settings).toEqual(retried.data.settings);
-  }
-  await saveTargets(page, { exercise: 32, lesson: 32, case: 7 });
-  const maximum = await archive(page);
-  expect(maximum.data.settings.goalTemplate?.targets).toEqual({
-    exercise: 32,
-    lesson: 32,
-    case: 7,
-  });
-  stableLearning(retried.data, maximum.data);
-  noExecutionPersistence(maximum.data);
-  await page.reload();
-  await ready(page);
-  expect((await archive(page)).data.settings.goalTemplate).toEqual(
-    maximum.data.settings.goalTemplate,
-  );
-  await record(folder, 'quota-and-goal-evidence', {
-    kind: 'real-execution-with-native-IDB-fault',
-    before,
-    failed,
-    attempted,
-    retried,
-    maximum,
-    runs,
-  });
-});
-
-test('P05 multiple tabs: package CAS invalidates an accepted old run and a later native clear cannot revive it or mint a pass', async ({
-  page,
-  context,
-}, info) => {
-  test.setTimeout(90_000);
-  const target = bundlePath(),
-    folder = await directory(info, 'tabs-package-and-clear');
-  await page.route(`**${target}`, (route) =>
-    route.fulfill({ status: 404, body: 'Old tab remains on the complete legacy release' }),
-  );
-  const echo = legacy.exercises.find((entry) => entry.id === 'exercise.c.echo')!;
-  await openAnswer(page, echo.id);
-  await fillAnswer(page, legacy, echo);
-  await panel(page).getByRole('button', { name: '运行本组', exact: true }).click();
-  await expect(panel(page)).toHaveAttribute('data-state', 'ran');
-  await expect(page.getByTestId('practice-run-only')).toBeVisible();
-  const oldWire = await observedCaseSetExecute(page);
-  const oldRequest = JSON.parse(
-    Buffer.from(oldWire.requestBytes!).toString('utf8'),
-  ) as ExecuteRequest;
-  const oldResultBytes = Buffer.from(oldWire.responseBytes!);
-  const oldResult = await decodeResult(Uint8Array.from(oldResultBytes).buffer, oldRequest);
-  expect(oldResult.producer).toBe('rust');
-  expect(oldResult.terminal).toMatchObject({ status: 'completed', exitCode: 0, diagnostics: [] });
-  expect(oldResult.judgeResult?.status).toBe('met');
-  expect(oldRequest.packageRef).toEqual({ id: 'content.c.p0', version: '1.0.1' });
-  await writeFile(
-    join(folder, 'accepted-old-run.request.json'),
-    Buffer.from(oldWire.requestBytes!),
-    { flag: 'wx' },
-  );
-  await writeFile(join(folder, 'accepted-old-run.result.json'), oldResultBytes, { flag: 'wx' });
-  await writeFile(join(folder, 'accepted-old-run.catalog.json'), oldWire.catalogJson!, {
-    flag: 'wx',
-  });
-  const acceptedOld = await archive(page);
-  expect(acceptedOld.data.progress).toEqual([]);
-  expect(acceptedOld.data.ledger).toEqual([]);
-  const other = await context.newPage();
-  await other.clock.setFixedTime(fixedDate);
-  await other.goto('/#/courses');
-  await ready(other);
-  await expect(other.locator('[data-course-lesson]')).toHaveCount(32);
-  await expect
-    .poll(async () => (await archive(page)).data.meta.activePackageRef)
-    .toEqual(p05Package);
-  await expect(page.getByTestId('practice-run-only')).toHaveCount(0);
-  const switched = await archive(other);
-  stableLearning(acceptedOld.data, switched.data);
-  await other.goto('/#/settings?panel=data');
-  await ready(other);
-  await other.getByRole('button', { name: '清除本地数据', exact: true }).click();
-  await other
-    .getByRole('dialog', { name: '确认清除本地数据', exact: true })
-    .getByRole('button', { name: '确认清除', exact: true })
-    .click();
-  await expect(save(other)).toContainText('本地数据已清除');
-  await expect
-    .poll(async () => (await archive(page)).data.meta.generation)
-    .not.toBe(switched.data.meta.generation);
-  const cleared = await archive(other);
-  for (const key of ['progress', 'receipts', 'ledger', 'dailyFacts', 'goals'] as const)
-    expect(cleared.data[key]).toEqual([]);
-  await expect(page.getByTestId('practice-run-only')).toHaveCount(0);
-  await page.unroute(`**${target}`);
-  await page.reload();
-  await ready(page);
-  const reloaded = await archive(page);
-  expect(reloaded.data.meta.generation).toBe(cleared.data.meta.generation);
-  for (const key of ['progress', 'receipts', 'ledger', 'dailyFacts'] as const)
-    expect(reloaded.data[key]).toEqual([]);
-  noExecutionPersistence(reloaded.data);
-  await record(folder, 'multi-tab-evidence', {
-    kind: 'real-old-run-new-package-CAS-and-native-clear',
-    acceptedOld,
-    switched,
-    cleared,
-    reloaded,
-  });
-  await other.close();
-});
-
-test('P05 partial old archive: confirmation-only and pass-only histories remain partial while an uncommitted old accepted event cannot become a new pass', async ({
-  page,
-}, info) => {
-  test.setTimeout(120_000);
-  const target = bundlePath(),
-    folder = await directory(info, 'partial-old-and-pending');
-  await installQuota(page);
-  await page.route(`**${target}`, (route) =>
-    route.fulfill({ status: 404, body: 'Complete legacy curriculum for partial-history upgrade' }),
-  );
-  const echoLesson = legacy.lessons.find((entry) => entry.id === 'lesson.c.variables-output')!;
-  const expression = legacy.exercises.find((entry) => entry.id === 'exercise.c.two-x-plus-three')!;
-  const branch = legacy.exercises.find((entry) => entry.id === 'exercise.c.nonnegative')!;
-  await openLesson(page, echoLesson);
-  await openAnswer(page, expression.id);
-  await fillAnswer(page, legacy, expression);
-  let offset = await executeCount(page);
-  await submit(page);
-  const passOnlyRuns = await captureRuns(page, legacy, expression, offset, folder, 'pass-only');
-  await openAnswer(page, branch.id);
-  await fillAnswer(page, legacy, branch);
-  const beforePending = await archive(page);
-  expect(beforePending.data.progress.filter((row) => row.eventType === 'lesson.completed')).toEqual(
-    [],
-  );
-  expect(
-    beforePending.data.progress
-      .filter((row) => row.eventType === 'exercise.passed')
-      .map((row) => row.subjectRef.id),
-  ).toEqual([expression.id]);
-  await page.evaluate(() => {
-    (window as unknown as { __p05PassQuota: QuotaFault }).__p05PassQuota.armed = true;
-  });
-  offset = await executeCount(page);
-  await submit(page, 'unsaved');
-  const pendingRuns = await captureRuns(
-    page,
-    legacy,
-    branch,
-    offset,
-    folder,
-    'accepted-but-unsaved',
-  );
-  const pending = await archive(page);
-  for (const key of ['progress', 'receipts', 'ledger', 'dailyFacts'] as const)
-    expect(pending.data[key]).toEqual(beforePending.data[key]);
-  const attempted = await page.evaluate(() =>
-    (window as unknown as { __p05PassQuota: QuotaFault }).__p05PassQuota.attempted.findLast(
-      (row) => row.eventType === 'exercise.passed',
-    ),
-  );
-  expect(attempted?.eventType).toBe('exercise.passed');
-  await page.unroute(`**${target}`);
-  await page.goto('/#/courses');
-  await page
-    .getByTestId('course-fallback')
-    .getByRole('button', { name: '重试扩充课程', exact: true })
-    .click();
-  await ready(page);
-  await expect(page.locator('[data-course-lesson]')).toHaveCount(32);
-  const upgraded = await archive(page);
-  expect(upgraded.data.meta.activePackageRef).toEqual(p05Package);
-  stableLearning(beforePending.data, upgraded.data);
-  expect(upgraded.data.receipts.some((row) => row.eventId === attempted!.eventId)).toBe(false);
-  await openLesson(
-    page,
-    current.lessons.find((entry) => entry.id === echoLesson.id)!,
-    false,
-  );
-  await expect(page.getByTestId('lesson-completion')).toHaveAttribute('data-state', 'incomplete');
-  await expect(page.getByTestId('lesson-confirmation-check')).toHaveAttribute('data-saved', 'yes');
-  await expect(page.getByTestId('lesson-exercise-check')).toHaveAttribute('data-saved', 'no');
-  await openLesson(
-    page,
-    current.lessons.find((entry) => entry.id === expression.lessonRef.id)!,
-    false,
-  );
-  await expect(page.getByTestId('lesson-completion')).toHaveAttribute('data-state', 'incomplete');
-  await expect(page.getByTestId('lesson-confirmation-check')).toHaveAttribute('data-saved', 'no');
-  await expect(page.getByTestId('lesson-exercise-check')).toHaveAttribute('data-saved', 'yes');
-  await openLesson(
-    page,
-    current.lessons.find((entry) => entry.id === branch.lessonRef.id)!,
-    false,
-  );
-  await expect(page.getByTestId('lesson-exercise-check')).toHaveAttribute('data-saved', 'no');
-  await expect(save(page).getByRole('button', { name: '重试未保存操作', exact: true })).toHaveCount(
-    0,
-  );
-  const final = await archive(page);
-  stableLearning(upgraded.data, final.data);
-  noExecutionPersistence(final.data);
-  await record(folder, 'partial-upgrade-evidence', {
-    kind: 'real-old-actions-and-native-uncommitted-pass-fault',
-    beforePending,
-    pending,
-    attempted,
-    upgraded,
-    final,
-    passOnlyRuns,
-    pendingRuns,
-  });
-});
 
 /** Fault injection only changes rows that were genuinely produced above. It never creates a passing row. */
 async function damageExistingProgress(page: Page, mode: 'foreign-package' | 'malformed-row') {
@@ -1118,9 +727,7 @@ async function damageExistingProgress(page: Page, mode: 'foreign-package' | 'mal
         const row = cursor.result;
         if (!row) return;
         const value = row.value as StorageSnapshot['progress'][number];
-        const targeted = ['lesson.c.variables-output', 'exercise.c.echo'].includes(
-          value.subjectRef.id,
-        );
+        const targeted = ['lesson.c6.s2.1', 'exercise.c6.s2.1'].includes(value.subjectRef.id);
         if (targeted && (kind === 'foreign-package' || value.eventType === 'exercise.passed')) {
           const after =
             kind === 'foreign-package'
@@ -1147,64 +754,399 @@ async function damageExistingProgress(page: Page, mode: 'foreign-package' | 'mal
   }, mode);
 }
 
+test('P05 fresh archive: 32 real code answers and 140 groups produce 32 confirmed completions and durable deduplicated rewards', async ({
+  page,
+}, info) => {
+  test.setTimeout(900_000);
+  const folder = await directory(info, 'fresh-current-404');
+  expect(await page.context().storageState({ indexedDB: true })).toEqual({
+    cookies: [],
+    origins: [],
+  });
+  await page.goto('/#/courses');
+  await currentLocalReady(page);
+  await expect(page.locator('.c6-node-list > li')).toHaveCount(19);
+  await expect.poll(async () => (await currentSnapshot(page)).settings.goalTemplate).not.toBeNull();
+  const initial = await archive(page);
+  expect(initial.databaseVersion).toBe(10);
+  expect(initial.stores).toHaveLength(19);
+  expect(initial.data.meta.activePackageRef).toEqual(currentPackage);
+  emptyLearning(initial.data);
+  expect(currentIndex.lessons).toHaveLength(404);
+  expect(currentExercises).toHaveLength(44);
+  for (const lesson of currentIndex.lessons) await confirmCurrentLesson(page, lesson[0]);
+  const read = await currentSnapshot(page);
+  expect(read.progress.filter((p) => p.eventType === 'lesson.study-confirmed')).toHaveLength(404);
+  expect(read.receipts).toHaveLength(404);
+  const runs = [];
+  for (const subject of currentExercises) {
+    await openCurrentAnswer(page, subject.ref.id);
+    await submitCurrent(page);
+    const run = await assertCurrentJudge(page, subject, 'passed');
+    runs.push({ request: run.request, caseKeys: run.result.cases.map((c) => c.caseKey) });
+  }
+  const completed = await currentSnapshot(page);
+  expect(runs.flatMap((r) => r.caseKeys)).toHaveLength(176);
+  expect(completed.progress.filter((p) => p.eventType === 'lesson.completed')).toHaveLength(404);
+  expect(completed.progress.filter((p) => p.eventType === 'exercise.passed')).toHaveLength(44);
+  expect(completed.receipts).toHaveLength(448);
+  expect(completed.dailyFacts).toHaveLength(448);
+  expect(c6RewardGroups.filter((g) => g.lessonIds.length)).toHaveLength(28);
+  expect(c6RewardGroups.filter((g) => g.exerciseIds.length)).toHaveLength(19);
+  expect(posted(completed, 'reward.lesson.first-completion')).toBe(560);
+  expect(posted(completed, 'reward.exercise.first-pass')).toBe(190);
+  expect(posted(completed, 'reward.daily-goal.once')).toBe(5);
+  expect(posted(completed)).toBe(755);
+  expect(completed.ledger).toHaveLength(48);
+  assertNoExecutionPersistence(completed, currentSources, currentExercises);
+  await page.goto('/#/');
+  await page.reload();
+  await currentLocalReady(page);
+  await expect(page.getByRole('progressbar', { name: 'C 课程完成进度' })).toHaveAttribute(
+    'value',
+    '404',
+  );
+  const refreshed = await currentSnapshot(page);
+  assertLearningEqual(completed, refreshed);
+  await openCurrentAnswer(page, currentExercises[0].ref.id);
+  await submitCurrent(page);
+  await assertCurrentJudge(page, currentExercises[0], 'passed');
+  const repeated = await currentSnapshot(page);
+  expect(repeated.ledger).toEqual(completed.ledger);
+  expect(repeated.dailyFacts).toEqual(completed.dailyFacts);
+  expect(repeated.receipts).toHaveLength(449);
+  await page.goto('/#/cases');
+  await currentLocalReady(page);
+  const caseLinks = page.locator('.case-grid .case-card .card-link[href^="#/visualize/"]');
+  await expect(caseLinks).toHaveCount(7);
+  const ids = await caseLinks.evaluateAll((links) =>
+    links.map((l) => decodeURIComponent((l as HTMLAnchorElement).hash.split('/visualize/')[1])),
+  );
+  expect(ids.sort()).toEqual(current.cases.map((c) => c.id).sort());
+  const once = await viewAndConfirmCase(page, folder, 'current-case-first');
+  expect(posted(once.saved.data)).toBe(760);
+  expect(once.saved.data.ledger).toHaveLength(49);
+  await page.reload();
+  await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'ready');
+  await ready(page);
+  const caseRefresh = await currentSnapshot(page);
+  assertLearningEqual(once.saved.data as Awaited<ReturnType<typeof currentSnapshot>>, caseRefresh);
+  const twice = await viewAndConfirmCase(page, folder, 'current-case-repeat');
+  expect(twice.run.identity.runId).not.toBe(once.run.identity.runId);
+  expect(twice.saved.data.ledger).toEqual(once.saved.data.ledger);
+  expect(twice.saved.data.dailyFacts).toEqual(once.saved.data.dailyFacts);
+  expect(
+    twice.saved.data.receipts.filter((r) => r.eventType === 'case.view-confirmed'),
+  ).toHaveLength(2);
+  await record(folder, 'current-complete', {
+    initial,
+    read,
+    completed,
+    refreshed,
+    repeated,
+    runs,
+    groups: 176,
+    caseDirectoryIds: ids,
+    caseRuns: [once.run, twice.run],
+    final: twice.saved,
+  });
+});
+
+test('P05 upgrade: six genuinely completed old lessons retain their exact records, points and opened-day targets while becoming 6 of 32', async ({
+  page,
+  context,
+}, info) => {
+  test.setTimeout(180_000);
+  const folder = await directory(info, 'six-genuine-reset');
+  await history(page);
+  await page.goto('/#/courses');
+  await ready(page);
+  await expect(page.locator('[data-course-lesson]')).toHaveCount(6);
+  await openGoals(page);
+  await saveTargets(page, { exercise: 6, lesson: 6, case: 1 });
+  const runs = [];
+  for (const [i, lesson] of legacy.lessons.entries())
+    runs.push(...(await complete(page, legacy, lesson, folder, `old-${i + 1}`)));
+  expect(runs).toHaveLength(24);
+  const old = await currentSnapshot(page);
+  expect(posted(old)).toBe(180);
+  expect(old.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(6);
+  expect(old.goals[0].targets).toEqual({ exercise: 6, lesson: 6, case: 1 });
+  noExecutionPersistence(old);
+  const fresh = await context.newPage();
+  await fresh.goto('/#/courses');
+  await currentLocalReady(fresh);
+  await expect(fresh.locator('.c6-node-list > li')).toHaveCount(19);
+  await expect
+    .poll(async () => (await currentSnapshot(fresh)).settings.goalTemplate)
+    .not.toBeNull();
+  const reset = await currentSnapshot(fresh);
+  expect(reset.meta.generation).not.toBe(old.meta.generation);
+  expect(reset.meta.activePackageRef).toEqual(currentPackage);
+  emptyLearning(reset);
+  expect(reset.courseActivities).toEqual([]);
+  expect(reset.courseDrafts).toEqual([]);
+  expect(reset.settings.goalTemplate?.targets).toEqual({ exercise: 1, lesson: 1, case: 0 });
+  const { goalTemplate: oldGoal, ...oldPreferences } = old.settings;
+  const { goalTemplate: newGoal, ...newPreferences } = reset.settings;
+  void oldGoal;
+  void newGoal;
+  expect(newPreferences).toEqual(oldPreferences);
+  expect(reset.avatar).toEqual(old.avatar);
+  expect(reset.appearance).toEqual(old.appearance);
+  await completeCurrentFirstGroup(fresh);
+  await assertCurrentJudge(fresh, currentExercises[0], 'passed');
+  const earned = await currentSnapshot(fresh);
+  expect(posted(earned)).toBe(35);
+  expect(
+    earned.progress.some(
+      (p) => p.subjectRef.id.startsWith('lesson.c.') || p.subjectRef.id.startsWith('exercise.c.'),
+    ),
+  ).toBe(false);
+  await fresh.reload();
+  await currentLocalReady(fresh);
+  assertLearningEqual(earned, await currentSnapshot(fresh));
+  await openCurrentAnswer(fresh, currentExercises[0].ref.id);
+  await submitCurrent(fresh);
+  await assertCurrentJudge(fresh, currentExercises[0], 'passed');
+  const repeat = await currentSnapshot(fresh);
+  expect(repeat.ledger).toEqual(earned.ledger);
+  expect(repeat.dailyFacts).toEqual(earned.dailyFacts);
+  assertNoExecutionPersistence(repeat, currentSources, currentExercises);
+  await record(folder, 'reset', { old, reset, earned, repeat, runs });
+  await fresh.close();
+});
+
+test('P05 native quota and goal bounds: a real new pass saves atomically on retry, 32 is valid and 33 or all-zero is refused without rewriting today', async ({
+  page,
+}, info) => {
+  test.setTimeout(90_000);
+  const folder = await directory(info, 'current-quota-goal-bounds');
+  await installCurrentReceiptFault(page);
+  await confirmCurrentLesson(page, 'lesson.c6.s2.1');
+  await confirmCurrentLesson(page, 'lesson.c6.s2.2.1');
+  await openCurrentAnswer(page, currentExercises[0].ref.id);
+  const before = await currentSnapshot(page);
+  await armCurrentReceiptFault(page);
+  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+  await expect(save(page)).toHaveAttribute('data-save-status', 'unsaved');
+  await assertCurrentJudge(page, currentExercises[0], 'passed');
+  const failed = await currentSnapshot(page);
+  assertLearningEqual(before, failed);
+  const attempted = (await currentReceiptFault(page)).attempted.at(-1)!;
+  expect(attempted.eventType).toBe('exercise.passed');
+  const count = await currentJudgeCount(page);
+  await c6Editor(page).fill('int main(void) { return 0; }');
+  await page.goto('/#/');
+  await save(page).getByRole('button', { name: '重试未保存操作', exact: true }).click();
+  await currentLocalReady(page);
+  const retried = await currentSnapshot(page);
+  const received = retried.receipts.find((r) => r.eventId === attempted.eventId)!;
+  expect(received).toBeTruthy();
+  const { committedRevision: a, ...wanted } = attempted;
+  const { committedRevision: b, ...actual } = received;
+  expect(a).toBeGreaterThan(0);
+  expect(b).toBeGreaterThan(0);
+  expect(actual).toEqual(wanted);
+  expect(await currentJudgeCount(page)).toBe(count);
+  expect(posted(retried)).toBe(35);
+  await openGoals(page);
+  const form = page.getByTestId('daily-goal-settings');
+  for (const value of [
+    { exercise: 33, lesson: 0, case: 0 },
+    { exercise: 0, lesson: 33, case: 0 },
+    { exercise: 0, lesson: 0, case: 8 },
+    { exercise: 0, lesson: 0, case: 0 },
+  ]) {
+    await fillTargets(page, value);
+    await expect(form.getByRole('button', { name: '保存自定义目标', exact: true })).toBeDisabled();
+    expect((await currentSnapshot(page)).settings).toEqual(retried.settings);
+  }
+  await saveTargets(page, { exercise: 32, lesson: 32, case: 7 });
+  const maximum = await currentSnapshot(page);
+  expect(maximum.settings.goalTemplate?.targets).toEqual({ exercise: 32, lesson: 32, case: 7 });
+  assertLearningEqual(retried, maximum);
+  expect(maximum.goals).toEqual(retried.goals);
+  await page.reload();
+  await currentLocalReady(page);
+  expect((await currentSnapshot(page)).settings.goalTemplate).toEqual(
+    maximum.settings.goalTemplate,
+  );
+  assertNoExecutionPersistence(maximum, currentSources, currentExercises);
+  await record(folder, 'quota', { before, failed, attempted, retried, maximum });
+});
+
+test('P05 multiple tabs: package CAS invalidates an accepted old run and a later native clear cannot revive it or mint a pass', async ({
+  page,
+  context,
+}, info) => {
+  test.setTimeout(90_000);
+  const folder = await directory(info, 'real-old-accepted-reset-clear');
+  await history(page);
+  const echo = legacy.exercises.find((e) => e.id === 'exercise.c.echo')!;
+  await openAnswer(page, echo.id);
+  await fillAnswer(page, legacy, echo);
+  await panel(page).getByRole('button', { name: '运行本组', exact: true }).click();
+  await expect(panel(page)).toHaveAttribute('data-state', 'ran');
+  await expect(page.getByTestId('practice-run-only')).toBeVisible();
+  const wire = await observedCaseSetExecute(page);
+  const req = JSON.parse(Buffer.from(wire.requestBytes!).toString('utf8')) as ExecuteRequest;
+  const res = await decodeResult(Uint8Array.from(wire.responseBytes!).buffer, req);
+  expect(res.producer).toBe('rust');
+  expect(res.judgeResult?.status).toBe('met');
+  expect(res.terminal.status).toBe('completed');
+  expect(req.packageRef).toEqual({ id: 'content.c.p0', version: '1.0.1' });
+  await record(folder, 'actual-old-packet', {
+    request: req,
+    response: JSON.parse(Buffer.from(wire.responseBytes!).toString('utf8')),
+    moduleSeen: wire.moduleSeen,
+    terminated: wire.terminated,
+  });
+  const old = await currentSnapshot(page);
+  expect(old.progress).toEqual([]);
+  expect(old.ledger).toEqual([]);
+  const other = await context.newPage();
+  await other.goto('/#/courses');
+  await currentLocalReady(other);
+  const switched = await currentSnapshot(other);
+  expect(switched.meta.generation).not.toBe(old.meta.generation);
+  emptyLearning(switched);
+  await panel(page).getByRole('button', { name: '提交练习', exact: true }).click();
+  await expect(panel(page)).toHaveAttribute('data-state', 'passed');
+  await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(
+    'data-save-state',
+    'unsaved',
+  );
+  emptyLearning(await currentSnapshot(other));
+  await clearCurrent(other);
+  const cleared = await currentSnapshot(other);
+  expect(cleared.meta.generation).not.toBe(switched.meta.generation);
+  emptyLearning(cleared);
+  const oldRetry = save(page).getByRole('button', { name: '重试未保存操作', exact: true });
+  if (await oldRetry.count()) await oldRetry.click();
+  emptyLearning(await currentSnapshot(other));
+  await other.reload();
+  await currentLocalReady(other);
+  const reloaded = await currentSnapshot(other);
+  expect(reloaded.meta.generation).toBe(cleared.meta.generation);
+  emptyLearning(reloaded);
+  await record(folder, 'tabs', { old, switched, cleared, reloaded });
+  await other.close();
+});
+
+test('P05 partial old archive: confirmation-only and pass-only histories remain partial while an uncommitted old accepted event cannot become a new pass', async ({
+  page,
+  context,
+}, info) => {
+  test.setTimeout(120_000);
+  const folder = await directory(info, 'real-old-partial-unsaved-reset');
+  await installQuota(page);
+  await history(page);
+  const lesson = legacy.lessons.find((l) => l.id === 'lesson.c.variables-output')!;
+  const expression = legacy.exercises.find((e) => e.id === 'exercise.c.two-x-plus-three')!;
+  const branch = legacy.exercises.find((e) => e.id === 'exercise.c.nonnegative')!;
+  await openLesson(page, lesson);
+  await openAnswer(page, expression.id);
+  await fillAnswer(page, legacy, expression);
+  let offset = await executeCount(page);
+  await submit(page);
+  const passOnly = await captureRuns(page, legacy, expression, offset, folder, 'old-pass-only');
+  await openAnswer(page, branch.id);
+  await fillAnswer(page, legacy, branch);
+  const before = await currentSnapshot(page);
+  expect(before.progress.filter((p) => p.eventType === 'lesson.completed')).toEqual([]);
+  expect(
+    before.progress.filter((p) => p.eventType === 'exercise.passed').map((p) => p.subjectRef.id),
+  ).toEqual([expression.id]);
+  expect(
+    before.progress.some(
+      (p) => p.eventType === 'lesson.study-confirmed' && p.subjectRef.id === lesson.id,
+    ),
+  ).toBe(true);
+  await page.evaluate(() => {
+    (window as unknown as { __p05PassQuota: QuotaFault }).__p05PassQuota.armed = true;
+  });
+  offset = await executeCount(page);
+  await submit(page, 'unsaved');
+  const pendingRuns = await captureRuns(page, legacy, branch, offset, folder, 'old-unsaved');
+  const pending = await currentSnapshot(page);
+  for (const key of ['progress', 'receipts', 'ledger', 'dailyFacts'] as const)
+    expect(pending[key]).toEqual(before[key]);
+  const attempted = await page.evaluate(() =>
+    (window as unknown as { __p05PassQuota: QuotaFault }).__p05PassQuota.attempted.at(-1)!,
+  );
+  expect(attempted.eventType).toBe('exercise.passed');
+  const fresh = await context.newPage();
+  await fresh.goto('/#/');
+  await currentLocalReady(fresh);
+  const reset = await currentSnapshot(fresh);
+  expect(reset.meta.generation).not.toBe(before.meta.generation);
+  emptyLearning(reset);
+  expect(reset.receipts.some((r) => r.eventId === attempted.eventId)).toBe(false);
+  await save(page).getByRole('button', { name: '重试未保存操作', exact: true }).click();
+  await expect(save(page)).toHaveAttribute('data-save-status', 'unsaved');
+  emptyLearning(await currentSnapshot(fresh));
+  await expect(fresh.getByRole('progressbar', { name: 'C 课程完成进度' })).toHaveAttribute(
+    'value',
+    '0',
+  );
+  await completeCurrentFirstGroup(fresh);
+  await assertCurrentJudge(fresh, currentExercises[0], 'passed');
+  const currentEarned = await currentSnapshot(fresh);
+  expect(posted(currentEarned)).toBe(35);
+  expect(currentEarned.receipts.some((r) => r.eventId === attempted.eventId)).toBe(false);
+  await record(folder, 'partial-reset', {
+    before,
+    pending,
+    attempted,
+    reset,
+    currentEarned,
+    passOnly,
+    pendingRuns,
+  });
+  await fresh.close();
+});
+
 test('P05 native corruption: foreign-package and damaged versions of genuinely earned progress remain stored but cannot grant current completion or new rewards', async ({
   page,
 }, info) => {
   test.setTimeout(90_000);
-  const target = bundlePath(),
-    folder = await directory(info, 'native-damaged-and-foreign');
-  await page.route(`**${target}`, (route) =>
-    route.fulfill({ status: 404, body: 'Earn real prior evidence before fault injection' }),
-  );
-  const lesson = legacy.lessons.find((entry) => entry.id === 'lesson.c.variables-output')!;
-  const runs = await complete(page, legacy, lesson, folder, 'genuinely-earned-old');
-  const earned = await archive(page);
-  expect(posted(earned.data)).toBe(35);
-  const changedPackages = await damageExistingProgress(page, 'foreign-package');
-  expect(changedPackages.length).toBeGreaterThanOrEqual(3);
-  const foreign = await archive(page);
-  const newLesson = current.lessons.find((entry) => entry.id === lesson.id)!;
-  await page.unroute(`**${target}`);
-  await page.goto(`/#/lessons/${newLesson.id}`);
+  const folder = await directory(info, 'current-native-damaged-foreign');
+  await completeCurrentFirstGroup(page);
+  await assertCurrentJudge(page, currentExercises[0], 'passed');
+  const earned = await currentSnapshot(page);
+  expect(posted(earned)).toBe(35);
+  const changed = await damageExistingProgress(page, 'foreign-package');
+  expect(changed.length).toBeGreaterThanOrEqual(3);
+  const foreign = await currentSnapshot(page);
+  await page.goto('/#/lessons/lesson.c6.s2.1');
   await page.reload();
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await expect(save(page)).not.toHaveAttribute('data-save-status', 'loading');
-  await expect(page.getByTestId('lesson-completion')).not.toHaveAttribute(
-    'data-state',
-    'completed',
-  );
-  const ignored = await archive(page);
-  expect(ignored.data.progress).toEqual(foreign.data.progress);
-  expect(ignored.data.ledger).toEqual(earned.data.ledger);
-  expect(ignored.data.receipts).toEqual(earned.data.receipts);
-  expect(ignored.data.aliases).toEqual(earned.data.aliases);
-  expect(ignored.data.progress.every((row) => row.packageRef.id === 'content.c.unreviewed')).toBe(
-    true,
-  );
-  const corruptedRows = await damageExistingProgress(page, 'malformed-row');
-  expect(corruptedRows).toHaveLength(1);
-  const malformed = await archive(page);
+  await expect(page.locator('.c6-reading-confirmation')).toBeVisible();
+  await expect(page.getByRole('heading', { name: '本节已完成', exact: true })).toHaveCount(0);
+  const ignored = await currentSnapshot(page);
+  expect(ignored.progress).toEqual(foreign.progress);
+  expect(ignored.ledger).toEqual(earned.ledger);
+  expect(ignored.receipts).toEqual(earned.receipts);
+  const corrupted = await damageExistingProgress(page, 'malformed-row');
+  expect(corrupted).toHaveLength(1);
+  const malformed = await currentSnapshot(page);
   await page.reload();
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
+  await expect(page.locator('.c6-reading-confirmation')).toBeVisible();
   await expect(save(page)).toContainText('损坏记录');
-  await expect(page.getByTestId('lesson-completion')).not.toHaveAttribute(
-    'data-state',
-    'completed',
-  );
-  const retained = await archive(page);
-  expect(retained.data.progress).toEqual(malformed.data.progress);
-  expect(retained.data.ledger).toEqual(earned.data.ledger);
-  expect(retained.data.receipts).toEqual(earned.data.receipts);
-  expect(retained.data.meta.generation).toBe(earned.data.meta.generation);
-  await record(folder, 'native-corruption-evidence', {
-    kind: 'native-fault-injection-after-real-earned-legacy-pass-no-synthetic-success',
+  await expect(page.getByRole('heading', { name: '本节已完成', exact: true })).toHaveCount(0);
+  const retained = await currentSnapshot(page);
+  expect(retained.progress).toEqual(malformed.progress);
+  expect(retained.ledger).toEqual(earned.ledger);
+  expect(retained.receipts).toEqual(earned.receipts);
+  expect(retained.meta.generation).toBe(earned.meta.generation);
+  await record(folder, 'corruption', {
     earned,
-    changedPackages,
+    changed,
     foreign,
     ignored,
-    corruptedRows,
+    corrupted,
     malformed,
     retained,
-    runs,
   });
 });

@@ -125,7 +125,7 @@ test('every theme opens a left vertical drawer on narrow screens and Escape rest
       expect(geometry.x).toBeCloseTo(0, 0);
       expect(geometry.y).toBeCloseTo(0, 0);
       expect(geometry.width).toBeCloseTo(216, 0);
-      expect(geometry.links).toHaveLength(4);
+      expect(geometry.links).toHaveLength(11);
       for (const [index, link] of geometry.links.entries()) {
         expect(link.width).toBeGreaterThan(100);
         expect(link.hit).toBe(true);

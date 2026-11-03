@@ -8,6 +8,7 @@ import type {
 import type { ExecutionCatalog } from '../engine/execution-client';
 import { practiceRelease } from './practice-release.generated';
 import { loadCourseBundle } from './course-bundle';
+import { c6IndependentSupplement } from '../c6-learning/supplements';
 export interface CoursePractice {
   readonly practiceVersion: '1.0.0';
   readonly sourceSha256: string;
@@ -41,6 +42,11 @@ export async function decodePractice(bytes: Uint8Array): Promise<CoursePractice>
   );
 }
 export async function loadCoursePractice(signal?: AbortSignal): Promise<CoursePractice> {
+  const independent = c6IndependentSupplement();
+  if (independent) {
+    if (signal?.aborted) throw new Error('PRACTICE_ABORTED');
+    return independent.practice;
+  }
   const bundle = await loadCourseBundle();
   if (signal?.aborted) throw new Error('PRACTICE_ABORTED');
   if (bundle) return bundle.practice;

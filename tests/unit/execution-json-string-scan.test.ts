@@ -183,3 +183,119 @@ test('flow and source-location records preserve canonical grammar in bounded and
       }
     }
 });
+
+function control(count: number) {
+  return {
+    activeFrameId: 'f1',
+    flowStack: Array.from({ length: count }, (_, iteration) => ({
+      iteration,
+      nodeId: 'n1',
+      stage: 'body',
+    })),
+    nextNodeId: 'n2',
+    phase: 'running',
+    returnValue: null as number | null,
+  };
+}
+
+test('complete controls preserve all scalar fallbacks, exact containers and nesting limits', () => {
+  for (const count of [0, 1, 2, 8, 9, 64]) {
+    const text = JSON.stringify(control(count));
+    expect(outcome(precheckJson, text)).toEqual({ accepted: true, containers: count + 2 });
+    for (const depth of [0, 28, 29, 30, 31, 32]) {
+      const nested = '['.repeat(depth) + text + ']'.repeat(depth);
+      expect(outcome(precheckJson, nested), `flows=${count} depth=${depth}`).toEqual(
+        outcome(before, nested),
+      );
+    }
+    for (const value of [
+      null,
+      0,
+      -1,
+      2147483647,
+      -2147483648,
+      999999999999999,
+      1000000000000000,
+      9007199254740991,
+      9007199254740992,
+    ]) {
+      const c = control(count);
+      c.returnValue = value;
+      const candidate = JSON.stringify(c);
+      expect(outcome(precheckJson, candidate), candidate.slice(0, 80)).toEqual(
+        outcome(before, candidate),
+      );
+    }
+  }
+  for (const n of [0, 1, 999999999999999, 1000000000000000, 9007199254740991, 9007199254740992]) {
+    const text = JSON.stringify({
+      liveBytes: n,
+      nextAddress: n,
+      nextFrame: n,
+      nextObject: n,
+      nextScope: n,
+    });
+    expect(outcome(precheckJson, text), text).toEqual(outcome(before, text));
+  }
+});
+
+test('complete controls do not hide malformed punctuation, noncanonical scalars or extra fields', () => {
+  for (const count of [0, 1, 8, 9]) {
+    const text = JSON.stringify(control(count));
+    const forms = [
+      text,
+      text + ' ',
+      text + '0',
+      text.slice(0, -1),
+      text.slice(0, -1) + ',"z":0}',
+      text.replace('"running"', '"unknown"'),
+      text.replace('"f1"', '"f0"'),
+      text.replace('"n2"', '"node}\\n"'),
+      text.replace('"returnValue":null', '"returnValue":-0'),
+      text.replace('"returnValue":null', '"returnValue":1e0'),
+      text.replace('"returnValue":null', '"returnValue":9007199254740992'),
+    ];
+    for (let i = 0; i < text.length; i++)
+      if ('{}[],:"'.includes(text[i]))
+        forms.push(
+          text.slice(0, i) + text.slice(i + 1),
+          text.slice(0, i) + text[i] + text.slice(i),
+          text.slice(0, i) + ' ' + text.slice(i + 1),
+        );
+    for (const value of forms)
+      expect(outcome(precheckJson, value), value.slice(0, 120)).toEqual(outcome(before, value));
+  }
+  for (const value of ['-0', '01', '1e0', '9007199254740992']) {
+    const text =
+      '{"liveBytes":' + value + ',"nextAddress":4096,"nextFrame":1,"nextObject":1,"nextScope":1}';
+    expect(outcome(precheckJson, text)).toEqual(outcome(before, text));
+  }
+});
+
+test('interleaved complete controls preserve the native-allocation threshold and bad-tail rejection', () => {
+  const large = JSON.stringify(Array(50001).fill(control(3)));
+  const alloc = { liveBytes: 0, nextAddress: 4096, nextFrame: 1, nextObject: 1, nextScope: 1 };
+  const texts = [
+    large,
+    JSON.stringify(Array(1000).fill(control(9))),
+    JSON.stringify(Array(6000).fill(alloc)).slice(0, -1) +
+      ',{"liveBytes":0,"nextAddress":4096,"nextFrame":1,"nextObject":1,"nextScope":-0}]',
+  ];
+  expect(outcome(before, large)).toEqual({ accepted: true, containers: 250006 });
+  const work = texts.map((text) => precheckJson(text)),
+    done = texts.map(() => false);
+  while (!done.every(Boolean))
+    for (let i = 0; i < work.length; i++) {
+      if (done[i]) continue;
+      let observed;
+      try {
+        const next = work[i].next();
+        if (!next.done) continue;
+        observed = { accepted: true, containers: next.value.containers };
+      } catch {
+        observed = { accepted: false };
+      }
+      done[i] = true;
+      expect(observed).toEqual(outcome(before, texts[i]));
+    }
+});

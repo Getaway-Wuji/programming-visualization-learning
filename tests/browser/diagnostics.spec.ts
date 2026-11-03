@@ -5,6 +5,7 @@ import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol
 import { presentDiagnostic } from '../../web/src/diagnostics/presentation';
 import { blockOptions, blockWorkspace, openBlockKeyboardEditor } from './block-ui';
 import type { AnalysisResult } from '../../web/src/blocks/analysis-types';
+import { openIndependentRepair } from './current-course-helpers';
 
 const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
 const editor = (page: Page) => page.getByTestId('draft-code-editor');
@@ -14,8 +15,8 @@ const directory = `.artifacts/14.1/browser/${process.env.TASK_EVIDENCE_LABEL ?? 
 test.beforeEach(async ({ page }) => {
   await observeCaseSetExecution(page);
 });
-async function open(page: Page, id = 'exercise.c.echo') {
-  await page.goto(`/#/practice/${id}`);
+async function open(page: Page, id = 'exercise.c.bug-semicolon') {
+  await openIndependentRepair(page, id);
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
   await expect(page.getByTestId('editor-history')).toHaveAttribute('data-save-state', 'ready');
   await page.getByRole('combobox', { name: '积木显示', exact: true }).selectOption('show');
@@ -138,9 +139,9 @@ for (const [label, body, errorCode] of [
 test('runtime error locates the frozen executed source and native block, then clears on repair', async ({
   page,
 }) => {
-  const base = await open(page, 'exercise.c.quotient-remainder');
+  const base = await open(page, 'exercise.c.bug-parenthesis');
   const before = await learning(page);
-  const draft = withBody(base, 'printf("%d\\n", a / 0); return 0;');
+  const draft = withBody(base, 'printf("%d\\n", x / 0); return 0;');
   await code(page).fill(draft);
   await settled(page, 'synced');
   await action(page, '运行本组').click();
@@ -201,7 +202,7 @@ test('runtime error locates the frozen executed source and native block, then cl
   await page.screenshot({ path: `${directory}/runtime.png` });
   await page.setViewportSize({ width: 1440, height: 900 });
   await expect(page.getByTestId('workbench')).toHaveAttribute('data-narrow', 'false');
-  await code(page).fill(withBody(base, 'printf("%d %d\\n", a / b, a % b); return 0;'));
+  await code(page).fill(withBody(base, 'printf("%d\\n", x * 2 + 3); return 0;'));
   await settled(page, 'synced');
   await expect(page.getByTestId('practice-feedback').getByTestId('diagnostic-panel')).toHaveCount(
     0,

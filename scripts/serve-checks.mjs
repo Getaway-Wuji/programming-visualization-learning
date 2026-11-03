@@ -1,8 +1,18 @@
 // Local static QA server. Deployment configuration is a later hosting task.
 import { createServer } from 'node:http';
-import { readFileSync, statSync } from 'node:fs';
+import { readFileSync, realpathSync, statSync } from 'node:fs';
 import { extname, join, resolve, sep } from 'node:path';
 import { workspaceDir } from './process.mjs';
+
+const port = Number(process.env.CHECK_PORT ?? 4178);
+if (!Number.isInteger(port) || port < 1 || port > 65535)
+  throw new Error('CHECK_PORT must be a valid local TCP port.');
+const productRoot = realpathSync(resolve(workspaceDir, process.env.CHECK_DIST ?? 'web/dist'));
+if (
+  productRoot !== realpathSync(resolve(workspaceDir, 'web/dist')) &&
+  !productRoot.startsWith(realpathSync(resolve(workspaceDir, '.artifacts')) + sep)
+)
+  throw new Error('CHECK_DIST must be web/dist or a candidate inside workspace .artifacts.');
 
 const mime = {
   '.html': 'text/html; charset=utf-8',
@@ -51,7 +61,7 @@ createServer((request, response) => {
     return;
   }
   const isCheck = url.pathname.startsWith('/checks/');
-  const root = resolve(workspaceDir, isCheck ? '.artifacts/browser-dist' : 'web/dist');
+  const root = isCheck ? resolve(workspaceDir, '.artifacts/browser-dist') : productRoot;
   let pathname;
   try {
     pathname = decodeURIComponent(isCheck ? url.pathname.slice('/checks'.length) : url.pathname);
@@ -80,6 +90,6 @@ createServer((request, response) => {
   } catch {
     response.writeHead(404, { 'Cache-Control': 'no-store' }).end('Resource not found');
   }
-}).listen(4178, '127.0.0.1', () =>
-  console.log('Static engineering checks at http://127.0.0.1:4178'),
+}).listen(port, '127.0.0.1', () =>
+  console.log(`Static engineering checks at http://127.0.0.1:${port}`),
 );

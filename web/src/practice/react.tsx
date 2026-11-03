@@ -13,9 +13,11 @@ import { flushSync } from 'react-dom';
 import { useLearning } from '../learning/react';
 import { PracticeSession } from './session';
 import { resolveBlockAccess } from '../blocks/permissions';
+import { bugQuestions } from '../bugs/content';
 const Context = createContext<PracticeSession | null>(null);
 export function PracticeProvider({ children }: { children: ReactNode }) {
   const { service, state } = useLearning();
+  const isC6 = !!state.c6;
   const [session] = useState(
     () =>
       new PracticeSession(
@@ -56,14 +58,15 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
       return;
     }
     const match = /^\/practice\/([^/]+)(\/review)?$/.exec(location.pathname);
+    const independent = !isC6 || bugQuestions.some((q) => q.exerciseRef.id === match?.[1]);
     session.enter(
-      match?.[1],
+      independent ? match?.[1] : undefined,
       Boolean(match?.[2]),
       new URLSearchParams(location.search).get('mode') === 'reconstruction'
         ? 'reconstruction'
         : undefined,
     );
-  }, [session, location.pathname, location.search, state.sessionEpoch]);
+  }, [session, location.pathname, location.search, state.sessionEpoch, isC6]);
   useEffect(() => {
     const lease = lifecycle.current;
     const token = ++lease.token;

@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import { waitForPhase2Archive } from './phase2-ready';
 import { native } from './scheduler-helpers';
-import { p05CourseRelease } from '../../web/src/content/p05-course-release.generated';
 const content = JSON.parse(
   readFileSync('content/advanced/language-migration-1.0.0.json', 'utf8'),
 ) as {
@@ -157,9 +156,7 @@ test('controlled visibility event pauses; leaving and returning cannot restore a
   await page.getByRole('button', { name: '播放教学标注', exact: true }).click();
   await page.getByRole('link', { name: '返回进阶课程', exact: true }).click();
   await page.clock.runFor(5000);
-  await page
-    .getByRole('link', { name: '语言迁移与语法对照：从已有语言读懂C++', exact: true })
-    .click();
+  await page.getByRole('link', { name: '语言迁移与语法对照', exact: true }).click();
   await expect(root(page)).toHaveAttribute('data-known', 'c');
   await expect(root(page)).toHaveAttribute('data-cursor', '0');
   await expect(root(page)).toHaveAttribute('data-playing', 'false');
@@ -197,17 +194,17 @@ test('bundled static reading works offline, creates no Worker or learning facts 
 test('course entries, exact original preparation and existing real C/C++ destinations remain usable', async ({
   page,
 }) => {
-  for (const url of ['/#/advanced', '/#/courses']) {
+  for (const url of ['/#/advanced']) {
     await page.goto(url);
     await waitForPhase2Archive(page);
     await page.getByRole('link', { name: /语言迁移与语法对照/ }).click();
     await expect(root(page)).toBeVisible();
   }
   await page.getByRole('combobox', { name: '阅读主题', exact: true }).selectOption('arrays');
-  const original = page.getByRole('link', { name: '回到原C小节：一维数组', exact: true });
-  if (p05CourseRelease.registered) {
-    await expect(original).toBeVisible();
-    await expect(original).toHaveAttribute('href', '#/lessons/lesson.c.array-update');
+  for (const topic of content.topics) {
+    await page.getByRole('combobox', { name: '阅读主题', exact: true }).selectOption(topic.id);
+    await expect(root(page).getByText(/基础课程版本暂不可用/)).toBeVisible();
+    await expect(root(page).getByRole('link', { name: /回到原C小节/ })).toHaveCount(0);
   }
   for (const [name, path] of [
     ['C循环真实观察', '/visualize/case.c.loops'],
@@ -227,7 +224,7 @@ test('course entries, exact original preparation and existing real C/C++ destina
 test('missing expanded course never impersonates preparation while bundled static teaching remains available', async ({
   page,
 }) => {
-  const bundle = /\/content\/(?:course|review)\//;
+  const bundle = /\/content\/c6-teaching\/manifest-2\.0\.0\.json$/;
   await page.route(bundle, (route) => route.fulfill({ status: 404, body: 'QA content fault' }));
   await page.goto('/#/advanced/migration');
   await expect(root(page).getByText(/基础课程版本暂不可用/)).toBeVisible();
@@ -238,8 +235,10 @@ test('missing expanded course never impersonates preparation while bundled stati
   await page.unroute(bundle);
   await page.reload();
   await waitForPhase2Archive(page);
-  if (p05CourseRelease.registered)
-    await expect(root(page).getByRole('link', { name: /回到原C小节/ })).toBeVisible();
+  await expect(root(page).getByRole('link', { name: /回到原C小节/ })).toHaveCount(0);
+  await expect(root(page).getByText(/基础课程版本暂不可用/)).toBeVisible();
+  await page.getByRole('link', { name: 'C课程目录', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '课程目录', exact: true })).toBeVisible();
 });
 for (const width of [1440, 768, 390])
   test(`static comparison layout and keyboard ${width}`, async ({ page }, info) => {

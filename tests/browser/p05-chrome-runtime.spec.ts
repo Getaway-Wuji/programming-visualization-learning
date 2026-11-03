@@ -2,26 +2,24 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
-import { p05CourseRelease } from '../../web/src/content/p05-course-release.generated';
+import { c6TeachingRelease } from '../../web/src/content/c6-teaching-release.generated';
+import { c6LearningRelease } from '../../web/src/c6-learning/release.generated';
 import { decodeResult, type ExecuteRequest, type TraceObject } from '../../web/src/engine/protocol';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
-const folder = '.artifacts/P0.5-09';
-const registrationPath = 'content/c/p0/blockly-release-1.0.16.json';
+const folder = `.artifacts/21.6/runtime/${process.env.TASK_EVIDENCE_LABEL ?? 'current'}`;
+const sourceLock = JSON.parse(readFileSync('content/build/source-lock.json', 'utf8')) as {
+  releaseVersion: string;
+};
+const registrationPath = `content/c/p0/blockly-release-${sourceLock.releaseVersion}.json`;
 const buildIndexPath = '.artifacts/artifact-hashes.json';
 const sha = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex');
 const proof = (path: string) => ({ path, sha256: sha(readFileSync(path)) });
 
 // Playwright's page fixture creates a disposable context. This spec only visits
 // the separately served production build, never an existing personal browser.
-test.use({ baseURL: 'http://127.0.0.1:4178' });
-
 async function ready(page: Page) {
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
   await expect(page.getByTestId('learning-temporary-status')).toHaveCount(0);
 }
 
@@ -34,8 +32,7 @@ test('registered Chrome course saves settings and displays both real sorting tra
   const registration = JSON.parse(readFileSync(registrationPath, 'utf8')) as {
     releaseVersion: string;
   };
-  expect(registration.releaseVersion).toBe('1.0.16');
-  expect(p05CourseRelease.registered).toBe(true);
+  expect(registration.releaseVersion).toBe(sourceLock.releaseVersion);
   const registeredProof = proof(registrationPath);
   const buildProof = proof(buildIndexPath);
   const pageErrors: string[] = [];
@@ -45,31 +42,43 @@ test('registered Chrome course saves settings and displays both real sorting tra
   page.on('console', (message) => {
     if (message.type() !== 'error') return;
     const url = message.location().url;
-    if (url === 'http://127.0.0.1:4178/favicon.ico' && message.text().includes('404 (Not Found)'))
+    if (
+      url === new URL('/favicon.ico', page.url()).href &&
+      message.text().includes('404 (Not Found)')
+    )
       optionalResourceErrors.push({ message: message.text(), url });
     else consoleErrors.push(`${message.text()} (${url})`);
   });
   await observeCaseSetExecution(page);
   await page.goto('/#/courses');
   await ready(page);
-  await expect(page.locator('[data-course-lesson]')).toHaveCount(32);
-  const bundleResponse = await page.request.get(`/${p05CourseRelease.file}`);
-  expect(bundleResponse.ok()).toBe(true);
-  const bundle = (await bundleResponse.json()) as {
-    registered: boolean;
-    learning: { packageRef: { id: string; version: string } } | null;
-    reading: { lessons: unknown[] };
-    practice: { exercises: unknown[] };
+  await expect(page.locator('.c6-node-list > li')).toHaveCount(19);
+  const manifestResponse = await page.request.get(
+    `/content/c/primer6-teaching/${c6TeachingRelease.manifestFile}`,
+  );
+  expect(manifestResponse.ok()).toBe(true);
+  const manifestBytes = await manifestResponse.body();
+  expect(sha(manifestBytes)).toBe(c6TeachingRelease.manifestSha256);
+  const manifest = JSON.parse(manifestBytes.toString('utf8')) as { nodes: unknown[] };
+  expect(manifest.nodes).toHaveLength(650);
+  const indexResponse = await page.request.get(
+    `/content/c/primer6-learning/${c6LearningRelease.file}`,
+  );
+  expect(indexResponse.ok()).toBe(true);
+  const indexBytes = await indexResponse.body();
+  expect(sha(indexBytes)).toBe(c6LearningRelease.sha256);
+  const index = JSON.parse(indexBytes.toString('utf8')) as {
+    packageRef: unknown;
+    lessons: unknown[];
+    exercises: unknown[];
   };
-  expect(bundle.registered).toBe(true);
-  expect(bundle.learning?.packageRef).toEqual({ id: 'content.c.p05', version: '1.0.0' });
-  expect(bundle.reading.lessons).toHaveLength(32);
-  expect(bundle.practice.exercises).toHaveLength(32);
+  expect(index.packageRef).toEqual(c6LearningRelease.packageRef);
+  expect(index.lessons).toHaveLength(404);
+  expect(index.exercises).toHaveLength(44);
 
   await page.getByRole('button', { name: '收起侧栏', exact: true }).click();
   await expect(page.locator('.app-shell')).toHaveAttribute('data-sidebar', 'collapsed');
   await ready(page);
-  await expect(page.getByTestId('learning-save-status')).toContainText('已保存');
   await page.reload();
   await ready(page);
   await expect(page.locator('.app-shell')).toHaveAttribute('data-sidebar', 'collapsed');
@@ -117,6 +126,7 @@ test('registered Chrome course saves settings and displays both real sorting tra
     expect(initialized).toBeGreaterThanOrEqual(0);
     const cursor = initialized + 1;
     const controls = panel.getByTestId('player-controls');
+    await page.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
     await expect(controls).toHaveAttribute('data-cursor', '0');
     await panel.getByTestId('player-workspace').focus();
     for (let index = 0; index < cursor; index++) await page.keyboard.press('ArrowRight');

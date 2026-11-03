@@ -49,7 +49,10 @@ export class ReviewController {
       this.serial++;
       this.publish({ rows: [], pending: 0, status: 'loading' });
     }
-    if (!context || !this.service.getState().practiceCatalog) {
+    if (
+      !context ||
+      (!this.service.getState().practiceCatalog && !this.service.getState().c6?.index)
+    ) {
       this.publish({ status: 'failed', error: '本地档案或课程暂不可确认' });
       return;
     }

@@ -88,7 +88,11 @@ export async function weaknessesTransaction(
           tx,
           (raw) => {
             try {
-              const r = inspectRecoveryRows(raw, (a, b) => factory.cmp(a, b));
+              const r = inspectRecoveryRows(
+                raw,
+                (a, b) => factory.cmp(a, b),
+                db.version === 10 ? '10.0.0' : '9.0.0',
+              );
               if (!r.writable || !r.snapshot)
                 throw new StorageError(r.errorCode ?? 'S_RECORD_INVALID');
               snapshot = r.snapshot;

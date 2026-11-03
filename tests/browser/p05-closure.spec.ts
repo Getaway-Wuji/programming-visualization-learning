@@ -1,14 +1,11 @@
 import { expect, test, type Page } from '@playwright/test';
 import type { StorageSnapshot } from '../../web/src/storage/model';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import {
-  blockOptions,
-  blockWorkspace,
-  correctStarter,
-  selectBlock,
-  showPracticeBlocks,
-} from './block-ui';
+import { blockOptions, blockWorkspace, selectBlock, showPracticeBlocks } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
+import { openIndependentRepair, completeCurrentFirstGroup } from './current-course-helpers';
+import { installC6Packets } from './c6-observation';
+import { assertCurrentJudge } from './current-practice-observation';
 
 const themes = ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech'] as const;
 const panel = (page: Page) => page.getByTestId('practice-execution');
@@ -59,11 +56,10 @@ test('six registered themes render readable native Blockly skins in light and da
     if (await page.getByTestId('save-appearance').isEnabled())
       await page.getByTestId('save-appearance').click();
     await expect(page.locator('html')).toHaveAttribute('data-appearance-draft', 'false');
-    await page.goto('/#/practice/exercise.c.echo');
+    await openIndependentRepair(page, 'exercise.c.bug-semicolon');
     await ready(page);
     await expect(panel(page)).toHaveAttribute('data-state', 'ready');
     await showPracticeBlocks(page);
-    await correctStarter(page, 'exercise.c.echo');
     for (const mode of ['light', 'dark'] as const) {
       if ((await page.locator('html').getAttribute('data-theme')) !== mode)
         await page.getByTestId('theme-mode-toggle').click();
@@ -184,17 +180,19 @@ async function connect(page: Page, child: string, parent: string, slot: string) 
 test('a fresh registered course saves a complete lesson built from empty native blocks', async ({
   page,
 }, info) => {
+  await page.addInitScript(installC6Packets);
   await observeCaseSetExecution(page);
-  await page.goto('/#/lessons/lesson.c.variables-output');
+  await openIndependentRepair(page, 'exercise.c.bug-semicolon');
   await ready(page);
-  await page.getByRole('button', { name: '确认已学习', exact: true }).click();
-  await expect(page.getByTestId('lesson-confirmation-check')).toHaveAttribute('data-saved', 'yes');
-  await page.getByRole('link', { name: '进入练习工作区', exact: true }).click();
-  await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+  const code = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+  const full = await code.inputValue(),
+    empty = full.replace(/\s*printf\("%d\\n", x\);/, '').replace(/\s*return 0;/, '');
+  expect(empty).not.toBe(full);
+  await code.clear();
+  await expect(code).toHaveValue('');
+  await code.fill(empty);
+  await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await showPracticeBlocks(page);
-  await expect(
-    page.getByTestId('practice-mode').getByRole('button', { name: '独立练习', exact: true }),
-  ).toHaveAttribute('aria-pressed', 'true');
   expect(await blockOptions(page, /^\d+\. 输出 ·/)).toEqual([]);
   const inputs = await blockOptions(page, /^\d+\. 声明整数 · x$/);
   expect(inputs).toHaveLength(1);
@@ -215,36 +213,51 @@ test('a fresh registered course saves a complete lesson built from empty native 
   await action(page, '提交练习').click();
   await expect(panel(page)).toHaveAttribute('data-state', 'passed');
   await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state', 'saved');
-  await expect(page.getByTestId('lesson-completion')).toHaveAttribute('data-state', 'completed');
   const finished = await snapshot(page);
-  expect(finished.meta.activePackageRef).toEqual({ id: 'content.c.p05', version: '1.0.0' });
-  expect(finished.progress.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(1);
-  expect(finished.progress.filter((row) => row.eventType === 'lesson.completed')).toHaveLength(1);
+  expect(finished.meta.activePackageRef).toEqual({ id: 'content.c.primer6', version: '2.0.0' });
+  expect(finished.progress.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(1);
+  expect(finished.progress.filter((r) => r.eventType === 'lesson.completed')).toEqual([]);
   const captures = await page.evaluate(() =>
     window.__verticalObservation.workers
-      .filter((worker) => worker.kind === 'execute')
-      .map((worker) => ({ request: worker.requestBytes, response: worker.responseBytes })),
+      .filter((w) => w.kind === 'execute')
+      .map((w) => {
+        const raw = (
+          w as typeof w & {
+            captureEncoded(): { requestBase64: string | null; responseBase64: string | null };
+          }
+        ).captureEncoded();
+        return raw;
+      }),
   );
-  expect(captures).toHaveLength(4);
+  expect(captures).toHaveLength(5);
   const runs = [];
-  for (const [index, capture] of captures.entries()) {
-    const request = JSON.parse(Buffer.from(capture.request!).toString('utf8')) as ExecuteRequest;
-    const result = await decodeResult(Uint8Array.from(capture.response!).buffer, request);
-    expect(request.packageRef).toEqual({ id: 'content.c.p05', version: '1.0.0' });
+  for (const [i, c] of captures.entries()) {
+    const request = JSON.parse(
+        Buffer.from(c.requestBase64!, 'base64').toString('utf8'),
+      ) as ExecuteRequest,
+      result = await decodeResult(
+        Uint8Array.from(Buffer.from(c.responseBase64!, 'base64')).buffer,
+        request,
+      );
+    expect(request.subjectRef?.id).toBe('exercise.c.bug-semicolon');
     expect(result.producer).toBe('rust');
     expect(result.terminal.status).toBe('completed');
-    if (index > 0) expect(result.judgeResult?.status).toBe('met');
+    if (i > 0) expect(result.judgeResult?.status).toBe('met');
     runs.push({ request, result });
   }
   await page.reload();
   await ready(page);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('lesson-completion')).toHaveAttribute('data-state', 'completed');
   const refreshed = await snapshot(page);
   for (const key of ['progress', 'receipts', 'ledger'] as const)
     expect(refreshed[key]).toEqual(finished[key]);
-  await info.attach('empty-blocks-real-run-submit-save-refresh', {
-    body: JSON.stringify({ before, afterRun, finished, refreshed, runs }),
+  const exercise = await completeCurrentFirstGroup(page);
+  await assertCurrentJudge(page, exercise, 'passed');
+  const current = await snapshot(page);
+  expect(current.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(2);
+  expect(current.ledger.reduce((n, r) => n + (r.points ?? 0), 0)).toBe(45);
+  await info.attach('empty-native-blocks-and-new-course-four-case-completion', {
+    body: JSON.stringify({ before, afterRun, finished, refreshed, current, runs }),
     contentType: 'application/json',
   });
 });

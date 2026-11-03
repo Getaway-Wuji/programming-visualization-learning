@@ -1,0 +1,121 @@
+{
+  "programs": [
+    {
+      "id": "sample14.main",
+      "title": "main",
+      "mode": "execute",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n\nstruct Book {\n    char title[24];\n    char author[16];\n    float price;\n    int copies;\n};\n\nint main(void)\n{\n    struct Book book = { // 初始化时，初值按成员的声明顺序对应。\n        \"C Steps\",\n        \"Lin\",\n        12.50f,\n        2\n    };\n    struct Book draft = {\"Draft\"}; // 部分初始化：其余成员也初始化；作者为空串，价格和数量为零。\n    float total = book.price * book.copies;\n\n    printf(\"initial: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    printf(\"partial: %s | author=<%s> | price=%.2f | copies=%d\\n\",\n           draft.title, draft.author, draft.price, draft.copies);\n\n    book.price = 10.00f;\n    book.copies = book.copies + 1;\n    total = book.price * book.copies;\n    printf(\"updated: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    return 0;\n}\n"
+        }
+      ],
+      "input": "",
+      "expectedStdout": "initial: C Steps | Lin | price=12.50 | copies=2 | total=25.00\npartial: Draft | author=<> | price=0.00 | copies=0\nupdated: C Steps | Lin | price=10.00 | copies=3 | total=30.00\n",
+      "expectedReturn": 0
+    },
+    {
+      "id": "sample14.zero",
+      "title": "zero",
+      "mode": "execute",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n\nstruct Book {\n    char title[24];\n    char author[16];\n    float price;\n    int copies;\n};\n\nint main(void)\n{\n    struct Book book = { // 初始化时，初值按成员的声明顺序对应。\n        \"C Steps\",\n        \"Lin\",\n        12.50f,\n        0\n    };\n    struct Book draft = {\"Draft\"}; // 部分初始化：其余成员也初始化；作者为空串，价格和数量为零。\n    float total = book.price * book.copies;\n\n    printf(\"initial: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    printf(\"partial: %s | author=<%s> | price=%.2f | copies=%d\\n\",\n           draft.title, draft.author, draft.price, draft.copies);\n\n    book.price = 10.00f;\n    book.copies = book.copies + 1;\n    total = book.price * book.copies;\n    printf(\"updated: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    return 0;\n}\n"
+        }
+      ],
+      "input": "",
+      "expectedStdout": "initial: C Steps | Lin | price=12.50 | copies=0 | total=0.00\npartial: Draft | author=<> | price=0.00 | copies=0\nupdated: C Steps | Lin | price=10.00 | copies=1 | total=10.00\n",
+      "expectedReturn": 0
+    },
+    {
+      "id": "sample14.swapped",
+      "title": "swapped",
+      "mode": "execute",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n\nstruct Book {\n    char title[24];\n    char author[16];\n    float price;\n    int copies;\n};\n\nint main(void)\n{\n    struct Book book = { // 初始化时，初值按成员的声明顺序对应。\n        \"C Steps\",\n        \"Lin\",\n        2,\n        12.50f\n    };\n    struct Book draft = {\"Draft\"}; // 部分初始化：其余成员也初始化；作者为空串，价格和数量为零。\n    float total = book.price * book.copies;\n\n    printf(\"initial: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    printf(\"partial: %s | author=<%s> | price=%.2f | copies=%d\\n\",\n           draft.title, draft.author, draft.price, draft.copies);\n\n    book.price = 10.00f;\n    book.copies = book.copies + 1;\n    total = book.price * book.copies;\n    printf(\"updated: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    return 0;\n}\n"
+        }
+      ],
+      "input": "",
+      "expectedStdout": "initial: C Steps | Lin | price=2.00 | copies=12 | total=24.00\npartial: Draft | author=<> | price=0.00 | copies=0\nupdated: C Steps | Lin | price=10.00 | copies=13 | total=130.00\n",
+      "expectedReturn": 0
+    },
+    {
+      "id": "sample14.uninitialized",
+      "title": "uninitialized",
+      "mode": "diagnostic",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n\nstruct Book {\n    char title[24];\n    char author[16];\n    float price;\n    int copies;\n};\n\nint main(void)\n{\n    struct Book book = { // 初始化时，初值按成员的声明顺序对应。\n        \"C Steps\",\n        \"Lin\",\n        12.50f,\n        2\n    };\n    struct Book draft; // 部分初始化：其余成员也初始化；作者为空串，价格和数量为零。\n    float total = book.price * book.copies;\n\n    printf(\"initial: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    printf(\"partial: %s | author=<%s> | price=%.2f | copies=%d\\n\",\n           draft.title, draft.author, draft.price, draft.copies);\n\n    book.price = 10.00f;\n    book.copies = book.copies + 1;\n    total = book.price * book.copies;\n    printf(\"updated: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    return 0;\n}\n"
+        }
+      ],
+      "input": "",
+      "expectedStdout": "initial: C Steps | Lin | price=12.50 | copies=2 | total=25.00\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_UNINITIALIZED"
+    },
+    {
+      "id": "sample14.extra",
+      "title": "extra",
+      "mode": "diagnostic",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n\nstruct Book {\n    char title[24];\n    char author[16];\n    float price;\n    int copies;\n};\n\nint main(void)\n{\n    struct Book book = { // 初始化时，初值按成员的声明顺序对应。\n        \"C Steps\",\n        \"Lin\",\n        12.50f,\n        2,\n        9\n    };\n    struct Book draft = {\"Draft\"}; // 部分初始化：其余成员也初始化；作者为空串，价格和数量为零。\n    float total = book.price * book.copies;\n\n    printf(\"initial: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    printf(\"partial: %s | author=<%s> | price=%.2f | copies=%d\\n\",\n           draft.title, draft.author, draft.price, draft.copies);\n\n    book.price = 10.00f;\n    book.copies = book.copies + 1;\n    total = book.price * book.copies;\n    printf(\"updated: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    return 0;\n}\n"
+        }
+      ],
+      "input": "",
+      "expectedStdout": "",
+      "expectedReturn": 0,
+      "expectedCode": "E_FIELD_LIMIT"
+    },
+    {
+      "id": "sample14.array-assignment",
+      "title": "array-assignment",
+      "mode": "diagnostic",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n\nstruct Book {\n    char title[24];\n    char author[16];\n    float price;\n    int copies;\n};\n\nint main(void)\n{\n    struct Book book = { // 初始化时，初值按成员的声明顺序对应。\n        \"C Steps\",\n        \"Lin\",\n        12.50f,\n        2\n    };\n    struct Book draft = {\"Draft\"}; // 部分初始化：其余成员也初始化；作者为空串，价格和数量为零。\n    float total = book.price * book.copies;\n\n    printf(\"initial: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    printf(\"partial: %s | author=<%s> | price=%.2f | copies=%d\\n\",\n           draft.title, draft.author, draft.price, draft.copies);\n\n    book.title = \"Other\";\n    book.copies = book.copies + 1;\n    total = book.price * book.copies;\n    printf(\"updated: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    return 0;\n}\n"
+        }
+      ],
+      "input": "",
+      "expectedStdout": "",
+      "expectedReturn": 0,
+      "expectedCode": "E_TYPE_INVALID"
+    },
+    {
+      "id": "sample14.reading",
+      "title": "reading",
+      "mode": "reading",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\nstruct Stock { int copies; float price; };\nint main(void)\n{\n    int requested = 3;\n    struct Stock item = {requested, 5.00f}; // 标准C允许自动对象的初值读取变量；当前C6暂不支持。\n    printf(\"%.2f\\n\", item.copies * item.price);\n    return 0;\n}\n"
+        }
+      ],
+      "input": "",
+      "expectedStdout": "",
+      "expectedReturn": 0,
+      "boundary": "运行时聚合初值不在C6范围。",
+      "prediction": "标准C输出15.00与LF，C6在执行前拒绝。"
+    },
+    {
+      "id": "sample14.stale-total",
+      "title": "stale-total",
+      "mode": "execute",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n\nstruct Book {\n    char title[24];\n    char author[16];\n    float price;\n    int copies;\n};\n\nint main(void)\n{\n    struct Book book = { // 初始化时，初值按成员的声明顺序对应。\n        \"C Steps\",\n        \"Lin\",\n        12.50f,\n        2\n    };\n    struct Book draft = {\"Draft\"}; // 部分初始化：其余成员也初始化；作者为空串，价格和数量为零。\n    float total = book.price * book.copies;\n\n    printf(\"initial: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    printf(\"partial: %s | author=<%s> | price=%.2f | copies=%d\\n\",\n           draft.title, draft.author, draft.price, draft.copies);\n\n    book.price = 10.00f;\n    book.copies = book.copies + 1;\n    printf(\"updated: %s | %s | price=%.2f | copies=%d | total=%.2f\\n\",\n           book.title, book.author, book.price, book.copies, total);\n    return 0;\n}\n"
+        }
+      ],
+      "input": "",
+      "expectedStdout": "initial: C Steps | Lin | price=12.50 | copies=2 | total=25.00\npartial: Draft | author=<> | price=0.00 | copies=0\nupdated: C Steps | Lin | price=10.00 | copies=3 | total=25.00\n",
+      "expectedReturn": 0
+    }
+  ]
+}

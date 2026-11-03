@@ -1,30 +1,27 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import { expect, test, type Page } from '@playwright/test';
+import { archive, ready, submit, panel, code, observeCaseSetExecution } from './notebook-helpers';
 import {
-  archive,
-  ready,
-  openAnswer,
-  confirm,
-  submit,
-  panel,
-  code,
-  observeCaseSetExecution,
-} from './notebook-helpers';
+  openIndependentRepair as openAnswer,
+  confirmCurrentLesson as confirm,
+} from './current-course-helpers';
+import { routeHistoricalApp } from './legacy-app';
 import { observedCaseSetExecute } from './case-set-observation';
 import type {} from './harness/editor-history';
 const folder = `.artifacts/19.1/browser/${process.env.TASK_EVIDENCE_LABEL ?? 'local'}`;
 const status = (p: Page) => p.getByTestId('weakness-status');
-const variable = (p: Page) => p.locator('[data-weakness-id="knowledge.c.variables"]');
+const variable = (p: Page) => p.locator('[data-weakness-id="knowledge.c6.s2.2.2"]');
 test.beforeAll(() => mkdir(folder, { recursive: true }));
 test('19.1 native DB8 upgrade preserves every original store key and row and adds only the new empty partition', async ({
   page,
 }) => {
+  await routeHistoricalApp(page, new URL(test.info().project.use.baseURL as string).origin);
   await page.goto('/#/custom-code');
   await expect(page.getByRole('button', { name: '保存草稿', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByTestId('custom-save-status')).toHaveText('草稿已保存到当前浏览器。');
-  await mark(page);
+  await markLegacy(page);
   const name = 'c-viz-learning.test.weakness-migration8';
   const original = await page.evaluate(async (name) => {
     const db = await new Promise<IDBDatabase>((resolve) => {
@@ -70,6 +67,7 @@ test('19.1 native DB8 upgrade preserves every original store key and row and add
     return all;
   }, name);
   expect(original.customDrafts.values).toHaveLength(1);
+  await page.unroute('**/*');
   await page.goto('/checks/');
   await page.waitForFunction(() => Boolean(window.historyHarness));
   await page.evaluate((name) => window.historyHarness.open(name), name);
@@ -127,7 +125,7 @@ async function open(p: Page) {
   await expect(status(p)).toHaveAttribute('data-state', 'ready');
 }
 async function fail(p: Page) {
-  await openAnswer(p, 'exercise.c.echo');
+  await openAnswer(p, 'exercise.c.bug-parenthesis');
   const text = await code(p).inputValue();
   await code(p).fill(text.replace(/printf\([^;]+;/, 'printf("%d\\n", x + 1);'));
   await expect(p.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
@@ -136,10 +134,10 @@ async function fail(p: Page) {
   await expect(p.getByTestId('practice-attempt-save')).toHaveAttribute('data-save-state', 'saved');
 }
 async function mark(p: Page) {
-  await p.goto('/#/lessons/lesson.c.variables-output');
+  await p.goto('/#/lessons/lesson.c6.s2.2.2');
   await ready(p);
   await expect(p.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
-  await p.locator('[data-knowledge-mark="knowledge.c.variables"]').click();
+  await p.locator('[data-knowledge-mark="knowledge.c6.s2.2.2"]').click();
   await expect(p.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
 }
 async function capture(p: Page, name: string, worker = false) {
@@ -186,8 +184,8 @@ test('19.1 two real Rust failures explain recurrence, repair closes and another 
 }) => {
   test.setTimeout(90000);
   await observeCaseSetExecution(page);
-  await confirm(page, 'lesson.c.expressions');
-  await openAnswer(page, 'exercise.c.two-x-plus-three');
+  await confirm(page, 'lesson.c6.s5.1');
+  await openAnswer(page, 'exercise.c.bug-parenthesis');
   await submit(page);
   await fail(page);
   await open(page);
@@ -211,7 +209,7 @@ test('19.1 two real Rust failures explain recurrence, repair closes and another 
   await page.reload();
   await expect(status(page)).toHaveAttribute('data-state', 'ready');
   expect(await archive(page)).toEqual(before);
-  await openAnswer(page, 'exercise.c.echo');
+  await openAnswer(page, 'exercise.c.bug-parenthesis');
   await submit(page);
   await open(page);
   await expect(variable(page)).toHaveCount(0);
@@ -316,9 +314,7 @@ test('19.1 corrupt or future summary remains preserved, never looks like no weak
   await expect(page.getByTestId('weakness-empty')).toHaveCount(0);
   expect(await archive(page)).toEqual(before);
   await page.getByRole('link', { name: '继续原课程 →', exact: true }).click();
-  await expect(
-    page.getByRole('heading', { name: '从基础开始，一步步学懂。', exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: '课程目录', exact: true })).toBeVisible();
 });
 test('19.1 peer clear while the native summary acknowledgement is held rejects the old generation', async ({
   page,
@@ -406,7 +402,7 @@ test('19.1 two tabs concurrently derive one bounded summary without duplicating 
     }
   ).weaknesses;
   expect(summaries).toHaveLength(1);
-  const row = summaries[0].rows.find((r) => r.knowledgeRef.id === 'knowledge.c.variables')!;
+  const row = summaries[0].rows.find((r) => r.knowledgeRef.id === 'knowledge.c6.s2.2.2')!;
   expect(row.evidence).toHaveLength(1);
   await page.reload();
   await expect(status(page)).toHaveAttribute('data-state', 'ready');
@@ -470,19 +466,31 @@ test('19.1 two distinct real challenge mistakes qualify, replay stays one per qu
   await answer('case.c.assignment');
   await answer('case.c.assignment');
   await open(page);
-  await expect(variable(page)).toContainText('有1道挑战题');
+  await expect(page.locator('[data-weakness-id="knowledge.c6.s3.2"]')).toContainText('有1道挑战题');
   const reward = await archive(page);
   await answer('case.c.branch');
   await open(page);
-  await expect(variable(page)).toContainText('达到卡壳规则');
+  await expect(page.locator('[data-weakness-id="knowledge.c6.s3.2"]')).toContainText(
+    '达到卡壳规则',
+  );
   await capture(page, 'challenge-stall', true);
   await answer('case.c.assignment', true);
   await open(page);
-  await expect(variable(page)).not.toContainText('达到卡壳规则');
-  await expect(variable(page)).toContainText('有1道挑战题');
+  await expect(page.locator('[data-weakness-id="knowledge.c6.s3.2"]')).not.toContainText(
+    '达到卡壳规则',
+  );
+  await expect(page.locator('[data-weakness-id="knowledge.c6.s3.2"]')).toContainText('有1道挑战题');
   const after = await archive(page);
   expect(after.ledger.filter((l) => l.subjectId === 'challenge.c.assignment.initialize')).toEqual(
     reward.ledger.filter((l) => l.subjectId === 'challenge.c.assignment.initialize'),
   );
   await capture(page, 'challenge-repaired', true);
 });
+
+async function markLegacy(p: Page) {
+  await p.goto('/#/lessons/lesson.c.variables-output');
+  await ready(p);
+  await expect(p.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
+  await p.locator('[data-knowledge-mark="knowledge.c.variables"]').click();
+  await expect(p.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
+}

@@ -80,7 +80,8 @@ export function Layout({ children }: { children: ReactNode }) {
     return () => observer.disconnect();
   }, [location.pathname]);
   const courseRoute =
-    /^\/(lessons|practice)\//.test(location.pathname) || location.pathname.startsWith('/bugs');
+    /^\/(lessons|practice|c6\/program)\//.test(location.pathname) ||
+    location.pathname.startsWith('/bugs');
   const caseRoute =
     location.pathname.startsWith('/visualize/') ||
     location.pathname.startsWith('/algorithms/') ||
@@ -93,6 +94,7 @@ export function Layout({ children }: { children: ReactNode }) {
     location.pathname === '/custom-code' ||
     caseRoute ||
     location.pathname.startsWith('/practice/') ||
+    location.pathname.startsWith('/c6/program/') ||
     location.pathname.startsWith('/advanced/examples/') ||
     location.pathname.startsWith('/advanced/algorithms/');
   const focused = toolRoute && workbench.layout.workbenchMode === 'focus';

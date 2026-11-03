@@ -719,6 +719,7 @@ function projectStep(
   step: MemoryStep,
   types: TypeMap,
   backward = false,
+  reuseParsed = false,
 ): MemoryState {
   // Copy only touched records. Earlier states and checkpoint records remain
   // immutable; a deep copy of the whole live stack per delta is unnecessary.
@@ -739,9 +740,10 @@ function projectStep(
             ? !table.some((item) => item.id === change.id)
             : equal(table[change.index], before)),
       );
-      if (before === null) table.splice(change.index, 0, structuredClone(after!));
+      if (before === null)
+        table.splice(change.index, 0, reuseParsed ? after! : structuredClone(after!));
       else if (after === null) table.splice(change.index, 1);
-      else table[change.index] = structuredClone(after);
+      else table[change.index] = reuseParsed ? after : structuredClone(after);
     } else if (change.op === 'cell') {
       writable('objects');
       const position = next.objects.findIndex((item) => item.id === change.objectId);
@@ -763,7 +765,10 @@ function projectStep(
       valueType(after, type, types);
       if (at >= 0) object.cells.splice(at, 1);
       if (!equal(after, defaultCell(object, change.byteOffset, types))) {
-        object.cells.push({ byteOffset: change.byteOffset, value: structuredClone(after) });
+        object.cells.push({
+          byteOffset: change.byteOffset,
+          value: reuseParsed ? after : structuredClone(after),
+        });
         object.cells.sort((a, b) => a.byteOffset - b.byteOffset);
       }
     } else if (change.op === 'output') {
@@ -777,7 +782,7 @@ function projectStep(
       const before = backward ? change.after : change.before;
       const after = backward ? change.before : change.after;
       memoryAssert(equal(next[change.op], before));
-      Object.assign(next, { [change.op]: structuredClone(after) });
+      Object.assign(next, { [change.op]: reuseParsed ? after : structuredClone(after) });
     }
   }
   return next;
@@ -1063,7 +1068,9 @@ export async function decodeMemoryResult(
           singletons.add(change.op);
         }
       }
-      const next = projectStep(state, step, types);
+      // These parsed records remain private for this decode. Projection never
+      // mutates them; public playback keeps the default deep-copy boundary.
+      const next = projectStep(state, step, types, false, true);
       validateState(next, nodes, request.input.length, types, cache);
       const count = next.frames.length - state.frames.length;
       memoryAssert(
@@ -1082,7 +1089,7 @@ export async function decodeMemoryResult(
       for (const key of ['comparisons', 'scalarWrites', 'arrayWrites', 'swaps'] as const)
         memoryAssert(next.counters[key] >= state.counters[key]);
       memoryAssert(next.control.inputCursor >= state.control.inputCursor);
-      memoryAssert(equal(projectStep(next, step, types, true), state));
+      memoryAssert(equal(projectStep(next, step, types, true, true), state));
       state = next;
     }
     if (result.terminal.status === 'completed')

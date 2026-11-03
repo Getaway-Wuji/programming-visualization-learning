@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import type { Avatar } from '../storage/model';
 import type { LearningServiceState } from './service';
-import { projectLearning } from './domain';
+import { projectLearning, projectC6Learning } from './domain';
 import { deriveLearningLevel, type ProfileConfiguration } from './profile';
 import { useLearning } from './react';
 import './profile.css';
@@ -82,6 +82,7 @@ export function AvatarPicture({
 /** The home never promotes pending in-memory learning into saved course progress. */
 export function savedCourseProjection(state: LearningServiceState) {
   if (!state.snapshot) return null;
+  if (state.c6?.index) return projectC6Learning(state.snapshot, state.c6.index);
   const catalog = state.practiceCatalog ??
     state.reading?.catalog ?? {
       purpose: 'contract-fixture' as const,

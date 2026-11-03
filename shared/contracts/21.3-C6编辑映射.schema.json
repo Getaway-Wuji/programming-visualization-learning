@@ -1,0 +1,895 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:c-viz:c6:edit:2.0.0",
+  "title": "21.3 C6 EDIT2 closed flat graph wire contract",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/editRequest"
+    },
+    {
+      "$ref": "#/$defs/editResult"
+    }
+  ],
+  "$defs": {
+    "editRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "editVersion",
+        "documentId",
+        "packageRef",
+        "engine",
+        "sourceRevision",
+        "sourceSha256",
+        "source"
+      ],
+      "properties": {
+        "editVersion": {
+          "const": "2.0.0"
+        },
+        "documentId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+        },
+        "packageRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "content.c.primer6"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        "engine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "engine.rust.c6"
+            },
+            "version": {
+              "const": "0.1.0"
+            }
+          }
+        },
+        "sourceRevision": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+        },
+        "sourceSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+        },
+        "source": {
+          "type": "string",
+          "maxLength": 32768
+        }
+      }
+    },
+    "editResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "editVersion",
+        "documentId",
+        "packageRef",
+        "engine",
+        "sourceRevision",
+        "sourceSha256",
+        "source",
+        "status",
+        "nodeMap",
+        "program",
+        "blockMap",
+        "diagnostics",
+        "profileRef"
+      ],
+      "properties": {
+        "editVersion": {
+          "const": "2.0.0"
+        },
+        "documentId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+        },
+        "packageRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "content.c.primer6"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        "engine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "buildId"
+          ],
+          "properties": {
+            "id": {
+              "const": "engine.rust.c6"
+            },
+            "version": {
+              "const": "0.1.0"
+            },
+            "buildId": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+            }
+          }
+        },
+        "sourceRevision": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+        },
+        "sourceSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+        },
+        "source": {
+          "type": "string",
+          "maxLength": 32768
+        },
+        "status": {
+          "enum": [
+            "mapped",
+            "code-only",
+            "invalid",
+            "unsupported"
+          ]
+        },
+        "nodeMap": {
+          "$ref": "urn:c-viz:c6:1.5.0#/$defs/result/properties/nodeMap"
+        },
+        "program": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "rootId",
+                "nodes"
+              ],
+              "properties": {
+                "rootId": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+                },
+                "nodes": {
+                  "type": "array",
+                  "maxItems": 32768,
+                  "items": {
+                    "$ref": "#/$defs/block"
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "blockMap": {
+          "type": "array",
+          "maxItems": 32768,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "blockId",
+              "nodeId",
+              "byteRange"
+            ],
+            "properties": {
+              "blockId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+              },
+              "nodeId": {
+                "type": "string",
+                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+              },
+              "byteRange": {
+                "$ref": "urn:c-viz:c6:1.5.0#/$defs/result/properties/nodeMap/items/properties/byteRange"
+              }
+            }
+          }
+        },
+        "diagnostics": {
+          "type": "array",
+          "maxItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "byteRange"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "allOf": [
+                  {
+                    "$ref": "urn:c-viz:c6:1.5.0#/$defs/result/properties/terminal/properties/code"
+                  }
+                ]
+              },
+              "byteRange": {
+                "$ref": "urn:c-viz:c6:1.5.0#/$defs/result/properties/nodeMap/items/properties/byteRange"
+              }
+            }
+          }
+        },
+        "profileRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "block-set.c6.common-int"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        }
+      }
+    },
+    "block": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "body"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "main"
+            },
+            "body": {
+              "type": "array",
+              "maxItems": 32768,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "value"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "integer"
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]{0,9})$(?![\\s\\S])"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "name"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "variable"
+            },
+            "name": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_]*$(?![\\s\\S])",
+              "maxLength": 32768
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "name",
+            "initial"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "declare"
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 32768
+            },
+            "initial": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "name",
+            "value"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "assign"
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 32768
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "operator",
+            "operand"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "unary"
+            },
+            "operator": {
+              "enum": [
+                "+",
+                "-",
+                "!"
+              ]
+            },
+            "operand": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "operator",
+            "left",
+            "right"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "arithmetic"
+            },
+            "operator": {
+              "enum": [
+                "+",
+                "-",
+                "*",
+                "/",
+                "%"
+              ]
+            },
+            "left": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "right": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "operator",
+            "left",
+            "right"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "compare"
+            },
+            "operator": {
+              "enum": [
+                "<",
+                "<=",
+                ">",
+                ">=",
+                "==",
+                "!="
+              ]
+            },
+            "left": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "right": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "operator",
+            "left",
+            "right"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "logic"
+            },
+            "operator": {
+              "enum": [
+                "&&",
+                "||"
+              ]
+            },
+            "left": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "right": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "condition",
+            "then",
+            "else"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "if"
+            },
+            "condition": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "then": {
+              "type": "array",
+              "maxItems": 32768,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+              }
+            },
+            "else": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "maxItems": 32768,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "condition",
+            "body"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "while"
+            },
+            "condition": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "body": {
+              "type": "array",
+              "maxItems": 32768,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "init",
+            "condition",
+            "update",
+            "body"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "for"
+            },
+            "init": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "condition": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "update": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "body": {
+              "type": "array",
+              "maxItems": 32768,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "break"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "continue"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "name",
+            "length",
+            "values"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "array_declare"
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 32768
+            },
+            "length": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*$(?![\\s\\S])"
+            },
+            "values": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "maxItems": 30,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^-?(0|[1-9][0-9]*)$(?![\\s\\S])"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "name",
+            "index"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "array_read"
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 32768
+            },
+            "index": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "name",
+            "index",
+            "value"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "array_write"
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 32768
+            },
+            "index": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "format",
+            "args"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "print"
+            },
+            "format": {
+              "type": "string",
+              "maxLength": 63
+            },
+            "args": {
+              "type": "array",
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "value"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "return"
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "body"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "scope"
+            },
+            "body": {
+              "type": "array",
+              "maxItems": 32768,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "$comment": "Structural closure only. UTF8, byte quotas, exact identities, one full tree, finite block connections, Rust reparse equivalence and mapped/code-only/raw-draft rules remain semantic checks. Flat child IDs preserve JSON depth32 with AST depth64."
+}

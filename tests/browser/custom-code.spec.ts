@@ -259,7 +259,20 @@ test('native DB1 through DB7 upgrades preserve old partitions and add the draft 
   page,
 }) => {
   await ready(page);
-  const old = await rows(page);
+  const currentBefore = await rows(page);
+  expect(currentBefore.meta[0]).toMatchObject({ schemaVersion: '10.0.0', dbVersion: 10 });
+  expect(Object.keys(currentBefore)).toHaveLength(19);
+  await page.goto('/checks/');
+  await page.waitForFunction(() => Boolean(window.historyHarness));
+  const referenceName = 'c-viz-learning.test.custom-draft-reference';
+  await page.evaluate((name) => window.historyHarness.open(name), referenceName);
+  const old = await rows(page, referenceName);
+  expect(old.meta[0]).toMatchObject({
+    schemaVersion: '9.0.0',
+    dbVersion: 9,
+    activePackageRef: { id: 'content.c.p0', version: '1.0.0' },
+  });
+  expect(Object.keys(old)).toHaveLength(17);
   const name = 'c-viz-learning.test.custom-draft-migration';
   await page.route('**/qa-blank', (r) =>
     r.fulfill({ contentType: 'text/html', body: '<title>migration setup</title>' }),
@@ -330,6 +343,7 @@ test('native DB1 through DB7 upgrades preserve old partitions and add the draft 
       generation: (old.meta[0] as { generation: string }).generation,
     });
   }
+  expect(await rows(page)).toEqual(currentBefore);
 });
 
 test('real editor and result remain accessible at desktop, tablet and phone widths', async ({

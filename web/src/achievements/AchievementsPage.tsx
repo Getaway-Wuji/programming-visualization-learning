@@ -1,11 +1,14 @@
 import { Link } from 'react-router';
 import { Breadcrumbs, PageHeading } from '../components/Ui';
 import { Icon } from '../components/Icon';
-import { achievementCatalog } from './model';
+import { achievementCatalog, c6AchievementCatalog } from './model';
+import { useLearning } from '../learning/react';
 import { AchievementStatus, useAchievements } from './react';
 
 export default function AchievementsPage() {
   const { state } = useAchievements();
+  const { state: learning } = useLearning();
+  const catalog = learning.c6 ? c6AchievementCatalog : achievementCatalog;
   const known = ['ready', 'unsaved'].includes(state.status);
   const unlocked = state.rows.filter((r) => r.unlockedAt).length;
   return (
@@ -27,7 +30,7 @@ export default function AchievementsPage() {
       </div>
       <AchievementStatus />
       <ol className="achievement-list">
-        {achievementCatalog.badges.map((badge, i) => {
+        {catalog.badges.map((badge, i) => {
           const saved = known ? state.rows.find((r) => r.badgeRef.id === badge.id) : undefined;
           return (
             <li

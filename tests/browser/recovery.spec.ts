@@ -4,7 +4,7 @@ import type { HarnessResult } from './harness/storage';
 import type { LearningServiceState } from '../../web/src/learning/service';
 import type { StorageSnapshot } from '../../web/src/storage/model';
 import { defaultAppearance } from '../../web/src/storage/model';
-import { p05CourseRelease } from '../../web/src/content/p05-course-release.generated';
+import { c6LearningRelease } from '../../web/src/c6-learning/release.generated';
 import type {} from './harness/recovery';
 
 const first = 'exercise.synthetic.first';
@@ -25,19 +25,12 @@ function unsaved(answer: HarnessResult<unknown>, code?: string) {
   if (code) expect(answer.error.code).toBe(code);
 }
 function initial(snapshot: StorageSnapshot, production = false) {
-  const expanded =
-    production && p05CourseRelease.registered && process.env.P05_HIDE_COURSE_BUNDLE !== '1';
   expect(snapshot.meta).toMatchObject({
-    schemaVersion: '7.0.0',
-    dbVersion: 7,
-    revision: production ? (expanded ? 2 : 1) : 0,
+    schemaVersion: production ? '10.0.0' : '9.0.0',
+    dbVersion: production ? 10 : 9,
+    revision: production ? 1 : 0,
   });
-  if (production)
-    expect(snapshot.meta.activePackageRef).toEqual(
-      expanded
-        ? { id: 'content.c.p05', version: '1.0.0' }
-        : { id: 'content.c.p0', version: '1.0.2' },
-    );
+  if (production) expect(snapshot.meta.activePackageRef).toEqual(c6LearningRelease.packageRef);
   expect(snapshot.settings).toEqual({
     theme: 'light',
     reducedMotion: 'system',
@@ -155,7 +148,7 @@ test('known eleven-store archives with invalid or missing meta can be explicitly
     expect(cleared.cleared).toBe(true);
     expect(cleared.snapshot!.meta.generation).not.toBe(old.snapshot!.meta.generation);
     initial(cleared.snapshot!);
-    expect((await page.evaluate(() => window.recoveryHarness.rawDump())).version).toBe(7);
+    expect((await page.evaluate(() => window.recoveryHarness.rawDump())).version).toBe(9);
   }
 });
 
@@ -756,11 +749,7 @@ test('production clear confirmation cancels without writes, then confirmed clear
   );
   await expect
     .poll(async () => (await productionSnapshot(page)).meta.activePackageRef)
-    .toEqual(
-      p05CourseRelease.registered && process.env.P05_HIDE_COURSE_BUNDLE !== '1'
-        ? { id: 'content.c.p05', version: '1.0.0' }
-        : { id: 'content.c.p0', version: '1.0.2' },
-    );
+    .toEqual(c6LearningRelease.packageRef);
   const after = await productionSnapshot(page);
   expect(after.meta.generation).not.toBe(before.meta.generation);
   initial(after, true);
@@ -810,8 +799,8 @@ test('production home visibly marks a corrupt ledger total as unconfirmed instea
   });
   await page.goto('/#/');
   await page.reload();
-  await expect(page.getByTestId('learning-posted-points')).toContainText('暂不可确认');
-  await expect(page.getByTestId('learning-posted-points')).not.toHaveText('0');
+  await expect(page.getByRole('heading', { name: '已入账 暂不可确认', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '已入账 0 分', exact: true })).toHaveCount(0);
 });
 
 test('production singleton reset requires its own confirmation and leaves all unrelated stored settings and learning rows unchanged', async ({
@@ -903,9 +892,9 @@ test('production singleton reset requires its own confirmation and leaves all un
 test('actual isolated browser contexts keep native IDB through refresh and discard that isolated profile when the context closes', async ({
   browser,
 }, testInfo) => {
-  const contextOptions = {
-    baseURL: String(testInfo.project.use.baseURL ?? 'http://127.0.0.1:4178'),
-  };
+  const baseURL = testInfo.project.use.baseURL;
+  if (!baseURL) throw new Error('The current test origin must be explicit');
+  const contextOptions = { baseURL };
   const name = newName();
   const transient = await browser.newContext(contextOptions);
   let originalGeneration: string;

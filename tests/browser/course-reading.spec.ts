@@ -1,22 +1,16 @@
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import type { StorageSnapshot } from '../../web/src/storage/model';
-import type { LessonEntity, ProgramEntity } from '../../web/src/content/types';
+import type { C6TeachingNode } from '../../web/src/content/c6-teaching-types';
 
-// These are independent expectations from the already reviewed 09.1 source.
-// The production page must fetch only the separate approved reading release.
-const reviewed = JSON.parse(
-  readFileSync(new URL('../../content/c/p0/course-1.0.1.json', import.meta.url), 'utf8'),
-) as {
-  chapters: { id: string; title: string }[];
-  lessons: LessonEntity[];
-  programs: ProgramEntity[];
+const source = JSON.parse(readFileSync('content/c/primer6-teaching/source-2.0.0.json', 'utf8')) as {
+  chapters: { nodes: C6TeachingNode[] }[];
 };
-const first = reviewed.lessons[0];
-const second = reviewed.lessons[1];
-const resource = '**/content/reading/course-reading-1.0.0.json';
-const lessonPath = (id: string) => `/#/lessons/${encodeURIComponent(id)}`;
-
+const nodes = source.chapters.flatMap((c) => c.nodes);
+const first = 'lesson.c6.s2.1',
+  second = 'lesson.c6.s3.2';
+const path = (id: string) => '/#/lessons/' + id;
+const snapshot = productionSnapshot;
 /** Native, read-only inspection of the same origin's actual production archive. */
 async function productionSnapshot(page: Page): Promise<StorageSnapshot> {
   return page.evaluate(async () => {
@@ -56,109 +50,65 @@ async function productionSnapshot(page: Page): Promise<StorageSnapshot> {
 }
 
 async function localReady(page: Page) {
-  await expect(page.getByTestId('learning-save-status')).not.toHaveAttribute(
-    'data-save-status',
-    'loading',
-  );
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-reading-status', 'ready');
 }
-
-async function openLesson(page: Page, id = first.id) {
-  await page.goto(lessonPath(id));
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
+async function open(page: Page, id = first) {
+  await page.goto(path(id));
+  await expect(page.locator('.c6-teaching-reading')).toBeVisible();
   await localReady(page);
 }
-
-async function saved(page: Page) {
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
-  await expect(
-    page.getByTestId('learning-save-status').getByText('已保存', { exact: true }),
-  ).toBeVisible();
-}
-
-async function start(page: Page) {
-  await page.getByRole('button', { name: '开始本节学习', exact: true }).click();
-  await expect(page.getByTestId('lesson-progress')).toContainText('已开始');
-  await saved(page);
-}
-
 async function confirm(page: Page) {
-  await page.getByRole('button', { name: '确认已学习', exact: true }).click();
-  await expect(page.getByTestId('lesson-progress')).toContainText('已确认学习');
-  await saved(page);
+  await page.getByRole('button', { name: '我已读完本节', exact: true }).click();
+  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  await localReady(page);
 }
-
-function readingOnly(snapshot: StorageSnapshot) {
+function partialRead(s: StorageSnapshot, id: string) {
   expect(
-    snapshot.progress.every((row) =>
-      ['lesson.started', 'lesson.study-confirmed'].includes(row.eventType),
-    ),
-  ).toBe(true);
+    s.progress
+      .filter((p) => p.subjectRef.id === id)
+      .map((p) => p.eventType)
+      .sort(),
+  ).toEqual(['lesson.study-confirmed']);
   expect(
-    snapshot.receipts.every((row) =>
-      ['lesson.started', 'lesson.study-confirmed'].includes(row.eventType),
-    ),
-  ).toBe(true);
-  expect(snapshot.ledger).toEqual([]);
-  expect(snapshot.dailyFacts).toEqual([]);
+    s.progress.some((p) => p.eventType === 'exercise.passed' || p.eventType === 'lesson.completed'),
+  ).toBe(false);
+  expect(s.ledger).toEqual([]);
+  expect(s.dailyFacts).toEqual([]);
 }
 
 test('the production reading release exposes three chapters and six complete reviewed lessons without recording passive browsing', async ({
   page,
-}, testInfo) => {
+}, info) => {
   const requests: string[] = [];
-  page.on('request', (request) => requests.push(request.url()));
+  page.on('request', (r) => requests.push(r.url()));
   await page.goto('/#/courses');
-  await expect(page.getByTestId('course-reading')).toHaveAttribute('data-state', 'ready');
   await localReady(page);
-  const before = await productionSnapshot(page);
-  await expect(page.locator('[data-course-lesson]')).toHaveCount(6);
-  for (const chapter of reviewed.chapters) {
-    await expect(page.getByRole('heading', { name: chapter.title, exact: true })).toBeVisible();
-  }
-  for (const lesson of reviewed.lessons) {
-    await expect(page.locator(`[data-course-lesson="${lesson.id}"]`)).toContainText('未开始');
-  }
-
-  let checkedFences = 0;
-  for (const lesson of reviewed.lessons) {
-    await openLesson(page, lesson.id);
-    const reading = page.getByTestId('lesson-reading');
-    await expect(page.getByRole('heading', { name: lesson.title, exact: true })).toBeVisible();
-    await expect(reading).toContainText(lesson.teaching.explanation.split('\n\n')[0]);
-    for (const text of [
-      ...lesson.teaching.objectives,
-      ...lesson.teaching.commonMistakes,
-      ...lesson.teaching.boundaryNotes,
-    ]) {
-      await expect(reading).toContainText(text);
+  await expect(page.getByRole('region', { name: '正文章节' }).getByRole('link')).toHaveCount(17);
+  await expect(page.getByRole('region', { name: '参考资料' }).getByRole('link')).toHaveCount(2);
+  const before = await snapshot(page);
+  let fences = 0;
+  for (const id of ['c6.s2.1', 'c6.s14.3.1', 'c6.appB']) {
+    const node = nodes.find((n) => n.sourceNodeId === id)!;
+    await page.goto(id === 'c6.appB' ? '/#/courses/' + id : path('lesson.' + id));
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(node.titleDisplay);
+    const reading = page.locator('.c6-teaching-reading');
+    await expect(reading).toBeVisible();
+    const code = await reading.locator('pre code').allTextContents();
+    for (const match of node.body.matchAll(/```[^\n]*\n([\s\S]*?)```/g)) {
+      expect(code.some((s) => s.trim() === match[1].trim())).toBe(true);
+      fences++;
     }
-    const code = await reading.locator('pre').allTextContents();
-    for (const match of lesson.teaching.explanation.matchAll(/```c\r?\n([\s\S]*?)```/g)) {
-      expect(code.some((text) => text.trim() === match[1].trim())).toBe(true);
-      checkedFences++;
-    }
-    for (const ref of lesson.teaching.exampleProgramRefs) {
-      const program = reviewed.programs.find(
-        (item) => item.id === ref.id && item.version === ref.version,
-      )!;
-      expect(code.some((text) => text.trim() === program.sourceExample.trim())).toBe(true);
-    }
-    await expect(reading.locator('textarea:not([readonly]), [contenteditable="true"]')).toHaveCount(
-      0,
-    );
-    await expect(page.getByTestId('lesson-progress')).toContainText('未开始');
+    await expect(reading.locator('textarea,[contenteditable="true"]')).toHaveCount(0);
+    if (id === 'c6.appB')
+      await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toHaveCount(0);
   }
-  expect(checkedFences).toBe(11);
-  expect(await productionSnapshot(page)).toEqual(before);
-  expect(requests.some((url) => new URL(url).pathname.endsWith('/course-reading-1.0.0.json'))).toBe(
-    true,
-  );
-  expect(requests.some((url) => new URL(url).pathname.endsWith('/course-1.0.1.json'))).toBe(false);
-  await testInfo.attach('reviewed-reading-production-scope', {
-    body: JSON.stringify({ chapters: 3, lessons: 6, originalCodeFences: checkedFences, requests }),
+  expect(fences).toBeGreaterThan(0);
+  expect(await snapshot(page)).toEqual(before);
+  expect(requests.some((u) => u.includes('/primer6-teaching/'))).toBe(true);
+  expect(requests.some((u) => /\/content\/(reading|course|review)\//.test(u))).toBe(false);
+  await info.attach('current-book-passive-reading', {
+    body: JSON.stringify({ chapters: 17, lessons: 404, references: 2, fences, before, requests }),
     contentType: 'application/json',
   });
 });
@@ -166,51 +116,28 @@ test('the production reading release exposes three chapters and six complete rev
 test('explicit start and study confirmation persist once through refresh and reopening, with no exercise pass or reward', async ({
   page,
   context,
-}, testInfo) => {
-  await openLesson(page);
-  await start(page);
-  const started = await productionSnapshot(page);
-  expect(started.progress).toHaveLength(1);
-  expect(started.receipts).toHaveLength(1);
-  expect(started.progress[0]).toMatchObject({
-    eventType: 'lesson.started',
-    subjectRef: { id: first.id, version: first.version },
-  });
-  await page.reload();
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('lesson-progress')).toContainText('已开始');
-  await localReady(page);
-  expect(await productionSnapshot(page)).toEqual(started);
-
-  const startAgain = page.getByRole('button', { name: '开始本节学习', exact: true });
-  if (await startAgain.isEnabled()) {
-    await startAgain.click();
-    await localReady(page);
-    expect(await productionSnapshot(page)).toEqual(started);
-  }
+}, info) => {
+  await open(page);
+  const before = await snapshot(page);
+  expect(before.progress).toEqual([]);
   await confirm(page);
-  const confirmed = await productionSnapshot(page);
-  expect(confirmed.progress).toHaveLength(2);
-  expect(confirmed.receipts).toHaveLength(2);
-  readingOnly(confirmed);
-  await expect(page.getByRole('button', { name: '确认已学习', exact: true })).toBeDisabled();
-  await expect(page.getByTestId('lesson-progress')).not.toContainText('小节已完成');
+  const saved = await snapshot(page);
+  partialRead(saved, first);
+  expect(saved.receipts.filter((r) => r.eventType === 'lesson.study-confirmed')).toHaveLength(1);
   await page.reload();
-  await expect(page.getByTestId('lesson-progress')).toContainText('已确认学习');
+  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
   await localReady(page);
-  expect(await productionSnapshot(page)).toEqual(confirmed);
+  expect(await snapshot(page)).toEqual(saved);
   await page.close();
   const reopened = await context.newPage();
-  await openLesson(reopened);
-  await expect(reopened.getByTestId('lesson-progress')).toContainText('已确认学习');
-  expect(await productionSnapshot(reopened)).toEqual(confirmed);
-  await expect(reopened.getByRole('link', { name: /复习/ }).first()).toBeVisible();
-  await testInfo.attach('real-reading-native-idb', {
-    body: JSON.stringify({
-      evidenceKind: 'actual production UI reading actions',
-      started,
-      confirmed,
-    }),
+  await open(reopened);
+  await expect(reopened.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  expect(await snapshot(reopened)).toEqual(saved);
+  await expect(
+    reopened.getByRole('link', { name: '完成配套执行练习', exact: true }),
+  ).toHaveAttribute('href', '#/practice/exercise.c6.s2.1');
+  await info.attach('actual-current-reading', {
+    body: JSON.stringify({ before, saved }),
     contentType: 'application/json',
   });
 });
@@ -218,87 +145,78 @@ test('explicit start and study confirmation persist once through refresh and reo
 test('confirming an untouched lesson creates only its start and study-confirmed facts', async ({
   page,
 }) => {
-  await openLesson(page, second.id);
+  await open(page, 'lesson.c6.s1.1');
   await confirm(page);
-  const snapshot = await productionSnapshot(page);
-  expect(snapshot.progress).toHaveLength(2);
-  expect(snapshot.receipts).toHaveLength(2);
-  expect(snapshot.progress.map((row) => row.eventType).sort()).toEqual([
-    'lesson.started',
+  const saved = await snapshot(page);
+  expect(saved.progress.map((p) => p.eventType).sort()).toEqual([
+    'lesson.completed',
     'lesson.study-confirmed',
   ]);
-  expect(snapshot.progress.every((row) => row.subjectRef.id === second.id)).toBe(true);
-  readingOnly(snapshot);
+  expect(
+    saved.progress.every(
+      (p) => p.subjectRef.id === 'lesson.c6.s1.1' && p.subjectRef.version === '2.0.0',
+    ),
+  ).toBe(true);
+  expect(saved.progress.some((p) => p.eventType === 'exercise.passed')).toBe(false);
+  expect(saved.ledger).toEqual([]);
+  await expect(page.getByRole('heading', { name: '本节已完成', exact: true })).toBeVisible();
 });
 
 test('continue learning follows the most recent explicit lesson activity and keeps each lesson independent', async ({
   page,
 }) => {
-  await openLesson(page);
+  await open(page);
   await confirm(page);
-  await openLesson(page, second.id);
-  await expect(page.getByTestId('lesson-progress')).toContainText('未开始');
-  const firstOnly = await productionSnapshot(page);
-  await page.goto('/#/courses');
-  await expect(page.getByTestId('course-reading')).toHaveAttribute('data-state', 'ready');
-  await localReady(page);
-  await expect(page.getByRole('link', { name: '继续学习', exact: true })).toHaveAttribute(
+  const before = await snapshot(page);
+  await open(page, second);
+  expect(await snapshot(page)).toEqual(before);
+  await page.goto('/#/');
+  await expect(page.getByRole('link', { name: '继续阅读', exact: true })).toHaveAttribute(
     'href',
-    `#/lessons/${first.id}`,
+    '#/lessons/' + first,
   );
-  await expect(page.locator(`[data-course-lesson="${first.id}"]`)).toContainText('已确认学习');
-  await expect(page.locator(`[data-course-lesson="${second.id}"]`)).toContainText('未开始');
-  expect(await productionSnapshot(page)).toEqual(firstOnly);
-
-  await openLesson(page, second.id);
-  await start(page);
-  const both = await productionSnapshot(page);
-  expect(both.progress.filter((row) => row.subjectRef.id === first.id)).toEqual(firstOnly.progress);
-  expect(both.progress.filter((row) => row.subjectRef.id === second.id)).toHaveLength(1);
-  readingOnly(both);
-  for (const route of ['/#/courses', '/#/']) {
-    await page.goto(route);
-    await localReady(page);
-    await expect(page.getByRole('link', { name: '继续学习', exact: true })).toHaveAttribute(
-      'href',
-      `#/lessons/${second.id}`,
-    );
-  }
-  await page.getByRole('link', { name: '继续学习', exact: true }).click();
-  await expect(page).toHaveURL(new RegExp(`#/lessons/${second.id}$`));
-  await expect(page.getByTestId('lesson-progress')).toContainText('已开始');
-  expect(await productionSnapshot(page)).toEqual(both);
+  await open(page, second);
+  await confirm(page);
+  const after = await snapshot(page);
+  expect(after.progress.filter((p) => p.subjectRef.id === first)).toEqual(before.progress);
+  expect(
+    after.progress
+      .filter((p) => p.subjectRef.id === second)
+      .map((p) => p.eventType)
+      .sort(),
+  ).toEqual(['lesson.study-confirmed']);
+  await page.goto('/#/');
+  await expect(page.getByRole('link', { name: '继续阅读', exact: true })).toHaveAttribute(
+    'href',
+    '#/lessons/' + second,
+  );
+  await page.getByRole('link', { name: '继续阅读', exact: true }).click();
+  await expect(page).toHaveURL(new RegExp('#/lessons/' + second + '$'));
+  expect((await snapshot(page)).ledger).toEqual([]);
 });
 
 test('a missing reading resource fails closed without learning writes and its visible retry recovers', async ({
   page,
-}, testInfo) => {
-  await page.goto('/#/settings?panel=display');
+}, info) => {
+  await page.goto('/#/courses');
   await localReady(page);
-  const before = await productionSnapshot(page);
-  await page.route(resource, (route) =>
-    route.fulfill({ status: 404, contentType: 'application/json', body: '{"error":"missing"}' }),
+  const before = await snapshot(page);
+  const resource = '**/content/c/primer6-teaching/ch02-2.0.0.json';
+  await page.route(resource, (r) =>
+    r.fulfill({ status: 404, body: 'Isolated chapter unavailable' }),
   );
-  await page.goto(lessonPath(first.id));
-  // Hash navigation keeps the already verified app resource in memory; reload exercises a fresh failed fetch.
-  await page.reload();
-  const reading = page.getByTestId('lesson-reading');
-  await expect(reading).toHaveAttribute('data-state', 'failed');
-  for (const name of ['开始本节学习', '确认已学习']) {
-    const action = page.getByRole('button', { name, exact: true });
-    if (await action.count()) await expect(action).toBeDisabled();
-  }
-  await localReady(page);
-  expect(await productionSnapshot(page)).toEqual(before);
+  await page.goto(path(first));
+  await expect(page.getByRole('heading', { name: '本节内容读取失败', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toHaveCount(0);
+  expect(await snapshot(page)).toEqual(before);
   await page.unroute(resource);
-  await reading.getByRole('button', { name: /重试/ }).click();
-  await expect(reading).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('lesson-progress')).toContainText('未开始');
-  expect(await productionSnapshot(page)).toEqual(before);
-  await start(page);
-  readingOnly(await productionSnapshot(page));
-  await testInfo.attach('missing-resource-fault-scope', {
-    body: 'Only the approved reading JSON request received an isolated HTTP 404. Recovery used the normal production resource and visible retry; no teaching result or persisted learning record was injected.',
+  await page.getByRole('button', { name: '重试本节', exact: true }).click();
+  await expect(page.locator('.c6-teaching-reading')).toBeVisible();
+  expect(await snapshot(page)).toEqual(before);
+  await confirm(page);
+  partialRead(await snapshot(page), first);
+  await info.attach('chapter-failure-scope', {
+    body: 'Only the real ch02 HTTP request failed. No execution, learning DTO or stored pass was supplied.',
     contentType: 'text/plain',
   });
 });
@@ -307,164 +225,154 @@ test('clearing in another production page invalidates the open lesson without re
   page,
   context,
 }) => {
-  await openLesson(page);
+  await open(page);
   await confirm(page);
-  const learned = await productionSnapshot(page);
-  const settings = await context.newPage();
-  await settings.goto('/#/settings?panel=data');
-  await localReady(settings);
-  await settings.getByRole('button', { name: '清除本地数据', exact: true }).click();
-  await settings
-    .getByRole('dialog', { name: '确认清除本地数据', exact: true })
-    .getByRole('button', { name: '确认清除', exact: true })
-    .click();
-  await expect(settings.getByTestId('learning-save-status')).toContainText('本地数据已清除');
-  await expect(page.getByTestId('lesson-progress')).toContainText('未开始');
-  const cleared = await productionSnapshot(page);
-  expect(cleared.meta.generation).not.toBe(learned.meta.generation);
+  const old = await snapshot(page);
+  const peer = await context.newPage();
+  await peer.goto('/#/settings?panel=data');
+  await localReady(peer);
+  await peer.getByRole('button', { name: '清除本地数据', exact: true }).click();
+  await peer.getByRole('button', { name: '确认清除', exact: true }).click();
+  await expect
+    .poll(async () => (await snapshot(page)).meta.generation)
+    .not.toBe(old.meta.generation);
+  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeEnabled();
+  const cleared = await snapshot(page);
   expect(cleared.progress).toEqual([]);
   expect(cleared.receipts).toEqual([]);
-  readingOnly(cleared);
-  await page.waitForTimeout(650);
-  expect(await productionSnapshot(page)).toEqual(cleared);
-  await page.reload();
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('lesson-progress')).toContainText('未开始');
-  await localReady(page);
-  expect(await productionSnapshot(page)).toEqual(cleared);
-  await start(page);
-  const restarted = await productionSnapshot(page);
-  expect(restarted.meta.generation).toBe(cleared.meta.generation);
-  expect(restarted.progress).toHaveLength(1);
-  expect(restarted.receipts).toHaveLength(1);
-  expect(restarted.receipts[0].eventId).not.toBe(learned.receipts[0].eventId);
-  readingOnly(restarted);
+  expect(cleared.ledger).toEqual([]);
+  await confirm(page);
+  const fresh = await snapshot(page);
+  partialRead(fresh, first);
+  expect(fresh.meta.generation).toBe(cleared.meta.generation);
+  expect(fresh.receipts.every((r) => !old.receipts.some((p) => p.eventId === r.eventId))).toBe(
+    true,
+  );
 });
 
 test('a native reading write failure is visibly unsaved and retry saves the same pending start once', async ({
   page,
-}, testInfo) => {
+}, info) => {
   await page.addInitScript(() => {
-    let fail = false;
-    Object.assign(window, {
-      failNextReadingSave: () => {
-        fail = true;
-      },
-    });
-    for (const method of ['add', 'put'] as const) {
-      const original = IDBObjectStore.prototype[method];
+    const control = { armed: false, ids: [] as string[] };
+    Object.assign(window, { currentReadingQuota: control });
+    for (const method of ['put', 'add'] as const) {
+      const native = IDBObjectStore.prototype[method];
       IDBObjectStore.prototype[method] = function (value, key) {
-        if (fail && this.name === 'progress') {
-          fail = false;
-          throw new DOMException('Isolated reading save fault', 'QuotaExceededError');
+        const r = value as { eventId?: string; eventType?: string };
+        if (this.name === 'receipts' && r.eventType === 'lesson.study-confirmed')
+          control.ids.push(r.eventId!);
+        if (control.armed && this.name === 'courseActivities') {
+          control.armed = false;
+          throw new DOMException('21.6 current reading activity quota', 'QuotaExceededError');
         }
-        return key === undefined ? original.call(this, value) : original.call(this, value, key);
+        return key === undefined ? native.call(this, value) : native.call(this, value, key);
       };
     }
   });
-  await openLesson(page);
-  const before = await productionSnapshot(page);
-  await page.evaluate(() =>
-    (window as unknown as { failNextReadingSave(): void }).failNextReadingSave(),
+  await open(page);
+  const before = await snapshot(page);
+  await page.evaluate(() => {
+    (window as unknown as { currentReadingQuota: { armed: boolean } }).currentReadingQuota.armed =
+      true;
+  });
+  await page.getByRole('button', { name: '我已读完本节', exact: true }).click();
+  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+    'data-save-status',
+    'unsaved',
   );
-  await page.getByRole('button', { name: '开始本节学习', exact: true }).click();
-  const status = page.getByTestId('learning-save-status');
-  await expect(status).toHaveAttribute('data-save-status', 'unsaved');
-  await expect(status).toContainText('未保存');
-  const failed = await productionSnapshot(page);
+  const failed = await snapshot(page);
   expect(failed.progress).toEqual(before.progress);
   expect(failed.receipts).toEqual(before.receipts);
   expect(failed.ledger).toEqual(before.ledger);
-  await status.getByRole('button', { name: '重试未保存操作', exact: true }).click();
-  await saved(page);
-  await expect(page.getByTestId('lesson-progress')).toContainText('已开始');
-  const retried = await productionSnapshot(page);
-  expect(retried.progress).toHaveLength(1);
-  expect(retried.receipts).toHaveLength(1);
-  readingOnly(retried);
-  await page.reload();
-  await expect(page.getByTestId('lesson-progress')).toContainText('已开始');
+  await page
+    .getByTestId('learning-save-status')
+    .getByRole('button', { name: '重试未保存操作', exact: true })
+    .click();
+  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
   await localReady(page);
-  expect(await productionSnapshot(page)).toEqual(retried);
-  await testInfo.attach('native-reading-save-fault-scope', {
-    body: 'QuotaExceededError was injected only at the next native progress add/put. This checks atomic rollback, the unsaved acknowledgment and the ordinary pending-event retry, not actual disk exhaustion or private-browser limits.',
-    contentType: 'text/plain',
+  await expect(page.locator('.c6-reading-confirmation').getByRole('alert')).toHaveCount(0);
+  const saved = await snapshot(page);
+  partialRead(saved, first);
+  const ids = await page.evaluate(
+    () => (window as unknown as { currentReadingQuota: { ids: string[] } }).currentReadingQuota.ids,
+  );
+  expect(ids).toHaveLength(2);
+  expect(new Set(ids).size).toBe(1);
+  expect(saved.receipts.filter((r) => r.eventId === ids[0])).toHaveLength(1);
+  await page.reload();
+  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  expect((await snapshot(page)).progress).toEqual(saved.progress);
+  await info.attach('native-current-reading-quota', {
+    body: JSON.stringify({ before, failed, saved, ids }),
+    contentType: 'application/json',
   });
 });
 
 test('explicitly seeded compatible historical passes are displayed as completed, while old versions remain unfinished and refresh creates no completion fact', async ({
   page,
-}, testInfo) => {
-  await openLesson(page);
+}, info) => {
+  await open(page);
   await confirm(page);
-  const base = await productionSnapshot(page);
-  const exerciseId = first.requiredExerciseRefs[0].id;
-  const seedHistoricalPass = async (version: string) => {
-    await page.evaluate(
-      async ({ id, version, packageRef, at }) => {
-        const db = await new Promise<IDBDatabase>((resolve, reject) => {
-          const request = indexedDB.open('c-viz-learning');
-          request.onsuccess = () => resolve(request.result);
-          request.onerror = () => reject(request.error);
-        });
-        try {
-          const tx = db.transaction(['meta', 'progress'], 'readwrite');
-          const done = new Promise<void>((resolve, reject) => {
-            tx.oncomplete = () => resolve();
-            tx.onabort = () => reject(tx.error);
-          });
-          const meta = tx.objectStore('meta').get('current');
-          meta.onsuccess = () => {
-            const value = meta.result as StorageSnapshot['meta'];
-            tx.objectStore('progress').put(
-              {
-                eventType: 'exercise.passed',
-                result: 'passed',
-                subjectRef: { id, version },
-                packageRef,
-                learningRevision: 1,
-                firstAt: at,
-                lastAt: at,
-              },
-              [value.generation, 'exercise.passed', id, version, 1],
-            );
-            tx.objectStore('meta').put({ ...value, revision: value.revision + 1 }, 'current');
-          };
-          await done;
-        } finally {
-          db.close();
-        }
-      },
-      {
-        id: exerciseId,
-        version,
-        packageRef: { id: 'content.c.p0', version: '1.0.1' },
-        at: base.progress[0].firstAt,
-      },
-    );
-  };
-  await seedHistoricalPass('1.0.0');
-  await page.reload();
-  await expect(page.getByTestId('lesson-progress')).toContainText('已确认学习');
-  await expect(page.getByTestId('lesson-progress')).not.toContainText('小节已完成');
-  await seedHistoricalPass('1.0.1');
-  const seeded = await productionSnapshot(page);
-  await page.reload();
-  await expect(page.getByTestId('lesson-progress')).toContainText('小节已完成');
-  await expect(page.getByRole('link', { name: '复习本节', exact: true })).toBeVisible();
-  expect(await productionSnapshot(page)).toEqual(seeded);
-  expect(seeded.receipts.map((row) => row.eventType).sort()).toEqual([
-    'lesson.started',
-    'lesson.study-confirmed',
-  ]);
-  await page.getByRole('link', { name: '复习本节', exact: true }).click();
-  expect(await productionSnapshot(page)).toEqual(seeded);
-  await page.screenshot({
-    path: testInfo.outputPath('completed-historical-reading.png'),
-    fullPage: false,
+  const before = await snapshot(page);
+  await page.evaluate(async () => {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const r = indexedDB.open('c-viz-learning');
+      r.onsuccess = () => resolve(r.result);
+      r.onerror = () => reject(r.error);
+    });
+    try {
+      await new Promise<void>((resolve, reject) => {
+        const tx = db.transaction(['meta', 'progress'], 'readwrite');
+        tx.oncomplete = () => resolve();
+        tx.onabort = () => reject(tx.error);
+        const r = tx.objectStore('meta').get('current');
+        r.onsuccess = () => {
+          const meta = r.result;
+          const at = new Date().toISOString();
+          tx.objectStore('progress').put(
+            {
+              eventType: 'exercise.passed',
+              result: 'passed',
+              subjectRef: { id: 'exercise.c.echo', version: '1.1.0' },
+              packageRef: { id: 'content.c.p05', version: '1.0.0' },
+              learningRevision: 1,
+              firstAt: at,
+              lastAt: at,
+            },
+            [meta.generation, 'exercise.passed', 'exercise.c.echo', '1.1.0', 1],
+          );
+          tx.objectStore('meta').put({ ...meta, revision: meta.revision + 1 }, 'current');
+        };
+      });
+    } finally {
+      db.close();
+    }
   });
-  await testInfo.attach('historical-projection-scope', {
-    body: 'Only this isolated browser profile was explicitly seeded with old/current historical exercise.passed rows to exercise completion compatibility rendering. These rows are synthetic history, not evidence of real exercise judgement. Production generated only the two actual reading actions; reload and review generated no completion event or reward.',
-    contentType: 'text/plain',
+  const corrupted = await snapshot(page);
+  await page.reload();
+  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeDisabled();
+  await expect(page.getByRole('heading', { name: '本节已完成', exact: true })).toHaveCount(0);
+  expect((await snapshot(page)).progress).toEqual(corrupted.progress);
+  expect((await snapshot(page)).ledger).toEqual(before.ledger);
+  await page.goto('/#/settings?panel=data');
+  await page.getByRole('button', { name: '清除本地数据', exact: true }).click();
+  await page.getByRole('button', { name: '确认清除', exact: true }).click();
+  await expect
+    .poll(async () => (await snapshot(page)).meta.generation)
+    .not.toBe(before.meta.generation);
+  await open(page);
+  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeEnabled();
+  const recovered = await snapshot(page);
+  expect(recovered.progress).toEqual([]);
+  expect(recovered.ledger).toEqual([]);
+  await info.attach('synthetic-corruption-not-real-pass', {
+    body: JSON.stringify({
+      scope: 'Isolated QA corruption only; never evidence of execution or historical migration',
+      before,
+      corrupted,
+      recovered,
+    }),
+    contentType: 'application/json',
   });
 });

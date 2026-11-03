@@ -1,3 +1,6 @@
+import { openCurrentAnswer, submitCurrent } from './current-course-helpers';
+import { assertCurrentJudge } from './current-practice-observation';
+import { installC6Packets } from './c6-observation';
 import { test, expect, type Page } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
@@ -327,7 +330,7 @@ test('eight-level catalog and real diagnostic remain usable at three widths', as
 test('missing atomic content disables all new memory execution and grants no progress', async ({
   page,
 }) => {
-  await page.route(`**/${p05CourseRelease.file}`, (route) => route.abort());
+  await page.route('**/content/c/primer6-teaching/manifest-2.0.0.json', (route) => route.abort());
   await page.goto(`/#/bugs/memory/${memoryBugQuestions[0].exerciseRef.id}`);
   await expect(page.getByRole('button', { name: '运行本组', exact: true })).toBeDisabled();
   await expect(root(page)).toContainText('受审关卡资源不可用');
@@ -383,16 +386,11 @@ if (p05CourseRelease.registered) {
   test('original C,14.3 and memory Bug keep three separate first rewards after refresh', async ({
     page,
   }) => {
-    await page.goto('/#/practice/exercise.c.echo');
-    await page.getByRole('combobox', { name: '积木显示', exact: true }).selectOption('hide');
+    await page.addInitScript(installC6Packets);
+    const current = await openCurrentAnswer(page, 'exercise.c6.s2.1');
+    await submitCurrent(page);
+    await assertCurrentJudge(page, current, 'passed');
     const code = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
-    await expect(code).toBeVisible();
-    await code.fill((await code.inputValue()).replace('return 0;', 'printf("%d\\n", x);return 0;'));
-    await page.getByRole('button', { name: '提交练习', exact: true }).click();
-    await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(
-      'data-save-state',
-      'saved',
-    );
     const old = await rows(page);
     await page.goto('/#/practice/exercise.c.bug-semicolon');
     await expect(code).toBeVisible();

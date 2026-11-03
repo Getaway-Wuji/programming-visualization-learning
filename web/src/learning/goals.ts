@@ -53,7 +53,9 @@ export function decodeGoalConfiguration(value: unknown): GoalConfiguration {
   return frozen(structuredClone(value) as unknown as GoalConfiguration);
 }
 export async function loadGoalConfiguration(packageRef?: Ref): Promise<GoalConfiguration> {
-  const expanded = packageRef?.id === 'content.c.p05' && packageRef.version === '1.0.0';
+  const expanded =
+    (packageRef?.id === 'content.c.p05' && packageRef.version === '1.0.0') ||
+    (packageRef?.id === 'content.c.primer6' && packageRef.version === '2.0.0');
   return decodeGoalConfiguration(JSON.parse(expanded ? expandedGoalJson : goalJson));
 }
 export function assertConfiguredTargets(targets: GoalTargets, config: GoalConfiguration): void {

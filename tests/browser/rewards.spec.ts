@@ -1,16 +1,32 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { ExecuteRequest, ExecuteResult } from '../../web/src/engine/protocol';
 import type { LedgerEntry, StorageSnapshot } from '../../web/src/storage/model';
-import { blockWorkspace, correctStarter, wrongEcho, showPracticeBlocks } from './block-ui';
+import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
+import type { C6Attempt, C6CourseActivity, C6CourseDraft } from '../../web/src/c6-learning/model';
+import { decodeC6Response, type C6JudgeRequest } from '../../web/src/engine/c6-protocol';
+import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
+import { installC6Packets, observedC6Packet } from './c6-observation';
+import { confirmCurrentLesson } from './current-course-helpers';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 const caseId = 'case.c.assignment';
-const exerciseId = 'exercise.c.echo';
-const lessonId = 'lesson.c.variables-output';
+const exerciseId = 'exercise.c6.s2.1';
+const exercise = (
+  JSON.parse(readFileSync('content/c/primer6-teaching/source-2.0.0.json', 'utf8')) as {
+    chapters: { exercises: C6CourseExercise[] }[];
+  }
+).chapters
+  .flatMap((c) => c.exercises)
+  .find((e) => e.ref.id === exerciseId)!;
+const wrongSource = exercise.referenceSource.replace('printf("n=%d', 'printf("wrong=%d');
+if (wrongSource === exercise.referenceSource)
+  throw new Error('Expected exact current output fixture');
+const editor = (page: Page) => page.getByLabel('完整 C 源码 · main.c', { exact: true });
 const casePanel = (page: Page) => page.getByTestId('case-execution');
-const practicePanel = (page: Page) => page.getByTestId('practice-execution');
 const controls = (page: Page) => page.getByTestId('player-controls');
 const confirmation = (page: Page) => page.getByTestId('case-view-confirmation');
 const confirmViewing = (page: Page) =>
@@ -21,7 +37,14 @@ const dailyPolicyRef = { id: 'reward.policy.daily-goal.p0', version: '1.0.0' };
 const recommendedTargets = { exercise: 1, lesson: 1, case: 0 };
 
 /** Inspect the real database without seeding progress, rewards or execution evidence. */
-async function snapshot(page: Page): Promise<StorageSnapshot> {
+type CurrentSnapshot = StorageSnapshot & {
+  courseActivities: C6CourseActivity[];
+  courseDrafts: C6CourseDraft[];
+};
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(installC6Packets);
+});
+async function snapshot(page: Page): Promise<CurrentSnapshot> {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
       const request = indexedDB.open('c-viz-learning');
@@ -49,7 +72,7 @@ async function snapshot(page: Page): Promise<StorageSnapshot> {
         }),
       );
       await done;
-      return Object.fromEntries(entries) as unknown as StorageSnapshot;
+      return Object.fromEntries(entries) as unknown as CurrentSnapshot;
     } finally {
       db.close();
     }
@@ -57,13 +80,13 @@ async function snapshot(page: Page): Promise<StorageSnapshot> {
 }
 
 const localReady = (page: Page) =>
-  expect(saveStatus(page)).toHaveAttribute('data-save-status', 'ready');
+  expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 
 function points(data: StorageSnapshot) {
   return data.ledger.reduce((total, row) => total + (row.points ?? 0), 0);
 }
 
-function assertRewards(data: StorageSnapshot, expectedPoints: number) {
+function assertRewards(data: CurrentSnapshot, expectedPoints: number) {
   expect(points(data)).toBe(expectedPoints);
   for (const row of data.ledger) {
     expect(row.status).toBe('posted');
@@ -116,12 +139,60 @@ function assertRewards(data: StorageSnapshot, expectedPoints: number) {
     'sourceRevision',
     'workspace',
   ];
-  expect(keys(data).filter((key) => forbidden.includes(key))).toEqual([]);
+  const metadata = (attempt: C6Attempt | null) => {
+    if (!attempt) return null;
+    const { sourceRevision, sourceSha256, ...rest } = attempt;
+    expect(sourceRevision).toMatch(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$/);
+    expect(
+      [exercise.referenceSource, wrongSource].map((s) =>
+        createHash('sha256').update(s).digest('hex'),
+      ),
+    ).toContain(sourceSha256);
+    expect(rest.engineBuildSha256).toBe(engineBuild.wasmSha256);
+    expect(rest.profileRef).toEqual(exercise.profileRef);
+    return rest;
+  };
+  expect(data.courseDrafts).toEqual([]);
+  const summaries = {
+    ...data,
+    courseActivities: data.courseActivities.map((row) =>
+      row.kind === 'exercise'
+        ? {
+            ...row,
+            firstPass: metadata(row.firstPass),
+            latestAttempt: metadata(row.latestAttempt),
+          }
+        : row,
+    ),
+  };
+  expect(keys(summaries).filter((key) => forbidden.includes(key))).toEqual([]);
 }
 
-function assertNoLearningChange(before: StorageSnapshot, after: StorageSnapshot) {
-  for (const store of ['progress', 'receipts', 'ledger', 'dailyFacts'] as const)
+function assertNoLearningChange(
+  before: CurrentSnapshot,
+  after: CurrentSnapshot,
+  goalOpened = false,
+) {
+  for (const store of [
+    'progress',
+    'receipts',
+    'ledger',
+    'dailyFacts',
+    'courseActivities',
+    'courseDrafts',
+  ] as const)
     expect(after[store]).toEqual(before[store]);
+  if (goalOpened) {
+    expect(before.goals).toEqual([]);
+    expect(after.goals).toEqual([
+      {
+        localDate: after.goals[0].localDate,
+        goalVersion: 1,
+        targets: recommendedTargets,
+        achievedAt: null,
+      },
+    ]);
+  } else expect(after.goals).toEqual(before.goals);
 }
 
 async function evidence(testInfo: TestInfo, label: string, value: unknown) {
@@ -252,40 +323,71 @@ async function saveCase(page: Page) {
 
 async function openPractice(page: Page) {
   await page.goto(`/#/practice/${exerciseId}`);
-  await expect(practicePanel(page)).toHaveAttribute('data-state', 'ready');
+  await expect(editor(page)).toBeEditable();
+  await editor(page).fill(wrongSource);
   await expect.poll(async () => (await snapshot(page)).settings.goalTemplate).not.toBeNull();
-  await localReady(page);
-  await showPracticeBlocks(page);
-  await expect(blockWorkspace(page)).toBeVisible();
   await localReady(page);
 }
 
 async function preparePractice(page: Page) {
-  await practicePanel(page).getByRole('button', { name: '准备代码', exact: true }).click();
-  await expect(practicePanel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(
-    practicePanel(page).getByRole('button', { name: '提交练习', exact: true }),
-  ).toBeEnabled();
+  await expect(page.getByRole('button', { name: '判定全部四组', exact: true })).toBeEnabled();
 }
 
 async function submitPractice(page: Page, terminal: 'passed' | 'unmet' = 'passed') {
   await preparePractice(page);
-  await practicePanel(page).getByRole('button', { name: '提交练习', exact: true }).click();
-  await expect(practicePanel(page)).toHaveAttribute('data-state', terminal);
+  const submitted = await editor(page).inputValue();
+  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
+  await expect(
+    page.getByRole('heading', {
+      name: terminal === 'passed' ? '四组全部通过' : '本次尚未通过',
+      exact: true,
+    }),
+  ).toBeVisible();
+  const worker = await observedC6Packet(page);
+  expect(worker.moduleSeen && worker.terminated).toBe(true);
+  const requestBytes = Buffer.from(worker.request!, 'base64'),
+    resultBytes = Buffer.from(worker.response!, 'base64');
+  const request = JSON.parse(requestBytes.toString('utf8')) as C6JudgeRequest;
+  expect(request.source).toBe(submitted);
+  expect(request.profileRef).toEqual(exercise.profileRef);
+  const result = await decodeC6Response(
+    Uint8Array.from(resultBytes).buffer,
+    request,
+    engineBuild.wasmSha256,
+  );
+  if (!('cases' in result)) throw new Error('Real current judge required');
+  expect(result.status).toBe(terminal === 'passed' ? 'passed' : 'failed');
+  if (terminal === 'passed') {
+    expect(result.cases).toHaveLength(4);
+    for (const [i, c] of result.cases.entries()) {
+      expect(c.stdoutMatches && c.returnMatches && c.observationMatches).toBe(true);
+      expect(c.packet.terminal.status).toBe('completed');
+      const output =
+        c.packet.trace!.initialState.output +
+        c.packet
+          .trace!.steps.flatMap((s) =>
+            s.changes.flatMap((c) => (c.op === 'output' ? [c.append] : [])),
+          )
+          .join('');
+      expect(output).toBe(exercise.tests[i].expectedStdout);
+    }
+  }
+  const directory = await evidence(test.info(), `current-${request.runId}`, {
+    submitted,
+    terminal,
+  });
+  await writeFile(join(directory, 'request.json'), requestBytes);
+  await writeFile(join(directory, 'result.json'), resultBytes);
 }
 
 async function savedPass(page: Page) {
-  await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state', 'saved');
+  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
   await localReady(page);
 }
 
 async function confirmLesson(page: Page) {
-  await page.goto(`/#/lessons/${lessonId}`);
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await localReady(page);
-  await page.getByRole('button', { name: /^(确认已学习|确认今日复习)$/ }).click();
-  await localReady(page);
-  await expect(page.getByTestId('lesson-progress')).toContainText(/已确认学习|小节已完成/);
+  await confirmCurrentLesson(page, 'lesson.c6.s2.1');
+  await confirmCurrentLesson(page, 'lesson.c6.s2.2.1');
 }
 
 interface LedgerFault {
@@ -452,18 +554,21 @@ test('a real exercise first pass awards ten and confirmed lesson completion adds
   await submitPractice(page, 'unmet');
   const wrong = await snapshot(page);
   assertRewards(wrong, 0);
-  await correctStarter(page, exerciseId);
+  await editor(page).fill(exercise.referenceSource);
   await submitPractice(page);
   await savedPass(page);
   const passed = await snapshot(page);
   assertRewards(passed, 10);
   expect(passed.ledger).toHaveLength(1);
-  await practicePanel(page).getByRole('link', { name: '查看本次复盘', exact: true }).click();
-  await expect(page).toHaveURL(new RegExp(`/practice/${exerciseId}/review$`));
+  await expect(
+    page.getByRole('group', { name: '选择判题组', exact: true }).getByRole('button'),
+  ).toHaveCount(4);
+  await page.getByRole('button', { name: '第 4 组 · 通过', exact: true }).click();
+  await expect(page.locator('.c6-trace')).toBeVisible();
   await expect(confirmation(page)).toHaveCount(0);
   await expect(page.getByRole('button', { name: '确认已观看', exact: true })).toHaveCount(0);
   await confirmLesson(page);
-  await expect(page.getByTestId('lesson-progress')).toContainText('小节已完成');
+  await expect(page.locator('.c6-reading-confirmation')).toContainText('本节已完成');
   const completed = await snapshot(page);
   assertRewards(completed, 35);
   expect(completed.ledger).toHaveLength(3);
@@ -475,7 +580,7 @@ test('a real exercise first pass awards ten and confirmed lesson completion adds
   expect(
     failedAgain.progress.filter((row) => row.eventType !== 'exercise.attempt-evaluated'),
   ).toEqual(completed.progress.filter((row) => row.eventType !== 'exercise.attempt-evaluated'));
-  await correctStarter(page, exerciseId);
+  await editor(page).fill(exercise.referenceSource);
   await submitPractice(page);
   await savedPass(page);
   const repeated = await snapshot(page);
@@ -484,7 +589,7 @@ test('a real exercise first pass awards ten and confirmed lesson completion adds
   expect(repeated.dailyFacts).toEqual(completed.dailyFacts);
   expect(repeated.receipts.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(2);
   await page.reload();
-  await expect(practicePanel(page)).toHaveAttribute('data-state', 'ready');
+  await expect(editor(page)).toBeEditable();
   await localReady(page);
   const reloaded = await snapshot(page);
   for (const store of [
@@ -498,6 +603,8 @@ test('a real exercise first pass awards ten and confirmed lesson completion adds
     'avatar',
     'appearance',
     'appearanceAssets',
+    'courseActivities',
+    'courseDrafts',
   ] as const)
     expect(reloaded[store]).toEqual(repeated[store]);
   await evidence(testInfo, 'exercise-ten-lesson-twenty-repeat', {
@@ -545,14 +652,10 @@ test('two real exercise pages concurrently passing share one ten-point first rew
   const other = await context.newPage();
   for (const target of [page, other]) {
     await openPractice(target);
-    await correctStarter(target, exerciseId);
+    await editor(target).fill(exercise.referenceSource);
     await preparePractice(target);
   }
-  await Promise.all(
-    [page, other].map((target) =>
-      practicePanel(target).getByRole('button', { name: '提交练习', exact: true }).click(),
-    ),
-  );
+  await Promise.all([page, other].map((target) => submitPractice(target)));
   await savedPass(page);
   await savedPass(other);
   const merged = await snapshot(page);
@@ -573,13 +676,12 @@ test('a native second-ledger quota failure rolls all awards and pass effects bac
   await confirmLesson(page);
   const before = await snapshot(page);
   await openPractice(page);
-  await correctStarter(page, exerciseId);
+  await editor(page).fill(exercise.referenceSource);
   await armLedgerQuota(page, 'reward.lesson.first-completion');
   await submitPractice(page);
-  await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(
-    'data-save-state',
-    'unsaved',
-  );
+  await expect(
+    saveStatus(page).getByRole('button', { name: '重试未保存操作', exact: true }),
+  ).toBeVisible();
   await expect(saveStatus(page)).toHaveAttribute('data-save-status', 'unsaved');
   const failed = await snapshot(page);
   assertNoLearningChange(before, failed);
@@ -589,10 +691,10 @@ test('a native second-ledger quota failure rolls all awards and pass effects bac
     'reward.lesson.first-completion',
   ]);
   const runsBefore = await page.evaluate(
-    () => window.__verticalObservation.workers.filter((worker) => worker.kind === 'execute').length,
+    () => window.c6CurrentPackets.filter((worker) => worker.request).length,
   );
-  await wrongEcho(page);
-  await page.goto('/#/courses');
+  await editor(page).fill(wrongSource);
+  await page.goto('/#/');
   await retryOriginal(page);
   const retried = await snapshot(page);
   assertRewards(retried, 35);
@@ -602,10 +704,7 @@ test('a native second-ledger quota failure rolls all awards and pass effects bac
   expect(retried.ledger).toHaveLength(3);
   expect(retried.receipts.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(1);
   expect(
-    await page.evaluate(
-      () =>
-        window.__verticalObservation.workers.filter((worker) => worker.kind === 'execute').length,
-    ),
+    await page.evaluate(() => window.c6CurrentPackets.filter((worker) => worker.request).length),
   ).toBe(runsBefore);
   await page.reload();
   await localReady(page);
@@ -634,12 +733,12 @@ test('a case ledger quota failure remains unsaved and original accepted confirma
   await expect(confirmation(page)).toHaveAttribute('data-view-state', 'unsaved');
   await expect(saveStatus(page)).toHaveAttribute('data-save-status', 'unsaved');
   const failed = await snapshot(page);
-  assertNoLearningChange(before, failed);
+  assertNoLearningChange(before, failed, true);
   const attempted = (await ledgerFault(page)).attempted;
   expect(attempted).toHaveLength(1);
   await page.getByTestId('input-field-x').fill('12');
   await expect(confirmViewing(page)).toBeDisabled();
-  await page.goto('/#/courses');
+  await page.goto('/#/');
   await retryOriginal(page);
   const retried = await snapshot(page);
   assertRewards(retried, 5);
@@ -695,21 +794,21 @@ test('the points detail explains the native ledger and fixed first-reward rules 
   page,
 }, testInfo) => {
   await openPractice(page);
-  await correctStarter(page, exerciseId);
+  await editor(page).fill(exercise.referenceSource);
   await submitPractice(page);
   await savedPass(page);
   await confirmLesson(page);
   const saved = await snapshot(page);
   assertRewards(saved, 35);
   await page.goto('/#/?panel=points');
-  await expect(page.getByTestId('learning-posted-points')).toHaveText('35');
+  await expect(page.getByRole('heading', { name: '已入账 35 分', exact: true })).toBeVisible();
   const dialog = page.getByRole('dialog', { name: '积分明细', exact: true });
   await expect(dialog).toBeVisible();
   await expect(dialog.locator('.learning-history-list li')).toHaveCount(3);
   await expect(dialog).toContainText('35');
   for (const number of ['10', '20', '5']) await expect(dialog).toContainText(number);
   await expect(dialog).toContainText(/习题|练习/);
-  await expect(dialog).toContainText('小节');
+  await expect(dialog).toContainText('教学组');
   await expect(dialog).toContainText('案例');
   const directory = await evidence(testInfo, 'points-detail-responsive', saved);
   for (const width of [1440, 768, 390]) {

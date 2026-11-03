@@ -599,6 +599,8 @@ async function saveCapture(
     'appearance',
     'appearanceAssets',
     'avatar',
+    'courseActivities',
+    'courseDrafts',
     'customDrafts',
     'dailyFacts',
     'editHistory',
@@ -614,7 +616,7 @@ async function saveCapture(
   ]);
   expect(before.database).toEqual({
     name: 'c-viz-learning',
-    version: 9,
+    version: 10,
     storeNames: Object.keys(before.stores).sort(),
   });
   expect(Object.keys(before.storeKeys).sort()).toEqual(before.database.storeNames);

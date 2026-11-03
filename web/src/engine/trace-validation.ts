@@ -28,12 +28,30 @@ function sameJsonSync(a: unknown, b: unknown): boolean {
   const left = Object.keys(a),
     right = Object.keys(b);
   if (left.length !== right.length) return false;
-  for (const key of left)
-    if (
-      !Object.hasOwn(b, key) ||
-      !sameJsonSync((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])
-    )
-      return false;
+  // Integer keys precede all other string keys. Count plus the final index
+  // proves dense arrays; sparse arrays and extra properties keep the full path.
+  if (
+    Array.isArray(a) &&
+    Array.isArray(b) &&
+    left.length === a.length &&
+    right.length === b.length &&
+    (!left.length ||
+      (left[left.length - 1] === String(a.length - 1) &&
+        right[right.length - 1] === String(b.length - 1)))
+  ) {
+    for (let i = 0; i < a.length; i++) {
+      const av: unknown = a[i],
+        bv: unknown = b[i];
+      if (av !== bv && !sameJsonSync(av, bv)) return false;
+    }
+    return true;
+  }
+  for (const key of left) {
+    if (!Object.hasOwn(b, key)) return false;
+    const av = (a as Record<string, unknown>)[key],
+      bv = (b as Record<string, unknown>)[key];
+    if (av !== bv && !sameJsonSync(av, bv)) return false;
+  }
   return true;
 }
 const encoder = new TextEncoder();

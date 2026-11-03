@@ -67,7 +67,10 @@ export class KnowledgeMarksController {
       reading = state.reading,
       lesson = reading?.lessons.find((l) => l.id === lessonId),
       knowledge = lesson?.knowledgeRefs.find((k) => k.id === knowledgeId);
-    if (!context || !reading || !lesson || !knowledge) return;
+    const c6Lesson = state.c6?.index?.lessons.find(
+      (l) => l[0] === lessonId && l[3] === knowledgeId,
+    );
+    if (!context || (!c6Lesson && (!reading || !lesson || !knowledge))) return;
     const old = this.state.rows.find((r) => r.knowledgeRef.id === knowledgeId);
     if (old?.marked === marked) return;
     this.pending = {
@@ -75,9 +78,11 @@ export class KnowledgeMarksController {
       command: {
         commandId: crypto.randomUUID(),
         expectedVersion: old?.revision ?? 0,
-        packageRef: { ...reading.packageRef },
-        knowledgeRef: { ...knowledge },
-        lessonRef: { id: lesson.id, version: lesson.version },
+        packageRef: { ...(state.c6?.index?.packageRef ?? reading!.packageRef) },
+        knowledgeRef: c6Lesson ? { id: knowledgeId, version: '2.0.0' } : { ...knowledge! },
+        lessonRef: c6Lesson
+          ? { id: lessonId, version: '2.0.0' }
+          : { id: lesson!.id, version: lesson!.version },
         marked,
         at: new Date().toISOString(),
       },

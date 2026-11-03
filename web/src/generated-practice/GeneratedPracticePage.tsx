@@ -9,6 +9,7 @@ import '../custom-code/custom-code.css';
 import { GeneratedPracticeController } from './controller';
 import { practiceKnowledgeIds } from './protocol';
 import './practice.css';
+import { c6GeneratedFoundation } from '../c6-learning/independent';
 
 const labels: Record<string, string> = {
   'knowledge.c.expressions': '表达式',
@@ -79,10 +80,33 @@ export default function GeneratedPracticePage() {
     summary.status === 'ready'
       ? (summary.summary?.rows ?? []).filter((r) => weaknessReasons(r).length)
       : [];
-  const recommended = active.find((r) => supported.has(r.knowledgeRef.id));
-  const lesson = learning.reading?.lessons.find((l) =>
-    l.knowledgeRefs.some((k) => k.id === snap.selection.knowledgeId),
+  const recommended = active.find((r) =>
+    supported.has(
+      learning.c6 ? (c6GeneratedFoundation(r.knowledgeRef.id) ?? '') : r.knowledgeRef.id,
+    ),
   );
+  const recommendedId = recommended
+    ? learning.c6
+      ? c6GeneratedFoundation(recommended.knowledgeRef.id)!
+      : recommended.knowledgeRef.id
+    : null;
+  const currentLessons = learning.c6?.index?.lessons;
+  const currentLesson =
+    currentLessons?.find(
+      (l) =>
+        l[3] === recommended?.knowledgeRef.id &&
+        c6GeneratedFoundation(l[3]) === snap.selection.knowledgeId,
+    ) ?? currentLessons?.find((l) => c6GeneratedFoundation(l[3]) === snap.selection.knowledgeId);
+  const currentNode = learning.c6?.manifest?.nodes.find(
+    (node) => `node.${node.id}` === currentLesson?.[1],
+  );
+  const lesson = learning.c6
+    ? currentLesson && currentNode
+      ? { id: currentLesson[0], title: currentNode.titleDisplay }
+      : null
+    : learning.reading?.lessons.find((l) =>
+        l.knowledgeRefs.some((k) => k.id === snap.selection.knowledgeId),
+      );
   const { problem, assessment, view } = snap;
   const running = snap.status === 'running';
   const validSource = new TextEncoder().encode(snap.source).length <= 32768;
@@ -118,12 +142,12 @@ export default function GeneratedPracticePage() {
         ) : recommended ? (
           <>
             <p>
-              <strong>可从{labels[recommended.knowledgeRef.id]}开始</strong> ·{' '}
+              <strong>可从{labels[recommendedId!]}开始</strong> ·{' '}
               {weaknessReasons(recommended).join('；')}。
             </p>
             <button
               className="text-link"
-              onClick={() => controller.select({ knowledgeId: recommended.knowledgeRef.id })}
+              onClick={() => controller.select({ knowledgeId: recommendedId! })}
             >
               采用此知识建议
             </button>

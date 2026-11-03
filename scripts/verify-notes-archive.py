@@ -7,7 +7,7 @@ assert not target.exists(), 'Keep prior verification outputs'
 with zipfile.ZipFile(source) as archive:
     names = archive.namelist()
     assert len(names) == len(set(names)) <= 19
-    assert names[:3] == ['笔记.md', '说明.txt', 'notes.json']
+    assert set(names[:3]) == {'笔记.md', '说明.txt', 'notes.json'}
     assert archive.testzip() is None
     for info in archive.infolist():
         p = pathlib.PurePosixPath(info.filename)
@@ -16,7 +16,13 @@ with zipfile.ZipFile(source) as archive:
     archive.extractall(target)
 
 metadata = json.loads((target / 'notes.json').read_text(encoding='utf-8'))
-assert metadata['formatId'] == 'urn:c-viz:study-notes-download:1.0.0'
+if metadata['formatId'] == 'urn:c-viz:study-notes-download:1.0.0':
+    assert names[:3] == ['笔记.md', '说明.txt', 'notes.json']
+elif metadata['formatId'] == 'urn:c-viz:study-notes-download:2.0.0':
+    assert metadata['formatVersion'] == '2.0.0'
+    assert names[:3] == ['笔记.md', 'notes.json', '说明.txt']
+else:
+    raise AssertionError('Unknown notes download format')
 assert 'lease' not in metadata and 0 < len(metadata['entries']) <= 200
 markdown = (target / '笔记.md').read_bytes().decode('utf-8')
 image_refs = re.findall(r'^!\[[^\n]*\]\((assets/[^)]+)\)$', markdown, re.MULTILINE)
@@ -41,13 +47,13 @@ for asset in metadata['assets']:
     assert offset == len(data) and embedded == state_bytes
     with Image.open(target / asset['image']) as image:
         image.load()
-        assert image.width == 1440 and 0 < image.height <= 8192
+        assert image.width == (1280 if state['formatVersion'] == '2.0.0' else 1440) and 0 < image.height <= 8192
         pngs.append({'path': asset['image'], 'width': image.width, 'height': image.height})
     assert state['source']['text'] in markdown
     assert hashlib.sha256(state['source']['text'].encode('utf-8')).hexdigest() == state['source']['sha256']
     assert f"]({asset['state']})" in markdown
 for entry in metadata['entries']:
-    if entry['reference'] and entry['reference']['source'] is not None:
+    if metadata['formatId'].endswith(':1.0.0') and entry['reference'] and entry['reference']['source'] is not None:
         assert entry['reference']['source'] in markdown
 report = {'files': names, 'entries': len(metadata['entries']), 'images': pngs, 'allCrcVerified': True, 'allReferencesLocalAndPresent': True}
 (target / 'verification.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

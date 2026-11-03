@@ -4,12 +4,46 @@ import {
   canonicalAlgorithmJson,
   decodeAlgorithmResult,
   encodeAlgorithmRequest,
+  projectAlgorithmStep,
   type AlgorithmResult,
 } from '../../web/src/engine/algorithm-protocol';
 import { fixture, request } from './algorithm-fixture';
 
 const bytes = (value: unknown) => new TextEncoder().encode(canonicalAlgorithmJson(value)).buffer;
 const decode = (value: unknown) => decodeAlgorithmResult(bytes(value), request, 'f'.repeat(64));
+
+test('private complete validation preserves every parsed algorithm delta and checkpoint', async () => {
+  const original = fixture();
+  const expected = structuredClone(original);
+  expect(await decode(original)).toEqual(expected);
+});
+
+test('public forward and inverse projections isolate touched nested records from the trace', async () => {
+  const result = await decode(fixture());
+  const expected = structuredClone(result);
+  const trace = result.trace!;
+  const forward = projectAlgorithmStep(trace.initialState, trace.steps[0]);
+  forward.frames[0].scopeIds.push('s999');
+  expect(result).toEqual(expected);
+  let state = trace.initialState;
+  for (const step of trace.steps) state = projectAlgorithmStep(state, step);
+  const inverse = projectAlgorithmStep(state, trace.steps.at(-1)!, true);
+  inverse.objects[0].cells[0].value = 99;
+  inverse.scopes[0].objectIds.push('o999');
+  expect(result).toEqual(expected);
+  expect(state.objects).toEqual([]);
+});
+
+test('public projection isolates changed allocator and control values from both inputs', async () => {
+  const result = await decode(fixture());
+  const expected = structuredClone(result);
+  const trace = result.trace!;
+  const next = projectAlgorithmStep(trace.initialState, trace.steps[0]);
+  next.allocator.nextAddress = 0;
+  next.control.activeFrameId = null;
+  expect(result).toEqual(expected);
+  expect(trace.initialState.allocator.nextAddress).toBe(4096);
+});
 test('closed branch accepts canonical synthetic deltas and restores returned objects', async () => {
   const value = await decode(fixture());
   const player = new AlgorithmPlayer();

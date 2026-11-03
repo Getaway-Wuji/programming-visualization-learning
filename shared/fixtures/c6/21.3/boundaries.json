@@ -1,0 +1,2090 @@
+{
+  "purpose": "21.3 independent boundary validation, not course content",
+  "cases": [
+    {
+      "id": "int-min",
+      "source": "int main(void){return -2147483648;}",
+      "input": "",
+      "returnValue": -2147483648,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-minus1",
+      "source": "int main(void){return -1;}",
+      "input": "",
+      "returnValue": -1,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-zero",
+      "source": "int main(void){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-one",
+      "source": "int main(void){return 1;}",
+      "input": "",
+      "returnValue": 1,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-max",
+      "source": "int main(void){return 2147483647;}",
+      "input": "",
+      "returnValue": 2147483647,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-negative-div",
+      "source": "int main(void){return -7/3;}",
+      "input": "",
+      "returnValue": -2,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-negative-rem",
+      "source": "int main(void){return -7%3;}",
+      "input": "",
+      "returnValue": -1,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-mixed-uint",
+      "source": "int main(void){return -1<1u;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-short-and",
+      "source": "int main(void){return 0 && 1/0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-short-or",
+      "source": "int main(void){return 1 || 1/0;}",
+      "input": "",
+      "returnValue": 1,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "max-plus1",
+      "source": "int main(void){return 2147483648;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_OVERFLOW",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "min-div-minus1",
+      "source": "int main(void){int n=-2147483648;return n/-1;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_OVERFLOW",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "max-overflow",
+      "source": "int main(void){int n=2147483647;return n+1;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_OVERFLOW",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "div-zero",
+      "source": "int main(void){int n=0;return 1/n;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_DIV_ZERO",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "char128",
+      "source": "int main(void){char c=128;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_CHAR_DOMAIN",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "shift-neg",
+      "source": "int main(void){return 1<<-1;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_SHIFT_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "shift32",
+      "source": "int main(void){return 1<<32;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_SHIFT_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "signed-left31",
+      "source": "int main(void){return 1<<31;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_SHIFT_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "negative-right",
+      "source": "int main(void){return -1>>1;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_SHIFT_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "negative-left",
+      "source": "int main(void){return -1<<1;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_SHIFT_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "char0-and127",
+      "source": "int main(void){char a=0;char b=127;return a+b;}",
+      "input": "",
+      "returnValue": 127,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "uint-max-wrap-mixed",
+      "source": "#include <stdio.h>\nint main(void){unsigned int x=4294967295u;printf(\"%u %u %u\\n\",x,x+1u,1u-2);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "4294967295 0 4294967295\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "uint-shifts0-31",
+      "source": "#include <stdio.h>\nint main(void){unsigned int x=1u;printf(\"%u %u\\n\",x<<0,x<<31);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "1 2147483648\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "uint-literal-too-large",
+      "source": "int main(void){unsigned int x=4294967296u;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_OVERFLOW",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "f32-positive-zero",
+      "source": "int main(void){float value=0.0f;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "00000000"
+        }
+      }
+    },
+    {
+      "id": "f32-negative-zero",
+      "source": "int main(void){float value=-0.0f;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "80000000"
+        }
+      }
+    },
+    {
+      "id": "f32-min-subnormal",
+      "source": "int main(void){float value=1.401298464324817e-45f;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "00000001"
+        }
+      }
+    },
+    {
+      "id": "f32-max",
+      "source": "int main(void){float value=3.4028234663852886e38f;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "7f7fffff"
+        }
+      }
+    },
+    {
+      "id": "f32-one",
+      "source": "int main(void){float value=1.0f;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "3f800000"
+        }
+      }
+    },
+    {
+      "id": "f32-tenth",
+      "source": "int main(void){float value=.1f;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "3dcccccd"
+        }
+      }
+    },
+    {
+      "id": "f32-eighth",
+      "source": "int main(void){float value=.125f;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "3e000000"
+        }
+      }
+    },
+    {
+      "id": "f64-negative-zero",
+      "source": "int main(void){double value=-0.0;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f64",
+          "bits": "8000000000000000"
+        }
+      }
+    },
+    {
+      "id": "f64-min-subnormal",
+      "source": "int main(void){double value=4.9406564584124654e-324;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f64",
+          "bits": "0000000000000001"
+        }
+      }
+    },
+    {
+      "id": "f64-max",
+      "source": "int main(void){double value=1.7976931348623157e308;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f64",
+          "bits": "7fefffffffffffff"
+        }
+      }
+    },
+    {
+      "id": "f64-tenth",
+      "source": "int main(void){double value=.1;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f64",
+          "bits": "3fb999999999999a"
+        }
+      }
+    },
+    {
+      "id": "f32-tie-even-down",
+      "source": "int main(void){float value=1.000000059604644775390625;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "3f800000"
+        }
+      }
+    },
+    {
+      "id": "f32-tie-even-up",
+      "source": "int main(void){float value=1.000000178813934326171875;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "3f800002"
+        }
+      }
+    },
+    {
+      "id": "f32-operation-rounding",
+      "source": "int main(void){float value=16777216.0f+1.0f;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "4b800000"
+        }
+      }
+    },
+    {
+      "id": "fabs-negative-zero",
+      "source": "#include <math.h>\nint main(void){double value=fabs(-0.0);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f64",
+          "bits": "0000000000000000"
+        }
+      }
+    },
+    {
+      "id": "cast-min",
+      "source": "int main(void){return (int)-2147483648.0;}",
+      "input": "",
+      "returnValue": -2147483648,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "cast-max",
+      "source": "int main(void){return (int)2147483647.875;}",
+      "input": "",
+      "returnValue": 2147483647,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "cast-negative",
+      "source": "int main(void){return (int)-2.75;}",
+      "input": "",
+      "returnValue": -2,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "cast-negative-fraction",
+      "source": "int main(void){return (int)-.875;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "f32-overflow",
+      "source": "int main(void){float x=4e38;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FLOAT_NONFINITE",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "f64-overflow",
+      "source": "int main(void){double x=1e309;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FLOAT_NONFINITE",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "float-div-zero",
+      "source": "int main(void){double x=1.0/0.0;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_DIV_ZERO",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "cast-too-large",
+      "source": "int main(void){return (int)2147483648.0;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_OVERFLOW",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "sqrt-negative",
+      "source": "#include <math.h>\nint main(void){double x=sqrt(-1.0);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FLOAT_NONFINITE",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "f32-to-f64-storage",
+      "source": "int main(void){float a=.125f;double b=a;float value=b;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "3e000000"
+        }
+      }
+    },
+    {
+      "id": "scanf-whitespace-eof",
+      "source": "#include <stdio.h>\nint main(void){int x=7;int r=scanf(\"%d\",&x);printf(\"%d %d\\n\",r,x);return 0;}",
+      "input": " \t\r\n",
+      "returnValue": 0,
+      "stdout": "-1 7\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-crlf-cursor",
+      "source": "#include <stdio.h>\nint main(void){int x;int y;scanf(\"%d\",&x);scanf(\"%d\",&y);printf(\"%d %d\\n\",x,y);return 0;}",
+      "input": "1\r\n2",
+      "returnValue": 0,
+      "stdout": "1 2\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "stdin256",
+      "source": "#include <stdio.h>\nint main(void){int c=0;int n=0;while((c=getchar())!=EOF)n++;printf(\"%d\\n\",n);return 0;}",
+      "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "returnValue": 0,
+      "stdout": "256\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "stdin257",
+      "source": "#include <stdio.h>\nint main(void){return 0;}",
+      "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_INPUT_INVALID",
+      "adapterError": true,
+      "cells": {}
+    },
+    {
+      "id": "stdin-unicode",
+      "source": "#include <stdio.h>\nint main(void){return 0;}",
+      "input": "中",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_INPUT_INVALID",
+      "adapterError": true,
+      "cells": {}
+    },
+    {
+      "id": "stdin-nul",
+      "source": "#include <stdio.h>\nint main(void){return 0;}",
+      "input": "\u0000",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_INPUT_INVALID",
+      "adapterError": true,
+      "cells": {}
+    },
+    {
+      "id": "stdin-escape",
+      "source": "#include <stdio.h>\nint main(void){return 0;}",
+      "input": "\u001b",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_INPUT_INVALID",
+      "adapterError": true,
+      "cells": {}
+    },
+    {
+      "id": "scanf63-exact",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[64]=\"\";scanf(\"%63s\",s);printf(\"%u\\n\",strlen(s));return 0;}",
+      "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "returnValue": 0,
+      "stdout": "63\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf63-too-small",
+      "source": "#include <stdio.h>\nint main(void){char s[63]=\"\";scanf(\"%63s\",s);return 0;}",
+      "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "fgets2",
+      "source": "#include <stdio.h>\nint main(void){char s[2]=\"\";fgets(s,2,stdin);printf(\"%s %d\\n\",s,getchar());return 0;}",
+      "input": "ab",
+      "returnValue": 0,
+      "stdout": "a 98\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "fgets-too-small",
+      "source": "#include <stdio.h>\nint main(void){char s[2]=\"\";fgets(s,3,stdin);return 0;}",
+      "input": "a",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "fgets-invalid-n",
+      "source": "#include <stdio.h>\nint main(void){char s[2]=\"\";fgets(s,1,stdin);return 0;}",
+      "input": "a",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-float-incomplete",
+      "source": "#include <stdio.h>\nint main(void){float x=7;int r=scanf(\"%f\",&x);printf(\"%d %d\\n\",r,getchar());return 0;}",
+      "input": "100er",
+      "returnValue": 0,
+      "stdout": "0 114\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-u-minus-one",
+      "source": "#include <stdio.h>\nint main(void){unsigned int x=0u;scanf(\"%u\",&x);printf(\"%u\\n\",x);return 0;}",
+      "input": "-1",
+      "returnValue": 0,
+      "stdout": "4294967295\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-u-magnitude-overflow",
+      "source": "#include <stdio.h>\nint main(void){unsigned int x=0u;scanf(\"%u\",&x);return 0;}",
+      "input": "4294967296",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_OVERFLOW",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-char-domain",
+      "source": "#include <stdio.h>\nint main(void){char c=0;scanf(\"%c\",&c);printf(\"%d\\n\",c);return 0;}",
+      "input": " ",
+      "returnValue": 0,
+      "stdout": "32\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-space-char",
+      "source": "#include <stdio.h>\nint main(void){char c=0;scanf(\" %c\",&c);printf(\"%d\\n\",c);return 0;}",
+      "input": " \r\nA",
+      "returnValue": 0,
+      "stdout": "65\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "empty-and63-strings",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char empty[1]=\"\";char full[64]=\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\";printf(\"%u %u\\n\",strlen(empty),strlen(full));return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "0 63\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "missing-nul64",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[64];for(int i=0;i<64;i++)s[i]=65;return (int)strlen(s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_UNTERMINATED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncmp-zero-unterminated",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char a[1]={65};char b[1]={66};printf(\"%d\\n\",strncmp(a,b,0u));return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "0\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcmp-equal",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){printf(\"%d\\n\",strcmp(\"a\",\"a\"));return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "0\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncmp-prefix",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){printf(\"%d\\n\",strncmp(\"ab\",\"ac\",1u));return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "0\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcpy-exact",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[4]=\"\";strcpy(s,\"abc\");printf(\"%s\\n\",s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "abc\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncpy-padding",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[4];strncpy(s,\"a\",4u);printf(\"%d %d %d\\n\",s[1],s[2],s[3]);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "0 0 0\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcat-exact",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[4]=\"a\";strcat(s,\"bc\");printf(\"%s\\n\",s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "abc\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncat-exact",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[4]=\"a\";strncat(s,\"bcd\",2u);printf(\"%s\\n\",s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "abc\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strchr-nul",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[4]=\"abc\";char *p=strchr(s,0);printf(\"%d\\n\",p-s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "3\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strchr-missing",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char *p=strchr(\"abc\",120);printf(\"%d\\n\",p==NULL);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "1\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcpy-over",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[3]=\"\";strcpy(s,\"abc\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcat-over",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[3]=\"a\";strcat(s,\"bc\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncat-over",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[3]=\"a\";strncat(s,\"bc\",2u);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncpy-no-nul",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[3];strncpy(s,\"abc\",3u);printf(\"%s\",s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_UNTERMINATED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcpy-overlap",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[5]=\"abc\";strcpy(s+1,s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncpy-overlap",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[5]=\"abc\";strncpy(s+1,s,3u);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcat-overlap",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[8]=\"abc\";strcat(s,s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncat-overlap",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[8]=\"abc\";strncat(s,s,2u);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRING_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcpy-readonly",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char *p=\"abc\";strcpy(p,\"x\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_READONLY",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strlen-uninitialized",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[4];return (int)strlen(s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNINITIALIZED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "ascii-ctype-boundaries",
+      "source": "#include <stdio.h>\n#include <ctype.h>\nint main(void){printf(\"%d %d %d %d %d %d\\n\",isalpha(65),isdigit(48),isspace(11),toupper(122),tolower(65),isalpha(EOF));return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "1 1 1 90 97 0\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "ctype-128",
+      "source": "#include <ctype.h>\nint main(void){return isalpha(128);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_CHAR_DOMAIN",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-zero-eight-conversions",
+      "source": "#include <stdio.h>\nint main(void){printf(\"ready %%\\n\");printf(\"%d%d%d%d%d%d%d%d\\n\",1,2,3,4,5,6,7,8);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "ready %\n12345678\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-width1-16",
+      "source": "#include <stdio.h>\nint main(void){printf(\"%1d|%16d\\n\",1,1);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "1|               1\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-precision0-6",
+      "source": "#include <stdio.h>\nint main(void){printf(\"%.0f %.6f\\n\",1.5,.125);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "2 0.125000\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-virtual-pointer",
+      "source": "#include <stdio.h>\nint main(void){int x=7;int *p=NULL;printf(\"%p %p\\n\",p,&x);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "vaddr:null vaddr:0x00001000\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-nine",
+      "source": "#include <stdio.h>\nint main(void){printf(\"%d%d%d%d%d%d%d%d%d\",1,2,3,4,5,6,7,8);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FORMAT_UNSUPPORTED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-width17",
+      "source": "#include <stdio.h>\nint main(void){printf(\"%17d\",1);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FORMAT_UNSUPPORTED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-precision7",
+      "source": "#include <stdio.h>\nint main(void){printf(\"%.7f\",1.0);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FORMAT_UNSUPPORTED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-star",
+      "source": "#include <stdio.h>\nint main(void){printf(\"%*d\",2,1);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FORMAT_UNSUPPORTED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-percent-n",
+      "source": "#include <stdio.h>\nint main(void){int n;printf(\"%n\",&n);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FORMAT_UNSUPPORTED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-length",
+      "source": "#include <stdio.h>\nint main(void){printf(\"%ld\",1);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FORMAT_UNSUPPORTED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-wrong-type",
+      "source": "#include <stdio.h>\nint main(void){printf(\"%d\",1.0);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_TYPE_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-missing-arg",
+      "source": "#include <stdio.h>\nint main(void){printf(\"%d\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_ARGUMENTS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "printf-dynamic",
+      "source": "#include <stdio.h>\nint main(void){char s[4]=\"abc\";printf(s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FORMAT_UNSUPPORTED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "params-eight",
+      "source": "int f(int a,int b,int c,int d,int e,int f0,int g,int h){return a+h;}int main(){return f(1,2,3,4,5,6,7,8);}",
+      "input": "",
+      "returnValue": 9,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "params-nine",
+      "source": "int f(int a,int b,int c,int d,int e,int f0,int g,int h,int i){return a;}int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_PARAMETER_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "functions-32",
+      "source": "int f0(){return 0;}int f1(){return 1;}int f2(){return 2;}int f3(){return 3;}int f4(){return 4;}int f5(){return 5;}int f6(){return 6;}int f7(){return 7;}int f8(){return 8;}int f9(){return 9;}int f10(){return 10;}int f11(){return 11;}int f12(){return 12;}int f13(){return 13;}int f14(){return 14;}int f15(){return 15;}int f16(){return 16;}int f17(){return 17;}int f18(){return 18;}int f19(){return 19;}int f20(){return 20;}int f21(){return 21;}int f22(){return 22;}int f23(){return 23;}int f24(){return 24;}int f25(){return 25;}int f26(){return 26;}int f27(){return 27;}int f28(){return 28;}int f29(){return 29;}int f30(){return 30;}int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "functions-33",
+      "source": "int f0(){return 0;}int f1(){return 1;}int f2(){return 2;}int f3(){return 3;}int f4(){return 4;}int f5(){return 5;}int f6(){return 6;}int f7(){return 7;}int f8(){return 8;}int f9(){return 9;}int f10(){return 10;}int f11(){return 11;}int f12(){return 12;}int f13(){return 13;}int f14(){return 14;}int f15(){return 15;}int f16(){return 16;}int f17(){return 17;}int f18(){return 18;}int f19(){return 19;}int f20(){return 20;}int f21(){return 21;}int f22(){return 22;}int f23(){return 23;}int f24(){return 24;}int f25(){return 25;}int f26(){return 26;}int f27(){return 27;}int f28(){return 28;}int f29(){return 29;}int f30(){return 30;}int f31(){return 31;}int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FUNCTION_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "prototype-alias-compatible",
+      "source": "typedef int Count;int f(Count);int main(){return f(7);}int f(int value){return value;}",
+      "input": "",
+      "returnValue": 7,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "prototype-top-const-compatible",
+      "source": "int f(const int);int main(){return f(4);}int f(int n){return n;}",
+      "input": "",
+      "returnValue": 4,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "prototype-mismatch",
+      "source": "int f(int);int f(double n){return 0;}int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_TYPE_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "undeclared-forward",
+      "source": "int main(){return f(1);}int f(int x){return x;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNDECLARED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "mutual-recursion",
+      "source": "int a(int);int b(int);int a(int n){return b(n);}int b(int n){return a(n);}int main(){return a(1);}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNSUPPORTED_SYNTAX",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "global-auto-static",
+      "source": "int global;int tick(){static int n;n++;return n;}int main(){int x=2;{int x=7;global=x;}return global+x+tick()+tick();}",
+      "input": "",
+      "returnValue": 12,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "global-default-zero",
+      "source": "int global;int *p;double d;int main(){return global+(p!=0)+(int)d;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "global-constant-initializer-required",
+      "source": "#include <stdio.h>\nint global=getchar();int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNSUPPORTED_SYNTAX",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "const-write",
+      "source": "int main(void){const int x=1;x=2;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_CONST_WRITE",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "pointer-after-lifetime",
+      "source": "int *p;int f(){int x=1;p=&x;return 0;}int main(){f();return *p;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_DANGLING_POINTER",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "header-trailing-comment",
+      "source": "#include <stdio.h> // comment\nint main(void){printf(\"ok\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "ok",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "macro-signed-min",
+      "source": "#define BOTTOM -2147483648\nint main(){return BOTTOM;}",
+      "input": "",
+      "returnValue": -2147483648,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "macro-negative-zero",
+      "source": "#define Z -0.0f\nint main(){float value=Z;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f32",
+          "bits": "80000000"
+        }
+      }
+    },
+    {
+      "id": "macro-plus",
+      "source": "#define K +7\nint main(){return K;}",
+      "input": "",
+      "returnValue": 7,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "macros-32",
+      "source": "#define K0 0\n#define K1 1\n#define K2 2\n#define K3 3\n#define K4 4\n#define K5 5\n#define K6 6\n#define K7 7\n#define K8 8\n#define K9 9\n#define K10 10\n#define K11 11\n#define K12 12\n#define K13 13\n#define K14 14\n#define K15 15\n#define K16 16\n#define K17 17\n#define K18 18\n#define K19 19\n#define K20 20\n#define K21 21\n#define K22 22\n#define K23 23\n#define K24 24\n#define K25 25\n#define K26 26\n#define K27 27\n#define K28 28\n#define K29 29\n#define K30 30\n#define K31 31\nint main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "macros-33",
+      "source": "#define K0 0\n#define K1 1\n#define K2 2\n#define K3 3\n#define K4 4\n#define K5 5\n#define K6 6\n#define K7 7\n#define K8 8\n#define K9 9\n#define K10 10\n#define K11 11\n#define K12 12\n#define K13 13\n#define K14 14\n#define K15 15\n#define K16 16\n#define K17 17\n#define K18 18\n#define K19 19\n#define K20 20\n#define K21 21\n#define K22 22\n#define K23 23\n#define K24 24\n#define K25 25\n#define K26 26\n#define K27 27\n#define K28 28\n#define K29 29\n#define K30 30\n#define K31 31\n#define K32 32\nint main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_MACRO_UNSUPPORTED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "enum-max",
+      "source": "int main(void){enum X{A=2147483647};return A;}",
+      "input": "",
+      "returnValue": 2147483647,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "enum-overflow",
+      "source": "int main(void){enum X{A=2147483647,B};return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_OVERFLOW",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "unbraced-declaration",
+      "source": "int main(void){if(1)int x=2;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_PARSE_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-array-1",
+      "source": "int main(void){int a[1]={0};return a[0];}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-array-30",
+      "source": "int main(void){int a[30]={0};return a[29];}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "int-array-31",
+      "source": "int main(void){int a[31]={0};return a[30];}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "char-array-64",
+      "source": "int main(void){char a[64]=\"\";return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "char-array-65",
+      "source": "int main(void){char a[65]=\"\";return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "struct-types-8",
+      "source": "struct S0{int x;};struct S1{int x;};struct S2{int x;};struct S3{int x;};struct S4{int x;};struct S5{int x;};struct S6{int x;};struct S7{int x;};int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "struct-types-9",
+      "source": "struct S0{int x;};struct S1{int x;};struct S2{int x;};struct S3{int x;};struct S4{int x;};struct S5{int x;};struct S6{int x;};struct S7{int x;};struct S8{int x;};int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STRUCT_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "struct-fields-8",
+      "source": "struct S{int v0;int v1;int v2;int v3;int v4;int v5;int v6;int v7;};int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "struct-fields-9",
+      "source": "struct S{int v0;int v1;int v2;int v3;int v4;int v5;int v6;int v7;int v8;};int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_FIELD_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "mixed-layout",
+      "source": "#include <stdio.h>\nstruct S{char c;int n;double d;int *p;};int main(void){struct S s={1,2,3.0,0};printf(\"%u %u\\n\",sizeof(struct S),sizeof(s.p));return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "24 4\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "struct-array30",
+      "source": "struct S{int n;};int main(void){struct S items[30]={{1},{2}};items[29].n=7;return items[0].n+items[1].n+items[2].n+items[29].n;return 10;}",
+      "input": "",
+      "returnValue": 10,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "pointer-one-past",
+      "source": "int main(void){int a[30]={0};int *p=a+30;return p-a;return 30;}",
+      "input": "",
+      "returnValue": 30,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "pointer-one-past-deref",
+      "source": "int main(void){int a[1]={0};return *(a+1);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_POINTER_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "pointer-before-first",
+      "source": "int main(void){int a[1]={0};int *p=a-1;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_POINTER_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "pointer-cross-object-diff",
+      "source": "int main(void){int a=1;int b=2;return &a-&b;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_POINTER_BOUNDS",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "pointer-null-deref",
+      "source": "int main(void){int *p=0;return *p;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_NULL_POINTER",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "array2d",
+      "source": "int main(void){int a[2][2];return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNSUPPORTED_SYNTAX",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "pointer-array",
+      "source": "int main(void){int *p[2];return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNSUPPORTED_SYNTAX",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "pointer-pointer",
+      "source": "int main(void){int **p;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNSUPPORTED_SYNTAX",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "pointer-expression-level2",
+      "source": "int main(void){int x=1;int *p=&x;return (int)sizeof(&p);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNSUPPORTED_SYNTAX",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "void-pointer",
+      "source": "int main(void){void *p;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNSUPPORTED_SYNTAX",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "struct-copy",
+      "source": "int main(void){struct S{int n;};struct S a={1};struct S b=a;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNSUPPORTED_SYNTAX",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "native-system",
+      "source": "int main(void){system(\"anything\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNDECLARED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "source-32768",
+      "source": "/*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*/int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "source-32769",
+      "source": "/*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*/int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_SOURCE_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "unary-depth-61",
+      "source": "int main(){return + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + 1;}",
+      "input": "",
+      "returnValue": 1,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "unary-depth-62",
+      "source": "int main(){return + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + 1;}",
+      "input": "",
+      "returnValue": 1,
+      "stdout": "",
+      "code": "E_DEPTH_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "syntax-parentheses-61",
+      "source": "int main(){return (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((1)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));}",
+      "input": "",
+      "returnValue": 1,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "syntax-parentheses-62",
+      "source": "int main(){return ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((1))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));}",
+      "input": "",
+      "returnValue": 1,
+      "stdout": "",
+      "code": "E_DEPTH_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "actual-stack-31-frames",
+      "source": "int f(int n){if(n==0)return 0;return f(n-1);}int main(){return f(29);}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "actual-stack-32-frames",
+      "source": "int f(int n){if(n==0)return 0;return f(n-1);}int main(){return f(30);}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "actual-stack-33-frames",
+      "source": "int f(int n){if(n==0)return 0;return f(n-1);}int main(){return f(31);}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_STACK_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "combined-depth-4",
+      "source": "int f(int n){if(n==0)return 0;return + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + f(n-1);}int main(){return + + f(4);}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "combined-depth-5",
+      "source": "int f(int n){if(n==0)return 0;return + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + f(n-1);}int main(){return + + f(5);}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_DEPTH_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "stdout16384",
+      "source": "#include <stdio.h>\nint main(void){for(int i=0;i<128;i++){printf(\"%16d%16d%16d%16d%16d%16d%16d%16d\",0,0,0,0,0,0,0,0);}return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "stdout16385",
+      "source": "#include <stdio.h>\nint main(void){for(int i=0;i<128;i++){printf(\"%16d%16d%16d%16d%16d%16d%16d%16d\",0,0,0,0,0,0,0,0);}putchar(33);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0               0",
+      "code": "E_OUTPUT_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "virtual-memory-exact-1MiB",
+      "source": "struct Page{char b0[64];char b1[64];char b2[64];char b3[64];char b4[64];char b5[64];char b6[64];char b7[64];};struct Page pages0[30];struct Page pages1[30];struct Page pages2[30];struct Page pages3[30];struct Page pages4[30];struct Page pages5[30];struct Page pages6[30];struct Page pages7[30];struct Page pages8[30];struct Page pages9[30];struct Page pages10[30];struct Page pages11[30];struct Page pages12[30];struct Page pages13[30];struct Page pages14[30];struct Page pages15[30];struct Page pages16[30];struct Page pages17[30];struct Page pages18[30];struct Page pages19[30];struct Page pages20[30];struct Page pages21[30];struct Page pages22[30];struct Page pages23[30];struct Page pages24[30];struct Page pages25[30];struct Page pages26[30];struct Page pages27[30];struct Page pages28[30];struct Page pages29[30];struct Page pages30[30];struct Page pages31[30];struct Page pages32[30];struct Page pages33[30];struct Page pages34[30];struct Page pages35[30];struct Page pages36[30];struct Page pages37[30];struct Page pages38[30];struct Page pages39[30];struct Page pages40[30];struct Page pages41[30];struct Page pages42[30];struct Page pages43[30];struct Page pages44[30];struct Page pages45[30];struct Page pages46[30];struct Page pages47[30];struct Page pages48[30];struct Page pages49[30];struct Page pages50[30];struct Page pages51[30];struct Page pages52[30];struct Page pages53[30];struct Page pages54[30];struct Page pages55[30];struct Page pages56[30];struct Page pages57[30];struct Page pages58[30];struct Page pages59[30];struct Page pages60[30];struct Page pages61[30];struct Page pages62[30];struct Page pages63[30];struct Page pages64[30];struct Page pages65[30];struct Page pages66[30];struct Page pages67[30];char tail0[64];char tail1[64];char tail2[64];char tail3[64];char tail4[64];char tail5[64];char tail6[64];char tail7[64];char tail8[64];char tail9[64];char tail10[64];char tail11[64];char tail12[64];char tail13[64];char tail14[64];char tail15[64];char tail16[64];char tail17[64];char tail18[64];char tail19[64];char tail20[64];char tail21[64];char tail22[64];char tail23[64];char tail24[64];char tail25[64];char tail26[64];char tail27[64];char tail28[64];char tail29[64];char tail30[64];char tail31[64];char tail32[64];char tail33[64];char tail34[64];char tail35[64];char tail36[64];char tail37[64];char tail38[64];char tail39[64];char tail40[64];char tail41[64];char tail42[64];char tail43[64];char tail44[64];char tail45[64];char tail46[64];char tail47[64];char tail48[64];char tail49[64];char tail50[64];char tail51[64];char tail52[64];char tail53[64];char tail54[64];char tail55[64];char tail56[64];char tail57[64];char tail58[64];char tail59[64];char tail60[64];char tail61[64];char tail62[64];char tail63[64];int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "virtual-memory-one-int-more",
+      "source": "struct Page{char b0[64];char b1[64];char b2[64];char b3[64];char b4[64];char b5[64];char b6[64];char b7[64];};struct Page pages0[30];struct Page pages1[30];struct Page pages2[30];struct Page pages3[30];struct Page pages4[30];struct Page pages5[30];struct Page pages6[30];struct Page pages7[30];struct Page pages8[30];struct Page pages9[30];struct Page pages10[30];struct Page pages11[30];struct Page pages12[30];struct Page pages13[30];struct Page pages14[30];struct Page pages15[30];struct Page pages16[30];struct Page pages17[30];struct Page pages18[30];struct Page pages19[30];struct Page pages20[30];struct Page pages21[30];struct Page pages22[30];struct Page pages23[30];struct Page pages24[30];struct Page pages25[30];struct Page pages26[30];struct Page pages27[30];struct Page pages28[30];struct Page pages29[30];struct Page pages30[30];struct Page pages31[30];struct Page pages32[30];struct Page pages33[30];struct Page pages34[30];struct Page pages35[30];struct Page pages36[30];struct Page pages37[30];struct Page pages38[30];struct Page pages39[30];struct Page pages40[30];struct Page pages41[30];struct Page pages42[30];struct Page pages43[30];struct Page pages44[30];struct Page pages45[30];struct Page pages46[30];struct Page pages47[30];struct Page pages48[30];struct Page pages49[30];struct Page pages50[30];struct Page pages51[30];struct Page pages52[30];struct Page pages53[30];struct Page pages54[30];struct Page pages55[30];struct Page pages56[30];struct Page pages57[30];struct Page pages58[30];struct Page pages59[30];struct Page pages60[30];struct Page pages61[30];struct Page pages62[30];struct Page pages63[30];struct Page pages64[30];struct Page pages65[30];struct Page pages66[30];struct Page pages67[30];char tail0[64];char tail1[64];char tail2[64];char tail3[64];char tail4[64];char tail5[64];char tail6[64];char tail7[64];char tail8[64];char tail9[64];char tail10[64];char tail11[64];char tail12[64];char tail13[64];char tail14[64];char tail15[64];char tail16[64];char tail17[64];char tail18[64];char tail19[64];char tail20[64];char tail21[64];char tail22[64];char tail23[64];char tail24[64];char tail25[64];char tail26[64];char tail27[64];char tail28[64];char tail29[64];char tail30[64];char tail31[64];char tail32[64];char tail33[64];char tail34[64];char tail35[64];char tail36[64];char tail37[64];char tail38[64];char tail39[64];char tail40[64];char tail41[64];char tail42[64];char tail43[64];char tail44[64];char tail45[64];char tail46[64];char tail47[64];char tail48[64];char tail49[64];char tail50[64];char tail51[64];char tail52[64];char tail53[64];char tail54[64];char tail55[64];char tail56[64];char tail57[64];char tail58[64];char tail59[64];char tail60[64];char tail61[64];char tail62[64];char tail63[64];int beyond;int main(){return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_MEMORY_LIMIT",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "static-address-initializers",
+      "source": "int x=7;int a[2]={1,2};struct S{char c;int v;int *p;};struct S s={1,3,&x};int *q=&s.v;int *r=a+1;int main(){static int *p=&x;*p+=s.c;*q+=*r;return x+s.v;}",
+      "input": "",
+      "returnValue": 13,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "static-address-of-auto-refused",
+      "source": "int main(void){int x=1;static int *p=&x;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNSUPPORTED_SYNTAX",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "static-address-of-static-array",
+      "source": "int main(void){static int a[2]={1,4};static int *p=&a[1];return *p;}",
+      "input": "",
+      "returnValue": 4,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "f64-positive-zero",
+      "source": "int main(void){double value=0.0;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f64",
+          "bits": "0000000000000000"
+        }
+      }
+    },
+    {
+      "id": "f64-one",
+      "source": "int main(void){double value=1.0;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f64",
+          "bits": "3ff0000000000000"
+        }
+      }
+    },
+    {
+      "id": "f64-eighth",
+      "source": "int main(void){double value=.125;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f64",
+          "bits": "3fc0000000000000"
+        }
+      }
+    },
+    {
+      "id": "f64-tie-even",
+      "source": "int main(void){double value=1.00000000000000011102230246251565404236316680908203125;return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {
+        "value": {
+          "kind": "f64",
+          "bits": "3ff0000000000000"
+        }
+      }
+    },
+    {
+      "id": "scanf-u-eof",
+      "source": "#include <stdio.h>\nint main(void){unsigned int value=7u;int r=scanf(\"%u\",&value);return r;}",
+      "input": " \t",
+      "returnValue": -1,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-u-matching-failure",
+      "source": "#include <stdio.h>\nint main(void){unsigned int value=7u;int r=scanf(\"%u\",&value);return r;}",
+      "input": "x",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-f-eof",
+      "source": "#include <stdio.h>\nint main(void){float value=7.0f;int r=scanf(\"%f\",&value);return r;}",
+      "input": " \t",
+      "returnValue": -1,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-f-matching-failure",
+      "source": "#include <stdio.h>\nint main(void){float value=7.0f;int r=scanf(\"%f\",&value);return r;}",
+      "input": "x",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-lf-eof",
+      "source": "#include <stdio.h>\nint main(void){double value=7.0;int r=scanf(\"%lf\",&value);return r;}",
+      "input": " \t",
+      "returnValue": -1,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-lf-matching-failure",
+      "source": "#include <stdio.h>\nint main(void){double value=7.0;int r=scanf(\"%lf\",&value);return r;}",
+      "input": "x",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-c-eof",
+      "source": "#include <stdio.h>\nint main(void){char value=65;int r=scanf(\"%c\",&value);printf(\"%d %d\\n\",r,value);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "-1 65\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "scanf-s-eof",
+      "source": "#include <stdio.h>\nint main(void){char value[2]=\"a\";int r=scanf(\"%1s\",value);printf(\"%d %s\\n\",r,value);return 0;}",
+      "input": " \n",
+      "returnValue": 0,
+      "stdout": "-1 a\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strlen-uninitialized-entry",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[2];strlen(s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNINITIALIZED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcmp-uninitialized-entry",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[2];strcmp(s,\"\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNINITIALIZED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncmp-uninitialized-entry",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[2];strncmp(s,\"\",1u);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNINITIALIZED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strchr-uninitialized-entry",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[2];strchr(s,0);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNINITIALIZED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strchr-nul-short",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[2]=\"a\";char *p=strchr(s,0);return (int)(p-s);}",
+      "input": "",
+      "returnValue": 1,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncmp-zero-no-read",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[1];int r=strncmp(s,\"\",0u);return r;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncpy-zero-no-write",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[2]=\"a\";char src[1];strncpy(s,src,0u);printf(\"%s\\n\",s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "a\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncat-zero-no-read-source",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[2]=\"a\";char src[1];strncat(s,src,0u);printf(\"%s\\n\",s);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "a\n",
+      "code": null,
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcpy-const-argument",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){const char *s=\"\";strcpy(s,\"a\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_TYPE_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcpy-literal-readonly",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char *s=\"\";strcpy(s,\"a\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_READONLY",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncpy-const-argument",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){const char *s=\"\";strncpy(s,\"a\",1u);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_TYPE_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncpy-literal-readonly",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char *s=\"\";strncpy(s,\"a\",1u);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_READONLY",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcat-const-argument",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){const char *s=\"\";strcat(s,\"a\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_TYPE_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcat-literal-readonly",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char *s=\"\";strcat(s,\"a\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_READONLY",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncat-const-argument",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){const char *s=\"\";strncat(s,\"a\",1u);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_TYPE_INVALID",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncat-literal-readonly",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char *s=\"\";strncat(s,\"a\",1u);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_READONLY",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcat-uninitialized-target",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[4];strcat(s,\"a\");return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNINITIALIZED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncat-uninitialized-target",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[4];strncat(s,\"a\",1u);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNINITIALIZED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strcpy-uninitialized-source",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[2]=\"\";char src[2];strcpy(s,src);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNINITIALIZED",
+      "adapterError": false,
+      "cells": {}
+    },
+    {
+      "id": "strncpy-uninitialized-source",
+      "source": "#include <stdio.h>\n#include <string.h>\nint main(void){char s[2]=\"\";char src[2];strncpy(s,src,1u);return 0;}",
+      "input": "",
+      "returnValue": 0,
+      "stdout": "",
+      "code": "E_UNINITIALIZED",
+      "adapterError": false,
+      "cells": {}
+    }
+  ]
+}

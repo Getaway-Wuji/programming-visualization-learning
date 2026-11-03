@@ -1,0 +1,42 @@
+[
+  {
+    "id": "integer-control",
+    "code": "#include <stdio.h>\nint main(){int sum=0;for(int i=0;i<30;i++){if(i%2==0)sum+=i;else sum-=i;}printf(\"%d\\n\",sum);return 0;}",
+    "stdout": "-15\n"
+  },
+  {
+    "id": "real-format",
+    "code": "#include <stdio.h>\nint main(){float f=0.1;double d=-0.125;printf(\"%.2f %.3f\\n\",f,d);return 0;}",
+    "stdout": "0.10 -0.125\n"
+  },
+  {
+    "id": "char64-eof",
+    "code": "#include <stdio.h>\nint main(){char s[64]=\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\";int c=getchar();printf(\"%s %d\\n\",s,c);return 0;}",
+    "stdout": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -1\n"
+  },
+  {
+    "id": "scalar30",
+    "code": "#include <stdio.h>\nint main(){int a[30]={30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1};int sum=0;for(int i=0;i<30;i++)sum+=a[i];printf(\"%d\\n\",sum);return 0;}",
+    "stdout": "465\n"
+  },
+  {
+    "id": "struct30",
+    "code": "#include <stdio.h>\nstruct S{int n;double d;};int main(){struct S a[30];int sum=0;for(int i=0;i<30;i++){a[i].n=i;a[i].d=0.5;sum+=a[i].n;}printf(\"%d %.1f\\n\",sum,a[29].d);return 0;}",
+    "stdout": "435 0.5\n"
+  },
+  {
+    "id": "functions-static-typedef-enum",
+    "code": "#include <stdio.h>\n#define OFFSET 2\ntypedef int Count; enum Mode{BASE=3};int tick(){static int n=0;n++;return n;}int adjust(Count x){return x+OFFSET+BASE;}int main(){int total=0;for(int i=0;i<10;i++)total+=adjust(tick());printf(\"%d\\n\",total);return 0;}",
+    "stdout": "105\n"
+  },
+  {
+    "id": "pointer-alias",
+    "code": "#include <stdio.h>\nvoid swap(int *a,int *b){int t=*a;*a=*b;*b=t;}int main(){int a[3]={7,-2,9};int *p=&a[0];int *q=&a[2];swap(p,q);printf(\"%d %d %d\\n\",a[0],a[1],a[2]);return 0;}",
+    "stdout": "9 -2 7\n"
+  },
+  {
+    "id": "four-case-judge",
+    "code": "#include <stdio.h>\nint main(void) {\n    int values[30] = {0};\n    int count = 0;\n    if (scanf(\"%d\", &count) != 1 || count < 0 || count > 30) return 1;\n    if (count == 0) {\n        printf(\"0\\n\");\n        return 0;\n    }\n    for (int i = 0; i < count; i++) {\n        if (scanf(\"%d\", &values[i]) != 1) return 1;\n    }\n    int total = 0;\n    for (int i = 0; i < count; i++) total += values[i];\n    printf(\"%d\\n\", total);\n    return 0;\n}\n",
+    "judge": true
+  }
+]

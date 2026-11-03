@@ -346,4 +346,81 @@ describe('11.4 statically disjoint oneOf dispatch preserves the frozen schema', 
       expect(calls).toBe(9);
     }
   });
+
+  it('preserves scalar lengths and pattern decisions for BMP, astral and line endings', () => {
+    const request = archived('bubble-sort-mixed', 'request');
+    for (const path of [
+      ['identity', 'runId'],
+      ['packageRef', 'id'],
+      ['packageRef', 'version'],
+      ['source', 'text'],
+    ]) {
+      for (const text of [
+        '',
+        'a',
+        'a'.repeat(95),
+        'a'.repeat(96),
+        'a'.repeat(97),
+        'x.y',
+        '1.0.0',
+        'n1',
+        'n1\n',
+        'n1\r\n',
+        'n1\u2028',
+        'n1\u2029',
+        '中',
+        '😀',
+        '😀'.repeat(96),
+        '\ud800',
+        '\udfff',
+        'a\ud800b',
+      ]) {
+        const value = structuredClone(request);
+        parentAt(value, path)[path.at(-1)!] = text;
+        expect(validateRequestSchema(value)).toBe(previousRequest(value));
+      }
+    }
+    for (const nodeId of ['n1', 'n1\n', 'n1\u2028', 'n😀', 'n' + '1'.repeat(96)]) {
+      const value = structuredClone(emptyTrace);
+      record(record(value.initialState).control).nextNodeId = nodeId;
+      expect(finish(validateTraceSchema(value, () => {}))).toBe(
+        finish(previousTrace(value, () => {})),
+      );
+    }
+  });
+
+  it('keeps numeric range and complete own-key checks after reference forwarding is removed', () => {
+    for (const value of [
+      -9007199254740992,
+      -2147483649,
+      -2147483648,
+      -1,
+      0,
+      1,
+      2147483647,
+      2147483648,
+      9007199254740991,
+      9007199254740992,
+      0.5,
+      Infinity,
+      NaN,
+    ]) {
+      const trace = structuredClone(emptyTrace);
+      record(record(trace.initialState).allocator).nextAddress = value;
+      expect(finish(validateTraceSchema(trace, () => {}))).toBe(
+        finish(previousTrace(trace, () => {})),
+      );
+    }
+    const request = record(archived('bubble-sort-mixed', 'request'));
+    for (const key of Object.keys(request)) {
+      const absent = structuredClone(request);
+      delete absent[key];
+      expect(validateRequestSchema(absent)).toBe(previousRequest(absent));
+      Object.setPrototypeOf(absent, { [key]: request[key] });
+      expect(validateRequestSchema(absent)).toBe(previousRequest(absent));
+    }
+    const extra = { ...request, surprise: 1 };
+    expect(validateRequestSchema(extra)).toBe(false);
+    expect(validateRequestSchema(extra)).toBe(previousRequest(extra));
+  });
 });

@@ -1,23 +1,11 @@
-import { learnBlockPrerequisites } from './learn-block-prerequisites';
+import { openIndependentRepair } from './current-course-helpers';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import {
-  blockWorkspace,
-  correctStarter,
-  openCorrectionPractice,
-  showPracticeBlocks,
-} from './block-ui';
+import { blockWorkspace, showPracticeBlocks } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 type Point = { x: number; y: number };
-test.beforeEach(async ({ page }, info) => {
-  if (/native flyout dragging builds nested arithmetic/.test(info.title)) {
-    test.setTimeout(Math.max(info.timeout, 90000));
-    await learnBlockPrerequisites(page);
-  }
-});
-
-const exercise = 'exercise.c.echo';
+const exercise = 'exercise.c.bug-semicolon';
 const practice = (page: Page) => page.getByTestId('practice-execution');
 const disclosure = (page: Page) => page.getByTestId('block-keyboard-editor');
 const canvas = (page: Page) => blockWorkspace(page).locator('.block-canvas');
@@ -36,13 +24,12 @@ async function ready(page: Page) {
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await expect(page.locator('html')).toHaveAttribute('data-appearance-config', 'ready');
 }
-async function open(page: Page) {
-  await page.goto(`/#/practice/${exercise}`);
+async function open(page: Page, id = exercise) {
+  await openIndependentRepair(page, id);
   await ready(page);
   await expect(practice(page)).toHaveAttribute('data-state', 'ready');
   await showPracticeBlocks(page);
   await expect(canvas(page).locator('.blocklySvg')).toBeVisible();
-  await openCorrectionPractice(page);
   await canvas(page).scrollIntoViewIfNeeded();
 }
 async function nativeIds(page: Page) {
@@ -106,13 +93,20 @@ async function port(
   const label = kind === 'value' ? '值位置' : '语句位置';
   return block(page, id)
     .locator(`:scope > .blocklyHighlightedConnectionPath[aria-roledescription="${label}"]`)
-    .nth(index)
-    .evaluate((element) => {
-      const matrix = (element as SVGGraphicsElement).getScreenCTM();
-      if (!matrix) throw new Error('Native SVG port has no screen transformation');
-      const position = new DOMPoint(0, 0).matrixTransform(matrix);
-      return { x: position.x, y: position.y };
-    });
+    .evaluateAll(
+      (elements, { index, kind }) => {
+        const points = elements.map((element) => {
+          const matrix = (element as SVGGraphicsElement).getScreenCTM();
+          if (!matrix) throw new Error('Native SVG port has no screen transformation');
+          const position = new DOMPoint(0, 0).matrixTransform(matrix);
+          return { x: position.x, y: position.y };
+        });
+        if (kind === 'value') points.sort((a, b) => a.y - b.y || a.x - b.x);
+        if (!points[index]) throw new Error('Native SVG port is missing');
+        return points[index];
+      },
+      { index, kind },
+    );
 }
 async function output(page: Page, id: string): Promise<Point> {
   const bounds = await block(page, id)
@@ -226,7 +220,6 @@ test('keyboard editing starts folded, remains keyboard reachable and opening it 
   await summary.focus();
   await page.keyboard.press('Enter');
   await expect(disclosure(page)).toHaveAttribute('open', '');
-  await correctStarter(page, exercise);
   await practice(page).getByRole('button', { name: '准备代码', exact: true }).click();
   await practice(page).getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(practice(page)).toHaveAttribute('data-state', 'passed');
@@ -341,13 +334,13 @@ test('native flyout dragging builds nested arithmetic and rejects wrong connecti
 }, info) => {
   test.setTimeout(120000);
   await observeCaseSetExecution(page);
-  await open(page);
-  await correctStarter(page, exercise);
+  await open(page, 'exercise.c.bug-parenthesis');
   if ((await disclosure(page).getAttribute('open')) !== null)
     await disclosure(page).locator('summary').click();
   await canvas(page).scrollIntoViewIfNeeded();
-  const ids = await echoBlocks(page),
-    old = ids.read;
+  const ids = await echoBlocks(page);
+  let old = ids.read;
+  while ((await parent(page, old)) !== ids.output) old = (await parent(page, old))!;
   const detached = await detach(page, old);
   const arithmetic = await flyout(page, '运算与判断', 1);
   await drag(page, arithmetic.id, await port(page, ids.output, 'value'));
@@ -357,6 +350,7 @@ test('native flyout dragging builds nested arithmetic and rejects wrong connecti
   const integer = await flyout(page, '整数与变量', 0);
   await drag(page, integer.id, await port(page, arithmetic.id, 'value', 1));
   await expect.poll(() => parent(page, integer.id)).toBe(arithmetic.id);
+  await expect.poll(() => parent(page, old)).toBe(arithmetic.id);
   const invalid = await flyout(page, '整数与变量', 0);
   await drag(page, invalid.id, await port(page, ids.output, 'statement', 1), 0, true);
   await expect(feedback(page)).not.toHaveText('已找到连接位置，松开即可拼接。');
@@ -376,7 +370,7 @@ test('native flyout dragging builds nested arithmetic and rejects wrong connecti
   const result = await decodeResult(Uint8Array.from(worker.responseBytes!).buffer, request);
   expect(result.producer).toBe('rust');
   expect(result.judgeResult?.status).toBe('met');
-  expect(request.source.text).toContain('(x + 0)');
+  expect(request.source.text).toMatch(/\(\(\(x \* 2\) \+ 3\) \+ 0\)/);
   await expect(
     page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true, includeHidden: true }),
   ).toHaveValue(request.source.text);
@@ -450,7 +444,6 @@ test('a statement stack reconnects by native pointer with its child retained and
   page,
 }, info) => {
   await open(page);
-  await correctStarter(page, exercise);
   if ((await disclosure(page).getAttribute('open')) !== null)
     await disclosure(page).locator('summary').click();
   await practice(page).getByRole('button', { name: '准备代码', exact: true }).click();

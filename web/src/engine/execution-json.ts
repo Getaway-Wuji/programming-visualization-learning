@@ -18,7 +18,12 @@ const simpleString = /[^"\\\u0000-\u001f\ud800-\udfff]{0,32768}"/y;
 // fixed and sorted; the integer alternatives are shortest safe <=15 digits.
 // Other objects (including legal16-digit integers) retain the scalar scanner.
 const smallScalarRecord =
-  /\{(?:"end":(?:0|[1-9][0-9]{0,14}),"start":(?:0|[1-9][0-9]{0,14})|"arrayWrites":(?:0|[1-9][0-9]{0,14}),"comparisons":(?:0|[1-9][0-9]{0,14}),"scalarWrites":(?:0|[1-9][0-9]{0,14}),"swaps":(?:0|[1-9][0-9]{0,14})|"index":(?:0|[1-9][0-9]{0,14}),"value":(?:null|0|-?[1-9][0-9]{0,14})|"iteration":(?:0|[1-9][0-9]{0,14}),"nodeId":"n[1-9][0-9]{0,14}","stage":"(?:block|init|condition|body|update)"|(?:"edge":"(?:start|whole|end)",)?"kind":"source","nodeId":"n[1-9][0-9]{0,14}")\}/y;
+  /\{(?:"end":(?:0|[1-9][0-9]{0,14}),"start":(?:0|[1-9][0-9]{0,14})|"arrayWrites":(?:0|[1-9][0-9]{0,14}),"comparisons":(?:0|[1-9][0-9]{0,14}),"scalarWrites":(?:0|[1-9][0-9]{0,14}),"swaps":(?:0|[1-9][0-9]{0,14})|"liveBytes":(?:0|[1-9][0-9]{0,14}),"nextAddress":(?:0|[1-9][0-9]{0,14}),"nextFrame":(?:0|[1-9][0-9]{0,14}),"nextObject":(?:0|[1-9][0-9]{0,14}),"nextScope":(?:0|[1-9][0-9]{0,14})|"index":(?:0|[1-9][0-9]{0,14}),"value":(?:null|0|-?[1-9][0-9]{0,14})|"iteration":(?:0|[1-9][0-9]{0,14}),"nodeId":"n[1-9][0-9]{0,14}","stage":"(?:block|init|condition|body|update)"|(?:"edge":"(?:start|whole|end)",)?"kind":"source","nodeId":"n[1-9][0-9]{0,14}")\}/y;
+// A complete canonical control record with at most eight short flow entries.
+// The match is <1KiB. Other values/shapes retain the full scalar scanner.
+// Its nested containers are counted and depth-checked explicitly below.
+const controlRecord =
+  /\{"activeFrameId":(?:null|"f[1-9][0-9]{0,14}"),"flowStack":\[(?:\{"iteration":(?:0|[1-9][0-9]{0,14}),"nodeId":"n[1-9][0-9]{0,14}","stage":"(?:block|init|condition|body|update)"\}(?:,\{"iteration":(?:0|[1-9][0-9]{0,14}),"nodeId":"n[1-9][0-9]{0,14}","stage":"(?:block|init|condition|body|update)"\}){0,7})?\],"nextNodeId":(?:null|"n[1-9][0-9]{0,14}"),"phase":"(?:ready|running|returned)","returnValue":(?:null|0|-?[1-9][0-9]{0,14})\}/y;
 
 export interface JsonShape {
   containers: number;
@@ -94,6 +99,26 @@ export function* precheckJson(text: string): Generator<void, JsonShape, unknown>
       ensure(stack.length < 32, 'E_PROTOCOL_INVALID');
       containers++;
       if (character === 123) {
+        if (text.startsWith('{"activeFrameId":', at)) {
+          controlRecord.lastIndex = at;
+          if (controlRecord.test(text)) {
+            const end = controlRecord.lastIndex;
+            let objects = 0;
+            for (let cursor = at; cursor < end;) {
+              const next = text.indexOf('{', cursor);
+              if (next < 0 || next >= end) break;
+              objects++;
+              cursor = next + 1;
+            }
+            ensure(stack.length + (objects === 1 ? 2 : 3) <= 32, 'E_PROTOCOL_INVALID');
+            // Generic dispatch already counted the control object; add its
+            // flow array and every flow object (there are no braces in values).
+            containers += objects;
+            at = end;
+            if (!stack.length) finished = true;
+            continue;
+          }
+        }
         smallScalarRecord.lastIndex = at;
         if (smallScalarRecord.test(text)) {
           at = smallScalarRecord.lastIndex;

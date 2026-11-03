@@ -3,13 +3,15 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:net';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from '@playwright/test';
 import { checkEnvironment } from './environment.mjs';
 import { workspaceDir } from './process.mjs';
 import { engineBuild } from '../web/src/generated/engine-build.ts';
+import { engineBuild as c6Build } from '../web/src/generated/c6-teaching/engine-build.ts';
 
 const environment = checkEnvironment({ bindgen: true });
 const records = [];
@@ -118,7 +120,7 @@ try {
           const digest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
           globalThis.crypto.subtle.digest = async (algorithm, data) => {
             const result = await digest(algorithm, data);
-            if (data.byteLength === wasmBytes)
+            if (wasmBytes.includes(data.byteLength))
               audit.moduleHashes.push(
                 Array.from(new Uint8Array(result), (byte) =>
                   byte.toString(16).padStart(2, '0'),
@@ -144,7 +146,11 @@ try {
             postMessage(message, options = []) {
               this.record.nonce = message.nonce;
               this.record.kinds ??= [];
-              this.record.kinds.push(message.kind);
+              if (message.buffer instanceof ArrayBuffer) {
+                const payload = JSON.parse(new TextDecoder().decode(message.buffer));
+                this.record.request = payload;
+                this.record.kinds.push(payload.editVersion === '2.0.0' ? 'c6-edit' : message.kind);
+              } else this.record.kinds.push(message.kind);
               super.postMessage(message, options);
             }
             terminate() {
@@ -163,7 +169,7 @@ try {
             return open(...args);
           };
         },
-        { wasmBytes: engineBuild.wasmBytes },
+        { wasmBytes: [engineBuild.wasmBytes, c6Build.wasmBytes] },
       );
       const requests = [];
       const pageErrors = [];
@@ -176,41 +182,60 @@ try {
       );
       page.on('pageerror', (error) => pageErrors.push(error.message));
       const origin = `http://127.0.0.1:${port}`;
-      await page.goto(`${origin}/#/lessons/lesson.c.variables-output`);
-      await page.locator('[data-testid="lesson-reading"][data-state="ready"]').waitFor();
+      await page.goto(`${origin}/#/lessons/lesson.c6.s2.1`);
+      await page.locator('.c6-teaching-reading').waitFor();
       assert.ok(
-        (await page.getByTestId('lesson-reading').locator('pre').allTextContents()).some((source) =>
+        (await page.locator('.c6-teaching-reading pre code').allTextContents()).some((source) =>
           source.includes('int main(void)'),
         ),
       );
-      await page.getByRole('link', { name: '进入练习工作区' }).click();
-      await page.locator('[data-testid="practice-execution"][data-state="ready"]').waitFor();
-      await page.locator('[data-testid="draft-code-editor"][data-sync="synced"]').waitFor();
-      const answerCode = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
-      assert.match(await answerCode.inputValue(), /int main\(void\)/);
+      await page.getByRole('link', { name: '完成配套执行练习', exact: true }).click();
+      const answerCode = page.getByLabel('完整 C 源码 · main.c', { exact: true });
+      await answerCode.waitFor();
+      const starter = await answerCode.inputValue();
+      assert.match(starter, /int main\(void\)/);
       assert.equal(await answerCode.getAttribute('readonly'), null);
       assert.equal(
-        await page.getByRole('button', { name: '提交练习', exact: true }).isEnabled(),
+        await page.getByRole('button', { name: '判定全部四组', exact: true }).isEnabled(),
         true,
       );
       assert.equal(
-        await page.getByRole('button', { name: '准备代码', exact: true }).isEnabled(),
+        await page.getByRole('button', { name: '同步到积木', exact: true }).isEnabled(),
         true,
       );
       assert.equal(await page.getByTestId('engine-connection').count(), 0);
-      assert.equal(await page.getByTestId('player-controls').getAttribute('data-length'), '0');
-      assert.equal(await page.getByTestId('practice-stdout').count(), 0);
-      assert.equal(await page.getByTestId('step-output').count(), 0);
+      assert.equal(await page.locator('.c6-trace').count(), 0);
       const passivePractice = await page.evaluate(() => globalThis.startupAudit);
-      assert.equal(passivePractice.workers.length, 1);
-      assert.deepEqual(passivePractice.workers[0].kinds, ['analyze-code']);
-      assert.equal(passivePractice.workers[0].build.kind, 'analysisResult');
-      assert.equal(passivePractice.workers[0].build.status, 'valid');
-      assert.equal(passivePractice.workers[0].build.analysisVersion, '1.0.0');
+      assert.deepEqual(passivePractice.workers, []);
       assert.equal(passivePractice.writes, 0);
-      assert.equal(passivePractice.wasmFetches, 1);
-      assert.equal(passivePractice.compiles, 1);
-      assert.deepEqual(passivePractice.moduleHashes, [engineBuild.wasmSha256]);
+      assert.equal(passivePractice.wasmFetches, 0);
+      assert.equal(passivePractice.compiles, 0);
+      const probeSource =
+        '#include <stdio.h>\nint main(void){int probe=1;printf("%d\\n",probe);return 0;}';
+      await answerCode.fill(probeSource);
+      await page.getByRole('button', { name: '同步到积木', exact: true }).click();
+      await page
+        .getByRole('region', { name: '积木工作区', exact: true })
+        .locator('.blocklySvg')
+        .waitFor();
+      const analysisAudit = await page.evaluate(() => globalThis.startupAudit);
+      assert.equal(analysisAudit.workers.length, 1);
+      assert.equal(analysisAudit.workers[0].terminated, true);
+      assert.deepEqual(analysisAudit.workers[0].kinds, ['c6-edit']);
+      assert.equal(analysisAudit.workers[0].build.editVersion, '2.0.0');
+      assert.equal(analysisAudit.workers[0].build.status, 'mapped');
+      assert.equal(analysisAudit.workers[0].build.source, probeSource);
+      assert.equal(
+        analysisAudit.workers[0].build.sourceSha256,
+        createHash('sha256').update(probeSource).digest('hex'),
+      );
+      assert.equal(analysisAudit.workers[0].build.engine.buildId, c6Build.wasmSha256);
+      assert.equal(analysisAudit.wasmFetches, 1);
+      assert.equal(analysisAudit.compiles, 1);
+      assert.deepEqual(analysisAudit.moduleHashes, [c6Build.wasmSha256]);
+      await answerCode.fill(starter);
+      assert.equal(await answerCode.inputValue(), starter);
+      assert.equal(await page.locator('.c6-trace').count(), 0);
       await page
         .getByRole('navigation', { name: '主导航' })
         .getByRole('link', { name: '算法与演示', exact: true })
@@ -228,7 +253,7 @@ try {
       );
       assert.ok(
         (await page.getByTestId('content-sample').innerText()).includes(
-          `内容版本 ${existsSync(join(workspaceDir, 'content/c/p0/blockly-release-1.0.14.json')) ? '1.0.0' : '1.0.2'}`,
+          `内容版本 ${JSON.parse(readFileSync(join(workspaceDir, 'content/c/primer6-learning/cases-1.0.0.json'), 'utf8')).catalogs[0].packageRef.version}`,
         ),
       );
       await page.locator('[data-testid="case-execution"][data-state="ready"]').waitFor();
@@ -246,10 +271,10 @@ try {
       const passiveCase = await page.evaluate(() => globalThis.startupAudit);
       assert.equal(passiveCase.workers.length, 1);
       assert.equal(passiveCase.workers[0].terminated, true);
-      assert.deepEqual(passiveCase.workers[0].kinds, ['analyze-code']);
+      assert.deepEqual(passiveCase.workers[0].kinds, ['c6-edit']);
       assert.equal(passiveCase.wasmFetches, 1);
       assert.equal(passiveCase.compiles, 1);
-      assert.deepEqual(passiveCase.moduleHashes, [engineBuild.wasmSha256]);
+      assert.deepEqual(passiveCase.moduleHashes, [c6Build.wasmSha256]);
       await page.getByRole('button', { name: '检查执行模块' }).click();
       await page.locator('[data-testid="engine-connection"][data-state="ready"]').waitFor();
       const audit = await page.evaluate(() => globalThis.startupAudit);
@@ -263,18 +288,33 @@ try {
         interpreterReady: false,
       });
       assert.equal(audit.writes, 0);
-      assert.equal(audit.wasmFetches, 1);
-      assert.equal(audit.compiles, 1);
-      assert.deepEqual(audit.moduleHashes, [engineBuild.wasmSha256]);
+      assert.equal(audit.wasmFetches, 2);
+      assert.equal(audit.compiles, 2);
+      assert.deepEqual(audit.moduleHashes, [c6Build.wasmSha256, engineBuild.wasmSha256]);
       assert.ok(audit.databaseOpens >= 1);
       const learningRows = await page.evaluate(async () => {
         const db = await new Promise((resolve, reject) => {
-          const req = globalThis.indexedDB.open('c-viz-learning', 9);
+          const req = globalThis.indexedDB.open('c-viz-learning');
           req.onsuccess = () => resolve(req.result);
           req.onerror = () => reject(req.error);
         });
         try {
-          const names = ['progress', 'dailyFacts', 'goals', 'ledger', 'receipts', 'aliases'];
+          const names = [
+            'progress',
+            'dailyFacts',
+            'goals',
+            'ledger',
+            'receipts',
+            'aliases',
+            'editHistory',
+            'knowledgeMarks',
+            'reviewCards',
+            'achievements',
+            'customDrafts',
+            'weaknesses',
+            'courseActivities',
+            'courseDrafts',
+          ];
           const tx = db.transaction(names, 'readonly');
           const businessCounts = await Promise.all(
             names.map(
@@ -286,7 +326,11 @@ try {
                 }),
             ),
           );
-          return { storeNames: Array.from(db.objectStoreNames).sort(), businessCounts };
+          return {
+            dbVersion: db.version,
+            storeNames: Array.from(db.objectStoreNames).sort(),
+            businessCounts,
+          };
         } finally {
           db.close();
         }
@@ -297,6 +341,8 @@ try {
         'appearance',
         'appearanceAssets',
         'avatar',
+        'courseActivities',
+        'courseDrafts',
         'customDrafts',
         'dailyFacts',
         'editHistory',
@@ -310,7 +356,8 @@ try {
         'settings',
         'weaknesses',
       ]);
-      assert.deepEqual(learningRows.businessCounts, [0, 0, 0, 0, 0, 0]);
+      assert.equal(learningRows.dbVersion, 10);
+      assert.deepEqual(learningRows.businessCounts, Array(14).fill(0));
       assert.match(
         await page.getByTestId('code-panel').locator('textarea').inputValue(),
         /int main\(void\)/,
@@ -338,6 +385,7 @@ try {
         contentReady: true,
         practiceReady: true,
         passivePractice,
+        analysisAudit,
         passiveCase,
         interpreterReady: false,
         audit,

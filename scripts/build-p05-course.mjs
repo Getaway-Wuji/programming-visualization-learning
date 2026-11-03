@@ -271,6 +271,11 @@ if (!candidate) {
     ['advancedEngine', 'advanced/c_viz_advanced_bg.wasm'],
   ])
     assert.equal(registration[key].wasmSha256, sha(read(`web/src/generated/${path}`)));
+  if (registration.c6Engine)
+    assert.equal(
+      registration.c6Engine.wasmSha256,
+      sha(read('web/src/generated/c6/c_viz_c6_bg.wasm')),
+    );
   registered = true;
 }
 const learning = registered ? { ...catalog, purpose: 'course-practice' } : null;

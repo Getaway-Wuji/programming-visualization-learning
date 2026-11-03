@@ -2,28 +2,36 @@ import { readFileSync } from 'node:fs';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
-import type { ContentPackage } from '../../web/src/content/types';
 import type { StorageSnapshot } from '../../web/src/storage/model';
-import { initSync, prepare_input } from '../../web/src/generated/c_viz_wasm';
+import { initSync } from '../../web/src/generated/c_viz_wasm';
 import { showPracticeBlocks, openBlockKeyboardEditor } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
-import { p05CourseRelease } from '../../web/src/content/p05-course-release.generated';
+import { routeHistoricalApp } from './legacy-app';
+import {
+  confirm as confirmLegacy,
+  openAnswer as answerLegacy,
+  submit as submitLegacy,
+} from './notebook-helpers';
+import {
+  completeCurrentFirstGroup,
+  confirmCurrentLesson,
+  openCurrentAnswer,
+  openIndependentRepair,
+} from './current-course-helpers';
+import { installC6Packets, observedC6Packet } from './c6-observation';
+import { decodeC6Response, type C6JudgeRequest } from '../../web/src/engine/c6-protocol';
+import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
 
-const course = JSON.parse(
-  readFileSync('content/c/p05/course-1.0.0.json', 'utf8'),
-) as ContentPackage;
-const references = JSON.parse(
-  readFileSync('tests/fixtures/p05-reference-solutions.json', 'utf8'),
-) as { solutions: { exerciseRef: { id: string }; source: string }[] };
 const panel = (page: Page) => page.getByTestId('practice-execution');
 const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
 const permission = (page: Page, kind: string) =>
   page.getByTestId('block-permissions').locator(`[data-block-kind="${kind}"]`);
 const localReady = (page: Page) =>
-  expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
-  );
+  expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+const sources = new WeakMap<Page, string>();
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(installC6Packets);
+});
 async function archive(page: Page): Promise<StorageSnapshot> {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -58,59 +66,83 @@ async function archive(page: Page): Promise<StorageSnapshot> {
     }
   });
 }
-function answer(id: string) {
-  const subject = course.exercises.find((e) => e.id === id)!;
-  const program = course.programs.find((p) => p.id === subject.programRef.id)!;
-  const catalog = {
-    packageRef: { id: course.packageId, version: course.packageVersion },
-    subject,
-    program: {
-      ...program,
-      sourceExample: references.solutions.find((s) => s.exerciseRef.id === id)!.source,
-    },
-    inputSpec: course.inputSpecs.find((s) => s.id === program.inputRef.id)!,
-    judgeProfile: course.judgeProfiles.find((j) => j.id === subject.judgeRef.id)!,
-  };
-  const input = Object.fromEntries(
-    Object.entries(subject.tests[0].input).sort(([a], [b]) => a.localeCompare(b)),
-  );
-  return (
-    JSON.parse(
-      new TextDecoder().decode(
-        prepare_input(
-          JSON.stringify(catalog),
-          new TextEncoder().encode(JSON.stringify(input)),
-          1000,
-        ),
-      ),
-    ) as { source: { text: string } }
-  ).source.text;
-}
-async function open(page: Page, id = 'exercise.c.first-output') {
-  await page.goto(`/#/practice/${id}`);
-  await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+async function open(page: Page) {
+  await openIndependentRepair(page, 'exercise.c.bug-semicolon');
   await localReady(page);
   await expect(code(page)).toBeEditable();
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
+  sources.set(page, await code(page).inputValue());
 }
-async function fill(page: Page, id: string) {
-  await code(page).fill(answer(id));
+async function fill(page: Page) {
+  if (!sources.has(page)) throw new Error('Original public repair source required');
+  await code(page).fill(sources.get(page)!);
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await expect(panel(page).getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
 }
-async function confirm(page: Page, id: string) {
-  const lesson = course.lessons.find((l) => l.requiredExerciseRefs.some((e) => e.id === id))!;
-  await page.goto(`/#/lessons/${lesson.id}`);
-  await localReady(page);
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  const start = page.getByRole('button', { name: '开始本节学习', exact: true });
-  if (await start.isEnabled()) {
-    await start.click();
-    await localReady(page);
+async function captureCurrent(page: Page) {
+  const captured = await observedC6Packet(page);
+  expect(captured).toMatchObject({ moduleSeen: true, terminated: true });
+  // Retained repair preparation also constructs workers; count actual judge IPC
+  // rather than treating every worker in this mixed-language route as a judge.
+  expect(
+    await page.evaluate(
+      () =>
+        window.c6CurrentPackets.filter(
+          (p) => p.request && 'judgeVersion' in JSON.parse(new TextDecoder().decode(p.request)),
+        ).length,
+    ),
+  ).toBe(1);
+  const requestBytes = Buffer.from(captured.request!, 'base64');
+  const resultBytes = Buffer.from(captured.response!, 'base64');
+  const request = JSON.parse(requestBytes.toString('utf8')) as C6JudgeRequest;
+  const exercise = (
+    JSON.parse(readFileSync('content/c/primer6-teaching/source-2.0.0.json', 'utf8')) as {
+      chapters: {
+        exercises: {
+          ref: { id: string };
+          referenceSource: string;
+          profileRef: unknown;
+          tests: { expectedStdout: string }[];
+        }[];
+      }[];
+    }
+  ).chapters
+    .flatMap((c) => c.exercises)
+    .find((e) => e.ref.id === 'exercise.c6.s2.1')!;
+  expect(request.source).toBe(exercise.referenceSource);
+  expect(request.profileRef).toEqual(exercise.profileRef);
+  const result = await decodeC6Response(
+    Uint8Array.from(resultBytes).buffer,
+    request,
+    engineBuild.wasmSha256,
+  );
+  if (!('cases' in result)) throw new Error('Current four-case response required');
+  expect(result.status).toBe('passed');
+  expect(result.cases).toHaveLength(4);
+  for (const [i, c] of result.cases.entries()) {
+    expect(c.stdoutMatches && c.returnMatches && c.observationMatches).toBe(true);
+    expect(c.packet.terminal.status).toBe('completed');
+    const output =
+      c.packet.trace!.initialState.output +
+      c.packet
+        .trace!.steps.flatMap((s) =>
+          s.changes.flatMap((v) => (v.op === 'output' ? [v.append] : [])),
+        )
+        .join('');
+    expect(output).toBe(exercise.tests[i].expectedStdout);
   }
-  await page.getByRole('button', { name: /^(确认已学习|确认今日复习)$/ }).click();
-  await localReady(page);
-  await expect(page.getByTestId('lesson-confirmation-check')).toHaveAttribute('data-saved', 'yes');
+  await test
+    .info()
+    .attach('current-permissions-request', { body: requestBytes, contentType: 'application/json' });
+  await test
+    .info()
+    .attach('current-permissions-result', { body: resultBytes, contentType: 'application/json' });
+}
+async function noPermanent(page: Page) {
+  await expect(page.getByTestId('block-permissions').locator('summary')).toContainText(
+    '已永久解锁 0 / 20',
+  );
+  await expect(permission(page, 'scope')).toHaveAttribute('data-access', '未解锁');
 }
 async function submit(page: Page, status = 'saved') {
   await panel(page).getByRole('button', { name: '提交练习', exact: true }).click();
@@ -136,7 +168,7 @@ test('13.3 fresh learner: locked toolbox and keyboard, code/hidden-block guard, 
   ).toHaveAttribute('disabled', '');
   await page.getByRole('treeitem', { name: '条件与循环', exact: true }).click();
   await expect(page.locator('.blocklyFlyout .blocklyDisabled')).toHaveCount(5);
-  const bad = answer('exercise.c.first-output').replace('printf(', 'while (0) {}\n    printf(');
+  const bad = sources.get(page)!.replace('printf(', 'while (0) {}\n    printf(');
   await code(page).fill(bad);
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await expect(page.getByTestId('block-permission-blocked')).toContainText('while 循环');
@@ -151,12 +183,10 @@ test('13.3 fresh learner: locked toolbox and keyboard, code/hidden-block guard, 
       () => window.__verticalObservation.workers.filter((r) => r.kind === 'execute').length,
     ),
   ).toBe(0);
-  await fill(page, 'exercise.c.first-output');
-  await submit(page, p05CourseRelease.registered ? 'saved' : 'unavailable');
+  await fill(page);
+  await submit(page);
   const saved = await archive(page);
-  expect(saved.progress.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(
-    p05CourseRelease.registered ? 1 : 0,
-  );
+  expect(saved.progress.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(1);
   expect(saved.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(0);
   await expect(page.getByTestId('block-permissions').locator('summary')).toContainText(
     '已永久解锁 0 / 20',
@@ -182,27 +212,37 @@ test('13.3 saved completion: permanent access, cross-tab refresh, review, repeat
   context,
 }) => {
   test.setTimeout(90000);
+  await observeCaseSetExecution(page);
   await open(page);
   const other = await context.newPage();
   await open(other);
-  await confirm(page, 'exercise.c.shadowed-values');
-  await open(page, 'exercise.c.shadowed-values');
-  await fill(page, 'exercise.c.shadowed-values');
+  await completeCurrentFirstGroup(page);
+  await captureCurrent(page);
+  await noPermanent(other);
+  await open(page);
+  await noPermanent(page);
   await submit(page);
-  await expect(permission(page, 'scope')).toHaveAttribute('data-access', '已永久解锁');
-  await expect(permission(other, 'scope')).toHaveAttribute('data-access', '已永久解锁');
   const saved = await archive(page);
-  expect(saved.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(1);
+  expect(saved.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(2);
+  expect(saved.ledger.reduce((s, r) => s + (r.points ?? 0), 0)).toBe(45);
   await submit(page);
   expect((await archive(page)).ledger).toEqual(saved.ledger);
-  await page.goto('/#/practice/exercise.c.shadowed-values/review');
+  const executions = await page.evaluate(
+    () => window.__verticalObservation.workers.filter((r) => r.kind === 'execute').length,
+  );
+  await page.goto('/#/practice/exercise.c.bug-semicolon/review');
   await expect(panel(page)).toHaveAttribute('data-state', 'passed');
+  expect(
+    await page.evaluate(
+      () => window.__verticalObservation.workers.filter((r) => r.kind === 'execute').length,
+    ),
+  ).toBe(executions);
   await open(page);
-  await expect(permission(page, 'scope')).toHaveAttribute('data-access', '已永久解锁');
+  await noPermanent(page);
   await expect(permission(page, 'while')).toHaveAttribute('data-access', '未解锁');
   await page.reload();
   await localReady(page);
-  await expect(permission(page, 'scope')).toHaveAttribute('data-access', '已永久解锁');
+  await noPermanent(page);
   await page.goto('/#/settings?panel=data');
   await page.getByRole('button', { name: '清除本地数据', exact: true }).click();
   await page
@@ -219,84 +259,100 @@ test('13.3 failed save grants no permanent access; original real pass retry gran
 }) => {
   test.setTimeout(90000);
   await page.addInitScript(() => {
-    const state = { armed: false };
+    const state = { armed: false, attempted: [] as unknown[] };
     Object.assign(window, { __permissionQuota: state });
-    const native = IDBObjectStore.prototype.add;
-    IDBObjectStore.prototype.add = function (value, key) {
-      if (
-        state.armed &&
-        this.name === 'receipts' &&
-        (value as { eventType?: string })?.eventType === 'exercise.passed'
-      ) {
-        state.armed = false;
-        throw new DOMException('13.3 quota injection', 'QuotaExceededError');
-      }
-      return key === undefined ? native.call(this, value) : native.call(this, value, key);
-    };
+    for (const method of ['add', 'put'] as const) {
+      const native = IDBObjectStore.prototype[method];
+      IDBObjectStore.prototype[method] = function (value, key) {
+        if (
+          state.armed &&
+          this.name === 'receipts' &&
+          (value as { eventType?: string })?.eventType === 'exercise.passed'
+        ) {
+          state.armed = false;
+          state.attempted.push(structuredClone(value));
+          throw new DOMException('13.3 quota injection', 'QuotaExceededError');
+        }
+        return key === undefined ? native.call(this, value) : native.call(this, value, key);
+      };
+    }
   });
-  await confirm(page, 'exercise.c.shadowed-values');
-  await open(page, 'exercise.c.shadowed-values');
-  await fill(page, 'exercise.c.shadowed-values');
+  await confirmCurrentLesson(page, 'lesson.c6.s2.1');
+  await confirmCurrentLesson(page, 'lesson.c6.s2.2.1');
+  await openCurrentAnswer(page, 'exercise.c6.s2.1');
+  const before = await archive(page);
   await page.evaluate(() => {
     (window as unknown as { __permissionQuota: { armed: boolean } }).__permissionQuota.armed = true;
   });
-  await submit(page, 'unsaved');
-  await expect(permission(page, 'scope')).toHaveAttribute('data-access', '本节可用');
-  expect((await archive(page)).progress.filter((r) => r.eventType === 'lesson.completed')).toEqual(
-    [],
-  );
-  await page.goto('/#/courses');
+  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toHaveCount(0);
+  await captureCurrent(page);
+  const failed = await archive(page);
+  for (const store of ['progress', 'receipts', 'ledger', 'dailyFacts'] as const)
+    expect(failed[store]).toEqual(before[store]);
+  await page.goto('/#/');
   await page
     .getByTestId('learning-save-status')
     .getByRole('button', { name: '重试未保存操作', exact: true })
     .click();
   await localReady(page);
-  await open(page);
-  await expect(permission(page, 'scope')).toHaveAttribute('data-access', '已永久解锁');
   const saved = await archive(page);
-  expect(saved.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(1);
+  expect(saved.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(2);
+  expect(saved.receipts.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(1);
+  expect(saved.ledger.reduce((s, r) => s + (r.points ?? 0), 0)).toBe(35);
   expect(saved.ledger.filter((r) => r.sourceId === 'reward.lesson.first-completion')).toHaveLength(
     1,
   );
+  const fault = await page.evaluate(
+    () =>
+      (window as unknown as { __permissionQuota: { armed: boolean; attempted: unknown[] } })
+        .__permissionQuota,
+  );
+  expect(fault.armed).toBe(false);
+  expect(fault.attempted).toHaveLength(1);
+  await open(page);
+  await noPermanent(page);
+  await expect(permission(page, 'print')).toHaveAttribute('data-access', '本节可用');
 });
 
 test('13.3 legacy first completion keeps only its original grants after the 32-lesson upgrade', async ({
   page,
+  context,
 }) => {
-  const pattern = `**/${p05CourseRelease.file}`;
+  test.setTimeout(90000);
+  await routeHistoricalApp(page, new URL(test.info().project.use.baseURL as string).origin);
+  const pattern = '**/content/course/course-bundle-*.json';
   await page.route(pattern, (route) =>
     route.fulfill({ status: 404, body: 'Explicit original-course fallback' }),
   );
-  await confirm(page, 'exercise.c.echo');
-  await open(page, 'exercise.c.echo');
-  await fill(page, 'exercise.c.echo');
-  await submit(page);
+  await confirmLegacy(page, 'lesson.c.variables-output');
+  await answerLegacy(page, 'exercise.c.echo');
+  await submitLegacy(page);
   const old = await archive(page);
   expect(old.progress.filter((row) => row.eventType === 'lesson.completed')).toHaveLength(1);
+  await expect(page.getByTestId('block-permissions').locator('summary')).toContainText(
+    '已永久解锁 8 / 20',
+  );
   await expect(permission(page, 'arithmetic')).toHaveAttribute('data-access', '未解锁');
   await page.getByTestId('block-permissions').locator('summary').click();
   await expect(permission(page, 'scope').getByRole('link')).toHaveAttribute(
     'href',
     /#\/lessons\/lesson\.c\.loops$/,
   );
-  await page.unroute(pattern);
-  await page.goto('/#/courses');
-  await page.reload();
-  await localReady(page);
-  await expect(page.locator('[data-course-lesson]')).toHaveCount(32);
-  await open(page);
-  await expect(page.getByTestId('block-permissions').locator('summary')).toContainText(
-    '已永久解锁 8 / 20',
-  );
-  await expect(permission(page, 'arithmetic')).toHaveAttribute('data-access', '未解锁');
-  await expect(permission(page, 'while')).toHaveAttribute('data-access', '未解锁');
-  await expect(permission(page, 'scope')).toHaveAttribute('data-access', '未解锁');
-  await page.getByTestId('block-permissions').locator('summary').click();
-  await expect(permission(page, 'scope').getByRole('link')).toHaveAttribute(
-    'href',
-    /#\/lessons\/lesson\.c\.scope-shadowing$/,
-  );
-  const upgraded = await archive(page);
-  expect(upgraded.progress).toEqual(old.progress);
-  expect(upgraded.ledger).toEqual(old.ledger);
+  const current = await context.newPage();
+  await open(current);
+  const reset = await archive(current);
+  expect(reset.meta.generation).not.toBe(old.meta.generation);
+  expect(reset.progress).toEqual([]);
+  expect(reset.ledger).toEqual([]);
+  await noPermanent(current);
+  await expect(permission(current, 'arithmetic')).toHaveAttribute('data-access', '未解锁');
+  await expect(permission(current, 'while')).toHaveAttribute('data-access', '未解锁');
+  await completeCurrentFirstGroup(current);
+  await captureCurrent(current);
+  await open(current);
+  await noPermanent(current);
+  expect((await archive(current)).ledger.reduce((s, r) => s + (r.points ?? 0), 0)).toBe(35);
+  await current.close();
 });

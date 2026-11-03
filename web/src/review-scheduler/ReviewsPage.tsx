@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { PageHeading } from '../components/Ui';
 import { useLearning } from '../learning/react';
+import { c6DisplayReference } from '../c6-learning/display';
+import { c6IndependentReference, c6IndependentHref } from '../c6-learning/independent';
 import { memoryBugQuestions } from '../memory-bugs/content';
 import { useReviews, ReviewStatus } from './react';
 import { reviewGroups, scheduled, ratingLabels, type Rating, type ReviewCard } from './model';
@@ -26,17 +28,21 @@ export default function ReviewsPage() {
     groups.future[0] ??
     groups.paused[0];
   const title = (c: ReviewCard) =>
-    c.kind === 'knowledge'
+    c6DisplayReference(learning, c.subjectRef)?.title ??
+    c6IndependentReference(c.subjectRef.id)?.question.title ??
+    (c.kind === 'knowledge'
       ? learning.reading?.knowledgePoints.find(
           (k) => k.id === c.subjectRef.id && k.version === c.subjectRef.version,
         )?.title
       : (learning.reading?.exercises.find(
           (e) => e.id === c.subjectRef.id && e.version === c.subjectRef.version,
-        )?.title ?? memoryBugQuestions.find((q) => q.exerciseRef.id === c.subjectRef.id)?.title);
+        )?.title ?? memoryBugQuestions.find((q) => q.exerciseRef.id === c.subjectRef.id)?.title));
   const lesson = card
-    ? learning.reading?.lessons.find(
-        (l) => l.id === card.lessonRef.id && l.version === card.lessonRef.version,
-      )
+    ? c6DisplayReference(learning, card.lessonRef)
+      ? { id: card.lessonRef.id, title: c6DisplayReference(learning, card.lessonRef)!.title }
+      : learning.reading?.lessons.find(
+          (l) => l.id === card.lessonRef.id && l.version === card.lessonRef.version,
+        )
     : undefined;
   const enabled = state.status === 'ready' && learning.clockStatus !== 'rollback';
   return (
@@ -152,7 +158,7 @@ export default function ReviewsPage() {
                           to={
                             memoryBugQuestions.some((q) => q.exerciseRef.id === card.subjectRef.id)
                               ? `/bugs/memory/${card.subjectRef.id}`
-                              : `/practice/${card.subjectRef.id}`
+                              : c6IndependentHref(card.subjectRef.id)
                           }
                         >
                           重新练习

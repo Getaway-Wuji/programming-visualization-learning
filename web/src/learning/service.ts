@@ -1,3 +1,17 @@
+import { c6ReviewSources, deriveC6Weaknesses, c6ExerciseEvents } from '../c6-learning/review';
+import { activateC6IndependentCases } from '../c6-learning/cases';
+import {
+  activateC6IndependentSupplement,
+  c6IndependentSupplement,
+} from '../c6-learning/supplements';
+import { c6IndependentExercises } from '../c6-learning/independent';
+import { C6LearningSession } from '../c6-learning/session';
+import { loadC6LearningIndex, type C6LearningIndex } from '../c6-learning';
+import { createC6StorageActivation } from '../storage/c6-activation';
+import { createC6TeachingRepository } from '../content/c6-teaching-repository';
+import type { C6TeachingManifest } from '../content/c6-teaching-types';
+import type { C6CourseRows } from '../c6-learning/model';
+import { projectC6Learning } from './domain';
 import type { CustomDraftWrite } from '../storage/custom-draft';
 import { loadCoursePractice } from '../content/practice';
 import { deriveWeaknesses } from '../weaknesses/model';
@@ -82,6 +96,13 @@ import {
 } from './goals';
 
 export interface LearningServiceState {
+  c6?: {
+    status: 'loading' | 'ready' | 'failed';
+    index: C6LearningIndex | null;
+    manifest: C6TeachingManifest | null;
+    rows: C6CourseRows | null;
+    error: string | null;
+  };
   profileStatus?: 'loading' | 'ready' | 'failed' | 'disabled';
   profileError?: string | null;
   profileConfiguration?: ProfileConfiguration | null;
@@ -114,6 +135,7 @@ export interface LearningServiceState {
   appearanceError?: string | null;
 }
 interface ServiceOptions {
+  c6Course?: true;
   loadProfileConfig?: () => Promise<ProfileConfiguration>;
   loadGoalConfig?: () => Promise<GoalConfiguration>;
   loadDailyGoalPolicy?: () => Promise<DailyGoalRewardPolicy>;
@@ -188,6 +210,23 @@ function same(a: unknown, b: unknown): boolean {
 // exposes only state/settings capability; it never exposes a learning issuer.
 export class LearningService {
   private state: LearningServiceState = initial;
+  private readonly c6Repository = createC6TeachingRepository();
+  private c6Session: C6LearningSession | undefined;
+  courseRepository = () => this.c6Repository;
+  private courseSession() {
+    if (!this.c6Session) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    return this.c6Session;
+  }
+  beginC6Practice = (...args: Parameters<C6LearningSession['begin']>) =>
+    this.courseSession().begin(...args);
+  invalidateC6Practice = (...args: Parameters<C6LearningSession['invalidate']>) =>
+    this.c6Session?.invalidate(...args);
+  recordC6Judge = (...args: Parameters<C6LearningSession['recordJudge']>) =>
+    this.courseSession().recordJudge(...args);
+  saveC6Draft = (...args: Parameters<C6LearningSession['saveDraft']>) =>
+    this.courseSession().saveDraft(...args);
+  deleteC6Draft = (...args: Parameters<C6LearningSession['deleteDraft']>) =>
+    this.courseSession().deleteDraft(...args);
   private listeners = new Set<() => void>();
   private client: StorageClient | undefined;
   private catalog: LearningCatalog;
@@ -258,6 +297,17 @@ export class LearningService {
     this.profileEnabled = !options.catalog || !!options.loadProfileConfig;
     this.state = {
       ...initial,
+      ...(options.c6Course
+        ? {
+            c6: {
+              status: 'loading' as const,
+              index: null,
+              manifest: null,
+              rows: null,
+              error: null,
+            },
+          }
+        : {}),
       rewardStatus: this.rewardsEnabled || this.goalsEnabled ? 'loading' : 'disabled',
       goalStatus: this.goalsEnabled ? 'loading' : 'disabled',
       profileStatus: this.profileEnabled ? 'loading' : 'disabled',
@@ -419,7 +469,18 @@ export class LearningService {
     }
     const result = await this.storage().syncAchievements(
       context,
-      (snapshot) => achievementPassSources(snapshot, catalog),
+      (snapshot) =>
+        this.state.c6?.index
+          ? c6ExerciseEvents(snapshot, this.state.c6.index)
+              .filter((r) => r.eventType === 'exercise.passed')
+              .map((r) => ({
+                kind: 'exercise',
+                eventId: r.eventId,
+                subjectRef: { ...r.subjectRef },
+                learningRevision: r.learningRevision,
+                occurredAt: r.occurredAt,
+              }))
+          : achievementPassSources(snapshot, catalog),
       observation,
     );
     this.checkEditorHistory(context);
@@ -431,13 +492,17 @@ export class LearningService {
     this.checkEditorHistory(context);
     const reading = this.state.reading,
       catalog = this.state.practiceCatalog;
-    if (!reading || !catalog || !this.state.capabilities.learning)
+    const c6Index = this.state.c6?.index;
+    if ((!c6Index && (!reading || !catalog)) || !this.state.capabilities.learning)
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
     if (command && this.state.clockStatus === 'rollback') throw new StorageError('S_DATE_INVALID');
     const at = (this.options.clock ?? (() => new Date().toISOString()))();
     const result = await this.storage().syncReviewCards(
       context,
-      (snapshot, marks) => reviewSources(snapshot, marks, catalog, reading),
+      (snapshot, marks) =>
+        c6Index
+          ? c6ReviewSources(snapshot, marks, c6Index)
+          : reviewSources(snapshot, marks, catalog!, reading!),
       at,
       command,
     );
@@ -454,15 +519,19 @@ export class LearningService {
     this.checkEditorHistory(context);
     const reading = this.state.reading,
       catalog = this.state.practiceCatalog;
-    if (!reading || !catalog || !this.state.capabilities.learning)
+    const c6Index = this.state.c6?.index;
+    if ((!c6Index && (!reading || !catalog)) || !this.state.capabilities.learning)
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
     if (this.state.clockStatus === 'rollback') throw new StorageError('S_DATE_INVALID');
-    const practice = await loadCoursePractice();
+    const practice = c6Index ? null : await loadCoursePractice();
     this.checkEditorHistory(context);
     const at = (this.options.clock ?? (() => new Date().toISOString()))();
     const result = await this.storage().syncWeaknesses(
       context,
-      (snapshot, marks) => deriveWeaknesses(snapshot, marks, catalog, reading, practice, at),
+      (snapshot, marks) =>
+        c6Index
+          ? deriveC6Weaknesses(snapshot, marks, c6Index, at)
+          : deriveWeaknesses(snapshot, marks, catalog!, reading!, practice!, at),
       at,
     );
     this.checkEditorHistory(context);
@@ -477,15 +546,25 @@ export class LearningService {
       lesson = reading?.lessons.find(
         (l) => l.id === command.lessonRef.id && l.version === command.lessonRef.version,
       );
+    const c6 = this.state.c6?.index;
+    const validC6 =
+      c6 &&
+      command.packageRef.id === c6.packageRef.id &&
+      command.packageRef.version === '2.0.0' &&
+      command.lessonRef.version === '2.0.0' &&
+      command.knowledgeRef.version === '2.0.0' &&
+      c6.lessons.some((l) => l[0] === command.lessonRef.id && l[3] === command.knowledgeRef.id);
     if (
       !this.state.capabilities.learning ||
-      !reading ||
-      !lesson ||
-      command.packageRef.id !== reading.packageRef.id ||
-      command.packageRef.version !== reading.packageRef.version ||
-      !lesson.knowledgeRefs.some(
-        (k) => k.id === command.knowledgeRef.id && k.version === command.knowledgeRef.version,
-      )
+      (c6
+        ? !validC6
+        : !reading ||
+          !lesson ||
+          command.packageRef.id !== reading.packageRef.id ||
+          command.packageRef.version !== reading.packageRef.version ||
+          !lesson.knowledgeRefs.some(
+            (k) => k.id === command.knowledgeRef.id && k.version === command.knowledgeRef.version,
+          ))
     )
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
     const rows = await this.storage().saveKnowledgeMark(context, command);
@@ -548,6 +627,7 @@ export class LearningService {
     return result;
   };
   private caseCatalog(): LearningCatalog {
+    if (this.options.c6Course) return caseLearningCatalog(reviewedCoursePackage);
     try {
       return caseLearningCatalog(
         sameRef(this.catalog.packageRef, reviewedCoursePackage)
@@ -570,6 +650,7 @@ export class LearningService {
     return !this.options.catalog && hasReviewedCourseAssembly(this.catalog, this.caseCatalog());
   }
   private usesReviewedCaseRelease(): boolean {
+    if (this.options.c6Course) return false;
     return (
       !this.options.catalog &&
       !sameRef(this.catalog.packageRef, reviewedCoursePackage) &&
@@ -577,6 +658,7 @@ export class LearningService {
     );
   }
   private learningSnapshot(snapshot: StorageSnapshot): StorageSnapshot {
+    if (this.options.c6Course) return snapshot;
     if (this.usesReviewedCourseRelease())
       return reviewedCourseSnapshot(snapshot, this.catalog, this.caseCatalog());
     if (!this.options.catalog && sameRef(this.catalog.packageRef, reviewedCoursePackage))
@@ -587,6 +669,7 @@ export class LearningService {
   }
   private pendingCount(): number {
     return (
+      (this.c6Session?.pendingCount ?? 0) +
       this.pendingCommands.size +
       this.pendingFacts.size +
       this.pendingChallengeFacts.size +
@@ -594,8 +677,16 @@ export class LearningService {
     );
   }
   private assertCurrentPackage(snapshot: StorageSnapshot, expected?: Ref): void {
+    if (
+      this.options.c6Course &&
+      (snapshot.meta.schemaVersion !== '10.0.0' ||
+        !this.state.c6?.index ||
+        !sameRef(snapshot.meta.activePackageRef, this.state.c6.index.packageRef))
+    )
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
     if (expected && !sameRef(snapshot.meta.activePackageRef, expected))
       throw new StorageError('S_GENERATION_STALE');
+    if (this.options.c6Course) return;
     if (
       !this.options.catalog &&
       sameRef(this.catalog.packageRef, reviewedCoursePackage) &&
@@ -610,6 +701,10 @@ export class LearningService {
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
   }
   private async ensureReviewedCaseRelease(explicitRetry: boolean): Promise<void> {
+    if (this.options.c6Course) {
+      if (this.state.snapshot) this.assertCurrentPackage(this.state.snapshot);
+      return;
+    }
     if (this.state.recovery?.writable === false) return;
     const expanded = this.usesReviewedCourseRelease();
     if (
@@ -649,6 +744,18 @@ export class LearningService {
     }
   }
   private project(snapshot: StorageSnapshot): LearningProjection {
+    if (this.options.c6Course) {
+      if (!this.state.c6?.index) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+      const projection = projectC6Learning(snapshot, this.state.c6.index, this.caseCatalog().cases);
+      const supplement = c6IndependentSupplement();
+      if (supplement)
+        projection.exercises.push(
+          ...projectLearning(snapshot, supplement.learning).exercises.filter((e) =>
+            c6IndependentExercises.some((q) => q.exerciseRef.id === e.id),
+          ),
+        );
+      return projection;
+    }
     const fullSnapshot = snapshot;
     snapshot = this.learningSnapshot(snapshot);
     // Projection may include the independent case-view release. The command
@@ -733,6 +840,7 @@ export class LearningService {
     return () => this.sessionListeners.delete(listener);
   };
   private invalidateSession(): void {
+    this.c6Session?.clear();
     this.pendingCommands.clear();
     this.pendingFacts.clear();
     this.pendingChallengeFacts.clear();
@@ -767,16 +875,29 @@ export class LearningService {
   private async initialize(): Promise<void> {
     if (this.profileEnabled && this.state.profileStatus !== 'ready')
       void this.reloadProfileConfiguration();
-    if (!this.options.catalog && this.state.readingStatus !== 'ready') void this.reloadReading();
+    if (!this.options.c6Course && !this.options.catalog && this.state.readingStatus !== 'ready')
+      void this.reloadReading();
     try {
       // Catalog loading cannot keep settings unavailable when only a public
       // resource failed. It never converts a fixture into a published package.
+      if (this.options.c6Course) {
+        await this.reloadC6Reading();
+        if (!this.state.c6?.index || this.state.c6.status !== 'ready')
+          throw new StorageError('S_CONTENT_INCOMPATIBLE');
+      }
       const client = await (this.options.openStorage?.() ??
         openDatabase({
           // Initialize a production archive with the last reviewed assembly.
           // Even an unregistered/new reading candidate must not create a
           // fixture marker that could later bypass the exact predecessor CAS.
-          activePackageRef: this.options.catalog ? packageRef : reviewedCasePackage,
+          activePackageRef: this.options.c6Course
+            ? this.state.c6!.index!.packageRef
+            : this.options.catalog
+              ? packageRef
+              : reviewedCasePackage,
+          ...(this.options.c6Course
+            ? { c6Activation: createC6StorageActivation(this.state.c6!.index!) }
+            : {}),
           recovery: true,
         }));
       if (this.disposed) {
@@ -824,7 +945,73 @@ export class LearningService {
       });
     }
   };
+  private async reloadC6Reading(): Promise<void> {
+    const request = ++this.readingRequest;
+    this.publish({
+      readingStatus: 'loading',
+      practiceStatus: 'loading',
+      c6: { ...this.state.c6!, status: 'loading', error: null },
+    });
+    try {
+      const manifest = await this.c6Repository.loadManifest();
+      const index = await loadC6LearningIndex(manifest);
+      await activateC6IndependentCases(index);
+      const supplement = await activateC6IndependentSupplement(index);
+      if (this.disposed || request !== this.readingRequest) return;
+      if (!this.c6Session)
+        this.c6Session = new C6LearningSession(index, {
+          current: () => ({
+            epoch: this.state.sessionEpoch,
+            snapshot: this.state.snapshot,
+            writable: this.state.recovery?.writable !== false,
+            rollback: this.state.clockStatus === 'rollback',
+          }),
+          storage: () => this.storage(),
+          clock: () => (this.options.clock ?? (() => new Date().toISOString()))(),
+          run: (action) => this.enqueue(action),
+          openDay: (generation, at) => this.openDay(generation, at),
+          rewards: (operations) =>
+            postNewDailyGoalRewards(
+              postNewRewards(operations, this.rewardPolicy),
+              this.dailyGoalPolicy,
+            ),
+          saved: (result, generation, epoch) => this.savedRead(result, generation, epoch),
+          saving: () =>
+            this.publish({
+              status: 'saving',
+              lastSaved: false,
+              errorCode: null,
+              pendingCount: this.pendingCount(),
+            }),
+          failed: (error) => this.fail(error),
+          pendingChanged: () => this.publish({ pendingCount: this.pendingCount() }),
+        });
+      this.publish({
+        reading: null,
+        readingStatus: 'ready',
+        readingError: null,
+        practiceCatalog: supplement.learning,
+        practiceStatus: 'ready',
+        practiceError: null,
+        c6: { status: 'ready', index, manifest, rows: this.state.c6?.rows ?? null, error: null },
+      });
+    } catch (error) {
+      if (this.disposed || request !== this.readingRequest) return;
+      const code =
+        error && typeof error === 'object' && 'code' in error
+          ? String(error.code)
+          : 'C6_INDEX_LOAD';
+      this.publish({
+        readingStatus: 'failed',
+        readingError: code,
+        practiceStatus: 'failed',
+        practiceError: code,
+        c6: { ...this.state.c6!, status: 'failed', error: code },
+      });
+    }
+  }
   reloadReading = async (): Promise<void> => {
+    if (this.options.c6Course) return this.reloadC6Reading();
     if (this.disposed) return;
     const request = ++this.readingRequest;
     if (this.state.reading) this.invalidateSession();
@@ -921,6 +1108,10 @@ export class LearningService {
 
   /** Only explicit lesson actions are public; callers cannot submit event payloads. */
   recordLesson = (id: string, confirmed: boolean, expectedEpoch: number): Promise<void> => {
+    if (this.options.c6Course)
+      return this.courseSession()
+        .recordLesson(id, confirmed, expectedEpoch)
+        .then(() => undefined);
     const reading = this.state.reading;
     const lesson = reading?.lessons.find((value) => value.id === id);
     if (!reading || !lesson || expectedEpoch !== this.state.sessionEpoch || this.disposed)
@@ -1085,7 +1276,8 @@ export class LearningService {
   private async loadGoals(): Promise<void> {
     if (!this.goalsEnabled || this.disposed) return;
     const expectedVersion =
-      !this.options.loadGoalConfig && sameRef(this.catalog.packageRef, reviewedCoursePackage)
+      !this.options.loadGoalConfig &&
+      (this.options.c6Course || sameRef(this.catalog.packageRef, reviewedCoursePackage))
         ? '1.1.0'
         : '1.0.0';
     if (
@@ -1095,7 +1287,7 @@ export class LearningService {
       return;
     if (this.goalLoading) return this.goalLoading;
     const request = ++this.goalConfigurationRequest;
-    const packageRef = { ...this.catalog.packageRef };
+    const packageRef = { ...(this.state.c6?.index?.packageRef ?? this.catalog.packageRef) };
     this.goalConfiguration = undefined;
     this.publish({ goalStatus: 'loading', goalError: null, goalConfiguration: null });
     const loading = (async () => {
@@ -1269,7 +1461,13 @@ export class LearningService {
     const client = this.storage();
     const epoch = this.state.sessionEpoch;
     const recovery = client.readRecovery ? await client.readRecovery() : null;
-    const snapshot = recovery ? recovery.snapshot : await client.read();
+    let snapshot = recovery ? recovery.snapshot : await client.read();
+    let courseRows: C6CourseRows | null = null;
+    if (this.options.c6Course && snapshot && recovery?.writable !== false) {
+      const course = await client.readC6Course();
+      snapshot = course.snapshot;
+      courseRows = course.rows;
+    }
     if (this.disposed) throw new StorageError('S_STORAGE_UNAVAILABLE');
     if (epoch !== this.state.sessionEpoch) throw new StorageError('S_GENERATION_STALE');
     if (generation !== undefined && snapshot?.meta.generation !== generation) {
@@ -1320,6 +1518,7 @@ export class LearningService {
     this.publish({
       status: readonly ? 'readonly' : pending ? 'unsaved' : 'ready',
       snapshot,
+      ...(this.options.c6Course ? { c6: { ...this.state.c6!, rows: courseRows } } : {}),
       projection: snapshot
         ? this.project(
             pending && !readonly && this.temporarySnapshot ? this.temporarySnapshot : snapshot,
@@ -1339,7 +1538,9 @@ export class LearningService {
       pendingCount: this.pendingCount(),
       capabilities: {
         learning:
-          (this.catalog.purpose === 'publishable' ||
+          (!this.options.c6Course || (!readonly && !!snapshot)) &&
+          (this.options.c6Course === true ||
+            this.catalog.purpose === 'publishable' ||
             this.catalog.purpose === 'lesson-reading' ||
             this.catalog.purpose === 'course-practice') &&
           (!this.usesReviewedCaseRelease() ||
@@ -1620,6 +1821,13 @@ export class LearningService {
     });
   };
   retryPending = async (): Promise<void> => {
+    if (this.c6Session?.pendingCount) {
+      try {
+        await this.c6Session.retry();
+      } catch {
+        return;
+      }
+    }
     const commands = [...this.pendingCommands];
     const facts = [...this.pendingFacts];
     const challenges = [...this.pendingChallengeFacts];
@@ -1652,6 +1860,7 @@ export class LearningService {
     }
   };
   private requireLearningContent(catalog = this.catalog): void {
+    if (this.options.c6Course && this.state.c6?.index && catalog === this.catalog) return;
     if (
       catalog.purpose !== 'publishable' &&
       catalog.purpose !== 'lesson-reading' &&
@@ -1767,9 +1976,20 @@ export class LearningService {
     if (prior?.command) return prior.command;
     if (prior?.pending) return prior.pending;
     const verified = readVerifiedFact(fact);
+    if (
+      this.options.c6Course &&
+      verified.catalog.purpose !== 'case-view' &&
+      (verified.catalog !== c6IndependentSupplement()?.learning ||
+        !['exercise.passed', 'exercise.attempt-evaluated'].includes(verified.event.eventType) ||
+        !c6IndependentExercises.some((q) => sameRef(q.exerciseRef, verified.event.subjectRef)))
+    )
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
     this.requireLearningContent(verified.catalog);
     if (verified.catalog.purpose === 'case-view') assertCaseViewFact(fact);
-    else if (!same(verified.catalog, this.catalog))
+    else if (
+      !same(verified.catalog, this.catalog) &&
+      !(this.options.c6Course && verified.catalog === c6IndependentSupplement()?.learning)
+    )
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
     checkLearningEvent(verified.event, verified.catalog);
     if (
@@ -1945,7 +2165,11 @@ export class LearningService {
           this.requireLearningContent(context.catalog);
           this.assertCurrentPackage(snapshot, context.activePackageRef);
           readVerifiedFact(context.fact);
-          if (context.catalog.purpose !== 'case-view' && !same(context.catalog, this.catalog))
+          if (
+            context.catalog.purpose !== 'case-view' &&
+            !same(context.catalog, this.catalog) &&
+            !(this.options.c6Course && context.catalog === c6IndependentSupplement()?.learning)
+          )
             throw new StorageError('S_CONTENT_INCOMPATIBLE');
           return postNewDailyGoalRewards(
             postNewRewards(
@@ -1989,6 +2213,8 @@ export class LearningService {
     });
   };
   dispose = (): void => {
+    this.c6Repository.reset();
+    this.c6Session?.clear();
     this.disposed = true;
     this.invalidationCleanup?.();
     this.invalidationCleanup = undefined;
@@ -2005,9 +2231,15 @@ export class LearningService {
 }
 
 export function createLearningService() {
-  const service = new LearningService();
+  const service = new LearningService({ c6Course: true });
   // Deliberately no raw command, trusted authority, DB name or fixture options.
   return {
+    courseRepository: service.courseRepository,
+    beginC6Practice: service.beginC6Practice,
+    invalidateC6Practice: service.invalidateC6Practice,
+    recordC6Judge: service.recordC6Judge,
+    saveC6Draft: service.saveC6Draft,
+    deleteC6Draft: service.deleteC6Draft,
     recordChallengeAnswer: service.recordChallengeAnswer,
     editorHistoryContext: service.editorHistoryContext,
     customDraft: service.customDraft,

@@ -2,7 +2,10 @@ import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import { test, expect } from '@playwright/test';
-import { openAnswer, code, panel, submit, confirm } from './notebook-helpers';
+import { code, panel, submit } from './notebook-helpers';
+import { openIndependentEchoRepair, completeCurrentFirstGroup } from './current-course-helpers';
+import { assertCurrentJudge } from './current-practice-observation';
+import { installC6Packets } from './c6-observation';
 import { native } from './achievement-helpers';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 import { waitForPhase2Archive } from './phase2-ready';
@@ -17,12 +20,16 @@ test('one native archive connects real failure, review, completion, challenge, b
   test.setTimeout(90000);
   await mkdir(directory, { recursive: true });
   await observeCaseSetExecution(p);
-  await openAnswer(p, 'exercise.c.echo');
+  await p.addInitScript(installC6Packets);
+  await openIndependentEchoRepair(p);
   await waitForPhase2Archive(p);
   const solution = await code(p).inputValue(),
     wrong = solution.replace(/\bx\);/, '0);');
   expect(wrong).not.toBe(solution);
+  await code(p).clear();
+  await expect(code(p)).toHaveValue('');
   await code(p).fill(wrong);
+  await expect(code(p)).toHaveValue(wrong);
   await expect(p.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await panel(p).getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(panel(p)).toHaveAttribute('data-state', 'unmet');
@@ -33,16 +40,21 @@ test('one native archive connects real failure, review, completion, challenge, b
     { flag: 'wx' },
   );
   await p.goto('/#/notebook');
-  await expect(p.locator('[data-mistake-id="exercise.c.echo"]')).toHaveCount(1);
+  await expect(
+    p
+      .locator('.c6-mistake-list > li')
+      .filter({ has: p.locator('a[href="#/practice/exercise.c.bug-semicolon"]') }),
+  ).toHaveCount(1);
   await p.goto('/#/reviews');
   await expect(p.getByTestId('review-detail')).toBeVisible();
   const rating = p.locator('[data-review-rating="good"]');
   await expect(rating).toBeEnabled();
   await rating.click();
   await expect.poll(async () => (await native(p)).reviewCards[0]?.reviewCount).toBe(1);
-  await openAnswer(p, 'exercise.c.echo');
+  await openIndependentEchoRepair(p);
   await submit(p);
-  await confirm(p, 'lesson.c.variables-output');
+  const currentExercise = await completeCurrentFirstGroup(p);
+  await assertCurrentJudge(p, currentExercise, 'passed');
   const completed = await native(p);
   expect(completed.progress.some((r) => r.eventType === 'lesson.completed')).toBe(true);
   expect(completed.progress.some((r) => r.eventType === 'exercise.passed')).toBe(true);

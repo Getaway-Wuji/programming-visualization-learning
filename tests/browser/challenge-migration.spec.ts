@@ -1,3 +1,7 @@
+import {
+  archivedMigrationSuccessor,
+  verifyCurrentResetAfterMigration,
+} from './migration-current-reset';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { test, expect, type Page } from '@playwright/test';
 import { native, openAnswer, submit, achievementReady } from './achievement-helpers';
@@ -54,6 +58,15 @@ test('16.1 actual34 SAVE6 upgrades to7 without rewriting any of the15 old partit
   expect(before.achievements).toHaveLength(1);
   expect(before.reviewCards).toHaveLength(1);
   expect(before.knowledgeMarks).toHaveLength(1);
+  test.info().annotations.push({
+    type: 'historical-intermediate-and-current-reset',
+    description:
+      'Original migration assertions run against existing .artifacts/16.10/delivery-workspace/web/dist; then actual formal73 DB10 RESET and genuine fresh C6 learning are independently verified.',
+  });
+  const historicalSuccessor = await archivedMigrationSuccessor(
+    page,
+    '.artifacts/16.10/delivery-workspace/web/dist',
+  );
   await mkdir('.artifacts/16.1', { recursive: true });
   await writeFile(`.artifacts/16.1/migration-switch-${label}`, 'actual successor switch\n', {
     flag: 'wx',
@@ -100,6 +113,23 @@ test('16.1 actual34 SAVE6 upgrades to7 without rewriting any of the15 old partit
         answered,
         physicalBefore,
         physicalAfter,
+      },
+      null,
+      2,
+    ),
+    { flag: 'wx' },
+  );
+  await historicalSuccessor.dispose();
+  const currentReset = await verifyCurrentResetAfterMigration(page, after);
+  await writeFile(
+    `.artifacts/21.6/migration-${label}-challenge.json`,
+    JSON.stringify(
+      {
+        historicalIntermediate: {
+          directory: historicalSuccessor.directory,
+          files: historicalSuccessor.files,
+        },
+        currentReset,
       },
       null,
       2,

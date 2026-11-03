@@ -586,6 +586,7 @@ function SettingsContent() {
                             meta: '档案信息',
                             appearance: '外观偏好',
                             appearanceAssets: '外观资源',
+                            course: '新课程记录',
                           } as Record<string, string>
                         )[issue.store] ?? '档案记录'}
                         ：{issue.count} 条记录需要处理

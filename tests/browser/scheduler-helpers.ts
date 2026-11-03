@@ -46,6 +46,17 @@ export async function mark(p: Page) {
   await reviews(p);
   await expect.poll(async () => (await native(p)).reviewCards.length).toBe(1);
 }
+export async function markCurrent(p: Page) {
+  await p.goto('/#/lessons/lesson.c6.s2.1');
+  await ready(p);
+  await expect(p.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
+  await reviewReady(p);
+  const mark = p.locator('[data-knowledge-mark="knowledge.c6.s2.1"]');
+  await mark.click();
+  await expect(mark).toHaveAttribute('aria-pressed', 'true');
+  await reviews(p);
+  await expect.poll(async () => (await native(p)).reviewCards.length).toBe(1);
+}
 export async function changePrint(p: Page, expression: string) {
   const source = await code(p).inputValue();
   await code(p).fill(source.replace(/printf\([^;]+;/, `printf("%d\\n", ${expression});`));

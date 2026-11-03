@@ -1,0 +1,555 @@
+{
+  "programs": [
+    {
+      "id": "lib15.unsigned-expression",
+      "title": "unsigned-expression",
+      "mode": "execute",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\nint main(){unsigned value=13u;for(int bit=7;bit>=0;--bit)putchar('0'+((value>>bit)&1u));putchar(10u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "00001101\n",
+      "expectedReturn": 0
+    },
+    {
+      "id": "lib15.ascii-ends",
+      "title": "ascii-ends",
+      "mode": "execute",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\nint main(){putchar(0u);putchar(127u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "\u0000",
+      "expectedReturn": 0
+    },
+    {
+      "id": "lib15.classification",
+      "title": "classification",
+      "mode": "execute",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\nint main(){printf(\"%d %d %d %d %d\\n\",isalpha(65u),isdigit(57u),isspace(10u),toupper(122u),tolower(65u));return 0;}\n"
+        }
+      ],
+      "expectedStdout": "1 1 1 90 97\n",
+      "expectedReturn": 0
+    },
+    {
+      "id": "lib15.search-and-nul",
+      "title": "search-and-nul",
+      "mode": "execute",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <string.h>\nint main(){char text[4]=\"abc\";printf(\"%d %d %d\\n\",strchr(text,98u)==text+1,strchr(text,0u)==text+3,strchr(text,120u)==0);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "1 1 1\n",
+      "expectedReturn": 0
+    },
+    {
+      "id": "lib15.putchar-128u",
+      "title": "putchar-128u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");putchar(128u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.putchar-2147483647u",
+      "title": "putchar-2147483647u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");putchar(2147483647u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.putchar-2147483648u",
+      "title": "putchar-2147483648u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");putchar(2147483648u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.putchar-4294967295u",
+      "title": "putchar-4294967295u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");putchar(4294967295u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.isalpha-128u",
+      "title": "isalpha-128u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isalpha(128u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.isalpha-2147483647u",
+      "title": "isalpha-2147483647u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isalpha(2147483647u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.isalpha-2147483648u",
+      "title": "isalpha-2147483648u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isalpha(2147483648u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.isalpha-4294967295u",
+      "title": "isalpha-4294967295u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isalpha(4294967295u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.isdigit-128u",
+      "title": "isdigit-128u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isdigit(128u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.isdigit-2147483647u",
+      "title": "isdigit-2147483647u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isdigit(2147483647u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.isdigit-2147483648u",
+      "title": "isdigit-2147483648u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isdigit(2147483648u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.isdigit-4294967295u",
+      "title": "isdigit-4294967295u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isdigit(4294967295u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.isspace-128u",
+      "title": "isspace-128u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isspace(128u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.isspace-2147483647u",
+      "title": "isspace-2147483647u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isspace(2147483647u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.isspace-2147483648u",
+      "title": "isspace-2147483648u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isspace(2147483648u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.isspace-4294967295u",
+      "title": "isspace-4294967295u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");isspace(4294967295u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.toupper-128u",
+      "title": "toupper-128u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");toupper(128u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.toupper-2147483647u",
+      "title": "toupper-2147483647u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");toupper(2147483647u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.toupper-2147483648u",
+      "title": "toupper-2147483648u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");toupper(2147483648u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.toupper-4294967295u",
+      "title": "toupper-4294967295u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");toupper(4294967295u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.tolower-128u",
+      "title": "tolower-128u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");tolower(128u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.tolower-2147483647u",
+      "title": "tolower-2147483647u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");tolower(2147483647u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.tolower-2147483648u",
+      "title": "tolower-2147483648u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");tolower(2147483648u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.tolower-4294967295u",
+      "title": "tolower-4294967295u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");tolower(4294967295u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.strchr-128u",
+      "title": "strchr-128u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");strchr(\"abc\",128u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.strchr-2147483647u",
+      "title": "strchr-2147483647u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");strchr(\"abc\",2147483647u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_CHAR_DOMAIN"
+    },
+    {
+      "id": "lib15.strchr-2147483648u",
+      "title": "strchr-2147483648u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");strchr(\"abc\",2147483648u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.strchr-4294967295u",
+      "title": "strchr-4294967295u",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\nint main(){puts(\"prefix\");strchr(\"abc\",4294967295u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "prefix\n",
+      "expectedReturn": 0,
+      "expectedCode": "E_OVERFLOW"
+    },
+    {
+      "id": "lib15.putchar-float",
+      "title": "putchar-float",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\nint main(){putchar(65.0);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "",
+      "expectedReturn": 0,
+      "expectedCode": "E_TYPE_INVALID"
+    },
+    {
+      "id": "lib15.ctype-float",
+      "title": "ctype-float",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <ctype.h>\nint main(){isalpha(65.0);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "",
+      "expectedReturn": 0,
+      "expectedCode": "E_TYPE_INVALID"
+    },
+    {
+      "id": "lib15.strchr-float",
+      "title": "strchr-float",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <string.h>\nint main(){strchr(\"abc\",98.0);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "",
+      "expectedReturn": 0,
+      "expectedCode": "E_TYPE_INVALID"
+    },
+    {
+      "id": "lib15.printf-char",
+      "title": "printf-char",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\nint main(){printf(\"%c\",65u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "",
+      "expectedReturn": 0,
+      "expectedCode": "E_TYPE_INVALID"
+    },
+    {
+      "id": "lib15.printf-int",
+      "title": "printf-int",
+      "mode": "diagnostic",
+      "input": "",
+      "files": [
+        {
+          "name": "main.c",
+          "source": "#include <stdio.h>\nint main(){printf(\"%d\",65u);return 0;}\n"
+        }
+      ],
+      "expectedStdout": "",
+      "expectedReturn": 0,
+      "expectedCode": "E_TYPE_INVALID"
+    }
+  ]
+}

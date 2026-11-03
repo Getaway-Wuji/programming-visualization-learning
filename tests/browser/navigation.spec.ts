@@ -1,13 +1,26 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { openBlockKeyboardEditor, showPracticeBlocks } from './block-ui';
-import { p05CourseRelease } from '../../web/src/content/p05-course-release.generated';
+import { openIndependentEchoRepair } from './current-course-helpers';
 
-const practicePath = '/#/practice/exercise.c.echo';
+const practicePath = '/#/practice/exercise.c.bug-semicolon';
+const currentPracticePath = '/#/practice/exercise.c6.s2.1';
 const visualPath = '/#/visualize/case.c.bubble-sort';
 
 async function ready(page: Page, id: string) {
-  await expect(page.locator(`[data-page-id="${id}"]`)).toBeVisible();
+  const surface =
+    id === 'PAGE-01'
+      ? page.locator('.c6-home-columns')
+      : id === 'PAGE-02'
+        ? page.getByRole('heading', { name: '课程目录', exact: true })
+        : id === 'PAGE-03'
+          ? page.locator('.c6-reading-page')
+          : id === 'PAGE-04'
+            ? page.locator('main h1')
+            : id === 'PAGE-06' && page.url().endsWith('/review')
+              ? page.locator('[data-mode="exercise-review"]')
+              : page.locator(`[data-page-id="${id}"]`);
+  await expect(surface).toBeVisible();
   await expect(page.locator('.state-loading')).toHaveCount(0);
   await expect(page.locator('main h1')).toBeVisible();
 }
@@ -35,31 +48,32 @@ test('public routes preserve content relationships, refresh and browser history'
   await expect(
     page.getByRole('navigation', { name: '主导航' }).getByRole('link', { name: 'C 语言课程' }),
   ).toHaveAttribute('aria-current', 'page');
-  await page.locator('[data-course-lesson] a[href="#/lessons/lesson.c.variables-output"]').click();
+  await page.locator('main a[href="#/courses/c6.ch02"]').click();
+  await page.locator('main a[href="#/lessons/lesson.c6.s2.1"]').click();
   await ready(page, 'PAGE-03');
-  await expect(page.locator('main h1')).toHaveText('变量和输出');
+  await expect(page.locator('main h1')).toHaveText('2.1 简单的C程序示例');
   await expect(page.locator('main h1')).toBeFocused();
-  await expect(page.getByRole('button', { name: '确认已学习' })).toBeEnabled();
+  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeEnabled();
   await expect(
     page.getByRole('navigation', { name: '当前位置' }).getByRole('link', {
-      name:
-        p05CourseRelease.enabled && process.env.P05_HIDE_COURSE_BUNDLE !== '1'
-          ? '程序入门与输出'
-          : '变量与表达式',
+      name: '第2章 C语言概述',
       exact: true,
     }),
-  ).toHaveAttribute('href', '#/courses/chapter.c.values');
+  ).toHaveAttribute('href', '#/courses/c6.ch02');
   expect(wasmRequests).toEqual([]);
-  await page.getByRole('link', { name: '进入练习工作区' }).click();
+  await page.getByRole('link', { name: '完成配套执行练习', exact: true }).click();
   await ready(page, 'PAGE-04');
-  await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
+  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).toBeEditable();
+  expect(wasmRequests).toEqual([]);
+  await page.getByRole('button', { name: '运行当前代码', exact: true }).click();
+  await expect(page.locator('.c6-trace')).toBeVisible();
   expect(wasmRequests.length).toBeGreaterThan(0);
-  await expect(page).toHaveURL(/#\/practice\/exercise\.c\.echo$/);
+  await expect(page).toHaveURL(/#\/practice\/exercise\.c6\.s2\.1$/);
   await page.reload();
   await ready(page, 'PAGE-04');
   await expect(
-    page.getByRole('navigation', { name: '当前位置' }).getByRole('link', { name: '变量和输出' }),
-  ).toHaveAttribute('href', '#/lessons/lesson.c.variables-output');
+    page.getByRole('link', { name: '返回 2.1 简单的C程序示例', exact: true }),
+  ).toHaveAttribute('href', '#/lessons/lesson.c6.s2.1');
   await page.goBack();
   await ready(page, 'PAGE-03');
   await page
@@ -85,7 +99,7 @@ test('public routes preserve content relationships, refresh and browser history'
 test('workspaces keep real blocks beside read-only code, review playback and empty-review boundaries', async ({
   page,
 }, testInfo) => {
-  await page.goto(practicePath);
+  await openIndependentEchoRepair(page);
   await ready(page, 'PAGE-04');
   const options = page.getByRole('region', { name: '积木工作区', exact: true });
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
@@ -120,7 +134,7 @@ test('workspaces keep real blocks beside read-only code, review playback and emp
   await expect(page.getByTestId('practice-feedback')).not.toContainText('本次提交通过');
   await expect(page.getByRole('link', { name: '查看本次复盘', exact: true })).toHaveAttribute(
     'href',
-    '#/practice/exercise.c.echo/review',
+    '#/practice/exercise.c.bug-semicolon/review',
   );
   await page.screenshot({ path: testInfo.outputPath('practice-layout.png'), fullPage: true });
 
@@ -142,16 +156,19 @@ test('workspaces keep real blocks beside read-only code, review playback and emp
   await expect(page.getByTestId('trace-view')).toHaveAttribute('data-cursor', '');
   await page.screenshot({ path: testInfo.outputPath('visualize-layout.png'), fullPage: true });
 
-  await page.goto('/#/practice/exercise.c.echo/review');
+  await page.goto('/#/practice/exercise.c.bug-semicolon/review');
   await ready(page, 'PAGE-06');
   await expect(page.getByTestId('practice-execution')).toContainText('还没有可复盘的运行');
   await expect(page.getByTestId('code-panel')).toHaveCount(0);
   await expect(page.getByTestId('animation-panel')).toHaveCount(0);
   await expect(page.getByRole('button', { name: '播放', exact: true })).toHaveCount(0);
-  await expect(page.locator('main a[href="#/practice/exercise.c.echo"]').first()).toBeVisible();
   await expect(
-    page.locator('main a[href="#/lessons/lesson.c.variables-output"]').first(),
+    page.locator('main a[href="#/practice/exercise.c.bug-semicolon"]').first(),
   ).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Bug 修复闯关', exact: true })).toHaveAttribute(
+    'href',
+    '#/bugs',
+  );
   await expect(page.getByRole('button', { name: /运行|设置输入|随机数据/ })).toHaveCount(0);
 });
 
@@ -237,40 +254,48 @@ test('unknown addresses and real lazy module failures provide recovery', async (
     '/#/unknown',
   ]) {
     await page.goto(path);
-    await expect(page.locator('.state-error[role="alert"]')).toBeVisible();
-    await expect(page.locator('main .state-actions a')).toBeVisible();
-    await page.locator('main .state-actions a').click();
-    await expect(page.locator('main [data-page-id]')).toBeVisible();
+    if (/\/(courses|lessons|practice)\//.test(path)) {
+      await expect(
+        page.getByRole('heading', { name: '课程内容已更新', exact: true }),
+      ).toBeVisible();
+      await page.getByRole('link', { name: '打开课程目录', exact: true }).click();
+      await ready(page, 'PAGE-02');
+    } else {
+      await expect(page.locator('.state-error[role="alert"]')).toBeVisible();
+      await expect(page.locator('main .state-actions a')).toBeVisible();
+      await page.locator('main .state-actions a').click();
+      await expect(page.locator('main h1')).toBeVisible();
+    }
   }
 
   let release!: () => void;
   const gate = new Promise<void>((resolve) => {
     release = resolve;
   });
-  await page.route(/\/assets\/CatalogPages-[^/]+\.js$/, async (route) => {
+  const cold = await page.context().newPage();
+  await cold.route(/\/assets\/CoursePages-[^/]+\.js$/, async (route) => {
     await gate;
     await route.continue();
   });
-  await page.goto('/');
-  await ready(page, 'PAGE-01');
-  await page
-    .getByRole('navigation', { name: '主导航' })
-    .getByRole('link', { name: 'C 语言课程' })
-    .click();
+  await cold.goto('/#/courses', { waitUntil: 'domcontentloaded' });
   try {
-    await expect(page.locator('.state-loading[role="status"]')).toContainText('正在准备页面');
+    await expect(cold.locator('.state-loading[role="status"]')).toContainText('正在准备页面');
   } finally {
     release();
   }
-  await ready(page, 'PAGE-02');
-  await page.unroute(/\/assets\/CatalogPages-[^/]+\.js$/);
+  await ready(cold, 'PAGE-02');
+  await cold.unroute(/\/assets\/CoursePages-[^/]+\.js$/);
+  await cold.close();
 
-  await page.route(/\/assets\/Workspaces-[^/]+\.js$/, (route) => route.abort('failed'));
+  await page.route(/\/assets\/IndependentPracticePage-[^/]+\.js$/, (route) =>
+    route.abort('failed'),
+  );
   await page.goto(practicePath);
   await expect(page.getByRole('alert')).toContainText('页面加载失败');
-  await page.unroute(/\/assets\/Workspaces-[^/]+\.js$/);
+  await page.unroute(/\/assets\/IndependentPracticePage-[^/]+\.js$/);
   await page.getByRole('button', { name: '重新加载' }).click();
   await ready(page, 'PAGE-04');
+  await openIndependentEchoRepair(page);
   await expect(page.getByRole('alert')).toHaveCount(0);
 });
 
@@ -280,6 +305,7 @@ test('desktop and narrower layouts avoid horizontal page overflow', async ({ pag
     for (const [path, id] of [
       ['/', 'PAGE-01'],
       [practicePath, 'PAGE-04'],
+      [currentPracticePath, 'PAGE-04'],
       [visualPath, 'PAGE-06'],
       ['/#/settings', 'PAGE-07'],
     ] as const) {
@@ -296,9 +322,12 @@ test('desktop and narrower layouts avoid horizontal page overflow', async ({ pag
       await expect(page.getByRole('navigation', { name: '主导航' }).getByRole('link')).toHaveText([
         '学习首页',
         'C 语言课程',
+        '进阶课程',
         '算法与演示',
+        'C 代码工作台',
         '编译流程',
         '错题与陌生点',
+        '学习笔记',
         '今日复习',
         '学习成就',
         '本地设置',

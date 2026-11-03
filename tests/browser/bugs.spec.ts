@@ -5,6 +5,9 @@ import { p05CourseRelease } from '../../web/src/content/p05-course-release.gener
 import { observeCaseSetExecution } from './case-set-observation';
 import type { EditorSnapshot } from '../../web/src/storage/editor-history';
 import type { LedgerEntry, Progress } from '../../web/src/storage/model';
+import { openCurrentAnswer, submitCurrent } from './current-course-helpers';
+import { installC6Packets } from './c6-observation';
+import { assertCurrentJudge } from './current-practice-observation';
 
 const panel = (p: Page) => p.getByTestId('practice-execution');
 const code = (p: Page) => p.getByRole('textbox', { name: '编辑 C 代码', exact: true });
@@ -197,12 +200,22 @@ test('catalog and editor remain operable at three widths and reveal the authored
 });
 
 test('missing composite content does not authorize supplementary levels', async ({ page }) => {
-  await page.route(`**/${p05CourseRelease.file}`, (route) => route.abort());
+  const currentManifest = '**/content/c/primer6-teaching/manifest-2.0.0.json';
+  await page.route(currentManifest, (route) => route.abort());
   await page.goto('/#/bugs');
   await expect(page.getByRole('link', { name: /^修复：/ })).toHaveCount(0);
   await expect(page.locator('[data-page-id="PAGE-14-3"]')).toContainText(
     '旧版课程不会授权这些新关卡',
   );
+  expect(
+    (await page.evaluate(() => indexedDB.databases())).some((d) => d.name === 'c-viz-learning'),
+  ).toBe(false);
+  await page.unroute(currentManifest);
+  await page.goto('/#/courses');
+  await page.getByRole('button', { name: '重试读取', exact: true }).click();
+  await expect(page.locator('.c6-node-list > li')).toHaveCount(19);
+  await page.getByRole('link', { name: 'Bug 修复闯关', exact: true }).click();
+  await expect(page.getByRole('link', { name: /^修复：/ })).toHaveCount(8);
 });
 
 if (p05CourseRelease.registered) {
@@ -263,14 +276,15 @@ if (p05CourseRelease.registered) {
   test('an existing original-course pass stays independent of the new Bug entitlement', async ({
     page,
   }) => {
-    await page.goto('/#/practice/exercise.c.echo');
-    await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-    await page.getByRole('combobox', { name: '积木显示', exact: true }).selectOption('hide');
-    await expect(code(page)).toBeVisible();
-    const skeleton = await code(page).inputValue();
-    await code(page).fill(skeleton.replace('return 0;', 'printf("%d\\n", x); return 0;'));
-    await expect(action(page, '提交练习')).toBeEnabled();
-    await submit(page);
+    test.info().annotations.push({
+      type: 'current-course-carrier',
+      description:
+        'Retired ordinary echo is explicitly replaced by actual current 2.1 four-case pass; retained Bug entitlement remains separate.',
+    });
+    await page.addInitScript(installC6Packets);
+    const subject = await openCurrentAnswer(page, 'exercise.c6.s2.1');
+    await submitCurrent(page);
+    await assertCurrentJudge(page, subject, 'passed');
     const old = await rows(page);
     expect(old.ledger.filter((r) => r.sourceId === 'reward.exercise.first-pass')).toHaveLength(1);
     const q = bugQuestions[0],

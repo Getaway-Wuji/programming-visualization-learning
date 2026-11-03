@@ -93,8 +93,18 @@ export function installPhase2Probe() {
   const inspect = () => {
     const config = audit.configuration;
     if (!config) return;
-    const root = document.querySelector(config.root),
-      state = root?.getAttribute(config.stateAttribute);
+    const readState = () =>
+      config.currentC6
+        ? [...document.querySelectorAll('.c6-result-pane h2')].some(
+            (e) => e.textContent === '四组全部通过',
+          ) &&
+          [...document.querySelectorAll('[role="status"]')].some(
+            (e) => e.textContent === '本次判题记录已保存。',
+          )
+          ? 'passed'
+          : null
+        : document.querySelector(config.root)?.getAttribute(config.stateAttribute);
+    const state = readState();
     const intent = audit.intents.at(-1);
     if (intent && intent.end === null) {
       if (['running', 'preparing', 'submitting'].includes(state ?? '')) intent.seenBusy = true;
@@ -104,9 +114,7 @@ export function installPhase2Probe() {
         intent.queued = true;
         requestAnimationFrame(() =>
           requestAnimationFrame(() => {
-            const current = document
-              .querySelector(config.root)
-              ?.getAttribute(config.stateAttribute);
+            const current = readState();
             if (config.terminalStates.includes(current)) {
               intent.end = performance.now();
               intent.state = current;
@@ -193,6 +201,8 @@ export function readPhase2Probe(includePackets = true) {
               engine: result.engine ?? result.engineRef,
               identity: result.identity,
               terminal: result.terminal,
+              judgeStatus: result.judgeVersion ? result.status : undefined,
+              caseCount: result.cases?.length,
               stats: result.stats,
               steps: result.trace?.steps?.length,
               completeness: result.trace?.completeness,

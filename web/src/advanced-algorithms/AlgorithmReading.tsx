@@ -3,6 +3,7 @@ import { useLearning } from '../learning/react';
 import { lessonCompletionDetails } from '../learning/completion';
 import { KnowledgeMarkButton, KnowledgeMarksStatus } from '../review-notebook/marks';
 import type { AdvancedAlgorithmSpec } from './content';
+import { C6Foundation } from '../c6-learning/foundations';
 export function AlgorithmReading({
   spec,
 }: {
@@ -48,7 +49,9 @@ export function AlgorithmReading({
         <section>
           <h2>基础准备与复习</h2>
           <p>{spec.reviewQuestion}</p>
-          {lesson ? (
+          {state.c6 ? (
+            <C6Foundation prior={spec.prerequisiteLessonRef} />
+          ) : lesson ? (
             <>
               <p>
                 <Link to={'/lessons/' + lesson.id}>{lesson.title}</Link> ·{' '}

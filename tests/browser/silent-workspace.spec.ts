@@ -1,9 +1,9 @@
+import { openIndependentRepair } from './current-course-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import {
   blockOptions,
   blockWorkspace,
   openBlockKeyboardEditor,
-  openCorrectionPractice,
   selectBlock,
   showPracticeBlocks,
 } from './block-ui';
@@ -77,10 +77,10 @@ test('silent native Blockly mounts and remounts without constructing AudioContex
     window.__silentAudioAudit = audit;
   });
 
-  await page.goto('/#/practice/exercise.c.echo');
+  await openIndependentRepair(page, 'exercise.c.bug-semicolon');
   await showPracticeBlocks(page);
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
-  await openCorrectionPractice(page);
+  await openBlockKeyboardEditor(page);
   const initial = await audioState(page);
   expect(initial).toMatchObject({ supported: true, calls: 0, restored: true });
 
@@ -119,7 +119,7 @@ test('silent native Blockly mounts and remounts without constructing AudioContex
 
   // Hash navigation uses the same document and native APIs, while switching the
   // exercise actually disposes and remounts Blockly, its flyout and trashcan.
-  await page.goto('/#/practice/exercise.c.two-x-plus-three');
+  await openIndependentRepair(page, 'exercise.c.bug-parenthesis');
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   const afterExercise = await audioState(page);
   expect(afterExercise).toEqual(initial);

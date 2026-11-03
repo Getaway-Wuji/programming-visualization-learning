@@ -2,6 +2,7 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import { Link } from 'react-router';
 import { PageHeading } from '../components/Ui';
 import { LearningSaveStatus, useLearning } from '../learning/react';
+import { c6DisplayReference } from '../c6-learning/display';
 import type { createLearningService } from '../learning/service';
 import { storageError } from '../storage/errors';
 import { challengeQuestions } from '../challenges/content';
@@ -82,7 +83,8 @@ function Evidence({ item }: { item: WeaknessEvidence }) {
       ? '手动陌生标记'
       : item.kind === 'challenge'
         ? (q?.title ?? item.sourceRef.id)
-        : (state.reading?.exercises.find((e) => e.id === item.sourceRef.id)?.title ??
+        : (c6DisplayReference(state, item.sourceRef)?.title ??
+          state.reading?.exercises.find((e) => e.id === item.sourceRef.id)?.title ??
           item.sourceRef.id);
   const label =
     item.category && Object.hasOwn(mistakeLabels, item.category)
@@ -225,9 +227,12 @@ export default function WeaknessPage() {
                   data-recommended={weaknessReasons(row).length ? 'yes' : 'no'}
                 >
                   <h3>
-                    {learning.reading?.knowledgePoints.find(
-                      (k) => k.id === row.knowledgeRef.id && k.version === row.knowledgeRef.version,
-                    )?.title ?? row.knowledgeRef.id}
+                    {c6DisplayReference(learning, row.knowledgeRef)?.title ??
+                      learning.reading?.knowledgePoints.find(
+                        (k) =>
+                          k.id === row.knowledgeRef.id && k.version === row.knowledgeRef.version,
+                      )?.title ??
+                      row.knowledgeRef.id}
                   </h3>
                   {weaknessReasons(row).length ? (
                     <ul className="weakness-reasons">

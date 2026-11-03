@@ -5,6 +5,7 @@ import type { EditorSnapshot } from '../../web/src/storage/editor-history';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
 import { blockOptions, blockWorkspace, selectBlock, showPracticeBlocks } from './block-ui';
+import { openIndependentEchoRepair } from './current-course-helpers';
 import { p05CourseRelease } from '../../web/src/content/p05-course-release.generated';
 
 test('13.4 native partition: atomic count/byte eviction, two writers, faults, corruption and clear barrier', async ({
@@ -155,7 +156,7 @@ async function savedRows(page: Page): Promise<EditorSnapshot[]> {
   });
 }
 async function open(page: Page) {
-  await page.goto('/#/practice/exercise.c.first-output');
+  await openIndependentEchoRepair(page);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await readyHistory(page);
@@ -214,7 +215,9 @@ test('13.4 real editor: code history survives refresh, invalid drafts stay exact
   await expect(page.getByTestId('block-permission-blocked')).toBeVisible();
   await expect(panel(page).getByRole('button', { name: '提交练习', exact: true })).toBeDisabled();
   await page.reload();
-  await expect(editor(page)).toHaveValue(original);
+  await expect(editor(page)).toHaveValue(
+    original.replace('printf("%d\\n", x);', 'printf("%d\\n", x)'),
+  );
   await readyHistory(page);
   await history(page).locator('summary').click();
   await restore(page, invalidId);
@@ -244,7 +247,7 @@ test('13.4 native block value/add/delete and drag endpoints restore exact canvas
   await selectBlock(page, outputs[0]);
   await blockWorkspace(page)
     .getByRole('textbox', { name: '输出格式', exact: true })
-    .fill('history value');
+    .fill('%d history value');
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   const valueRow = (await savedRows(page)).filter((r) => r.reason === 'blocks').at(-1)!;
   expect(valueRow.codeText).toContain('history value');
@@ -341,7 +344,7 @@ test('13.4 native block value/add/delete and drag endpoints restore exact canvas
           .filter((e) => e.tag !== 'g')
           .slice(0, 30),
       );
-      await page.screenshot({ path: '.artifacts/13.4/overflow-full.png', fullPage: true });
+      await page.screenshot({ path: `${test.info().outputDir}/overflow-full.png`, fullPage: true });
       await info.attach('overflow', {
         body: JSON.stringify(overflowing),
         contentType: 'application/json',
@@ -349,7 +352,7 @@ test('13.4 native block value/add/delete and drag endpoints restore exact canvas
       expect(bounds.scroll, JSON.stringify(overflowing)).toBeLessThanOrEqual(width + 1);
     }
     await expect(history(page).getByRole('button', { name: '恢复所选版本' })).toBeVisible();
-    await page.screenshot({ path: `.artifacts/13.4/history-${width}.png` });
+    await page.screenshot({ path: `${test.info().outputDir}/history-${width}.png` });
     widths.push(width);
   }
   await info.attach('native-block-history', {
@@ -404,9 +407,19 @@ test('13.4 production save failure stays visible, explicit retry preserves IDs a
   if ((await history(page).getAttribute('open')) === null)
     await history(page).locator('summary').click();
   await expect(editor(page)).not.toHaveValue(text);
+  await expect
+    .poll(
+      async () =>
+        (await savedRows(page)).find((row) => row.documentRevision === 2 && row.reason === 'code')
+          ?.state,
+    )
+    .toBe('invalid');
   const fresh = await savedRows(page);
-  expect(fresh).toHaveLength(1);
+  expect(fresh).toHaveLength(2);
   expect(fresh[0]).toMatchObject({ reason: 'initial', documentRevision: 1 });
+  expect(fresh[1]).toMatchObject({ reason: 'code', documentRevision: 2, state: 'invalid' });
+  expect(fresh.every((row) => row.generation === fresh[0].generation)).toBe(true);
+  expect(fresh[1].codeText).not.toBe(text);
   expect(fresh[0].entryId).not.toBe(selected);
   expect(fresh[0].codeText).not.toBe(text);
   const remaining = await settings.evaluate(async () => {
@@ -423,5 +436,5 @@ test('13.4 production save failure stays visible, explicit retry preserves IDs a
       db.close();
     }
   });
-  expect(remaining).toBe(1);
+  expect(remaining).toBe(fresh.length);
 });

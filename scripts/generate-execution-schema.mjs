@@ -30,6 +30,20 @@ const functions = [],
 let serial = 0;
 for (const name of Object.keys(definitions)) named.set(name, `d${serial++}`);
 const quote = JSON.stringify;
+// These frozen patterns admit no surrogate characters: their explicit classes
+// are ASCII, and any final line terminator admitted by `$` is also BMP.
+// Matching strings therefore have identical UTF-16 and scalar lengths. Other
+// patterns retain scalarLength; this is not a general regex inference.
+const asciiLengthPatterns = new Set([
+  '^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$',
+  '^[A-Za-z0-9][A-Za-z0-9._:-]*$',
+  '^n[1-9][0-9]*$',
+  '^o[1-9][0-9]*$',
+  '^s[1-9][0-9]*$',
+  '^f[1-9][0-9]*$',
+  '^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$',
+  '^[A-Za-z_][A-Za-z0-9_]*$',
+]);
 // A JSON object cannot satisfy two branches that require different string
 // constants for the same own property. Prove that narrow case at build time;
 // the chosen branch still runs its complete, unmodified schema validator.
@@ -58,6 +72,10 @@ function disjointObjectTag(alternatives) {
 }
 function compile(rule, location = '') {
   if (compiled.has(rule)) return compiled.get(rule);
+  // A pure reference needs no additional forwarding function. The referenced
+  // validator, including its original context/guard behavior, still runs.
+  if (rule.$ref && Object.keys(rule).length === 1)
+    return named.get(rule.$ref.slice('#/$defs/'.length));
   const name = `v${serial++}`;
   compiled.set(rule, name);
   const body = [];
@@ -85,7 +103,9 @@ function compile(rule, location = '') {
     if (rule.maximum !== undefined) numbers.push(`value>${rule.maximum}`);
     if (rule.multipleOf !== undefined) numbers.push(`value%${rule.multipleOf}!==0`);
     if (numbers.length)
-      body.push(`if(typeof value==='number'&&(${numbers.join('||')}))return false;`);
+      body.push(
+        `if(${rule.type === 'integer' ? '' : "typeof value==='number'&&"}(${numbers.join('||')}))return false;`,
+      );
     if (rule.minLength !== undefined || rule.maxLength !== undefined || rule.pattern) {
       const checks = [];
       if (rule.minLength !== undefined) checks.push(`size<${rule.minLength}`);
@@ -94,8 +114,9 @@ function compile(rule, location = '') {
         if (!patterns.has(rule.pattern)) patterns.set(rule.pattern, `p${patterns.size}`);
         checks.push(`!${patterns.get(rule.pattern)}.test(value)`);
       }
+      const size = asciiLengthPatterns.has(rule.pattern) ? 'value.length' : 'scalarLength(value)';
       body.push(
-        `if(typeof value==='string'){${rule.minLength !== undefined || rule.maxLength !== undefined ? 'const size=scalarLength(value);' : ''}if(${checks.join('||')})return false;}`,
+        `${rule.type === 'string' ? '' : "if(typeof value==='string')"}{${rule.minLength !== undefined || rule.maxLength !== undefined ? `const size=${size};` : ''}if(${checks.join('||')})return false;}`,
       );
     }
     if (
@@ -125,7 +146,7 @@ function compile(rule, location = '') {
           `${deferred ? 'if(!context.deferTrace)' : ''}for(let index=0;index<value.length;index++){${inner.join('')}}`,
         );
       }
-      body.push(`if(Array.isArray(value)){${lines.join('')}}`);
+      body.push(`${rule.type === 'array' ? '' : 'if(Array.isArray(value))'}{${lines.join('')}}`);
     }
     if (
       rule.required ||
@@ -191,7 +212,7 @@ function compile(rule, location = '') {
           lines.push(
             `if(Object.hasOwn(value,${quote(key)})&&(${required.map((key) => `!Object.hasOwn(value,${quote(key)})`).join('||')}))return false;`,
           );
-      body.push(`if(isRecord(value)){${lines.join('')}}`);
+      body.push(`${rule.type === 'object' ? '' : 'if(isRecord(value))'}{${lines.join('')}}`);
     }
     if (rule.allOf)
       for (const item of rule.allOf)
@@ -226,6 +247,7 @@ function compile(rule, location = '') {
 for (const [name, rule] of Object.entries(definitions)) {
   const body = compile(rule, name),
     identifier = named.get(name);
+  // Memo belongs to this validation only; FIFO eviction revalidates the object.
   const cacheable = [
     'trace',
     'state',
@@ -239,19 +261,19 @@ for (const [name, rule] of Object.entries(definitions)) {
   ].includes(name);
   functions.push(
     cacheable
-      ? `function ${identifier}(value:SchemaValue,context:Context):boolean{if(value!==null&&typeof value==='object'){const known=context.validated.get(value);if(known?.includes(${quote(identifier)}))return true;if(!${body}(value,context))return false;if(known)known.push(${quote(identifier)});else context.validated.set(value,[${quote(identifier)}]);return true;}return ${body}(value,context);}`
+      ? `function ${identifier}(value:SchemaValue,context:Context):boolean{if(value!==null&&typeof value==='object'){const known=context.validated.get(${quote(identifier)});if(known?.includes(value))return true;if(!${body}(value,context))return false;if(known){known.push(value);if(known.length>32)known.shift();}else context.validated.set(${quote(identifier)},[value]);return true;}return ${body}(value,context);}`
       : `function ${identifier}(value:SchemaValue,context:Context):boolean{return ${body}(value,context);}`,
   );
 }
 const source = `/** Generated by scripts/generate-execution-schema.mjs from frozen EXEC/STEP/DIAG 1.0.0. */
 export const FROZEN_EXEC_SCHEMA_SHA256=${quote(createHash('sha256').update(original).digest('hex'))};
 export type SchemaValue=null|boolean|number|string|SchemaValue[]|{[key:string]:SchemaValue};
-interface Context{guard:()=>void;deferTrace:boolean;validated:WeakMap<object,string[]>}
+interface Context{guard:()=>void;deferTrace:boolean;validated:Map<string,object[]>}
 function isRecord(value:SchemaValue):value is {[key:string]:SchemaValue}{return value!==null&&typeof value==='object'&&!Array.isArray(value);}
 function scalarLength(value:string):number{let length=value.length;for(let i=0;i<value.length;i++){const code=value.charCodeAt(i);if(code>=0xd800&&code<=0xdbff){length--;i++;}}return length;}
 ${[...patterns].map(([pattern, name]) => `const ${name}=new RegExp(${quote(pattern)});`).join('\n')}
 ${functions.join('\n')}
-function context(guard:()=>void,deferTrace:boolean):Context{return {guard,deferTrace,validated:new WeakMap()};}
+function context(guard:()=>void,deferTrace:boolean):Context{return {guard,deferTrace,validated:new Map()};}
 export function validateRequestSchema(value:SchemaValue):boolean{return ${named.get('request')}(value,context(()=>{},false));}
 export function* validateResultSchema(value:SchemaValue,guard:()=>void):Generator<void,boolean,unknown>{const state=context(guard,true);if(!${named.get('result')}(value,state))return false;yield;return yield* validateDeferredTrace(isRecord(value)?value.trace:null,state);}
 export function* validateTraceSchema(value:SchemaValue,guard:()=>void):Generator<void,boolean,unknown>{const state=context(guard,true);if(!${named.get('trace')}(value,state))return false;yield;return yield* validateDeferredTrace(value,state);}

@@ -2,26 +2,41 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
+import { decodeC6Response, type C6JudgeRequest } from '../../web/src/engine/c6-protocol';
+import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
+import { installC6Packets, observedC6Packet } from './c6-observation';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
+import type { C6Attempt, C6CourseActivity, C6CourseDraft } from '../../web/src/c6-learning/model';
 import type { GoalTargets, LedgerEntry, StorageSnapshot } from '../../web/src/storage/model';
-import { blockWorkspace, correctStarter, showPracticeBlocks } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
-const exerciseId = 'exercise.c.echo';
-const lessonId = 'lesson.c.variables-output';
+const exerciseId = 'exercise.c6.s2.1';
+const lessonId = 'lesson.c6.s2.1';
+const exercise = (
+  JSON.parse(readFileSync('content/c/primer6-teaching/source-2.0.0.json', 'utf8')) as {
+    chapters: { exercises: C6CourseExercise[] }[];
+  }
+).chapters
+  .flatMap((c) => c.exercises)
+  .find((e) => e.ref.id === exerciseId)!;
 const recommended: GoalTargets = { exercise: 1, lesson: 1, case: 0 };
 const dailyPolicy = { id: 'reward.policy.daily-goal.p0', version: '1.0.0' };
 const contentPolicy = { id: 'reward.policy.p0', version: '1.0.0' };
 const firstDay = new Date('2026-10-20T12:00:00.000Z');
 const secondDay = new Date('2026-10-21T12:00:00.000Z');
-const summary = (page: Page) =>
-  page.getByTestId('learning-today-goal').getByTestId('daily-goal-summary');
+const summary = (page: Page) => page.locator('.c6-home-columns').getByTestId('daily-goal-summary');
 const saveStatus = (page: Page) => page.getByTestId('learning-save-status');
-const practice = (page: Page) => page.getByTestId('practice-execution');
 const goalDialog = (page: Page) => page.getByRole('dialog', { name: '每日目标', exact: true });
 const goalForm = (page: Page) => page.getByTestId('daily-goal-settings');
 
+type CurrentSnapshot = StorageSnapshot & {
+  courseActivities: C6CourseActivity[];
+  courseDrafts: C6CourseDraft[];
+};
 /** Native read-only inspection, never an issuer of learning facts or awards. */
-async function snapshot(page: Page): Promise<StorageSnapshot> {
+async function snapshot(page: Page): Promise<CurrentSnapshot> {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
       const request = indexedDB.open('c-viz-learning');
@@ -49,7 +64,7 @@ async function snapshot(page: Page): Promise<StorageSnapshot> {
         }),
       );
       await done;
-      return Object.fromEntries(entries) as unknown as StorageSnapshot;
+      return Object.fromEntries(entries) as unknown as CurrentSnapshot;
     } finally {
       db.close();
     }
@@ -73,7 +88,7 @@ function dailyAwards(data: StorageSnapshot) {
   return data.ledger.filter((row) => row.sourceId === 'reward.daily-goal.once');
 }
 
-function assertPoints(data: StorageSnapshot, points: number, dailyCount: number) {
+function assertPoints(data: CurrentSnapshot, points: number, dailyCount: number) {
   expect(total(data)).toBe(points);
   expect(dailyAwards(data)).toHaveLength(dailyCount);
   for (const award of data.ledger) {
@@ -113,7 +128,29 @@ function assertPoints(data: StorageSnapshot, points: number, dailyCount: number)
     'sourceRevision',
     'workspace',
   ];
-  expect(keys(data).filter((key) => forbidden.includes(key))).toEqual([]);
+  const attemptMetadata = (attempt: C6Attempt | null) => {
+    if (!attempt) return null;
+    const { sourceRevision, sourceSha256, ...summary } = attempt;
+    expect(sourceRevision).toMatch(/^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$/);
+    expect(sourceSha256).toBe(createHash('sha256').update(exercise.referenceSource).digest('hex'));
+    expect(summary.engineBuildSha256).toBe(engineBuild.wasmSha256);
+    expect(summary.profileRef).toEqual(exercise.profileRef);
+    return summary;
+  };
+  expect(data.courseDrafts).toEqual([]);
+  const summaries = {
+    ...data,
+    courseActivities: data.courseActivities.map((row) =>
+      row.kind === 'exercise'
+        ? {
+            ...row,
+            firstPass: attemptMetadata(row.firstPass),
+            latestAttempt: attemptMetadata(row.latestAttempt),
+          }
+        : row,
+    ),
+  };
+  expect(keys(summaries).filter((key) => forbidden.includes(key))).toEqual([]);
 }
 
 function noLearningChange(before: StorageSnapshot, after: StorageSnapshot) {
@@ -182,64 +219,53 @@ async function saveTargets(page: Page, targets: GoalTargets) {
 }
 
 async function confirmLesson(page: Page, review = false) {
-  await page.goto(`/#/lessons/${lessonId}`);
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await localReady(page);
-  const before = await snapshot(page);
-  await page
-    .getByRole('button', { name: review ? '确认今日复习' : '确认已学习', exact: true })
-    .click();
-  await expect
-    .poll(async () => (await snapshot(page)).receipts.length)
-    .toBeGreaterThan(before.receipts.length);
-  await localReady(page);
+  for (const id of review ? [lessonId] : [lessonId, 'lesson.c6.s2.2.1']) {
+    await page.goto(`/#/lessons/${id}`);
+    await expect(page.locator('.c6-reading-confirmation')).toBeVisible();
+    await localReady(page);
+    const before = await snapshot(page);
+    await page
+      .getByRole('button', { name: review ? '确认今日复习' : '我已读完本节', exact: true })
+      .click();
+    await expect
+      .poll(async () => (await snapshot(page)).receipts.length)
+      .toBeGreaterThan(before.receipts.length);
+    await localReady(page);
+  }
 }
 
 async function openPractice(page: Page) {
   await page.goto(`/#/practice/${exerciseId}`);
-  await expect(practice(page)).toHaveAttribute('data-state', 'ready');
-  await showPracticeBlocks(page);
-  await expect(blockWorkspace(page)).toBeVisible();
-  await localReady(page);
+  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).toBeEditable();
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 
 async function preparePass(page: Page) {
-  await correctStarter(page, exerciseId);
-  await practice(page).getByRole('button', { name: '准备代码', exact: true }).click();
-  await expect(practice(page)).toHaveAttribute('data-state', 'ready');
-  await expect(practice(page).getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
+  await page.getByLabel('完整 C 源码 · main.c', { exact: true }).fill(exercise.referenceSource);
+  await expect(page.getByRole('button', { name: '判定全部四组', exact: true })).toBeEnabled();
 }
 
 async function submitPrepared(page: Page, saved = true) {
-  await practice(page).getByRole('button', { name: '提交练习', exact: true }).click();
-  await expect(practice(page)).toHaveAttribute('data-state', 'passed');
-  await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(
-    'data-save-state',
-    saved ? 'saved' : 'unsaved',
-  );
-  if (saved) await localReady(page);
+  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+  if (saved) {
+    await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+    await expect(page.locator('.app-shell')).toHaveAttribute(
+      'data-learning-storage-status',
+      'ready',
+    );
+  } else
+    await expect(
+      saveStatus(page).getByRole('button', { name: '重试未保存操作', exact: true }),
+    ).toBeVisible();
 }
 
 /** Preserve genuine public Worker bytes after the complete submission has settled. */
 async function captureRuns(page: Page, testInfo: TestInfo, label: string) {
-  const captured = await page.evaluate(() =>
-    window.__verticalObservation.workers
-      .filter((worker) => worker.kind === 'execute')
-      .map((worker) => {
-        const encoded = (
-          worker as typeof worker & {
-            captureEncoded(): { requestBase64: string | null; responseBase64: string | null };
-          }
-        ).captureEncoded();
-        return {
-          ...encoded,
-          catalogJson: worker.catalogJson,
-          moduleSeen: worker.moduleSeen,
-          terminated: worker.terminated,
-        };
-      }),
-  );
-  expect(captured.length).toBeGreaterThanOrEqual(3);
+  const count = await page.evaluate(() => window.c6CurrentPackets.length);
+  expect(count).toBeGreaterThanOrEqual(1);
+  const captured = [];
+  for (let i = 0; i < count; i++) captured.push(await observedC6Packet(page, i));
   const directory = join(
     '.artifacts',
     process.env.TASK_EVIDENCE_TASK ?? '11.2',
@@ -253,24 +279,43 @@ async function captureRuns(page: Page, testInfo: TestInfo, label: string) {
   for (const [index, worker] of captured.entries()) {
     expect(worker.moduleSeen).toBe(true);
     expect(worker.terminated).toBe(true);
-    expect(worker.requestBase64).toBeTruthy();
-    expect(worker.responseBase64).toBeTruthy();
-    const requestBytes = Buffer.from(worker.requestBase64!, 'base64');
-    const resultBytes = Buffer.from(worker.responseBase64!, 'base64');
-    const request = JSON.parse(requestBytes.toString('utf8')) as ExecuteRequest;
-    const result = await decodeResult(Uint8Array.from(resultBytes).buffer, request);
-    expect(request.mode).toBe('exercise-test');
-    expect(request.subjectRef?.id).toBe(exerciseId);
-    expect(request.remainingMs).toBeGreaterThan(0);
-    expect(request.remainingMs).toBeLessThanOrEqual(1000);
-    expect(result.producer).toBe('rust');
-    expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0, diagnostics: [] });
-    expect(result.judgeResult?.status).toBe('met');
-    const prefix = `${String(index + 1).padStart(2, '0')}-${request.identity.testCaseKey}`;
+    expect(worker.request).toBeTruthy();
+    expect(worker.response).toBeTruthy();
+    const requestBytes = Buffer.from(worker.request!, 'base64');
+    const resultBytes = Buffer.from(worker.response!, 'base64');
+    const request = JSON.parse(requestBytes.toString('utf8')) as C6JudgeRequest;
+    expect(request.source).toBe(exercise.referenceSource);
+    expect(request.profileRef).toEqual(exercise.profileRef);
+    const result = await decodeC6Response(
+      Uint8Array.from(resultBytes).buffer,
+      request,
+      engineBuild.wasmSha256,
+    );
+    if (!('cases' in result)) throw new Error('Real current four-case judge required');
+    expect(result.status).toBe('passed');
+    expect(result.cases).toHaveLength(4);
+    for (const [i, c] of result.cases.entries()) {
+      expect(c.packet.engine.buildId).toBe(engineBuild.wasmSha256);
+      expect(c.packet.terminal.status).toBe('completed');
+      expect(c.stdoutMatches && c.returnMatches && c.observationMatches).toBe(true);
+      const output =
+        c.packet.trace!.initialState.output +
+        c.packet
+          .trace!.steps.flatMap((s) =>
+            s.changes.flatMap((c) => (c.op === 'output' ? [c.append] : [])),
+          )
+          .join('');
+      expect(output).toBe(exercise.tests[i].expectedStdout);
+    }
+    const prefix = `${String(index + 1).padStart(2, '0')}-${request.runId}`;
     await writeFile(join(directory, `${prefix}.request.json`), requestBytes);
     await writeFile(join(directory, `${prefix}.result.json`), resultBytes);
-    await writeFile(join(directory, `${prefix}.catalog.json`), worker.catalogJson!);
-    identities.push(request.identity);
+    identities.push({
+      runId: request.runId,
+      profileRef: request.profileRef,
+      sourceRevision: request.sourceRevision,
+      sourceSha256: request.sourceSha256,
+    });
   }
   return identities;
 }
@@ -317,7 +362,7 @@ test('recommended preview is durable without opening a day; real learning achiev
 }, testInfo) => {
   test.setTimeout(60_000);
   await page.clock.setFixedTime(firstDay);
-  await observeCaseSetExecution(page);
+  await page.addInitScript(installC6Packets);
   await openHome(page);
   await expect(summary(page)).toHaveAttribute('data-goal-state', 'preview');
   const initial = await snapshot(page);
@@ -333,7 +378,7 @@ test('recommended preview is durable without opening a day; real learning achiev
   await openGoals(page);
   for (const invalid of [
     { exercise: 0, lesson: 0, case: 0 },
-    { exercise: 7, lesson: 0, case: 0 },
+    { exercise: 33, lesson: 0, case: 0 },
     { exercise: 0, lesson: 0, case: 8 },
   ]) {
     await fillTargets(page, invalid);
@@ -354,7 +399,7 @@ test('recommended preview is durable without opening a day; real learning achiev
   const pass = achieved.receipts.find((row) => row.eventType === 'exercise.passed')!;
   expect(achieved.goals[0].achievedAt).toBe(pass.occurredAt);
   expect(dailyAwards(achieved)[0].occurredAt).toBe(pass.occurredAt);
-  expect(achieved.dailyFacts).toHaveLength(2);
+  expect(achieved.dailyFacts).toHaveLength(3);
   await openHome(page);
   await expect(summary(page)).toHaveAttribute('data-goal-state', 'achieved');
   await expect(summary(page)).toHaveAttribute('data-local-date', pass.localDate);
@@ -421,7 +466,7 @@ test('a new local day needs fresh active review and a real repeat pass; refresh 
 }, testInfo) => {
   test.setTimeout(60_000);
   await page.clock.setFixedTime(firstDay);
-  await observeCaseSetExecution(page);
+  await page.addInitScript(installC6Packets);
   await openHome(page);
   const firstRuns = await completeFirstLesson(page, testInfo, 'cross-day-first');
   const first = await snapshot(page);
@@ -453,7 +498,7 @@ test('a new local day needs fresh active review and a real repeat pass; refresh 
   const second = await snapshot(page);
   assertPoints(second, 40, 2);
   expect(second.goals.every((row) => row.achievedAt !== null)).toBe(true);
-  expect(second.dailyFacts).toHaveLength(4);
+  expect(second.dailyFacts).toHaveLength(5);
   expect(second.ledger.filter((row) => row.sourceId !== 'reward.daily-goal.once')).toEqual(
     first.ledger.filter((row) => row.sourceId !== 'reward.daily-goal.once'),
   );
@@ -478,11 +523,11 @@ test('two real tabs passing the same exercise share one daily award and one set 
 }, testInfo) => {
   test.setTimeout(60_000);
   await page.clock.setFixedTime(firstDay);
-  await observeCaseSetExecution(page);
+  await page.addInitScript(installC6Packets);
   await confirmLesson(page);
   const other = await context.newPage();
   await other.clock.setFixedTime(firstDay);
-  await observeCaseSetExecution(other);
+  await other.addInitScript(installC6Packets);
   for (const target of [page, other]) {
     await openPractice(target);
     await preparePass(target);
@@ -490,7 +535,7 @@ test('two real tabs passing the same exercise share one daily award and one set 
   await Promise.all([submitPrepared(page), submitPrepared(other)]);
   const merged = await snapshot(page);
   assertPoints(merged, 35, 1);
-  expect(merged.dailyFacts).toHaveLength(2);
+  expect(merged.dailyFacts).toHaveLength(3);
   expect(merged.goals).toHaveLength(1);
   expect(merged.receipts.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(2);
   expect(new Set(merged.receipts.map((row) => row.eventId)).size).toBe(merged.receipts.length);
@@ -547,7 +592,7 @@ test('a native daily-award failure aborts the whole pass and retry after midnigh
   test.setTimeout(60_000);
   await page.clock.setFixedTime(firstDay);
   await installDailyQuota(page);
-  await observeCaseSetExecution(page);
+  await page.addInitScript(installC6Packets);
   await confirmLesson(page);
   const before = await snapshot(page);
   await openPractice(page);
@@ -570,7 +615,7 @@ test('a native daily-award failure aborts the whole pass and retry after midnigh
   ]);
   const runs = await captureRuns(page, testInfo, 'quota-original-submission');
   await page.clock.setFixedTime(secondDay);
-  await page.goto('/#/courses');
+  await page.goto('/#/');
   await saveStatus(page).getByRole('button', { name: '重试未保存操作', exact: true }).click();
   await localReady(page);
   const retried = await snapshot(page);
@@ -584,12 +629,7 @@ test('a native daily-award failure aborts the whole pass and retry after midnigh
   expect(pass.occurredAt).toBe(firstDay.toISOString());
   expect(retried.goals[0].achievedAt).toBe(firstDay.toISOString());
   expect(retried.dailyFacts.every((row) => row.localDate === pass.localDate)).toBe(true);
-  expect(
-    await page.evaluate(
-      () =>
-        window.__verticalObservation.workers.filter((worker) => worker.kind === 'execute').length,
-    ),
-  ).toBe(3);
+  expect(await page.evaluate(() => window.c6CurrentPackets.length)).toBe(1);
   await openHome(page);
   await expect(summary(page)).toHaveAttribute('data-goal-state', 'preview');
   await page.reload();
@@ -609,7 +649,7 @@ test('an explicit engineering null-day shape stays immutable; real learning coun
 }, testInfo) => {
   test.setTimeout(60_000);
   await page.clock.setFixedTime(firstDay);
-  await observeCaseSetExecution(page);
+  await page.addInitScript(installC6Packets);
   await openHome(page);
   const initialized = await snapshot(page);
   const legacyDate = dateAt(firstDay, initialized.meta.timeZone);
@@ -685,7 +725,7 @@ test('clearing creates a new generation with a valid recommended template and re
 }, testInfo) => {
   test.setTimeout(60_000);
   await page.clock.setFixedTime(firstDay);
-  await observeCaseSetExecution(page);
+  await page.addInitScript(installC6Packets);
   await openHome(page);
   await completeFirstLesson(page, testInfo, 'before-clear-real-completion');
   await openGoals(page);
@@ -754,6 +794,7 @@ test('a reachable custom case-only goal requires genuine adjacent viewing and ac
   const length = result.trace!.steps.length;
   expect(length).toBe(6);
   const controls = page.getByTestId('player-controls');
+  await page.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
   const trace = page.getByTestId('trace-view');
   const core = trace.locator('[aria-label="当前变量"]');
   const coverage = page.getByTestId('case-view-coverage');

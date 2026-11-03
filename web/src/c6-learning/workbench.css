@@ -1,0 +1,156 @@
+.c6-workbench {
+  min-width: 0;
+}
+.c6-exercise-description {
+  max-width: 64rem;
+  margin-bottom: 24px;
+  line-height: 1.7;
+}
+.c6-workbench-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 24px;
+  align-items: start;
+}
+.c6-source-pane,
+.c6-result-pane {
+  min-width: 0;
+}
+.c6-source-pane > label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 12px 0 8px;
+}
+.c6-source-editor,
+.c6-input-editor {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  color: inherit;
+  border: 1px solid var(--border-tone, #cfd9ca);
+  border-radius: 8px;
+  background: var(--surface-tone, #fff);
+  padding: 14px;
+  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 22px;
+  tab-size: 4;
+  resize: vertical;
+}
+.c6-source-editor {
+  min-height: 460px;
+  white-space: pre;
+  overflow: auto;
+}
+.c6-input-editor {
+  min-height: 80px;
+}
+.c6-action-row,
+.c6-trace-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+}
+.c6-action-row .button,
+.c6-trace-controls .button {
+  min-height: 36px;
+  padding: 8px 12px;
+}
+.c6-output,
+.c6-source-read {
+  max-width: 100%;
+  overflow: auto;
+  padding: 16px;
+  background: var(--surface-tone, #f4f6f0);
+  border: 1px solid var(--border-tone, #e3e8df);
+  border-radius: 8px;
+  font:
+    0.875rem/1.7 Consolas,
+    'Cascadia Mono',
+    monospace;
+  white-space: pre;
+}
+.c6-output {
+  min-height: 64px;
+}
+.c6-cursor-label {
+  display: grid;
+  gap: 8px;
+  font-size: 0.875rem;
+}
+.c6-cursor-label input {
+  width: 100%;
+}
+.c6-trace .text-link {
+  margin-left: 12px;
+}
+.c6-stack-list {
+  font-size: 0.875rem;
+  line-height: 1.8;
+  padding-left: 24px;
+}
+.c6-table-scroll {
+  max-width: 100%;
+  overflow: auto;
+}
+.c6-table-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 480px;
+  font-size: 0.8125rem;
+  text-align: left;
+}
+.c6-table-scroll th,
+.c6-table-scroll td {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--border-tone, #e3e8df);
+  vertical-align: top;
+}
+.c6-table-scroll thead th {
+  color: var(--muted);
+  font-weight: 400;
+}
+.c6-table-scroll small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-weight: 400;
+  white-space: nowrap;
+}
+.c6-case-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-tone, #e3e8df);
+}
+.c6-case-tabs button {
+  padding: 10px 4px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.c6-case-tabs .c6-case-selected {
+  border-bottom-color: currentColor;
+  font-weight: 600;
+}
+.c6-block-pane {
+  margin: 32px 0;
+  min-width: 0;
+}
+@media (max-width: 1280px) {
+  .c6-workbench-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .c6-source-editor {
+    min-height: 360px;
+  }
+}

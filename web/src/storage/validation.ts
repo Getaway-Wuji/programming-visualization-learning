@@ -6,6 +6,8 @@ import {
   THEME_IDS,
   recordKey,
 } from './model';
+import { assertC6Meta } from './c6-reset';
+import { hasC6RewardEvidence, isC6TopicRewardSubject } from '../c6-learning/rewards';
 import {
   challengePackage,
   challengePolicy,
@@ -105,23 +107,39 @@ export function isLocalDate(value: unknown): value is string {
     isUtcTime(`${value}T00:00:00.000Z`)
   );
 }
+const dateFormatterCacheLimit = 32;
+const validTimeZones = new Map<string, true>();
+const localDateFormatters = new Map<string, Intl.DateTimeFormat>();
+function rememberDateFormatter<T>(cache: Map<string, T>, key: string, value: T): T {
+  if (cache.size >= dateFormatterCacheLimit) cache.delete(cache.keys().next().value!);
+  cache.set(key, value);
+  return value;
+}
 export function isTimeZone(value: unknown): value is string {
   if (typeof value !== 'string' || !/^[A-Za-z][A-Za-z0-9_+./-]*$/.test(value)) return false;
+  if (validTimeZones.has(value)) return true;
   try {
     new Intl.DateTimeFormat('en-US', { timeZone: value }).format(0);
-    return true;
+    return rememberDateFormatter(validTimeZones, value, true);
   } catch {
     return false;
   }
 }
 export function localDateAt(at: string, timeZone: string): string {
   requireRule(isUtcTime(at) && isTimeZone(timeZone), 'S_DATE_INVALID');
-  const parts = new Intl.DateTimeFormat('en-US-u-ca-gregory-nu-latn', {
-    timeZone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(new Date(at));
+  const formatter =
+    localDateFormatters.get(timeZone) ??
+    rememberDateFormatter(
+      localDateFormatters,
+      timeZone,
+      new Intl.DateTimeFormat('en-US-u-ca-gregory-nu-latn', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }),
+    );
+  const parts = formatter.formatToParts(new Date(at));
   const part = (name: Intl.DateTimeFormatPartTypes) =>
     parts.find((item) => item.type === name)?.value;
   const date = `${part('year')?.padStart(4, '0')}-${part('month')}-${part('day')}`;
@@ -316,6 +334,14 @@ export function assertRecord<S extends StoreName>(
       return;
     }
     case 'meta': {
+      const descriptor =
+        value && typeof value === 'object'
+          ? Object.getOwnPropertyDescriptor(value, 'schemaVersion')
+          : undefined;
+      if (descriptor && 'value' in descriptor && descriptor.value === '10.0.0') {
+        assertC6Meta(value);
+        return;
+      }
       const valueRow = row(value, [
         'schemaVersion',
         'dbVersion',
@@ -411,7 +437,10 @@ export function assertRecord<S extends StoreName>(
       } else {
         requireRule(isEntityId(valueRow.subjectId));
         const event = sourceEvents[valueRow.sourceId as keyof typeof sourceEvents];
-        requireRule(valueRow.subjectId.startsWith(`${event.split('.')[0]}.`));
+        requireRule(
+          valueRow.subjectId.startsWith(`${event.split('.')[0]}.`) ||
+            isC6TopicRewardSubject(valueRow.sourceId, valueRow.subjectId),
+        );
       }
       if (valueRow.sourceId === challengeSource) {
         requireRule(
@@ -549,6 +578,8 @@ function checkRelations(snapshot: StorageSnapshot) {
     }
   for (const entry of ledger) {
     assertDate(entry.occurredAt, entry.localDate);
+    if (isC6TopicRewardSubject(entry.sourceId, entry.subjectId))
+      requireRule(meta.schemaVersion === '10.0.0');
     // The declared synthetic predecessor preserves old awards, without inventing
     // current daily goals, facts or completion. This is never reward authorization.
     const legacy =
@@ -575,12 +606,16 @@ function checkRelations(snapshot: StorageSnapshot) {
     } else {
       requireRule(canonicalSubjectId(aliases, entry.subjectId) === entry.subjectId);
       requireRule(
-        legacy ||
-          progress.some(
-            (item) =>
-              item.eventType === sourceEvents[entry.sourceId] &&
-              canonicalSubjectId(aliases, item.subjectRef.id) === entry.subjectId,
-          ),
+        meta.schemaVersion === '10.0.0' &&
+          (entry.sourceId === 'reward.lesson.first-completion' ||
+            entry.sourceId === 'reward.exercise.first-pass')
+          ? hasC6RewardEvidence(snapshot, entry)
+          : legacy ||
+              progress.some(
+                (item) =>
+                  item.eventType === sourceEvents[entry.sourceId] &&
+                  canonicalSubjectId(aliases, item.subjectRef.id) === entry.subjectId,
+              ),
       );
     }
   }

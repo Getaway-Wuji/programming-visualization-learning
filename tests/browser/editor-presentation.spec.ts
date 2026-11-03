@@ -1,3 +1,4 @@
+import { currentEditorRegression } from './current-editor-regression';
 import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -15,21 +16,18 @@ import { blockOptions, blockWorkspace, selectBlock } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
 
 const content = JSON.parse(
-  readFileSync('web/public/content/practice/course-practice-1.2.0.json', 'utf8'),
-) as CoursePractice;
-const reading = JSON.parse(
-  readFileSync('web/public/content/reading/course-reading-1.1.0.json', 'utf8'),
-) as {
-  lessons: {
-    id: string;
-    version: string;
-    requiredExerciseRefs: { id: string; version: string }[];
-  }[];
-};
-const guidance = JSON.parse(readFileSync('content/c/p05/practice-guidance-1.0.0.json', 'utf8')) as {
-  entries: { exerciseRef: { id: string; version: string }; preferredEditor: 'code' | 'blocks' }[];
-};
-const echo = 'exercise.c.echo';
+  readFileSync('content/c/primer6-learning/supplements-1.0.0.json', 'utf8'),
+).practice as CoursePractice;
+const retained = JSON.parse(readFileSync('content/c/bugs/questions-1.0.0.json', 'utf8'))
+  .questions as {
+  exerciseRef: { id: string };
+  baseExerciseRef: { id: string };
+  solutionBody: string;
+  brokenBody: string;
+}[];
+const guidance = JSON.parse(readFileSync('content/c/p05/practice-guidance-1.0.0.json', 'utf8'))
+  .entries as { exerciseRef: { id: string }; preferredEditor: 'code' | 'blocks' }[];
+const echo = 'exercise.c.bug-semicolon';
 const panel = (page: Page) => page.getByTestId('practice-execution');
 const layout = (page: Page) => page.getByTestId('practice-editor-layout');
 const editor = (page: Page) => page.getByTestId('draft-code-editor');
@@ -46,18 +44,9 @@ test.beforeEach(async ({ page }) => observeCaseSetExecution(page));
 
 /** These answers are authored in this test, then typed through the normal code
  * editor. Rust alone parses them, projects blocks and produces test results. */
-const answers: Record<string, string> = {
-  'exercise.c.echo': 'printf("%d\\n", x);\nreturn 0;',
-  'exercise.c.two-x-plus-three': 'int result = x * 2 + 3;\nprintf("%d\\n", result);\nreturn 0;',
-  'exercise.c.nonnegative':
-    'if (x >= 0) {\n  printf("1\\n");\n} else {\n  printf("0\\n");\n}\nreturn 0;',
-  'exercise.c.two-loop-sums':
-    'int i = 1;\nint sumWhile = 0;\nwhile (i <= n) {\n  sumWhile = sumWhile + i;\n  i = i + 1;\n}\nint sumFor = 0;\nfor (int j = 1; j <= n; j = j + 1) {\n  sumFor = sumFor + j;\n}\nprintf("%d\\n%d\\n", sumWhile, sumFor);\nreturn 0;',
-  'exercise.c.increment-at-index':
-    'values[k] = values[k] + 1;\nprintf("%d\\n", values[k]);\nreturn 0;',
-  'exercise.c.array-sum':
-    'int sum = 0;\nfor (int i = 0; i < n; i = i + 1) {\n  sum = sum + values[i];\n}\nprintf("%d\\n", sum);\nreturn 0;',
-};
+const answers: Record<string, string> = Object.fromEntries(
+  retained.map((q) => [q.exerciseRef.id, q.solutionBody]),
+);
 
 function withBody(id: string, body: string) {
   const catalog = exerciseCatalog(content, id);
@@ -125,7 +114,7 @@ function onlyTeachingFailure(before: StorageSnapshot, after: StorageSnapshot, co
   expect(attempts).toHaveLength(count);
   for (const r of attempts)
     expect(r).toMatchObject({
-      subjectRef: { id: 'exercise.c.nonnegative' },
+      subjectRef: { id: 'exercise.c.bug-zero-branch' },
       result: 'failed',
       resultCategory: 'teaching-goal-unmet',
     });
@@ -187,8 +176,8 @@ async function open(page: Page, id = echo, mode: Preference = 'hide') {
   await choose(page, mode);
   if (mode !== 'hide' && !(await code(page).isVisible()))
     await action(page, '编辑 C 并同步积木').click();
-  await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
   await expect(code(page)).toBeEditable();
+  await fillSynced(page, withBody(id, answers[id]));
   await expect.poll(async () => (await snapshot(page)).settings.goalTemplate).not.toBeNull();
 }
 async function fillSynced(page: Page, text: string) {
@@ -343,12 +332,8 @@ test('automatic presentation follows each lesson recommendation and explicit pre
   page,
 }, info) => {
   const samples = [];
-  const required = content.exercises.filter((e) =>
-    reading.lessons.some((l) =>
-      l.requiredExerciseRefs.some((r) => r.id === e.id && r.version === e.version),
-    ),
-  );
-  expect(required).toHaveLength(32);
+  const required = content.exercises;
+  expect(required).toHaveLength(4);
   for (const exercise of required) {
     await page.goto(`/#/practice/${exercise.id}`);
     await expect(panel(page)).toHaveAttribute('data-state', 'ready');
@@ -357,10 +342,8 @@ test('automatic presentation follows each lesson recommendation and explicit pre
       'ready',
     );
     await choose(page, 'auto');
-    const visible =
-      guidance.entries.find(
-        (g) => g.exerciseRef.id === exercise.id && g.exerciseRef.version === exercise.version,
-      )!.preferredEditor === 'blocks';
+    const baseId = retained.find((q) => q.exerciseRef.id === exercise.id)!.baseExerciseRef.id;
+    const visible = guidance.find((g) => g.exerciseRef.id === baseId)!.preferredEditor === 'blocks';
     await expect(layout(page)).toHaveAttribute('data-blocks-visible', visible ? 'yes' : 'no');
     if (visible) await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
     else await expect(code(page)).toBeEditable();
@@ -373,9 +356,9 @@ test('automatic presentation follows each lesson recommendation and explicit pre
     samples.push({ exercise: exercise.id, expectedAutoBlocks: visible });
   }
   if (!(await code(page).isVisible())) await action(page, '编辑 C 并同步积木').click();
-  await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
+  await fillSynced(page, withBody(required.at(-1)!.id, answers[required.at(-1)!.id]));
   expect(await counts(page)).toMatchObject({ execute: 0 });
-  await evidence(page, info, 'automatic-reviewed-32-lessons', samples);
+  await evidence(page, info, 'automatic-reviewed-four-independent-repairs', samples);
 });
 
 test('invalid and unmapped code survives hide-show, settings return and mode switching without executing historical blocks', async ({
@@ -418,14 +401,8 @@ test('invalid and unmapped code survives hide-show, settings return and mode swi
     await expect(code(page)).toHaveValue(entry.text);
     await expect(editor(page)).toHaveAttribute('data-sync', entry.sync);
     await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
-    await page
-      .getByTestId('practice-mode')
-      .getByRole('button', { name: '改错练习', exact: true })
-      .click();
-    await page
-      .getByTestId('practice-mode')
-      .getByRole('button', { name: '独立练习', exact: true })
-      .click();
+    await choose(page, 'hide');
+    await choose(page, 'show');
     await expect(code(page)).toHaveValue(entry.text);
     await expect(action(page, '提交练习')).toBeDisabled();
     await choose(page, 'hide');
@@ -691,7 +668,11 @@ test('a peer clear discards a failed preference and unfinished answer instead of
     preference(page).getByRole('button', { name: '重新读取并保存选择', exact: true }),
   ).toHaveCount(0);
   await expect(code(page)).not.toHaveValue(invalid);
-  await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
+  await expect(editor(page)).toHaveAttribute('data-sync', 'invalid');
+  expect(await code(page).inputValue()).toContain(
+    retained.find((q) => q.exerciseRef.id === echo)!.brokenBody,
+  );
+  await expect(action(page, '提交练习')).toBeDisabled();
   expect((await snapshot(page)).appearance.blockWorkspace).toBe('auto');
   await evidence(page, info, 'generation-clear-discards-temporary-choice', {
     before,
@@ -703,7 +684,7 @@ test('a peer clear discards a failed preference and unfinished answer instead of
 test('hidden blocks do not bypass the same teaching checks or accepted source identity', async ({
   page,
 }, info) => {
-  const id = 'exercise.c.nonnegative';
+  const id = 'exercise.c.bug-zero-branch';
   await open(page, id);
   const before = await snapshot(page);
   const text = withBody(id, 'printf("%d\\n", x >= 0);\nreturn 0;');
@@ -771,14 +752,15 @@ test('narrow-screen keyboard preference controls keep the current code editable 
 test('a blocks-first lesson retains an incomplete block draft when hiding before the first code edit', async ({
   page,
 }, info) => {
-  const id = 'exercise.c.two-loop-sums';
+  const id = 'exercise.c.bug-sum-initial';
   await page.goto(`/#/practice/${id}`);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await expect(select(page)).toHaveValue('auto');
+  await choose(page, 'show');
   await expect(layout(page)).toHaveAttribute('data-blocks-visible', 'yes');
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
-  await expect(code(page)).toHaveCount(0);
+  await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
   const before = await snapshot(page);
   const initialIds = new Set(await blockOptions(page, /./));
   await blockWorkspace(page)
@@ -829,4 +811,166 @@ test('a blocks-first lesson retains an incomplete block draft when hiding before
   });
   expect(runs).toHaveLength(content.exercises.find((exercise) => exercise.id === id)!.tests.length);
   expect(runs.every((run) => run.result.judgeResult?.status === 'met')).toBe(true);
+});
+
+// Original regression identities; the carrier mapping is explicit in each annotation.
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.first-output', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 0);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.echo', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 1);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.printf-layout', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 2);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.ordered-updates', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 3);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.reassign-value', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 4);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.swap-with-temp', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 5);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.shadowed-values', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 6);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.wide-product', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 7);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.two-x-plus-three', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 8);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.quotient-remainder', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 9);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.boolean-flags', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 10);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.guarded-division', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 11);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.absolute-with-if', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 12);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.nonnegative', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 13);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.sign-classification', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 14);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.in-closed-range', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 15);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.while-countdown', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 16);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.two-loop-sums', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 17);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.odd-sum-until-stop', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 18);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.grid-count', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 19);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.partial-array-init', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 20);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.increment-at-index', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 21);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.print-logical-array', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 22);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.safe-array-access', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 23);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.array-sum', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 24);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.array-extrema', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 25);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.count-positive', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 26);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.linear-search-first', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 27);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.check-nondecreasing', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 28);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.bubble-sort', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 29);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.selection-sort', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 30);
+});
+test('hidden-block code answer retains real input mapping and passes all tests: exercise.c.binary-search-first', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 31);
 });

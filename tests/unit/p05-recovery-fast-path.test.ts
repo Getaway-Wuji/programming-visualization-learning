@@ -157,13 +157,17 @@ describe('P0.5-09 healthy archive recovery cost and damage fallback', () => {
       const before = structuredClone(raw);
       // Call through to the native implementation; count work instead of setting a
       // machine-dependent wall-clock threshold or weakening any date validation.
+      const dates = vi.spyOn(Intl.DateTimeFormat.prototype, 'formatToParts');
       const formatter = vi.spyOn(Intl, 'DateTimeFormat');
       const result = inspect(raw);
       const constructions = formatter.mock.calls.length;
+      const dateConversions = dates.mock.calls.length;
       formatter.mockRestore();
+      dates.mockRestore();
       const datedRows = value.dailyFacts.length + value.ledger.length + value.receipts.length + 1;
-      expect(constructions).toBeGreaterThanOrEqual(datedRows * 2);
-      expect(constructions).toBeLessThanOrEqual(datedRows * 2 + 10);
+      expect(dateConversions).toBeGreaterThanOrEqual(datedRows);
+      expect(dateConversions).toBeLessThanOrEqual(datedRows + 5);
+      expect(constructions).toBeLessThanOrEqual(2);
       expect(result).toEqual({
         snapshot: value,
         issues: [],

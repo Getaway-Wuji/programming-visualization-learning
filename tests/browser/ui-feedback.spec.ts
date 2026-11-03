@@ -4,7 +4,7 @@ import { mkdir } from 'node:fs/promises';
 import { observeCaseSetExecution } from './case-set-observation';
 import type { AlgorithmResult } from '../../web/src/engine/algorithm-protocol';
 
-const folder = '.artifacts/UI-20261031/browser';
+const folder = `.artifacts/21.6/ui-feedback/${process.env.TASK_EVIDENCE_LABEL ?? 'current'}`;
 test.beforeAll(() => mkdir(folder, { recursive: true }));
 for (const width of [1440, 768, 390])
   test(`home learning card leads and knowledge map closes the page at ${width}px`, async ({
@@ -12,24 +12,27 @@ for (const width of [1440, 768, 390])
   }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
-    await expect(page.getByTestId('home-continue-learning')).toBeVisible();
+    const continuation = page.locator('.c6-next-section .button-primary');
+    await expect(continuation).toBeVisible();
     await expect(page.getByTestId('achievement-summary')).toHaveCount(0);
-    const composition = page.locator('.home-composition');
-    expect(await composition.locator(':scope > section').first().getAttribute('class')).toBe(
-      'study-feature',
-    );
+    const composition = page.locator('.c6-course-page');
+    expect(
+      await composition.locator('.c6-home-columns > section').first().getAttribute('class'),
+    ).toBe('c6-next-section');
     await expect(composition.locator(':scope > section').last()).toHaveAttribute(
       'data-testid',
-      'knowledge-map',
+      'c6-knowledge-map',
     );
-    const graph = page.getByTestId('knowledge-map'),
-      feature = page.locator('.study-feature');
+    const graph = page.getByTestId('c6-knowledge-map'),
+      feature = page.locator('.c6-next-section');
+    await expect(graph.locator(':scope > details')).toHaveCount(17);
+    await expect(graph).toContainText('0 / 421 已点亮');
     expect((await graph.boundingBox())!.y).toBeGreaterThan((await feature.boundingBox())!.y);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
     await page.screenshot({ path: `${folder}/home-${width}.png`, fullPage: true });
-    await page.getByTestId('home-continue-learning').click();
+    await continuation.click();
     await expect(page).toHaveURL(/\/lessons\//);
   });
 

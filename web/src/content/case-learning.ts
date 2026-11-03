@@ -6,6 +6,7 @@ import { createLearningCatalog } from '../learning/catalog';
 import type { LearningCatalog } from '../learning/types';
 import type { EntityRef } from './types';
 import { currentCourseBundle } from './course-bundle';
+import { c6IndependentCases } from '../c6-learning/cases';
 
 export interface CaseExecutionCatalog extends ExecutionCatalog {
   readonly subject: CaseEntity;
@@ -46,13 +47,15 @@ if (
 
 export function caseExecutionCatalog(id: string): CaseExecutionCatalog | null {
   return (
-    (currentCourseBundle()?.cases ?? caseViewRelease.catalogs).find(
-      (entry) => entry.subject.id === id,
-    ) ?? null
+    (
+      c6IndependentCases()?.catalogs ??
+      currentCourseBundle()?.cases ??
+      caseViewRelease.catalogs
+    ).find((entry) => entry.subject.id === id) ?? null
   );
 }
 export function caseTemplateBindings(id: string): readonly TemplateBinding[] {
-  return caseViewRelease.templateBindings[id] ?? [];
+  return (c6IndependentCases()?.templateBindings ?? caseViewRelease.templateBindings)[id] ?? [];
 }
 const learningCatalog = createLearningCatalog({
   purpose: 'case-view',
@@ -66,6 +69,23 @@ const learningCatalog = createLearningCatalog({
   })),
 });
 export function caseLearningCatalog(expectedPackageRef?: EntityRef): LearningCatalog {
+  const independent = c6IndependentCases();
+  if (
+    independent &&
+    (!expectedPackageRef ||
+      (expectedPackageRef.id === 'content.c.p05' && expectedPackageRef.version === '1.0.0'))
+  )
+    return createLearningCatalog({
+      purpose: 'case-view',
+      packageRef: independent.catalogs[0].packageRef,
+      lessons: [],
+      exercises: [],
+      cases: independent.catalogs.map(({ subject }) => ({
+        ref: { id: subject.id, version: subject.version },
+        learningRevision: subject.learningRevision,
+        acceptedPriorVersions: [],
+      })),
+    });
   const bundle = currentCourseBundle();
   if (expectedPackageRef?.id === 'content.c.p05' || (!expectedPackageRef && bundle)) {
     if (!bundle || (expectedPackageRef && expectedPackageRef.version !== '1.0.0'))

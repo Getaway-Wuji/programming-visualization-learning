@@ -1,4 +1,5 @@
 import config from '../../../content/achievements/catalog-1.0.0.json';
+import c6Config from '../../../content/achievements/catalog-2.0.0.json';
 import type { Ref, StorageSnapshot, ContentReceipt, Progress } from '../storage/model';
 import type { LearningCatalog } from '../learning/types';
 import { reviewedDurableSnapshot } from '../learning/reviewed-release';
@@ -14,6 +15,7 @@ import {
 } from '../storage/validation';
 
 export const achievementCatalog = config;
+export const c6AchievementCatalog = c6Config;
 export interface AchievementEvidence {
   kind: 'exercise' | 'observation';
   eventId: string;
@@ -22,7 +24,7 @@ export interface AchievementEvidence {
   occurredAt: string;
 }
 export interface Achievement {
-  achievementVersion: '1.0.0';
+  achievementVersion: '1.0.0' | '2.0.0';
   generation: string;
   revision: number;
   catalogRef: Ref;
@@ -45,7 +47,8 @@ export function assertAchievementEvidence(v: unknown): asserts v is AchievementE
       isUtcTime(r.occurredAt),
   );
 }
-export function assertAchievement(v: unknown): asserts v is Achievement {
+export function assertAchievement(v: unknown, catalog = config): asserts v is Achievement {
+  const config = catalog;
   const r = row(v, [
     'achievementVersion',
     'generation',
@@ -58,7 +61,9 @@ export function assertAchievement(v: unknown): asserts v is Achievement {
   ]);
   for (const k of ['catalogRef', 'badgeRef', 'packageRef']) assertPublicRef(r[k]);
   requireRule(
-    r.achievementVersion === '1.0.0' && isUuid(r.generation) && isPositiveInt(r.revision),
+    r.achievementVersion === config.ref.version &&
+      isUuid(r.generation) &&
+      isPositiveInt(r.revision),
   );
   if (!sameRef(r.catalogRef as Ref, config.ref) || !sameRef(r.packageRef as Ref, config.packageRef))
     throw new StorageError('S_VERSION_UNKNOWN');
@@ -139,10 +144,12 @@ export function mergeAchievements(
   previous: readonly Achievement[],
   sources: readonly AchievementEvidence[],
   generation: string,
+  catalog = config,
 ): Achievement[] {
+  const config = catalog;
   requireRule(isUuid(generation));
   for (const p of previous) {
-    assertAchievement(p);
+    assertAchievement(p, config);
     requireRule(p.generation === generation);
   }
   requireRule(new Set(previous.map((p) => p.badgeRef.id)).size === previous.length);
@@ -173,7 +180,7 @@ export function mergeAchievements(
       if (!e) continue;
       if (!current) {
         current = {
-          achievementVersion: '1.0.0',
+          achievementVersion: config.ref.version === '2.0.0' ? '2.0.0' : '1.0.0',
           generation,
           revision: 1,
           catalogRef: { ...config.ref },
@@ -200,7 +207,7 @@ export function mergeAchievements(
           .at(-1)!;
     }
   }
-  for (const p of rows) assertAchievement(p);
+  for (const p of rows) assertAchievement(p, config);
   if (rows.length > 100 || new TextEncoder().encode(JSON.stringify(rows)).length > 131072)
     throw new StorageError('S_QUOTA');
   return rows;

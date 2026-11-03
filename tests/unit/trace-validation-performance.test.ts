@@ -115,4 +115,32 @@ describe('11.4 allocation-efficient full-state validation regressions', () => {
       expect(() => finish(validateTraceRelationships(result, request))).toThrow(ProtocolFailure);
     },
   );
+
+  it.each(['length', 'extra', 'hole-with-extra', 'nested-value'] as const)(
+    'rejects %s corruption in a real object record precondition',
+    (kind) => {
+      const { result, request } = packet();
+      const change = changes(result).find(
+        (change) =>
+          change.op === 'record' &&
+          change.table === 'objects' &&
+          change.before &&
+          'cells' in change.before &&
+          change.before.cells.length > 0,
+      )!;
+      if (change.op !== 'record' || !change.before || !('cells' in change.before))
+        throw new Error('Missing archived object cells');
+      const cells = change.before.cells;
+      if (kind === 'length') cells.pop();
+      else if (kind === 'nested-value')
+        cells[0].value = cells[0].value === null ? 0 : cells[0].value + 1;
+      else {
+        const first = cells[0];
+        if (kind === 'hole-with-extra') Reflect.deleteProperty(cells, '0');
+        Object.defineProperty(cells, 'extra', { enumerable: true, value: first });
+        if (kind === 'hole-with-extra') expect(Object.keys(cells)).toHaveLength(cells.length);
+      }
+      expect(() => finish(validateTraceRelationships(result, request))).toThrow(ProtocolFailure);
+    },
+  );
 });

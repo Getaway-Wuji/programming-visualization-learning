@@ -1,0 +1,4324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:c-viz:current-snapshot:2.0.0",
+  "title": "SNAPSHOT2 complete current C6 state",
+  "$comment": "A read-only observation, never learning-pass authority or an executable import. Capture requires the private accepted production C6 response, current source/session and exact STEP cursor. JSON2MiB; PNG8MiB/layout4MiB/1440x8192/5s/512objects/64frames/2048live slots remain unchanged. Cross-field source hash, coordinates, cursor/step/state, type relations and judge input are checked at capture.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "formatId",
+    "formatVersion",
+    "snapshotId",
+    "capturedAt",
+    "origin",
+    "source",
+    "input",
+    "runtime",
+    "position",
+    "virtualAddresses",
+    "presentation",
+    "types",
+    "currentState",
+    "currentStep",
+    "executionOutcome",
+    "terminalAtCursor"
+  ],
+  "properties": {
+    "formatId": {
+      "const": "urn:c-viz:current-snapshot:2.0.0"
+    },
+    "formatVersion": {
+      "const": "2.0.0"
+    },
+    "snapshotId": {
+      "$ref": "#/$defs/uuid"
+    },
+    "capturedAt": {
+      "$ref": "#/$defs/utcTime"
+    },
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "title",
+        "documentRef",
+        "nodeRef",
+        "exerciseRef",
+        "packageRef"
+      ],
+      "properties": {
+        "kind": {
+          "const": "c6-course"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "documentRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "enum": [
+                "teach.c6.ch01.welcome",
+                "teach.c6.ch01.sum",
+                "teach.c6.ch01.modular",
+                "teach.c6.ch01.efficiency",
+                "teach.c6.ch01.flags",
+                "teach.c6.ch01.bounds",
+                "teach.c6.ch01.c89",
+                "teach.c6.ch01.c99",
+                "teach.c6.ch01.c11",
+                "teach.c6.ch01.tickets",
+                "teach.c6.ch01.build",
+                "teach.c6.ch01.font",
+                "teach.c6.ch01.io",
+                "teach.c6.ch01.logic",
+                "teach.c6.ch02.first",
+                "teach.c6.ch02.details",
+                "teach.c6.ch02.readability",
+                "teach.c6.ch02.convert",
+                "teach.c6.ch02.functions",
+                "teach.c6.ch02.missing-semicolon",
+                "teach.c6.ch02.wrong-cube",
+                "teach.c6.ch02.state",
+                "teach.c6.ch02.names",
+                "teach.c6.ch02.summary",
+                "teach.c6.ch03.measure",
+                "teach.c6.ch03.constants",
+                "teach.c6.ch03.categories",
+                "teach.c6.ch03.division",
+                "teach.c6.ch03.bases",
+                "teach.c6.ch03.integer",
+                "teach.c6.ch03.integer-widths",
+                "teach.c6.ch03.unsigned-wrap",
+                "teach.c6.ch03.signed-overflow",
+                "teach.c6.ch03.character",
+                "teach.c6.ch03.boolean",
+                "teach.c6.ch03.portable",
+                "teach.c6.ch03.float",
+                "teach.c6.ch03.precision",
+                "teach.c6.ch03.extended-float",
+                "teach.c6.ch03.complex",
+                "teach.c6.ch03.derived",
+                "teach.c6.ch03.sizes",
+                "teach.c6.ch03.convert",
+                "teach.c6.ch03.arguments",
+                "teach.c6.ch03.escapes",
+                "teach.c6.ch03.terminal",
+                "teach.c6.ch03.flush",
+                "teach.c6.ch04.intro",
+                "teach.c6.ch04.null",
+                "teach.c6.ch04.word",
+                "teach.c6.ch04.length",
+                "teach.c6.ch04.macro",
+                "teach.c6.ch04.constant",
+                "teach.c6.ch04.const-write",
+                "teach.c6.ch04.limits",
+                "teach.c6.ch04.types",
+                "teach.c6.ch04.percent",
+                "teach.c6.ch04.width",
+                "teach.c6.ch04.flags",
+                "teach.c6.ch04.representation",
+                "teach.c6.ch04.return",
+                "teach.c6.ch04.long-message",
+                "teach.c6.ch04.scan-chars",
+                "teach.c6.ch04.scan-multiple",
+                "teach.c6.ch04.scan-comma",
+                "teach.c6.ch04.dynamic-width",
+                "teach.c6.ch04.suppress",
+                "teach.c6.ch04.columns",
+                "teach.c6.ch04.locale",
+                "teach.c6.ch05.loop",
+                "teach.c6.ch05.assignment",
+                "teach.c6.ch05.arithmetic",
+                "teach.c6.ch05.unary",
+                "teach.c6.ch05.squares",
+                "teach.c6.ch05.doubling",
+                "teach.c6.ch05.divide",
+                "teach.c6.ch05.group",
+                "teach.c6.ch05.order",
+                "teach.c6.ch05.sizeof",
+                "teach.c6.ch05.alias",
+                "teach.c6.ch05.remainder",
+                "teach.c6.ch05.increment",
+                "teach.c6.ch05.decrement",
+                "teach.c6.ch05.postfix",
+                "teach.c6.ch05.unsequenced",
+                "teach.c6.ch05.clear",
+                "teach.c6.ch05.expression",
+                "teach.c6.ch05.condition",
+                "teach.c6.ch05.block",
+                "teach.c6.ch05.conversion",
+                "teach.c6.ch05.usual",
+                "teach.c6.ch05.cast",
+                "teach.c6.ch05.parameters",
+                "teach.c6.ch05.pace",
+                "teach.c6.ch06.read-separated",
+                "teach.c6.ch06.read-compact",
+                "teach.c6.ch06.progress",
+                "teach.c6.ch06.exit-time",
+                "teach.c6.ch06.zero",
+                "teach.c6.ch06.empty",
+                "teach.c6.ch06.compare",
+                "teach.c6.ch06.tolerance",
+                "teach.c6.ch06.nonzero",
+                "teach.c6.ch06.assignment-test",
+                "teach.c6.ch06.boolean",
+                "teach.c6.ch06.relation-group",
+                "teach.c6.ch06.for",
+                "teach.c6.ch06.flexible",
+                "teach.c6.ch06.compound",
+                "teach.c6.ch06.compound-once",
+                "teach.c6.ch06.comma",
+                "teach.c6.ch06.zeno",
+                "teach.c6.ch06.zeno-comma",
+                "teach.c6.ch06.do",
+                "teach.c6.ch06.choose",
+                "teach.c6.ch06.grid",
+                "teach.c6.ch06.nested-variable",
+                "teach.c6.ch06.array",
+                "teach.c6.ch06.array-input",
+                "teach.c6.ch06.power",
+                "teach.c6.ch06.power-driver",
+                "teach.c6.ch07.if-count",
+                "teach.c6.ch07.words",
+                "teach.c6.ch07.conditional",
+                "teach.c6.ch07.continue",
+                "teach.c6.ch07.for-continue",
+                "teach.c6.ch07.break",
+                "teach.c6.ch07.nested-break",
+                "teach.c6.ch07.switch",
+                "teach.c6.ch07.fallthrough",
+                "teach.c6.ch07.first-character",
+                "teach.c6.ch07.labels",
+                "teach.c6.ch07.goto",
+                "teach.c6.ch07.structured",
+                "teach.c6.ch07.two-branches",
+                "teach.c6.ch07.character-io",
+                "teach.c6.ch07.character-map",
+                "teach.c6.ch07.ctype-more",
+                "teach.c6.ch07.tiers",
+                "teach.c6.ch07.nearest-else",
+                "teach.c6.ch07.braced-else",
+                "teach.c6.ch07.divisors",
+                "teach.c6.ch07.prime",
+                "teach.c6.ch07.logic",
+                "teach.c6.ch07.alternative",
+                "teach.c6.ch07.logic-precedence",
+                "teach.c6.ch07.short-circuit",
+                "teach.c6.ch07.range",
+                "teach.c6.ch08.echo",
+                "teach.c6.ch08.sentinel",
+                "teach.c6.ch08.buffer",
+                "teach.c6.ch08.values",
+                "teach.c6.ch08.file",
+                "teach.c6.ch08.responses",
+                "teach.c6.ch08.mixed-leftover",
+                "teach.c6.ch08.display",
+                "teach.c6.ch08.recover",
+                "teach.c6.ch08.squares",
+                "teach.c6.ch08.prefix",
+                "teach.c6.ch08.menu",
+                "teach.c6.ch08.menu-number",
+                "teach.c6.ch09.banner",
+                "teach.c6.ch09.repeat",
+                "teach.c6.ch09.parameter-copy",
+                "teach.c6.ch09.minimum",
+                "teach.c6.ch09.return-conversion",
+                "teach.c6.ch09.early-return",
+                "teach.c6.ch09.prototype",
+                "teach.c6.ch09.missing-argument",
+                "teach.c6.ch09.old-declaration",
+                "teach.c6.ch09.no-arguments",
+                "teach.c6.ch09.recursive-flow",
+                "teach.c6.ch09.factorials",
+                "teach.c6.ch09.binary",
+                "teach.c6.ch09.fibonacci",
+                "teach.c6.ch09.multi-file",
+                "teach.c6.ch09.address-identity",
+                "teach.c6.ch09.address-print",
+                "teach.c6.ch09.swap-copy",
+                "teach.c6.ch09.swap",
+                "teach.c6.ch09.redirect",
+                "teach.c6.ch09.declarations",
+                "teach.c6.ch09.pointer-parameter",
+                "teach.c6.ch10.sum",
+                "teach.c6.ch10.partial",
+                "teach.c6.ch10.uninitialized",
+                "teach.c6.ch10.inferred",
+                "teach.c6.ch10.designated",
+                "teach.c6.ch10.copy",
+                "teach.c6.ch10.guarded",
+                "teach.c6.ch10.past-end",
+                "teach.c6.ch10.size",
+                "teach.c6.ch10.matrix",
+                "teach.c6.ch10.matrix-init",
+                "teach.c6.ch10.cube",
+                "teach.c6.ch10.decay",
+                "teach.c6.ch10.parameter-size",
+                "teach.c6.ch10.range-sum",
+                "teach.c6.ch10.pointer-order",
+                "teach.c6.ch10.pointer-operations",
+                "teach.c6.ch10.protect",
+                "teach.c6.ch10.const-write",
+                "teach.c6.ch10.const-pointer",
+                "teach.c6.ch10.matrix-pointer",
+                "teach.c6.ch10.compatible",
+                "teach.c6.ch10.matrix-function",
+                "teach.c6.ch10.vla",
+                "teach.c6.ch10.compound",
+                "teach.c6.ch11.basics",
+                "teach.c6.ch11.groups",
+                "teach.c6.ch11.pointer-copy",
+                "teach.c6.ch11.literal-write",
+                "teach.c6.ch11.fgets",
+                "teach.c6.ch11.line",
+                "teach.c6.ch11.scan-words",
+                "teach.c6.ch11.puts",
+                "teach.c6.ch11.unterminated",
+                "teach.c6.ch11.fputs",
+                "teach.c6.ch11.printf",
+                "teach.c6.ch11.custom-output",
+                "teach.c6.ch11.fit",
+                "teach.c6.ch11.strcat",
+                "teach.c6.ch11.strncat",
+                "teach.c6.ch11.compare",
+                "teach.c6.ch11.prefix",
+                "teach.c6.ch11.strcpy",
+                "teach.c6.ch11.strncpy",
+                "teach.c6.ch11.sprintf",
+                "teach.c6.ch11.snprintf",
+                "teach.c6.ch11.strchr",
+                "teach.c6.ch11.other-find",
+                "teach.c6.ch11.sort",
+                "teach.c6.ch11.ascii-upper",
+                "teach.c6.ch11.ctype-standard",
+                "teach.c6.ch11.arguments",
+                "teach.c6.ch11.compare-input",
+                "teach.c6.ch11.parse-number",
+                "teach.c6.ch12.storage",
+                "teach.c6.ch12.scope",
+                "teach.c6.ch12.linkage",
+                "teach.c6.ch12.thread",
+                "teach.c6.ch12.automatic",
+                "teach.c6.ch12.register",
+                "teach.c6.ch12.static-address",
+                "teach.c6.ch12.global",
+                "teach.c6.ch12.private",
+                "teach.c6.ch12.extern-inherit",
+                "teach.c6.ch12.choose",
+                "teach.c6.ch12.random",
+                "teach.c6.ch12.dice",
+                "teach.c6.ch12.allocate",
+                "teach.c6.ch12.release",
+                "teach.c6.ch12.calloc",
+                "teach.c6.ch12.vla",
+                "teach.c6.ch12.allocated-duration",
+                "teach.c6.ch12.const",
+                "teach.c6.ch12.volatile",
+                "teach.c6.ch12.restrict",
+                "teach.c6.ch12.atomic",
+                "teach.c6.ch12.array-contract",
+                "teach.c6.ch13.count",
+                "teach.c6.ch13.streams",
+                "teach.c6.ch13.temporary",
+                "teach.c6.ch13.modes",
+                "teach.c6.ch13.reduce",
+                "teach.c6.ch13.formatted",
+                "teach.c6.ch13.lines",
+                "teach.c6.ch13.seek",
+                "teach.c6.ch13.text-position",
+                "teach.c6.ch13.position-object",
+                "teach.c6.ch13.ungetc",
+                "teach.c6.ch13.flush",
+                "teach.c6.ch13.buffer",
+                "teach.c6.ch13.binary",
+                "teach.c6.ch13.write-items",
+                "teach.c6.ch13.read-items",
+                "teach.c6.ch13.flags",
+                "teach.c6.ch13.append",
+                "teach.c6.ch13.random-access",
+                "teach.c6.ch14.members",
+                "teach.c6.ch14.designated",
+                "teach.c6.ch14.array",
+                "teach.c6.ch14.read-records",
+                "teach.c6.ch14.nested",
+                "teach.c6.ch14.pointer",
+                "teach.c6.ch14.member-argument",
+                "teach.c6.ch14.compound",
+                "teach.c6.ch14.flexible",
+                "teach.c6.ch14.anonymous-member",
+                "teach.c6.ch14.array-argument",
+                "teach.c6.ch14.file-record",
+                "teach.c6.ch14.append-record",
+                "teach.c6.ch14.linked",
+                "teach.c6.ch14.union",
+                "teach.c6.ch14.anonymous-union",
+                "teach.c6.ch14.enum-default",
+                "teach.c6.ch14.enum-values",
+                "teach.c6.ch14.enum-input",
+                "teach.c6.ch14.namespaces",
+                "teach.c6.ch14.typedef",
+                "teach.c6.ch14.declarators",
+                "teach.c6.ch14.callback",
+                "teach.c6.ch14.address-argument",
+                "teach.c6.ch14.value-argument",
+                "teach.c6.ch14.copy",
+                "teach.c6.ch14.text-members",
+                "teach.c6.ch14.allocated-text",
+                "teach.c6.ch14.sample-main",
+                "teach.c6.ch14.sample-reading",
+                "teach.c6.ch14.array-pointer",
+                "teach.c6.ch15.binary",
+                "teach.c6.ch15.signed",
+                "teach.c6.ch15.fraction",
+                "teach.c6.ch15.bases",
+                "teach.c6.ch15.logic",
+                "teach.c6.ch15.promotion",
+                "teach.c6.ch15.mask",
+                "teach.c6.ch15.set",
+                "teach.c6.ch15.clear",
+                "teach.c6.ch15.toggle",
+                "teach.c6.ch15.test",
+                "teach.c6.ch15.precedence",
+                "teach.c6.ch15.shift",
+                "teach.c6.ch15.shift-negative-count",
+                "teach.c6.ch15.shift-width",
+                "teach.c6.ch15.shift-signed-negative",
+                "teach.c6.ch15.shift-signed-overflow",
+                "teach.c6.ch15.display",
+                "teach.c6.ch15.invert",
+                "teach.c6.ch15.fields",
+                "teach.c6.ch15.packed",
+                "teach.c6.ch15.alignment",
+                "teach.c6.ch16.constants",
+                "teach.c6.ch16.translation",
+                "teach.c6.ch16.object",
+                "teach.c6.ch16.tokens",
+                "teach.c6.ch16.redefine",
+                "teach.c6.ch16.square",
+                "teach.c6.ch16.hash",
+                "teach.c6.ch16.paste",
+                "teach.c6.ch16.variadic-macro",
+                "teach.c6.ch16.function",
+                "teach.c6.ch16.header",
+                "teach.c6.ch16.header-state",
+                "teach.c6.ch16.undef",
+                "teach.c6.ch16.defined",
+                "teach.c6.ch16.conditional",
+                "teach.c6.ch16.guard",
+                "teach.c6.ch16.predefined",
+                "teach.c6.ch16.line-error",
+                "teach.c6.ch16.pragma",
+                "teach.c6.ch16.generic",
+                "teach.c6.ch16.inline",
+                "teach.c6.ch16.noreturn",
+                "teach.c6.ch16.library",
+                "teach.c6.ch16.description",
+                "teach.c6.ch16.math",
+                "teach.c6.ch16.polar",
+                "teach.c6.ch16.math-types",
+                "teach.c6.ch16.tgmath",
+                "teach.c6.ch16.exit",
+                "teach.c6.ch16.qsort",
+                "teach.c6.ch16.qsort-records",
+                "teach.c6.ch16.assert",
+                "teach.c6.ch16.static-assert",
+                "teach.c6.ch16.memory",
+                "teach.c6.ch16.varargs",
+                "teach.c6.ch16.macro-side-effect",
+                "teach.c6.ch16.sqrt-domain",
+                "teach.c6.ch17.films",
+                "teach.c6.ch17.dynamic-array",
+                "teach.c6.ch17.links",
+                "teach.c6.ch17.dynamic-links",
+                "teach.c6.ch17.list-adt",
+                "teach.c6.ch17.const-alias",
+                "teach.c6.ch17.ring",
+                "teach.c6.ch17.linked-queue",
+                "teach.c6.ch17.simulation",
+                "teach.c6.ch17.random-simulation",
+                "teach.c6.ch17.search",
+                "teach.c6.ch17.insert",
+                "teach.c6.ch17.tree",
+                "teach.c6.ch17.tree-adt",
+                "teach.c6.ch17.tree-client",
+                "teach.c6.ch17.shape",
+                "teach.c6.ch17.word-count",
+                "exercise.c6.s2.1",
+                "exercise.c6.s3.2",
+                "exercise.c6.s3.4.1",
+                "exercise.c6.s3.4.2",
+                "exercise.c6.s3.4.3",
+                "exercise.c6.s3.4.6",
+                "exercise.c6.s3.4.9",
+                "exercise.c6.s4.2.1",
+                "exercise.c6.s4.2.2",
+                "exercise.c6.s4.2.3",
+                "exercise.c6.s5.3.3",
+                "exercise.c6.s5.3.4",
+                "exercise.c6.s5.5.1",
+                "exercise.c6.s6.5.1",
+                "exercise.c6.s6.6",
+                "exercise.c6.s6.8",
+                "exercise.c6.s7.1",
+                "exercise.c6.s7.5",
+                "exercise.c6.s7.7.1",
+                "exercise.c6.s8.1",
+                "exercise.c6.s8.6.2",
+                "exercise.c6.s9.1.3",
+                "exercise.c6.s9.2.4",
+                "exercise.c6.s9.3.1",
+                "exercise.c6.s9.7.1",
+                "exercise.c6.s9.7.3",
+                "exercise.c6.s10.1.1",
+                "exercise.c6.s10.1.3",
+                "exercise.c6.s10.1.4",
+                "exercise.c6.s10.4.1",
+                "exercise.c6.s10.5",
+                "exercise.c6.s11.5.1",
+                "exercise.c6.s11.5.4",
+                "exercise.c6.s11.5.5",
+                "exercise.c6.s12.1.4",
+                "exercise.c6.s12.1.6",
+                "exercise.c6.s14.3.1",
+                "exercise.c6.s14.3.2",
+                "exercise.c6.s14.6.2",
+                "exercise.c6.s14.11.4",
+                "exercise.c6.s14.12",
+                "exercise.c6.s15.3.1",
+                "exercise.c6.s15.3.7",
+                "exercise.c6.s16.2.1"
+              ]
+            },
+            "version": {
+              "const": "2.0.0"
+            }
+          }
+        },
+        "nodeRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "enum": [
+                "node.c6.ch01",
+                "node.c6.s1.1",
+                "node.c6.s1.2",
+                "node.c6.s1.2.1",
+                "node.c6.s1.2.2",
+                "node.c6.s1.2.3",
+                "node.c6.s1.2.4",
+                "node.c6.s1.2.5",
+                "node.c6.s1.2.6",
+                "node.c6.s1.3",
+                "node.c6.s1.4",
+                "node.c6.s1.5",
+                "node.c6.s1.6",
+                "node.c6.s1.6.1",
+                "node.c6.s1.6.2",
+                "node.c6.s1.6.3",
+                "node.c6.s1.7",
+                "node.c6.s1.7.1",
+                "node.c6.s1.7.2",
+                "node.c6.s1.7.3",
+                "node.c6.s1.7.4",
+                "node.c6.s1.7.5",
+                "node.c6.s1.7.6",
+                "node.c6.s1.7.7",
+                "node.c6.s1.7.8",
+                "node.c6.s1.8",
+                "node.c6.s1.8.1",
+                "node.c6.s1.8.2",
+                "node.c6.s1.8.3",
+                "node.c6.s1.8.4",
+                "node.c6.s1.8.5",
+                "node.c6.s1.8.6",
+                "node.c6.s1.8.7",
+                "node.c6.s1.8.8",
+                "node.c6.s1.9",
+                "node.c6.s1.10",
+                "node.c6.s1.10.1",
+                "node.c6.s1.10.2",
+                "node.c6.s1.10.3",
+                "node.c6.s1.11",
+                "node.c6.s1.12",
+                "node.c6.s1.13",
+                "node.c6.ch02",
+                "node.c6.s2.1",
+                "node.c6.s2.2",
+                "node.c6.s2.2.1",
+                "node.c6.s2.2.2",
+                "node.c6.s2.3",
+                "node.c6.s2.4",
+                "node.c6.s2.5",
+                "node.c6.s2.5.1",
+                "node.c6.s2.5.2",
+                "node.c6.s2.5.3",
+                "node.c6.s2.5.4",
+                "node.c6.s2.6",
+                "node.c6.s2.7",
+                "node.c6.s2.7.1",
+                "node.c6.s2.7.2",
+                "node.c6.s2.7.3",
+                "node.c6.s2.8",
+                "node.c6.s2.9",
+                "node.c6.s2.10",
+                "node.c6.s2.11",
+                "node.c6.s2.12",
+                "node.c6.ch03",
+                "node.c6.s3.1",
+                "node.c6.s3.1.1",
+                "node.c6.s3.2",
+                "node.c6.s3.3",
+                "node.c6.s3.3.1",
+                "node.c6.s3.3.2",
+                "node.c6.s3.3.3",
+                "node.c6.s3.4",
+                "node.c6.s3.4.1",
+                "node.c6.s3.4.2",
+                "node.c6.s3.4.3",
+                "node.c6.s3.4.4",
+                "node.c6.s3.4.5",
+                "node.c6.s3.4.6",
+                "node.c6.s3.4.7",
+                "node.c6.s3.4.8",
+                "node.c6.s3.4.9",
+                "node.c6.s3.5",
+                "node.c6.s3.6",
+                "node.c6.s3.7",
+                "node.c6.s3.7.1",
+                "node.c6.s3.7.2",
+                "node.c6.s3.8",
+                "node.c6.s3.9",
+                "node.c6.s3.10",
+                "node.c6.s3.11",
+                "node.c6.ch04",
+                "node.c6.s4.1",
+                "node.c6.s4.2",
+                "node.c6.s4.2.1",
+                "node.c6.s4.2.2",
+                "node.c6.s4.2.3",
+                "node.c6.s4.3",
+                "node.c6.s4.3.1",
+                "node.c6.s4.3.2",
+                "node.c6.s4.4",
+                "node.c6.s4.4.1",
+                "node.c6.s4.4.2",
+                "node.c6.s4.4.3",
+                "node.c6.s4.4.4",
+                "node.c6.s4.4.5",
+                "node.c6.s4.4.6",
+                "node.c6.s4.4.7",
+                "node.c6.s4.5",
+                "node.c6.s4.6",
+                "node.c6.s4.7",
+                "node.c6.s4.8",
+                "node.c6.ch05",
+                "node.c6.s5.1",
+                "node.c6.s5.2",
+                "node.c6.s5.2.1",
+                "node.c6.s5.2.2",
+                "node.c6.s5.2.3",
+                "node.c6.s5.2.4",
+                "node.c6.s5.2.5",
+                "node.c6.s5.2.6",
+                "node.c6.s5.2.7",
+                "node.c6.s5.2.8",
+                "node.c6.s5.3",
+                "node.c6.s5.3.1",
+                "node.c6.s5.3.2",
+                "node.c6.s5.3.3",
+                "node.c6.s5.3.4",
+                "node.c6.s5.3.5",
+                "node.c6.s5.3.6",
+                "node.c6.s5.4",
+                "node.c6.s5.4.1",
+                "node.c6.s5.4.2",
+                "node.c6.s5.4.3",
+                "node.c6.s5.5",
+                "node.c6.s5.5.1",
+                "node.c6.s5.6",
+                "node.c6.s5.7",
+                "node.c6.s5.8",
+                "node.c6.s5.9",
+                "node.c6.s5.10",
+                "node.c6.s5.11",
+                "node.c6.ch06",
+                "node.c6.s6.1",
+                "node.c6.s6.1.1",
+                "node.c6.s6.1.2",
+                "node.c6.s6.2",
+                "node.c6.s6.2.1",
+                "node.c6.s6.2.2",
+                "node.c6.s6.2.3",
+                "node.c6.s6.2.4",
+                "node.c6.s6.3",
+                "node.c6.s6.3.1",
+                "node.c6.s6.3.2",
+                "node.c6.s6.3.3",
+                "node.c6.s6.3.4",
+                "node.c6.s6.3.5",
+                "node.c6.s6.4",
+                "node.c6.s6.5",
+                "node.c6.s6.5.1",
+                "node.c6.s6.6",
+                "node.c6.s6.7",
+                "node.c6.s6.7.1",
+                "node.c6.s6.8",
+                "node.c6.s6.9",
+                "node.c6.s6.10",
+                "node.c6.s6.10.1",
+                "node.c6.s6.10.2",
+                "node.c6.s6.11",
+                "node.c6.s6.11.1",
+                "node.c6.s6.12",
+                "node.c6.s6.12.1",
+                "node.c6.s6.12.2",
+                "node.c6.s6.13",
+                "node.c6.s6.14",
+                "node.c6.s6.15",
+                "node.c6.s6.16",
+                "node.c6.ch07",
+                "node.c6.s7.1",
+                "node.c6.s7.2",
+                "node.c6.s7.2.1",
+                "node.c6.s7.2.2",
+                "node.c6.s7.2.3",
+                "node.c6.s7.2.4",
+                "node.c6.s7.2.5",
+                "node.c6.s7.3",
+                "node.c6.s7.3.1",
+                "node.c6.s7.3.2",
+                "node.c6.s7.3.3",
+                "node.c6.s7.3.4",
+                "node.c6.s7.4",
+                "node.c6.s7.5",
+                "node.c6.s7.6",
+                "node.c6.s7.6.1",
+                "node.c6.s7.6.2",
+                "node.c6.s7.7",
+                "node.c6.s7.7.1",
+                "node.c6.s7.7.2",
+                "node.c6.s7.7.3",
+                "node.c6.s7.7.4",
+                "node.c6.s7.8",
+                "node.c6.s7.8.1",
+                "node.c6.s7.9",
+                "node.c6.s7.10",
+                "node.c6.s7.11",
+                "node.c6.s7.12",
+                "node.c6.ch08",
+                "node.c6.s8.1",
+                "node.c6.s8.2",
+                "node.c6.s8.3",
+                "node.c6.s8.3.1",
+                "node.c6.s8.3.2",
+                "node.c6.s8.4",
+                "node.c6.s8.4.1",
+                "node.c6.s8.5",
+                "node.c6.s8.5.1",
+                "node.c6.s8.5.2",
+                "node.c6.s8.6",
+                "node.c6.s8.6.1",
+                "node.c6.s8.6.2",
+                "node.c6.s8.7",
+                "node.c6.s8.7.1",
+                "node.c6.s8.7.2",
+                "node.c6.s8.7.3",
+                "node.c6.s8.8",
+                "node.c6.s8.9",
+                "node.c6.s8.10",
+                "node.c6.s8.11",
+                "node.c6.ch09",
+                "node.c6.s9.1",
+                "node.c6.s9.1.1",
+                "node.c6.s9.1.2",
+                "node.c6.s9.1.3",
+                "node.c6.s9.1.4",
+                "node.c6.s9.1.5",
+                "node.c6.s9.1.6",
+                "node.c6.s9.1.7",
+                "node.c6.s9.1.8",
+                "node.c6.s9.1.9",
+                "node.c6.s9.2",
+                "node.c6.s9.2.1",
+                "node.c6.s9.2.2",
+                "node.c6.s9.2.3",
+                "node.c6.s9.2.4",
+                "node.c6.s9.3",
+                "node.c6.s9.3.1",
+                "node.c6.s9.3.2",
+                "node.c6.s9.3.3",
+                "node.c6.s9.3.4",
+                "node.c6.s9.3.5",
+                "node.c6.s9.4",
+                "node.c6.s9.4.1",
+                "node.c6.s9.4.2",
+                "node.c6.s9.4.3",
+                "node.c6.s9.4.4",
+                "node.c6.s9.4.5",
+                "node.c6.s9.5",
+                "node.c6.s9.6",
+                "node.c6.s9.7",
+                "node.c6.s9.7.1",
+                "node.c6.s9.7.2",
+                "node.c6.s9.7.3",
+                "node.c6.s9.8",
+                "node.c6.s9.9",
+                "node.c6.s9.10",
+                "node.c6.s9.11",
+                "node.c6.ch10",
+                "node.c6.s10.1",
+                "node.c6.s10.1.1",
+                "node.c6.s10.1.2",
+                "node.c6.s10.1.3",
+                "node.c6.s10.1.4",
+                "node.c6.s10.1.5",
+                "node.c6.s10.2",
+                "node.c6.s10.2.1",
+                "node.c6.s10.2.2",
+                "node.c6.s10.3",
+                "node.c6.s10.4",
+                "node.c6.s10.4.1",
+                "node.c6.s10.4.2",
+                "node.c6.s10.5",
+                "node.c6.s10.6",
+                "node.c6.s10.6.1",
+                "node.c6.s10.6.2",
+                "node.c6.s10.7",
+                "node.c6.s10.7.1",
+                "node.c6.s10.7.2",
+                "node.c6.s10.7.3",
+                "node.c6.s10.8",
+                "node.c6.s10.9",
+                "node.c6.s10.10",
+                "node.c6.s10.11",
+                "node.c6.s10.12",
+                "node.c6.s10.13",
+                "node.c6.ch11",
+                "node.c6.s11.1",
+                "node.c6.s11.1.1",
+                "node.c6.s11.1.2",
+                "node.c6.s11.2",
+                "node.c6.s11.2.1",
+                "node.c6.s11.2.2",
+                "node.c6.s11.2.3",
+                "node.c6.s11.2.4",
+                "node.c6.s11.3",
+                "node.c6.s11.3.1",
+                "node.c6.s11.3.2",
+                "node.c6.s11.3.3",
+                "node.c6.s11.4",
+                "node.c6.s11.5",
+                "node.c6.s11.5.1",
+                "node.c6.s11.5.2",
+                "node.c6.s11.5.3",
+                "node.c6.s11.5.4",
+                "node.c6.s11.5.5",
+                "node.c6.s11.5.6",
+                "node.c6.s11.5.7",
+                "node.c6.s11.6",
+                "node.c6.s11.6.1",
+                "node.c6.s11.6.2",
+                "node.c6.s11.7",
+                "node.c6.s11.8",
+                "node.c6.s11.8.1",
+                "node.c6.s11.8.2",
+                "node.c6.s11.9",
+                "node.c6.s11.10",
+                "node.c6.s11.11",
+                "node.c6.s11.12",
+                "node.c6.s11.13",
+                "node.c6.ch12",
+                "node.c6.s12.1",
+                "node.c6.s12.1.1",
+                "node.c6.s12.1.2",
+                "node.c6.s12.1.3",
+                "node.c6.s12.1.4",
+                "node.c6.s12.1.5",
+                "node.c6.s12.1.6",
+                "node.c6.s12.1.7",
+                "node.c6.s12.1.8",
+                "node.c6.s12.1.9",
+                "node.c6.s12.1.10",
+                "node.c6.s12.1.11",
+                "node.c6.s12.1.12",
+                "node.c6.s12.2",
+                "node.c6.s12.3",
+                "node.c6.s12.4",
+                "node.c6.s12.4.1",
+                "node.c6.s12.4.2",
+                "node.c6.s12.4.3",
+                "node.c6.s12.4.4",
+                "node.c6.s12.5",
+                "node.c6.s12.5.1",
+                "node.c6.s12.5.2",
+                "node.c6.s12.5.3",
+                "node.c6.s12.5.4",
+                "node.c6.s12.5.5",
+                "node.c6.s12.6",
+                "node.c6.s12.7",
+                "node.c6.s12.8",
+                "node.c6.s12.9",
+                "node.c6.ch13",
+                "node.c6.s13.1",
+                "node.c6.s13.1.1",
+                "node.c6.s13.1.2",
+                "node.c6.s13.1.3",
+                "node.c6.s13.1.4",
+                "node.c6.s13.2",
+                "node.c6.s13.2.1",
+                "node.c6.s13.2.2",
+                "node.c6.s13.2.3",
+                "node.c6.s13.2.4",
+                "node.c6.s13.2.5",
+                "node.c6.s13.2.6",
+                "node.c6.s13.3",
+                "node.c6.s13.4",
+                "node.c6.s13.4.1",
+                "node.c6.s13.4.2",
+                "node.c6.s13.5",
+                "node.c6.s13.5.1",
+                "node.c6.s13.5.2",
+                "node.c6.s13.5.3",
+                "node.c6.s13.5.4",
+                "node.c6.s13.6",
+                "node.c6.s13.7",
+                "node.c6.s13.7.1",
+                "node.c6.s13.7.2",
+                "node.c6.s13.7.3",
+                "node.c6.s13.7.4",
+                "node.c6.s13.7.5",
+                "node.c6.s13.7.6",
+                "node.c6.s13.7.7",
+                "node.c6.s13.7.8",
+                "node.c6.s13.7.9",
+                "node.c6.s13.8",
+                "node.c6.s13.9",
+                "node.c6.s13.10",
+                "node.c6.s13.11",
+                "node.c6.ch14",
+                "node.c6.s14.1",
+                "node.c6.s14.2",
+                "node.c6.s14.3",
+                "node.c6.s14.3.1",
+                "node.c6.s14.3.2",
+                "node.c6.s14.3.3",
+                "node.c6.s14.4",
+                "node.c6.s14.4.1",
+                "node.c6.s14.4.2",
+                "node.c6.s14.4.3",
+                "node.c6.s14.5",
+                "node.c6.s14.6",
+                "node.c6.s14.6.1",
+                "node.c6.s14.6.2",
+                "node.c6.s14.7",
+                "node.c6.s14.7.1",
+                "node.c6.s14.7.2",
+                "node.c6.s14.7.3",
+                "node.c6.s14.7.4",
+                "node.c6.s14.7.5",
+                "node.c6.s14.7.6",
+                "node.c6.s14.7.7",
+                "node.c6.s14.7.8",
+                "node.c6.s14.7.9",
+                "node.c6.s14.7.10",
+                "node.c6.s14.7.11",
+                "node.c6.s14.8",
+                "node.c6.s14.8.1",
+                "node.c6.s14.8.2",
+                "node.c6.s14.9",
+                "node.c6.s14.10",
+                "node.c6.s14.10.1",
+                "node.c6.s14.10.2",
+                "node.c6.s14.11",
+                "node.c6.s14.11.1",
+                "node.c6.s14.11.2",
+                "node.c6.s14.11.3",
+                "node.c6.s14.11.4",
+                "node.c6.s14.11.5",
+                "node.c6.s14.12",
+                "node.c6.s14.13",
+                "node.c6.s14.14",
+                "node.c6.s14.15",
+                "node.c6.s14.16",
+                "node.c6.s14.17",
+                "node.c6.s14.18",
+                "node.c6.ch15",
+                "node.c6.s15.1",
+                "node.c6.s15.1.1",
+                "node.c6.s15.1.2",
+                "node.c6.s15.1.3",
+                "node.c6.s15.2",
+                "node.c6.s15.2.1",
+                "node.c6.s15.2.2",
+                "node.c6.s15.3",
+                "node.c6.s15.3.1",
+                "node.c6.s15.3.2",
+                "node.c6.s15.3.3",
+                "node.c6.s15.3.4",
+                "node.c6.s15.3.5",
+                "node.c6.s15.3.6",
+                "node.c6.s15.3.7",
+                "node.c6.s15.3.8",
+                "node.c6.s15.3.9",
+                "node.c6.s15.4",
+                "node.c6.s15.4.1",
+                "node.c6.s15.4.2",
+                "node.c6.s15.5",
+                "node.c6.s15.6",
+                "node.c6.s15.7",
+                "node.c6.s15.8",
+                "node.c6.s15.9",
+                "node.c6.ch16",
+                "node.c6.s16.1",
+                "node.c6.s16.2",
+                "node.c6.s16.2.1",
+                "node.c6.s16.2.2",
+                "node.c6.s16.3",
+                "node.c6.s16.3.1",
+                "node.c6.s16.3.2",
+                "node.c6.s16.3.3",
+                "node.c6.s16.4",
+                "node.c6.s16.5",
+                "node.c6.s16.5.1",
+                "node.c6.s16.5.2",
+                "node.c6.s16.6",
+                "node.c6.s16.6.1",
+                "node.c6.s16.6.2",
+                "node.c6.s16.6.3",
+                "node.c6.s16.6.4",
+                "node.c6.s16.6.5",
+                "node.c6.s16.6.6",
+                "node.c6.s16.6.7",
+                "node.c6.s16.7",
+                "node.c6.s16.8",
+                "node.c6.s16.9",
+                "node.c6.s16.9.1",
+                "node.c6.s16.9.2",
+                "node.c6.s16.10",
+                "node.c6.s16.10.1",
+                "node.c6.s16.10.2",
+                "node.c6.s16.10.3",
+                "node.c6.s16.11",
+                "node.c6.s16.11.1",
+                "node.c6.s16.11.2",
+                "node.c6.s16.12",
+                "node.c6.s16.12.1",
+                "node.c6.s16.12.2",
+                "node.c6.s16.13",
+                "node.c6.s16.14",
+                "node.c6.s16.15",
+                "node.c6.s16.16",
+                "node.c6.s16.17",
+                "node.c6.s16.18",
+                "node.c6.ch17",
+                "node.c6.s17.1",
+                "node.c6.s17.2",
+                "node.c6.s17.2.1",
+                "node.c6.s17.2.2",
+                "node.c6.s17.3",
+                "node.c6.s17.3.1",
+                "node.c6.s17.3.2",
+                "node.c6.s17.3.3",
+                "node.c6.s17.3.4",
+                "node.c6.s17.4",
+                "node.c6.s17.4.1",
+                "node.c6.s17.4.2",
+                "node.c6.s17.4.3",
+                "node.c6.s17.4.4",
+                "node.c6.s17.5",
+                "node.c6.s17.6",
+                "node.c6.s17.7",
+                "node.c6.s17.7.1",
+                "node.c6.s17.7.2",
+                "node.c6.s17.7.3",
+                "node.c6.s17.7.4",
+                "node.c6.s17.7.5",
+                "node.c6.s17.8",
+                "node.c6.s17.9",
+                "node.c6.s17.10",
+                "node.c6.s17.11",
+                "node.c6.s17.12",
+                "node.c6.appA",
+                "node.c6.sA.1",
+                "node.c6.sA.2",
+                "node.c6.sA.3",
+                "node.c6.sA.4",
+                "node.c6.sA.5",
+                "node.c6.sA.6",
+                "node.c6.sA.7",
+                "node.c6.sA.8",
+                "node.c6.sA.9",
+                "node.c6.sA.10",
+                "node.c6.sA.11",
+                "node.c6.sA.12",
+                "node.c6.sA.13",
+                "node.c6.sA.14",
+                "node.c6.sA.15",
+                "node.c6.sA.16",
+                "node.c6.sA.17",
+                "node.c6.appB",
+                "node.c6.sB.1",
+                "node.c6.sB.1.1",
+                "node.c6.sB.1.2",
+                "node.c6.sB.1.3",
+                "node.c6.sB.1.4",
+                "node.c6.sB.1.5",
+                "node.c6.sB.2",
+                "node.c6.sB.2.1",
+                "node.c6.sB.2.2",
+                "node.c6.sB.2.3",
+                "node.c6.sB.2.4",
+                "node.c6.sB.2.5",
+                "node.c6.sB.2.6",
+                "node.c6.sB.2.7",
+                "node.c6.sB.2.8",
+                "node.c6.sB.2.9",
+                "node.c6.sB.2.10",
+                "node.c6.sB.3",
+                "node.c6.sB.3.1",
+                "node.c6.sB.3.2",
+                "node.c6.sB.3.3",
+                "node.c6.sB.4",
+                "node.c6.sB.4.1",
+                "node.c6.sB.4.2",
+                "node.c6.sB.4.3",
+                "node.c6.sB.4.4",
+                "node.c6.sB.4.5",
+                "node.c6.sB.4.6",
+                "node.c6.sB.4.7",
+                "node.c6.sB.5",
+                "node.c6.sB.5.1",
+                "node.c6.sB.5.2",
+                "node.c6.sB.5.3",
+                "node.c6.sB.5.4",
+                "node.c6.sB.5.5",
+                "node.c6.sB.5.6",
+                "node.c6.sB.5.7",
+                "node.c6.sB.5.8",
+                "node.c6.sB.5.9",
+                "node.c6.sB.5.10",
+                "node.c6.sB.5.11",
+                "node.c6.sB.5.12",
+                "node.c6.sB.5.13",
+                "node.c6.sB.5.14",
+                "node.c6.sB.5.15",
+                "node.c6.sB.5.16",
+                "node.c6.sB.5.17",
+                "node.c6.sB.5.18",
+                "node.c6.sB.5.19",
+                "node.c6.sB.5.20",
+                "node.c6.sB.5.21",
+                "node.c6.sB.5.22",
+                "node.c6.sB.5.23",
+                "node.c6.sB.5.24",
+                "node.c6.sB.5.25",
+                "node.c6.sB.5.26",
+                "node.c6.sB.5.27",
+                "node.c6.sB.5.28",
+                "node.c6.sB.6",
+                "node.c6.sB.6.1",
+                "node.c6.sB.6.2",
+                "node.c6.sB.6.3",
+                "node.c6.sB.6.4",
+                "node.c6.sB.6.5",
+                "node.c6.sB.6.6",
+                "node.c6.sB.7",
+                "node.c6.sB.7.1",
+                "node.c6.sB.7.2",
+                "node.c6.sB.7.3",
+                "node.c6.sB.7.4",
+                "node.c6.sB.7.5",
+                "node.c6.sB.7.6",
+                "node.c6.sB.7.7",
+                "node.c6.sB.8",
+                "node.c6.sB.8.1",
+                "node.c6.sB.8.2",
+                "node.c6.sB.8.3",
+                "node.c6.sB.8.4",
+                "node.c6.sB.8.5",
+                "node.c6.sB.9",
+                "node.c6.sB.9.1",
+                "node.c6.sB.9.2",
+                "node.c6.sB.9.3",
+                "node.c6.sB.9.4",
+                "node.c6.sB.9.5",
+                "node.c6.sB.9.6",
+                "node.c6.sB.9.7",
+                "node.c6.sB.9.8",
+                "node.c6.sB.9.9",
+                "node.c6.sB.9.10",
+                "node.c6.sB.9.11",
+                "node.c6.sB.9.12"
+              ]
+            },
+            "version": {
+              "const": "2.0.0"
+            }
+          }
+        },
+        "exerciseRef": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "version"
+              ],
+              "properties": {
+                "id": {
+                  "enum": [
+                    "exercise.c6.s2.1",
+                    "exercise.c6.s3.2",
+                    "exercise.c6.s3.4.1",
+                    "exercise.c6.s3.4.2",
+                    "exercise.c6.s3.4.3",
+                    "exercise.c6.s3.4.6",
+                    "exercise.c6.s3.4.9",
+                    "exercise.c6.s4.2.1",
+                    "exercise.c6.s4.2.2",
+                    "exercise.c6.s4.2.3",
+                    "exercise.c6.s5.3.3",
+                    "exercise.c6.s5.3.4",
+                    "exercise.c6.s5.5.1",
+                    "exercise.c6.s6.5.1",
+                    "exercise.c6.s6.6",
+                    "exercise.c6.s6.8",
+                    "exercise.c6.s7.1",
+                    "exercise.c6.s7.5",
+                    "exercise.c6.s7.7.1",
+                    "exercise.c6.s8.1",
+                    "exercise.c6.s8.6.2",
+                    "exercise.c6.s9.1.3",
+                    "exercise.c6.s9.2.4",
+                    "exercise.c6.s9.3.1",
+                    "exercise.c6.s9.7.1",
+                    "exercise.c6.s9.7.3",
+                    "exercise.c6.s10.1.1",
+                    "exercise.c6.s10.1.3",
+                    "exercise.c6.s10.1.4",
+                    "exercise.c6.s10.4.1",
+                    "exercise.c6.s10.5",
+                    "exercise.c6.s11.5.1",
+                    "exercise.c6.s11.5.4",
+                    "exercise.c6.s11.5.5",
+                    "exercise.c6.s12.1.4",
+                    "exercise.c6.s12.1.6",
+                    "exercise.c6.s14.3.1",
+                    "exercise.c6.s14.3.2",
+                    "exercise.c6.s14.6.2",
+                    "exercise.c6.s14.11.4",
+                    "exercise.c6.s14.12",
+                    "exercise.c6.s15.3.1",
+                    "exercise.c6.s15.3.7",
+                    "exercise.c6.s16.2.1"
+                  ]
+                },
+                "version": {
+                  "const": "2.0.0"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "packageRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "enum": [
+                "content.c.primer6"
+              ]
+            },
+            "version": {
+              "const": "2.0.0"
+            }
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "encoding",
+        "sourceRevision",
+        "sha256",
+        "nodeMap"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 32768
+        },
+        "encoding": {
+          "const": "UTF-8"
+        },
+        "sourceRevision": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+        },
+        "nodeMap": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "nodeId",
+              "kind",
+              "byteRange"
+            ],
+            "properties": {
+              "nodeId": {
+                "type": "string",
+                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+              },
+              "kind": {
+                "enum": [
+                  "struct",
+                  "field",
+                  "function",
+                  "parameter",
+                  "block",
+                  "declaration",
+                  "assignment",
+                  "if",
+                  "while",
+                  "for",
+                  "return",
+                  "break",
+                  "continue",
+                  "empty",
+                  "expression",
+                  "expression-statement",
+                  "call",
+                  "output",
+                  "input",
+                  "translation-unit",
+                  "prototype",
+                  "do-while",
+                  "switch",
+                  "case",
+                  "cast",
+                  "sizeof",
+                  "enum",
+                  "typedef",
+                  "constant-macro"
+                ]
+              },
+              "byteRange": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "start",
+                  "end"
+                ],
+                "properties": {
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                }
+              }
+            }
+          },
+          "maxItems": 32768
+        }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "text",
+        "profileRef",
+        "caseKey"
+      ],
+      "properties": {
+        "kind": {
+          "const": "stdin-ascii"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 256,
+          "pattern": "^[\\t\\n\\r -~]*$(?![\\s\\S])"
+        },
+        "profileRef": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "version"
+              ],
+              "properties": {
+                "id": {
+                  "enum": [
+                    "judge.c6.s2.1",
+                    "judge.c6.s3.2",
+                    "judge.c6.s3.4.1",
+                    "judge.c6.s3.4.2",
+                    "judge.c6.s3.4.3",
+                    "judge.c6.s3.4.6",
+                    "judge.c6.s3.4.9",
+                    "judge.c6.s4.2.1",
+                    "judge.c6.s4.2.2",
+                    "judge.c6.s4.2.3",
+                    "judge.c6.s5.3.3",
+                    "judge.c6.s5.3.4",
+                    "judge.c6.s5.5.1",
+                    "judge.c6.s6.5.1",
+                    "judge.c6.s6.6",
+                    "judge.c6.s6.8",
+                    "judge.c6.s7.1",
+                    "judge.c6.s7.5",
+                    "judge.c6.s7.7.1",
+                    "judge.c6.s8.1",
+                    "judge.c6.s8.6.2",
+                    "judge.c6.s9.1.3",
+                    "judge.c6.s9.2.4",
+                    "judge.c6.s9.3.1",
+                    "judge.c6.s9.7.1",
+                    "judge.c6.s9.7.3",
+                    "judge.c6.s10.1.1",
+                    "judge.c6.s10.1.3",
+                    "judge.c6.s10.1.4",
+                    "judge.c6.s10.4.1",
+                    "judge.c6.s10.5",
+                    "judge.c6.s11.5.1",
+                    "judge.c6.s11.5.4",
+                    "judge.c6.s11.5.5",
+                    "judge.c6.s12.1.4",
+                    "judge.c6.s12.1.6",
+                    "judge.c6.s14.3.1",
+                    "judge.c6.s14.3.2",
+                    "judge.c6.s14.6.2",
+                    "judge.c6.s14.11.4",
+                    "judge.c6.s14.12",
+                    "judge.c6.s15.3.1",
+                    "judge.c6.s15.3.7",
+                    "judge.c6.s16.2.1"
+                  ]
+                },
+                "version": {
+                  "const": "1.0.0"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "caseKey": {
+          "anyOf": [
+            {
+              "enum": [
+                "case-1",
+                "case-2",
+                "case-3",
+                "case-4"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "engine",
+        "identity",
+        "versions",
+        "requestSha256",
+        "resultSha256"
+      ],
+      "properties": {
+        "domain": {
+          "const": "c6"
+        },
+        "engine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "buildId"
+          ],
+          "properties": {
+            "id": {
+              "const": "engine.rust.c6"
+            },
+            "version": {
+              "const": "0.1.0"
+            },
+            "buildId": {
+              "const": "804d686bdf75f56ba41970aac199e45c72b805bcb5ac2d0102815bd5236d5069"
+            }
+          }
+        },
+        "identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "runId",
+            "sourceRevision",
+            "sourceSha256"
+          ],
+          "properties": {
+            "runId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "sourceRevision": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "sourceSha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+            }
+          }
+        },
+        "versions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "execution",
+            "step",
+            "diagnostic",
+            "integerEncoding",
+            "judge"
+          ],
+          "properties": {
+            "execution": {
+              "const": "1.5.0"
+            },
+            "step": {
+              "const": "1.4.0"
+            },
+            "diagnostic": {
+              "const": "1.4.0"
+            },
+            "integerEncoding": {
+              "const": "1.0.0"
+            },
+            "judge": {
+              "anyOf": [
+                {
+                  "const": "2.0.0"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "requestSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+        },
+        "resultSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+        }
+      }
+    },
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cursor",
+        "length",
+        "paused",
+        "completeness",
+        "executedRange",
+        "terminalRange"
+      ],
+      "properties": {
+        "cursor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "paused": {
+          "const": true
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "prefix"
+          ]
+        },
+        "executedRange": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "byteRange",
+                "utf16Range",
+                "start",
+                "end"
+              ],
+              "properties": {
+                "byteRange": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "properties": {
+                    "start": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32768
+                    },
+                    "end": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32768
+                    }
+                  }
+                },
+                "utf16Range": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "properties": {
+                    "start": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32768
+                    },
+                    "end": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32768
+                    }
+                  }
+                },
+                "start": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "line",
+                    "column"
+                  ],
+                  "properties": {
+                    "line": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 32769
+                    },
+                    "column": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 32769
+                    }
+                  }
+                },
+                "end": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "line",
+                    "column"
+                  ],
+                  "properties": {
+                    "line": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 32769
+                    },
+                    "column": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 32769
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "terminalRange": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "byteRange",
+                "utf16Range",
+                "start",
+                "end"
+              ],
+              "properties": {
+                "byteRange": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "properties": {
+                    "start": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32768
+                    },
+                    "end": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32768
+                    }
+                  }
+                },
+                "utf16Range": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "properties": {
+                    "start": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32768
+                    },
+                    "end": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 32768
+                    }
+                  }
+                },
+                "start": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "line",
+                    "column"
+                  ],
+                  "properties": {
+                    "line": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 32769
+                    },
+                    "column": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 32769
+                    }
+                  }
+                },
+                "end": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "line",
+                    "column"
+                  ],
+                  "properties": {
+                    "line": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 32769
+                    },
+                    "column": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 32769
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "virtualAddresses": {
+      "const": "educational-not-host-addresses"
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "image",
+        "selectionAndPaginationExcluded"
+      ],
+      "properties": {
+        "scope": {
+          "const": "complete-current-state"
+        },
+        "image": {
+          "const": "reflowed-state-picture"
+        },
+        "selectionAndPaginationExcluded": {
+          "const": true
+        }
+      }
+    },
+    "types": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "kind",
+          "byteSize",
+          "alignment",
+          "pointeeType",
+          "elementType",
+          "elementCount",
+          "fields"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "kind": {
+            "enum": [
+              "int",
+              "uint",
+              "char",
+              "f32",
+              "f64",
+              "pointer",
+              "array",
+              "struct",
+              "void"
+            ]
+          },
+          "byteSize": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1048576
+          },
+          "alignment": {
+            "enum": [
+              1,
+              4,
+              8
+            ]
+          },
+          "pointeeType": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "elementType": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "elementCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 64
+          },
+          "fields": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "typeName",
+                "byteOffset"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "typeName": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "byteOffset": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "currentState": {
+      "$ref": "#/$defs/state"
+    },
+    "currentStep": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "seq",
+            "kind",
+            "nodeId",
+            "changes"
+          ],
+          "properties": {
+            "seq": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20000
+            },
+            "kind": {
+              "enum": [
+                "pointer.write",
+                "program.enter",
+                "function.enter",
+                "function.return",
+                "program.return",
+                "object.declare",
+                "value.initialize",
+                "value.write",
+                "condition",
+                "scope.enter",
+                "scope.exit",
+                "output.append",
+                "input.read",
+                "control.jump",
+                "nop",
+                "c6.static.initialize",
+                "c6.library"
+              ]
+            },
+            "nodeId": {
+              "type": "string",
+              "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+            },
+            "changes": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "op",
+                      "table",
+                      "id",
+                      "index",
+                      "before",
+                      "after"
+                    ],
+                    "properties": {
+                      "op": {
+                        "const": "record"
+                      },
+                      "table": {
+                        "const": "frames"
+                      },
+                      "id": {
+                        "type": "string",
+                        "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                      },
+                      "index": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "before": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "functionNodeId",
+                              "functionName",
+                              "parentFrameId",
+                              "callNodeId",
+                              "scopeIds"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "functionNodeId": {
+                                "type": "string",
+                                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "functionName": {
+                                "type": "string",
+                                "maxLength": 32768
+                              },
+                              "parentFrameId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "callNodeId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "scopeIds": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "pattern": "^s[1-9][0-9]*$(?![\\s\\S])"
+                                },
+                                "maxItems": 32768
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "after": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "functionNodeId",
+                              "functionName",
+                              "parentFrameId",
+                              "callNodeId",
+                              "scopeIds"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "functionNodeId": {
+                                "type": "string",
+                                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "functionName": {
+                                "type": "string",
+                                "maxLength": 32768
+                              },
+                              "parentFrameId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "callNodeId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "scopeIds": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "pattern": "^s[1-9][0-9]*$(?![\\s\\S])"
+                                },
+                                "maxItems": 32768
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "op",
+                      "table",
+                      "id",
+                      "index",
+                      "before",
+                      "after"
+                    ],
+                    "properties": {
+                      "op": {
+                        "const": "record"
+                      },
+                      "table": {
+                        "const": "scopes"
+                      },
+                      "id": {
+                        "type": "string",
+                        "pattern": "^s[1-9][0-9]*$(?![\\s\\S])"
+                      },
+                      "index": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "before": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "frameId",
+                              "nodeId",
+                              "objectIds",
+                              "aliases"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^s[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "frameId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "nodeId": {
+                                "type": "string",
+                                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "objectIds": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+                                },
+                                "maxItems": 32768
+                              },
+                              "aliases": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "additionalProperties": false,
+                                  "required": [
+                                    "name",
+                                    "objectId"
+                                  ],
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "maxLength": 32768
+                                    },
+                                    "objectId": {
+                                      "type": "string",
+                                      "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+                                    }
+                                  }
+                                },
+                                "maxItems": 8
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "after": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "frameId",
+                              "nodeId",
+                              "objectIds",
+                              "aliases"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^s[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "frameId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "nodeId": {
+                                "type": "string",
+                                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "objectIds": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+                                },
+                                "maxItems": 32768
+                              },
+                              "aliases": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "additionalProperties": false,
+                                  "required": [
+                                    "name",
+                                    "objectId"
+                                  ],
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "maxLength": 32768
+                                    },
+                                    "objectId": {
+                                      "type": "string",
+                                      "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+                                    }
+                                  }
+                                },
+                                "maxItems": 8
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "op",
+                      "table",
+                      "id",
+                      "index",
+                      "before",
+                      "after"
+                    ],
+                    "properties": {
+                      "op": {
+                        "const": "record"
+                      },
+                      "table": {
+                        "const": "objects"
+                      },
+                      "id": {
+                        "type": "string",
+                        "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+                      },
+                      "index": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "before": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "declarationNodeId",
+                              "frameId",
+                              "scopeId",
+                              "name",
+                              "typeName",
+                              "length",
+                              "byteLength",
+                              "baseAddress",
+                              "storage",
+                              "alive",
+                              "zeroInitialized",
+                              "cells",
+                              "writable"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "declarationNodeId": {
+                                "type": "string",
+                                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "frameId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "scopeId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^s[1-9][0-9]*$(?![\\s\\S])"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "maxLength": 32768
+                              },
+                              "typeName": {
+                                "type": "string",
+                                "maxLength": 32768
+                              },
+                              "length": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 262144
+                              },
+                              "byteLength": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 1048576
+                              },
+                              "baseAddress": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "storage": {
+                                "enum": [
+                                  "automatic",
+                                  "static",
+                                  "literal"
+                                ]
+                              },
+                              "alive": {
+                                "type": "boolean"
+                              },
+                              "zeroInitialized": {
+                                "type": "boolean"
+                              },
+                              "cells": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "additionalProperties": false,
+                                  "required": [
+                                    "byteOffset",
+                                    "value"
+                                  ],
+                                  "properties": {
+                                    "byteOffset": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "value": {
+                                      "anyOf": [
+                                        {
+                                          "type": "integer",
+                                          "minimum": -2147483648,
+                                          "maximum": 4294967295
+                                        },
+                                        {
+                                          "type": "null"
+                                        },
+                                        {
+                                          "type": "object",
+                                          "additionalProperties": false,
+                                          "required": [
+                                            "objectId",
+                                            "byteOffset",
+                                            "lowerBound",
+                                            "upperBound",
+                                            "pointeeType"
+                                          ],
+                                          "properties": {
+                                            "objectId": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "pattern": "^o[1-9][0-9]*$"
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "byteOffset": {
+                                              "type": "integer",
+                                              "minimum": 0,
+                                              "maximum": 9007199254740991
+                                            },
+                                            "lowerBound": {
+                                              "type": "integer",
+                                              "minimum": 0,
+                                              "maximum": 9007199254740991
+                                            },
+                                            "upperBound": {
+                                              "type": "integer",
+                                              "minimum": 0,
+                                              "maximum": 9007199254740991
+                                            },
+                                            "pointeeType": {
+                                              "type": "string",
+                                              "maxLength": 32768
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "object",
+                                          "additionalProperties": false,
+                                          "required": [
+                                            "kind",
+                                            "bits"
+                                          ],
+                                          "properties": {
+                                            "kind": {
+                                              "const": "f32"
+                                            },
+                                            "bits": {
+                                              "type": "string",
+                                              "pattern": "^(?!(?:7f|ff)[89a-f])[0-9a-f]{8}$(?![\\s\\S])"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "object",
+                                          "additionalProperties": false,
+                                          "required": [
+                                            "kind",
+                                            "bits"
+                                          ],
+                                          "properties": {
+                                            "kind": {
+                                              "const": "f64"
+                                            },
+                                            "bits": {
+                                              "type": "string",
+                                              "pattern": "^(?!(?:7ff|fff))[0-9a-f]{16}$(?![\\s\\S])"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                "maxItems": 262144
+                              },
+                              "writable": {
+                                "type": "boolean"
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "after": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "id",
+                              "declarationNodeId",
+                              "frameId",
+                              "scopeId",
+                              "name",
+                              "typeName",
+                              "length",
+                              "byteLength",
+                              "baseAddress",
+                              "storage",
+                              "alive",
+                              "zeroInitialized",
+                              "cells",
+                              "writable"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "declarationNodeId": {
+                                "type": "string",
+                                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              "frameId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "scopeId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^s[1-9][0-9]*$(?![\\s\\S])"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "maxLength": 32768
+                              },
+                              "typeName": {
+                                "type": "string",
+                                "maxLength": 32768
+                              },
+                              "length": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 262144
+                              },
+                              "byteLength": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 1048576
+                              },
+                              "baseAddress": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "storage": {
+                                "enum": [
+                                  "automatic",
+                                  "static",
+                                  "literal"
+                                ]
+                              },
+                              "alive": {
+                                "type": "boolean"
+                              },
+                              "zeroInitialized": {
+                                "type": "boolean"
+                              },
+                              "cells": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "additionalProperties": false,
+                                  "required": [
+                                    "byteOffset",
+                                    "value"
+                                  ],
+                                  "properties": {
+                                    "byteOffset": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "value": {
+                                      "anyOf": [
+                                        {
+                                          "type": "integer",
+                                          "minimum": -2147483648,
+                                          "maximum": 4294967295
+                                        },
+                                        {
+                                          "type": "null"
+                                        },
+                                        {
+                                          "type": "object",
+                                          "additionalProperties": false,
+                                          "required": [
+                                            "objectId",
+                                            "byteOffset",
+                                            "lowerBound",
+                                            "upperBound",
+                                            "pointeeType"
+                                          ],
+                                          "properties": {
+                                            "objectId": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "pattern": "^o[1-9][0-9]*$"
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "byteOffset": {
+                                              "type": "integer",
+                                              "minimum": 0,
+                                              "maximum": 9007199254740991
+                                            },
+                                            "lowerBound": {
+                                              "type": "integer",
+                                              "minimum": 0,
+                                              "maximum": 9007199254740991
+                                            },
+                                            "upperBound": {
+                                              "type": "integer",
+                                              "minimum": 0,
+                                              "maximum": 9007199254740991
+                                            },
+                                            "pointeeType": {
+                                              "type": "string",
+                                              "maxLength": 32768
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "object",
+                                          "additionalProperties": false,
+                                          "required": [
+                                            "kind",
+                                            "bits"
+                                          ],
+                                          "properties": {
+                                            "kind": {
+                                              "const": "f32"
+                                            },
+                                            "bits": {
+                                              "type": "string",
+                                              "pattern": "^(?!(?:7f|ff)[89a-f])[0-9a-f]{8}$(?![\\s\\S])"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "object",
+                                          "additionalProperties": false,
+                                          "required": [
+                                            "kind",
+                                            "bits"
+                                          ],
+                                          "properties": {
+                                            "kind": {
+                                              "const": "f64"
+                                            },
+                                            "bits": {
+                                              "type": "string",
+                                              "pattern": "^(?!(?:7ff|fff))[0-9a-f]{16}$(?![\\s\\S])"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                "maxItems": 262144
+                              },
+                              "writable": {
+                                "type": "boolean"
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "op",
+                      "objectId",
+                      "byteOffset",
+                      "before",
+                      "after"
+                    ],
+                    "properties": {
+                      "op": {
+                        "const": "cell"
+                      },
+                      "objectId": {
+                        "type": "string",
+                        "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+                      },
+                      "byteOffset": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "before": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 4294967295
+                          },
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "objectId",
+                              "byteOffset",
+                              "lowerBound",
+                              "upperBound",
+                              "pointeeType"
+                            ],
+                            "properties": {
+                              "objectId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^o[1-9][0-9]*$"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "byteOffset": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "lowerBound": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "upperBound": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "pointeeType": {
+                                "type": "string",
+                                "maxLength": 32768
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "kind",
+                              "bits"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "f32"
+                              },
+                              "bits": {
+                                "type": "string",
+                                "pattern": "^(?!(?:7f|ff)[89a-f])[0-9a-f]{8}$(?![\\s\\S])"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "kind",
+                              "bits"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "f64"
+                              },
+                              "bits": {
+                                "type": "string",
+                                "pattern": "^(?!(?:7ff|fff))[0-9a-f]{16}$(?![\\s\\S])"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "after": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 4294967295
+                          },
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "objectId",
+                              "byteOffset",
+                              "lowerBound",
+                              "upperBound",
+                              "pointeeType"
+                            ],
+                            "properties": {
+                              "objectId": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^o[1-9][0-9]*$"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "byteOffset": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "lowerBound": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "upperBound": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "pointeeType": {
+                                "type": "string",
+                                "maxLength": 32768
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "kind",
+                              "bits"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "f32"
+                              },
+                              "bits": {
+                                "type": "string",
+                                "pattern": "^(?!(?:7f|ff)[89a-f])[0-9a-f]{8}$(?![\\s\\S])"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "kind",
+                              "bits"
+                            ],
+                            "properties": {
+                              "kind": {
+                                "const": "f64"
+                              },
+                              "bits": {
+                                "type": "string",
+                                "pattern": "^(?!(?:7ff|fff))[0-9a-f]{16}$(?![\\s\\S])"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "op",
+                      "before",
+                      "after"
+                    ],
+                    "properties": {
+                      "op": {
+                        "const": "control"
+                      },
+                      "before": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "activeFrameId",
+                          "nextNodeId",
+                          "returnValue",
+                          "inputCursor"
+                        ],
+                        "properties": {
+                          "activeFrameId": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "nextNodeId": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "returnValue": {
+                            "anyOf": [
+                              {
+                                "type": "integer",
+                                "minimum": -2147483648,
+                                "maximum": 4294967295
+                              },
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                  "objectId",
+                                  "byteOffset",
+                                  "lowerBound",
+                                  "upperBound",
+                                  "pointeeType"
+                                ],
+                                "properties": {
+                                  "objectId": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "pattern": "^o[1-9][0-9]*$"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "byteOffset": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "lowerBound": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "upperBound": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "pointeeType": {
+                                    "type": "string",
+                                    "maxLength": 32768
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                  "kind",
+                                  "bits"
+                                ],
+                                "properties": {
+                                  "kind": {
+                                    "const": "f32"
+                                  },
+                                  "bits": {
+                                    "type": "string",
+                                    "pattern": "^(?!(?:7f|ff)[89a-f])[0-9a-f]{8}$(?![\\s\\S])"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                  "kind",
+                                  "bits"
+                                ],
+                                "properties": {
+                                  "kind": {
+                                    "const": "f64"
+                                  },
+                                  "bits": {
+                                    "type": "string",
+                                    "pattern": "^(?!(?:7ff|fff))[0-9a-f]{16}$(?![\\s\\S])"
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          "inputCursor": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 256
+                          }
+                        }
+                      },
+                      "after": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "activeFrameId",
+                          "nextNodeId",
+                          "returnValue",
+                          "inputCursor"
+                        ],
+                        "properties": {
+                          "activeFrameId": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "nextNodeId": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "returnValue": {
+                            "anyOf": [
+                              {
+                                "type": "integer",
+                                "minimum": -2147483648,
+                                "maximum": 4294967295
+                              },
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                  "objectId",
+                                  "byteOffset",
+                                  "lowerBound",
+                                  "upperBound",
+                                  "pointeeType"
+                                ],
+                                "properties": {
+                                  "objectId": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "pattern": "^o[1-9][0-9]*$"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "byteOffset": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "lowerBound": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "upperBound": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "pointeeType": {
+                                    "type": "string",
+                                    "maxLength": 32768
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                  "kind",
+                                  "bits"
+                                ],
+                                "properties": {
+                                  "kind": {
+                                    "const": "f32"
+                                  },
+                                  "bits": {
+                                    "type": "string",
+                                    "pattern": "^(?!(?:7f|ff)[89a-f])[0-9a-f]{8}$(?![\\s\\S])"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": [
+                                  "kind",
+                                  "bits"
+                                ],
+                                "properties": {
+                                  "kind": {
+                                    "const": "f64"
+                                  },
+                                  "bits": {
+                                    "type": "string",
+                                    "pattern": "^(?!(?:7ff|fff))[0-9a-f]{16}$(?![\\s\\S])"
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          "inputCursor": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 256
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "op",
+                      "before",
+                      "after"
+                    ],
+                    "properties": {
+                      "op": {
+                        "const": "allocator"
+                      },
+                      "before": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "nextAddress",
+                          "liveBytes",
+                          "nextObject",
+                          "nextScope",
+                          "nextFrame"
+                        ],
+                        "properties": {
+                          "nextAddress": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "liveBytes": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1048576
+                          },
+                          "nextObject": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "nextScope": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "nextFrame": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        }
+                      },
+                      "after": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "nextAddress",
+                          "liveBytes",
+                          "nextObject",
+                          "nextScope",
+                          "nextFrame"
+                        ],
+                        "properties": {
+                          "nextAddress": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "liveBytes": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1048576
+                          },
+                          "nextObject": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "nextScope": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "nextFrame": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "op",
+                      "before",
+                      "after"
+                    ],
+                    "properties": {
+                      "op": {
+                        "const": "counters"
+                      },
+                      "before": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "comparisons",
+                          "scalarWrites",
+                          "arrayWrites",
+                          "swaps"
+                        ],
+                        "properties": {
+                          "comparisons": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "scalarWrites": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "arrayWrites": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "swaps": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        }
+                      },
+                      "after": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "comparisons",
+                          "scalarWrites",
+                          "arrayWrites",
+                          "swaps"
+                        ],
+                        "properties": {
+                          "comparisons": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "scalarWrites": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "arrayWrites": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "swaps": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "op",
+                      "beforeBytes",
+                      "afterBytes",
+                      "append"
+                    ],
+                    "properties": {
+                      "op": {
+                        "const": "output"
+                      },
+                      "beforeBytes": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "afterBytes": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "append": {
+                        "type": "string",
+                        "maxLength": 32768
+                      }
+                    }
+                  }
+                ]
+              },
+              "maxItems": 32768
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "executionOutcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code",
+        "byteRange",
+        "cursor",
+        "returnValue"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "completed",
+            "error",
+            "limited",
+            "cancelled"
+          ]
+        },
+        "code": {
+          "anyOf": [
+            {
+              "enum": [
+                "E_STRUCT_LIMIT",
+                "E_FIELD_LIMIT",
+                "E_NULL_POINTER",
+                "E_DANGLING_POINTER",
+                "E_POINTER_BOUNDS",
+                "E_OBJECT_LIMIT",
+                "E_PROTOCOL_INVALID",
+                "E_UNSUPPORTED_VERSION",
+                "E_SOURCE_LIMIT",
+                "E_REQUEST_LIMIT",
+                "E_INPUT_INVALID",
+                "E_LEX_INVALID",
+                "E_PARSE_INVALID",
+                "E_NAME_INVALID",
+                "E_UNSUPPORTED_SYNTAX",
+                "E_DEPTH_LIMIT",
+                "E_FUNCTION_LIMIT",
+                "E_PARAMETER_LIMIT",
+                "E_DUPLICATE",
+                "E_UNDECLARED",
+                "E_TYPE_INVALID",
+                "E_ARGUMENTS",
+                "E_RETURN_MISSING",
+                "E_STACK_LIMIT",
+                "E_UNINITIALIZED",
+                "E_BOUNDS",
+                "E_DIV_ZERO",
+                "E_OVERFLOW",
+                "E_INPUT_EXHAUSTED",
+                "E_OUTPUT_LIMIT",
+                "E_MEMORY_LIMIT",
+                "E_STEP_LIMIT",
+                "E_RESULT_LIMIT",
+                "E_FUEL_LIMIT",
+                "E_DEADLINE",
+                "E_CANCELLED",
+                "E_ENCODING_FAILURE",
+                "E_INPUT_KIND",
+                "E_STRING_BOUNDS",
+                "E_CHAR_DOMAIN",
+                "E_FLOAT_NONFINITE",
+                "E_SHIFT_INVALID",
+                "E_FORMAT_UNSUPPORTED",
+                "E_STRING_UNTERMINATED",
+                "E_READONLY",
+                "E_CONST_WRITE",
+                "E_MACRO_UNSUPPORTED"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byteRange": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "start",
+                "end"
+              ],
+              "properties": {
+                "start": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "end": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cursor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "returnValue": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "terminalAtCursor": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "code",
+            "byteRange",
+            "cursor",
+            "returnValue"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "completed",
+                "error",
+                "limited",
+                "cancelled"
+              ]
+            },
+            "code": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "E_STRUCT_LIMIT",
+                    "E_FIELD_LIMIT",
+                    "E_NULL_POINTER",
+                    "E_DANGLING_POINTER",
+                    "E_POINTER_BOUNDS",
+                    "E_OBJECT_LIMIT",
+                    "E_PROTOCOL_INVALID",
+                    "E_UNSUPPORTED_VERSION",
+                    "E_SOURCE_LIMIT",
+                    "E_REQUEST_LIMIT",
+                    "E_INPUT_INVALID",
+                    "E_LEX_INVALID",
+                    "E_PARSE_INVALID",
+                    "E_NAME_INVALID",
+                    "E_UNSUPPORTED_SYNTAX",
+                    "E_DEPTH_LIMIT",
+                    "E_FUNCTION_LIMIT",
+                    "E_PARAMETER_LIMIT",
+                    "E_DUPLICATE",
+                    "E_UNDECLARED",
+                    "E_TYPE_INVALID",
+                    "E_ARGUMENTS",
+                    "E_RETURN_MISSING",
+                    "E_STACK_LIMIT",
+                    "E_UNINITIALIZED",
+                    "E_BOUNDS",
+                    "E_DIV_ZERO",
+                    "E_OVERFLOW",
+                    "E_INPUT_EXHAUSTED",
+                    "E_OUTPUT_LIMIT",
+                    "E_MEMORY_LIMIT",
+                    "E_STEP_LIMIT",
+                    "E_RESULT_LIMIT",
+                    "E_FUEL_LIMIT",
+                    "E_DEADLINE",
+                    "E_CANCELLED",
+                    "E_ENCODING_FAILURE",
+                    "E_INPUT_KIND",
+                    "E_STRING_BOUNDS",
+                    "E_CHAR_DOMAIN",
+                    "E_FLOAT_NONFINITE",
+                    "E_SHIFT_INVALID",
+                    "E_FORMAT_UNSUPPORTED",
+                    "E_STRING_UNTERMINATED",
+                    "E_READONLY",
+                    "E_CONST_WRITE",
+                    "E_MACRO_UNSUPPORTED"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "byteRange": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "properties": {
+                    "start": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "end": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "cursor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20000
+            },
+            "returnValue": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": -2147483648,
+                  "maximum": 2147483647
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "utcTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}Z$"
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frames",
+        "scopes",
+        "objects",
+        "control",
+        "allocator",
+        "output",
+        "counters"
+      ],
+      "properties": {
+        "frames": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "functionNodeId",
+              "functionName",
+              "parentFrameId",
+              "callNodeId",
+              "scopeIds"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+              },
+              "functionNodeId": {
+                "type": "string",
+                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+              },
+              "functionName": {
+                "type": "string",
+                "maxLength": 32768
+              },
+              "parentFrameId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "callNodeId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "scopeIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^s[1-9][0-9]*$(?![\\s\\S])"
+                },
+                "maxItems": 32768
+              }
+            }
+          },
+          "maxItems": 32
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "frameId",
+              "nodeId",
+              "objectIds",
+              "aliases"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^s[1-9][0-9]*$(?![\\s\\S])"
+              },
+              "frameId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "nodeId": {
+                "type": "string",
+                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+              },
+              "objectIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+                },
+                "maxItems": 32768
+              },
+              "aliases": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "objectId"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "maxLength": 32768
+                    },
+                    "objectId": {
+                      "type": "string",
+                      "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+                    }
+                  }
+                },
+                "maxItems": 8
+              }
+            }
+          },
+          "maxItems": 32768
+        },
+        "objects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "declarationNodeId",
+              "frameId",
+              "scopeId",
+              "name",
+              "typeName",
+              "length",
+              "byteLength",
+              "baseAddress",
+              "storage",
+              "alive",
+              "zeroInitialized",
+              "cells",
+              "writable"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^o[1-9][0-9]*$(?![\\s\\S])"
+              },
+              "declarationNodeId": {
+                "type": "string",
+                "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+              },
+              "frameId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "scopeId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^s[1-9][0-9]*$(?![\\s\\S])"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 32768
+              },
+              "typeName": {
+                "type": "string",
+                "maxLength": 32768
+              },
+              "length": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 262144
+              },
+              "byteLength": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1048576
+              },
+              "baseAddress": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "storage": {
+                "enum": [
+                  "automatic",
+                  "static",
+                  "literal"
+                ]
+              },
+              "alive": {
+                "type": "boolean"
+              },
+              "zeroInitialized": {
+                "type": "boolean"
+              },
+              "cells": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "byteOffset",
+                    "value"
+                  ],
+                  "properties": {
+                    "byteOffset": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -2147483648,
+                          "maximum": 4294967295
+                        },
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "objectId",
+                            "byteOffset",
+                            "lowerBound",
+                            "upperBound",
+                            "pointeeType"
+                          ],
+                          "properties": {
+                            "objectId": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^o[1-9][0-9]*$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "byteOffset": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "lowerBound": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "upperBound": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "pointeeType": {
+                              "type": "string",
+                              "maxLength": 32768
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "kind",
+                            "bits"
+                          ],
+                          "properties": {
+                            "kind": {
+                              "const": "f32"
+                            },
+                            "bits": {
+                              "type": "string",
+                              "pattern": "^(?!(?:7f|ff)[89a-f])[0-9a-f]{8}$(?![\\s\\S])"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "kind",
+                            "bits"
+                          ],
+                          "properties": {
+                            "kind": {
+                              "const": "f64"
+                            },
+                            "bits": {
+                              "type": "string",
+                              "pattern": "^(?!(?:7ff|fff))[0-9a-f]{16}$(?![\\s\\S])"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "maxItems": 262144
+              },
+              "writable": {
+                "type": "boolean"
+              }
+            }
+          },
+          "maxItems": 4096
+        },
+        "control": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "activeFrameId",
+            "nextNodeId",
+            "returnValue",
+            "inputCursor"
+          ],
+          "properties": {
+            "activeFrameId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^f[1-9][0-9]*$(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "nextNodeId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^n[1-9][0-9]*$(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "returnValue": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": -2147483648,
+                  "maximum": 4294967295
+                },
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "objectId",
+                    "byteOffset",
+                    "lowerBound",
+                    "upperBound",
+                    "pointeeType"
+                  ],
+                  "properties": {
+                    "objectId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^o[1-9][0-9]*$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "byteOffset": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "lowerBound": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "upperBound": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "pointeeType": {
+                      "type": "string",
+                      "maxLength": 32768
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "kind",
+                    "bits"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "f32"
+                    },
+                    "bits": {
+                      "type": "string",
+                      "pattern": "^(?!(?:7f|ff)[89a-f])[0-9a-f]{8}$(?![\\s\\S])"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "kind",
+                    "bits"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "f64"
+                    },
+                    "bits": {
+                      "type": "string",
+                      "pattern": "^(?!(?:7ff|fff))[0-9a-f]{16}$(?![\\s\\S])"
+                    }
+                  }
+                }
+              ]
+            },
+            "inputCursor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 256
+            }
+          }
+        },
+        "allocator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "nextAddress",
+            "liveBytes",
+            "nextObject",
+            "nextScope",
+            "nextFrame"
+          ],
+          "properties": {
+            "nextAddress": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "liveBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1048576
+            },
+            "nextObject": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "nextScope": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "nextFrame": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "output": {
+          "type": "string",
+          "maxLength": 32768
+        },
+        "counters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "comparisons",
+            "scalarWrites",
+            "arrayWrites",
+            "swaps"
+          ],
+          "properties": {
+            "comparisons": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "scalarWrites": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "arrayWrites": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "swaps": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        }
+      }
+    },
+    "scalarValue": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 4294967295
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "objectId",
+            "byteOffset",
+            "lowerBound",
+            "upperBound",
+            "pointeeType"
+          ],
+          "properties": {
+            "objectId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^o[1-9][0-9]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "byteOffset": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "lowerBound": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "upperBound": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "pointeeType": {
+              "type": "string",
+              "maxLength": 32768
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "bits"
+          ],
+          "properties": {
+            "kind": {
+              "const": "f32"
+            },
+            "bits": {
+              "type": "string",
+              "pattern": "^(?!(?:7f|ff)[89a-f])[0-9a-f]{8}$(?![\\s\\S])"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "bits"
+          ],
+          "properties": {
+            "kind": {
+              "const": "f64"
+            },
+            "bits": {
+              "type": "string",
+              "pattern": "^(?!(?:7ff|fff))[0-9a-f]{16}$(?![\\s\\S])"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

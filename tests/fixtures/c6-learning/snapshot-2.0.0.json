@@ -1,0 +1,492 @@
+{
+  "formatId": "urn:c-viz:current-snapshot:2.0.0",
+  "formatVersion": "2.0.0",
+  "snapshotId": "fdb8954b-56e7-4afc-858a-2c99399e0033",
+  "capturedAt": "2026-11-02T18:48:28.799Z",
+  "origin": {
+    "kind": "c6-course",
+    "title": "从入口读入并显示一个整数",
+    "documentRef": {
+      "id": "exercise.c6.s2.1",
+      "version": "2.0.0"
+    },
+    "nodeRef": {
+      "id": "node.c6.s2.1",
+      "version": "2.0.0"
+    },
+    "exerciseRef": {
+      "id": "exercise.c6.s2.1",
+      "version": "2.0.0"
+    },
+    "packageRef": {
+      "id": "content.c.primer6",
+      "version": "2.0.0"
+    }
+  },
+  "source": {
+    "text": "#include <stdio.h>\nint main(void) {\n    int received = 0;\n    int converted = scanf(\"%d\", &received);\n    if (converted == 1) {\n        printf(\"n=%d\\n\", received);\n    }\n    return 0;\n}\n",
+    "encoding": "UTF-8",
+    "sourceRevision": "5a750300-5f13-46a0-8579-3faaa6e170ef",
+    "sha256": "371edb5553af640860fde2d99ae8bd009b0a4168c0fa7693c2489fcc4a387f0a",
+    "nodeMap": [
+      {
+        "byteRange": {
+          "end": 56,
+          "start": 55
+        },
+        "kind": "expression",
+        "nodeId": "n1"
+      },
+      {
+        "byteRange": {
+          "end": 56,
+          "start": 44
+        },
+        "kind": "declaration",
+        "nodeId": "n2"
+      },
+      {
+        "byteRange": {
+          "end": 57,
+          "start": 40
+        },
+        "kind": "block",
+        "nodeId": "n3"
+      },
+      {
+        "byteRange": {
+          "end": 83,
+          "start": 78
+        },
+        "kind": "expression",
+        "nodeId": "n4"
+      },
+      {
+        "byteRange": {
+          "end": 88,
+          "start": 84
+        },
+        "kind": "expression",
+        "nodeId": "n5"
+      },
+      {
+        "byteRange": {
+          "end": 99,
+          "start": 91
+        },
+        "kind": "expression",
+        "nodeId": "n6"
+      },
+      {
+        "byteRange": {
+          "end": 99,
+          "start": 90
+        },
+        "kind": "expression",
+        "nodeId": "n7"
+      },
+      {
+        "byteRange": {
+          "end": 100,
+          "start": 78
+        },
+        "kind": "call",
+        "nodeId": "n8"
+      },
+      {
+        "byteRange": {
+          "end": 100,
+          "start": 66
+        },
+        "kind": "declaration",
+        "nodeId": "n9"
+      },
+      {
+        "byteRange": {
+          "end": 101,
+          "start": 62
+        },
+        "kind": "block",
+        "nodeId": "n10"
+      },
+      {
+        "byteRange": {
+          "end": 119,
+          "start": 110
+        },
+        "kind": "expression",
+        "nodeId": "n11"
+      },
+      {
+        "byteRange": {
+          "end": 124,
+          "start": 123
+        },
+        "kind": "expression",
+        "nodeId": "n12"
+      },
+      {
+        "byteRange": {
+          "end": 124,
+          "start": 110
+        },
+        "kind": "expression",
+        "nodeId": "n13"
+      },
+      {
+        "byteRange": {
+          "end": 142,
+          "start": 136
+        },
+        "kind": "expression",
+        "nodeId": "n14"
+      },
+      {
+        "byteRange": {
+          "end": 151,
+          "start": 143
+        },
+        "kind": "expression",
+        "nodeId": "n15"
+      },
+      {
+        "byteRange": {
+          "end": 161,
+          "start": 153
+        },
+        "kind": "expression",
+        "nodeId": "n16"
+      },
+      {
+        "byteRange": {
+          "end": 162,
+          "start": 136
+        },
+        "kind": "call",
+        "nodeId": "n17"
+      },
+      {
+        "byteRange": {
+          "end": 163,
+          "start": 136
+        },
+        "kind": "expression-statement",
+        "nodeId": "n18"
+      },
+      {
+        "byteRange": {
+          "end": 169,
+          "start": 126
+        },
+        "kind": "block",
+        "nodeId": "n19"
+      },
+      {
+        "byteRange": {
+          "end": 169,
+          "start": 106
+        },
+        "kind": "if",
+        "nodeId": "n20"
+      },
+      {
+        "byteRange": {
+          "end": 182,
+          "start": 181
+        },
+        "kind": "expression",
+        "nodeId": "n21"
+      },
+      {
+        "byteRange": {
+          "end": 183,
+          "start": 174
+        },
+        "kind": "return",
+        "nodeId": "n22"
+      },
+      {
+        "byteRange": {
+          "end": 185,
+          "start": 34
+        },
+        "kind": "block",
+        "nodeId": "n23"
+      },
+      {
+        "byteRange": {
+          "end": 185,
+          "start": 19
+        },
+        "kind": "function",
+        "nodeId": "n24"
+      },
+      {
+        "byteRange": {
+          "end": 186,
+          "start": 0
+        },
+        "kind": "translation-unit",
+        "nodeId": "n25"
+      }
+    ]
+  },
+  "input": {
+    "kind": "stdin-ascii",
+    "text": "-9",
+    "profileRef": {
+      "id": "judge.c6.s2.1",
+      "version": "1.0.0"
+    },
+    "caseKey": "case-1"
+  },
+  "runtime": {
+    "domain": "c6",
+    "engine": {
+      "buildId": "804d686bdf75f56ba41970aac199e45c72b805bcb5ac2d0102815bd5236d5069",
+      "id": "engine.rust.c6",
+      "version": "0.1.0"
+    },
+    "identity": {
+      "runId": "1f84293c-497d-4b0f-90c4-c9caf3f11668",
+      "sourceRevision": "5a750300-5f13-46a0-8579-3faaa6e170ef",
+      "sourceSha256": "371edb5553af640860fde2d99ae8bd009b0a4168c0fa7693c2489fcc4a387f0a"
+    },
+    "versions": {
+      "execution": "1.5.0",
+      "step": "1.4.0",
+      "diagnostic": "1.4.0",
+      "integerEncoding": "1.0.0",
+      "judge": "2.0.0"
+    },
+    "requestSha256": "d19308905ef2cb89330f21a9b5a079fa9f63c15a9431de57fa783f21a4a40379",
+    "resultSha256": "3a8dce3a68735cfc33cd112556348146e2bdd53233e0d2bc12890be39952f1ef"
+  },
+  "position": {
+    "cursor": 3,
+    "length": 18,
+    "paused": true,
+    "completeness": "complete",
+    "executedRange": {
+      "byteRange": {
+        "start": 0,
+        "end": 186
+      },
+      "utf16Range": {
+        "start": 0,
+        "end": 186
+      },
+      "start": {
+        "line": 1,
+        "column": 1
+      },
+      "end": {
+        "line": 10,
+        "column": 1
+      }
+    },
+    "terminalRange": null
+  },
+  "virtualAddresses": "educational-not-host-addresses",
+  "presentation": {
+    "scope": "complete-current-state",
+    "image": "reflowed-state-picture",
+    "selectionAndPaginationExcluded": true
+  },
+  "types": [
+    {
+      "alignment": 1,
+      "byteSize": 1,
+      "elementCount": 0,
+      "elementType": null,
+      "fields": [],
+      "kind": "char",
+      "name": "char",
+      "pointeeType": null
+    },
+    {
+      "alignment": 1,
+      "byteSize": 3,
+      "elementCount": 3,
+      "elementType": "char",
+      "fields": [],
+      "kind": "array",
+      "name": "char[3]",
+      "pointeeType": null
+    },
+    {
+      "alignment": 1,
+      "byteSize": 6,
+      "elementCount": 6,
+      "elementType": "char",
+      "fields": [],
+      "kind": "array",
+      "name": "char[6]",
+      "pointeeType": null
+    },
+    {
+      "alignment": 8,
+      "byteSize": 8,
+      "elementCount": 0,
+      "elementType": null,
+      "fields": [],
+      "kind": "f64",
+      "name": "double",
+      "pointeeType": null
+    },
+    {
+      "alignment": 4,
+      "byteSize": 4,
+      "elementCount": 0,
+      "elementType": null,
+      "fields": [],
+      "kind": "f32",
+      "name": "float",
+      "pointeeType": null
+    },
+    {
+      "alignment": 4,
+      "byteSize": 4,
+      "elementCount": 0,
+      "elementType": null,
+      "fields": [],
+      "kind": "int",
+      "name": "int",
+      "pointeeType": null
+    },
+    {
+      "alignment": 4,
+      "byteSize": 4,
+      "elementCount": 0,
+      "elementType": null,
+      "fields": [],
+      "kind": "pointer",
+      "name": "int*",
+      "pointeeType": "int"
+    },
+    {
+      "alignment": 4,
+      "byteSize": 4,
+      "elementCount": 0,
+      "elementType": null,
+      "fields": [],
+      "kind": "uint",
+      "name": "unsigned int",
+      "pointeeType": null
+    },
+    {
+      "alignment": 1,
+      "byteSize": 0,
+      "elementCount": 0,
+      "elementType": null,
+      "fields": [],
+      "kind": "void",
+      "name": "void",
+      "pointeeType": null
+    }
+  ],
+  "currentState": {
+    "allocator": {
+      "liveBytes": 0,
+      "nextAddress": 4096,
+      "nextFrame": 2,
+      "nextObject": 1,
+      "nextScope": 2
+    },
+    "control": {
+      "activeFrameId": "f1",
+      "inputCursor": 0,
+      "nextNodeId": "n25",
+      "returnValue": null
+    },
+    "counters": {
+      "arrayWrites": 0,
+      "comparisons": 0,
+      "scalarWrites": 0,
+      "swaps": 0
+    },
+    "frames": [
+      {
+        "callNodeId": null,
+        "functionName": "main",
+        "functionNodeId": "n24",
+        "id": "f1",
+        "parentFrameId": null,
+        "scopeIds": []
+      }
+    ],
+    "objects": [],
+    "output": "",
+    "scopes": [
+      {
+        "aliases": [],
+        "frameId": null,
+        "id": "s1",
+        "nodeId": "n25",
+        "objectIds": []
+      }
+    ]
+  },
+  "currentStep": {
+    "changes": [
+      {
+        "after": {
+          "callNodeId": null,
+          "functionName": "main",
+          "functionNodeId": "n24",
+          "id": "f1",
+          "parentFrameId": null,
+          "scopeIds": []
+        },
+        "before": null,
+        "id": "f1",
+        "index": 0,
+        "op": "record",
+        "table": "frames"
+      },
+      {
+        "after": {
+          "liveBytes": 0,
+          "nextAddress": 4096,
+          "nextFrame": 2,
+          "nextObject": 1,
+          "nextScope": 2
+        },
+        "before": {
+          "liveBytes": 0,
+          "nextAddress": 4096,
+          "nextFrame": 1,
+          "nextObject": 1,
+          "nextScope": 2
+        },
+        "op": "allocator"
+      },
+      {
+        "after": {
+          "activeFrameId": "f1",
+          "inputCursor": 0,
+          "nextNodeId": "n25",
+          "returnValue": null
+        },
+        "before": {
+          "activeFrameId": null,
+          "inputCursor": 0,
+          "nextNodeId": "n25",
+          "returnValue": null
+        },
+        "op": "control"
+      }
+    ],
+    "kind": "program.enter",
+    "nodeId": "n25",
+    "seq": 3
+  },
+  "executionOutcome": {
+    "byteRange": null,
+    "code": null,
+    "cursor": 18,
+    "returnValue": 0,
+    "status": "completed"
+  },
+  "terminalAtCursor": null
+}

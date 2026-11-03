@@ -2,9 +2,17 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { StorageSnapshot } from '../../web/src/storage/model';
-import { correctStarter } from './block-ui';
+import { completeCurrentFirstGroup } from './current-course-helpers';
+import { installC6Packets, observedC6Packet } from './c6-observation';
+import { decodeC6Response, type C6JudgeRequest } from '../../web/src/engine/c6-protocol';
+import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
 
 const status = (page: Page) => page.getByTestId('learning-save-status');
+const posted = (page: Page, points: number) =>
+  page.getByRole('heading', { name: `已入账 ${points} 分`, exact: true });
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(installC6Packets);
+});
 async function read(page: Page): Promise<StorageSnapshot> {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -39,19 +47,39 @@ async function read(page: Page): Promise<StorageSnapshot> {
   });
 }
 async function genuineRights(page: Page) {
-  await page.goto('/#/lessons/lesson.c.variables-output');
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await expect(status(page)).toHaveAttribute('data-save-status', 'ready');
-  await page.getByRole('button', { name: /^(确认已学习|确认今日复习)$/ }).click();
-  await expect(page.getByTestId('lesson-progress')).toContainText('已确认学习');
-  await page.getByRole('link', { name: '进入练习工作区', exact: true }).click();
-  const panel = page.getByTestId('practice-execution');
-  await expect(panel).toHaveAttribute('data-state', 'ready');
-  await correctStarter(page, 'exercise.c.echo');
-  await panel.getByRole('button', { name: '准备代码', exact: true }).click();
-  await expect(panel.getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
-  await panel.getByRole('button', { name: '提交练习', exact: true }).click();
-  await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state', 'saved');
+  const exercise = await completeCurrentFirstGroup(page);
+  const captured = await observedC6Packet(page);
+  expect(captured).toMatchObject({ count: 1, moduleSeen: true, terminated: true });
+  const requestBytes = Buffer.from(captured.request!, 'base64'),
+    resultBytes = Buffer.from(captured.response!, 'base64');
+  const request = JSON.parse(requestBytes.toString('utf8')) as C6JudgeRequest;
+  expect(request.source).toBe(exercise.referenceSource);
+  expect(request.profileRef).toEqual(exercise.profileRef);
+  const result = await decodeC6Response(
+    Uint8Array.from(resultBytes).buffer,
+    request,
+    engineBuild.wasmSha256,
+  );
+  if (!('cases' in result)) throw new Error('Actual current four-case judge required');
+  expect(result.status).toBe('passed');
+  expect(result.cases).toHaveLength(4);
+  for (const [i, c] of result.cases.entries()) {
+    expect(c.stdoutMatches && c.returnMatches && c.observationMatches).toBe(true);
+    const output =
+      c.packet.trace!.initialState.output +
+      c.packet
+        .trace!.steps.flatMap((s) =>
+          s.changes.flatMap((c) => (c.op === 'output' ? [c.append] : [])),
+        )
+        .join('');
+    expect(output).toBe(exercise.tests[i].expectedStdout);
+  }
+  await test
+    .info()
+    .attach('genuine-four-case-request', { body: requestBytes, contentType: 'application/json' });
+  await test
+    .info()
+    .attach('genuine-four-case-result', { body: resultBytes, contentType: 'application/json' });
   const saved = await read(page);
   expect(saved.ledger).toHaveLength(3);
   expect(saved.ledger.every((entry) => entry.status === 'posted')).toBe(true);
@@ -136,6 +164,7 @@ async function evidence(info: TestInfo, value: unknown) {
     process.env.TASK_EVIDENCE_TASK ?? '11.2',
     'regression',
     'reward-settlement',
+    process.env.TASK_EVIDENCE_LABEL ?? 'current',
     info.project.name,
     info.title.slice(0, 32),
   );
@@ -164,7 +193,7 @@ test('two pages settle simulated prior pending rights only once without new lear
   await Promise.all([page.reload(), other.goto('/#/?panel=points')]);
   for (const target of [page, other])
     await expect(status(target)).toHaveAttribute('data-save-status', 'ready');
-  await expect(other.getByTestId('learning-posted-points')).toHaveText('35');
+  await expect(posted(other, 35)).toBeVisible();
   const settled = await read(other);
   expect(settled.ledger).toEqual(genuine.ledger);
   expect(settled.meta.revision).toBe(pending.meta.revision + 1);
@@ -195,9 +224,9 @@ test('a second native settlement put aborts all posting and explicit retry prese
   await expect(status(page)).toHaveAttribute('data-save-status', 'unsaved');
   const aborted = await read(page);
   expect(aborted).toEqual(pending);
-  await expect(page.getByTestId('learning-posted-points')).toHaveText('0');
+  await expect(posted(page, 0)).toBeVisible();
   await page.getByRole('button', { name: '重试奖励入账', exact: true }).click();
-  await expect(page.getByTestId('learning-posted-points')).toHaveText('35');
+  await expect(posted(page, 35)).toBeVisible();
   const settled = await read(page);
   expect(settled.ledger).toEqual(genuine.ledger);
   expect(settled.meta.revision).toBe(pending.meta.revision + 1);

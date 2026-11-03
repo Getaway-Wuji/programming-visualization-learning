@@ -1,3 +1,7 @@
+import {
+  archivedMigrationSuccessor,
+  verifyCurrentResetAfterMigration,
+} from './migration-current-reset';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import {
@@ -75,6 +79,15 @@ test('15.3 actual27 DB4 real pass, wrong submission, knowledge mark and history 
   expect(before.knowledgeMarks).toHaveLength(1);
   expect(before.receipts.some((r) => r.eventType === 'exercise.attempt-evaluated')).toBe(true);
   expect(before.receipts.some((r) => r.eventType === 'exercise.passed')).toBe(true);
+  test.info().annotations.push({
+    type: 'historical-intermediate-and-current-reset',
+    description:
+      'Original migration assertions run against existing .artifacts/15.4/legacy29-dist; then actual formal73 DB10 RESET and genuine fresh C6 learning are independently verified.',
+  });
+  const historicalSuccessor = await archivedMigrationSuccessor(
+    page,
+    '.artifacts/15.4/legacy29-dist',
+  );
   await mkdir('.artifacts/15.3', { recursive: true });
   await writeFile(`.artifacts/15.3/migration-switch-${label}`, 'actual successor switch\n', {
     flag: 'wx',
@@ -110,5 +123,22 @@ test('15.3 actual27 DB4 real pass, wrong submission, knowledge mark and history 
       null,
       2,
     ),
+  );
+  await historicalSuccessor.dispose();
+  const currentReset = await verifyCurrentResetAfterMigration(page, after);
+  await writeFile(
+    `.artifacts/21.6/migration-${label}-scheduler.json`,
+    JSON.stringify(
+      {
+        historicalIntermediate: {
+          directory: historicalSuccessor.directory,
+          files: historicalSuccessor.files,
+        },
+        currentReset,
+      },
+      null,
+      2,
+    ),
+    { flag: 'wx' },
   );
 });

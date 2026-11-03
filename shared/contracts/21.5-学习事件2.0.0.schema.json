@@ -1,0 +1,2195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:c-viz:learn:2.0.0",
+  "title": "LEARN2 explicit new C course command",
+  "$comment": "Only the private current-session fact issuer may submit a judge event. A structurally valid DTO never proves execution. SAVE9/LEARN1 are unchanged. A/B, containers and optional guides have no learning identity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "learnVersion",
+    "generation",
+    "receipt"
+  ],
+  "properties": {
+    "learnVersion": {
+      "const": "2.0.0"
+    },
+    "generation": {
+      "$ref": "#/$defs/uuid"
+    },
+    "receipt": {
+      "$ref": "#/$defs/c6LearningReceipt"
+    }
+  },
+  "$defs": {
+    "entityId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[a-z][a-z0-9]*(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "uuid": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "safeUint": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "safePositiveInt": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/entityId"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        }
+      }
+    },
+    "utcTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}Z$"
+    },
+    "nullableUtcTime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/utcTime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "localDate": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+    },
+    "localGoalId": {
+      "type": "string",
+      "pattern": "^local-goal\\.[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+    },
+    "localGoalRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/localGoalId"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        }
+      }
+    },
+    "subjectId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/entityId"
+        },
+        {
+          "$ref": "#/$defs/localGoalId"
+        }
+      ]
+    },
+    "caseKey": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "dbVersion",
+        "generation",
+        "revision",
+        "timeZone",
+        "createdAt",
+        "activePackageRef"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "9.0.0"
+        },
+        "dbVersion": {
+          "const": 9
+        },
+        "generation": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision": {
+          "$ref": "#/$defs/safeUint"
+        },
+        "timeZone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "createdAt": {
+          "$ref": "#/$defs/utcTime"
+        },
+        "activePackageRef": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "targets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exercise",
+        "lesson",
+        "case"
+      ],
+      "properties": {
+        "exercise": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "lesson": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "case": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "exercise": {
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "lesson": {
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "case": {
+              "minimum": 1
+            }
+          }
+        }
+      ]
+    },
+    "goalTemplate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision",
+        "targets"
+      ],
+      "properties": {
+        "revision": {
+          "$ref": "#/$defs/safePositiveInt"
+        },
+        "targets": {
+          "$ref": "#/$defs/targets"
+        }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "theme",
+        "reducedMotion",
+        "playbackRate",
+        "goalTemplate"
+      ],
+      "properties": {
+        "theme": {
+          "enum": [
+            "system",
+            "light",
+            "dark"
+          ]
+        },
+        "reducedMotion": {
+          "enum": [
+            "system",
+            "on",
+            "off"
+          ]
+        },
+        "playbackRate": {
+          "enum": [
+            0.25,
+            0.5,
+            1,
+            1.5,
+            2,
+            4
+          ]
+        },
+        "goalTemplate": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/goalTemplate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "avatar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "presetId",
+        "accentColor"
+      ],
+      "properties": {
+        "presetId": {
+          "$ref": "#/$defs/entityId"
+        },
+        "accentColor": {
+          "type": "string",
+          "pattern": "^#[0-9A-F]{6}$"
+        }
+      }
+    },
+    "contentEventType": {
+      "enum": [
+        "lesson.started",
+        "lesson.study-confirmed",
+        "exercise.attempt-evaluated",
+        "exercise.passed",
+        "lesson.completed",
+        "case.view-confirmed"
+      ]
+    },
+    "allEventType": {
+      "enum": [
+        "lesson.started",
+        "lesson.study-confirmed",
+        "exercise.attempt-evaluated",
+        "exercise.passed",
+        "lesson.completed",
+        "case.view-confirmed",
+        "daily-goal.achieved"
+      ]
+    },
+    "progress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eventType",
+        "result",
+        "subjectRef",
+        "packageRef",
+        "learningRevision",
+        "firstAt",
+        "lastAt"
+      ],
+      "properties": {
+        "eventType": {
+          "$ref": "#/$defs/contentEventType"
+        },
+        "result": {
+          "enum": [
+            "started",
+            "confirmed",
+            "failed",
+            "passed",
+            "completed"
+          ]
+        },
+        "subjectRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "packageRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "learningRevision": {
+          "$ref": "#/$defs/safePositiveInt"
+        },
+        "firstAt": {
+          "$ref": "#/$defs/utcTime"
+        },
+        "lastAt": {
+          "$ref": "#/$defs/utcTime"
+        },
+        "resultCategory": {
+          "enum": [
+            "wrong-answer",
+            "teaching-goal-unmet",
+            "program-error",
+            "cancelled",
+            "resource-limit",
+            "infrastructure-failure"
+          ]
+        },
+        "failedCaseKey": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/caseKey"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "lesson.started"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "started"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "enum": [
+                  "lesson.study-confirmed",
+                  "case.view-confirmed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "confirmed"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "exercise.passed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "passed"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "lesson.completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "completed"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "exercise.attempt-evaluated"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "resultCategory",
+              "failedCaseKey"
+            ],
+            "properties": {
+              "result": {
+                "const": "failed"
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "resultCategory"
+                  ]
+                },
+                {
+                  "required": [
+                    "failedCaseKey"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "dailyFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eventType",
+        "subjectRef",
+        "canonicalSubjectId",
+        "occurredAt",
+        "localDate"
+      ],
+      "properties": {
+        "eventType": {
+          "enum": [
+            "exercise.passed",
+            "lesson.completed",
+            "case.view-confirmed"
+          ]
+        },
+        "subjectRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "canonicalSubjectId": {
+          "$ref": "#/$defs/entityId"
+        },
+        "occurredAt": {
+          "$ref": "#/$defs/utcTime"
+        },
+        "localDate": {
+          "$ref": "#/$defs/localDate"
+        }
+      }
+    },
+    "goal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "localDate",
+        "goalVersion",
+        "targets",
+        "achievedAt"
+      ],
+      "properties": {
+        "localDate": {
+          "$ref": "#/$defs/localDate"
+        },
+        "goalVersion": {
+          "$ref": "#/$defs/safePositiveInt"
+        },
+        "targets": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/targets"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "achievedAt": {
+          "$ref": "#/$defs/nullableUtcTime"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "targets": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "achievedAt": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "rewardSourceId": {
+      "enum": [
+        "reward.exercise.first-pass",
+        "reward.lesson.first-completion",
+        "reward.case.first-view",
+        "reward.daily-goal.once"
+      ]
+    },
+    "ledgerEntry": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/legacyLedgerEntry"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sourceId",
+            "subjectId",
+            "localDate",
+            "occurredAt",
+            "status",
+            "points",
+            "policyRef"
+          ],
+          "properties": {
+            "sourceId": {
+              "const": "reward.challenge.first-answer"
+            },
+            "subjectId": {
+              "enum": [
+                "challenge.c.assignment.initialize",
+                "challenge.c.assignment.action",
+                "challenge.c.assignment.output",
+                "challenge.c.branch.initialize",
+                "challenge.c.branch.action",
+                "challenge.c.branch.output",
+                "challenge.c.loops.initialize",
+                "challenge.c.loops.action",
+                "challenge.c.loops.output",
+                "challenge.c.array-traversal.initialize",
+                "challenge.c.array-traversal.action",
+                "challenge.c.array-traversal.output",
+                "challenge.c.bubble-sort.initialize",
+                "challenge.c.bubble-sort.action",
+                "challenge.c.bubble-sort.output",
+                "challenge.c.selection-sort.initialize",
+                "challenge.c.selection-sort.action",
+                "challenge.c.selection-sort.output",
+                "challenge.c.binary-search-first.initialize",
+                "challenge.c.binary-search-first.action",
+                "challenge.c.binary-search-first.output"
+              ]
+            },
+            "localDate": {
+              "$ref": "#/$defs/localDate"
+            },
+            "occurredAt": {
+              "$ref": "#/$defs/utcTime"
+            },
+            "status": {
+              "const": "posted"
+            },
+            "points": {
+              "enum": [
+                -1,
+                2
+              ]
+            },
+            "policyRef": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "version"
+              ],
+              "properties": {
+                "id": {
+                  "const": "reward.policy.challenge"
+                },
+                "version": {
+                  "const": "1.0.0"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "receipt": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/legacyReceipt"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "eventId",
+            "eventType",
+            "subjectRef",
+            "packageRef",
+            "learningRevision",
+            "result",
+            "goalVersion",
+            "occurredAt",
+            "localDate",
+            "committedRevision",
+            "eventContractVersion",
+            "answerKind"
+          ],
+          "properties": {
+            "eventId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "eventType": {
+              "const": "challenge.answered"
+            },
+            "subjectRef": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "version"
+              ],
+              "properties": {
+                "id": {
+                  "enum": [
+                    "challenge.c.assignment.initialize",
+                    "challenge.c.assignment.action",
+                    "challenge.c.assignment.output",
+                    "challenge.c.branch.initialize",
+                    "challenge.c.branch.action",
+                    "challenge.c.branch.output",
+                    "challenge.c.loops.initialize",
+                    "challenge.c.loops.action",
+                    "challenge.c.loops.output",
+                    "challenge.c.array-traversal.initialize",
+                    "challenge.c.array-traversal.action",
+                    "challenge.c.array-traversal.output",
+                    "challenge.c.bubble-sort.initialize",
+                    "challenge.c.bubble-sort.action",
+                    "challenge.c.bubble-sort.output",
+                    "challenge.c.selection-sort.initialize",
+                    "challenge.c.selection-sort.action",
+                    "challenge.c.selection-sort.output",
+                    "challenge.c.binary-search-first.initialize",
+                    "challenge.c.binary-search-first.action",
+                    "challenge.c.binary-search-first.output"
+                  ]
+                },
+                "version": {
+                  "const": "1.0.0"
+                }
+              }
+            },
+            "packageRef": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "version"
+              ],
+              "properties": {
+                "id": {
+                  "const": "content.challenge.c"
+                },
+                "version": {
+                  "const": "1.0.0"
+                }
+              }
+            },
+            "learningRevision": {
+              "const": 1
+            },
+            "result": {
+              "enum": [
+                "correct",
+                "incorrect"
+              ]
+            },
+            "goalVersion": {
+              "$ref": "#/$defs/safePositiveInt"
+            },
+            "occurredAt": {
+              "$ref": "#/$defs/utcTime"
+            },
+            "localDate": {
+              "$ref": "#/$defs/localDate"
+            },
+            "committedRevision": {
+              "$ref": "#/$defs/safePositiveInt"
+            },
+            "eventContractVersion": {
+              "const": "1.1.0"
+            },
+            "answerKind": {
+              "enum": [
+                "value.initialize",
+                "value.write",
+                "condition",
+                "output.append",
+                "object.declare",
+                "program.return"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "alias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fromRef",
+        "toRef",
+        "fromAcceptedPriorVersions",
+        "kind",
+        "learningRevision",
+        "manifestRef"
+      ],
+      "properties": {
+        "fromRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "toRef": {
+          "$ref": "#/$defs/ref"
+        },
+        "fromAcceptedPriorVersions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/version"
+          }
+        },
+        "kind": {
+          "enum": [
+            "lesson",
+            "exercise",
+            "case"
+          ]
+        },
+        "learningRevision": {
+          "$ref": "#/$defs/safePositiveInt"
+        },
+        "manifestRef": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "appearance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preset",
+        "themeOverrides",
+        "blockWorkspace",
+        "layout",
+        "background"
+      ],
+      "properties": {
+        "preset": {
+          "enum": [
+            "minimal",
+            "cute",
+            "glass",
+            "soft",
+            "cool",
+            "tech"
+          ]
+        },
+        "themeOverrides": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "minimal",
+            "cute",
+            "glass",
+            "soft",
+            "cool",
+            "tech"
+          ],
+          "properties": {
+            "minimal": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "accentColor"
+              ],
+              "properties": {
+                "accentColor": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^#[0-9A-F]{6}$"
+                    }
+                  ]
+                }
+              }
+            },
+            "cute": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "accentColor"
+              ],
+              "properties": {
+                "accentColor": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^#[0-9A-F]{6}$"
+                    }
+                  ]
+                }
+              }
+            },
+            "glass": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "accentColor"
+              ],
+              "properties": {
+                "accentColor": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^#[0-9A-F]{6}$"
+                    }
+                  ]
+                }
+              }
+            },
+            "soft": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "accentColor"
+              ],
+              "properties": {
+                "accentColor": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^#[0-9A-F]{6}$"
+                    }
+                  ]
+                }
+              }
+            },
+            "cool": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "accentColor"
+              ],
+              "properties": {
+                "accentColor": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^#[0-9A-F]{6}$"
+                    }
+                  ]
+                }
+              }
+            },
+            "tech": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "accentColor"
+              ],
+              "properties": {
+                "accentColor": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^#[0-9A-F]{6}$"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "blockWorkspace": {
+          "enum": [
+            "auto",
+            "show",
+            "hide"
+          ]
+        },
+        "layout": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sidebar",
+            "workbenchMode",
+            "splitRatios"
+          ],
+          "properties": {
+            "sidebar": {
+              "enum": [
+                "expanded",
+                "collapsed"
+              ]
+            },
+            "workbenchMode": {
+              "enum": [
+                "standard",
+                "focus"
+              ]
+            },
+            "splitRatios": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "practice",
+                "visualize",
+                "review"
+              ],
+              "properties": {
+                "practice": {
+                  "type": "integer",
+                  "minimum": 30,
+                  "maximum": 70
+                },
+                "visualize": {
+                  "type": "integer",
+                  "minimum": 30,
+                  "maximum": 70
+                },
+                "review": {
+                  "type": "integer",
+                  "minimum": 30,
+                  "maximum": 70
+                }
+              }
+            }
+          }
+        },
+        "background": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "assetId",
+            "visible",
+            "fit",
+            "position",
+            "overlayOpacity"
+          ],
+          "properties": {
+            "assetId": {
+              "enum": [
+                null,
+                "background"
+              ]
+            },
+            "visible": {
+              "type": "boolean"
+            },
+            "fit": {
+              "enum": [
+                "cover",
+                "contain",
+                "tile"
+              ]
+            },
+            "position": {
+              "enum": [
+                "center",
+                "top",
+                "bottom"
+              ]
+            },
+            "overlayOpacity": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 90
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "assetId": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "visible": {
+                    "const": false
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "appearanceAsset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assetId",
+        "mimeType",
+        "byteLength",
+        "width",
+        "height",
+        "blob"
+      ],
+      "properties": {
+        "assetId": {
+          "const": "background"
+        },
+        "mimeType": {
+          "enum": [
+            "image/png",
+            "image/jpeg",
+            "image/webp"
+          ]
+        },
+        "byteLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5242880
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "blob": {
+          "not": {},
+          "$comment": "Native Blob only. No JSON object/string/null can represent it; validate actual Blob using runtime assertRecord and its byte/format/size relationships."
+        }
+      }
+    },
+    "legacyLedgerEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceId",
+        "subjectId",
+        "localDate",
+        "occurredAt",
+        "status",
+        "points",
+        "policyRef"
+      ],
+      "properties": {
+        "sourceId": {
+          "$ref": "#/$defs/rewardSourceId"
+        },
+        "subjectId": {
+          "$ref": "#/$defs/subjectId"
+        },
+        "localDate": {
+          "$ref": "#/$defs/localDate"
+        },
+        "occurredAt": {
+          "$ref": "#/$defs/utcTime"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "posted"
+          ]
+        },
+        "points": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/safeUint"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "policyRef": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "pending"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "points": {
+                "type": "null"
+              },
+              "policyRef": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "posted"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "points": {
+                "$ref": "#/$defs/safeUint"
+              },
+              "policyRef": {
+                "$ref": "#/$defs/ref"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "sourceId": {
+                "const": "reward.daily-goal.once"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "subjectId": {
+                "$ref": "#/$defs/localGoalId"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "subjectId": {
+                "$ref": "#/$defs/entityId"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "legacyReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eventId",
+        "eventType",
+        "subjectRef",
+        "packageRef",
+        "learningRevision",
+        "result",
+        "goalVersion",
+        "occurredAt",
+        "localDate",
+        "committedRevision"
+      ],
+      "properties": {
+        "eventId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "eventType": {
+          "$ref": "#/$defs/allEventType"
+        },
+        "subjectRef": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "$ref": "#/$defs/localGoalRef"
+            }
+          ]
+        },
+        "packageRef": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "learningRevision": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/safePositiveInt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "result": {
+          "enum": [
+            "started",
+            "confirmed",
+            "failed",
+            "passed",
+            "completed",
+            "achieved"
+          ]
+        },
+        "goalVersion": {
+          "$ref": "#/$defs/safePositiveInt"
+        },
+        "occurredAt": {
+          "$ref": "#/$defs/utcTime"
+        },
+        "localDate": {
+          "$ref": "#/$defs/localDate"
+        },
+        "committedRevision": {
+          "$ref": "#/$defs/safePositiveInt"
+        },
+        "resultCategory": {
+          "enum": [
+            "wrong-answer",
+            "teaching-goal-unmet",
+            "program-error",
+            "cancelled",
+            "resource-limit",
+            "infrastructure-failure"
+          ]
+        },
+        "failedCaseKey": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/caseKey"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "daily-goal.achieved"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "subjectRef": {
+                "$ref": "#/$defs/localGoalRef"
+              },
+              "packageRef": {
+                "type": "null"
+              },
+              "learningRevision": {
+                "type": "null"
+              },
+              "result": {
+                "const": "achieved"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "subjectRef": {
+                "$ref": "#/$defs/ref"
+              },
+              "packageRef": {
+                "$ref": "#/$defs/ref"
+              },
+              "learningRevision": {
+                "$ref": "#/$defs/safePositiveInt"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "lesson.started"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "started"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "enum": [
+                  "lesson.study-confirmed",
+                  "case.view-confirmed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "confirmed"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "exercise.passed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "passed"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "lesson.completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "completed"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "exercise.attempt-evaluated"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "resultCategory",
+              "failedCaseKey"
+            ],
+            "properties": {
+              "result": {
+                "const": "failed"
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "resultCategory"
+                  ]
+                },
+                {
+                  "required": [
+                    "failedCaseKey"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "c6LearningReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eventId",
+        "eventType",
+        "subjectRef",
+        "packageRef",
+        "learningRevision",
+        "result",
+        "goalVersion",
+        "occurredAt",
+        "localDate"
+      ],
+      "properties": {
+        "eventId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "eventType": {
+          "enum": [
+            "lesson.started",
+            "lesson.study-confirmed",
+            "exercise.passed",
+            "exercise.attempt-evaluated"
+          ]
+        },
+        "subjectRef": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "version"
+              ],
+              "properties": {
+                "id": {
+                  "enum": [
+                    "lesson.c6.s1.1",
+                    "lesson.c6.s1.2.1",
+                    "lesson.c6.s1.2.2",
+                    "lesson.c6.s1.2.3",
+                    "lesson.c6.s1.2.4",
+                    "lesson.c6.s1.2.5",
+                    "lesson.c6.s1.2.6",
+                    "lesson.c6.s1.3",
+                    "lesson.c6.s1.4",
+                    "lesson.c6.s1.5",
+                    "lesson.c6.s1.6.1",
+                    "lesson.c6.s1.6.2",
+                    "lesson.c6.s1.6.3",
+                    "lesson.c6.s1.7.1",
+                    "lesson.c6.s1.7.2",
+                    "lesson.c6.s1.7.3",
+                    "lesson.c6.s1.7.4",
+                    "lesson.c6.s1.7.5",
+                    "lesson.c6.s1.7.6",
+                    "lesson.c6.s1.7.7",
+                    "lesson.c6.s1.7.8",
+                    "lesson.c6.s1.8.1",
+                    "lesson.c6.s1.8.2",
+                    "lesson.c6.s1.8.3",
+                    "lesson.c6.s1.8.4",
+                    "lesson.c6.s1.8.5",
+                    "lesson.c6.s1.8.6",
+                    "lesson.c6.s1.8.7",
+                    "lesson.c6.s1.8.8",
+                    "lesson.c6.s1.9",
+                    "lesson.c6.s1.10.1",
+                    "lesson.c6.s1.10.2",
+                    "lesson.c6.s1.10.3",
+                    "lesson.c6.s1.11",
+                    "lesson.c6.s2.1",
+                    "lesson.c6.s2.2.1",
+                    "lesson.c6.s2.2.2",
+                    "lesson.c6.s2.3",
+                    "lesson.c6.s2.4",
+                    "lesson.c6.s2.5.1",
+                    "lesson.c6.s2.5.2",
+                    "lesson.c6.s2.5.3",
+                    "lesson.c6.s2.5.4",
+                    "lesson.c6.s2.6",
+                    "lesson.c6.s2.7.1",
+                    "lesson.c6.s2.7.2",
+                    "lesson.c6.s2.7.3",
+                    "lesson.c6.s2.8",
+                    "lesson.c6.s2.9",
+                    "lesson.c6.s2.10",
+                    "lesson.c6.s3.1.1",
+                    "lesson.c6.s3.2",
+                    "lesson.c6.s3.3.1",
+                    "lesson.c6.s3.3.2",
+                    "lesson.c6.s3.3.3",
+                    "lesson.c6.s3.4.1",
+                    "lesson.c6.s3.4.2",
+                    "lesson.c6.s3.4.3",
+                    "lesson.c6.s3.4.4",
+                    "lesson.c6.s3.4.5",
+                    "lesson.c6.s3.4.6",
+                    "lesson.c6.s3.4.7",
+                    "lesson.c6.s3.4.8",
+                    "lesson.c6.s3.4.9",
+                    "lesson.c6.s3.5",
+                    "lesson.c6.s3.6",
+                    "lesson.c6.s3.7.1",
+                    "lesson.c6.s3.7.2",
+                    "lesson.c6.s3.8",
+                    "lesson.c6.s3.9",
+                    "lesson.c6.s4.1",
+                    "lesson.c6.s4.2.1",
+                    "lesson.c6.s4.2.2",
+                    "lesson.c6.s4.2.3",
+                    "lesson.c6.s4.3.1",
+                    "lesson.c6.s4.3.2",
+                    "lesson.c6.s4.4.1",
+                    "lesson.c6.s4.4.2",
+                    "lesson.c6.s4.4.3",
+                    "lesson.c6.s4.4.4",
+                    "lesson.c6.s4.4.5",
+                    "lesson.c6.s4.4.6",
+                    "lesson.c6.s4.4.7",
+                    "lesson.c6.s4.5",
+                    "lesson.c6.s4.6",
+                    "lesson.c6.s5.1",
+                    "lesson.c6.s5.2.1",
+                    "lesson.c6.s5.2.2",
+                    "lesson.c6.s5.2.3",
+                    "lesson.c6.s5.2.4",
+                    "lesson.c6.s5.2.5",
+                    "lesson.c6.s5.2.6",
+                    "lesson.c6.s5.2.7",
+                    "lesson.c6.s5.2.8",
+                    "lesson.c6.s5.3.1",
+                    "lesson.c6.s5.3.2",
+                    "lesson.c6.s5.3.3",
+                    "lesson.c6.s5.3.4",
+                    "lesson.c6.s5.3.5",
+                    "lesson.c6.s5.3.6",
+                    "lesson.c6.s5.4.1",
+                    "lesson.c6.s5.4.2",
+                    "lesson.c6.s5.4.3",
+                    "lesson.c6.s5.5.1",
+                    "lesson.c6.s5.6",
+                    "lesson.c6.s5.7",
+                    "lesson.c6.s5.8",
+                    "lesson.c6.s5.9",
+                    "lesson.c6.s6.1.1",
+                    "lesson.c6.s6.1.2",
+                    "lesson.c6.s6.2.1",
+                    "lesson.c6.s6.2.2",
+                    "lesson.c6.s6.2.3",
+                    "lesson.c6.s6.2.4",
+                    "lesson.c6.s6.3.1",
+                    "lesson.c6.s6.3.2",
+                    "lesson.c6.s6.3.3",
+                    "lesson.c6.s6.3.4",
+                    "lesson.c6.s6.3.5",
+                    "lesson.c6.s6.4",
+                    "lesson.c6.s6.5.1",
+                    "lesson.c6.s6.6",
+                    "lesson.c6.s6.7.1",
+                    "lesson.c6.s6.8",
+                    "lesson.c6.s6.9",
+                    "lesson.c6.s6.10.1",
+                    "lesson.c6.s6.10.2",
+                    "lesson.c6.s6.11.1",
+                    "lesson.c6.s6.12.1",
+                    "lesson.c6.s6.12.2",
+                    "lesson.c6.s6.13",
+                    "lesson.c6.s6.14",
+                    "lesson.c6.s7.1",
+                    "lesson.c6.s7.2.1",
+                    "lesson.c6.s7.2.2",
+                    "lesson.c6.s7.2.3",
+                    "lesson.c6.s7.2.4",
+                    "lesson.c6.s7.2.5",
+                    "lesson.c6.s7.3.1",
+                    "lesson.c6.s7.3.2",
+                    "lesson.c6.s7.3.3",
+                    "lesson.c6.s7.3.4",
+                    "lesson.c6.s7.4",
+                    "lesson.c6.s7.5",
+                    "lesson.c6.s7.6.1",
+                    "lesson.c6.s7.6.2",
+                    "lesson.c6.s7.7.1",
+                    "lesson.c6.s7.7.2",
+                    "lesson.c6.s7.7.3",
+                    "lesson.c6.s7.7.4",
+                    "lesson.c6.s7.8.1",
+                    "lesson.c6.s7.9",
+                    "lesson.c6.s7.10",
+                    "lesson.c6.s8.1",
+                    "lesson.c6.s8.2",
+                    "lesson.c6.s8.3.1",
+                    "lesson.c6.s8.3.2",
+                    "lesson.c6.s8.4.1",
+                    "lesson.c6.s8.5.1",
+                    "lesson.c6.s8.5.2",
+                    "lesson.c6.s8.6.1",
+                    "lesson.c6.s8.6.2",
+                    "lesson.c6.s8.7.1",
+                    "lesson.c6.s8.7.2",
+                    "lesson.c6.s8.7.3",
+                    "lesson.c6.s8.8",
+                    "lesson.c6.s8.9",
+                    "lesson.c6.s9.1.1",
+                    "lesson.c6.s9.1.2",
+                    "lesson.c6.s9.1.3",
+                    "lesson.c6.s9.1.4",
+                    "lesson.c6.s9.1.5",
+                    "lesson.c6.s9.1.6",
+                    "lesson.c6.s9.1.7",
+                    "lesson.c6.s9.1.8",
+                    "lesson.c6.s9.1.9",
+                    "lesson.c6.s9.2.1",
+                    "lesson.c6.s9.2.2",
+                    "lesson.c6.s9.2.3",
+                    "lesson.c6.s9.2.4",
+                    "lesson.c6.s9.3.1",
+                    "lesson.c6.s9.3.2",
+                    "lesson.c6.s9.3.3",
+                    "lesson.c6.s9.3.4",
+                    "lesson.c6.s9.3.5",
+                    "lesson.c6.s9.4.1",
+                    "lesson.c6.s9.4.2",
+                    "lesson.c6.s9.4.3",
+                    "lesson.c6.s9.4.4",
+                    "lesson.c6.s9.4.5",
+                    "lesson.c6.s9.5",
+                    "lesson.c6.s9.6",
+                    "lesson.c6.s9.7.1",
+                    "lesson.c6.s9.7.2",
+                    "lesson.c6.s9.7.3",
+                    "lesson.c6.s9.8",
+                    "lesson.c6.s9.9",
+                    "lesson.c6.s10.1.1",
+                    "lesson.c6.s10.1.2",
+                    "lesson.c6.s10.1.3",
+                    "lesson.c6.s10.1.4",
+                    "lesson.c6.s10.1.5",
+                    "lesson.c6.s10.2.1",
+                    "lesson.c6.s10.2.2",
+                    "lesson.c6.s10.3",
+                    "lesson.c6.s10.4.1",
+                    "lesson.c6.s10.4.2",
+                    "lesson.c6.s10.5",
+                    "lesson.c6.s10.6.1",
+                    "lesson.c6.s10.6.2",
+                    "lesson.c6.s10.7.1",
+                    "lesson.c6.s10.7.2",
+                    "lesson.c6.s10.7.3",
+                    "lesson.c6.s10.8",
+                    "lesson.c6.s10.9",
+                    "lesson.c6.s10.10",
+                    "lesson.c6.s10.11",
+                    "lesson.c6.s11.1.1",
+                    "lesson.c6.s11.1.2",
+                    "lesson.c6.s11.2.1",
+                    "lesson.c6.s11.2.2",
+                    "lesson.c6.s11.2.3",
+                    "lesson.c6.s11.2.4",
+                    "lesson.c6.s11.3.1",
+                    "lesson.c6.s11.3.2",
+                    "lesson.c6.s11.3.3",
+                    "lesson.c6.s11.4",
+                    "lesson.c6.s11.5.1",
+                    "lesson.c6.s11.5.2",
+                    "lesson.c6.s11.5.3",
+                    "lesson.c6.s11.5.4",
+                    "lesson.c6.s11.5.5",
+                    "lesson.c6.s11.5.6",
+                    "lesson.c6.s11.5.7",
+                    "lesson.c6.s11.6.1",
+                    "lesson.c6.s11.6.2",
+                    "lesson.c6.s11.7",
+                    "lesson.c6.s11.8.1",
+                    "lesson.c6.s11.8.2",
+                    "lesson.c6.s11.9",
+                    "lesson.c6.s11.10",
+                    "lesson.c6.s11.11",
+                    "lesson.c6.s12.1.1",
+                    "lesson.c6.s12.1.2",
+                    "lesson.c6.s12.1.3",
+                    "lesson.c6.s12.1.4",
+                    "lesson.c6.s12.1.5",
+                    "lesson.c6.s12.1.6",
+                    "lesson.c6.s12.1.7",
+                    "lesson.c6.s12.1.8",
+                    "lesson.c6.s12.1.9",
+                    "lesson.c6.s12.1.10",
+                    "lesson.c6.s12.1.11",
+                    "lesson.c6.s12.1.12",
+                    "lesson.c6.s12.2",
+                    "lesson.c6.s12.3",
+                    "lesson.c6.s12.4.1",
+                    "lesson.c6.s12.4.2",
+                    "lesson.c6.s12.4.3",
+                    "lesson.c6.s12.4.4",
+                    "lesson.c6.s12.5.1",
+                    "lesson.c6.s12.5.2",
+                    "lesson.c6.s12.5.3",
+                    "lesson.c6.s12.5.4",
+                    "lesson.c6.s12.5.5",
+                    "lesson.c6.s12.6",
+                    "lesson.c6.s12.7",
+                    "lesson.c6.s13.1.1",
+                    "lesson.c6.s13.1.2",
+                    "lesson.c6.s13.1.3",
+                    "lesson.c6.s13.1.4",
+                    "lesson.c6.s13.2.1",
+                    "lesson.c6.s13.2.2",
+                    "lesson.c6.s13.2.3",
+                    "lesson.c6.s13.2.4",
+                    "lesson.c6.s13.2.5",
+                    "lesson.c6.s13.2.6",
+                    "lesson.c6.s13.3",
+                    "lesson.c6.s13.4.1",
+                    "lesson.c6.s13.4.2",
+                    "lesson.c6.s13.5.1",
+                    "lesson.c6.s13.5.2",
+                    "lesson.c6.s13.5.3",
+                    "lesson.c6.s13.5.4",
+                    "lesson.c6.s13.6",
+                    "lesson.c6.s13.7.1",
+                    "lesson.c6.s13.7.2",
+                    "lesson.c6.s13.7.3",
+                    "lesson.c6.s13.7.4",
+                    "lesson.c6.s13.7.5",
+                    "lesson.c6.s13.7.6",
+                    "lesson.c6.s13.7.7",
+                    "lesson.c6.s13.7.8",
+                    "lesson.c6.s13.7.9",
+                    "lesson.c6.s13.8",
+                    "lesson.c6.s13.9",
+                    "lesson.c6.s14.1",
+                    "lesson.c6.s14.2",
+                    "lesson.c6.s14.3.1",
+                    "lesson.c6.s14.3.2",
+                    "lesson.c6.s14.3.3",
+                    "lesson.c6.s14.4.1",
+                    "lesson.c6.s14.4.2",
+                    "lesson.c6.s14.4.3",
+                    "lesson.c6.s14.5",
+                    "lesson.c6.s14.6.1",
+                    "lesson.c6.s14.6.2",
+                    "lesson.c6.s14.7.1",
+                    "lesson.c6.s14.7.2",
+                    "lesson.c6.s14.7.3",
+                    "lesson.c6.s14.7.4",
+                    "lesson.c6.s14.7.5",
+                    "lesson.c6.s14.7.6",
+                    "lesson.c6.s14.7.7",
+                    "lesson.c6.s14.7.8",
+                    "lesson.c6.s14.7.9",
+                    "lesson.c6.s14.7.10",
+                    "lesson.c6.s14.7.11",
+                    "lesson.c6.s14.8.1",
+                    "lesson.c6.s14.8.2",
+                    "lesson.c6.s14.9",
+                    "lesson.c6.s14.10.1",
+                    "lesson.c6.s14.10.2",
+                    "lesson.c6.s14.11.1",
+                    "lesson.c6.s14.11.2",
+                    "lesson.c6.s14.11.3",
+                    "lesson.c6.s14.11.4",
+                    "lesson.c6.s14.11.5",
+                    "lesson.c6.s14.12",
+                    "lesson.c6.s14.13",
+                    "lesson.c6.s14.14",
+                    "lesson.c6.s14.15",
+                    "lesson.c6.s14.16",
+                    "lesson.c6.s15.1.1",
+                    "lesson.c6.s15.1.2",
+                    "lesson.c6.s15.1.3",
+                    "lesson.c6.s15.2.1",
+                    "lesson.c6.s15.2.2",
+                    "lesson.c6.s15.3.1",
+                    "lesson.c6.s15.3.2",
+                    "lesson.c6.s15.3.3",
+                    "lesson.c6.s15.3.4",
+                    "lesson.c6.s15.3.5",
+                    "lesson.c6.s15.3.6",
+                    "lesson.c6.s15.3.7",
+                    "lesson.c6.s15.3.8",
+                    "lesson.c6.s15.3.9",
+                    "lesson.c6.s15.4.1",
+                    "lesson.c6.s15.4.2",
+                    "lesson.c6.s15.5",
+                    "lesson.c6.s15.6",
+                    "lesson.c6.s15.7",
+                    "lesson.c6.s16.1",
+                    "lesson.c6.s16.2.1",
+                    "lesson.c6.s16.2.2",
+                    "lesson.c6.s16.3.1",
+                    "lesson.c6.s16.3.2",
+                    "lesson.c6.s16.3.3",
+                    "lesson.c6.s16.4",
+                    "lesson.c6.s16.5.1",
+                    "lesson.c6.s16.5.2",
+                    "lesson.c6.s16.6.1",
+                    "lesson.c6.s16.6.2",
+                    "lesson.c6.s16.6.3",
+                    "lesson.c6.s16.6.4",
+                    "lesson.c6.s16.6.5",
+                    "lesson.c6.s16.6.6",
+                    "lesson.c6.s16.6.7",
+                    "lesson.c6.s16.7",
+                    "lesson.c6.s16.8",
+                    "lesson.c6.s16.9.1",
+                    "lesson.c6.s16.9.2",
+                    "lesson.c6.s16.10.1",
+                    "lesson.c6.s16.10.2",
+                    "lesson.c6.s16.10.3",
+                    "lesson.c6.s16.11.1",
+                    "lesson.c6.s16.11.2",
+                    "lesson.c6.s16.12.1",
+                    "lesson.c6.s16.12.2",
+                    "lesson.c6.s16.13",
+                    "lesson.c6.s16.14",
+                    "lesson.c6.s16.15",
+                    "lesson.c6.s16.16",
+                    "lesson.c6.s17.1",
+                    "lesson.c6.s17.2.1",
+                    "lesson.c6.s17.2.2",
+                    "lesson.c6.s17.3.1",
+                    "lesson.c6.s17.3.2",
+                    "lesson.c6.s17.3.3",
+                    "lesson.c6.s17.3.4",
+                    "lesson.c6.s17.4.1",
+                    "lesson.c6.s17.4.2",
+                    "lesson.c6.s17.4.3",
+                    "lesson.c6.s17.4.4",
+                    "lesson.c6.s17.5",
+                    "lesson.c6.s17.6",
+                    "lesson.c6.s17.7.1",
+                    "lesson.c6.s17.7.2",
+                    "lesson.c6.s17.7.3",
+                    "lesson.c6.s17.7.4",
+                    "lesson.c6.s17.7.5",
+                    "lesson.c6.s17.8",
+                    "lesson.c6.s17.9",
+                    "lesson.c6.s17.10"
+                  ]
+                },
+                "version": {
+                  "const": "2.0.0"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "version"
+              ],
+              "properties": {
+                "id": {
+                  "enum": [
+                    "exercise.c6.s2.1",
+                    "exercise.c6.s3.2",
+                    "exercise.c6.s3.4.1",
+                    "exercise.c6.s3.4.2",
+                    "exercise.c6.s3.4.3",
+                    "exercise.c6.s3.4.6",
+                    "exercise.c6.s3.4.9",
+                    "exercise.c6.s4.2.1",
+                    "exercise.c6.s4.2.2",
+                    "exercise.c6.s4.2.3",
+                    "exercise.c6.s5.3.3",
+                    "exercise.c6.s5.3.4",
+                    "exercise.c6.s5.5.1",
+                    "exercise.c6.s6.5.1",
+                    "exercise.c6.s6.6",
+                    "exercise.c6.s6.8",
+                    "exercise.c6.s7.1",
+                    "exercise.c6.s7.5",
+                    "exercise.c6.s7.7.1",
+                    "exercise.c6.s8.1",
+                    "exercise.c6.s8.6.2",
+                    "exercise.c6.s9.1.3",
+                    "exercise.c6.s9.2.4",
+                    "exercise.c6.s9.3.1",
+                    "exercise.c6.s9.7.1",
+                    "exercise.c6.s9.7.3",
+                    "exercise.c6.s10.1.1",
+                    "exercise.c6.s10.1.3",
+                    "exercise.c6.s10.1.4",
+                    "exercise.c6.s10.4.1",
+                    "exercise.c6.s10.5",
+                    "exercise.c6.s11.5.1",
+                    "exercise.c6.s11.5.4",
+                    "exercise.c6.s11.5.5",
+                    "exercise.c6.s12.1.4",
+                    "exercise.c6.s12.1.6",
+                    "exercise.c6.s14.3.1",
+                    "exercise.c6.s14.3.2",
+                    "exercise.c6.s14.6.2",
+                    "exercise.c6.s14.11.4",
+                    "exercise.c6.s14.12",
+                    "exercise.c6.s15.3.1",
+                    "exercise.c6.s15.3.7",
+                    "exercise.c6.s16.2.1"
+                  ]
+                },
+                "version": {
+                  "const": "2.0.0"
+                }
+              }
+            }
+          ]
+        },
+        "packageRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "enum": [
+                "content.c.primer6"
+              ]
+            },
+            "version": {
+              "const": "2.0.0"
+            }
+          }
+        },
+        "learningRevision": {
+          "const": 1
+        },
+        "result": {
+          "enum": [
+            "started",
+            "confirmed",
+            "failed",
+            "passed",
+            "completed",
+            "achieved"
+          ]
+        },
+        "goalVersion": {
+          "$ref": "#/$defs/safePositiveInt"
+        },
+        "occurredAt": {
+          "$ref": "#/$defs/utcTime"
+        },
+        "localDate": {
+          "$ref": "#/$defs/localDate"
+        },
+        "resultCategory": {
+          "enum": [
+            "wrong-answer",
+            "teaching-goal-unmet",
+            "program-error",
+            "cancelled",
+            "resource-limit",
+            "infrastructure-failure"
+          ]
+        },
+        "failedCaseKey": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/caseKey"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "daily-goal.achieved"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "subjectRef": {
+                "$ref": "#/$defs/localGoalRef"
+              },
+              "packageRef": {
+                "type": "null"
+              },
+              "learningRevision": {
+                "type": "null"
+              },
+              "result": {
+                "const": "achieved"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "subjectRef": {
+                "$ref": "#/$defs/ref"
+              },
+              "packageRef": {
+                "$ref": "#/$defs/ref"
+              },
+              "learningRevision": {
+                "$ref": "#/$defs/safePositiveInt"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "lesson.started"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "started"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "enum": [
+                  "lesson.study-confirmed",
+                  "case.view-confirmed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "confirmed"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "exercise.passed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "passed"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "lesson.completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "const": "completed"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "eventType": {
+                "const": "exercise.attempt-evaluated"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "resultCategory",
+              "failedCaseKey"
+            ],
+            "properties": {
+              "result": {
+                "const": "failed"
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "resultCategory"
+                  ]
+                },
+                {
+                  "required": [
+                    "failedCaseKey"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

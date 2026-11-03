@@ -1,3 +1,7 @@
+import {
+  archivedMigrationSuccessor,
+  verifyCurrentResetAfterMigration,
+} from './migration-current-reset';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
 import { archive, openAnswer, submit } from './notebook-helpers';
@@ -27,6 +31,15 @@ test('15.2 actual25 DB3 genuine progress, rewards and history migrate intact int
   });
   expect(physicalBefore.version).toBe(3);
   expect(before.progress.some((r) => r.eventType === 'lesson.completed')).toBe(true);
+  test.info().annotations.push({
+    type: 'historical-intermediate-and-current-reset',
+    description:
+      'Original migration assertions run against existing .artifacts/15.3/legacy27-dist; then actual formal73 DB10 RESET and genuine fresh C6 learning are independently verified.',
+  });
+  const historicalSuccessor = await archivedMigrationSuccessor(
+    page,
+    '.artifacts/15.3/legacy27-dist',
+  );
   await mkdir('.artifacts/15.2', { recursive: true });
   await writeFile(`.artifacts/15.2/migration-switch-${label}`, 'actual successor switch\n', {
     flag: 'wx',
@@ -52,5 +65,22 @@ test('15.2 actual25 DB3 genuine progress, rewards and history migrate intact int
   await writeFile(
     `.artifacts/15.2/migration-${label}.json`,
     JSON.stringify({ actualPredecessor: true, physicalBefore, before, after }, null, 2),
+  );
+  await historicalSuccessor.dispose();
+  const currentReset = await verifyCurrentResetAfterMigration(page, after);
+  await writeFile(
+    `.artifacts/21.6/migration-${label}-notebook.json`,
+    JSON.stringify(
+      {
+        historicalIntermediate: {
+          directory: historicalSuccessor.directory,
+          files: historicalSuccessor.files,
+        },
+        currentReset,
+      },
+      null,
+      2,
+    ),
+    { flag: 'wx' },
   );
 });

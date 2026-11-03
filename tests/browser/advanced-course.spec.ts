@@ -15,24 +15,33 @@ const ready = async (page: Page, path = '/advanced') => {
   await waitForPhase2Archive(page);
   await expect(page.getByTestId('advanced-course')).toBeVisible();
 };
+const preparationLists = (page: Page) =>
+  page.locator('.advanced-lesson-list:has(a[href^="#/advanced/lesson.c."])');
+const preparationLinks = (page: Page) => preparationLists(page).getByRole('link');
 test('directory, honest completion boundary and unknown routes', async ({ page }) => {
   await ready(page);
-  await expect(page.locator('[data-advanced-chapter]')).toHaveCount(2);
-  await expect(page.locator('.advanced-chapters .advanced-lesson-list li')).toHaveCount(4);
-  await expect(page.locator('.advanced-rule')).toContainText('不计完成或积分');
-  await expect(page.locator('.advanced-next')).toContainText('逐项开放');
+  await expect(preparationLists(page)).toHaveCount(2);
+  await expect(preparationLists(page).locator('li')).toHaveCount(4);
+  await expect(preparationLists(page).locator('li p')).toHaveText(
+    Array(4).fill('基础准备尚未完成'),
+  );
+  await preparationLinks(page).first().click();
+  await expect(page.getByTestId('c6-foundation')).toContainText('基础准备尚未完成');
+  await expect(page.getByText('拓展阅读与算法观察不增加课程完成或积分。')).toBeVisible();
   await page.goto('/#/advanced/lesson.c.fake');
-  await expect(page.getByRole('heading', { name: '找不到这个进阶小节' })).toBeVisible();
-  await page.getByRole('link', { name: '返回进阶课程', exact: true }).click();
-  await expect(page.locator('.advanced-chapters .advanced-lesson-list li')).toHaveCount(4);
+  await expect(page.getByText('找不到这个进阶小节。')).toBeVisible();
+  await page.getByRole('link', { name: '返回目录', exact: true }).click();
+  await expect(preparationLists(page).locator('li')).toHaveCount(4);
 });
 for (const entry of course.lessons)
   test(`real C++ source and reversible trace: ${entry.caseRef.id}`, async ({ page }, info) => {
     await observeCaseSetExecution(page);
     await ready(page, `/advanced/${entry.lessonRef.id}`);
     await expect(page.getByRole('heading', { name: '复杂度为何如此', exact: true })).toBeVisible();
-    await page.locator('summary').click();
-    const source = await page.getByLabel('进阶案例C++源码').textContent();
+    await expect(
+      page.getByRole('heading', { name: 'C++ 案例完整源码', exact: true }),
+    ).toBeVisible();
+    const source = await page.locator('.sample-source').textContent();
     await page.locator('a.button', { hasText: '可视化' }).click();
     const workspace = page.getByTestId('sort-workspace');
     await expect(workspace).toHaveAttribute('data-state', 'idle');
@@ -78,17 +87,17 @@ for (const entry of course.lessons)
     await expect(workspace).toHaveAttribute('data-state', 'ready');
   });
 test('missing course bundle is honest and recoverable', async ({ page }) => {
-  const bundle = /\/content\/(?:course|review)\//;
+  const bundle = /\/content\/c\/primer6-teaching\/manifest-2\.0\.0\.json$/;
   await page.route(bundle, (route) =>
     route.fulfill({ status: 404, body: 'Explicit QA content fault' }),
   );
   await page.goto('/#/advanced');
-  await expect(page.getByTestId('course-fallback')).toBeVisible();
-  await expect(page.locator('.advanced-chapters .advanced-lesson-list a')).toHaveCount(0);
-  await expect(page.getByTestId('advanced-chapter-progress').first()).toContainText('不可确认');
+  await expect(page.getByRole('heading', { name: '课程暂时无法读取', exact: true })).toBeVisible();
+  await expect(preparationLinks(page)).toHaveCount(0);
+  await expect(page.getByTestId('c6-foundation')).toHaveCount(0);
   await page.unroute(bundle);
-  await page.getByRole('button', { name: '重试扩充课程', exact: true }).click();
-  await expect(page.locator('.advanced-chapters .advanced-lesson-list a')).toHaveCount(4);
+  await page.getByRole('button', { name: '重试读取', exact: true }).click();
+  await expect(preparationLinks(page)).toHaveCount(4);
 });
 for (const width of [1440, 768, 390])
   test(`course layout and keyboard entry at ${width}px`, async ({ page }, info) => {
@@ -98,9 +107,10 @@ for (const width of [1440, 768, 390])
       true,
     );
     await page.screenshot({ path: info.outputPath(`directory-${width}.png`), fullPage: true });
-    await page.locator('.advanced-chapters .advanced-lesson-list a').first().focus();
+    await preparationLinks(page).first().focus();
     await page.keyboard.press('Enter');
-    await expect(page.getByRole('heading', { name: '基础准备清单', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '基础准备与复习', exact: true })).toBeVisible();
+    await expect(page.getByTestId('c6-foundation').getByRole('link')).toHaveCount(2);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );

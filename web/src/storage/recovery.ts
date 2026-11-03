@@ -6,8 +6,10 @@ export type RecoveryErrorCode =
   'S_VERSION_UNKNOWN' | 'S_MIGRATION_UNSUPPORTED' | 'S_DATE_INVALID' | 'S_RECORD_INVALID';
 
 export interface RecoveryRead {
+  /** A recognized DB10 metadata envelope with unreadable C6 collection records. */
+  courseReadOnly?: boolean;
   snapshot: StorageSnapshot | null;
-  issues: { store: StoreName | 'layout'; count: number }[];
+  issues: { store: StoreName | 'layout' | 'course'; count: number }[];
   /** Opaque confirmation token. It and the raw records stay in private memory. */
   guard: string;
   canClear: boolean;
@@ -122,25 +124,58 @@ export function sameRecoveryValue(first: unknown, second: unknown): boolean {
   return same(first, second);
 }
 
-/** Any observed string version outside SAVE 1 is unknown, never clearable here. */
-export function hasUnknownRecoveryVersion(raw: RawStorageRows): boolean {
+/** Recovery selects one exact current version; historical admitted shapes stay legacy-only. */
+export function hasUnknownRecoveryVersion(
+  raw: RawStorageRows,
+  expectedSchemaVersion: '9.0.0' | '10.0.0' = SCHEMA_VERSION,
+): boolean {
   return raw.meta.values.some((value) => {
     if (value === null || typeof value !== 'object') return false;
     const descriptor = Object.getOwnPropertyDescriptor(value, 'schemaVersion');
+    if (
+      expectedSchemaVersion === '10.0.0' &&
+      descriptor &&
+      'value' in descriptor &&
+      descriptor.value === '10.0.0'
+    ) {
+      for (const [field, expectedId] of [
+        ['activePackageRef', 'content.c.primer6'],
+        ['activeCatalogSetRef', 'catalog-set.c.primer6'],
+      ] as const) {
+        const outer = Object.getOwnPropertyDescriptor(value, field);
+        if (!outer || !('value' in outer) || !outer.value || typeof outer.value !== 'object')
+          continue;
+        const id = Object.getOwnPropertyDescriptor(outer.value, 'id'),
+          version = Object.getOwnPropertyDescriptor(outer.value, 'version');
+        if (
+          id &&
+          'value' in id &&
+          typeof id.value === 'string' &&
+          version &&
+          'value' in version &&
+          typeof version.value === 'string' &&
+          (id.value !== expectedId || version.value !== '2.0.0')
+        )
+          return true;
+      }
+    }
     return (
       descriptor &&
       'value' in descriptor &&
       typeof descriptor.value === 'string' &&
-      descriptor.value !== SCHEMA_VERSION &&
-      descriptor.value !== '2.0.0' &&
-      descriptor.value !== '3.0.0' &&
-      descriptor.value !== '4.0.0' &&
-      descriptor.value !== '5.0.0'
+      descriptor.value !== expectedSchemaVersion &&
+      !(
+        expectedSchemaVersion === SCHEMA_VERSION &&
+        ['2.0.0', '3.0.0', '4.0.0', '5.0.0'].includes(descriptor.value)
+      )
     );
   });
 }
-export function unknownRecoveryVersionCode(raw: RawStorageRows): RecoveryErrorCode | null {
-  if (!hasUnknownRecoveryVersion(raw)) return null;
+export function unknownRecoveryVersionCode(
+  raw: RawStorageRows,
+  expectedSchemaVersion: '9.0.0' | '10.0.0' = SCHEMA_VERSION,
+): RecoveryErrorCode | null {
+  if (!hasUnknownRecoveryVersion(raw, expectedSchemaVersion)) return null;
   const legacyOnly = raw.meta.values.every((value) => {
     if (!value || typeof value !== 'object') return true;
     const descriptor = Object.getOwnPropertyDescriptor(value, 'schemaVersion');
@@ -148,7 +183,7 @@ export function unknownRecoveryVersionCode(raw: RawStorageRows): RecoveryErrorCo
       !descriptor ||
       !('value' in descriptor) ||
       typeof descriptor.value !== 'string' ||
-      descriptor.value === SCHEMA_VERSION ||
+      descriptor.value === expectedSchemaVersion ||
       descriptor.value === '0.9.0'
     );
   });
@@ -163,9 +198,10 @@ export function unknownRecoveryVersionCode(raw: RawStorageRows): RecoveryErrorCo
 export function inspectRecoveryRows(
   raw: RawStorageRows,
   compare: KeyCompare,
+  expectedSchemaVersion: '9.0.0' | '10.0.0' = SCHEMA_VERSION,
 ): Omit<RecoveryRead, 'guard'> {
   const issueCounts = new Map<StoreName | 'layout', number>();
-  let errorCode = unknownRecoveryVersionCode(raw);
+  let errorCode = unknownRecoveryVersionCode(raw, expectedSchemaVersion);
   const issue = (
     store: StoreName | 'layout',
     count = 1,
@@ -182,7 +218,8 @@ export function inspectRecoveryRows(
   const issues = () => [...issueCounts].map(([store, count]) => ({ store, count }));
   const metaRows = raw.meta;
   const clearableMeta =
-    !hasUnknownRecoveryVersion(raw) && sameRecoveryValue(metaRows, structuredClone(metaRows));
+    !hasUnknownRecoveryVersion(raw, expectedSchemaVersion) &&
+    sameRecoveryValue(metaRows, structuredClone(metaRows));
   const singleton = (name: 'meta' | 'settings' | 'avatar') => {
     const source = raw[name];
     if (
@@ -301,7 +338,7 @@ export function inspectRecoveryRows(
       raw.settings.keys.length === 1 &&
       raw.settings.keys[0] === 'current' &&
       raw.settings.values.length === 1 &&
-      !hasUnknownRecoveryVersion(raw),
+      !hasUnknownRecoveryVersion(raw, expectedSchemaVersion),
   });
   // A healthy archive needs one complete relation check. Row shapes and native
   // keys have already been checked above; damaged archives still use the exact

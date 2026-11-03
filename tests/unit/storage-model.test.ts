@@ -225,7 +225,7 @@ describe('closed storage validation', () => {
     it(`rejects frozen invalid snapshot ${scenario.id} with its dedicated code`, () => {
       const value: unknown = snapshot();
       if (scenario.path)
-        set(value, scenario.path, scenario.id === 'unknown-version' ? '10.0.0' : scenario.value);
+        set(value, scenario.path, scenario.id === 'unknown-version' ? '11.0.0' : scenario.value);
       else {
         const target = pointer(value, scenario.appendTo!);
         const source = pointer(value, scenario.copyFrom!);

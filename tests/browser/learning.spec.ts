@@ -135,8 +135,14 @@ test('production display and basic avatar settings survive refresh and closing/r
   );
   expect(await productionSnapshot(reopened)).toEqual(persisted);
   await reopened.getByRole('link', { name: '学习首页', exact: true }).first().click();
-  await expect(reopened.getByTestId('learning-posted-points')).toContainText('0');
-  await expect(reopened.getByTestId('learning-pending-rewards')).toContainText('0');
+  await reopened.getByRole('link', { name: '查看积分明细', exact: true }).click();
+  await expect(reopened.getByRole('heading', { name: '已入账 0 分', exact: true })).toBeVisible();
+  await expect(
+    reopened.getByRole('dialog').getByRole('heading', { name: '暂无积分记录', exact: true }),
+  ).toBeVisible();
+  const reopenedArchive = await productionSnapshot(reopened);
+  expect(reopenedArchive.ledger.filter((row) => row.status === 'posted')).toEqual([]);
+  expect(reopenedArchive.ledger.filter((row) => row.status === 'pending')).toEqual([]);
   await testInfo.attach('production-native-idb-settings-reopen', {
     body: JSON.stringify({
       evidenceKind: 'real production settings; no learning execution claimed',
@@ -257,14 +263,12 @@ test('passive course reading, finite practice options and case previews leave al
 }) => {
   await readySettings(page);
   const before = await productionSnapshot(page);
-  await page.goto('/#/lessons/lesson.c.variables-output');
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByRole('button', { name: '确认已学习', exact: true })).toBeEnabled();
-  await page.goto('/#/practice/exercise.c.echo');
-  await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
-  await expect(page.getByTestId('code-panel')).toBeVisible();
-  await expect(page.getByTestId('code-panel').locator('textarea')).not.toHaveValue('');
+  await page.goto('/#/lessons/lesson.c6.s2.1');
+  await expect(page.locator('.c6-teaching-reading')).toBeVisible();
+  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeEnabled();
+  await page.goto('/#/practice/exercise.c6.s2.1');
+  await expect(page.getByRole('button', { name: '判定全部四组', exact: true })).toBeEnabled();
+  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).not.toHaveValue('');
   await page.goto('/#/visualize/case.c.bubble-sort');
   await expect(page.getByTestId('content-sample')).toHaveAttribute(
     'data-content-scope',

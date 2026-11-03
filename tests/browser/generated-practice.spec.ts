@@ -1,7 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
-import { ready, openAnswer, code, panel, confirm, submit } from './notebook-helpers';
+import { ready, code, panel, observeCaseSetExecution } from './notebook-helpers';
+import { openIndependentRepair as openAnswer } from './current-course-helpers';
+import { observedCaseSetExecute } from './case-set-observation';
 declare global {
   interface Window {
     practiceQA: { requests: unknown[]; responses: unknown[]; timings: number[] };
@@ -262,13 +264,13 @@ test('19.2 candidate responsive widths and representative minimal theme keep con
 test('19.2 formal empty evidence and whole keyed DB stay unchanged by transient practice', async ({
   page,
 }) => {
-  await page.goto('/#/courses');
+  await page.goto('/#/');
   await ready(page);
   await open(page);
   await expect(page.getByTestId('generated-recommendation')).toHaveAttribute('data-state', 'ready');
   await expect(page.getByTestId('generated-recommendation')).toContainText('暂无待复习');
   const before = await stores(page);
-  expect(before).toHaveLength(17);
+  expect(before).toHaveLength(19);
   await gen(page);
   await reference(page);
   await page.getByRole('button', { name: '提交全部输入', exact: true }).click();
@@ -284,37 +286,50 @@ test('19.2 formal empty evidence and whole keyed DB stay unchanged by transient 
 test('19.2 formal confirmed manual evidence recommends only supported exact knowledge and preserves original links', async ({
   page,
 }) => {
-  await page.goto('/#/lessons/lesson.c.variables-output');
+  await page.goto('/#/lessons/lesson.c6.s2.2.2');
   await ready(page);
   await expect(page.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
-  await page.locator('[data-knowledge-mark="knowledge.c.variables"]').click();
+  await page.locator('[data-knowledge-mark="knowledge.c6.s2.2.2"]').click();
   await expect(page.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
   await open(page);
   await expect(page.getByTestId('generated-recommendation')).toContainText('手动自评');
+  const before = await stores(page);
   await page.getByRole('button', { name: '采用此知识建议' }).click();
   await expect(page.getByLabel('知识', { exact: true })).toHaveValue('knowledge.c.variables');
   await expect(page.getByRole('link', { name: /原课程：/ })).toHaveAttribute(
     'href',
-    '#/lessons/lesson.c.variables-output',
+    '#/lessons/lesson.c6.s2.2.2',
+  );
+  await page.getByLabel('知识', { exact: true }).selectOption('knowledge.c.conditions');
+  await expect(page.getByRole('link', { name: /原课程：/ })).toHaveAttribute(
+    'href',
+    '#/lessons/lesson.c6.s7.1',
+  );
+  await page.getByRole('button', { name: '采用此知识建议' }).click();
+  await expect(page.getByRole('link', { name: /原课程：/ })).toHaveAttribute(
+    'href',
+    '#/lessons/lesson.c6.s2.2.2',
   );
   await gen(page, 'knowledge.c.variables');
   const qa = await page.evaluate(() => window.practiceQA);
   expect(qa.requests).toHaveLength(1);
   expect(Object.keys(qa.requests[0] as object)).toHaveLength(6);
   await capture(page, 'manual-minimal-payload');
+  await page.getByRole('link', { name: /原课程：/ }).click();
+  await expect(page).toHaveURL(/#\/lessons\/lesson\.c6\.s2\.2\.2$/);
+  await expect(page.locator('.c6-reading-page')).toBeVisible();
+  expect(await stores(page)).toEqual(before);
+  await open(page);
   await page.getByRole('link', { name: '核对学习依据 →' }).click();
   await expect(page.getByRole('link', { name: '生成一道同类加练题 →' })).toBeVisible();
 });
 test('19.2 formal actual exercise failure supplies explainable recommendation without sending history', async ({
   page,
 }) => {
-  await page.goto('/#/courses');
+  await observeCaseSetExecution(page);
+  await page.goto('/#/');
   await ready(page);
-  await confirm(page, 'lesson.c.variables-output');
-  await confirm(page, 'lesson.c.expressions');
-  await openAnswer(page, 'exercise.c.two-x-plus-three');
-  await submit(page);
-  await openAnswer(page, 'exercise.c.echo');
+  await openAnswer(page, 'exercise.c.bug-parenthesis');
   const source = await code(page).inputValue();
   await code(page).fill(source.replace(/printf\([^;]+;/, 'printf("%d\\n", x + 1);'));
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
@@ -323,6 +338,13 @@ test('19.2 formal actual exercise failure supplies explainable recommendation wi
   await expect(page.getByTestId('practice-attempt-save')).toHaveAttribute(
     'data-save-state',
     'saved',
+  );
+  const actual = await observedCaseSetExecute(page);
+  expect(actual.moduleSeen && actual.responseOk && actual.terminated).toBe(true);
+  await writeFile(
+    `${folder}/real-failure-current-source.json.gz`,
+    gzipSync(JSON.stringify(actual)),
+    { flag: 'wx' },
   );
   await open(page);
   await expect(page.getByTestId('generated-recommendation')).toContainText('真实练习错误');
@@ -334,10 +356,10 @@ test('19.2 formal actual exercise failure supplies explainable recommendation wi
 test('19.2 formal unsupported marked knowledge has honest original-course fallback', async ({
   page,
 }) => {
-  await page.goto('/#/lessons/lesson.c.array-initialization');
+  await page.goto('/#/lessons/lesson.c6.s10.1.1');
   await ready(page);
   await expect(page.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
-  await page.locator('[data-knowledge-mark="knowledge.c.arrays"]').click();
+  await page.locator('[data-knowledge-mark="knowledge.c6.s10.1.1"]').click();
   await expect(page.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
   await open(page);
   await expect(page.getByTestId('generated-recommendation')).toContainText('尚未提供的题型');

@@ -19,6 +19,42 @@ import {
 
 const bytes = (value: unknown) => new TextEncoder().encode(canonicalMemoryJson(value)).buffer;
 const decode = (value: unknown) => decodeMemoryResult(bytes(value), request, 'f'.repeat(64));
+
+test('private full validation preserves every supplied pointer record and checkpoint', async () => {
+  const original = pointerFixture();
+  const result = await decodeMemoryResult(bytes(original), pointerRequest, 'f'.repeat(64));
+  expect(result).toEqual(original);
+});
+
+test('public inverse record projection keeps nested pointers isolated from the trace and earlier state', () => {
+  const value = pointerFixture();
+  const trace = value.trace!;
+  const state = trace.steps
+    .slice(0, 4)
+    .reduce((state, step) => projectMemoryStep(state, step, value.types), trace.initialState);
+  const released = projectMemoryStep(state, trace.steps[4], value.types);
+  const previous = structuredClone(released);
+  const source = structuredClone(value);
+  const next = projectMemoryStep(released, trace.steps[4], value.types, true);
+  next.objects[1].name = 'consumer edit';
+  (next.objects[1].cells[0].value as MemoryPointer).byteOffset = 1;
+  expect(released).toEqual(previous);
+  expect(value).toEqual(source);
+});
+
+test('public cell projection keeps a consumer pointer edit out of the recorded delta', () => {
+  const value = pointerFixture();
+  const trace = value.trace!;
+  const state = trace.steps
+    .slice(0, 2)
+    .reduce((state, step) => projectMemoryStep(state, step, value.types), trace.initialState);
+  const previous = structuredClone(state);
+  const source = structuredClone(value);
+  const next = projectMemoryStep(state, trace.steps[2], value.types);
+  (next.objects[1].cells[0].value as MemoryPointer).upperBound = 0;
+  expect(state).toEqual(previous);
+  expect(value).toEqual(source);
+});
 test('closed branch accepts canonical synthetic deltas and restores returned objects', async () => {
   const value = await decode(fixture());
   const player = new MemoryPlayer();

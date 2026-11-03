@@ -17,6 +17,7 @@ import {
 import { MemoryBugSession } from './session';
 import '../memory/memory.css';
 import './memory-bugs.css';
+import { c6IndependentSupplement } from '../c6-learning/supplements';
 const checkLabels: Record<string, string> = {
   'exit-zero': '正常结束并返回0',
   'stdout-exact': '输出逐字正确',
@@ -26,7 +27,7 @@ const checkLabels: Record<string, string> = {
 
 export function MemoryBugCatalog() {
   const { state } = useLearning();
-  const available = !!currentCourseBundle()?.memoryBugSupplement;
+  const available = !!c6IndependentSupplement() || !!currentCourseBundle()?.memoryBugSupplement;
   return (
     <>
       {(['pointer', 'loop'] as const).map((category) => (
@@ -125,7 +126,7 @@ function MemoryBugWorkspace({ question }: { question: MemoryBugQuestion }) {
     [view, result],
   );
   const busy = state.phase === 'running',
-    available = !!currentCourseBundle()?.memoryBugSupplement;
+    available = !!c6IndependentSupplement() || !!currentCourseBundle()?.memoryBugSupplement;
   const atEnd = !!result && view.cursor === view.length;
   const code = result?.terminal.code;
   const chosen = history.items.find((r) => r.entryId === selected) ?? history.items[0];

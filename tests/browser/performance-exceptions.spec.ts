@@ -4,6 +4,7 @@ import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type {} from './harness/execution';
 import { observeExceptionMetadata } from './performance-exception-observer';
 import { waitForPhase2Archive } from './phase2-ready';
+import { openIndependentEchoRepair } from './current-course-helpers';
 
 const wasmPattern = /\/assets\/c_viz_wasm_bg-[^/]+\.wasm$/;
 
@@ -402,7 +403,7 @@ test('a failed inner Blockly lazy module reaches the page boundary and an explic
     failedRequests.push(route.request().url());
     await route.fulfill({ status: 404, contentType: 'text/javascript', body: 'missing' });
   });
-  await page.goto('/#/practice/exercise.c.echo');
+  await openIndependentEchoRepair(page);
   await waitForPhase2Archive(page);
   await page
     .getByTestId('block-workspace-preference')
@@ -416,6 +417,7 @@ test('a failed inner Blockly lazy module reaches the page boundary and an explic
   await expect(page.getByRole('region', { name: '积木工作区', exact: true })).toHaveCount(0);
   await page.unroute(blockPattern);
   await page.getByRole('button', { name: '重新加载', exact: true }).click();
+  await openIndependentEchoRepair(page);
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
   await expect(page.getByRole('region', { name: '积木工作区', exact: true })).toBeVisible();
   await expect(page.getByRole('alert')).toHaveCount(0);

@@ -4,10 +4,16 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './browser',
   testMatch: '**/*.spec.ts',
-  // Independent interpreter/migration harnesses use their own runners on 4181 / 4182 / 4188.
+  // Independent interpreters, migrations, C6 repositories and shaped performance
+  // each require their own runner/origin; they remain mandatory separate checks.
   testIgnore: [
     '**/phase2-performance.spec.ts',
+    '**/phase3-performance.spec.ts',
     '**/advanced-engine.spec.ts',
+    '**/c6-engine.spec.ts',
+    '**/c6-content.spec.ts',
+    '**/c6-teaching.spec.ts',
+    '**/c6-reset.spec.ts',
     '**/algorithm-engine.spec.ts',
     '**/memory-engine.spec.ts',
     '**/notebook-migration.spec.ts',

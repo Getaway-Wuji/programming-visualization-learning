@@ -14,10 +14,10 @@ import {
   arm,
   clear,
   sameLearning,
-  openAnswer,
-  submit,
   observeCaseSetExecution,
 } from './achievement-helpers';
+import { openCurrentAnswer, submitCurrent } from './current-course-helpers';
+
 test.use({ timezoneId: 'Asia/Shanghai' });
 test.beforeAll(() => mkdir(folder, { recursive: true }));
 test('15.4 common empty or unreviewed achievements stay honest without learning facts', async ({
@@ -55,31 +55,30 @@ test('15.4 common three widths expose fixed conditions and next actions', async 
     await page.screenshot({ path: `${folder}/empty-${width}.png`, fullPage: true });
   }
 });
-test('15.4 formal genuine bubble pass unlocks once, refresh and repeat preserve original evidence and rewards', async ({
+test('15.4 current genuine array-initialization pass unlocks once, refresh and repeat preserve original evidence and rewards', async ({
   page,
 }) => {
   await observeCaseSetExecution(page);
-  await openAnswer(page, 'exercise.c.bubble-sort');
-  await submit(page);
+  await openCurrentAnswer(page, 'exercise.c6.s10.1.1');
+  await submitCurrent(page);
   await achievementReady(page);
-  await capture(page, 'bubble-actual-pass');
+  await capture(page, 'current-array-actual-pass');
   await badges(page);
-  await expect(page.locator('[data-badge-id="badge.c.bubble-pass"]')).toHaveAttribute(
-    'data-unlocked',
-    'true',
-  );
+  await expect(
+    page.locator('[data-badge-id="badge.c6.array-initialization-pass"]'),
+  ).toHaveAttribute('data-unlocked', 'true');
   const before = await native(page);
   expect(before.achievements).toHaveLength(1);
   expect(before.achievements[0].evidence[0].eventId).toBe(
     before.receipts.find(
-      (r) => r.eventType === 'exercise.passed' && r.subjectRef.id === 'exercise.c.bubble-sort',
+      (r) => r.eventType === 'exercise.passed' && r.subjectRef.id === 'exercise.c6.s10.1.1',
     )?.eventId,
   );
   await page.reload();
   await achievementReady(page);
   expect((await native(page)).achievements).toEqual(before.achievements);
-  await openAnswer(page, 'exercise.c.bubble-sort');
-  await submit(page);
+  await openCurrentAnswer(page, 'exercise.c6.s10.1.1');
+  await submitCurrent(page);
   await achievementReady(page);
   const after = await native(page);
   expect(after.achievements).toEqual(before.achievements);
@@ -118,9 +117,9 @@ test('15.4 formal two complete visible recursion observations require explicit c
   test.setTimeout(150000);
   await observeCaseSetExecution(page);
   await badges(page);
-  await openAnswer(page, 'exercise.c.bubble-sort');
-  await submit(page);
-  await capture(page, 'all-three-bubble');
+  await openCurrentAnswer(page, 'exercise.c6.s10.1.1');
+  await submitCurrent(page);
+  await capture(page, 'all-three-current-array');
   await pointerPass(page, 0);
   await capture(page, 'all-three-pointer-one');
   await pointerPass(page, 1);
@@ -223,8 +222,8 @@ test('15.4 formal automatic badge quota cannot erase a saved practice pass', asy
   await quota(page);
   await badges(page);
   await arm(page);
-  await openAnswer(page, 'exercise.c.bubble-sort');
-  await submit(page);
+  await openCurrentAnswer(page, 'exercise.c6.s10.1.1');
+  await submitCurrent(page);
   await expect(page.locator('.app-shell')).toHaveAttribute(
     'data-achievement-storage-status',
     'failed',
@@ -233,7 +232,7 @@ test('15.4 formal automatic badge quota cannot erase a saved practice pass', asy
   expect(before.achievements).toEqual([]);
   expect(
     before.receipts.some(
-      (r) => r.eventType === 'exercise.passed' && r.subjectRef.id === 'exercise.c.bubble-sort',
+      (r) => r.eventType === 'exercise.passed' && r.subjectRef.id === 'exercise.c6.s10.1.1',
     ),
   ).toBe(true);
   await page.goto('/#/achievements');

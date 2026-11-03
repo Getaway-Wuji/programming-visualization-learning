@@ -6,6 +6,8 @@ import { StorageError, storageError } from './errors';
 import {
   assertAchievement,
   mergeAchievements,
+  achievementCatalog,
+  c6AchievementCatalog,
   type Achievement,
   type AchievementEvidence,
 } from '../achievements/model';
@@ -18,6 +20,7 @@ export async function achievementsTransaction(
   derive: AchievementSourceReader,
   observation?: AchievementEvidence,
 ) {
+  const catalog = db.version === 10 ? c6AchievementCatalog : achievementCatalog;
   try {
     const checkMeta = (v: unknown): Meta => {
       assertRecord('meta', v);
@@ -61,7 +64,7 @@ export async function achievementsTransaction(
               if (observation.kind !== 'observation') throw new StorageError('S_RECORD_INVALID');
               sources.push(observation);
             }
-            const rows = mergeAchievements(previous, sources, context.generation);
+            const rows = mergeAchievements(previous, sources, context.generation, catalog);
             let changed = false;
             for (const r of rows)
               if (
@@ -85,7 +88,11 @@ export async function achievementsTransaction(
           tx,
           (raw) => {
             try {
-              const r = inspectRecoveryRows(raw, (a, b) => factory.cmp(a, b));
+              const r = inspectRecoveryRows(
+                raw,
+                (a, b) => factory.cmp(a, b),
+                db.version === 10 ? '10.0.0' : '9.0.0',
+              );
               if (!r.writable || !r.snapshot)
                 throw new StorageError(r.errorCode ?? 'S_RECORD_INVALID');
               snapshot = r.snapshot;
@@ -105,7 +112,7 @@ export async function achievementsTransaction(
               return;
             }
             const v = c.value;
-            assertAchievement(v);
+            assertAchievement(v, catalog);
             if (
               v.generation !== context.generation ||
               factory.cmp(c.primaryKey, [context.generation, v.badgeRef.id]) !== 0

@@ -487,6 +487,15 @@ export function projectAlgorithmStep(
   step: AlgorithmStep,
   backward = false,
 ): AlgorithmState {
+  return projectStep(state, step, backward);
+}
+
+function projectStep(
+  state: AlgorithmState,
+  step: AlgorithmStep,
+  backward = false,
+  reuseParsed = false,
+): AlgorithmState {
   // Copy only touched records. Earlier states and checkpoint records remain
   // immutable; a deep copy of the whole live stack per delta is unnecessary.
   const next: AlgorithmState = {
@@ -507,9 +516,10 @@ export function projectAlgorithmStep(
             ? !table.some((item) => item.id === change.id)
             : equal(table[change.index], before)),
       );
-      if (before === null) table.splice(change.index, 0, structuredClone(after!));
+      if (before === null)
+        table.splice(change.index, 0, reuseParsed ? after! : structuredClone(after!));
       else if (after === null) table.splice(change.index, 1);
-      else table[change.index] = structuredClone(after);
+      else table[change.index] = reuseParsed ? after : structuredClone(after);
     } else if (change.op === 'cell') {
       const position = next.objects.findIndex((item) => item.id === change.objectId);
       algorithmAssert(position >= 0);
@@ -538,7 +548,7 @@ export function projectAlgorithmStep(
       const before = backward ? change.after : change.before;
       const after = backward ? change.before : change.after;
       algorithmAssert(equal(next[change.op], before));
-      Object.assign(next, { [change.op]: structuredClone(after) });
+      Object.assign(next, { [change.op]: reuseParsed ? after : structuredClone(after) });
     }
   }
   return next;
@@ -785,7 +795,7 @@ export async function decodeAlgorithmResult(
           Array.isArray(step.changes),
       );
       for (const change of step.changes) validateChange(change, nodes, request.input.length);
-      const next = projectAlgorithmStep(state, step);
+      const next = projectStep(state, step, false, true);
       validateState(next, nodes, request.input.length);
       const count = next.frames.length - state.frames.length;
       algorithmAssert(
@@ -804,7 +814,7 @@ export async function decodeAlgorithmResult(
       for (const key of ['comparisons', 'scalarWrites', 'arrayWrites', 'swaps'] as const)
         algorithmAssert(next.counters[key] >= state.counters[key]);
       algorithmAssert(next.control.inputCursor >= state.control.inputCursor);
-      algorithmAssert(equal(projectAlgorithmStep(next, step, true), state));
+      algorithmAssert(equal(projectStep(next, step, true, true), state));
       state = next;
     }
     if (result.terminal.status === 'completed')

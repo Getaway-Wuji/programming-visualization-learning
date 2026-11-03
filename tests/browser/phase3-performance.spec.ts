@@ -82,7 +82,7 @@ test('P2 current entry pages and maximum supported interactive workloads keep qu
   mkdirSync(output, { recursive: true });
   const report: any = {
     task: '20.4',
-    registration: '1.0.68',
+    registration: '1.0.79',
     method:
       '11.4 shared aggregate 20/5Mbps, 40ms RTT, Brotli HTTPS; trusted click to full accepted result plus two animation frames',
     navigation: [],

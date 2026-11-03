@@ -1,4 +1,4 @@
-import { learnBlockPrerequisites } from './learn-block-prerequisites';
+import { openIndependentRepair } from './current-course-helpers';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
@@ -6,36 +6,20 @@ import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol
 import {
   blockOptions,
   blockWorkspace,
-  correctStarter,
   selectBlock,
   openBlockKeyboardEditor,
   showPracticeBlocks,
 } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
-test.beforeEach(async ({ page }, info) => {
-  if (/native flyout drag creates|type rejection|a new arithmetic/.test(info.title)) {
-    test.setTimeout(Math.max(info.timeout, 90000));
-    await learnBlockPrerequisites(page);
-  }
-});
-
 const panel = (page: Page) => page.getByTestId('practice-execution');
 const submit = (page: Page) => panel(page).getByRole('button', { name: '提交练习', exact: true });
-const echo = 'exercise.c.echo';
-async function open(page: Page) {
-  await page.goto(`/#/practice/${echo}`);
-  await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+async function open(page: Page, id = 'exercise.c.bug-semicolon') {
+  await openIndependentRepair(page, id);
   await showPracticeBlocks(page);
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   await openBlockKeyboardEditor(page);
 }
-test.beforeEach(async ({ page }) => {
-  // The 10.1/10.3 integration gate cannot grant learning-write authority.
-  await page.route('**/content/learning/course-learning-*.json', (route) =>
-    route.fulfill({ status: 503, contentType: 'application/json', body: '{}' }),
-  );
-});
 async function allIds(page: Page) {
   return blockOptions(page, /./);
 }
@@ -177,7 +161,6 @@ test('the actual toolbox exposes all twenty supported kinds and the generated C 
   ).toHaveCount(20);
   await expect(panel(page).getByRole('button', { name: /导入|解析源码|反推/ })).toHaveCount(0);
   await expect(panel(page).locator('input[type="file"], [contenteditable="true"]')).toHaveCount(0);
-  await correctStarter(page, echo);
   await prepare(page);
   await expect(
     page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
@@ -199,20 +182,19 @@ test('native flyout drag creates a new block, keyboard controls nest native-id b
   await observeCaseSetExecution(page);
   const urls: string[] = [];
   page.on('request', (request) => urls.push(request.url()));
-  await open(page);
-  await correctStarter(page, echo);
+  await open(page, 'exercise.c.bug-zero-branch');
   // The current reverse-parsed correction contains an explicit final return.
   // Remove it through the editor before inserting a new statement stack there.
   for (const id of await blockOptions(page, /^\d+\. 返回$/)) await remove(page, id);
-  const print = await unique(page, /^\d+\. 输出 ·/);
+  const existingIf = await unique(page, /^\d+\. 条件分支$/);
   const before = new Set(await allIds(page));
-  await blockWorkspace(page).getByRole('treeitem', { name: '程序与作用域', exact: true }).click();
+  await blockWorkspace(page).getByRole('treeitem', { name: '条件与循环', exact: true }).click();
   await expect(
     blockWorkspace(page).locator('.blocklyFlyout .blocklyBlockCanvas > .blocklyDraggable'),
-  ).toHaveCount(3);
+  ).toHaveCount(5);
   const scopeBlock = blockWorkspace(page)
     .locator('.blocklyFlyout .blocklyBlockCanvas > .blocklyDraggable')
-    .nth(1);
+    .nth(0);
   await scopeBlock.scrollIntoViewIfNeeded();
   const start = await scopeBlock.boundingBox();
   const canvas = await blockWorkspace(page).locator('.block-canvas').boundingBox();
@@ -230,7 +212,7 @@ test('native flyout drag creates a new block, keyboard controls nest native-id b
   const scope = (await allIds(page)).find((id) => !before.has(id))!;
   await expect(page.getByTestId('block-issues')).toContainText('还未连接');
   const selected = blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true });
-  await connect(page, scope, print, '$next');
+  await connect(page, scope, existingIf, '$next');
   await expect(blockWorkspace(page).locator('.block-notice')).toHaveText('积木已连接。');
   await expect(selected).toHaveValue(scope);
   await selected.selectOption('');
@@ -242,23 +224,26 @@ test('native flyout drag creates a new block, keyboard controls nest native-id b
     blockWorkspace(page).getByRole('combobox', { name: '连接到积木', exact: true }),
   ).toBeDisabled();
   const returned = await add(page, 'return');
-  await connect(page, returned, scope, 'BODY');
+  await connect(page, returned, scope, 'THEN');
   await expect(blockWorkspace(page).locator('.block-notice')).toHaveText('积木已连接。');
   await expect(selected).toHaveValue(returned);
   const number = await add(page, 'integer');
   await connect(page, number, returned, 'VALUE');
   await expect(blockWorkspace(page).locator('.block-notice')).toHaveText('积木已连接。');
   await expect(selected).toHaveValue(number);
+  const condition = await add(page, 'integer');
+  await blockWorkspace(page).getByRole('textbox', { name: '整数值', exact: true }).fill('1');
+  await connect(page, condition, scope, 'CONDITION');
   await expect(page.getByTestId('block-issues')).toHaveCount(0);
   await prepare(page);
   await submit(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'passed');
-  const run = await capture(page, info, 'native-drag-nested', [scope, returned, number]);
+  const run = await capture(page, info, 'native-drag-nested', [scope, returned, number, condition]);
   expect(run.result.terminal.status).toBe('completed');
   expect(run.result.judgeResult?.status).toBe('met');
-  expect(run.request.source.text).toMatch(/\{\n\s+return 0;\n\s+\}/);
-  expect(await executeCount(page)).toBe(3);
-  for (const url of urls) expect(new URL(url).origin).toBe('http://127.0.0.1:4178');
+  expect(run.request.source.text).toMatch(/if \(1\) \{\n\s+return 0;\n\s+\}/);
+  expect(await executeCount(page)).toBe(4);
+  for (const url of urls) expect(new URL(url).origin).toBe(new URL(page.url()).origin);
   const controls = page.getByTestId('player-controls');
   await controls.getByRole('button', { name: '前进', exact: true }).click();
   const cursor = await controls.getAttribute('data-cursor');
@@ -267,7 +252,7 @@ test('native flyout drag creates a new block, keyboard controls nest native-id b
   await expect(controls).toHaveAttribute('data-cursor', cursor!);
   await page.getByRole('link', { name: '返回练习工作区', exact: true }).click();
   await expect.poll(async () => (await allIds(page)).includes(scope)).toBe(true);
-  expect(await executeCount(page)).toBe(3);
+  expect(await executeCount(page)).toBe(4);
   await remove(page, scope);
   await expect(page.getByTestId('practice-stdout')).toHaveCount(0);
   await expect(page.getByTestId('source-step-highlight')).toHaveCount(0);
@@ -278,21 +263,20 @@ test('type rejection, missing-slot drafts and deleted input sources visibly refu
   page,
 }, info) => {
   await observeCaseSetExecution(page);
-  await open(page);
-  await correctStarter(page, echo);
+  await open(page, 'exercise.c.bug-zero-branch');
   for (const id of await blockOptions(page, /^\d+\. 返回$/)) await remove(page, id);
-  const print = await unique(page, /^\d+\. 输出 ·/);
+  const existingIf = await unique(page, /^\d+\. 条件分支$/);
   const input = await unique(page, /^\d+\. 声明整数 · x$/);
-  const scope = await add(page, 'scope');
-  await connect(page, scope, print, '$next');
+  const scope = await add(page, 'if');
+  await connect(page, scope, existingIf, '$next');
   const integer = await add(page, 'integer');
-  await connect(page, integer, scope, 'BODY');
+  await connect(page, integer, scope, 'THEN');
   await expect(blockWorkspace(page).locator('.block-notice')).toContainText('不能这样连接');
   await expect(page.getByTestId('block-issues')).toContainText('还未连接');
   await expect(submit(page)).toBeDisabled();
   await remove(page, integer);
   const returned = await add(page, 'return');
-  await connect(page, returned, scope, 'BODY');
+  await connect(page, returned, scope, 'THEN');
   await expect(page.getByTestId('block-issues')).toContainText('表达式槽');
   await expect(submit(page)).toBeDisabled();
   await panel(page).getByRole('link', { name: '查看本次复盘', exact: true }).click();
@@ -326,8 +310,12 @@ test('a new arithmetic block produces a real located Rust diagnostic and an edit
   page,
 }, info) => {
   await observeCaseSetExecution(page);
-  await open(page);
-  await correctStarter(page, echo);
+  await openIndependentRepair(page, 'exercise.c.bug-parenthesis');
+  const editor = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+  await editor.fill((await editor.inputValue()).replace(/printf\([^;]+;/, 'printf("%d\\n", x);'));
+  await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
+  await showPracticeBlocks(page);
+  await openBlockKeyboardEditor(page);
   const print = await unique(page, /^\d+\. 输出 ·/);
   const originalRead = await unique(page, /^\d+\. 读取变量 · x$/);
   await selectBlock(page, originalRead);

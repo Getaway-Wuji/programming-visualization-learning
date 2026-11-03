@@ -10,6 +10,7 @@ import { advancedCourse, advancedChapterProgress, availableAdvancedLesson } from
 import './advanced-course.css';
 import { ExampleCatalog } from '../examples/ExampleCatalog';
 import { AdvancedAlgorithmCatalog } from '../advanced-algorithms/AdvancedAlgorithmCatalog';
+import { C6AdvancedPage } from '../c6-learning/AdvancedPage';
 
 export default function AdvancedCoursePage() {
   const { lessonId } = useParams();
@@ -17,6 +18,7 @@ export default function AdvancedCoursePage() {
   const entry = advancedCourse.lessons.find((item) => item.lessonRef.id === lessonId);
   const resolved = entry ? availableAdvancedLesson(entry, state.reading) : null;
   const details = entry ? lessonCompletionDetails(state, entry.lessonRef.id) : null;
+  if (state.c6) return <C6AdvancedPage lessonId={lessonId} />;
   if (lessonId && !entry)
     return <MissingPage title="找不到这个进阶小节" backTo="/advanced" backLabel="返回进阶课程" />;
   return (

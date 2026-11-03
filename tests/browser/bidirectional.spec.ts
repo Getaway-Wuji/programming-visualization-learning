@@ -1,6 +1,7 @@
-import { learnBlockPrerequisites } from './learn-block-prerequisites';
+import { currentEditorRegression } from './current-editor-regression';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { gzipSync } from 'node:zlib';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
@@ -16,20 +17,17 @@ import {
 import { initSync, prepare_input } from '../../web/src/generated/c_viz_wasm';
 import { blockOptions, blockWorkspace, selectBlock } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
-
-test.beforeEach(async ({ page }, info) => {
-  if (/a single code-origin|native block selection and code pointer/.test(info.title)) {
-    test.setTimeout(Math.max(info.timeout, 90000));
-    await learnBlockPrerequisites(page);
-  }
-});
+import { decodeC6Response, type C6Request } from '../../web/src/engine/c6-protocol';
+import { engineBuild as c6Build } from '../../web/src/generated/c6-teaching/engine-build';
 
 const content = JSON.parse(
-  readFileSync('web/public/content/practice/course-practice-1.0.0.json', 'utf8'),
-) as CoursePractice;
+  readFileSync('content/c/primer6-learning/supplements-1.0.0.json', 'utf8'),
+).practice as CoursePractice;
+const bugQuestions = JSON.parse(readFileSync('content/c/bugs/questions-1.0.0.json', 'utf8'))
+  .questions as { exerciseRef: { id: string }; baseExerciseRef: { id: string } }[];
 const encoder = new TextEncoder();
 const decoder = new TextDecoder('utf-8', { fatal: true });
-const echo = 'exercise.c.echo';
+const echo = 'exercise.c.bug-semicolon';
 const panel = (page: Page) => page.getByTestId('practice-execution');
 const editor = (page: Page) => page.getByTestId('draft-code-editor');
 const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
@@ -39,7 +37,7 @@ const submit = (page: Page) => action(page, '提交练习');
 test.beforeAll(() => initSync({ module: readFileSync('web/src/generated/c_viz_wasm_bg.wasm') }));
 test.beforeEach(async ({ page }) => observeCaseSetExecution(page));
 test.afterEach(async ({ page }, info) => {
-  if (info.status !== info.expectedStatus)
+  if (info.status !== info.expectedStatus && (await panel(page).count()))
     await capture(
       page,
       info,
@@ -68,7 +66,10 @@ function prepared(id: string) {
 function answer(id: string) {
   const { catalog, source } = prepared(id);
   return generateBlockSource(
-    correctBlockProgram(id, catalog.program.bindings),
+    correctBlockProgram(
+      bugQuestions.find((q) => q.exerciseRef.id === id)!.baseExerciseRef.id,
+      catalog.program.bindings,
+    ),
     source,
     catalog.program.bindings,
   ).text;
@@ -90,8 +91,8 @@ async function open(page: Page, id = echo) {
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   if (await action(page, '编辑 C 并同步积木').isVisible())
     await action(page, '编辑 C 并同步积木').click();
-  await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
   await expect(code(page)).toBeEditable();
+  await fillSynced(page, answer(id));
 }
 async function fillSynced(page: Page, text: string) {
   await code(page).fill(text);
@@ -199,8 +200,10 @@ async function capture(page: Page, info: TestInfo, label: string) {
     label,
     browser: info.project.name,
     phase: await panel(page).getAttribute('data-state'),
-    sync: await editor(page).getAttribute('data-sync'),
-    source: await code(page).inputValue(),
+    sync: (await editor(page).count()) ? await editor(page).getAttribute('data-sync') : null,
+    source: (await code(page).count())
+      ? await code(page).inputValue()
+      : await page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }).inputValue(),
     archive: await archive(page),
     captures: captures.map(({ requestBase64, responseBase64, ...value }) => ({
       ...value,
@@ -284,7 +287,7 @@ for (const exercise of content.exercises)
         expect(mapping?.byteRange).toEqual(node?.byteRange);
       }
     }
-    if (exercise.id === 'exercise.c.nonnegative') {
+    if (exercise.id === 'exercise.c.bug-zero-branch') {
       const coverage = submission
         .flatMap((run) => run.result.judgeResult!.coverage)
         .filter((item) => item.visits > 0);
@@ -308,11 +311,12 @@ for (const exercise of content.exercises)
 test('a single code-origin source reconstructs every one of the twenty visible block kinds and runs in Rust', async ({
   page,
 }, info) => {
-  await open(page);
-  const text = bodySource(
-    'int y; y=1; int a[3]={+7,-2,-0}; {int z=1; z=z+1;} if(x>=0 && !(x<0)){y=a[0];}else{} while(0){continue;break;} for(int i=0;i<1;i=i+1){a[i]=i;} printf("%d\\n",+x); return 0;',
-  );
-  await fillSynced(page, text);
+  await page.goto('/#/c6/program/teach.c6.ch01.welcome?node=c6.ch01');
+  const text =
+    '#include <stdio.h>\nint main(){int x=3;int y; y=1; int a[3]={7,-2,0}; {int z=1; z=z+1;} if(x>=0 && !(x<0)){y=a[0];}else{} while(0){continue;break;} for(int i=0;i<1;i=i+1){a[i]=i;} printf("%d\\n",+x); return 0;}';
+  await page.getByLabel('完整 C 源码 · main.c', { exact: true }).fill(text);
+  await page.getByRole('button', { name: '同步到积木', exact: true }).click();
+  await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   for (const label of [
     '主程序',
     '整数',
@@ -340,12 +344,42 @@ test('a single code-origin source reconstructs every one of the twenty visible b
       label,
     ).not.toHaveLength(0);
   }
-  await action(page, '运行本组').click();
-  await expect(panel(page)).toHaveAttribute('data-state', 'ran');
-  const runs = await capture(page, info, 'all-twenty-code-origin-blocks');
-  expect(runs).toHaveLength(1);
-  expect(runs[0].result.terminal.status).toBe('completed');
-  expect(runs[0].request.source.text).toBe(text);
+  await page.getByRole('button', { name: '运行当前代码', exact: true }).click();
+  await expect(page.locator('.c6-trace')).toHaveAttribute('data-cursor', '0');
+  await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
+  await expect(page.getByLabel('当前游标标准输出', { exact: true })).toHaveText('3');
+  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).toHaveValue(text);
+  const packets = await page.evaluate(() =>
+    window.__verticalObservation.workers
+      .filter((w) => w.moduleSeen && w.responseOk)
+      .map((w) => ({
+        ...(
+          w as typeof w & { captureEncoded(): { requestBase64: string; responseBase64: string } }
+        ).captureEncoded(),
+        terminated: w.terminated,
+      })),
+  );
+  expect(packets).toHaveLength(2);
+  for (const packet of packets) {
+    expect(packet.terminated).toBe(true);
+    const request = JSON.parse(
+      Buffer.from(packet.requestBase64, 'base64').toString('utf8'),
+    ) as C6Request;
+    expect(request.source).toBe(text);
+    const result = await decodeC6Response(
+      Uint8Array.from(Buffer.from(packet.responseBase64, 'base64')).buffer,
+      request,
+      c6Build.wasmSha256,
+    );
+    if ('editVersion' in result) expect(result.status).toBe('mapped');
+    else if ('terminal' in result) expect(result.terminal.status).toBe('completed');
+    else throw new Error('Unexpected judge response for current C6 program');
+  }
+  await info.attach('all-twenty-current-c6-real-packets', {
+    body: gzipSync(JSON.stringify(packets)),
+    contentType: 'application/gzip',
+  });
+  await info.attach('all-twenty-current-c6-source', { body: text, contentType: 'text/plain' });
 });
 
 test('invalid, unmapped and protected-input drafts keep exact text, disable execution and recover through real submission', async ({
@@ -431,8 +465,9 @@ test('invalid, unmapped and protected-input drafts keep exact text, disable exec
 test('native block selection and code pointer selection preserve an accepted run and document revision', async ({
   page,
 }, info) => {
-  await open(page);
-  const text = bodySource('if (1) {\n \t// 仅选区注释😀\n\nprintf("%d\\n", x);\n}\nreturn 0;');
+  const id = 'exercise.c.bug-zero-branch';
+  await open(page, id);
+  const text = bodySource('if (1) {\n \t// 仅选区注释😀\n\nprintf("%d\\n", x);\n}\nreturn 0;', id);
   await fillSynced(page, text);
   await action(page, '运行本组').click();
   await expect(panel(page)).toHaveAttribute('data-state', 'ran');
@@ -581,22 +616,25 @@ test('invalid code remains intact across editor folding, theme change, settings 
   await page.goBack();
   await expect(code(page)).toHaveValue(invalid);
   await expect(editor(page)).toHaveAttribute('data-sync', 'invalid');
-  await page
-    .getByTestId('practice-mode')
-    .getByRole('button', { name: '改错练习', exact: true })
-    .click();
-  await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
-  await page
-    .getByTestId('practice-mode')
-    .getByRole('button', { name: '独立练习', exact: true })
-    .click();
+  const display = page.getByRole('combobox', { name: '积木显示', exact: true });
+  await display.selectOption('hide');
+  await expect(page.getByTestId('practice-editor-layout')).toHaveAttribute(
+    'data-blocks-visible',
+    'no',
+  );
+  await expect(code(page)).toHaveValue(invalid);
+  await display.selectOption('show');
+  await expect(page.getByTestId('practice-editor-layout')).toHaveAttribute(
+    'data-blocks-visible',
+    'yes',
+  );
   await expect(code(page)).toHaveValue(invalid);
   await expect(editor(page)).toHaveAttribute('data-sync', 'invalid');
   await expect(submit(page)).toBeDisabled();
   expect(await count(page, 'execute')).toBe(0);
   sameLearning(before, await archive(page));
   await fillSynced(page, valid);
-  await capture(page, info, 'invalid-draft-presentation-and-mode');
+  await capture(page, info, 'invalid-draft-presentation-and-visibility');
 });
 
 test('a synchronized native field edit keeps its undo and redo history, source comments and no learning side effects', async ({
@@ -648,7 +686,7 @@ test('a synchronized native field edit keeps its undo and redo history, source c
 test('folding and reanalysis retain the last test result identity while the first-input editing draft stays separate', async ({
   page,
 }, info) => {
-  const id = 'exercise.c.array-sum';
+  const id = 'exercise.c.bug-sum-initial';
   const catalog = exerciseCatalog(content, id);
   const lastTest = catalog.subject.tests.at(-1)!;
   expect(lastTest.input).not.toEqual(catalog.subject.tests[0].input);
@@ -707,6 +745,9 @@ test('folding and reanalysis retain the last test result identity while the firs
   await action(page, '收起代码编辑').click();
   await expect(readonly).toHaveValue(last.request.source.text);
   await page.getByRole('link', { name: '查看本次复盘', exact: true }).click();
+  await expect(page.locator('[data-mode="exercise-review"]')).toBeVisible();
+  await expect(page.getByRole('button', { name: '提交练习', exact: true })).toHaveCount(0);
+  await expect(code(page)).toHaveCount(0);
   await expect(readonly).toHaveValue(last.request.source.text);
   await expect(retained).toContainText(lastTest.caseKey);
   await expect(input).toHaveText(JSON.stringify(lastTest.input));
@@ -720,4 +761,36 @@ test('folding and reanalysis retain the last test result identity while the firs
   expect(after.at(-1)!.request.identity).toEqual(last.request.identity);
   expect(after.at(-1)!.request.source).toEqual(last.request.source);
   sameLearning(before, await archive(page));
+});
+
+// Original regression identities; the carrier mapping is explicit in each annotation.
+test('code-origin answer passes every real test and preserves input/control identity: exercise.c.echo', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 0);
+});
+test('code-origin answer passes every real test and preserves input/control identity: exercise.c.two-x-plus-three', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 1);
+});
+test('code-origin answer passes every real test and preserves input/control identity: exercise.c.nonnegative', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 2);
+});
+test('code-origin answer passes every real test and preserves input/control identity: exercise.c.two-loop-sums', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 3);
+});
+test('code-origin answer passes every real test and preserves input/control identity: exercise.c.increment-at-index', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 4);
+});
+test('code-origin answer passes every real test and preserves input/control identity: exercise.c.array-sum', async ({
+  page,
+}, info) => {
+  await currentEditorRegression(page, info, 5);
 });

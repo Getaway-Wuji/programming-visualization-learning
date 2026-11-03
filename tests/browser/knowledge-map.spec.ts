@@ -1,170 +1,93 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { extname, resolve, sep } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { expect, test, type Page } from '@playwright/test';
-import type { ContentPackage } from '../../web/src/content/types';
-import type { StorageSnapshot } from '../../web/src/storage/model';
-import { initSync, prepare_input } from '../../web/src/generated/c_viz_wasm';
-import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
-import { p05CourseRelease } from '../../web/src/content/p05-course-release.generated';
+import type { C6LearningIndex } from '../../web/src/c6-learning/index';
+import type { C6TeachingManifest } from '../../web/src/content/c6-teaching-types';
+import { initSync } from '../../web/src/generated/c_viz_wasm';
+import { decodeC6Response, type C6Request } from '../../web/src/engine/c6-protocol';
+import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
+import {
+  archive,
+  ready,
+  confirm as confirmLegacy,
+  openAnswer as answerLegacy,
+  submit as submitLegacy,
+} from './notebook-helpers';
+import {
+  confirmCurrentLesson as confirm,
+  openCurrentAnswer as openAnswer,
+  submitCurrent as submit,
+} from './current-course-helpers';
+import { installC6Packets, observedC6Packet } from './c6-observation';
 
-const course = JSON.parse(
-  readFileSync('content/c/p05/course-1.0.0.json', 'utf8'),
-) as ContentPackage;
-const solutions = JSON.parse(
-  readFileSync('tests/fixtures/p05-reference-solutions.json', 'utf8'),
-) as { solutions: { exerciseRef: { id: string }; source: string }[] };
+const index = JSON.parse(
+  readFileSync('content/c/primer6-learning/index-1.0.0.json', 'utf8'),
+) as C6LearningIndex;
+const manifest = JSON.parse(
+  readFileSync('content/c/primer6-teaching/manifest-2.0.0.json', 'utf8'),
+) as C6TeachingManifest;
 const folder = `.artifacts/15.1/browser/${process.env.TASK_EVIDENCE_LABEL ?? 'local'}`;
-const graph = (page: Page) => page.getByTestId('knowledge-map');
-const node = (page: Page, key: string) =>
-  graph(page).locator(`[data-knowledge-node="knowledge.c.${key}"]`);
-const panel = (page: Page) => page.getByTestId('practice-execution');
-const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
-const ready = (page: Page) =>
-  expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
-  );
-async function archive(page: Page): Promise<StorageSnapshot> {
-  return page.evaluate(async () => {
-    const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const req = indexedDB.open('c-viz-learning');
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
-    });
-    try {
-      const names = Array.from(db.objectStoreNames);
-      const tx = db.transaction(names, 'readonly');
-      const done = new Promise<void>((resolve, reject) => {
-        tx.oncomplete = () => resolve();
-        tx.onabort = () => reject(tx.error);
-      });
-      const entries = await Promise.all(
-        names.map(async (name) => [
-          name,
-          await new Promise<unknown>((resolve, reject) => {
-            const store = tx.objectStore(name);
-            const req = ['meta', 'settings', 'avatar', 'appearance'].includes(name)
-              ? store.get('current')
-              : store.getAll();
-            req.onsuccess = () => resolve(req.result);
-            req.onerror = () => reject(req.error);
-          }),
-        ]),
-      );
-      await done;
-      return Object.fromEntries(entries) as unknown as StorageSnapshot;
-    } finally {
-      db.close();
-    }
-  });
-}
+const graph = (page: Page) => page.getByTestId('c6-knowledge-map');
+const count = (page: Page) => graph(page).getByRole('heading', { level: 2 });
+const row = (page: Page, id: string) =>
+  graph(page)
+    .locator('.c6-knowledge-list > li')
+    .filter({ has: page.locator(`a[href="#/lessons/${id}"]`) });
 async function home(page: Page) {
   await page.goto('/#/');
-  await expect(graph(page)).toHaveAttribute('data-state', 'ready');
+  await expect(graph(page)).toBeVisible();
+  await expect(graph(page).locator('details')).toHaveCount(17);
   await ready(page);
-}
-async function confirm(page: Page, id: string) {
-  await page.goto(`/#/lessons/${id}`);
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await ready(page);
-  const start = page.getByRole('button', { name: '开始本节学习', exact: true });
-  if (await start.isEnabled()) {
-    await start.click();
-    await ready(page);
-  }
-  await page.getByRole('button', { name: /^(确认已学习|确认今日复习)$/ }).click();
-  await ready(page);
-  await expect(page.getByTestId('lesson-confirmation-check')).toHaveAttribute('data-saved', 'yes');
-}
-async function openAnswer(page: Page, exerciseId: string) {
-  const subject = course.exercises.find((item) => item.id === exerciseId)!;
-  const program = course.programs.find((item) => item.id === subject.programRef.id)!;
-  const input = Object.fromEntries(
-    Object.entries(subject.tests[0].input).sort(([a], [b]) => a.localeCompare(b)),
-  );
-  const source = JSON.parse(
-    new TextDecoder().decode(
-      prepare_input(
-        JSON.stringify({
-          packageRef: { id: course.packageId, version: course.packageVersion },
-          subject,
-          program: {
-            ...program,
-            sourceExample: solutions.solutions.find((item) => item.exerciseRef.id === exerciseId)!
-              .source,
-          },
-          inputSpec: course.inputSpecs.find((item) => item.id === program.inputRef.id)!,
-          judgeProfile: course.judgeProfiles.find((item) => item.id === subject.judgeRef.id)!,
-        }),
-        new TextEncoder().encode(JSON.stringify(input)),
-        1000,
-      ),
-    ),
-  ) as { source: { text: string } };
-  await page.goto(`/#/practice/${exerciseId}`);
-  await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await ready(page);
-  await expect(code(page)).toBeEditable();
-  await code(page).fill(source.source.text);
-  await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
-}
-async function submit(page: Page, saved = true) {
-  await panel(page).getByRole('button', { name: '提交练习', exact: true }).click();
-  await expect(panel(page)).toHaveAttribute('data-state', 'passed');
-  await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(
-    'data-save-state',
-    saved ? 'saved' : 'unsaved',
-  );
-  if (saved) await ready(page);
+  await expect.poll(async () => (await archive(page)).settings.goalTemplate).not.toBeNull();
 }
 async function capture(page: Page, name: string) {
-  const actual = await observedCaseSetExecute(page);
+  const actual = await observedC6Packet(page);
   expect(actual.moduleSeen).toBe(true);
-  expect(actual.responseOk).toBe(true);
+  expect(actual.terminated).toBe(true);
+  expect(actual.response).not.toBeNull();
+  const request = JSON.parse(Buffer.from(actual.request!, 'base64').toString('utf8')) as C6Request;
+  const bytes = Uint8Array.from(Buffer.from(actual.response!, 'base64'));
+  const decoded = await decodeC6Response(bytes.buffer, request, engineBuild.wasmSha256);
+  expect(decoded).toHaveProperty('cases');
   await mkdir(folder, { recursive: true });
   await writeFile(`${folder}/${name}.json.gz`, gzipSync(JSON.stringify(actual)), { flag: 'wx' });
 }
-
 test.beforeAll(() => initSync({ module: readFileSync('web/src/generated/c_viz_wasm_bg.wasm') }));
 
 test('15.1 common: empty graph, every exact lesson destination and selection are read-only', async ({
   page,
 }) => {
-  await observeCaseSetExecution(page);
+  test.setTimeout(90000);
+  await page.addInitScript(installC6Packets);
   await home(page);
-  // The existing goal bootstrap is independent of graph readiness. Capture the
-  // readonly baseline only after that native settings transaction completes.
-  await expect.poll(async () => (await archive(page)).settings.goalTemplate).not.toBeNull();
   const before = await archive(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('0 / 10 已点亮');
-  await expect(graph(page).locator('[data-knowledge-edge]')).toHaveCount(11);
-  await expect(graph(page).locator('[data-knowledge-node][data-state="unlearned"]')).toHaveCount(
-    10,
-  );
-  for (const knowledge of course.knowledgePoints) {
-    const button = graph(page).locator(`[data-knowledge-node="${knowledge.id}"]`);
-    await button.click();
-    await expect(button).toHaveAttribute('aria-pressed', 'true');
-    const detail = page.getByTestId('knowledge-detail');
-    await expect(detail.getByRole('heading', { level: 3 })).toHaveText(knowledge.title);
-    const related = course.chapters
-      .flatMap((chapter) => chapter.lessonRefs)
-      .map((ref) => course.lessons.find((lesson) => lesson.id === ref.id)!)
-      .filter((lesson) => lesson.knowledgeRefs.some((ref) => ref.id === knowledge.id));
-    await expect(detail.getByRole('link')).toHaveCount(related.length);
-    for (const lesson of related)
-      await expect(
-        detail.getByRole('link', { name: `${lesson.title} 学习 →`, exact: true }),
-      ).toHaveAttribute('href', `#/lessons/${lesson.id}`);
-    await detail.getByRole('link').first().click();
-    await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-    await expect(page.locator('main h1')).toHaveText(related[0].title);
+  await expect(count(page)).toHaveText('我的知识图谱 · 0 / 421 已点亮');
+  await expect(graph(page).locator('.c6-knowledge-list > li')).toHaveCount(404);
+  for (const lesson of index.lessons) {
+    const title = manifest.nodes.find((n) => `node.${n.id}` === lesson[1])!.titleDisplay;
+    await expect(row(page, lesson[0]).locator('a')).toHaveText(title);
+    await expect(row(page, lesson[0]).locator('a')).toHaveAttribute(
+      'href',
+      `#/lessons/${lesson[0]}`,
+    );
+    await expect(row(page, lesson[0]).locator('small')).toHaveText('未学完');
+  }
+  for (const chapter of index.knowledge.filter((k) => k[2] === 'chapter')) {
+    const lesson = index.lessons.find((l) => l[2] === chapter[1])!;
+    const detail = row(page, lesson[0]).locator('xpath=ancestor::details');
+    await detail.locator('summary').click();
+    await row(page, lesson[0]).locator('a').click();
+    await expect(page.locator('main h1')).toHaveText(
+      manifest.nodes.find((n) => `node.${n.id}` === lesson[1])!.titleDisplay,
+    );
+    await expect(page.locator('.c6-teaching-reading')).toBeVisible();
     await page.goBack();
-    await expect(graph(page)).toHaveAttribute('data-state', 'ready');
+    await expect(graph(page)).toBeVisible();
   }
   expect(await archive(page)).toEqual(before);
-  expect(await page.evaluate(() => window.__verticalObservation.workers.length)).toBe(0);
+  expect(await page.evaluate(() => window.c6CurrentPackets.length)).toBe(0);
   await mkdir(folder, { recursive: true });
   await writeFile(
     `${folder}/no-side-effects.json`,
@@ -176,31 +99,27 @@ test('15.1 common: keyboard selection, three widths and refresh preserve empty s
   page,
 }) => {
   await home(page);
-  await node(page, 'sorting').focus();
-  await page.keyboard.press('Enter');
-  await expect(node(page, 'sorting')).toBeFocused();
-  await expect(page.getByTestId('knowledge-detail')).toContainText('结合数组和循环');
-  await mkdir(folder, { recursive: true });
+  const before = await archive(page);
   for (const width of [1440, 768, 390]) {
     await page.setViewportSize({ width, height: 900 });
-    await graph(page).scrollIntoViewIfNeeded();
-    if (width === 390) {
-      await page
-        .getByRole('combobox', { name: '选择知识点', exact: true })
-        .selectOption('knowledge.c.variables');
-      await expect(page.getByTestId('knowledge-detail')).toContainText('变量与作用域');
-      await expect(node(page, 'variables')).toHaveAttribute('aria-pressed', 'true');
-    }
-    await node(page, 'binary-search').click();
-    await expect(page.getByTestId('knowledge-detail')).toContainText('首次匹配');
+    const details = graph(page).locator('details').first();
+    const summary = details.locator('summary');
+    await summary.focus();
+    const open = await details.getAttribute('open');
+    await page.keyboard.press('Enter');
+    if (open === null) await expect(details).toHaveAttribute('open', '');
+    else await expect(details).not.toHaveAttribute('open');
+    await expect(summary).toBeFocused();
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth - innerWidth),
     ).toBeLessThanOrEqual(1);
-    await page.screenshot({ path: `${folder}/empty-${width}.png`, fullPage: true });
+    await mkdir(folder, { recursive: true });
+    await graph(page).screenshot({ path: `${folder}/empty-${width}.png` });
   }
   await page.reload();
   await ready(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('0 / 10 已点亮');
+  await expect(count(page)).toHaveText('我的知识图谱 · 0 / 421 已点亮');
+  expect(await archive(page)).toEqual(before);
 });
 
 test('15.1 formal: real completion lights only related nodes and both-end edges, refresh/repeat/clear restore correctly', async ({
@@ -208,44 +127,35 @@ test('15.1 formal: real completion lights only related nodes and both-end edges,
   context,
 }) => {
   test.setTimeout(90000);
-  await observeCaseSetExecution(page);
+  await page.addInitScript(installC6Packets);
   await home(page);
   const other = await context.newPage();
   await home(other);
-  await confirm(page, 'lesson.c.first-program');
+  await confirm(page, 'lesson.c6.s1.1');
   await home(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('0 / 10 已点亮');
-  await openAnswer(page, 'exercise.c.first-output');
+  await expect(count(page)).toHaveText('我的知识图谱 · 1 / 421 已点亮');
+  await expect(row(page, 'lesson.c6.s1.1').locator('small')).toHaveText('已点亮');
+  await confirm(page, 'lesson.c6.s2.1');
+  await home(page);
+  await expect(row(page, 'lesson.c6.s2.1').locator('small')).toHaveText('未学完');
+  await openAnswer(page, 'exercise.c6.s2.1');
   await submit(page);
-  await capture(page, 'first-program');
+  await capture(page, 'current-four-cases');
   await home(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('2 / 10 已点亮');
-  await expect(graph(page).locator('[data-knowledge-edge][data-lit="yes"]')).toHaveCount(0);
-  await confirm(page, 'lesson.c.variables-output');
-  await openAnswer(page, 'exercise.c.echo');
-  await submit(page);
-  await capture(page, 'variables-output');
-  await home(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('4 / 10 已点亮');
-  for (const key of ['entry', 'variables', 'input', 'output'])
-    await expect(node(page, key)).toHaveAttribute('data-state', 'lit');
-  await expect(node(page, 'expressions')).toHaveAttribute('data-state', 'unlearned');
-  await expect(graph(page).locator('[data-knowledge-edge][data-lit="yes"]')).toHaveCount(3);
-  await expect(other.getByTestId('knowledge-lit-count')).toHaveText('4 / 10 已点亮');
+  await expect(count(page)).toHaveText('我的知识图谱 · 2 / 421 已点亮');
+  await expect(row(page, 'lesson.c6.s2.1').locator('small')).toHaveText('已点亮');
+  await expect(row(page, 'lesson.c6.s2.2.2').locator('small')).toHaveText('未学完');
+  await expect(count(other)).toHaveText('我的知识图谱 · 2 / 421 已点亮');
   const saved = await archive(page);
-  expect(saved.progress.filter((row) => row.eventType === 'lesson.completed')).toHaveLength(2);
+  expect(saved.progress.filter((p) => p.eventType === 'lesson.completed')).toHaveLength(2);
   await page.reload();
   await ready(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('4 / 10 已点亮');
-  await node(page, 'variables').click();
-  await expect(page.getByTestId('knowledge-detail')).toContainText('已完成 1/10 节');
-  await page
-    .getByTestId('knowledge-detail')
-    .getByRole('link', { name: '变量和输出 复习 →', exact: true })
-    .click();
+  await expect(count(page)).toHaveText('我的知识图谱 · 2 / 421 已点亮');
+  await row(page, 'lesson.c6.s2.1').locator('xpath=ancestor::details').locator('summary').click();
+  await row(page, 'lesson.c6.s2.1').locator('a').click();
   await ready(page);
   expect(await archive(page)).toEqual(saved);
-  await openAnswer(page, 'exercise.c.echo');
+  await openAnswer(page, 'exercise.c6.s2.1');
   await submit(page);
   expect((await archive(page)).ledger).toEqual(saved.ledger);
   await home(page);
@@ -258,61 +168,73 @@ test('15.1 formal: real completion lights only related nodes and both-end edges,
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
-  await expect(other.getByTestId('knowledge-lit-count')).toHaveText('0 / 10 已点亮');
+  await expect(count(other)).toHaveText('我的知识图谱 · 0 / 421 已点亮');
   expect((await archive(other)).progress).toEqual([]);
   await other.reload();
   await ready(other);
-  await expect(other.getByTestId('knowledge-lit-count')).toHaveText('0 / 10 已点亮');
+  await expect(count(other)).toHaveText('我的知识图谱 · 0 / 421 已点亮');
 });
 
 test('15.1 formal: failed native transaction keeps graph unlearned until original event retry is acknowledged', async ({
   page,
 }) => {
-  test.setTimeout(90000);
+  await page.addInitScript(installC6Packets);
   await page.addInitScript(() => {
-    const control = { armed: false };
+    const control = { armed: false, ids: [] as string[] };
     Object.assign(window, { __knowledgeQuota: control });
-    const native = IDBObjectStore.prototype.add;
-    IDBObjectStore.prototype.add = function (value, key) {
-      if (
-        control.armed &&
-        this.name === 'receipts' &&
-        (value as { eventType?: string })?.eventType === 'exercise.passed'
-      ) {
-        control.armed = false;
-        throw new DOMException('15.1 isolated native quota failure', 'QuotaExceededError');
-      }
-      return key === undefined ? native.call(this, value) : native.call(this, value, key);
-    };
+    for (const method of ['put', 'add'] as const) {
+      const add = IDBObjectStore.prototype[method];
+      IDBObjectStore.prototype[method] = function (value, key) {
+        const r = value as { eventType?: string; eventId: string };
+        if (this.name === 'receipts' && r.eventType === 'exercise.passed') {
+          control.ids.push(r.eventId);
+          if (control.armed) {
+            control.armed = false;
+            throw new DOMException('15.1 native current quota', 'QuotaExceededError');
+          }
+        }
+        return key === undefined ? add.call(this, value) : add.call(this, value, key);
+      };
+    }
   });
-  await confirm(page, 'lesson.c.variables-output');
-  await openAnswer(page, 'exercise.c.echo');
+  await confirm(page, 'lesson.c6.s2.1');
+  await openAnswer(page, 'exercise.c6.s2.1');
+  const before = await archive(page);
   await page.evaluate(() => {
     (window as unknown as { __knowledgeQuota: { armed: boolean } }).__knowledgeQuota.armed = true;
   });
-  await submit(page, false);
+  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+  await expect(page.getByTestId('learning-save-status')).toContainText('尚未保存');
+  await expect(page.getByRole('button', { name: '重试未保存操作', exact: true })).toBeVisible();
+  await capture(page, 'quota-accepted-current-four-cases');
+  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+    'data-save-status',
+    'unsaved',
+  );
   const failed = await archive(page);
-  expect(failed.progress.filter((row) => row.eventType === 'lesson.completed')).toEqual([]);
+  expect(failed.progress).toEqual(before.progress);
+  expect(failed.ledger).toEqual(before.ledger);
   await page.goto('/#/');
-  await expect(graph(page)).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('knowledge-storage-note')).toContainText('暂不用于点亮');
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('0 / 10 已点亮');
-  await mkdir(folder, { recursive: true });
-  await graph(page).screenshot({ path: `${folder}/failed-save.png` });
+  await expect(count(page)).toHaveText('我的知识图谱 · 0 / 421 已点亮');
   await page
     .getByTestId('learning-save-status')
     .getByRole('button', { name: '重试未保存操作', exact: true })
     .click();
   await ready(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('4 / 10 已点亮');
+  await expect(count(page)).toHaveText('我的知识图谱 · 1 / 421 已点亮');
   const saved = await archive(page);
-  expect(saved.progress.filter((row) => row.eventType === 'lesson.completed')).toHaveLength(1);
-  expect(
-    saved.ledger.filter((row) => row.sourceId === 'reward.lesson.first-completion'),
-  ).toHaveLength(1);
+  expect(saved.progress.filter((p) => p.eventType === 'lesson.completed')).toHaveLength(1);
+  expect(saved.ledger.filter((l) => l.points === 10)).toHaveLength(1);
+  const ids = await page.evaluate(
+    () => (window as unknown as { __knowledgeQuota: { ids: string[] } }).__knowledgeQuota.ids,
+  );
+  expect(ids.length).toBeGreaterThanOrEqual(2);
+  expect(new Set(ids).size).toBe(1);
+  expect(await page.evaluate(() => window.c6CurrentPackets.length)).toBe(1);
   await page.reload();
   await ready(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('4 / 10 已点亮');
+  await expect(count(page)).toHaveText('我的知识图谱 · 1 / 421 已点亮');
   expect((await archive(page)).ledger).toEqual(saved.ledger);
 });
 
@@ -320,35 +242,57 @@ test('15.1 formal: real original-course completion survives the reviewed 32-less
   page,
 }) => {
   test.setTimeout(90000);
-  await page.route(`**/${p05CourseRelease.file}`, (route) =>
-    route.fulfill({ status: 404, body: 'Explicit whole original-course fallback' }),
-  );
-  await confirm(page, 'lesson.c.variables-output');
-  await openAnswer(page, 'exercise.c.echo');
-  await submit(page);
-  await home(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('4 / 10 已点亮');
-  const old = await archive(page);
-  expect(old.progress.find((row) => row.eventType === 'lesson.completed')?.packageRef).toEqual({
-    id: 'content.c.p0',
-    version: '1.0.1',
+  const root = resolve('.artifacts/21.5/legacy-production');
+  const mime: Record<string, string> = {
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.css': 'text/css',
+    '.json': 'application/json',
+    '.wasm': 'application/wasm',
+    '.png': 'image/png',
+    '.svg': 'image/svg+xml',
+  };
+  await page.route('**/*', async (route) => {
+    const url = new URL(route.request().url());
+    if (url.origin !== new URL(test.info().project.use.baseURL as string).origin)
+      return route.continue();
+    const file = resolve(
+      root,
+      '.' + (url.pathname === '/' ? '/index.html' : decodeURIComponent(url.pathname)),
+    );
+    if (!file.startsWith(root + sep) || !existsSync(file)) return route.abort();
+    await route.fulfill({
+      body: readFileSync(file),
+      contentType: mime[extname(file)] ?? 'application/octet-stream',
+    });
   });
-  await page.unroute(`**/${p05CourseRelease.file}`);
+  await confirmLegacy(page, 'lesson.c.variables-output');
+  await answerLegacy(page, 'exercise.c.echo');
+  await submitLegacy(page);
+  const old = await archive(page);
+  expect(old.progress.some((p) => p.eventType === 'lesson.completed')).toBe(true);
+  expect(old.ledger.some((l) => (l.points ?? 0) > 0)).toBe(true);
+  await page.unroute('**/*');
+  await page.reload();
+  await home(page);
+  const current = await archive(page);
+  expect(current.meta.generation).not.toBe(old.meta.generation);
+  expect(current.meta.schemaVersion).toBe('10.0.0');
+  expect(current.progress).toEqual([]);
+  expect(current.ledger).toEqual([]);
+  expect(current.settings.theme).toBe(old.settings.theme);
+  await expect(count(page)).toHaveText('我的知识图谱 · 0 / 421 已点亮');
   await page.reload();
   await ready(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('4 / 10 已点亮');
-  await node(page, 'variables').click();
-  await expect(page.getByTestId('knowledge-detail')).toContainText('已完成 1/10 节');
-  const upgraded = await archive(page);
-  expect(upgraded.progress).toEqual(old.progress);
-  expect(upgraded.ledger).toEqual(old.ledger);
+  expect((await archive(page)).meta.generation).toBe(current.meta.generation);
+  expect((await archive(page)).progress).toEqual([]);
 });
 
 test('15.1 common: unavailable storage is pending confirmation and recovers without a fake completion', async ({
   page,
 }) => {
   await page.addInitScript(() => {
-    const native = indexedDB.open.bind(indexedDB);
+    const open = indexedDB.open.bind(indexedDB);
     let blocked = true;
     Object.assign(window, {
       __knowledgeRestoreStorage: () => {
@@ -356,16 +300,14 @@ test('15.1 common: unavailable storage is pending confirmation and recovers with
       },
     });
     indexedDB.open = (...args: Parameters<IDBFactory['open']>) => {
-      if (blocked)
-        throw new DOMException('15.1 isolated storage permission fault', 'SecurityError');
-      return native(...args);
+      if (blocked) throw new DOMException('15.1 storage fault', 'SecurityError');
+      return open(...args);
     };
   });
   await page.goto('/#/');
-  await expect(graph(page)).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('学习记录待确认');
-  await expect(graph(page).locator('[data-knowledge-node][data-state="unknown"]')).toHaveCount(10);
-  await expect(graph(page)).not.toContainText('0 / 10 已点亮');
+  await expect(count(page)).toHaveText('我的知识图谱 · 学习记录待确认');
+  await expect(graph(page).getByText('记录待确认', { exact: true })).toHaveCount(404);
+  await expect(graph(page)).not.toContainText('0 / 421 已点亮');
   await page.evaluate(() =>
     (window as unknown as { __knowledgeRestoreStorage(): void }).__knowledgeRestoreStorage(),
   );
@@ -374,26 +316,24 @@ test('15.1 common: unavailable storage is pending confirmation and recovers with
     .getByRole('button', { name: '重新读取档案', exact: true })
     .click();
   await ready(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('0 / 10 已点亮');
+  await expect(count(page)).toHaveText('我的知识图谱 · 0 / 421 已点亮');
   expect((await archive(page)).progress).toEqual([]);
 });
 
 test('15.1 common: unavailable reading fails locally and normal course retry restores the map', async ({
   page,
 }) => {
-  await page.route('**/content/**/*.json', (route) =>
-    /\/(course|review|reading)\//.test(route.request().url())
-      ? route.fulfill({ status: 404, body: 'Explicit unavailable course' })
-      : route.continue(),
+  const pattern = '**/content/c/primer6-teaching/manifest-2.0.0.json';
+  await page.route(pattern, (route) =>
+    route.fulfill({ status: 404, body: 'Explicit unavailable current manifest' }),
   );
   await page.goto('/#/');
-  await expect(graph(page)).toHaveAttribute('data-state', 'failed');
-  await expect(graph(page)).toContainText('知识图谱暂不可用');
-  await expect(graph(page).locator('[data-knowledge-node]')).toHaveCount(0);
-  await page.unroute('**/content/**/*.json');
-  await graph(page).getByRole('button', { name: '重新读取课程', exact: true }).click();
-  await expect(graph(page)).toHaveAttribute('data-state', 'ready');
+  await expect(page.getByRole('heading', { name: '课程暂时无法读取', exact: true })).toBeVisible();
+  await expect(graph(page)).toHaveCount(0);
+  await page.unroute(pattern);
+  await page.getByRole('button', { name: '重试读取', exact: true }).click();
+  await expect(graph(page)).toBeVisible();
   await ready(page);
-  await expect(page.getByTestId('knowledge-lit-count')).toHaveText('0 / 10 已点亮');
+  await expect(count(page)).toHaveText('我的知识图谱 · 0 / 421 已点亮');
   expect((await archive(page)).progress).toEqual([]);
 });

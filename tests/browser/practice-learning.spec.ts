@@ -2,92 +2,63 @@ import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
-import type { ExerciseEntity, LessonEntity } from '../../web/src/content/types';
-import type { Receipt, StorageSnapshot } from '../../web/src/storage/model';
-import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import { correctStarter, wrongEcho, blockWorkspace, showPracticeBlocks } from './block-ui';
-import { observeCaseSetExecution } from './case-set-observation';
+import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
+import type { Receipt } from '../../web/src/storage/model';
+import { decodeC6Response, type C6RunRequest } from '../../web/src/engine/c6-protocol';
+import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
+import { blockOptions, blockWorkspace, selectBlock } from './block-ui';
+import { confirmCurrentLesson, openCurrentAnswer } from './current-course-helpers';
+import { installC6Packets, observedC6Packet } from './c6-observation';
+import {
+  currentSnapshot as snapshot,
+  currentLocalReady as localReady,
+  assertCurrentJudge,
+  assertNoExecutionPersistence,
+  assertLearningEqual,
+  currentJudgeCount,
+  installCurrentReceiptFault,
+  armCurrentReceiptFault,
+  currentReceiptFault,
+} from './current-practice-observation';
 
-const reviewed = JSON.parse(
-  readFileSync(new URL('../../content/c/p0/course-1.0.1.json', import.meta.url), 'utf8'),
-) as {
-  lessons: LessonEntity[];
-  exercises: ExerciseEntity[];
-};
-const panel = (page: Page) => page.getByTestId('practice-execution');
+const exercises = (
+  JSON.parse(readFileSync('content/c/primer6-teaching/source-2.0.0.json', 'utf8')) as {
+    chapters: { exercises: C6CourseExercise[] }[];
+  }
+).chapters
+  .flatMap((c) => c.exercises)
+  .slice(0, 6);
+const exercise = exercises[0];
+const editor = (page: Page) => page.getByLabel('完整 C 源码 · main.c', { exact: true });
 const saveStatus = (page: Page) => page.getByTestId('learning-save-status');
-const practicePath = (id: string) => `/#/practice/${encodeURIComponent(id)}`;
-const lessonPath = (id: string) => `/#/lessons/${encodeURIComponent(id)}`;
-const authorization = '**/content/learning/course-learning-*.json';
-
-/** Read-only native inspection. No progress, receipt, reward or result is seeded. */
-async function snapshot(page: Page): Promise<StorageSnapshot> {
-  return page.evaluate(async () => {
-    const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const request = indexedDB.open('c-viz-learning');
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-    try {
-      const names = Array.from(db.objectStoreNames);
-      const tx = db.transaction(names, 'readonly');
-      const done = new Promise<void>((resolve, reject) => {
-        tx.oncomplete = () => resolve();
-        tx.onabort = () => reject(tx.error);
-      });
-      const entries = await Promise.all(
-        names.map(async (name) => {
-          const value = await new Promise<unknown>((resolve, reject) => {
-            const store = tx.objectStore(name);
-            const request = ['meta', 'settings', 'avatar', 'appearance'].includes(name)
-              ? store.get('current')
-              : store.getAll();
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-          });
-          return [name, value];
-        }),
-      );
-      await done;
-      return Object.fromEntries(entries) as unknown as StorageSnapshot;
-    } finally {
-      db.close();
-    }
-  });
-}
-async function localReady(page: Page) {
-  await expect(saveStatus(page)).toHaveAttribute('data-save-status', 'ready');
-}
-async function openLesson(page: Page, id: string) {
-  await page.goto(lessonPath(id));
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await localReady(page);
-}
-async function confirm(page: Page) {
-  await page.getByRole('button', { name: /^(确认已学习|确认今日复习)$/ }).click();
-  await localReady(page);
-  await expect(page.getByTestId('lesson-progress')).toContainText(/已确认学习|小节已完成/);
-}
-async function openPractice(page: Page, id: string) {
-  await page.goto(practicePath(id));
-  await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await showPracticeBlocks(page);
-  await expect(blockWorkspace(page)).toBeVisible();
-  await localReady(page);
-}
-async function prepare(page: Page) {
-  await panel(page).getByRole('button', { name: '准备代码', exact: true }).click();
-  await expect(panel(page)).toHaveAttribute('data-state', /^(ready|passed)$/);
-  await expect(panel(page).getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
-}
-async function submit(page: Page, expected: 'passed' | 'unmet' = 'passed') {
-  await prepare(page);
-  await panel(page).getByRole('button', { name: '提交练习', exact: true }).click();
-  await expect(panel(page)).toHaveAttribute('data-state', expected);
+const wrongSource = exercise.referenceSource.replace('printf("n=%d', 'printf("wrong=%d');
+if (wrongSource === exercise.referenceSource)
+  throw Error('Exact current wrong-output fixture required');
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(installC6Packets);
+});
+async function submit(
+  page: Page,
+  status: 'passed' | 'failed' = 'passed',
+  source = exercise.referenceSource,
+  subject = exercise,
+) {
+  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
+  await expect(
+    page.getByRole('heading', {
+      name: status === 'passed' ? '四组全部通过' : '本次尚未通过',
+      exact: true,
+    }),
+  ).toBeVisible();
+  return assertCurrentJudge(page, subject, status, source);
 }
 async function savedPass(page: Page) {
-  await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state', 'saved');
+  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
   await localReady(page);
+}
+async function confirmGroup(page: Page) {
+  await confirmCurrentLesson(page, 'lesson.c6.s2.1');
+  await confirmCurrentLesson(page, 'lesson.c6.s2.2.1');
 }
 async function clear(page: Page) {
   await page.goto('/#/settings?panel=data');
@@ -99,330 +70,214 @@ async function clear(page: Page) {
     .click();
   await expect(saveStatus(page)).toContainText('本地数据已清除');
 }
-async function executeCount(page: Page) {
-  return page.evaluate(
-    () => window.__verticalObservation.workers.filter((worker) => worker.kind === 'execute').length,
-  );
-}
-function privateFields(value: unknown): string[] {
-  if (!value || typeof value !== 'object') return [];
-  return Object.entries(value).flatMap(([key, child]) => [key, ...privateFields(child)]);
-}
-function noExecutionPersistence(data: StorageSnapshot) {
-  const forbidden = [
-    'source',
-    'sourceSha256',
-    'input',
-    'seed',
-    'stdout',
-    'trace',
-    'ast',
-    'nodeMap',
-    'checks',
-    'coverage',
-    'submissionId',
-    'runId',
-    'contextId',
-    'sourceRevision',
-    'workspace',
-  ];
-  expect(privateFields(data).filter((key) => forbidden.includes(key))).toEqual([]);
-  expect(
-    data.ledger.every(
-      (row) =>
-        row.status === 'posted' &&
-        row.points ===
-          (row.sourceId === 'reward.exercise.first-pass'
-            ? 10
-            : row.sourceId === 'reward.lesson.first-completion'
-              ? 20
-              : row.sourceId === 'reward.daily-goal.once'
-                ? 5
-                : Number.NaN) &&
-        row.policyRef.id ===
-          (row.sourceId === 'reward.daily-goal.once'
-            ? 'reward.policy.daily-goal.p0'
-            : 'reward.policy.p0') &&
-        row.policyRef.version === '1.0.0',
-    ),
-  ).toBe(true);
-  const targets = { exercise: 1, lesson: 1, case: 0 };
-  expect(data.settings.goalTemplate).toEqual({ revision: 1, targets });
-  for (const goal of data.goals) {
-    expect(goal).toMatchObject({ goalVersion: 1, targets });
-    const facts = data.dailyFacts.filter((fact) => fact.localDate === goal.localDate);
-    const achieved =
-      facts.some((fact) => fact.eventType === 'exercise.passed') &&
-      facts.some((fact) => fact.eventType === 'lesson.completed');
-    expect(goal.achievedAt !== null).toBe(achieved);
-    expect(
-      data.ledger.filter(
-        (entry) =>
-          entry.sourceId === 'reward.daily-goal.once' && entry.localDate === goal.localDate,
-      ),
-    ).toHaveLength(achieved ? 1 : 0);
-  }
-}
-async function evidence(testInfo: TestInfo, label: string, value: unknown) {
-  const directory = join(
+async function evidence(info: TestInfo, label: string, value: unknown) {
+  const dir = join(
     '.artifacts',
     process.env.TASK_EVIDENCE_TASK ?? '11.2',
     'regression',
     'practice-learning',
-    testInfo.project.name,
+    process.env.TASK_EVIDENCE_LABEL ?? 'current',
+    info.project.name,
     label,
   );
-  await mkdir(directory, { recursive: true });
-  const path = join(directory, 'native-ui.json');
+  await mkdir(dir, { recursive: true });
+  const path = join(dir, 'native-ui.json');
   await writeFile(path, JSON.stringify(value, null, 2));
-  await testInfo.attach(label, { path, contentType: 'application/json' });
+  await info.attach(label, { path, contentType: 'application/json' });
 }
-async function captureAllRuns(page: Page, testInfo: TestInfo) {
-  // Convert captured raw buffers only after all final result/deadline guards and saves settle.
-  const captured = await page.evaluate(() =>
-    window.__verticalObservation.workers
-      .filter((worker) => worker.kind === 'execute')
-      .map((worker) => {
-        const encoded = (
-          worker as typeof worker & {
-            captureEncoded(): { requestBase64: string | null; responseBase64: string | null };
-          }
-        ).captureEncoded();
-        return { ...encoded, catalogJson: worker.catalogJson, moduleSeen: worker.moduleSeen };
-      }),
+/** Current full-source mapping is exercised with a supported integer draft.
+ * Book stdin programs remain complete code-only documents; no scanf is erased. */
+async function nativeDraft(page: Page) {
+  const before = await snapshot(page);
+  await editor(page).fill(
+    '#include <stdio.h>\nint main(void){int probe=1;printf("%d\\n",probe);return 0;}',
   );
-  const directory = join(
-    '.artifacts',
-    process.env.TASK_EVIDENCE_TASK ?? '11.2',
-    'regression',
-    'practice-learning',
-    testInfo.project.name,
-    'six-lessons-24-groups',
-    'runs',
+  await page.getByRole('button', { name: '同步到积木', exact: true }).click();
+  await expect(blockWorkspace(page)).toBeVisible();
+  const ids = await blockOptions(page, /^\d+\. 整数 · 1$/);
+  expect(ids).toHaveLength(1);
+  await selectBlock(page, ids[0]);
+  await blockWorkspace(page).getByRole('textbox', { name: '整数值', exact: true }).fill('2');
+  await expect(page.getByText('积木生成的完整程序预览', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '应用生成代码', exact: true }).click();
+  const source = await editor(page).inputValue();
+  expect(source).toMatch(/probe\s*=\s*2/);
+  await page.getByRole('button', { name: '运行当前代码', exact: true }).click();
+  await expect(page.locator('.c6-trace')).toBeVisible();
+  const raw = await observedC6Packet(page);
+  expect(raw).toMatchObject({ moduleSeen: true, terminated: true });
+  const request = JSON.parse(Buffer.from(raw.request!, 'base64').toString('utf8')) as C6RunRequest;
+  expect(request.source).toBe(source);
+  const result = await decodeC6Response(
+    Uint8Array.from(Buffer.from(raw.response!, 'base64')).buffer,
+    request,
+    engineBuild.wasmSha256,
   );
-  await mkdir(directory, { recursive: true });
-  const identities = [];
-  for (const [index, entry] of captured.entries()) {
-    expect(entry.moduleSeen).toBe(true);
-    expect(entry.requestBase64).toBeTruthy();
-    expect(entry.responseBase64).toBeTruthy();
-    const requestBytes = Buffer.from(entry.requestBase64!, 'base64');
-    const resultBytes = Buffer.from(entry.responseBase64!, 'base64');
-    const request = JSON.parse(requestBytes.toString('utf8')) as ExecuteRequest;
-    const result = await decodeResult(Uint8Array.from(resultBytes).buffer, request);
-    expect(result.producer).toBe('rust');
-    expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0, diagnostics: [] });
-    expect(result.judgeResult?.status).toBe('met');
-    expect(request.mode).toBe('exercise-test');
-    expect(request.remainingMs).toBeGreaterThan(0);
-    expect(request.remainingMs).toBeLessThanOrEqual(1000);
-    const prefix = `${String(index + 1).padStart(2, '0')}-${request.identity.testCaseKey}`;
-    await writeFile(join(directory, `${prefix}.request.json`), requestBytes);
-    await writeFile(join(directory, `${prefix}.result.json`), resultBytes);
-    await writeFile(join(directory, `${prefix}.catalog.json`), entry.catalogJson!);
-    identities.push({ subjectRef: request.subjectRef, identity: request.identity });
-  }
-  return identities;
+  if ('cases' in result || 'editVersion' in result) throw Error('Actual standalone run required');
+  expect(result.terminal.status).toBe('completed');
+  await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
+  await expect(page.getByLabel('当前游标标准输出')).toHaveText('2\n');
+  assertLearningEqual(before, await snapshot(page));
 }
 
 test('a new local archive completes six lessons through native block edits, 24 real groups, review, course return and readonly refresh', async ({
   page,
 }, testInfo) => {
   test.setTimeout(90_000);
-  await observeCaseSetExecution(page);
-  await page.goto('/#/courses');
-  await expect(page.getByTestId('course-reading')).toHaveAttribute('data-state', 'ready');
+  await page.goto('/#/');
   await localReady(page);
   const initial = await snapshot(page);
   expect(initial.progress).toEqual([]);
   expect(initial.receipts).toEqual([]);
-  const states = [];
-  for (const lesson of reviewed.lessons) {
-    const exercise = reviewed.exercises.find(
-      (entry) => entry.id === lesson.requiredExerciseRefs[0].id,
-    )!;
-    await openLesson(page, lesson.id);
-    await confirm(page);
-    const link = page.getByRole('link', { name: '进入练习工作区', exact: true });
-    await expect(link).toHaveAttribute('href', `#/practice/${exercise.id}`);
+  await confirmCurrentLesson(page, 'lesson.c6.s2.2.1');
+  const states = [],
+    runs = [];
+  for (const [i, e] of exercises.entries()) {
+    await confirmCurrentLesson(page, e.lessonRef.id);
+    const link = page.getByRole('link', { name: '完成配套执行练习', exact: true });
+    await expect(link).toHaveAttribute('href', `#/practice/${e.ref.id}`);
     await link.click();
-    await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-    await showPracticeBlocks(page);
-    await expect(blockWorkspace(page)).toBeVisible();
-    await correctStarter(page, exercise.id);
-    await submit(page);
+    await expect(editor(page)).toHaveValue(e.starterSource);
+    if (i === 0) await nativeDraft(page);
+    await editor(page).fill(e.referenceSource);
+    const run = await submit(page, 'passed', e.referenceSource, e);
     await savedPass(page);
-    const executionCount = await executeCount(page);
-    const controls = page.getByTestId('player-controls');
-    await controls.getByRole('combobox', { name: '播放速度', exact: true }).selectOption('4');
-    await controls.getByRole('button', { name: '播放', exact: true }).click();
-    await expect
-      .poll(async () => Number(await controls.getAttribute('data-cursor')))
-      .toBeGreaterThan(0);
-    const pause = controls.getByRole('button', { name: '暂停', exact: true });
-    if (await pause.count()) await pause.click();
-    const cursor = await controls.getAttribute('data-cursor');
-    await panel(page).getByRole('link', { name: '查看本次复盘', exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`/practice/${exercise.id}/review$`));
-    await expect(controls).toHaveAttribute('data-cursor', cursor!);
-    expect(await executeCount(page)).toBe(executionCount);
-    await page.getByRole('link', { name: '返回练习工作区', exact: true }).click();
-    await expect(controls).toHaveAttribute('data-cursor', cursor!);
-    expect(await executeCount(page)).toBe(executionCount);
-    await page.getByRole('link', { name: '返回本节学习', exact: true }).click();
-    await expect(page.getByTestId('lesson-progress')).toContainText('小节已完成');
-    const current = await snapshot(page);
-    noExecutionPersistence(current);
-    states.push(current);
+    runs.push(run);
+    const count = await currentJudgeCount(page),
+      before = await snapshot(page);
+    for (let n = 0; n < 4; n++) {
+      await page.getByRole('button', { name: `第 ${n + 1} 组 · 通过`, exact: true }).click();
+      const trace = page.getByRole('region', { name: '真实执行轨迹', exact: true });
+      await expect(trace).toHaveAttribute('data-cursor', '0');
+      await page.getByRole('button', { name: '下一步', exact: true }).click();
+      await expect(trace).toHaveAttribute('data-cursor', '1');
+      await page.getByRole('button', { name: '上一步', exact: true }).click();
+      await expect(trace).toHaveAttribute('data-cursor', '0');
+      await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
+      await expect(page.getByLabel('当前游标标准输出')).toHaveText(e.tests[n].expectedStdout);
+    }
+    expect(await currentJudgeCount(page)).toBe(count);
+    expect(await snapshot(page)).toEqual(before);
+    await page.locator('.c6-workbench > a.text-link').click();
+    await expect(page.locator('.c6-reading-confirmation')).toContainText('本节已完成');
+    const state = await snapshot(page);
+    assertNoExecutionPersistence(
+      state,
+      exercises.map((e) => e.referenceSource),
+      exercises,
+    );
+    states.push(state);
   }
-  const runs = await captureAllRuns(page, testInfo);
-  expect(runs).toHaveLength(24);
-  for (const exercise of reviewed.exercises)
-    expect(
-      runs
-        .filter((run) => run.subjectRef?.id === exercise.id)
-        .map((run) => run.identity.testCaseKey),
-    ).toEqual(exercise.tests.map((entry) => entry.caseKey));
+  expect(runs.flatMap((r) => r.result.cases)).toHaveLength(24);
   const finished = await snapshot(page);
-  expect(finished.progress).toHaveLength(24);
-  expect(finished.receipts).toHaveLength(18);
-  expect(finished.ledger).toHaveLength(13);
-  expect(finished.ledger.reduce((sum, entry) => sum + (entry.points ?? 0), 0)).toBe(185);
-  expect(finished.dailyFacts).toHaveLength(12);
-  expect(new Set(finished.receipts.map((row) => row.eventId)).size).toBe(18);
-  expect(finished.progress.filter((row) => row.eventType === 'lesson.completed')).toHaveLength(6);
-  await page.goto('/#/courses');
-  for (const lesson of reviewed.lessons)
-    await expect(page.locator(`[data-course-lesson="${lesson.id}"]`)).toContainText('小节已完成');
+  expect(finished.progress.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(6);
+  expect(finished.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(7);
+  expect(finished.ledger).toHaveLength(6);
+  expect(finished.ledger.reduce((s, r) => s + (r.points ?? 0), 0)).toBe(65);
+  expect(finished.dailyFacts).toHaveLength(13);
+  expect(new Set(finished.receipts.map((r) => r.eventId)).size).toBe(finished.receipts.length);
+  await page.goto('/#/');
+  await expect(page.getByText('7 / 404 个小节已完成', { exact: true })).toBeVisible();
   await page.reload();
-  await expect(page.getByTestId('course-reading')).toHaveAttribute('data-state', 'ready');
   await localReady(page);
   expect(await snapshot(page)).toEqual(finished);
-  await openPractice(page, reviewed.exercises[0].id);
-  await expect(page.locator(`[data-learning-subject="${reviewed.exercises[0].id}"]`)).toContainText(
-    '练习已通过',
-  );
-  await expect(page.getByTestId('practice-stdout')).toHaveCount(0);
+  await page.goto(`/#/practice/${exercise.ref.id}`);
+  await expect(editor(page)).toHaveValue(exercise.starterSource);
+  await expect(
+    page.getByText('已保存首次通过记录。当前代码的运行和判题结果显示在下方。', { exact: true }),
+  ).toBeVisible();
+  await expect(page.locator('.c6-trace')).toHaveCount(0);
   expect(await snapshot(page)).toEqual(finished);
-  await evidence(testInfo, 'six-lessons-24-groups', { initial, states, finished, runs });
+  await evidence(testInfo, 'six-current-lessons-24-groups', { initial, states, finished, runs });
 });
 
 test('passing before study confirmation stays incomplete; later failures preserve history and repeated real passes deduplicate rights', async ({
   page,
 }, testInfo) => {
-  const exercise = reviewed.exercises[0],
-    lesson = reviewed.lessons[0];
-  await openPractice(page, exercise.id);
-  await correctStarter(page, exercise.id);
+  await openCurrentAnswer(page, exercise.ref.id);
   await submit(page);
   await savedPass(page);
   const passed = await snapshot(page);
-  expect(passed.progress.map((row) => row.eventType)).toEqual(['exercise.passed']);
-  await page.getByRole('link', { name: '返回本节学习', exact: true }).click();
-  await expect(page.getByTestId('lesson-progress')).not.toContainText('小节已完成');
-  await confirm(page);
-  await expect(page.getByTestId('lesson-progress')).toContainText('小节已完成');
+  expect(passed.progress.map((r) => r.eventType)).toEqual(['exercise.passed']);
+  await confirmCurrentLesson(page, exercise.lessonRef.id);
+  await expect(page.locator('.c6-reading-confirmation')).toContainText('本节已完成');
+  await confirmCurrentLesson(page, 'lesson.c6.s2.2.1');
   const complete = await snapshot(page);
-  await page.getByRole('link', { name: '进入练习工作区', exact: true }).click();
-  await showPracticeBlocks(page);
-  await expect(blockWorkspace(page)).toBeVisible();
-  await submit(page, 'unmet');
-  expect(await snapshot(page)).toEqual(complete);
-  await correctStarter(page, exercise.id);
+  await openCurrentAnswer(page, exercise.ref.id);
+  await editor(page).fill(wrongSource);
+  await submit(page, 'failed', wrongSource);
+  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  const failed = await snapshot(page);
+  expect(failed.ledger).toEqual(complete.ledger);
+  expect(failed.dailyFacts).toEqual(complete.dailyFacts);
+  expect(failed.progress.filter((r) => r.eventType !== 'exercise.attempt-evaluated')).toEqual(
+    complete.progress,
+  );
+  expect(failed.progress.filter((r) => r.eventType === 'exercise.attempt-evaluated')).toEqual([
+    expect.objectContaining({
+      subjectRef: exercise.ref,
+      result: 'failed',
+      failedCaseKey: 'case-1',
+      resultCategory: 'wrong-answer',
+    }),
+  ]);
+  const first = complete.courseActivities.find((r) => r.kind === 'exercise')!;
+  const after = failed.courseActivities.find((r) => r.kind === 'exercise')!;
+  if (first.kind !== 'exercise' || after.kind !== 'exercise')
+    throw Error('Actual exercise activities required');
+  expect(after.firstPass).toEqual(first.firstPass);
+  expect(after.latestAttempt.status).toBe('failed');
+  await editor(page).fill(exercise.referenceSource);
   await submit(page);
   await savedPass(page);
   const repeated = await snapshot(page);
   expect(repeated.ledger).toEqual(complete.ledger);
   expect(repeated.dailyFacts).toEqual(complete.dailyFacts);
-  expect(repeated.receipts.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(2);
-  expect(repeated.progress.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(1);
-  expect(repeated.progress.filter((row) => row.eventType === 'lesson.completed')).toHaveLength(1);
+  expect(repeated.receipts.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(2);
   expect(
-    repeated.progress.some(
-      (row) => row.subjectRef.id === lesson.id && row.eventType === 'lesson.completed',
-    ),
-  ).toBe(true);
-  noExecutionPersistence(repeated);
-  await evidence(testInfo, 'pass-confirm-repeat', { passed, complete, repeated });
+    repeated.receipts.filter((r) => r.eventType === 'exercise.attempt-evaluated'),
+  ).toHaveLength(1);
+  expect(repeated.progress.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(1);
+  expect(repeated.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(2);
+  assertNoExecutionPersistence(repeated, [exercise.referenceSource, wrongSource], exercises);
+  await evidence(testInfo, 'pass-confirm-repeat', { passed, complete, failed, repeated });
 });
-
-interface SaveFault {
-  armed: boolean;
-  attempted: Receipt[];
-}
-async function installPassQuota(page: Page) {
-  await page.addInitScript(() => {
-    const state: SaveFault = { armed: false, attempted: [] };
-    Object.assign(window, { __practiceSaveFault: state });
-    const original = IDBObjectStore.prototype.add;
-    IDBObjectStore.prototype.add = function (value, key) {
-      if (
-        this.name === 'receipts' &&
-        (value as { eventType?: string })?.eventType === 'exercise.passed'
-      ) {
-        state.attempted.push(structuredClone(value as Receipt));
-        if (state.armed) {
-          state.armed = false;
-          throw new DOMException('Isolated practice receipt failure', 'QuotaExceededError');
-        }
-      }
-      return key === undefined ? original.call(this, value) : original.call(this, value, key);
-    };
-  });
-}
-const fault = (page: Page) =>
-  page.evaluate(
-    () => (window as unknown as { __practiceSaveFault: SaveFault }).__practiceSaveFault,
-  );
-const armFault = (page: Page) =>
-  page.evaluate(() => {
-    (window as unknown as { __practiceSaveFault: SaveFault }).__practiceSaveFault.armed = true;
-  });
 
 test('a native quota abort saves no partial pass and retries the original accepted event after editing and leaving the workspace', async ({
   page,
 }, testInfo) => {
-  await installPassQuota(page);
-  const exercise = reviewed.exercises[0];
-  await openLesson(page, reviewed.lessons[0].id);
-  await confirm(page);
+  await installCurrentReceiptFault(page);
+  await confirmGroup(page);
+  await openCurrentAnswer(page, exercise.ref.id);
   const before = await snapshot(page);
-  await page.getByRole('link', { name: '进入练习工作区', exact: true }).click();
-  await showPracticeBlocks(page);
-  await expect(blockWorkspace(page)).toBeVisible();
-  await correctStarter(page, exercise.id);
-  await armFault(page);
+  await armCurrentReceiptFault(page);
   await submit(page);
-  await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(
-    'data-save-state',
-    'unsaved',
-  );
   await expect(saveStatus(page)).toHaveAttribute('data-save-status', 'unsaved');
   const failed = await snapshot(page);
-  for (const store of ['progress', 'receipts', 'ledger', 'dailyFacts'] as const)
-    expect(failed[store]).toEqual(before[store]);
-  const original = (await fault(page)).attempted[0];
+  assertLearningEqual(before, failed);
+  const original = (await currentReceiptFault(page)).attempted[0];
   expect(original.eventType).toBe('exercise.passed');
-  await wrongEcho(page);
-  await expect(page.getByTestId('practice-stdout')).toHaveCount(0);
-  await page.goto('/#/courses');
+  const count = await currentJudgeCount(page);
+  await editor(page).fill(wrongSource);
+  await expect(page.locator('.c6-trace')).toHaveCount(0);
+  await page.goto('/#/');
   await expect(saveStatus(page)).toHaveAttribute('data-save-status', 'unsaved');
   await saveStatus(page).getByRole('button', { name: '重试未保存操作', exact: true }).click();
   await localReady(page);
-  await expect(saveStatus(page).getByText('已保存', { exact: true })).toBeVisible();
+  expect(await currentJudgeCount(page)).toBe(count);
   const retried = await snapshot(page);
-  const received = retried.receipts.find((row) => row.eventType === 'exercise.passed')!;
-  const originalSummary: Partial<Receipt> = { ...original };
-  const receivedSummary: Partial<Receipt> = { ...received };
-  delete originalSummary.committedRevision;
-  delete receivedSummary.committedRevision;
-  expect(receivedSummary).toEqual(originalSummary);
+  const received = retried.receipts.find((r) => r.eventType === 'exercise.passed')!;
+  const a: Partial<Receipt> = { ...original },
+    b: Partial<Receipt> = { ...received };
+  delete a.committedRevision;
+  delete b.committedRevision;
+  expect(b).toEqual(a);
   expect(retried.ledger).toHaveLength(3);
-  expect(retried.dailyFacts).toHaveLength(2);
+  expect(retried.dailyFacts).toHaveLength(3);
   await page.reload();
   await localReady(page);
   expect(await snapshot(page)).toEqual(retried);
-  noExecutionPersistence(retried);
+  assertNoExecutionPersistence(retried, [exercise.referenceSource], exercises);
   await evidence(testInfo, 'native-quota-original-retry', { before, failed, original, retried });
 });
 
@@ -430,96 +285,95 @@ test('cross-page clear removes real saved history and a pending accepted retry w
   page,
   context,
 }, testInfo) => {
-  await installPassQuota(page);
-  const exercise = reviewed.exercises[0];
-  await openLesson(page, reviewed.lessons[0].id);
-  await confirm(page);
-  await page.getByRole('link', { name: '进入练习工作区', exact: true }).click();
-  await showPracticeBlocks(page);
-  await expect(blockWorkspace(page)).toBeVisible();
-  await correctStarter(page, exercise.id);
+  await installCurrentReceiptFault(page);
+  await confirmGroup(page);
+  await openCurrentAnswer(page, exercise.ref.id);
   await submit(page);
   await savedPass(page);
   const saved = await snapshot(page);
-  await armFault(page);
+  await armCurrentReceiptFault(page);
   await submit(page);
   await expect(saveStatus(page)).toHaveAttribute('data-save-status', 'unsaved');
   const settings = await context.newPage();
   await clear(settings);
-  await expect(page.getByTestId('practice-stdout')).toHaveCount(0);
+  await expect(page.locator('.c6-trace')).toHaveCount(0);
   await expect(
     saveStatus(page).getByRole('button', { name: '重试未保存操作', exact: true }),
   ).toHaveCount(0);
   const cleared = await snapshot(page);
   expect(cleared.meta.generation).not.toBe(saved.meta.generation);
-  for (const store of ['progress', 'receipts', 'ledger', 'dailyFacts'] as const)
+  for (const store of [
+    'progress',
+    'receipts',
+    'ledger',
+    'dailyFacts',
+    'courseActivities',
+    'courseDrafts',
+  ] as const)
     expect(cleared[store]).toEqual([]);
   await page.reload();
-  await expect(panel(page)).toHaveAttribute('data-state', 'ready');
+  await expect(editor(page)).toHaveValue(exercise.starterSource);
   await localReady(page);
   expect(await snapshot(page)).toEqual(cleared);
   await evidence(testInfo, 'native-clear-real-history-and-pending', { saved, cleared });
+  await settings.close();
 });
 
 test('missing practice learning authorization keeps successful judgement temporary and explicit recovery requires a fresh accepted submission', async ({
   page,
 }, testInfo) => {
-  await page.route(authorization, (route) =>
-    route.fulfill({ status: 503, body: 'isolated missing authorization' }),
+  const authorization = '**/content/c/primer6-teaching/manifest-2.0.0.json';
+  await page.route(authorization, (r) =>
+    r.fulfill({ status: 503, body: 'Explicit current manifest unavailable' }),
   );
-  await openPractice(page, reviewed.exercises[0].id);
-  const before = await snapshot(page);
-  await expect(page.getByTestId('practice-learning-unavailable')).toBeVisible();
-  await correctStarter(page, reviewed.exercises[0].id);
-  await submit(page);
-  await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(
-    'data-save-state',
-    'unavailable',
-  );
-  expect(await snapshot(page)).toEqual(before);
+  await page.goto(`/#/practice/${exercise.ref.id}`);
+  await expect(page.getByRole('button', { name: '重试读取', exact: true })).toBeVisible();
+  await expect(editor(page)).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '判定全部四组', exact: true })).toHaveCount(0);
+  expect(await currentJudgeCount(page)).toBe(0);
+  // Activation fails before opening the learning archive. Inspect the database
+  // inventory instead of creating an empty database with indexedDB.open.
+  const before = await page.evaluate(() => indexedDB.databases());
+  expect(before.some((db) => db.name === 'c-viz-learning')).toBe(false);
   await page.unroute(authorization);
-  await page
-    .getByTestId('practice-learning-unavailable')
-    .getByRole('button', { name: '重试读取学习授权', exact: true })
-    .click();
-  await expect(page.getByTestId('practice-learning-unavailable')).toHaveCount(0);
-  await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('practice-stdout')).toHaveCount(0);
-  expect(await snapshot(page)).toEqual(before);
-  await correctStarter(page, reviewed.exercises[0].id);
+  await page.getByRole('button', { name: '重试读取', exact: true }).click();
+  await expect(editor(page)).toHaveValue(exercise.starterSource);
+  expect(await currentJudgeCount(page)).toBe(0);
+  const ready = await snapshot(page);
+  expect(ready.progress).toEqual([]);
+  expect(ready.receipts).toEqual([]);
+  expect(ready.ledger).toEqual([]);
+  await editor(page).fill(exercise.referenceSource);
   await submit(page);
   await savedPass(page);
   const recovered = await snapshot(page);
-  expect(recovered.progress.map((row) => row.eventType)).toEqual(['exercise.passed']);
-  noExecutionPersistence(recovered);
-  await evidence(testInfo, 'authorization-fail-closed-and-recovery', { before, recovered });
+  expect(recovered.progress.map((r) => r.eventType)).toEqual(['exercise.passed']);
+  assertNoExecutionPersistence(recovered, [exercise.referenceSource], exercises);
+  await evidence(testInfo, 'current-authorization-fail-closed-and-recovery', { before, recovered });
 });
 
 test('two production pages passing the same exercise merge their receipts and share one first right and daily fact', async ({
   page,
   context,
 }, testInfo) => {
-  const exercise = reviewed.exercises[0];
   const other = await context.newPage();
-  await openPractice(page, exercise.id);
-  await correctStarter(page, exercise.id);
-  await prepare(page);
-  await openPractice(other, exercise.id);
-  await correctStarter(other, exercise.id);
-  await prepare(other);
-  await Promise.all([
-    panel(page).getByRole('button', { name: '提交练习', exact: true }).click(),
-    panel(other).getByRole('button', { name: '提交练习', exact: true }).click(),
-  ]);
+  await openCurrentAnswer(page, exercise.ref.id);
+  await openCurrentAnswer(other, exercise.ref.id);
+  await Promise.all(
+    [page, other].map((p) => p.getByRole('button', { name: '判定全部四组', exact: true }).click()),
+  );
   await savedPass(page);
   await savedPass(other);
+  await assertCurrentJudge(page, exercise, 'passed');
+  await assertCurrentJudge(other, exercise, 'passed');
   const merged = await snapshot(page);
   expect(merged.receipts).toHaveLength(2);
-  expect(new Set(merged.receipts.map((row) => row.eventId)).size).toBe(2);
+  expect(new Set(merged.receipts.map((r) => r.eventId)).size).toBe(2);
   expect(merged.progress).toHaveLength(1);
   expect(merged.dailyFacts).toHaveLength(1);
   expect(merged.ledger).toHaveLength(1);
   expect(merged.progress[0].eventType).toBe('exercise.passed');
-  noExecutionPersistence(merged);
+  assertNoExecutionPersistence(merged, [exercise.referenceSource], exercises);
   await evidence(testInfo, 'native-concurrent-same-exercise', merged);
+  await other.close();
 });

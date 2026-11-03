@@ -3,8 +3,6 @@ import { expect, test, type Page } from '@playwright/test';
 import {
   archive,
   ready,
-  openAnswer,
-  confirm,
   submit,
   capture,
   panel,
@@ -12,9 +10,21 @@ import {
   folder,
   observeCaseSetExecution,
 } from './notebook-helpers';
+import {
+  openIndependentRepair as openAnswer,
+  confirmCurrentLesson as confirm,
+} from './current-course-helpers';
 const marksStatus = (page: Page) => page.getByTestId('knowledge-marks-status');
-const variableMark = (page: Page) => page.locator('[data-knowledge-mark="knowledge.c.variables"]');
-const errorRow = (page: Page) => page.locator('[data-mistake-id="exercise.c.echo"]');
+const variableMark = (page: Page) => page.locator('[data-knowledge-mark="knowledge.c6.s2.1"]');
+const mistake = (page: Page, id: string) =>
+  page.locator('.c6-mistake-list > li').filter({
+    has: page.locator(
+      `a[href="#/${id.startsWith('exercise.cpp.') ? 'bugs/memory' : 'practice'}/${id}"]`,
+    ),
+  });
+const errorRow = (page: Page) => mistake(page, 'exercise.c.bug-parenthesis');
+const unfamiliarRows = (page: Page) => page.locator('.c6-knowledge-list > li');
+const emptyMistakes = (page: Page) => page.getByText('暂无已保存的错题。', { exact: true });
 
 test('15.2 formal stale mark retry cannot overwrite a peer command and re-reading enables a fresh explicit action', async ({
   page,
@@ -44,6 +54,15 @@ test('15.2 formal stale mark retry cannot overwrite a peer command and re-readin
   await expect(variableMark(other)).toHaveAttribute('aria-pressed', 'true');
   const saved = ((await archive(other)) as unknown as { knowledgeMarks: unknown[] }).knowledgeMarks;
   await marksStatus(page).getByRole('button', { name: '重试陌生标记', exact: true }).click();
+  await test.info().attach('actual-peer-mark-and-stale-retry-status', {
+    body: JSON.stringify({
+      saved,
+      after: ((await archive(page)) as unknown as { knowledgeMarks: unknown[] }).knowledgeMarks,
+      status: await marksStatus(page).getAttribute('data-state'),
+      text: await marksStatus(page).textContent(),
+    }),
+    contentType: 'application/json',
+  });
   await expect(marksStatus(page)).toHaveAttribute('data-state', 'failed');
   await expect(marksStatus(page)).toContainText('S_REVISION_CONFLICT');
   expect(
@@ -66,9 +85,7 @@ test('15.2 formal actual C++ pointer errors collect while loop resource or deadl
   await expect(page.getByTestId('memory-bug-session')).toHaveAttribute('data-state', 'unmet');
   await expect(page.getByTestId('memory-bug-session')).toHaveAttribute('data-save-state', 'saved');
   await notebook(page);
-  await expect(
-    page.locator('[data-mistake-id="exercise.cpp.bug-uninitialized-pointer"]'),
-  ).toContainText('程序错误');
+  await expect(mistake(page, 'exercise.cpp.bug-uninitialized-pointer')).toContainText('程序错误');
   const before = await archive(page);
   await page.goto('/#/bugs/memory/exercise.cpp.bug-missing-update');
   await ready(page);
@@ -80,7 +97,7 @@ test('15.2 formal actual C++ pointer errors collect while loop resource or deadl
   );
   await expect(page.getByTestId('memory-bug-session')).toContainText(/E_STEP_LIMIT|E_DEADLINE/);
   await notebook(page);
-  await expect(page.locator('[data-mistake-id="exercise.cpp.bug-missing-update"]')).toHaveCount(0);
+  await expect(mistake(page, 'exercise.cpp.bug-missing-update')).toHaveCount(0);
   expect((await archive(page)).receipts).toEqual(before.receipts);
 });
 async function notebook(page: Page) {
@@ -90,8 +107,8 @@ async function notebook(page: Page) {
   await expect(marksStatus(page)).toHaveAttribute('data-state', 'ready');
 }
 async function lesson(page: Page) {
-  await page.goto('/#/lessons/lesson.c.variables-output');
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
+  await page.goto('/#/lessons/lesson.c6.s2.1');
+  await expect(page.locator('.c6-teaching-reading')).toBeVisible();
   await ready(page);
   await expect(marksStatus(page)).toHaveAttribute('data-state', 'ready');
 }
@@ -106,12 +123,16 @@ async function failed(page: Page) {
 }
 async function changePrint(page: Page, expression: string) {
   const source = await code(page).inputValue();
-  await code(page).fill(source.replace(/printf\([^;]+;/, `printf("%d\\n", ${expression});`));
+  const changed = source.replace(/printf\([^;]+;/, `printf("%d\\n", ${expression});`);
+  await code(page).clear();
+  await expect(code(page)).toHaveValue('');
+  await code(page).fill(changed);
+  await expect(code(page)).toHaveValue(changed);
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
 }
-async function unlockArithmetic(page: Page) {
-  await confirm(page, 'lesson.c.expressions');
-  await openAnswer(page, 'exercise.c.two-x-plus-three');
+async function prepareArithmeticRepair(page: Page) {
+  await confirm(page, 'lesson.c6.s5.1');
+  await openAnswer(page, 'exercise.c.bug-parenthesis');
   await submit(page);
 }
 
@@ -120,10 +141,10 @@ test('15.2 common empty notebook is honest, navigation and refresh never write l
 }) => {
   await notebook(page);
   const before = await archive(page);
-  await expect(page.getByTestId('mistakes-empty')).toBeVisible();
-  await expect(page.locator('[data-unfamiliar-id]')).toHaveCount(0);
-  await page.getByRole('link', { name: '去课程标记陌生点 →', exact: true }).click();
-  await ready(page);
+  await expect(emptyMistakes(page)).toBeVisible();
+  await expect(unfamiliarRows(page)).toHaveCount(0);
+  await page.getByRole('link', { name: 'C 语言课程', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '课程目录', exact: true })).toBeVisible();
   await page.goBack();
   await expect(page.getByRole('heading', { name: '错题与陌生点', exact: true })).toBeVisible();
   await page.reload();
@@ -141,8 +162,9 @@ test('15.2 common three widths keep notebook navigation and meaningful empty act
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth - innerWidth),
     ).toBeLessThanOrEqual(1);
-    await page.getByRole('link', { name: '去课程标记陌生点 →', exact: true }).focus();
-    await expect(page.getByRole('link', { name: '去课程标记陌生点 →', exact: true })).toBeFocused();
+    const action = page.getByRole('link', { name: '打开复习队列', exact: true });
+    await action.focus();
+    await expect(action).toBeFocused();
     await page.screenshot({ path: `${folder}/empty-${width}.png`, fullPage: true });
   }
 });
@@ -151,22 +173,22 @@ test('15.2 formal three genuine error categories merge, repair and reopen withou
 }) => {
   test.setTimeout(90000);
   await observeCaseSetExecution(page);
-  await unlockArithmetic(page);
-  await openAnswer(page, 'exercise.c.echo');
+  await prepareArithmeticRepair(page);
+  await openAnswer(page, 'exercise.c.bug-parenthesis');
   const before = await archive(page);
   for (const [index, expression, category] of [
-    [0, 'x + 1', 'wrong-answer'],
-    [1, 'x % 1000', 'teaching-goal-unmet'],
+    [0, 'x * 2 + 4', 'wrong-answer'],
+    [1, 'x + x + 3', 'teaching-goal-unmet'],
     [2, 'x / (x - x)', 'program-error'],
   ] as const) {
-    await openAnswer(page, 'exercise.c.echo');
-    // All published inputs fit within (-1000, 1000). Modulo preserves their
-    // answers while the Rust provenance judge rejects this teaching shortcut.
+    await openAnswer(page, 'exercise.c.bug-parenthesis');
+    // Repeated addition has the exact expected outputs, while Rust's actual
+    // provenance judgement still requires the stated multiplication target.
     await changePrint(page, expression);
     await failed(page);
     await capture(page, `error-${category}`);
     await notebook(page);
-    await expect(errorRow(page)).toContainText(`${index + 1} 次真实失败`);
+    await expect(errorRow(page)).toContainText(`${index + 1} 次有效错误`);
     expect(
       (await archive(page)).receipts
         .filter((r) => r.eventType === 'exercise.attempt-evaluated')
@@ -180,10 +202,10 @@ test('15.2 formal three genuine error categories merge, repair and reopen withou
   await page.reload();
   await ready(page);
   expect(await archive(page)).toEqual(failedArchive);
-  await openAnswer(page, 'exercise.c.echo');
+  await openAnswer(page, 'exercise.c.bug-parenthesis');
   await submit(page);
   await notebook(page);
-  await expect(errorRow(page)).toHaveAttribute('data-repaired', 'yes');
+  await expect(errorRow(page)).toContainText('已修复');
   const repaired = await archive(page);
   await errorRow(page)
     .getByRole('link', { name: /重新练习/ })
@@ -194,11 +216,12 @@ test('15.2 formal three genuine error categories merge, repair and reopen withou
   // Every learning/appearance/mark partition must remain unchanged.
   for (const key of Object.keys(repaired) as (keyof typeof repaired)[])
     if (String(key) !== 'editHistory') expect(revisited[key]).toEqual(repaired[key]);
+  await openAnswer(page, 'exercise.c.bug-parenthesis');
   await changePrint(page, 'x + 1');
   await failed(page);
   await notebook(page);
-  await expect(errorRow(page)).toHaveAttribute('data-repaired', 'no');
-  await expect(errorRow(page)).toContainText('4 次真实失败');
+  await expect(errorRow(page)).toContainText('待复习');
+  await expect(errorRow(page)).toContainText('4 次有效错误');
   expect((await archive(page)).ledger).toEqual(repaired.ledger);
   await page.screenshot({ path: `${folder}/actual-errors.png`, fullPage: true });
   await writeFile(`${folder}/actual-errors.json`, JSON.stringify(await archive(page), null, 2));
@@ -224,9 +247,9 @@ test('15.2 formal failed attempt transaction retries its original event once and
       return key === undefined ? add.call(this, value) : add.call(this, value, key);
     };
   });
-  await unlockArithmetic(page);
+  await prepareArithmeticRepair(page);
   const before = await archive(page);
-  await openAnswer(page, 'exercise.c.echo');
+  await openAnswer(page, 'exercise.c.bug-parenthesis');
   await changePrint(page, 'x + 1');
   await page.evaluate(() => {
     (window as unknown as { __notebookQuota: { armed: boolean } }).__notebookQuota.armed = true;
@@ -240,13 +263,13 @@ test('15.2 formal failed attempt transaction retries its original event once and
     (await archive(page)).receipts.filter((r) => r.eventType === 'exercise.attempt-evaluated'),
   ).toEqual([]);
   await page.goto('/#/notebook');
-  await expect(page.getByTestId('mistakes-empty')).toBeVisible();
+  await expect(emptyMistakes(page)).toBeVisible();
   await page
     .getByTestId('learning-save-status')
     .getByRole('button', { name: '重试未保存操作', exact: true })
     .click();
   await ready(page);
-  await expect(errorRow(page)).toContainText('1 次真实失败');
+  await expect(errorRow(page)).toContainText('1 次有效错误');
   const ids = await page.evaluate(
     () => (window as unknown as { __notebookQuota: { ids: string[] } }).__notebookQuota.ids,
   );
@@ -279,16 +302,16 @@ test('15.2 formal double mark, refresh, source review and familiar tombstone hav
   await expect(variableMark(page)).toHaveAttribute('aria-pressed', 'true');
   const other = await context.newPage();
   await notebook(other);
-  await expect(other.locator('[data-unfamiliar-id]')).toHaveCount(1);
+  await expect(unfamiliarRows(other)).toHaveCount(1);
   await other.screenshot({ path: `${folder}/actual-mark.png`, fullPage: true });
   await writeFile(`${folder}/actual-mark.json`, JSON.stringify(await archive(other), null, 2));
-  await other.getByRole('link', { name: '复习：变量和输出', exact: true }).click();
+  await other.getByRole('link', { name: '2.1 简单的C程序示例', exact: true }).click();
   await ready(other);
   expect((await archive(other)).receipts).toEqual(before.receipts);
   await variableMark(page).click();
   await expect(marksStatus(page)).toHaveAttribute('data-state', 'ready');
   await notebook(other);
-  await expect(other.locator('[data-unfamiliar-id]')).toHaveCount(0);
+  await expect(unfamiliarRows(other)).toHaveCount(0);
   const row = (
     (await archive(page)) as unknown as {
       knowledgeMarks: { marked: boolean; revision: number; firstAt: string }[];
@@ -334,7 +357,7 @@ test('15.2 formal native mark rollback and exact retry preserve the original com
   expect(ids).toHaveLength(2);
   expect(ids[0]).toBe(ids[1]);
   await notebook(page);
-  await expect(page.locator('[data-unfamiliar-id]')).toHaveCount(1);
+  await expect(unfamiliarRows(page)).toHaveCount(1);
 });
 test('15.2 formal peer clear discards pending marks and stored error summaries without resurrection', async ({
   page,
@@ -374,7 +397,7 @@ test('15.2 formal peer clear discards pending marks and stored error summaries w
   ).toHaveCount(0);
   await page.reload();
   await notebook(page);
-  await expect(page.locator('[data-unfamiliar-id]')).toHaveCount(0);
+  await expect(unfamiliarRows(page)).toHaveCount(0);
   expect(
     ((await archive(page)) as unknown as { knowledgeMarks: unknown[] }).knowledgeMarks,
   ).toEqual([]);
@@ -419,8 +442,8 @@ test('15.2 formal corrupt mark partition stays preserved and visibly unavailable
 test('15.2 formal damaged core attempt receipts show unknown instead of a false empty notebook', async ({
   page,
 }) => {
-  await unlockArithmetic(page);
-  await openAnswer(page, 'exercise.c.echo');
+  await prepareArithmeticRepair(page);
+  await openAnswer(page, 'exercise.c.bug-parenthesis');
   await changePrint(page, 'x + 1');
   await failed(page);
   await page.evaluate(async () => {
@@ -452,8 +475,8 @@ test('15.2 formal damaged core attempt receipts show unknown instead of a false 
     'readonly',
   );
   await expect(
-    page.getByText('学习记录暂不能确认，请先恢复本地档案。', { exact: true }),
+    page.getByText('学习记录暂不能确认，请恢复本地档案。', { exact: true }),
   ).toBeVisible();
-  await expect(page.getByTestId('mistakes-empty')).toHaveCount(0);
+  await expect(emptyMistakes(page)).toHaveCount(0);
   expect((await archive(page)).receipts).toEqual(before.receipts);
 });

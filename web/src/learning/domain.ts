@@ -1,3 +1,5 @@
+import { c6LearningCatalog, type C6LearningCatalog, type C6LearningIndex } from '../c6-learning';
+import type { C6LearningCommand } from '../c6-learning/model';
 import type { StorageMutation } from '../storage/client';
 import { StorageError } from '../storage/errors';
 import { recordKey } from '../storage/model';
@@ -45,7 +47,8 @@ const sourceIds: Record<DailyEventType, RewardSourceId> = {
 function kindOf(eventType: ContentEventType): AliasKind {
   return eventType.split('.')[0] as AliasKind;
 }
-function entities(catalog: LearningCatalog, kind: AliasKind) {
+type LearningGraph = LearningCatalog | C6LearningCatalog;
+function entities(catalog: LearningGraph, kind: AliasKind) {
   return kind === 'lesson'
     ? catalog.lessons
     : kind === 'exercise'
@@ -72,6 +75,11 @@ export function isCompatibleLearningHistory(
   kind: AliasKind,
   aliases: readonly Alias[],
 ): boolean {
+  if (
+    /^(lesson|exercise)\.c6\./u.test(current.ref.id) &&
+    (progress.packageRef.id !== 'content.c.primer6' || progress.packageRef.version !== '2.0.0')
+  )
+    return false;
   if (kindOf(progress.eventType) !== kind || progress.learningRevision !== current.learningRevision)
     return false;
   let mapped: Ref = progress.subjectRef;
@@ -111,12 +119,12 @@ function hasProgress(
 }
 function lessonCompleted(
   snapshot: StorageSnapshot,
-  catalog: LearningCatalog,
+  catalog: LearningGraph,
   lesson: LearningCatalog['lessons'][number],
 ): boolean {
   return (
     hasProgress(snapshot, 'lesson.study-confirmed', lesson) &&
-    lesson.requiredExerciseRefs.length > 0 &&
+    (catalog.purpose === 'c6-course-practice' || lesson.requiredExerciseRefs.length > 0) &&
     lesson.requiredExerciseRefs.every((ref) => {
       const exercise = catalog.exercises.find((value) => sameRef(value.ref, ref));
       return !!exercise && hasProgress(snapshot, 'exercise.passed', exercise);
@@ -139,8 +147,41 @@ export function applyLearningEvent(
   catalog: LearningCatalog,
   approvedHistory?: (snapshot: StorageSnapshot) => readonly Progress[],
 ): StorageMutation[] {
-  assertSnapshot(snapshot);
   createLearningCatalog(catalog);
+  return applyEvent(snapshot, command, catalog, approvedHistory);
+}
+
+/** LEARN2 course entry; the LEARN1 constructor remains unchanged. */
+export function applyC6LearningEvent(
+  snapshot: StorageSnapshot,
+  command: C6LearningCommand,
+  index: C6LearningIndex,
+): StorageMutation[] {
+  const catalog = c6LearningCatalog(index);
+  row(command, ['learnVersion', 'generation', 'receipt']);
+  requireRule(command.learnVersion === '2.0.0');
+  if (
+    snapshot.meta.schemaVersion !== '10.0.0' ||
+    !sameRef(snapshot.meta.activePackageRef, index.packageRef) ||
+    command.receipt.eventType === 'case.view-confirmed'
+  )
+    throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  return applyEvent(
+    snapshot,
+    { generation: command.generation, receipt: command.receipt },
+    catalog,
+    undefined,
+    index,
+  );
+}
+function applyEvent(
+  snapshot: StorageSnapshot,
+  command: LearningCommand,
+  catalog: LearningGraph,
+  approvedHistory?: (snapshot: StorageSnapshot) => readonly Progress[],
+  c6Index?: C6LearningIndex,
+): StorageMutation[] {
+  assertSnapshot(snapshot);
   row(command, ['generation', 'receipt']);
   requireRule(isUuid(command.generation));
   if (command.generation !== snapshot.meta.generation) throw new StorageError('S_GENERATION_STALE');
@@ -286,7 +327,27 @@ export function applyLearningEvent(
       next.dailyFacts.push(value);
       stage({ store: 'dailyFacts', mode: 'add', value });
     }
-    pending(sourceIds[eventType], canonicalSubjectId);
+    if (!c6Index || eventType === 'case.view-confirmed') {
+      pending(sourceIds[eventType], canonicalSubjectId);
+    } else {
+      const group = c6Index.rewardGroups.find((g) =>
+        (eventType === 'lesson.completed' ? g.lessonRefs : g.exerciseRefs).some((ref) =>
+          sameRef(ref, subjectRef),
+        ),
+      );
+      requireRule(group);
+      if (eventType === 'exercise.passed') {
+        pending(group.exerciseReward.sourceId, group.exerciseReward.subjectId);
+      } else if (
+        group.lessonRefs.length > 0 &&
+        group.lessonRefs.every((ref) => {
+          const lesson = catalog.lessons.find((entry) => sameRef(entry.ref, ref));
+          return !!lesson && lessonCompleted(next, catalog, lesson);
+        })
+      ) {
+        pending(group.lessonReward.sourceId, group.lessonReward.subjectId);
+      }
+    }
   };
   const occurredAt = receipt.occurredAt;
   mergeProgress({
@@ -347,11 +408,30 @@ export function projectLearning(
   catalog: LearningCatalog,
   approvedHistory?: readonly Progress[],
 ): LearningProjection {
+  createLearningCatalog(catalog);
+  return projectGraph(snapshot, catalog, approvedHistory);
+}
+export function projectC6Learning(
+  snapshot: StorageSnapshot,
+  index: C6LearningIndex,
+  cases: LearningCatalog['cases'] = [],
+): LearningProjection {
+  if (
+    snapshot.meta.schemaVersion !== '10.0.0' ||
+    !sameRef(snapshot.meta.activePackageRef, index.packageRef)
+  )
+    throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  return projectGraph(snapshot, { ...c6LearningCatalog(index), cases });
+}
+function projectGraph(
+  snapshot: StorageSnapshot,
+  catalog: LearningGraph,
+  approvedHistory?: readonly Progress[],
+): LearningProjection {
   assertSnapshot(snapshot);
   // Validate the intact archive first. Filtering history for current course
   // predicates must not break ledger/receipt relations or alter stored rows.
   if (approvedHistory) snapshot = { ...snapshot, progress: [...approvedHistory] };
-  createLearningCatalog(catalog);
   const historyFor = (entity: LearningCatalogEntity) => {
     const canonical = canonicalLearningId(snapshot.aliases, entity.ref.id);
     return structuredClone(

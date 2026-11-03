@@ -4,14 +4,17 @@ import { isDeepStrictEqual } from 'node:util';
 import { gzipSync } from 'node:zlib';
 import { createHash } from 'node:crypto';
 import { test, expect, type Page, type CDPSession } from '@playwright/test';
-import { openAnswer } from './notebook-helpers';
+import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
+import { openCurrentAnswer } from './current-course-helpers';
+import { waitForPhase2Archive } from './phase2-ready';
+import { decodeC6Response, type C6JudgeRequest } from '../../web/src/engine/c6-protocol';
+import { engineBuild as c6Build } from '../../web/src/generated/c6-teaching/engine-build';
 import { native } from './achievement-helpers';
 import { installPhase2Probe, readPhase2Probe } from './phase2-performance-probe';
 import {
   capturePerformanceHost,
   qualifyPerformanceHost,
 } from '../../scripts/phase2-performance-host.mjs';
-import { p05CourseRelease } from '../../web/src/content/p05-course-release.generated';
 
 const label = process.env.TASK_EVIDENCE_LABEL!;
 const output = `.artifacts/11.4/${label}`;
@@ -19,13 +22,15 @@ mkdirSync(output, { recursive: true });
 const pilot = process.env.PHASE2_PERF_PILOT === '1',
   repeat = pilot ? 1 : 10;
 const descending = Array.from({ length: 30 }, (_, i) => 30 - i).join(' ');
-const practiceInputs = (
-  JSON.parse(readFileSync('content/c/p05/course-1.0.0.json', 'utf8')) as {
-    exercises: { id: string; tests: { input: Record<string, unknown> }[] }[];
+const currentExercise = (
+  JSON.parse(readFileSync('content/c/primer6-teaching/source-2.0.0.json', 'utf8')) as {
+    chapters: { exercises: C6CourseExercise[] }[];
   }
-).exercises
-  .find((e) => e.id === 'exercise.c.bubble-sort')!
-  .tests.map((t) => t.input);
+).chapters
+  .flatMap((c) => c.exercises)
+  .find((e) => e.ref.id === 'exercise.c6.s10.1.1')!;
+const practiceInputs = currentExercise.tests.map((t) => t.stdin);
+const currentBookRegistered = practiceInputs.length === 4;
 const definitions = [
   {
     id: 'c-bubble30',
@@ -38,11 +43,12 @@ const definitions = [
   },
   {
     id: 'visible-practice-bubble6',
-    route: '/practice/exercise.c.bubble-sort',
-    root: '[data-testid="practice-execution"]',
+    route: '/practice/exercise.c6.s10.1.1',
+    currentC6: true,
+    root: '.c6-result-pane',
     stateAttribute: 'data-state',
     terminalStates: ['passed'],
-    runLabel: '提交练习',
+    runLabel: '判定全部四组',
     slider: 'input[aria-label="执行步骤"]',
   },
   {
@@ -83,14 +89,10 @@ const definitions = [
   },
 ] as const;
 const navigation = [
-  ['home', '/', '[data-testid="home-continue-learning"]'],
-  ['courses', '/courses', '[data-course-lesson]'],
-  [
-    'lesson',
-    '/lessons/lesson.c.variables-output',
-    '[data-testid="lesson-reading"][data-state="ready"]',
-  ],
-  ['practice', '/practice/exercise.c.echo', '[data-testid="practice-editor-layout"]'],
+  ['home', '/', '.c6-next-section a[href*="/lessons/"]'],
+  ['courses', '/courses', '.c6-node-list'],
+  ['lesson', '/lessons/lesson.c6.s2.1', '.c6-reading-confirmation'],
+  ['practice', '/practice/exercise.c6.s2.1', '.c6-source-editor'],
   ['cases', '/cases', '[data-page-id="PAGE-05"] a[href*="visualize"]'],
   ['case', '/visualize/case.c.assignment', '[data-testid="input-panel"]'],
   ['settings', '/settings', '[data-testid="learning-save-status"][data-save-status="ready"]'],
@@ -113,42 +115,15 @@ const stats = (values: number[]) => {
   };
 };
 async function ready(p: Page) {
-  await expect(p.locator('.app-shell')).toHaveAttribute(
-    'data-learning-storage-status',
-    p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
-  );
-  await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-reading-status', 'ready');
-  await expect(p.locator('.app-shell')).toHaveAttribute(
-    'data-learning-practice-status',
-    p05CourseRelease.registered ? 'ready' : 'failed',
-  );
-  await expect
-    .poll(async () => (await native(p)).meta.activePackageRef.id)
-    .toBe(p05CourseRelease.registered ? 'content.c.p05' : 'content.c.p0');
-  if (p05CourseRelease.registered)
-    await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
-  await expect(p.locator('.app-shell')).toHaveAttribute(
-    'data-learning-storage-status',
-    p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
-  );
+  await waitForPhase2Archive(p);
 }
 async function prepare(p: Page, d: (typeof definitions)[number]) {
   if (d.id === 'visible-practice-bubble6') {
-    await openAnswer(p, 'exercise.c.bubble-sort');
+    await openCurrentAnswer(p, currentExercise.ref.id);
     await ready(p);
-    await p
-      .getByTestId('block-workspace-preference')
-      .getByRole('combobox', { name: '积木显示', exact: true })
-      .selectOption('show');
-    await expect(p.getByTestId('practice-editor-layout')).toHaveAttribute(
-      'data-blocks-visible',
-      'yes',
+    await expect(p.getByLabel('完整 C 源码 · main.c', { exact: true })).toHaveValue(
+      currentExercise.referenceSource,
     );
-    await expect(p.locator('[aria-label="积木工作区"] .blocklySvg')).toBeVisible();
-    await p
-      .getByTestId('practice-execution')
-      .getByRole('button', { name: '准备代码', exact: true })
-      .click();
   } else {
     await p.goto('/#' + d.route);
     await ready(p);
@@ -206,9 +181,65 @@ async function captureSample(p: Page, d: (typeof definitions)[number]) {
         length: Number(x.getAttribute('data-length')),
       })),
     );
-  const expectedRuns = d.id === 'visible-practice-bubble6' ? 6 : d.id.includes('pair30') ? 2 : 1;
-  const terminalUi = await p.locator(d.root).getAttribute(d.stateAttribute);
-  return { before, failure, audit, intent, lanes, expectedRuns, terminalUi };
+  const expectedRuns = d.id === 'visible-practice-bubble6' ? 1 : d.id.includes('pair30') ? 2 : 1;
+  const currentC6 = d.id === 'visible-practice-bubble6';
+  const terminalUi = currentC6
+    ? (await p.getByRole('heading', { name: '四组全部通过', exact: true }).count()) &&
+      (await p.getByText('本次判题记录已保存。', { exact: true }).count())
+      ? 'passed'
+      : null
+    : await p.locator(d.root).getAttribute(d.stateAttribute);
+  let c6Validated: any = null;
+  if (currentC6 && !failure) {
+    const raw = await p.evaluate(() => {
+      const w = (window as any).phase2Perf.workers.at(-1);
+      const encode = (b: ArrayBuffer) => {
+        let text = '';
+        const a = new Uint8Array(b);
+        for (let i = 0; i < a.length; i += 16384)
+          text += String.fromCharCode(...a.subarray(i, i + 16384));
+        return btoa(text);
+      };
+      return { request: encode(w.request), response: encode(w.response) };
+    });
+    const requestBytes = Buffer.from(raw.request, 'base64'),
+      responseBytes = Buffer.from(raw.response, 'base64');
+    const request = JSON.parse(requestBytes.toString('utf8')) as C6JudgeRequest;
+    expect(request.source).toBe(currentExercise.referenceSource);
+    expect(request.profileRef).toEqual(currentExercise.profileRef);
+    const result = await decodeC6Response(
+      Uint8Array.from(responseBytes).buffer,
+      request,
+      c6Build.wasmSha256,
+    );
+    if (!('cases' in result)) throw Error('Actual current judge required');
+    expect(result.status).toBe('passed');
+    expect(result.cases).toHaveLength(4);
+    for (const [i, c] of result.cases.entries()) {
+      expect(c.caseKey).toBe(currentExercise.tests[i].caseKey);
+      expect(c.stdoutMatches && c.returnMatches && c.observationMatches).toBe(true);
+      expect(c.packet.terminal.status).toBe('completed');
+      const stdout =
+        c.packet.trace!.initialState.output +
+        c.packet
+          .trace!.steps.flatMap((s) =>
+            s.changes.flatMap((v) => (v.op === 'output' ? [v.append] : [])),
+          )
+          .join('');
+      expect(stdout).toBe(currentExercise.tests[i].expectedStdout);
+    }
+    c6Validated = {
+      passed: true,
+      caseCount: 4,
+      maximumArrayCount: Number(practiceInputs.at(-1)!.split(/\s+/)[0]),
+      sourceSha256: request.sourceSha256,
+      sourceRevision: request.sourceRevision,
+      requestSha256: createHash('sha256').update(requestBytes).digest('hex'),
+      responseSha256: createHash('sha256').update(responseBytes).digest('hex'),
+      completeReverse: true,
+    };
+  }
+  return { before, failure, audit, intent, lanes, expectedRuns, terminalUi, c6Validated };
 }
 function materializeSample(
   d: (typeof definitions)[number],
@@ -217,7 +248,7 @@ function materializeSample(
   capture: Awaited<ReturnType<typeof captureSample>>,
   packets: Awaited<ReturnType<typeof readPhase2Probe>>,
 ) {
-  const { before, failure, audit, intent, lanes, expectedRuns, terminalUi } = capture;
+  const { before, failure, audit, intent, lanes, expectedRuns, terminalUi, c6Validated } = capture;
   const workers = packets.workers.slice(before.workers.length, audit.workers.length);
   const executions = workers.filter(
     (w: any) => w.requestMetadata && (w.kind === 'execute' || w.kind === 'extended-execute'),
@@ -227,7 +258,7 @@ function materializeSample(
     d.id === 'memory-hanoi5'
       ? actualInputs[0]?.[0] === 5
       : d.id === 'visible-practice-bubble6'
-        ? actualInputs.at(-1)?.values?.values?.length === 30
+        ? c6Validated?.passed === true && c6Validated.maximumArrayCount === 30
         : actualInputs.every((input: any) =>
             Array.isArray(input) ? input.length === 30 : input?.values?.values?.length === 30,
           );
@@ -236,10 +267,7 @@ function materializeSample(
   );
   const inputMatchesIntent =
     d.id === 'visible-practice-bubble6'
-      ? actualInputs.length === practiceInputs.length &&
-        actualInputs.every((input: any, i: number) =>
-          isDeepStrictEqual(input?.values, practiceInputs[i]),
-        )
+      ? c6Validated?.passed === true && c6Validated.caseCount === practiceInputs.length
       : d.id === 'memory-hanoi5'
         ? isDeepStrictEqual(actualInputs[0], [5])
         : actualInputs.every((input: any) =>
@@ -255,6 +283,7 @@ function materializeSample(
     lanes,
     expectedRuns,
     actualInputs,
+    c6Validated,
     scaleVerified,
     inputMatchesIntent,
     elapsedMs: intent?.end != null ? intent.end - intent.start : null,
@@ -274,12 +303,15 @@ function materializeSample(
         (w: any) =>
           w.ok === true &&
           w.terminatedAt !== null &&
-          w.resultMetadata?.terminal?.status === 'completed',
+          (d.id === 'visible-practice-bubble6'
+            ? w.resultMetadata?.judgeStatus === 'passed' && w.resultMetadata.caseCount === 4
+            : w.resultMetadata?.terminal?.status === 'completed'),
       ) &&
       (!d.id.includes('pair30') ||
         (lanes.length === 2 && lanes.every((x) => x.phase === 'accepted' && x.length > 0))),
     original500Ms: !!intent?.end && intent.end - intent.start <= 500,
-    acceptedThresholdMs: before.compilations === 0 ? 800 : 600,
+    acceptedThresholdMs:
+      d.id === 'visible-practice-bubble6' ? 500 : before.compilations === 0 ? 800 : 600,
   };
   const boundaries = executions.map((w: any, at: number) => ({
     index: at + 1,
@@ -297,7 +329,7 @@ function materializeSample(
       }) => ({
         ...b,
         elapsedMs: b.to != null && b.from != null ? b.to - b.from : null,
-        acceptedThresholdMs: b.cold ? 800 : 600,
+        acceptedThresholdMs: d.id === 'visible-practice-bubble6' ? 500 : b.cold ? 800 : 600,
       }),
     ),
     compound: expectedRuns > 1,
@@ -331,6 +363,14 @@ test('P1 current production navigation and maximum-scale real execution use qual
   report.hostStart = capturePerformanceHost(output, 'start');
   write('configuration', {
     definitions,
+    currentCarrier: {
+      originalId: 'visible-practice-bubble6',
+      actual: currentExercise.ref,
+      codeOnly: true,
+      groups: 4,
+      worker: 1,
+      arrayMax: 30,
+    },
     navigation,
     repeat,
     navigationRepeats: pilot ? 1 : 5,
@@ -390,7 +430,7 @@ test('P1 current production navigation and maximum-scale real execution use qual
                   inspect();
                 });
               },
-              { selector, registered: p05CourseRelease.registered },
+              { selector, registered: currentBookRegistered },
             );
             await p.goto('/#' + route);
             await ready(p);
@@ -425,11 +465,11 @@ test('P1 current production navigation and maximum-scale real execution use qual
               ...observed,
               passed:
                 observed.elapsedMs <= 2000 &&
-                (p05CourseRelease.registered
+                (currentBookRegistered
                   ? observed.storageStatus === 'ready'
                   : ['ready', 'unsaved'].includes(observed.storageStatus ?? '')) &&
                 observed.readingStatus === 'ready' &&
-                observed.practiceStatus === (p05CourseRelease.registered ? 'ready' : 'failed') &&
+                observed.practiceStatus === (currentBookRegistered ? 'ready' : 'failed') &&
                 observed.visibility === 'visible' &&
                 observed.focus,
             });
@@ -526,7 +566,7 @@ test('P1 archive initialization diagnostic observes real cold storage without ch
             const inspect = () => {
               if (scope.phase2Navigation.end !== null) return;
               const target = document.querySelector(
-                  '[data-testid="home-continue-learning"], [data-course-lesson]',
+                  '.c6-next-section a[href*="/lessons/"], .c6-node-list',
                 ),
                 shell = document.querySelector('.app-shell');
               if (
@@ -553,7 +593,7 @@ test('P1 archive initialization diagnostic observes real cold storage without ch
               inspect();
             });
           },
-          { registered: p05CourseRelease.registered },
+          { registered: currentBookRegistered },
         );
         await page.goto('/#' + route);
         let readinessFailure: string | null = null;

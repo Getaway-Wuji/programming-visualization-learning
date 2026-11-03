@@ -137,6 +137,7 @@ function arrayInit(run: Run) {
 }
 
 async function seek(page: Page, cursor: number) {
+  await page.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
   const start = Number(await controls(page).getAttribute('data-cursor'));
   await page.getByTestId('player-workspace').focus();
   for (let count = 0; count < Math.abs(cursor - start); count++)

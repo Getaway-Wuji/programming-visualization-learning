@@ -7,7 +7,7 @@ import {
   native,
   reviewReady,
   reviews,
-  mark,
+  markCurrent as mark,
   changePrint,
   fail,
   capture,
@@ -15,12 +15,12 @@ import {
   quota,
   arm,
   clear,
-  openAnswer,
   submit,
   ready,
   panel,
   observeCaseSetExecution,
 } from './scheduler-helpers';
+import { openIndependentRepair as openAnswer } from './current-course-helpers';
 test.use({ timezoneId: 'Asia/Shanghai' });
 test.beforeAll(() => mkdir(folder, { recursive: true }));
 test('15.3 common empty or unreviewed queue states are honest and never create a learning fact', async ({
@@ -43,7 +43,13 @@ test('15.3 common empty or unreviewed queue states are honest and never create a
   expect(await native(page)).toEqual(before);
   await page.goto('/#/');
   await reviewReady(page);
-  await expect(page.getByTestId('review-due-summary')).toContainText('0 张卡片到期');
+  await expect(page.getByRole('link', { name: '今日复习', exact: true })).toHaveAttribute(
+    'href',
+    '#/reviews',
+  );
+  expect((await native(page)).reviewCards).toEqual([]);
+  await page.getByRole('link', { name: '今日复习', exact: true }).click();
+  await expect(page.getByTestId('review-empty')).toBeVisible();
   sameLearning(before, await native(page));
 });
 test('15.3 common queue entry and three widths stay usable without fabricated cards', async ({
@@ -129,7 +135,7 @@ test('15.3 formal real Rust failure creates one card, run-one does not, pass pau
 }) => {
   await page.clock.setFixedTime(new Date('2026-10-31T04:00:00.000Z'));
   await observeCaseSetExecution(page);
-  await openAnswer(page, 'exercise.c.echo');
+  await openAnswer(page, 'exercise.c.bug-semicolon');
   await changePrint(page, '0');
   await panel(page).getByRole('button', { name: '运行本组', exact: true }).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'ran');
@@ -142,14 +148,14 @@ test('15.3 formal real Rust failure creates one card, run-one does not, pass pau
   expect(before.reviewCards).toHaveLength(1);
   expect(before.reviewCards[0]).toMatchObject({
     kind: 'exercise',
-    subjectRef: { id: 'exercise.c.echo' },
+    subjectRef: { id: 'exercise.c.bug-semicolon' },
     level: 0,
     state: 'active',
   });
   await page.locator('[data-review-rating="easy"]').click();
   await reviewReady(page);
   sameLearning(before, await native(page));
-  await openAnswer(page, 'exercise.c.echo');
+  await openAnswer(page, 'exercise.c.bug-semicolon');
   await submit(page);
   await capture(page, 'actual-c-pass');
   await reviews(page);
@@ -159,7 +165,7 @@ test('15.3 formal real Rust failure creates one card, run-one does not, pass pau
   await reviewReady(page);
   const restarted = await native(page);
   expect(restarted.reviewCards[0].state).toBe('active');
-  await openAnswer(page, 'exercise.c.echo');
+  await openAnswer(page, 'exercise.c.bug-semicolon');
   await changePrint(page, '0');
   await fail(page);
   await reviews(page);
@@ -182,14 +188,14 @@ test('15.3 formal familiar and re-marking pause then reopen the same card withou
   await mark(page);
   const before = await native(page),
     id = before.reviewCards[0].cardId;
-  await page.getByRole('link', { name: '复习：变量和输出', exact: true }).click();
+  await page.getByRole('link', { name: '复习：2.1 简单的C程序示例', exact: true }).click();
   await ready(page);
-  await page.locator('[data-knowledge-mark="knowledge.c.variables"]').click();
+  await page.locator('[data-knowledge-mark="knowledge.c6.s2.1"]').click();
   await reviews(page);
   expect((await native(page)).reviewCards[0]).toMatchObject({ cardId: id, state: 'familiar' });
-  await page.getByRole('link', { name: '复习：变量和输出', exact: true }).click();
+  await page.getByRole('link', { name: '复习：2.1 简单的C程序示例', exact: true }).click();
   await ready(page);
-  await page.locator('[data-knowledge-mark="knowledge.c.variables"]').click();
+  await page.locator('[data-knowledge-mark="knowledge.c6.s2.1"]').click();
   await reviews(page);
   const after = await native(page);
   expect(after.reviewCards).toHaveLength(1);
@@ -314,10 +320,9 @@ test('15.3 formal source details, keyboard actions and mobile list-detail naviga
       await expect(page.getByRole('button', { name: '返回卡片列表', exact: true })).toBeHidden();
     else
       await expect(page.getByRole('button', { name: '返回卡片列表', exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: '复习：变量和输出', exact: true })).toHaveAttribute(
-      'href',
-      '#/lessons/lesson.c.variables-output',
-    );
+    await expect(
+      page.getByRole('link', { name: '复习：2.1 简单的C程序示例', exact: true }),
+    ).toHaveAttribute('href', '#/lessons/lesson.c6.s2.1');
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth - innerWidth),
     ).toBeLessThanOrEqual(1);

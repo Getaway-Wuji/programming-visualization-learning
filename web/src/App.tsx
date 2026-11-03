@@ -3,7 +3,9 @@ import type { ReactNode } from 'react';
 import { HashRouter, Route, Routes, useLocation } from 'react-router';
 import { Layout } from './components/Layout';
 import { MissingPage, StatePanel } from './components/Ui';
-import { HomePage } from './pages/HomePage';
+const HomePage = lazy(() =>
+  import('./c6-learning/CoursePages').then((module) => ({ default: module.C6HomePage })),
+);
 import { LearningProvider, useLearning } from './learning/react';
 import { PracticeProvider } from './practice/react';
 import { AppearanceProvider } from './appearance/react';
@@ -14,27 +16,29 @@ const AchievementsPage = lazy(() => import('./achievements/AchievementsPage'));
 import { ReviewProvider } from './review-scheduler/react';
 import { AiProvider } from './ai-debug/react';
 import { NotesProvider } from './study-notes/session';
-const NotesPage = lazy(() => import('./study-notes/NotesPage'));
+const NotesPage = lazy(() => import('./c6-learning/NotesPage'));
 const ReviewsPage = lazy(() => import('./review-scheduler/ReviewsPage'));
-const NotebookPage = lazy(() => import('./review-notebook/NotebookPage'));
+const NotebookPage = lazy(() => import('./c6-learning/NotebookPage'));
 const WeaknessPage = lazy(() => import('./weaknesses/WeaknessPage'));
 const GeneratedPracticePage = lazy(() => import('./generated-practice/GeneratedPracticePage'));
 
 const CoursePage = lazy(() =>
-  import('./pages/CatalogPages').then((module) => ({ default: module.CoursePage })),
+  import('./c6-learning/CoursePages').then((module) => ({ default: module.C6CoursePage })),
 );
 const CasesPage = lazy(() =>
   import('./pages/CatalogPages').then((module) => ({ default: module.CasesPage })),
 );
-const LessonPage = lazy(() => import('./pages/LessonPage'));
+const LessonPage = lazy(() =>
+  import('./c6-learning/CoursePages').then((module) => ({ default: module.C6LessonPage })),
+);
 const PracticePage = lazy(() =>
-  import('./pages/Workspaces').then((module) => ({ default: module.PracticePage })),
+  import('./c6-learning/Workbench').then((module) => ({ default: module.C6PracticePage })),
 );
 const VisualizePage = lazy(() =>
   import('./pages/Workspaces').then((module) => ({ default: module.VisualizePage })),
 );
-const ReviewPage = lazy(() =>
-  import('./pages/Workspaces').then((module) => ({ default: module.ReviewPage })),
+const C6ProgramPage = lazy(() =>
+  import('./c6-learning/Workbench').then((module) => ({ default: module.C6ProgramPage })),
 );
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const CustomCodePage = lazy(() => import('./custom-code/CustomCodePage'));
@@ -53,6 +57,17 @@ const ClassicPage = lazy(() => import('./classics/ClassicPage'));
 const CompilationPage = lazy(() => import('./compilation/CompilationPage'));
 const BugPage = lazy(() => import('./bugs/BugPanel'));
 const MemoryBugPage = lazy(() => import('./memory-bugs/MemoryBugPage'));
+const IndependentPracticePage = lazy(() => import('./c6-learning/IndependentPracticePage'));
+import { bugQuestions } from './bugs/content';
+import { useParams } from 'react-router';
+function PracticeRoute({ review = false }: { review?: boolean }) {
+  const { exerciseId } = useParams();
+  return bugQuestions.some((q) => q.exerciseRef.id === exerciseId) ? (
+    <IndependentPracticePage review={review} />
+  ) : (
+    <PracticePage />
+  );
+}
 
 class PageBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -79,6 +94,16 @@ class PageBoundary extends Component<{ children: ReactNode }, { failed: boolean 
 function AppRoutes() {
   const location = useLocation();
   const { state } = useLearning();
+  if (state.c6 && !state.snapshot && state.status === 'loading')
+    return (
+      <Layout>
+        <StatePanel
+          kind="loading"
+          title="正在准备本地学习环境"
+          description="正在核对当前课程并读取本地档案，准备完成后即可开始。"
+        />
+      </Layout>
+    );
   return (
     <Layout>
       <PageBoundary key={`${location.pathname}:${state.sessionEpoch}`}>
@@ -108,8 +133,9 @@ function AppRoutes() {
             />
             <Route path="/advanced/:lessonId" element={<AdvancedCoursePage />} />
             <Route path="/lessons/:lessonId" element={<LessonPage />} />
-            <Route path="/practice/:exerciseId" element={<PracticePage />} />
-            <Route path="/practice/:exerciseId/review" element={<ReviewPage />} />
+            <Route path="/practice/:exerciseId" element={<PracticeRoute />} />
+            <Route path="/practice/:exerciseId/review" element={<PracticeRoute review />} />
+            <Route path="/c6/program/:programId" element={<C6ProgramPage />} />
             <Route path="/cases" element={<CasesPage />} />
             <Route path="/compare" element={<ComparisonPage />} />
             <Route path="/algorithms/:algorithmId" element={<AlgorithmPage />} />

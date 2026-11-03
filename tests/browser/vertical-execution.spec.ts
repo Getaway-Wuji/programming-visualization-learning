@@ -151,10 +151,15 @@ async function prepareAndRun(page: Page, item: VerticalCase, reload = false) {
     item.status === 'completed' ? '程序正常结束' : '程序发生错误',
   );
   await expect(page.getByTestId('execution-output')).toHaveText(item.stdout);
-  if (item.diagnosticCode)
-    await expect(page.getByTestId('animation-panel')).toContainText(
-      `${item.diagnosticCode} · 阶段：execute`,
+  if (item.diagnosticCode) {
+    const diagnostic = page.getByTestId('animation-panel').getByTestId('diagnostic-item');
+    await expect(diagnostic).toHaveAttribute('data-code', item.diagnosticCode);
+    await expect(diagnostic).toHaveAttribute('data-stage', 'execute');
+    await expect(diagnostic.getByTestId('diagnostic-gcc')).toContainText(
+      `[${item.diagnosticCode}]`,
     );
+    await expect(diagnostic).toContainText('运行 · Rust 解释器');
+  }
 }
 
 async function saveCapture(
@@ -179,10 +184,11 @@ async function saveCapture(
   const stdout = await page.getByTestId('execution-output').textContent();
   const stepsText = await page.getByTestId('execution-steps').textContent();
   const stepCount = Number(stepsText?.match(/有效轨迹：(\d+)\s*步/u)?.[1]);
-  const diagnosticText = (await page.getByTestId('animation-panel').locator('p').allTextContents())
-    .map((text) => text.trim())
-    .filter((text) => /^E_/u.test(text));
-  const diagnosticCodes = diagnosticText.map((text) => text.match(/^E_[A-Z_]+/u)![0]);
+  const diagnosticItems = page.getByTestId('animation-panel').getByTestId('diagnostic-item');
+  const diagnosticText = await diagnosticItems.allTextContents();
+  const diagnosticCodes = await diagnosticItems.evaluateAll((items) =>
+    items.map((item) => item.getAttribute('data-code')),
+  );
   const draft: Record<string, string> = {};
   for (const key of Object.keys(item.draft))
     draft[key] = await page.getByTestId(`input-field-${key}`).inputValue();

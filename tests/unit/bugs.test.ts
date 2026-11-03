@@ -121,15 +121,20 @@ async function open(id: string) {
     vi.spyOn(session, 'enableCodeEditing').mockImplementationOnce(() => initialize(false));
   }
   session.enter(id);
-  await vi.waitFor(() => {
-    const s = session.getSnapshot();
-    expect(s.editDocument).toBeDefined();
-    expect(s.editDocument?.analysisPending).toBe(false);
-    expect(s.codeEditing).toBe(true);
-    expect(s.editDocument?.codeDraft).toContain(
-      bugQuestions.find((q) => q.exerciseRef.id === id)!.brokenBody,
-    );
-  });
+  // This includes the first lazy Blockly import before execution starts.
+  // Rust analysis/execution still receive the unchanged 1000 ms deadline above.
+  await vi.waitFor(
+    () => {
+      const s = session.getSnapshot();
+      expect(s.editDocument).toBeDefined();
+      expect(s.editDocument?.analysisPending).toBe(false);
+      expect(s.codeEditing).toBe(true);
+      expect(s.editDocument?.codeDraft).toContain(
+        bugQuestions.find((q) => q.exerciseRef.id === id)!.brokenBody,
+      );
+    },
+    { timeout: 3000 },
+  );
   return { session, port };
 }
 for (const q of bugQuestions)

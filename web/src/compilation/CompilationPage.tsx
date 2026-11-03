@@ -217,7 +217,7 @@ export default function CompilationPage() {
           <Link className="button" to="/visualize/case.c.assignment">
             查看真实解释执行
           </Link>
-          <Link className="button" to="/practice/exercise.c.echo">
+          <Link className="button" to="/practice/exercise.c6.s2.1">
             在练习中查看真实诊断
           </Link>
         </div>

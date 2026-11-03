@@ -1,21 +1,21 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
-import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
+import { decodeC6Response, type C6Request } from '../../web/src/engine/c6-protocol';
+import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
+import { completeCurrentFirstGroup } from './current-course-helpers';
+import { installC6Packets, observedC6Packet } from './c6-observation';
 import type { Avatar, StorageSnapshot } from '../../web/src/storage/model';
-import { blockWorkspace, correctStarter, showPracticeBlocks } from './block-ui';
-import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 const firstDay = new Date('2026-10-20T12:00:00.000Z');
-const exerciseId = 'exercise.c.echo';
-const lessonId = 'lesson.c.variables-output';
-const nextLessonId = 'lesson.c.expressions';
+const lessonId = 'lesson.c6.s1.1';
+const nextLessonId = 'lesson.c6.s1.1';
 const defaultAvatar: Avatar = { presetId: 'avatar.basic.01', accentColor: '#168A72' };
 const status = (page: Page) => page.getByTestId('learning-save-status');
 const saveButton = (page: Page) => page.getByRole('button', { name: '保存基础形象', exact: true });
 const preview = (page: Page) => page.getByTestId('avatar-preview');
 
-/** This helper only reads the actual eleven stores. It cannot issue learning facts. */
+/** This helper only reads the actual stores. It cannot issue learning facts. */
 async function snapshot(page: Page): Promise<StorageSnapshot> {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -138,7 +138,9 @@ async function assertHome(page: Page, avatar: Avatar, level: number, points: str
   );
   await expect(page.getByTestId('learning-level')).toHaveAttribute('data-level', String(level));
   await expect(page.getByTestId('learning-level')).toContainText(`Lv.${level}`);
-  await expect(page.getByTestId('learning-posted-points')).toHaveText(points);
+  await expect(
+    page.getByRole('heading', { name: `已入账 ${points} 分`, exact: true }),
+  ).toBeVisible();
   await expect(page.getByTestId('learning-level-progress')).toBeVisible();
 }
 
@@ -148,28 +150,8 @@ async function openHome(page: Page) {
 }
 
 async function completeFirstLesson(page: Page, testInfo: TestInfo, label: string) {
-  await page.goto(`/#/lessons/${lessonId}`);
-  await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await ready(page);
-  const before = await snapshot(page);
-  await page.getByRole('button', { name: '确认已学习', exact: true }).click();
-  await expect
-    .poll(async () => (await snapshot(page)).receipts.length)
-    .toBeGreaterThan(before.receipts.length);
-  await ready(page);
-  await page.goto(`/#/practice/${exerciseId}`);
-  const practice = page.getByTestId('practice-execution');
-  await expect(practice).toHaveAttribute('data-state', 'ready');
-  await showPracticeBlocks(page);
-  await expect(blockWorkspace(page)).toBeVisible();
-  await ready(page);
-  await correctStarter(page, exerciseId);
-  await practice.getByRole('button', { name: '准备代码', exact: true }).click();
-  await expect(practice.getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
-  await practice.getByRole('button', { name: '提交练习', exact: true }).click();
-  await expect(practice).toHaveAttribute('data-state', 'passed');
-  await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state', 'saved');
-  await ready(page);
+  const exercise = await completeCurrentFirstGroup(page);
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   const learned = await snapshot(page);
   expect(postedTotal(learned)).toBe('35');
   expect(learned.ledger).toHaveLength(3);
@@ -178,20 +160,32 @@ async function completeFirstLesson(page: Page, testInfo: TestInfo, label: string
     'reward.exercise.first-pass',
     'reward.lesson.first-completion',
   ]);
-  const captured = await page.evaluate(() =>
-    window.__verticalObservation.workers
-      .filter((worker) => worker.kind === 'execute')
-      .map((worker) => ({
-        ...(
-          worker as typeof worker & {
-            captureEncoded(): { requestBase64: string | null; responseBase64: string | null };
-          }
-        ).captureEncoded(),
-        moduleSeen: worker.moduleSeen,
-        terminated: worker.terminated,
-      })),
+  const captured = await observedC6Packet(page);
+  expect(captured).toMatchObject({ count: 1, moduleSeen: true, terminated: true });
+  const requestBytes = Buffer.from(captured.request!, 'base64');
+  const resultBytes = Buffer.from(captured.response!, 'base64');
+  const request = JSON.parse(requestBytes.toString('utf8')) as C6Request;
+  expect(request.source).toBe(exercise.referenceSource);
+  const response = await decodeC6Response(
+    Uint8Array.from(resultBytes).buffer,
+    request,
+    engineBuild.wasmSha256,
   );
-  expect(captured).toHaveLength(3);
+  if (!('cases' in response)) throw Error('Real four-case judge required');
+  expect(response.status).toBe('passed');
+  expect(response.cases).toHaveLength(4);
+  for (const [i, c] of response.cases.entries()) {
+    expect(c.packet.engine.buildId).toBe(engineBuild.wasmSha256);
+    expect(c.packet.terminal.status).toBe('completed');
+    const output =
+      c.packet.trace!.initialState.output +
+      c.packet
+        .trace!.steps.flatMap((s) =>
+          s.changes.flatMap((c) => (c.op === 'output' ? [c.append] : [])),
+        )
+        .join('');
+    expect(output).toBe(exercise.tests[i].expectedStdout);
+  }
   const directory = join(
     '.artifacts',
     process.env.TASK_EVIDENCE_TASK ?? '11.3',
@@ -201,26 +195,8 @@ async function completeFirstLesson(page: Page, testInfo: TestInfo, label: string
     'runs',
   );
   await mkdir(directory, { recursive: true });
-  for (const [index, run] of captured.entries()) {
-    expect(run.moduleSeen).toBe(true);
-    expect(run.terminated).toBe(true);
-    expect(run.requestBase64).toBeTruthy();
-    expect(run.responseBase64).toBeTruthy();
-    const requestBytes = Buffer.from(run.requestBase64!, 'base64');
-    const resultBytes = Buffer.from(run.responseBase64!, 'base64');
-    const request = JSON.parse(requestBytes.toString('utf8')) as ExecuteRequest;
-    const result = await decodeResult(Uint8Array.from(resultBytes).buffer, request);
-    expect(request.mode).toBe('exercise-test');
-    expect(request.subjectRef?.id).toBe(exerciseId);
-    expect(request.remainingMs).toBeGreaterThan(0);
-    expect(request.remainingMs).toBeLessThanOrEqual(1000);
-    expect(result.producer).toBe('rust');
-    expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0, diagnostics: [] });
-    expect(result.judgeResult?.status).toBe('met');
-    const prefix = `${index + 1}-${request.identity.testCaseKey}`;
-    await writeFile(join(directory, `${prefix}.request.json`), requestBytes);
-    await writeFile(join(directory, `${prefix}.result.json`), resultBytes);
-  }
+  await writeFile(join(directory, 'current-four-cases.request.json'), requestBytes);
+  await writeFile(join(directory, 'current-four-cases.result.json'), resultBytes);
   return learned;
 }
 
@@ -263,7 +239,7 @@ test('four public presets and accent colors persist through refresh and home nav
     await expect(preview(page)).toHaveAttribute('data-avatar-preset', variant.presetId);
     await openHome(page);
     await assertHome(page, avatar, 1, '0');
-    await expect(page.getByTestId('home-continue-learning')).toHaveAttribute(
+    await expect(page.locator('.c6-next-section .button-primary')).toHaveAttribute(
       'href',
       `#/lessons/${lessonId}`,
     );
@@ -299,16 +275,16 @@ test('a real complete three-group Rust pass raises the posted profile to Lv.2 an
 }, testInfo) => {
   test.setTimeout(60_000);
   await page.clock.setFixedTime(firstDay);
-  await observeCaseSetExecution(page);
+  await page.addInitScript(installC6Packets);
   await openHome(page);
   await assertHome(page, defaultAvatar, 1, '0');
   const learned = await completeFirstLesson(page, testInfo, 'real-35-level');
-  const executeCapture = await observedCaseSetExecute(page);
+  const executeCapture = await observedC6Packet(page);
   await openHome(page);
   await assertHome(page, defaultAvatar, 2, '35');
-  await expect(page.getByTestId('learning-course-progress')).toContainText('1/6');
-  await expect(page.getByTestId('learning-pending-rewards')).toHaveText('0');
-  await expect(page.getByTestId('home-continue-learning')).toHaveAttribute(
+  await expect(page.getByText('2 / 404 个小节已完成', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: '重试待入账奖励', exact: true })).toHaveCount(0);
+  await expect(page.locator('.c6-next-section .button-primary')).toHaveAttribute(
     'href',
     `#/lessons/${nextLessonId}`,
   );
@@ -327,7 +303,7 @@ test('a real complete three-group Rust pass raises the posted profile to Lv.2 an
     executeCapture,
   });
   await page.screenshot({ path: join(directory, 'home-level-2.png'), fullPage: true });
-  await page.getByTestId('home-continue-learning').click();
+  await page.locator('.c6-next-section .button-primary').click();
   await expect(page).toHaveURL(new RegExp(`/#/lessons/${nextLessonId}$`));
 });
 
@@ -429,7 +405,7 @@ test('a real learned profile resets to Lv.1 and a default avatar when a peer cle
 }, testInfo) => {
   test.setTimeout(60_000);
   await page.clock.setFixedTime(firstDay);
-  await observeCaseSetExecution(page);
+  await page.addInitScript(installC6Packets);
   const learned = await completeFirstLesson(page, testInfo, 'clear-real-35');
   await openAvatar(page);
   await setAvatar(page, '星光', '#A246C8');
@@ -455,7 +431,7 @@ test('a real learned profile resets to Lv.1 and a default avatar when a peer cle
     expect(cleared[store]).toEqual([]);
   await openHome(page);
   await assertHome(page, defaultAvatar, 1, '0');
-  await expect(page.getByTestId('home-continue-learning')).toHaveAttribute(
+  await expect(page.locator('.c6-next-section .button-primary')).toHaveAttribute(
     'href',
     `#/lessons/${lessonId}`,
   );
@@ -504,7 +480,7 @@ test('a deliberately corrupt native ledger makes points and level unconfirmed in
   const damaged = await snapshot(page);
   await page.reload();
   await expect(status(page)).not.toHaveAttribute('data-save-status', 'loading');
-  await expect(page.getByTestId('learning-posted-points')).toContainText('暂不可确认');
+  await expect(page.getByRole('heading', { name: '已入账 暂不可确认', exact: true })).toBeVisible();
   await expect(page.getByTestId('learning-level')).toContainText('暂不可确认');
   await expect(page.getByTestId('learning-level')).not.toHaveAttribute('data-level', /[1-5]/);
   expect(await snapshot(page)).toEqual(damaged);
@@ -521,7 +497,7 @@ test('explicit historical-shape simulation preserves an unknown preset and displ
 }, testInfo) => {
   test.setTimeout(60_000);
   await page.clock.setFixedTime(firstDay);
-  await observeCaseSetExecution(page);
+  await page.addInitScript(installC6Packets);
   const real = await completeFirstLesson(page, testInfo, 'historical-shape-original-real-pass');
   await page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -559,7 +535,9 @@ test('explicit historical-shape simulation preserves an unknown preset and displ
   await openHome(page);
   await page.reload();
   await ready(page);
-  await expect(page.getByTestId('learning-posted-points')).toHaveText(exact);
+  await expect(
+    page.getByRole('heading', { name: `已入账 ${exact} 分`, exact: true }),
+  ).toBeVisible();
   await expect(page.getByTestId('learning-level')).toHaveAttribute('data-level', '5');
   await expect(page.getByTestId('learning-level')).toContainText('Lv.5');
   expect((await snapshot(page)).avatar.presetId).toBe('avatar.basic.99');

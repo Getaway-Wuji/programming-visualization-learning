@@ -12,6 +12,7 @@ export default tseslint.config(
       '.agents/**',
       'web/dist/**',
       'web/src/generated/**',
+      'content/engines/**',
       '项目文档/**',
     ],
   },
@@ -39,6 +40,12 @@ export default tseslint.config(
           'Buffer',
         ].map((name) => [name, 'readonly']),
       ),
+    },
+  },
+  {
+    files: ['scripts/c6-course/*.mjs'],
+    languageOptions: {
+      globals: { performance: 'readonly', structuredClone: 'readonly' },
     },
   },
 );

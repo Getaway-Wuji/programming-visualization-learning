@@ -1,14 +1,9 @@
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { StorageSnapshot, ThemeId } from '../../web/src/storage/model';
-import {
-  blockOptions,
-  blockWorkspace,
-  correctStarter,
-  openCorrectionPractice,
-  selectBlock,
-} from './block-ui';
+import { blockOptions, blockWorkspace, showPracticeBlocks, selectBlock } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
+import { openIndependentEchoRepair } from './current-course-helpers';
 
 const ids: readonly ThemeId[] = ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech'];
 const root = (page: Page) => page.locator('html');
@@ -115,7 +110,7 @@ test('six complete themes save and refresh with the header mode while removed ap
     await expect(modeToggle(page)).toHaveAccessibleName('切换为浅色');
   }
   const after = await snapshot(page);
-  expect(after.meta).toMatchObject({ dbVersion: 7, schemaVersion: '7.0.0' });
+  expect(after.meta).toMatchObject({ dbVersion: 10, schemaVersion: '10.0.0' });
   expect(after.appearance.preset).toBe('tech');
   expect(after.settings.theme).toBe('dark');
   expect(after.appearance.themeOverrides).toEqual(before.appearance.themeOverrides);
@@ -243,11 +238,11 @@ test('an actual Blockly draft survives settings theme changes and browser back w
   page,
 }, testInfo) => {
   await observeCaseSetExecution(page);
-  await page.goto('/#/practice/exercise.c.echo');
+  await openIndependentEchoRepair(page);
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
   await ready(page);
   const workspace = blockWorkspace(page);
-  await openCorrectionPractice(page);
+  await showPracticeBlocks(page);
   // Wait for the lazily mounted editor before reading the disclosure state.
   // A missing combobox during mount does not mean an open disclosure is closed.
   await expect(workspace.locator('details')).toBeVisible();
@@ -297,11 +292,11 @@ test('a real accepted Rust submission and player cursor survive appearance chang
   page,
 }, testInfo) => {
   await observeCaseSetExecution(page);
-  await page.goto('/#/practice/exercise.c.echo');
+  await openIndependentEchoRepair(page);
   const practice = page.getByTestId('practice-execution');
   await expect(practice).toHaveAttribute('data-state', 'ready');
   await ready(page);
-  await correctStarter(page, 'exercise.c.echo');
+  await showPracticeBlocks(page);
   await practice.getByRole('button', { name: '准备代码', exact: true }).click();
   await practice.getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(practice).toHaveAttribute('data-state', 'passed');
@@ -325,7 +320,7 @@ test('a real accepted Rust submission and player cursor survive appearance chang
   const executions = await page.evaluate(
     () => window.__verticalObservation.workers.filter((worker) => worker.kind === 'execute').length,
   );
-  expect(executions).toBe(3);
+  expect(executions).toBe(4);
   const before = await snapshot(page);
   await page
     .getByRole('navigation', { name: '主导航', exact: true })

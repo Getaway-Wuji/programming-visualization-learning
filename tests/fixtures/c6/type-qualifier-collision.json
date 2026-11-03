@@ -1,0 +1,63 @@
+{
+  "programs": [
+    {
+      "id": "qualifier.target-first",
+      "mode": "execute",
+      "files": [{"name": "main.c", "source": "#include <stdio.h>\nint main(void){int data[2]={2,4};const int *reader=data;int *const fixed=data;const int *const both=data;reader++;*fixed=3;printf(\"%d %d %d\\n\",*reader,*fixed,*both);return 0;}\n"}],
+      "input": "",
+      "expectedStdout": "4 3 3\n",
+      "expectedReturn": 0
+    },
+    {
+      "id": "qualifier.pointer-first",
+      "mode": "execute",
+      "files": [{"name": "main.c", "source": "#include <stdio.h>\nint main(void){int data[2]={2,4};int *const fixed=data;const int *const both=data;const int *reader=data;reader++;*fixed=3;printf(\"%d %d %d\\n\",*reader,*fixed,*both);return 0;}\n"}],
+      "input": "",
+      "expectedStdout": "4 3 3\n",
+      "expectedReturn": 0
+    },
+    {
+      "id": "qualifier.alias-field",
+      "mode": "execute",
+      "files": [{"name": "main.c", "source": "#include <stdio.h>\ntypedef int *Link;int value=2;struct Views{int *const fixed;const int *reader;};int main(void){Link const fixed=&value;const int *reader=&value;struct Views views={&value,&value};*fixed=7;printf(\"%d %d %d\\n\",*reader,*views.fixed,*views.reader);return 0;}\n"}],
+      "input": "",
+      "expectedStdout": "7 7 7\n",
+      "expectedReturn": 0
+    },
+    {
+      "id": "qualifier.alias-collision",
+      "mode": "execute",
+      "files": [{"name": "main.c", "source": "#include <stdio.h>\ntypedef int Element;int main(void){int value=2;const Element *reader=&value;Element *const fixed=&value;*fixed=8;printf(\"%d %d\\n\",*reader,*fixed);return 0;}\n"}],
+      "input": "",
+      "expectedStdout": "8 8\n",
+      "expectedReturn": 0
+    },
+    {
+      "id": "qualifier.refuse-pointer-write",
+      "mode": "diagnostic",
+      "files": [{"name": "main.c", "source": "int main(void){int value=2;const int *reader=&value;int *const fixed=&value;fixed=0;return 0;}\n"}],
+      "input": "",
+      "expectedCode": "E_CONST_WRITE",
+      "expectedStdout": "",
+      "expectedReturn": 0
+    },
+    {
+      "id": "qualifier.refuse-target-write",
+      "mode": "diagnostic",
+      "files": [{"name": "main.c", "source": "int main(void){int value=2;int *const fixed=&value;const int *reader=&value;*reader=7;return 0;}\n"}],
+      "input": "",
+      "expectedCode": "E_CONST_WRITE",
+      "expectedStdout": "",
+      "expectedReturn": 0
+    },
+    {
+      "id": "qualifier.refuse-both-write",
+      "mode": "diagnostic",
+      "files": [{"name": "main.c", "source": "int main(void){int value=2;const int *const both=&value;*both=7;return 0;}\n"}],
+      "input": "",
+      "expectedCode": "E_CONST_WRITE",
+      "expectedStdout": "",
+      "expectedReturn": 0
+    }
+  ]
+}

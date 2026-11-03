@@ -1,4 +1,5 @@
 /** SAVE-01 9.0.0. Local weakness summaries; original learning facts remain authoritative. */
+import type { C6ResetMeta } from './c6-reset';
 export const DB_NAME = 'c-viz-learning';
 export const DB_VERSION = 9;
 export const SCHEMA_VERSION = '9.0.0';
@@ -43,7 +44,7 @@ export interface LocalGoalRef {
   id: string;
   version: string;
 }
-export interface Meta {
+export interface LegacyMeta {
   schemaVersion: typeof SCHEMA_VERSION;
   dbVersion: typeof DB_VERSION;
   generation: string;
@@ -52,6 +53,8 @@ export interface Meta {
   createdAt: string;
   activePackageRef: PublicRef;
 }
+/** Separate exact metadata versions; the legacy constructor still produces SAVE9. */
+export type Meta = LegacyMeta | C6ResetMeta;
 export interface GoalTargets {
   exercise: number;
   lesson: number;
@@ -252,10 +255,10 @@ export function defaultAvatar(): Avatar {
   return { presetId: 'avatar.basic.01', accentColor: '#168A72' };
 }
 export function createMeta(
-  input: Omit<Meta, 'schemaVersion' | 'dbVersion' | 'revision'> & {
+  input: Omit<LegacyMeta, 'schemaVersion' | 'dbVersion' | 'revision'> & {
     revision?: number;
   },
-): Meta {
+): LegacyMeta {
   return {
     schemaVersion: SCHEMA_VERSION,
     dbVersion: DB_VERSION,
@@ -268,7 +271,7 @@ export function createMeta(
 }
 export function emptySnapshot(meta: Meta): StorageSnapshot {
   return {
-    meta: { ...meta, activePackageRef: { ...meta.activePackageRef } },
+    meta: structuredClone(meta),
     settings: defaultSettings(),
     avatar: defaultAvatar(),
     appearance: defaultAppearance(),

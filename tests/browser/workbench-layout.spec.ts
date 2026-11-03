@@ -1,13 +1,9 @@
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test';
 import type { StorageSnapshot, ThemeId } from '../../web/src/storage/model';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import {
-  blockWorkspace,
-  correctStarter,
-  openBlockKeyboardEditor,
-  showPracticeBlocks,
-} from './block-ui';
+import { blockWorkspace, openBlockKeyboardEditor, showPracticeBlocks } from './block-ui';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
+import { openIndependentEchoRepair } from './current-course-helpers';
 
 const themes: readonly ThemeId[] =
   process.env.TASK_REPRESENTATIVE_THEME === 'minimal'
@@ -77,7 +73,7 @@ async function ready(page: Page) {
 }
 
 async function openPractice(page: Page) {
-  await page.goto('/#/practice/exercise.c.echo');
+  await openIndependentEchoRepair(page);
   await ready(page);
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
   await expect(workbench(page, 'practice')).toBeVisible();
@@ -206,9 +202,12 @@ test('selected themes use the available workbench width and keep the collapsible
       await expect(links).toHaveText([
         '学习首页',
         'C 语言课程',
+        '进阶课程',
         '算法与演示',
+        'C 代码工作台',
         '编译流程',
         '错题与陌生点',
+        '学习笔记',
         '今日复习',
         '学习成就',
         '本地设置',
@@ -327,7 +326,6 @@ test('real Rust submission, Blockly draft and review cursor survive expansion, f
   await observeCaseSetExecution(page);
   await openPractice(page);
   await openDisclosure(page);
-  await correctStarter(page, 'exercise.c.echo');
   const practice = page.getByTestId('practice-execution');
   await practice.getByRole('button', { name: '准备代码', exact: true }).click();
   await practice.getByRole('button', { name: '提交练习', exact: true }).click();
@@ -343,7 +341,7 @@ test('real Rust submission, Blockly draft and review cursor survive expansion, f
   expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0 });
   expect(result.judgeResult?.status).toBe('met');
   const executionCount = await executions(page);
-  expect(executionCount).toBe(3);
+  expect(executionCount).toBe(4);
   const controls = page.getByTestId('player-controls');
   await controls.getByRole('button', { name: '前进', exact: true }).click();
   const cursor = await controls.getAttribute('data-cursor');

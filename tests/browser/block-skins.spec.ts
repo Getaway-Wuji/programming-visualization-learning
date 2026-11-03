@@ -1,9 +1,13 @@
 import { expect, test, type Page } from '@playwright/test';
-import { blockOptions, blockWorkspace, correctStarter, selectBlock } from './block-ui';
+import { blockOptions, blockWorkspace, selectBlock } from './block-ui';
 
 const themes = ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech'] as const;
 const toggle = (page: Page) => page.getByTestId('theme-mode-toggle');
-const practice = (page: Page) => page.getByTestId('practice-execution');
+import { observeCaseSetExecution } from './case-set-observation';
+import { decodeC6Response, type C6Request } from '../../web/src/engine/c6-protocol';
+import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
+import { gzipSync } from 'node:zlib';
+test.beforeEach(async ({ page }) => observeCaseSetExecution(page));
 
 async function ready(page: Page) {
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
@@ -104,10 +108,13 @@ for (const theme of themes) {
     await page.getByTestId('save-appearance').click();
     await ready(page);
     await expect(page.locator('html')).toHaveAttribute('data-appearance-draft', 'false');
-    await page.goto('/#/practice/exercise.c.echo');
-    await expect(practice(page)).toHaveAttribute('data-state', 'ready');
+    await page.goto('/#/c6/program/teach.c6.ch01.welcome?node=c6.ch01');
+    await page
+      .getByLabel('完整 C 源码 · main.c', { exact: true })
+      .fill('#include <stdio.h>\nint main(){int x=3;printf("%d\\n",x);return 0;}');
+    await page.getByRole('button', { name: '同步到积木', exact: true }).click();
     const editor = await readableEditor(page);
-    await correctStarter(page, 'exercise.c.echo');
+    await selectBlock(page, (await blockOptions(page, /^\d+\. 输出 ·/))[0]);
     const samples = [];
     for (const mode of ['light', 'dark'] as const) {
       if ((await page.locator('html').getAttribute('data-theme')) !== mode) {
@@ -162,13 +169,56 @@ for (const theme of themes) {
       .selectOption(outputs[0]);
     await editor.getByRole('combobox', { name: '连接位置', exact: true }).selectOption('$next');
     await editor.getByRole('button', { name: '连接选中积木', exact: true }).click();
+    await expect(editor.locator('.block-notice')).toContainText('该位置已有积木');
+    const returns = await blockOptions(page, /^\d+\. 返回(?: ·|$)/);
+    expect(returns).toHaveLength(1);
+    await selectBlock(page, returns[0]);
+    await editor.getByRole('button', { name: '断开选中积木', exact: true }).click();
+    await selectBlock(page, scope);
+    await editor
+      .getByRole('combobox', { name: '连接到积木', exact: true })
+      .selectOption(outputs[0]);
+    await editor.getByRole('combobox', { name: '连接位置', exact: true }).selectOption('$next');
+    await editor.getByRole('button', { name: '连接选中积木', exact: true }).click();
+    await expect(editor.locator('.block-notice')).toHaveText('积木已连接。');
+    await selectBlock(page, returns[0]);
+    await editor.getByRole('combobox', { name: '连接到积木', exact: true }).selectOption(scope);
+    await editor.getByRole('combobox', { name: '连接位置', exact: true }).selectOption('$next');
+    await editor.getByRole('button', { name: '连接选中积木', exact: true }).click();
     await expect(editor.locator('.block-notice')).toHaveText('积木已连接。');
     await expect(page.getByTestId('block-issues')).toHaveCount(0);
-    await practice(page).getByRole('button', { name: '准备代码', exact: true }).click();
-    const code = page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true });
+    await page.getByRole('button', { name: '应用生成代码', exact: true }).click();
+    const code = page.getByLabel('完整 C 源码 · main.c', { exact: true });
     await expect(code).toHaveValue(/printf\("%d\\n", x\)/);
-    await practice(page).getByRole('button', { name: '提交练习', exact: true }).click();
-    await expect(practice(page)).toHaveAttribute('data-state', 'passed');
+    await page.getByRole('button', { name: '运行当前代码', exact: true }).click();
+    await expect(page.locator('.c6-trace')).toHaveAttribute('data-cursor', '0');
+    await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
+    await expect(page.getByLabel('当前游标标准输出', { exact: true })).toHaveText('3');
+    const packets = await page.evaluate(() =>
+      window.__verticalObservation.workers
+        .filter((w) => w.moduleSeen && w.responseOk)
+        .map((w) =>
+          (
+            w as typeof w & { captureEncoded(): { requestBase64: string; responseBase64: string } }
+          ).captureEncoded(),
+        ),
+    );
+    expect(packets).toHaveLength(2);
+    const run = packets.at(-1)!;
+    const request = JSON.parse(
+      Buffer.from(run.requestBase64, 'base64').toString('utf8'),
+    ) as C6Request;
+    expect(request.source).toBe(await code.inputValue());
+    const result = await decodeC6Response(
+      Uint8Array.from(Buffer.from(run.responseBase64, 'base64')).buffer,
+      request,
+      engineBuild.wasmSha256,
+    );
+    expect('terminal' in result && result.terminal.status).toBe('completed');
+    await info.attach('actual-c6-skin-execution', {
+      body: gzipSync(JSON.stringify(packets)),
+      contentType: 'application/gzip',
+    });
     await info.attach('readable-real-block-skins-and-native-drag', {
       body: JSON.stringify({ theme, samples, scope, source: await code.inputValue() }),
       contentType: 'application/json',

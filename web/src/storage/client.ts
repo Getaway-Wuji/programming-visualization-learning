@@ -24,6 +24,11 @@ import type {
 } from './model';
 import { assertRecord, assertSnapshot, isSafeUint, isTimeZone, isUuid } from './validation';
 import { StorageError, storageError } from './errors';
+import { C6_RESET_STORES, createC6ResetMeta, queueC6ResetUpgrade } from './c6-reset';
+import { c6ActivationIndex } from './c6-activation';
+import type { C6StorageActivation } from './c6-activation';
+import { c6CourseTransaction, readC6Rows, type PrepareC6Course } from './c6-course';
+import type { C6LearningIndex } from '../c6-learning';
 import { upgradeV1Snapshot } from './v1-migration';
 import { usableBackground } from './appearance-assets';
 import { upgradeV2Meta } from './v2-migration';
@@ -90,6 +95,7 @@ export function prepareReviewedCourseSwitch(
   expectedRevision: number,
 ): Meta {
   assertRecord('meta', meta);
+  if (meta.schemaVersion !== SCHEMA_VERSION) throw new StorageError('S_CONTENT_INCOMPATIBLE');
   if (meta.generation !== generation) throw new StorageError('S_GENERATION_STALE');
   if (meta.revision !== expectedRevision) throw new StorageError('S_REVISION_CONFLICT');
   if (meta.activePackageRef.id === 'content.c.p05' && meta.activePackageRef.version === '1.0.0')
@@ -111,6 +117,8 @@ export function prepareReviewedCourseSwitch(
 
 export interface OpenStorageOptions {
   activePackageRef: Ref;
+  /** Internal capability from the successfully loaded pinned C6 learning index. */
+  c6Activation?: C6StorageActivation;
   signal?: AbortSignal;
   onBlocked?: () => void;
   // Dependency injection is internal; the public entry point fixes the production DB.
@@ -120,16 +128,21 @@ export interface OpenStorageOptions {
   recovery?: boolean;
 }
 
+function physicalStores(db: IDBDatabase): readonly string[] {
+  if (db.version === 10) return C6_RESET_STORES;
+  if (db.version === DB_VERSION) return ALL_STORE_NAMES;
+  throw new StorageError('S_VERSION_UNKNOWN');
+}
 function checkLayout(db: IDBDatabase): void {
-  if (db.version !== DB_VERSION) throw new StorageError('S_VERSION_UNKNOWN');
+  const names = physicalStores(db);
   if (
-    db.objectStoreNames.length !== ALL_STORE_NAMES.length ||
-    ALL_STORE_NAMES.some((store) => !db.objectStoreNames.contains(store))
+    db.objectStoreNames.length !== names.length ||
+    names.some((store) => !db.objectStoreNames.contains(store))
   ) {
     throw new StorageError('S_RECORD_INVALID');
   }
-  const tx = db.transaction(ALL_STORE_NAMES, 'readonly');
-  for (const name of ALL_STORE_NAMES) {
+  const tx = db.transaction(names, 'readonly');
+  for (const name of names) {
     const store = tx.objectStore(name);
     if (store.keyPath !== null || store.autoIncrement || store.indexNames.length) {
       throw new StorageError('S_RECORD_INVALID');
@@ -139,7 +152,7 @@ function checkLayout(db: IDBDatabase): void {
 
 function transaction(db: IDBDatabase, mode: IDBTransactionMode): IDBTransaction {
   return db.transaction(
-    STORE_NAMES,
+    db.version === 10 ? [...STORE_NAMES, 'courseActivities', 'courseDrafts'] : STORE_NAMES,
     mode,
     mode === 'readwrite' ? { durability: 'strict' } : undefined,
   );
@@ -150,7 +163,8 @@ function checkedMeta(value: unknown): asserts value is Meta {
     value &&
     typeof value === 'object' &&
     'schemaVersion' in value &&
-    value.schemaVersion !== SCHEMA_VERSION
+    value.schemaVersion !== SCHEMA_VERSION &&
+    value.schemaVersion !== '10.0.0'
   ) {
     throw new StorageError(
       value.schemaVersion === '0.9.0' ? 'S_MIGRATION_UNSUPPORTED' : 'S_VERSION_UNKNOWN',
@@ -166,15 +180,36 @@ export function readTransaction(
   ready: (snapshot: StorageSnapshot, appearanceReadOnly: boolean) => void,
   fail: (error: unknown) => void,
   factory: IDBFactory,
+  expectedDbVersion: number = DB_VERSION,
+  c6Index?: C6LearningIndex,
 ): void {
+  if (![DB_VERSION, 10].includes(expectedDbVersion)) {
+    fail(new StorageError('S_VERSION_UNKNOWN'));
+    return;
+  }
   readRawTransaction(
     tx,
     (raw) => {
       try {
-        const recovery = inspectRecoveryRows(raw, (a, b) => factory.cmp(a, b));
+        const recovery = inspectRecoveryRows(
+          raw,
+          (a, b) => factory.cmp(a, b),
+          expectedDbVersion === 10 ? '10.0.0' : SCHEMA_VERSION,
+        );
         if (!recovery.writable || !recovery.snapshot)
           throw new StorageError(recovery.errorCode ?? 'S_RECORD_INVALID');
-        ready(recovery.snapshot, recovery.appearanceReadOnly);
+        if (recovery.snapshot.meta.dbVersion !== expectedDbVersion)
+          throw new StorageError('S_VERSION_UNKNOWN');
+        if (c6Index && expectedDbVersion === 10) {
+          const snapshot = recovery.snapshot;
+          readC6Rows(
+            tx,
+            c6Index,
+            snapshot,
+            () => ready(snapshot, recovery.appearanceReadOnly),
+            fail,
+          );
+        } else ready(recovery.snapshot, recovery.appearanceReadOnly);
       } catch (error) {
         fail(error);
       }
@@ -198,8 +233,21 @@ export class StorageClient {
     private readonly db: IDBDatabase,
     fallback: boolean,
     private readonly factory: IDBFactory,
-    private readonly initialization?: { activePackageRef: Ref; timeZone?: string },
+    private readonly initialization?: {
+      activePackageRef: Ref;
+      timeZone?: string;
+      c6Activation?: C6StorageActivation;
+    },
   ) {
+    if (db.version === 10) {
+      if (!initialization?.c6Activation) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+      const index = c6ActivationIndex(initialization.c6Activation);
+      if (
+        initialization.activePackageRef.id !== index.packageRef.id ||
+        initialization.activePackageRef.version !== index.packageRef.version
+      )
+        throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    }
     this.fallback = fallback;
     db.onversionchange = () => {
       this.close();
@@ -356,6 +404,34 @@ export class StorageClient {
       throw new StorageError(recovery.errorCode ?? 'S_RECORD_INVALID');
     return recovery.snapshot;
   }
+  async readC6Course() {
+    if (!this.initialization?.c6Activation) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    return (
+      await c6CourseTransaction(
+        this.connection(),
+        this.factory,
+        c6ActivationIndex(this.initialization.c6Activation),
+      )
+    ).state;
+  }
+  async commitC6Course(
+    generation: string,
+    revision: number,
+    prepare: PrepareC6Course,
+  ): Promise<SaveResult> {
+    if (!this.initialization?.c6Activation) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    const result = await c6CourseTransaction(
+      this.connection(),
+      this.factory,
+      c6ActivationIndex(this.initialization.c6Activation),
+      { generation, revision, prepare },
+    );
+    const current = await this.readC6Course();
+    if (current.snapshot.meta.generation !== generation)
+      throw new StorageError('S_GENERATION_STALE');
+    if (!result.saved.replayed) this.broadcast(current.snapshot.meta);
+    return result.saved;
+  }
   async probe(): Promise<{ available: true }> {
     const initial = await this.read();
     await this.execute(initial.meta.generation, () => [], undefined, undefined, true);
@@ -396,10 +472,21 @@ export class StorageClient {
   }
   async readRecovery(): Promise<RecoveryRead> {
     const raw = await this.readRaw();
-    const recovery = {
-      ...inspectRecoveryRows(raw, (a, b) => this.factory.cmp(a, b)),
+    const recovery: RecoveryRead = {
+      ...inspectRecoveryRows(
+        raw,
+        (a, b) => this.factory.cmp(a, b),
+        this.connection().version === 10 ? '10.0.0' : SCHEMA_VERSION,
+      ),
       guard: crypto.randomUUID(),
     };
+    if (recovery.snapshot && recovery.snapshot.meta.dbVersion !== this.connection().version) {
+      recovery.snapshot = null;
+      recovery.writable = false;
+      recovery.canClear = false;
+      recovery.errorCode = 'S_VERSION_UNKNOWN';
+      recovery.issues.push({ store: 'layout', count: 1 });
+    }
     if (recovery.snapshot?.appearanceAssets.length && !recovery.appearanceReadOnly) {
       const valid = await usableBackground(recovery.snapshot.appearanceAssets[0]);
       const latest = await this.readRaw();
@@ -409,6 +496,24 @@ export class StorageClient {
         recovery.issues.push({ store: 'appearanceAssets', count: 1 });
         recovery.snapshot.appearance = defaultAppearance();
         recovery.snapshot.appearanceAssets = [];
+      }
+    }
+    if (this.connection().version === 10 && recovery.writable && recovery.snapshot) {
+      try {
+        const state = await this.readC6Course();
+        if (!sameRecoveryValue(state.snapshot.meta, recovery.snapshot.meta))
+          return this.readRecovery();
+      } catch (error) {
+        const code = storageError(error).code;
+        if (code !== 'S_RECORD_INVALID' && code !== 'S_VERSION_UNKNOWN') throw error;
+        recovery.snapshot = null;
+        recovery.courseReadOnly = true;
+        recovery.writable = false;
+        recovery.ledgerUncertain = true;
+        recovery.errorCode = code;
+        recovery.canClear &&= code !== 'S_VERSION_UNKNOWN';
+        recovery.resettable = [];
+        recovery.issues.push({ store: 'course', count: 1 });
       }
     }
     this.guards.set(recovery.guard, {
@@ -431,18 +536,21 @@ export class StorageClient {
       this.initialization?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
     const fallback = !isTimeZone(timeZone);
     if (fallback) timeZone = 'UTC';
-    const meta = createMeta({
-      generation: crypto.randomUUID(),
-      timeZone,
-      createdAt: new Date().toISOString(),
-      activePackageRef,
-    });
+    const meta =
+      this.connection().version === 10
+        ? createC6ResetMeta(crypto.randomUUID(), timeZone, new Date().toISOString())
+        : createMeta({
+            generation: crypto.randomUUID(),
+            timeZone,
+            createdAt: new Date().toISOString(),
+            activePackageRef,
+          });
     assertRecord('meta', meta);
     if (meta.generation === rawGeneration(confirmation.raw.meta))
       throw new StorageError('S_RECORD_INVALID');
     try {
       await this.repairTransaction(guard, 'clear', (_raw, tx) => {
-        for (const name of ALL_STORE_NAMES) tx.objectStore(name).clear();
+        for (const name of physicalStores(this.connection())) tx.objectStore(name).clear();
         tx.objectStore('meta').add(meta, 'current');
         tx.objectStore('settings').add(defaultSettings(), 'current');
         tx.objectStore('avatar').add(defaultAvatar(), 'current');
@@ -526,7 +634,7 @@ export class StorageClient {
     if (!confirmation) throw new StorageError('S_REVISION_CONFLICT');
     const db = this.connection();
     checkLayout(db);
-    const tx = db.transaction(ALL_STORE_NAMES, 'readwrite', { durability: 'strict' });
+    const tx = db.transaction(physicalStores(db), 'readwrite', { durability: 'strict' });
     return new Promise((resolve, reject) => {
       let failure: unknown;
       let written = false;
@@ -547,7 +655,8 @@ export class StorageClient {
         tx,
         (raw) => {
           try {
-            if (hasUnknownRecoveryVersion(raw)) throw new StorageError('S_VERSION_UNKNOWN');
+            if (hasUnknownRecoveryVersion(raw, db.version === 10 ? '10.0.0' : SCHEMA_VERSION))
+              throw new StorageError('S_VERSION_UNKNOWN');
             const oldMeta = confirmation.recovery.snapshot?.meta;
             const currentMeta =
               raw.meta.keys.length === 1 &&
@@ -577,7 +686,11 @@ export class StorageClient {
               throw new StorageError('S_REVISION_CONFLICT');
             if (
               operation === 'clear' &&
-              !inspectRecoveryRows(raw, (a, b) => this.factory.cmp(a, b)).canClear
+              !inspectRecoveryRows(
+                raw,
+                (a, b) => this.factory.cmp(a, b),
+                db.version === 10 ? '10.0.0' : SCHEMA_VERSION,
+              ).canClear
             )
               throw new StorageError('S_RECORD_INVALID');
             write(raw, tx);
@@ -671,6 +784,10 @@ export class StorageClient {
           },
           fail,
           this.factory,
+          this.connection().version,
+          this.initialization?.c6Activation
+            ? c6ActivationIndex(this.initialization.c6Activation)
+            : undefined,
         );
       });
       const current = await this.read();
@@ -718,6 +835,10 @@ export class StorageClient {
           },
           fail,
           this.factory,
+          this.connection().version,
+          this.initialization?.c6Activation
+            ? c6ActivationIndex(this.initialization.c6Activation)
+            : undefined,
         );
       });
       const current = await this.read();
@@ -872,6 +993,10 @@ export class StorageClient {
           },
           fail,
           this.factory,
+          this.connection().version,
+          this.initialization?.c6Activation
+            ? c6ActivationIndex(this.initialization.c6Activation)
+            : undefined,
         );
       });
       // A complete event is necessary but a clear could have committed before ACK.
@@ -935,6 +1060,16 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
   let client: StorageClient | undefined;
   try {
     if (options.signal?.aborted) throw new StorageError('S_ABORTED');
+    const index = options.c6Activation ? c6ActivationIndex(options.c6Activation) : null;
+    const activePackageRef = { ...options.activePackageRef };
+    if (activePackageRef.id === 'content.c.primer6' && !index)
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    if (
+      index &&
+      (activePackageRef.id !== index.packageRef.id ||
+        activePackageRef.version !== index.packageRef.version)
+    )
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
     const factory = options.factory ?? globalThis.indexedDB;
     if (!factory) throw new StorageError('S_STORAGE_UNAVAILABLE');
     let timeZone = options.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -946,15 +1081,20 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
       timeZone = 'UTC';
       fallback = true;
     }
-    const meta = createMeta({
-      generation: crypto.randomUUID(),
-      timeZone,
-      createdAt: new Date().toISOString(),
-      activePackageRef: options.activePackageRef,
-    });
+    const resetMeta = index
+      ? createC6ResetMeta(crypto.randomUUID(), timeZone, new Date().toISOString())
+      : null;
+    const meta =
+      resetMeta ??
+      createMeta({
+        generation: crypto.randomUUID(),
+        timeZone,
+        createdAt: new Date().toISOString(),
+        activePackageRef,
+      });
     assertRecord('meta', meta);
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const request = factory.open(options.name ?? DB_NAME, DB_VERSION);
+      const request = factory.open(options.name ?? DB_NAME, index ? 10 : DB_VERSION);
       let stopped = false;
       let failure: unknown;
       const cancel = () => {
@@ -966,11 +1106,31 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
       options.signal?.addEventListener('abort', cancel, { once: true });
       request.onblocked = () => {
         options.onBlocked?.();
+        if (index) {
+          // A later release of the blocking tab must not silently start a RESET
+          // after this attempt has already reported failure. Retry is explicit.
+          stopped = true;
+          cleanup();
+          reject(new StorageError('S_UPGRADE_BLOCKED'));
+        }
       };
       request.onupgradeneeded = (event) => {
         try {
           if (stopped) {
             request.transaction!.abort();
+            return;
+          }
+          if (resetMeta) {
+            createdNew = event.oldVersion === 0;
+            queueC6ResetUpgrade(
+              request.result,
+              request.transaction!,
+              event.oldVersion,
+              resetMeta,
+              (error) => {
+                failure = error;
+              },
+            );
             return;
           }
           if (event.oldVersion === 1) {
@@ -1366,8 +1526,9 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
     }
     try {
       client = new StorageClient(db, fallback && createdNew, factory, {
-        activePackageRef: { ...options.activePackageRef },
+        activePackageRef,
         timeZone: options.timeZone,
+        c6Activation: options.c6Activation,
       });
     } catch (error) {
       db.close();
@@ -1376,7 +1537,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
     if (options.recovery) {
       const recovery = await client.readRecovery();
       if (
-        recovery.errorCode === 'S_VERSION_UNKNOWN' ||
+        (recovery.errorCode === 'S_VERSION_UNKNOWN' && !(index && recovery.courseReadOnly)) ||
         recovery.errorCode === 'S_MIGRATION_UNSUPPORTED'
       )
         throw new StorageError(recovery.errorCode);

@@ -205,13 +205,14 @@ test('the explanation links to the existing real Rust path and lazy page failure
   await page.goBack();
   await ready(page);
   await page.getByRole('link', { name: '在练习中查看真实诊断', exact: true }).click();
-  await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
+  await expect(page).toHaveURL(/#\/practice\/exercise\.c6\.s2\.1$/);
+  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).toBeEditable();
   // New context: fail only this new page's actual lazy resource, then reload without the fault.
   const isolated = await page.context().browser()!.newContext();
   try {
     const broken = await isolated.newPage();
     await broken.route('**/assets/CompilationPage-*.js', (route) => route.abort());
-    await broken.goto('http://127.0.0.1:4178/#/compilation');
+    await broken.goto(new URL('/#/compilation', page.url()).href);
     await expect(broken.getByRole('heading', { name: '页面加载失败', exact: true })).toBeVisible();
     await broken.unroute('**/assets/CompilationPage-*.js');
     await broken.getByRole('button', { name: '重新加载', exact: true }).click();

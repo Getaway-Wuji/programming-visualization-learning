@@ -3,7 +3,8 @@ import { resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { gzipSync } from 'node:zlib';
 import { expect, test, type Page, type Download } from '@playwright/test';
-import { confirm, observeCaseSetExecution } from './notebook-helpers';
+import { observeCaseSetExecution } from './notebook-helpers';
+import { confirmCurrentLesson } from './current-course-helpers';
 import { native, clear } from './achievement-helpers';
 import type { SnapshotDocument } from '../../web/src/snapshot-export/types';
 const label = process.env.TASK_EVIDENCE_LABEL ?? 'local',
@@ -11,7 +12,7 @@ const label = process.env.TASK_EVIDENCE_LABEL ?? 'local',
 test.beforeAll(() => mkdir(folder, { recursive: true }));
 const downloadButton = (p: Page) =>
   p.getByRole('button', { name: '下载 Markdown 压缩包', exact: true });
-const status = (p: Page) => p.getByTestId('notes-download-status');
+const status = (p: Page) => p.locator('.note-download').locator('[role="status"], [role="alert"]');
 async function ready(p: Page) {
   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
@@ -59,7 +60,7 @@ async function raw(p: Page) {
 }
 async function unchanged(p: Page, name: string, before: Awaited<ReturnType<typeof raw>>) {
   const after = await raw(p);
-  expect(Object.keys(after.stores)).toHaveLength(17);
+  expect(Object.keys(after.stores)).toHaveLength(19);
   expect(after).toEqual(before);
   await writeFile(`${folder}/${name}-native.json.gz`, gzipSync(JSON.stringify({ before, after })), {
     flag: 'wx',
@@ -100,7 +101,7 @@ async function previewSnapshots(p: Page) {
     .check();
   for (const box of await p.locator('[data-note-kind="snapshot"]').getByRole('checkbox').all())
     await box.check();
-  await p.getByRole('button', { name: '生成笔记预览', exact: true }).click();
+  await p.getByRole('button', { name: '生成所选内容预览', exact: true }).click();
   await expect(downloadButton(p)).toBeEnabled();
 }
 async function prepareSnapshot(p: Page) {
@@ -203,9 +204,11 @@ async function held(p: Page) {
 test('20.2 explicit real learning selection downloads a readable Unicode archive without other records', async ({
   page,
 }) => {
-  await confirm(page, 'lesson.c.variables-output');
+  await confirmCurrentLesson(page, 'lesson.c6.s2.1');
+  await page.getByRole('button', { name: '标记陌生', exact: true }).click();
+  await expect(page.getByRole('button', { name: '已标陌生，改为熟悉', exact: true })).toBeVisible();
   await notes(page);
-  await expect(page.getByTestId('notes-download')).toHaveCount(0);
+  await expect(page.locator('.note-download')).toHaveCount(0);
   for (const name of ['学习记录', '解析'])
     await page
       .getByRole('group', { name: '内容类型' })
@@ -214,7 +217,7 @@ test('20.2 explicit real learning selection downloads a readable Unicode archive
   const learning = page.locator('[data-note-kind="learning"]');
   await learning.first().getByRole('checkbox').check();
   await page.locator('[data-note-kind="analysis"]').first().getByRole('checkbox').check();
-  await page.getByRole('button', { name: '生成笔记预览', exact: true }).click();
+  await page.getByRole('button', { name: '生成所选内容预览', exact: true }).click();
   const title = '中文复习 <img src=x onerror=alert(1)> [链接](javascript:x)';
   await page.getByLabel('笔记标题', { exact: true }).fill(title);
   const before = await raw(page),
@@ -225,12 +228,18 @@ test('20.2 explicit real learning selection downloads a readable Unicode archive
   const download = await getting;
   expect(download.suggestedFilename()).toContain('中文复习');
   expect(download.suggestedFilename()).not.toMatch(/[<>:"/\\|?*]/);
-  await expect(status(page)).toContainText('已发起下载');
+  await expect(status(page)).toContainText('已发起笔记压缩包下载');
   const output = await saved(download, 'learning');
   expect(output.metadata.entries).toHaveLength(2);
   expect(output.metadata.assets).toEqual([]);
   expect(output.metadata).not.toHaveProperty('lease');
-  expect(output.markdown).toContain('非历史作答');
+  expect(output.metadata.formatId).toBe('urn:c-viz:study-notes-download:2.0.0');
+  expect(
+    output.metadata.entries.every(
+      (e: { reference: { nodeRef: { id: string } } }) => e.reference.nodeRef.id === 'node.c6.s2.1',
+    ),
+  ).toBe(true);
+  expect(output.metadata.entries.every((e: { source: unknown }) => e.source === null)).toBe(true);
   expect(requests).toEqual([]);
   await unchanged(page, 'learning', before);
   await readMarkdown(page, output.target, 'learning', title);
@@ -250,7 +259,7 @@ test('20.2 mixed real C and C++ snapshots retain source/input/state and decode a
   const getting = page.waitForEvent('download');
   await downloadButton(page).click();
   const output = await saved(await getting, 'mixed-real');
-  await expect(status(page)).toContainText('已发起下载');
+  await expect(status(page)).toContainText('已发起笔记压缩包下载');
   expect(output.metadata.entries).toHaveLength(2);
   expect(output.metadata.assets).toHaveLength(2);
   for (const entry of output.metadata.entries as {
@@ -300,7 +309,7 @@ test('20.2 a real C++ pointer mistake exports its original result and missing-an
   const row = page.locator('[data-note-kind="mistake"]');
   await expect(row).toHaveCount(1);
   await row.getByRole('checkbox').check();
-  await page.getByRole('button', { name: '生成笔记预览', exact: true }).click();
+  await page.getByRole('button', { name: '生成所选内容预览', exact: true }).click();
   const before = await raw(page),
     getting = page.waitForEvent('download');
   await downloadButton(page).click();
@@ -315,7 +324,7 @@ test('20.2 a real C++ pointer mistake exports its original result and missing-an
   });
   expect(output.metadata.assets).toEqual([]);
   expect(output.markdown).toContain('程序错误');
-  expect(output.markdown).toContain('未保存当时的作答源码');
+  expect(output.markdown).toContain('记录不包含当时未保存的作答源码');
   expect(output.markdown).not.toContain('```cpp');
   await unchanged(page, 'real-mistake', before);
 });
@@ -340,7 +349,7 @@ for (const mode of ['cancel', 'title-aba'] as const)
     }
     await expect(status(page)).toContainText('未发起下载');
     await release(page);
-    await expect(page.getByTestId('notes-download')).toHaveAttribute('data-phase', 'cancelled');
+    await expect(page.locator('.note-download')).toContainText('本次笔记打包已取消，未发起下载。');
     expect(downloads).toHaveLength(0);
     const getting = page.waitForEvent('download');
     await downloadButton(page).click();
@@ -360,7 +369,7 @@ for (const kind of ['fail', 'anchorFail'] as const)
     page.on('download', (d) => downloads.push(d));
     await arm(page, kind);
     await downloadButton(page).click();
-    await expect(page.getByTestId('notes-download')).toHaveAttribute('data-phase', 'failed');
+    await expect(page.locator('.note-download').getByRole('alert')).toContainText('未发起下载');
     await expect(status(page)).toContainText('未发起下载');
     expect(downloads).toHaveLength(0);
     const getting = page.waitForEvent('download');
@@ -395,10 +404,10 @@ test('20.2 an unbroadcast native revision change is rejected by the final meta-o
     db.close();
   });
   await release(page);
-  await expect(page.getByTestId('notes-download')).toHaveAttribute('data-phase', 'failed');
+  await expect(page.locator('.note-download').getByRole('alert')).toContainText('未发起下载');
   expect(downloads).toHaveLength(0);
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
-  await expect(page.getByTestId('notes-preview')).toHaveCount(0);
+  await expect(page.locator('.note-preview-entry')).toHaveCount(0);
   await previewSnapshots(page);
   const before = await raw(page),
     getting = page.waitForEvent('download');
@@ -421,10 +430,20 @@ test('20.2 peer clearing while a real image is pending releases snapshots and no
   const peer = await context.newPage();
   await clear(peer);
   await page.bringToFront();
-  await expect(page.getByTestId('notes-preview')).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: '本次快照 · 0/8 份' })).toBeVisible();
+  await expect(page.locator('.note-preview-entry')).toHaveCount(0);
+  await expect(
+    page.getByText('先选择内容类型，再逐条勾选要整理的记录。', { exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole('group', { name: '内容类型' })
+    .getByRole('checkbox', { name: '快照', exact: true })
+    .check();
+  await expect(page.locator('[data-note-kind="snapshot"]')).toHaveCount(0);
+  await expect(
+    page.getByText('这个范围没有可整理的记录。快照需先从真实运行中加入。', { exact: true }),
+  ).toBeVisible();
   await release(page);
-  await expect(page.getByTestId('notes-download')).toHaveCount(0);
+  await expect(page.locator('.note-download')).toHaveCount(0);
   expect(downloads).toHaveLength(0);
 });
 

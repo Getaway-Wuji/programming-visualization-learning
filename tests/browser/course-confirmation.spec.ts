@@ -1,4 +1,7 @@
 import { expect, test } from '@playwright/test';
+import { routeHistoricalApp } from './legacy-app';
+import { currentSnapshot } from './current-practice-observation';
+import { verifyCurrentResetAfterMigration } from './migration-current-reset';
 
 test('retry preserves an initial confirmation when its separate start transaction fails', async ({
   page,
@@ -59,6 +62,15 @@ test('retry preserves an initial confirmation when its separate start transactio
         db.close();
       }
     });
+  testInfo.annotations.push({
+    type: 'historical-confirmation-and-current-reset',
+    description:
+      'Original separate-start recovery runs on the actual pre-RESET app; the current app must then clear that history and persist genuine new-book learning.',
+  });
+  await routeHistoricalApp(page, new URL(String(testInfo.project.use.baseURL)).origin);
+  await page.route('**/content/course/course-bundle-*.json', (r) =>
+    r.fulfill({ status: 404, body: 'Original six-course fallback for genuine historical input' }),
+  );
   await page.goto('/#/lessons/lesson.c.variables-output');
   await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
   await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
@@ -106,6 +118,13 @@ test('retry preserves an initial confirmation when its separate start transactio
       partial,
       retried,
     }),
+    contentType: 'application/json',
+  });
+  const historical = await currentSnapshot(page);
+  await page.unrouteAll();
+  const current = await verifyCurrentResetAfterMigration(page, historical);
+  await testInfo.attach('actual-current-reset-and-fresh-learning', {
+    body: JSON.stringify(current),
     contentType: 'application/json',
   });
 });

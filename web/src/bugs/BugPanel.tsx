@@ -6,6 +6,7 @@ import { currentCourseBundle } from '../content/course-bundle';
 import { Breadcrumbs, PageHeading } from '../components/Ui';
 import './bugs.css';
 import { MemoryBugCatalog } from '../memory-bugs/MemoryBugPage';
+import { c6IndependentSupplement } from '../c6-learning/supplements';
 
 export function BugGuidance({ question }: { question: BugQuestion }) {
   const [shown, setShown] = useState(0);
@@ -53,7 +54,7 @@ export function BugCatalogLink() {
 export default function BugPage() {
   const { state } = useLearning();
   const available = bugQuestions.every((q) =>
-    currentCourseBundle()?.practice.exercises.some(
+    (c6IndependentSupplement()?.practice ?? currentCourseBundle()?.practice)?.exercises.some(
       (e) => e.id === q.exerciseRef.id && e.version === q.exerciseRef.version,
     ),
   );

@@ -11,7 +11,10 @@ const referencePath = '/#/visualize/case.c.assignment';
 const visualPath = '/#/visualize/case.c.bubble-sort';
 const fixturePath = '/#/cases';
 const reviewedCases = JSON.parse(
-  readFileSync(new URL('../../content/c/p0/case-view-1.0.1.json', import.meta.url), 'utf8'),
+  readFileSync(
+    new URL('../../content/c/primer6-learning/cases-1.0.0.json', import.meta.url),
+    'utf8',
+  ),
 ) as { catalogs: CaseExecutionCatalog[] };
 
 interface BuildValue {
@@ -24,6 +27,7 @@ interface BuildValue {
 
 interface WorkerObservation {
   url: string;
+  requestKind?: string;
   terminated: boolean;
   moduleToken: number;
   nonce?: number;
@@ -157,6 +161,7 @@ async function observeAdapter(page: Page) {
       postMessage(message: unknown, options: Transferable[] | StructuredSerializeOptions = []) {
         if (typeof message === 'object' && message !== null) {
           const value = message as Record<string, unknown>;
+          if (typeof value.kind === 'string') this.observation.requestKind = value.kind;
           const module = Object.values(value).find(
             (entry): entry is WebAssembly.Module => entry instanceof WebAssembly.Module,
           );
@@ -227,12 +232,27 @@ async function noLearningWrites(page: Page) {
   expect(observation.databaseNames.every((name) => name === 'c-viz-learning')).toBe(true);
   const counts = await page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const req = indexedDB.open('c-viz-learning', 2);
+      const req = indexedDB.open('c-viz-learning', 10);
       req.onsuccess = () => resolve(req.result);
       req.onerror = () => reject(req.error);
     });
     try {
-      const names = ['progress', 'dailyFacts', 'goals', 'ledger', 'receipts', 'aliases'];
+      const names = [
+        'progress',
+        'dailyFacts',
+        'goals',
+        'ledger',
+        'receipts',
+        'aliases',
+        'editHistory',
+        'knowledgeMarks',
+        'reviewCards',
+        'achievements',
+        'customDrafts',
+        'weaknesses',
+        'courseActivities',
+        'courseDrafts',
+      ];
       const tx = db.transaction(names, 'readonly');
       const businessCounts = await Promise.all(
         names.map(
@@ -250,19 +270,27 @@ async function noLearningWrites(page: Page) {
     }
   });
   expect(counts.storeNames).toEqual([
+    'achievements',
     'aliases',
     'appearance',
     'appearanceAssets',
     'avatar',
+    'courseActivities',
+    'courseDrafts',
+    'customDrafts',
     'dailyFacts',
+    'editHistory',
     'goals',
+    'knowledgeMarks',
     'ledger',
     'meta',
     'progress',
     'receipts',
+    'reviewCards',
     'settings',
+    'weaknesses',
   ]);
-  expect(counts.businessCounts).toEqual([0, 0, 0, 0, 0, 0]);
+  expect(counts.businessCounts).toEqual(Array(14).fill(0));
 }
 
 test('reviewed case reference matches its execution release while the frozen package remains unpublished', async ({
@@ -308,12 +336,25 @@ test('reviewed case reference matches its execution release while the frozen pac
   );
   expect(
     requests.some((entry) =>
-      /execute|submission|reward|progress/i.test(new URL(entry.url).pathname),
+      /\/(?:execute|submission|reward|progress)(?:\/|$)/i.test(new URL(entry.url).pathname),
     ),
   ).toBe(false);
-  expect(requests.some((entry) => /\.wasm$|probe\.worker-/.test(new URL(entry.url).pathname))).toBe(
-    false,
-  );
+  const preparation = await page.evaluate(() => ({
+    workers: window.__adapterAudit.workers,
+    compileCalls: window.__adapterAudit.compileCalls,
+    maximumActiveWorkers: window.__adapterAudit.maximumActiveWorkers,
+  }));
+  expect(preparation).toEqual({ workers: [], compileCalls: 0, maximumActiveWorkers: 0 });
+  expect(requests.filter((entry) => wasmPattern.test(new URL(entry.url).pathname))).toHaveLength(0);
+  for (const entry of requests.filter((entry) =>
+    /reward|progress/i.test(new URL(entry.url).pathname),
+  )) {
+    expect(new URL(entry.url).pathname).toMatch(/^\/assets\/[^/]+-[A-Za-z0-9_-]{8,}\.(?:css|js)$/);
+  }
+  await testInfo.attach('published-source-preparation-without-execution', {
+    body: JSON.stringify({ requests, preparation }),
+    contentType: 'application/json',
+  });
   await noLearningWrites(page);
   await page.screenshot({
     path: testInfo.outputPath('standard-content-sample.png'),
@@ -380,7 +421,8 @@ test('on-demand cold and warm checks call real Rust in separate terminated worke
     if (wasmPattern.test(new URL(entry.url()).pathname)) wasmRequests.push(entry.url());
   });
   await page.goto('/');
-  await expect(page.locator('[data-page-id="PAGE-01"]')).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   expect(wasmRequests).toEqual([]);
   expect(await page.evaluate(() => window.__adapterAudit.workers.length)).toBe(0);
   await page.goto(referencePath);

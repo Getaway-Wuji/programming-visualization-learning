@@ -6,7 +6,7 @@ export type SchemaValue =
 interface Context {
   guard: () => void;
   deferTrace: boolean;
-  validated: WeakMap<object, string[]>;
+  validated: Map<string, object[]>;
 }
 function isRecord(value: SchemaValue): value is { [key: string]: SchemaValue } {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -41,8 +41,8 @@ function d0(value: SchemaValue, context: Context): boolean {
 function v73(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size < 1 || size > 96 || !p0.test(value)) return false;
   }
   return true;
@@ -53,8 +53,8 @@ function d1(value: SchemaValue, context: Context): boolean {
 function v74(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size < 1 || size > 96 || !p1.test(value)) return false;
   }
   return true;
@@ -65,8 +65,8 @@ function d2(value: SchemaValue, context: Context): boolean {
 function v75(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size > 96 || !p2.test(value)) return false;
   }
   return true;
@@ -75,9 +75,6 @@ function d3(value: SchemaValue, context: Context): boolean {
   return v75(value, context);
 }
 function v77(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v78(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
@@ -85,8 +82,8 @@ function v78(value: SchemaValue, context: Context): boolean {
 function v76(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
+    if (d3(value, context)) matches++;
     if (v77(value, context)) matches++;
-    if (v78(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
@@ -94,165 +91,150 @@ function v76(value: SchemaValue, context: Context): boolean {
 function d4(value: SchemaValue, context: Context): boolean {
   return v76(value, context);
 }
-function v79(value: SchemaValue, context: Context): boolean {
+function v78(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size > 96 || !p3.test(value)) return false;
   }
   return true;
 }
 function d5(value: SchemaValue, context: Context): boolean {
-  return v79(value, context);
+  return v78(value, context);
 }
-function v80(value: SchemaValue, context: Context): boolean {
+function v79(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size > 96 || !p4.test(value)) return false;
   }
   return true;
 }
 function d6(value: SchemaValue, context: Context): boolean {
-  return v80(value, context);
+  return v79(value, context);
 }
-function v81(value: SchemaValue, context: Context): boolean {
+function v80(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size > 96 || !p5.test(value)) return false;
   }
   return true;
 }
 function d7(value: SchemaValue, context: Context): boolean {
+  return v80(value, context);
+}
+function v81(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
+  if (value < 0 || value > 9007199254740991) return false;
+  return true;
+}
+function d8(value: SchemaValue, context: Context): boolean {
   return v81(value, context);
 }
 function v82(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 9007199254740991)) return false;
+  if (value < 1 || value > 9007199254740991) return false;
   return true;
 }
-function d8(value: SchemaValue, context: Context): boolean {
+function d9(value: SchemaValue, context: Context): boolean {
   return v82(value, context);
 }
 function v83(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 1 || value > 9007199254740991)) return false;
-  return true;
-}
-function d9(value: SchemaValue, context: Context): boolean {
-  return v83(value, context);
-}
-function v84(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < -2147483648 || value > 2147483647)) return false;
+  if (value < -2147483648 || value > 2147483647) return false;
   return true;
 }
 function d10(value: SchemaValue, context: Context): boolean {
-  return v84(value, context);
+  return v83(value, context);
 }
-function v86(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v87(value: SchemaValue, context: Context): boolean {
+function v85(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v85(value: SchemaValue, context: Context): boolean {
+function v84(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v86(value, context)) matches++;
-    if (v87(value, context)) matches++;
+    if (d10(value, context)) matches++;
+    if (v85(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
 function d11(value: SchemaValue, context: Context): boolean {
-  return v85(value, context);
+  return v84(value, context);
 }
-function v88(value: SchemaValue, context: Context): boolean {
+function v86(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 20000)) return false;
+  if (value < 0 || value > 20000) return false;
   return true;
 }
 function d12(value: SchemaValue, context: Context): boolean {
-  return v88(value, context);
+  return v86(value, context);
 }
-function v89(value: SchemaValue, context: Context): boolean {
+function v87(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 1 || value > 20000)) return false;
+  if (value < 1 || value > 20000) return false;
   return true;
 }
 function d13(value: SchemaValue, context: Context): boolean {
-  return v89(value, context);
+  return v87(value, context);
 }
-function v91(value: SchemaValue, context: Context): boolean {
-  return d1(value, context);
-}
-function v92(value: SchemaValue, context: Context): boolean {
+function v89(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     if (!p6.test(value)) return false;
   }
   return true;
 }
-function v90(value: SchemaValue, context: Context): boolean {
+function v88(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v91(value['id'], context)) return false;
-    if (!v92(value['version'], context)) return false;
+    if (!d1(value['id'], context)) return false;
+    if (!v89(value['version'], context)) return false;
   }
   return true;
 }
 function d14(value: SchemaValue, context: Context): boolean {
-  return v90(value, context);
+  return v88(value, context);
 }
-function v94(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v95(value: SchemaValue, context: Context): boolean {
+function v91(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v93(value: SchemaValue, context: Context): boolean {
+function v90(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v94(value, context)) matches++;
-    if (v95(value, context)) matches++;
+    if (d14(value, context)) matches++;
+    if (v91(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
 function d15(value: SchemaValue, context: Context): boolean {
-  return v93(value, context);
+  return v90(value, context);
 }
-function v97(value: SchemaValue, context: Context): boolean {
-  return d1(value, context);
-}
-function v98(value: SchemaValue, context: Context): boolean {
+function v93(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v99(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v96(value: SchemaValue, context: Context): boolean {
+function v92(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'id') ||
       !Object.hasOwn(value, 'version') ||
@@ -260,50 +242,32 @@ function v96(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v97(value['id'], context)) return false;
-    if (!v98(value['version'], context)) return false;
-    if (!v99(value['buildId'], context)) return false;
+    if (!d1(value['id'], context)) return false;
+    if (!v93(value['version'], context)) return false;
+    if (!d2(value['buildId'], context)) return false;
   }
   return true;
 }
 function d16(value: SchemaValue, context: Context): boolean {
-  return v96(value, context);
+  return v92(value, context);
 }
-function v101(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v102(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v103(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v104(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v105(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v107(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v108(value: SchemaValue, context: Context): boolean {
+function v96(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v106(value: SchemaValue, context: Context): boolean {
+function v95(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v107(value, context)) matches++;
-    if (v108(value, context)) matches++;
+    if (d2(value, context)) matches++;
+    if (v96(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v100(value: SchemaValue, context: Context): boolean {
+function v94(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'contextId') ||
       !Object.hasOwn(value, 'contextRevision') ||
@@ -314,90 +278,84 @@ function v100(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v101(value['contextId'], context)) return false;
-    if (!v102(value['contextRevision'], context)) return false;
-    if (!v103(value['submissionId'], context)) return false;
-    if (!v104(value['runId'], context)) return false;
-    if (!v105(value['sourceRevision'], context)) return false;
-    if (!v106(value['testCaseKey'], context)) return false;
+    if (!d2(value['contextId'], context)) return false;
+    if (!d9(value['contextRevision'], context)) return false;
+    if (!d2(value['submissionId'], context)) return false;
+    if (!d2(value['runId'], context)) return false;
+    if (!d9(value['sourceRevision'], context)) return false;
+    if (!v95(value['testCaseKey'], context)) return false;
   }
   return true;
 }
 function d17(value: SchemaValue, context: Context): boolean {
-  return v100(value, context);
+  return v94(value, context);
 }
-function v110(value: SchemaValue, context: Context): boolean {
+function v98(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 32768)) return false;
+  if (value < 0 || value > 32768) return false;
   return true;
 }
-function v111(value: SchemaValue, context: Context): boolean {
+function v99(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 32768)) return false;
+  if (value < 0 || value > 32768) return false;
   return true;
 }
-function v109(value: SchemaValue, context: Context): boolean {
+function v97(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'start') || !Object.hasOwn(value, 'end')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v110(value['start'], context)) return false;
-    if (!v111(value['end'], context)) return false;
+    if (!v98(value['start'], context)) return false;
+    if (!v99(value['end'], context)) return false;
   }
   return true;
 }
 function d18(value: SchemaValue, context: Context): boolean {
-  return v109(value, context);
+  return v97(value, context);
 }
-function v113(value: SchemaValue, context: Context): boolean {
+function v101(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'source') return false;
   return true;
 }
-function v114(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v115(value: SchemaValue, context: Context): boolean {
+function v102(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'start' || value === 'whole' || value === 'end')) return false;
   return true;
 }
-function v116(value: SchemaValue, context: Context): boolean {
-  return d18(value, context);
-}
-function v117(value: SchemaValue, context: Context): boolean {
+function v103(value: SchemaValue, context: Context): boolean {
   void context;
   if (isRecord(value)) {
     if (!Object.hasOwn(value, 'nodeId') || !Object.hasOwn(value, 'edge')) return false;
   }
   return true;
 }
-function v118(value: SchemaValue, context: Context): boolean {
+function v104(value: SchemaValue, context: Context): boolean {
   void context;
   if (isRecord(value)) {
     if (!Object.hasOwn(value, 'byteRange')) return false;
   }
   return true;
 }
-function v112(value: SchemaValue, context: Context): boolean {
+function v100(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'kind')) return false;
     for (const key of Object.keys(value)) {
       switch (key) {
         case 'kind':
-          if (!v113(value[key], context)) return false;
+          if (!v101(value[key], context)) return false;
           break;
         case 'nodeId':
-          if (!v114(value[key], context)) return false;
+          if (!d3(value[key], context)) return false;
           break;
         case 'edge':
-          if (!v115(value[key], context)) return false;
+          if (!v102(value[key], context)) return false;
           break;
         case 'byteRange':
-          if (!v116(value[key], context)) return false;
+          if (!d18(value[key], context)) return false;
           break;
         default:
           return false;
@@ -407,18 +365,18 @@ function v112(value: SchemaValue, context: Context): boolean {
     if (Object.hasOwn(value, 'nodeId') && !Object.hasOwn(value, 'edge')) return false;
     if (Object.hasOwn(value, 'edge') && !Object.hasOwn(value, 'nodeId')) return false;
   }
-  if (!(v117(value, context) || v118(value, context))) return false;
+  if (!(v103(value, context) || v104(value, context))) return false;
   return true;
 }
 function d19(value: SchemaValue, context: Context): boolean {
-  return v112(value, context);
+  return v100(value, context);
 }
-function v120(value: SchemaValue, context: Context): boolean {
+function v106(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'synthetic') return false;
   return true;
 }
-function v121(value: SchemaValue, context: Context): boolean {
+function v107(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'initial-state' ||
@@ -434,23 +392,20 @@ function v121(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v122(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v119(value: SchemaValue, context: Context): boolean {
+function v105(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'kind') || !Object.hasOwn(value, 'reason')) return false;
     for (const key of Object.keys(value)) {
       switch (key) {
         case 'kind':
-          if (!v120(value[key], context)) return false;
+          if (!v106(value[key], context)) return false;
           break;
         case 'reason':
-          if (!v121(value[key], context)) return false;
+          if (!v107(value[key], context)) return false;
           break;
         case 'anchorNodeId':
-          if (!v122(value[key], context)) return false;
+          if (!d3(value[key], context)) return false;
           break;
         default:
           return false;
@@ -461,22 +416,16 @@ function v119(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d20(value: SchemaValue, context: Context): boolean {
-  return v119(value, context);
+  return v105(value, context);
 }
-function v124(value: SchemaValue, context: Context): boolean {
-  return d19(value, context);
-}
-function v125(value: SchemaValue, context: Context): boolean {
-  return d20(value, context);
-}
-function v123(value: SchemaValue, context: Context): boolean {
+function v108(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
   switch (value['kind']) {
     case 'source':
-      if (!v124(value, context)) return false;
+      if (!d19(value, context)) return false;
       break;
     case 'synthetic':
-      if (!v125(value, context)) return false;
+      if (!d20(value, context)) return false;
       break;
     default:
       return false;
@@ -484,73 +433,61 @@ function v123(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d21(value: SchemaValue, context: Context): boolean {
-  return v123(value, context);
+  return v108(value, context);
 }
-function v128(value: SchemaValue, context: Context): boolean {
-  return d19(value, context);
-}
-function v127(value: SchemaValue, context: Context): boolean {
+function v110(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
     if (!Object.hasOwn(value, 'nodeId') || !Object.hasOwn(value, 'edge')) return false;
   }
-  if (!v128(value, context)) return false;
+  if (!d19(value, context)) return false;
   return true;
 }
-function v129(value: SchemaValue, context: Context): boolean {
-  return d20(value, context);
-}
-function v126(value: SchemaValue, context: Context): boolean {
+function v109(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v127(value, context)) matches++;
-    if (v129(value, context)) matches++;
+    if (v110(value, context)) matches++;
+    if (d20(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
 function d22(value: SchemaValue, context: Context): boolean {
-  return v126(value, context);
+  return v109(value, context);
 }
-function v131(value: SchemaValue, context: Context): boolean {
+function v112(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size > 32768) return false;
   }
   return true;
 }
-function v133(value: SchemaValue, context: Context): boolean {
-  return d24(value, context);
-}
-function v132(value: SchemaValue, context: Context): boolean {
+function v113(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v133(value[index], context)) return false;
+      if (!d24(value[index], context)) return false;
     }
   }
   return true;
 }
-function v135(value: SchemaValue, context: Context): boolean {
-  return d25(value, context);
-}
-function v134(value: SchemaValue, context: Context): boolean {
+function v114(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v135(value[index], context)) return false;
+      if (!d25(value[index], context)) return false;
     }
   }
   return true;
 }
-function v130(value: SchemaValue, context: Context): boolean {
+function v111(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'text') ||
       !Object.hasOwn(value, 'blockMap') ||
@@ -558,152 +495,122 @@ function v130(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v131(value['text'], context)) return false;
-    if (!v132(value['blockMap'], context)) return false;
-    if (!v134(value['bindingMap'], context)) return false;
+    if (!v112(value['text'], context)) return false;
+    if (!v113(value['blockMap'], context)) return false;
+    if (!v114(value['bindingMap'], context)) return false;
   }
   return true;
 }
 function d23(value: SchemaValue, context: Context): boolean {
-  return v130(value, context);
+  return v111(value, context);
 }
-function v137(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v138(value: SchemaValue, context: Context): boolean {
-  return d18(value, context);
-}
-function v136(value: SchemaValue, context: Context): boolean {
+function v115(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'blockId') || !Object.hasOwn(value, 'byteRange')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v137(value['blockId'], context)) return false;
-    if (!v138(value['byteRange'], context)) return false;
+    if (!d2(value['blockId'], context)) return false;
+    if (!d18(value['byteRange'], context)) return false;
   }
   return true;
 }
 function d24(value: SchemaValue, context: Context): boolean {
-  return v136(value, context);
+  return v115(value, context);
 }
-function v140(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v141(value: SchemaValue, context: Context): boolean {
-  return d18(value, context);
-}
-function v139(value: SchemaValue, context: Context): boolean {
+function v116(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'bindingKey') || !Object.hasOwn(value, 'byteRange')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v140(value['bindingKey'], context)) return false;
-    if (!v141(value['byteRange'], context)) return false;
+    if (!d2(value['bindingKey'], context)) return false;
+    if (!d18(value['byteRange'], context)) return false;
   }
   return true;
 }
 function d25(value: SchemaValue, context: Context): boolean {
-  return v139(value, context);
+  return v116(value, context);
 }
-function v143(value: SchemaValue, context: Context): boolean {
+function v118(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size > 96 || !p7.test(value)) return false;
   }
   return true;
 }
-function v145(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v147(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v146(value: SchemaValue, context: Context): boolean {
+function v120(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 30) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v147(value[index], context)) return false;
+      if (!d10(value[index], context)) return false;
     }
   }
   return true;
 }
-function v144(value: SchemaValue, context: Context): boolean {
+function v119(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v145(value, context)) matches++;
-    if (v146(value, context)) matches++;
+    if (d10(value, context)) matches++;
+    if (v120(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v142(value: SchemaValue, context: Context): boolean {
+function v117(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     for (const key of Object.keys(value)) {
-      if (!v143(key, context)) return false;
-      if (!v144(value[key], context)) return false;
+      if (!v118(key, context)) return false;
+      if (!v119(value[key], context)) return false;
     }
   }
   return true;
 }
 function d26(value: SchemaValue, context: Context): boolean {
-  return v142(value, context);
+  return v117(value, context);
 }
-function v149(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v150(value: SchemaValue, context: Context): boolean {
+function v122(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size < 1 || size > 128) return false;
   }
   return true;
 }
-function v148(value: SchemaValue, context: Context): boolean {
+function v121(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'generatorRef') || !Object.hasOwn(value, 'seed')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v149(value['generatorRef'], context)) return false;
-    if (!v150(value['seed'], context)) return false;
+    if (!d14(value['generatorRef'], context)) return false;
+    if (!v122(value['seed'], context)) return false;
   }
   return true;
 }
 function d27(value: SchemaValue, context: Context): boolean {
-  return v148(value, context);
+  return v121(value, context);
 }
-function v152(value: SchemaValue, context: Context): boolean {
-  return d15(value, context);
-}
-function v153(value: SchemaValue, context: Context): boolean {
-  return d26(value, context);
-}
-function v155(value: SchemaValue, context: Context): boolean {
-  return d27(value, context);
-}
-function v156(value: SchemaValue, context: Context): boolean {
+function v125(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v154(value: SchemaValue, context: Context): boolean {
+function v124(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v155(value, context)) matches++;
-    if (v156(value, context)) matches++;
+    if (d27(value, context)) matches++;
+    if (v125(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v151(value: SchemaValue, context: Context): boolean {
+function v123(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'specRef') ||
       !Object.hasOwn(value, 'values') ||
@@ -711,16 +618,16 @@ function v151(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v152(value['specRef'], context)) return false;
-    if (!v153(value['values'], context)) return false;
-    if (!v154(value['random'], context)) return false;
+    if (!d15(value['specRef'], context)) return false;
+    if (!d26(value['values'], context)) return false;
+    if (!v124(value['random'], context)) return false;
   }
   return true;
 }
 function d28(value: SchemaValue, context: Context): boolean {
-  return v151(value, context);
+  return v123(value, context);
 }
-function v157(value: SchemaValue, context: Context): boolean {
+function v126(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'entry-output' ||
@@ -754,1163 +661,1154 @@ function v157(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d29(value: SchemaValue, context: Context): boolean {
-  return v157(value, context);
+  return v126(value, context);
 }
-function v159(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v160(value: SchemaValue, context: Context): boolean {
-  return d29(value, context);
-}
-function v161(value: SchemaValue, context: Context): boolean {
+function v128(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size > 16384) return false;
   }
   return true;
 }
-function v162(value: SchemaValue, context: Context): boolean {
+function v129(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v164(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v163(value: SchemaValue, context: Context): boolean {
+function v130(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 30) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v164(value[index], context)) return false;
+      if (!d10(value[index], context)) return false;
     }
   }
   return true;
 }
-function v167(value: SchemaValue, context: Context): boolean {
+function v133(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'entry-output') return false;
   return true;
 }
-function v166(value: SchemaValue, context: Context): boolean {
+function v132(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v167(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v133(value['rule'], context)) return false;
   }
   return true;
 }
-function v170(value: SchemaValue, context: Context): boolean {
+function v136(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.first-output') return false;
   return true;
 }
-function v171(value: SchemaValue, context: Context): boolean {
+function v137(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v169(value: SchemaValue, context: Context): boolean {
+function v135(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v170(value['id'], context)) return false;
-    if (!v171(value['version'], context)) return false;
+    if (!v136(value['id'], context)) return false;
+    if (!v137(value['version'], context)) return false;
   }
   return true;
 }
-function v168(value: SchemaValue, context: Context): boolean {
+function v134(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v169(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v135(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v165(value: SchemaValue, context: Context): boolean {
-  if (v166(value, context)) {
-    if (!v168(value, context)) return false;
+function v131(value: SchemaValue, context: Context): boolean {
+  if (v132(value, context)) {
+    if (!v134(value, context)) return false;
   }
   return true;
 }
-function v174(value: SchemaValue, context: Context): boolean {
+function v140(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'printf-integer-layout') return false;
   return true;
 }
-function v173(value: SchemaValue, context: Context): boolean {
+function v139(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v174(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v140(value['rule'], context)) return false;
   }
   return true;
 }
-function v177(value: SchemaValue, context: Context): boolean {
+function v143(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.printf-layout') return false;
   return true;
 }
-function v178(value: SchemaValue, context: Context): boolean {
+function v144(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v176(value: SchemaValue, context: Context): boolean {
+function v142(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v177(value['id'], context)) return false;
-    if (!v178(value['version'], context)) return false;
+    if (!v143(value['id'], context)) return false;
+    if (!v144(value['version'], context)) return false;
   }
   return true;
 }
-function v175(value: SchemaValue, context: Context): boolean {
+function v141(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v176(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v142(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v172(value: SchemaValue, context: Context): boolean {
-  if (v173(value, context)) {
-    if (!v175(value, context)) return false;
+function v138(value: SchemaValue, context: Context): boolean {
+  if (v139(value, context)) {
+    if (!v141(value, context)) return false;
   }
   return true;
 }
-function v181(value: SchemaValue, context: Context): boolean {
+function v147(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'ordered-output-dependency') return false;
   return true;
 }
-function v180(value: SchemaValue, context: Context): boolean {
+function v146(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v181(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v147(value['rule'], context)) return false;
   }
   return true;
 }
-function v184(value: SchemaValue, context: Context): boolean {
+function v150(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.ordered-updates') return false;
   return true;
 }
-function v185(value: SchemaValue, context: Context): boolean {
+function v151(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v183(value: SchemaValue, context: Context): boolean {
+function v149(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v184(value['id'], context)) return false;
-    if (!v185(value['version'], context)) return false;
+    if (!v150(value['id'], context)) return false;
+    if (!v151(value['version'], context)) return false;
   }
   return true;
 }
-function v182(value: SchemaValue, context: Context): boolean {
+function v148(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v183(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v149(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v179(value: SchemaValue, context: Context): boolean {
-  if (v180(value, context)) {
-    if (!v182(value, context)) return false;
+function v145(value: SchemaValue, context: Context): boolean {
+  if (v146(value, context)) {
+    if (!v148(value, context)) return false;
   }
   return true;
 }
-function v188(value: SchemaValue, context: Context): boolean {
+function v154(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'scalar-reassignment') return false;
   return true;
 }
-function v187(value: SchemaValue, context: Context): boolean {
+function v153(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v188(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v154(value['rule'], context)) return false;
   }
   return true;
 }
-function v191(value: SchemaValue, context: Context): boolean {
+function v157(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.reassign-value') return false;
   return true;
 }
-function v192(value: SchemaValue, context: Context): boolean {
+function v158(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v190(value: SchemaValue, context: Context): boolean {
+function v156(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v191(value['id'], context)) return false;
-    if (!v192(value['version'], context)) return false;
+    if (!v157(value['id'], context)) return false;
+    if (!v158(value['version'], context)) return false;
   }
   return true;
 }
-function v189(value: SchemaValue, context: Context): boolean {
+function v155(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v190(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v156(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v186(value: SchemaValue, context: Context): boolean {
-  if (v187(value, context)) {
-    if (!v189(value, context)) return false;
+function v152(value: SchemaValue, context: Context): boolean {
+  if (v153(value, context)) {
+    if (!v155(value, context)) return false;
   }
   return true;
 }
-function v195(value: SchemaValue, context: Context): boolean {
+function v161(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'temporary-swap') return false;
   return true;
 }
-function v194(value: SchemaValue, context: Context): boolean {
+function v160(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v195(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v161(value['rule'], context)) return false;
   }
   return true;
 }
-function v198(value: SchemaValue, context: Context): boolean {
+function v164(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.swap-with-temp') return false;
   return true;
 }
-function v199(value: SchemaValue, context: Context): boolean {
+function v165(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v197(value: SchemaValue, context: Context): boolean {
+function v163(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v198(value['id'], context)) return false;
-    if (!v199(value['version'], context)) return false;
+    if (!v164(value['id'], context)) return false;
+    if (!v165(value['version'], context)) return false;
   }
   return true;
 }
-function v196(value: SchemaValue, context: Context): boolean {
+function v162(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v197(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v163(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v193(value: SchemaValue, context: Context): boolean {
-  if (v194(value, context)) {
-    if (!v196(value, context)) return false;
+function v159(value: SchemaValue, context: Context): boolean {
+  if (v160(value, context)) {
+    if (!v162(value, context)) return false;
   }
   return true;
 }
-function v202(value: SchemaValue, context: Context): boolean {
+function v168(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'scope-shadow-output') return false;
   return true;
 }
-function v201(value: SchemaValue, context: Context): boolean {
+function v167(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v202(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v168(value['rule'], context)) return false;
   }
   return true;
 }
-function v205(value: SchemaValue, context: Context): boolean {
+function v171(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.shadowed-values') return false;
   return true;
 }
-function v206(value: SchemaValue, context: Context): boolean {
+function v172(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v204(value: SchemaValue, context: Context): boolean {
+function v170(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v205(value['id'], context)) return false;
-    if (!v206(value['version'], context)) return false;
+    if (!v171(value['id'], context)) return false;
+    if (!v172(value['version'], context)) return false;
   }
   return true;
 }
-function v203(value: SchemaValue, context: Context): boolean {
+function v169(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v204(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v170(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v200(value: SchemaValue, context: Context): boolean {
-  if (v201(value, context)) {
-    if (!v203(value, context)) return false;
+function v166(value: SchemaValue, context: Context): boolean {
+  if (v167(value, context)) {
+    if (!v169(value, context)) return false;
   }
   return true;
 }
-function v209(value: SchemaValue, context: Context): boolean {
+function v175(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'safe-wide-product') return false;
   return true;
 }
-function v208(value: SchemaValue, context: Context): boolean {
+function v174(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v209(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v175(value['rule'], context)) return false;
   }
   return true;
 }
-function v212(value: SchemaValue, context: Context): boolean {
+function v178(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.wide-product') return false;
   return true;
 }
-function v213(value: SchemaValue, context: Context): boolean {
+function v179(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v211(value: SchemaValue, context: Context): boolean {
+function v177(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v212(value['id'], context)) return false;
-    if (!v213(value['version'], context)) return false;
+    if (!v178(value['id'], context)) return false;
+    if (!v179(value['version'], context)) return false;
   }
   return true;
 }
-function v210(value: SchemaValue, context: Context): boolean {
+function v176(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v211(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v177(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v207(value: SchemaValue, context: Context): boolean {
-  if (v208(value, context)) {
-    if (!v210(value, context)) return false;
+function v173(value: SchemaValue, context: Context): boolean {
+  if (v174(value, context)) {
+    if (!v176(value, context)) return false;
   }
   return true;
 }
-function v216(value: SchemaValue, context: Context): boolean {
+function v182(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'integer-quotient-remainder') return false;
   return true;
 }
-function v215(value: SchemaValue, context: Context): boolean {
+function v181(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v216(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v182(value['rule'], context)) return false;
   }
   return true;
 }
-function v219(value: SchemaValue, context: Context): boolean {
+function v185(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.quotient-remainder') return false;
   return true;
 }
-function v220(value: SchemaValue, context: Context): boolean {
+function v186(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v218(value: SchemaValue, context: Context): boolean {
+function v184(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v219(value['id'], context)) return false;
-    if (!v220(value['version'], context)) return false;
+    if (!v185(value['id'], context)) return false;
+    if (!v186(value['version'], context)) return false;
   }
   return true;
 }
-function v217(value: SchemaValue, context: Context): boolean {
+function v183(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v218(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v184(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v214(value: SchemaValue, context: Context): boolean {
-  if (v215(value, context)) {
-    if (!v217(value, context)) return false;
+function v180(value: SchemaValue, context: Context): boolean {
+  if (v181(value, context)) {
+    if (!v183(value, context)) return false;
   }
   return true;
 }
-function v223(value: SchemaValue, context: Context): boolean {
+function v189(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'boolean-classification') return false;
   return true;
 }
-function v222(value: SchemaValue, context: Context): boolean {
+function v188(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v223(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v189(value['rule'], context)) return false;
   }
   return true;
 }
-function v226(value: SchemaValue, context: Context): boolean {
+function v192(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.boolean-flags') return false;
   return true;
 }
-function v227(value: SchemaValue, context: Context): boolean {
+function v193(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v225(value: SchemaValue, context: Context): boolean {
+function v191(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v226(value['id'], context)) return false;
-    if (!v227(value['version'], context)) return false;
+    if (!v192(value['id'], context)) return false;
+    if (!v193(value['version'], context)) return false;
   }
   return true;
 }
-function v224(value: SchemaValue, context: Context): boolean {
+function v190(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v225(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v191(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v221(value: SchemaValue, context: Context): boolean {
-  if (v222(value, context)) {
-    if (!v224(value, context)) return false;
+function v187(value: SchemaValue, context: Context): boolean {
+  if (v188(value, context)) {
+    if (!v190(value, context)) return false;
   }
   return true;
 }
-function v230(value: SchemaValue, context: Context): boolean {
+function v196(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'short-circuit-guard') return false;
   return true;
 }
-function v229(value: SchemaValue, context: Context): boolean {
+function v195(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v230(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v196(value['rule'], context)) return false;
   }
   return true;
 }
-function v233(value: SchemaValue, context: Context): boolean {
+function v199(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.guarded-division') return false;
   return true;
 }
-function v234(value: SchemaValue, context: Context): boolean {
+function v200(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v232(value: SchemaValue, context: Context): boolean {
+function v198(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v233(value['id'], context)) return false;
-    if (!v234(value['version'], context)) return false;
+    if (!v199(value['id'], context)) return false;
+    if (!v200(value['version'], context)) return false;
   }
   return true;
 }
-function v231(value: SchemaValue, context: Context): boolean {
+function v197(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v232(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v198(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v228(value: SchemaValue, context: Context): boolean {
-  if (v229(value, context)) {
-    if (!v231(value, context)) return false;
+function v194(value: SchemaValue, context: Context): boolean {
+  if (v195(value, context)) {
+    if (!v197(value, context)) return false;
   }
   return true;
 }
-function v237(value: SchemaValue, context: Context): boolean {
+function v203(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'if-positive-normalize') return false;
   return true;
 }
-function v236(value: SchemaValue, context: Context): boolean {
+function v202(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v237(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v203(value['rule'], context)) return false;
   }
   return true;
 }
-function v240(value: SchemaValue, context: Context): boolean {
+function v206(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.absolute-with-if') return false;
   return true;
 }
-function v241(value: SchemaValue, context: Context): boolean {
+function v207(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v239(value: SchemaValue, context: Context): boolean {
+function v205(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v240(value['id'], context)) return false;
-    if (!v241(value['version'], context)) return false;
+    if (!v206(value['id'], context)) return false;
+    if (!v207(value['version'], context)) return false;
   }
   return true;
 }
-function v238(value: SchemaValue, context: Context): boolean {
+function v204(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v239(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v205(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v235(value: SchemaValue, context: Context): boolean {
-  if (v236(value, context)) {
-    if (!v238(value, context)) return false;
+function v201(value: SchemaValue, context: Context): boolean {
+  if (v202(value, context)) {
+    if (!v204(value, context)) return false;
   }
   return true;
 }
-function v244(value: SchemaValue, context: Context): boolean {
+function v210(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'nested-sign-branches') return false;
   return true;
 }
-function v243(value: SchemaValue, context: Context): boolean {
+function v209(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v244(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v210(value['rule'], context)) return false;
   }
   return true;
 }
-function v247(value: SchemaValue, context: Context): boolean {
+function v213(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.sign-classification') return false;
   return true;
 }
-function v248(value: SchemaValue, context: Context): boolean {
+function v214(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v246(value: SchemaValue, context: Context): boolean {
+function v212(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v247(value['id'], context)) return false;
-    if (!v248(value['version'], context)) return false;
+    if (!v213(value['id'], context)) return false;
+    if (!v214(value['version'], context)) return false;
   }
   return true;
 }
-function v245(value: SchemaValue, context: Context): boolean {
+function v211(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v246(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v212(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v242(value: SchemaValue, context: Context): boolean {
-  if (v243(value, context)) {
-    if (!v245(value, context)) return false;
+function v208(value: SchemaValue, context: Context): boolean {
+  if (v209(value, context)) {
+    if (!v211(value, context)) return false;
   }
   return true;
 }
-function v251(value: SchemaValue, context: Context): boolean {
+function v217(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'interval-membership') return false;
   return true;
 }
-function v250(value: SchemaValue, context: Context): boolean {
+function v216(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v251(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v217(value['rule'], context)) return false;
   }
   return true;
 }
-function v254(value: SchemaValue, context: Context): boolean {
+function v220(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.in-closed-range') return false;
   return true;
 }
-function v255(value: SchemaValue, context: Context): boolean {
+function v221(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v253(value: SchemaValue, context: Context): boolean {
+function v219(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v254(value['id'], context)) return false;
-    if (!v255(value['version'], context)) return false;
+    if (!v220(value['id'], context)) return false;
+    if (!v221(value['version'], context)) return false;
   }
   return true;
 }
-function v252(value: SchemaValue, context: Context): boolean {
+function v218(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v253(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v219(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v249(value: SchemaValue, context: Context): boolean {
-  if (v250(value, context)) {
-    if (!v252(value, context)) return false;
+function v215(value: SchemaValue, context: Context): boolean {
+  if (v216(value, context)) {
+    if (!v218(value, context)) return false;
   }
   return true;
 }
-function v258(value: SchemaValue, context: Context): boolean {
+function v224(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'while-countdown') return false;
   return true;
 }
-function v257(value: SchemaValue, context: Context): boolean {
+function v223(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v258(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v224(value['rule'], context)) return false;
   }
   return true;
 }
-function v261(value: SchemaValue, context: Context): boolean {
+function v227(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.while-countdown') return false;
   return true;
 }
-function v262(value: SchemaValue, context: Context): boolean {
+function v228(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v260(value: SchemaValue, context: Context): boolean {
+function v226(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v261(value['id'], context)) return false;
-    if (!v262(value['version'], context)) return false;
+    if (!v227(value['id'], context)) return false;
+    if (!v228(value['version'], context)) return false;
   }
   return true;
 }
-function v259(value: SchemaValue, context: Context): boolean {
+function v225(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v260(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v226(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v256(value: SchemaValue, context: Context): boolean {
-  if (v257(value, context)) {
-    if (!v259(value, context)) return false;
+function v222(value: SchemaValue, context: Context): boolean {
+  if (v223(value, context)) {
+    if (!v225(value, context)) return false;
   }
   return true;
 }
-function v265(value: SchemaValue, context: Context): boolean {
+function v231(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'break-continue-odd-sum') return false;
   return true;
 }
-function v264(value: SchemaValue, context: Context): boolean {
+function v230(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v265(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v231(value['rule'], context)) return false;
   }
   return true;
 }
-function v268(value: SchemaValue, context: Context): boolean {
+function v234(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.odd-sum-until-stop') return false;
   return true;
 }
-function v269(value: SchemaValue, context: Context): boolean {
+function v235(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v267(value: SchemaValue, context: Context): boolean {
+function v233(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v268(value['id'], context)) return false;
-    if (!v269(value['version'], context)) return false;
+    if (!v234(value['id'], context)) return false;
+    if (!v235(value['version'], context)) return false;
   }
   return true;
 }
-function v266(value: SchemaValue, context: Context): boolean {
+function v232(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v267(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v233(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v263(value: SchemaValue, context: Context): boolean {
-  if (v264(value, context)) {
-    if (!v266(value, context)) return false;
+function v229(value: SchemaValue, context: Context): boolean {
+  if (v230(value, context)) {
+    if (!v232(value, context)) return false;
   }
   return true;
 }
-function v272(value: SchemaValue, context: Context): boolean {
+function v238(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'nested-grid-count') return false;
   return true;
 }
-function v271(value: SchemaValue, context: Context): boolean {
+function v237(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v272(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v238(value['rule'], context)) return false;
   }
   return true;
 }
-function v275(value: SchemaValue, context: Context): boolean {
+function v241(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.grid-count') return false;
   return true;
 }
-function v276(value: SchemaValue, context: Context): boolean {
+function v242(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v274(value: SchemaValue, context: Context): boolean {
+function v240(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v275(value['id'], context)) return false;
-    if (!v276(value['version'], context)) return false;
+    if (!v241(value['id'], context)) return false;
+    if (!v242(value['version'], context)) return false;
   }
   return true;
 }
-function v273(value: SchemaValue, context: Context): boolean {
+function v239(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v274(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v240(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v270(value: SchemaValue, context: Context): boolean {
-  if (v271(value, context)) {
-    if (!v273(value, context)) return false;
+function v236(value: SchemaValue, context: Context): boolean {
+  if (v237(value, context)) {
+    if (!v239(value, context)) return false;
   }
   return true;
 }
-function v279(value: SchemaValue, context: Context): boolean {
+function v245(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'partial-array-initialization') return false;
   return true;
 }
-function v278(value: SchemaValue, context: Context): boolean {
+function v244(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v279(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v245(value['rule'], context)) return false;
   }
   return true;
 }
-function v282(value: SchemaValue, context: Context): boolean {
+function v248(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.partial-array-init') return false;
   return true;
 }
-function v283(value: SchemaValue, context: Context): boolean {
+function v249(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v281(value: SchemaValue, context: Context): boolean {
+function v247(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v282(value['id'], context)) return false;
-    if (!v283(value['version'], context)) return false;
+    if (!v248(value['id'], context)) return false;
+    if (!v249(value['version'], context)) return false;
   }
   return true;
 }
-function v280(value: SchemaValue, context: Context): boolean {
+function v246(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v281(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v247(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v277(value: SchemaValue, context: Context): boolean {
-  if (v278(value, context)) {
-    if (!v280(value, context)) return false;
+function v243(value: SchemaValue, context: Context): boolean {
+  if (v244(value, context)) {
+    if (!v246(value, context)) return false;
   }
   return true;
 }
-function v286(value: SchemaValue, context: Context): boolean {
+function v252(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'logical-array-print') return false;
   return true;
 }
-function v285(value: SchemaValue, context: Context): boolean {
+function v251(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v286(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v252(value['rule'], context)) return false;
   }
   return true;
 }
-function v289(value: SchemaValue, context: Context): boolean {
+function v255(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.print-logical-array') return false;
   return true;
 }
-function v290(value: SchemaValue, context: Context): boolean {
+function v256(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v288(value: SchemaValue, context: Context): boolean {
+function v254(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v289(value['id'], context)) return false;
-    if (!v290(value['version'], context)) return false;
+    if (!v255(value['id'], context)) return false;
+    if (!v256(value['version'], context)) return false;
   }
   return true;
 }
-function v287(value: SchemaValue, context: Context): boolean {
+function v253(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v288(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v254(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v284(value: SchemaValue, context: Context): boolean {
-  if (v285(value, context)) {
-    if (!v287(value, context)) return false;
+function v250(value: SchemaValue, context: Context): boolean {
+  if (v251(value, context)) {
+    if (!v253(value, context)) return false;
   }
   return true;
 }
-function v293(value: SchemaValue, context: Context): boolean {
+function v259(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'guarded-array-access') return false;
   return true;
 }
-function v292(value: SchemaValue, context: Context): boolean {
+function v258(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v293(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v259(value['rule'], context)) return false;
   }
   return true;
 }
-function v296(value: SchemaValue, context: Context): boolean {
+function v262(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.safe-array-access') return false;
   return true;
 }
-function v297(value: SchemaValue, context: Context): boolean {
+function v263(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v295(value: SchemaValue, context: Context): boolean {
+function v261(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v296(value['id'], context)) return false;
-    if (!v297(value['version'], context)) return false;
+    if (!v262(value['id'], context)) return false;
+    if (!v263(value['version'], context)) return false;
   }
   return true;
 }
-function v294(value: SchemaValue, context: Context): boolean {
+function v260(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v295(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v261(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v291(value: SchemaValue, context: Context): boolean {
-  if (v292(value, context)) {
-    if (!v294(value, context)) return false;
+function v257(value: SchemaValue, context: Context): boolean {
+  if (v258(value, context)) {
+    if (!v260(value, context)) return false;
   }
   return true;
 }
-function v300(value: SchemaValue, context: Context): boolean {
+function v266(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'array-extrema') return false;
   return true;
 }
-function v299(value: SchemaValue, context: Context): boolean {
+function v265(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v300(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v266(value['rule'], context)) return false;
   }
   return true;
 }
-function v303(value: SchemaValue, context: Context): boolean {
+function v269(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.array-extrema') return false;
   return true;
 }
-function v304(value: SchemaValue, context: Context): boolean {
+function v270(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v302(value: SchemaValue, context: Context): boolean {
+function v268(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v303(value['id'], context)) return false;
-    if (!v304(value['version'], context)) return false;
+    if (!v269(value['id'], context)) return false;
+    if (!v270(value['version'], context)) return false;
   }
   return true;
 }
-function v301(value: SchemaValue, context: Context): boolean {
+function v267(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v302(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v268(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v298(value: SchemaValue, context: Context): boolean {
-  if (v299(value, context)) {
-    if (!v301(value, context)) return false;
+function v264(value: SchemaValue, context: Context): boolean {
+  if (v265(value, context)) {
+    if (!v267(value, context)) return false;
   }
   return true;
 }
-function v307(value: SchemaValue, context: Context): boolean {
+function v273(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'array-positive-count') return false;
   return true;
 }
-function v306(value: SchemaValue, context: Context): boolean {
+function v272(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v307(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v273(value['rule'], context)) return false;
   }
   return true;
 }
-function v310(value: SchemaValue, context: Context): boolean {
+function v276(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.count-positive') return false;
   return true;
 }
-function v311(value: SchemaValue, context: Context): boolean {
+function v277(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v309(value: SchemaValue, context: Context): boolean {
+function v275(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v310(value['id'], context)) return false;
-    if (!v311(value['version'], context)) return false;
+    if (!v276(value['id'], context)) return false;
+    if (!v277(value['version'], context)) return false;
   }
   return true;
 }
-function v308(value: SchemaValue, context: Context): boolean {
+function v274(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v309(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v275(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v305(value: SchemaValue, context: Context): boolean {
-  if (v306(value, context)) {
-    if (!v308(value, context)) return false;
+function v271(value: SchemaValue, context: Context): boolean {
+  if (v272(value, context)) {
+    if (!v274(value, context)) return false;
   }
   return true;
 }
-function v314(value: SchemaValue, context: Context): boolean {
+function v280(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'linear-first-index') return false;
   return true;
 }
-function v313(value: SchemaValue, context: Context): boolean {
+function v279(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v314(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v280(value['rule'], context)) return false;
   }
   return true;
 }
-function v317(value: SchemaValue, context: Context): boolean {
+function v283(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.linear-search-first') return false;
   return true;
 }
-function v318(value: SchemaValue, context: Context): boolean {
+function v284(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v316(value: SchemaValue, context: Context): boolean {
+function v282(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v317(value['id'], context)) return false;
-    if (!v318(value['version'], context)) return false;
+    if (!v283(value['id'], context)) return false;
+    if (!v284(value['version'], context)) return false;
   }
   return true;
 }
-function v315(value: SchemaValue, context: Context): boolean {
+function v281(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v316(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v282(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v312(value: SchemaValue, context: Context): boolean {
-  if (v313(value, context)) {
-    if (!v315(value, context)) return false;
+function v278(value: SchemaValue, context: Context): boolean {
+  if (v279(value, context)) {
+    if (!v281(value, context)) return false;
   }
   return true;
 }
-function v321(value: SchemaValue, context: Context): boolean {
+function v287(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'adjacent-order-check') return false;
   return true;
 }
-function v320(value: SchemaValue, context: Context): boolean {
+function v286(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v321(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v287(value['rule'], context)) return false;
   }
   return true;
 }
-function v324(value: SchemaValue, context: Context): boolean {
+function v290(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.check-nondecreasing') return false;
   return true;
 }
-function v325(value: SchemaValue, context: Context): boolean {
+function v291(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v323(value: SchemaValue, context: Context): boolean {
+function v289(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v324(value['id'], context)) return false;
-    if (!v325(value['version'], context)) return false;
+    if (!v290(value['id'], context)) return false;
+    if (!v291(value['version'], context)) return false;
   }
   return true;
 }
-function v322(value: SchemaValue, context: Context): boolean {
+function v288(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v323(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v289(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v319(value: SchemaValue, context: Context): boolean {
-  if (v320(value, context)) {
-    if (!v322(value, context)) return false;
+function v285(value: SchemaValue, context: Context): boolean {
+  if (v286(value, context)) {
+    if (!v288(value, context)) return false;
   }
   return true;
 }
-function v328(value: SchemaValue, context: Context): boolean {
+function v294(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'bubble-ascending') return false;
   return true;
 }
-function v327(value: SchemaValue, context: Context): boolean {
+function v293(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v328(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v294(value['rule'], context)) return false;
   }
   return true;
 }
-function v331(value: SchemaValue, context: Context): boolean {
+function v297(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.bubble-sort') return false;
   return true;
 }
-function v332(value: SchemaValue, context: Context): boolean {
+function v298(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v330(value: SchemaValue, context: Context): boolean {
+function v296(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v331(value['id'], context)) return false;
-    if (!v332(value['version'], context)) return false;
+    if (!v297(value['id'], context)) return false;
+    if (!v298(value['version'], context)) return false;
   }
   return true;
 }
-function v329(value: SchemaValue, context: Context): boolean {
+function v295(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v330(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v296(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v326(value: SchemaValue, context: Context): boolean {
-  if (v327(value, context)) {
-    if (!v329(value, context)) return false;
+function v292(value: SchemaValue, context: Context): boolean {
+  if (v293(value, context)) {
+    if (!v295(value, context)) return false;
   }
   return true;
 }
-function v335(value: SchemaValue, context: Context): boolean {
+function v301(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'selection-ascending') return false;
   return true;
 }
-function v334(value: SchemaValue, context: Context): boolean {
+function v300(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v335(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v301(value['rule'], context)) return false;
   }
   return true;
 }
-function v338(value: SchemaValue, context: Context): boolean {
+function v304(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.selection-sort') return false;
   return true;
 }
-function v339(value: SchemaValue, context: Context): boolean {
+function v305(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v337(value: SchemaValue, context: Context): boolean {
+function v303(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v338(value['id'], context)) return false;
-    if (!v339(value['version'], context)) return false;
+    if (!v304(value['id'], context)) return false;
+    if (!v305(value['version'], context)) return false;
   }
   return true;
 }
-function v336(value: SchemaValue, context: Context): boolean {
+function v302(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v337(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v303(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v333(value: SchemaValue, context: Context): boolean {
-  if (v334(value, context)) {
-    if (!v336(value, context)) return false;
+function v299(value: SchemaValue, context: Context): boolean {
+  if (v300(value, context)) {
+    if (!v302(value, context)) return false;
   }
   return true;
 }
-function v342(value: SchemaValue, context: Context): boolean {
+function v308(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'binary-first-index') return false;
   return true;
 }
-function v341(value: SchemaValue, context: Context): boolean {
+function v307(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v342(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v308(value['rule'], context)) return false;
   }
   return true;
 }
-function v345(value: SchemaValue, context: Context): boolean {
+function v311(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'judge.c.binary-search-first') return false;
   return true;
 }
-function v346(value: SchemaValue, context: Context): boolean {
+function v312(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v344(value: SchemaValue, context: Context): boolean {
+function v310(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v345(value['id'], context)) return false;
-    if (!v346(value['version'], context)) return false;
+    if (!v311(value['id'], context)) return false;
+    if (!v312(value['version'], context)) return false;
   }
   return true;
 }
-function v343(value: SchemaValue, context: Context): boolean {
+function v309(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'profileRef') && !v344(value['profileRef'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v310(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v340(value: SchemaValue, context: Context): boolean {
-  if (v341(value, context)) {
-    if (!v343(value, context)) return false;
+function v306(value: SchemaValue, context: Context): boolean {
+  if (v307(value, context)) {
+    if (!v309(value, context)) return false;
   }
   return true;
 }
-function v158(value: SchemaValue, context: Context): boolean {
+function v127(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'profileRef') ||
       !Object.hasOwn(value, 'rule') ||
@@ -1921,19 +1819,19 @@ function v158(value: SchemaValue, context: Context): boolean {
     for (const key of Object.keys(value)) {
       switch (key) {
         case 'profileRef':
-          if (!v159(value[key], context)) return false;
+          if (!d14(value[key], context)) return false;
           break;
         case 'rule':
-          if (!v160(value[key], context)) return false;
+          if (!d29(value[key], context)) return false;
           break;
         case 'expectedStdout':
-          if (!v161(value[key], context)) return false;
+          if (!v128(value[key], context)) return false;
           break;
         case 'expectedExitCode':
-          if (!v162(value[key], context)) return false;
+          if (!v129(value[key], context)) return false;
           break;
         case 'expectedArray':
-          if (!v163(value[key], context)) return false;
+          if (!v130(value[key], context)) return false;
           break;
         default:
           return false;
@@ -1941,2812 +1839,2761 @@ function v158(value: SchemaValue, context: Context): boolean {
       }
     }
   }
-  if (!v165(value, context)) return false;
-  if (!v172(value, context)) return false;
-  if (!v179(value, context)) return false;
-  if (!v186(value, context)) return false;
-  if (!v193(value, context)) return false;
-  if (!v200(value, context)) return false;
-  if (!v207(value, context)) return false;
-  if (!v214(value, context)) return false;
-  if (!v221(value, context)) return false;
-  if (!v228(value, context)) return false;
-  if (!v235(value, context)) return false;
-  if (!v242(value, context)) return false;
-  if (!v249(value, context)) return false;
-  if (!v256(value, context)) return false;
-  if (!v263(value, context)) return false;
-  if (!v270(value, context)) return false;
-  if (!v277(value, context)) return false;
-  if (!v284(value, context)) return false;
-  if (!v291(value, context)) return false;
-  if (!v298(value, context)) return false;
-  if (!v305(value, context)) return false;
-  if (!v312(value, context)) return false;
-  if (!v319(value, context)) return false;
-  if (!v326(value, context)) return false;
-  if (!v333(value, context)) return false;
-  if (!v340(value, context)) return false;
+  if (!v131(value, context)) return false;
+  if (!v138(value, context)) return false;
+  if (!v145(value, context)) return false;
+  if (!v152(value, context)) return false;
+  if (!v159(value, context)) return false;
+  if (!v166(value, context)) return false;
+  if (!v173(value, context)) return false;
+  if (!v180(value, context)) return false;
+  if (!v187(value, context)) return false;
+  if (!v194(value, context)) return false;
+  if (!v201(value, context)) return false;
+  if (!v208(value, context)) return false;
+  if (!v215(value, context)) return false;
+  if (!v222(value, context)) return false;
+  if (!v229(value, context)) return false;
+  if (!v236(value, context)) return false;
+  if (!v243(value, context)) return false;
+  if (!v250(value, context)) return false;
+  if (!v257(value, context)) return false;
+  if (!v264(value, context)) return false;
+  if (!v271(value, context)) return false;
+  if (!v278(value, context)) return false;
+  if (!v285(value, context)) return false;
+  if (!v292(value, context)) return false;
+  if (!v299(value, context)) return false;
+  if (!v306(value, context)) return false;
   return true;
 }
 function d30(value: SchemaValue, context: Context): boolean {
-  return v158(value, context);
+  return v127(value, context);
 }
-function v348(value: SchemaValue, context: Context): boolean {
+function v314(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'execute') return false;
   return true;
 }
-function v349(value: SchemaValue, context: Context): boolean {
+function v315(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.1.0') return false;
   return true;
 }
-function v350(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v351(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v352(value: SchemaValue, context: Context): boolean {
+function v316(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.1.0') return false;
   return true;
 }
-function v353(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v354(value: SchemaValue, context: Context): boolean {
-  return d17(value, context);
-}
-function v355(value: SchemaValue, context: Context): boolean {
+function v317(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'exercise-test') return false;
   return true;
 }
-function v357(value: SchemaValue, context: Context): boolean {
+function v319(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'content.c.p05') return false;
   return true;
 }
-function v358(value: SchemaValue, context: Context): boolean {
+function v320(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v356(value: SchemaValue, context: Context): boolean {
+function v318(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v357(value['id'], context)) return false;
-    if (!v358(value['version'], context)) return false;
+    if (!v319(value['id'], context)) return false;
+    if (!v320(value['version'], context)) return false;
   }
   return true;
 }
-function v360(value: SchemaValue, context: Context): boolean {
+function v322(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'lang.c') return false;
   return true;
 }
-function v361(value: SchemaValue, context: Context): boolean {
+function v323(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v359(value: SchemaValue, context: Context): boolean {
+function v321(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v360(value['id'], context)) return false;
-    if (!v361(value['version'], context)) return false;
+    if (!v322(value['id'], context)) return false;
+    if (!v323(value['version'], context)) return false;
+  }
+  return true;
+}
+function v325(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'subset.c.p0') return false;
+  return true;
+}
+function v326(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v324(value: SchemaValue, context: Context): boolean {
+  if (!isRecord(value)) return false;
+  {
+    if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
+    if (Object.keys(value).length !== 2) return false;
+    if (!v325(value['id'], context)) return false;
+    if (!v326(value['version'], context)) return false;
+  }
+  return true;
+}
+function v328(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(value === null)) return false;
+  return true;
+}
+function v327(value: SchemaValue, context: Context): boolean {
+  {
+    let matches = 0;
+    if (d9(value, context)) matches++;
+    if (v328(value, context)) matches++;
+    if (matches !== 1) return false;
+  }
+  return true;
+}
+function v330(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'budget.p0') return false;
+  return true;
+}
+function v331(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v329(value: SchemaValue, context: Context): boolean {
+  if (!isRecord(value)) return false;
+  {
+    if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
+    if (Object.keys(value).length !== 2) return false;
+    if (!v330(value['id'], context)) return false;
+    if (!v331(value['version'], context)) return false;
+  }
+  return true;
+}
+function v332(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
+  if (value < 1 || value > 1000) return false;
+  return true;
+}
+function v335(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'contract-probe') return false;
+  return true;
+}
+function v334(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'mode') && !v335(value['mode'], context)) return false;
+  }
+  return true;
+}
+function v337(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(value === null)) return false;
+  return true;
+}
+function v338(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(value === null)) return false;
+  return true;
+}
+function v339(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(value === null)) return false;
+  return true;
+}
+function v340(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(value === null)) return false;
+  return true;
+}
+function v342(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(value === null)) return false;
+  return true;
+}
+function v341(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'testCaseKey') && !v342(value['testCaseKey'], context)) return false;
+  }
+  return true;
+}
+function v336(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'programRef') && !v337(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v338(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'learningRevision') && !v339(value['learningRevision'], context))
+      return false;
+    if (Object.hasOwn(value, 'judge') && !v340(value['judge'], context)) return false;
+    if (Object.hasOwn(value, 'identity') && !v341(value['identity'], context)) return false;
+  }
+  return true;
+}
+function v333(value: SchemaValue, context: Context): boolean {
+  if (v334(value, context)) {
+    if (!v336(value, context)) return false;
+  }
+  return true;
+}
+function v345(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(value === 'case' || value === 'exercise-test')) return false;
+  return true;
+}
+function v344(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'mode') && !v345(value['mode'], context)) return false;
+  }
+  return true;
+}
+function v347(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'specRef') && !d14(value['specRef'], context)) return false;
+  }
+  return true;
+}
+function v346(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'programRef') && !d14(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !d14(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'learningRevision') && !d9(value['learningRevision'], context))
+      return false;
+    if (Object.hasOwn(value, 'input') && !v347(value['input'], context)) return false;
+  }
+  return true;
+}
+function v343(value: SchemaValue, context: Context): boolean {
+  if (v344(value, context)) {
+    if (!v346(value, context)) return false;
+  }
+  return true;
+}
+function v350(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'case') return false;
+  return true;
+}
+function v349(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'mode') && !v350(value['mode'], context)) return false;
+  }
+  return true;
+}
+function v352(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(value === null)) return false;
+  return true;
+}
+function v354(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(value === null)) return false;
+  return true;
+}
+function v353(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'testCaseKey') && !v354(value['testCaseKey'], context)) return false;
+  }
+  return true;
+}
+function v351(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'judge') && !v352(value['judge'], context)) return false;
+    if (Object.hasOwn(value, 'identity') && !v353(value['identity'], context)) return false;
+  }
+  return true;
+}
+function v348(value: SchemaValue, context: Context): boolean {
+  if (v349(value, context)) {
+    if (!v351(value, context)) return false;
+  }
+  return true;
+}
+function v357(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'exercise-test') return false;
+  return true;
+}
+function v356(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'mode') && !v357(value['mode'], context)) return false;
+  }
+  return true;
+}
+function v359(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'testCaseKey') && !d2(value['testCaseKey'], context)) return false;
+  }
+  return true;
+}
+function v358(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'judge') && !d30(value['judge'], context)) return false;
+    if (Object.hasOwn(value, 'identity') && !v359(value['identity'], context)) return false;
+  }
+  return true;
+}
+function v355(value: SchemaValue, context: Context): boolean {
+  if (v356(value, context)) {
+    if (!v358(value, context)) return false;
   }
   return true;
 }
 function v363(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'subset.c.p0') return false;
-  return true;
-}
-function v364(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+  if (value !== 'entry-output') return false;
   return true;
 }
 function v362(value: SchemaValue, context: Context): boolean {
-  if (!isRecord(value)) return false;
   if (isRecord(value)) {
-    if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
-    if (Object.keys(value).length !== 2) return false;
-    if (!v363(value['id'], context)) return false;
-    if (!v364(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v363(value['rule'], context)) return false;
   }
   return true;
 }
-function v365(value: SchemaValue, context: Context): boolean {
-  return d15(value, context);
+function v361(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'judge') && !v362(value['judge'], context)) return false;
+  }
+  return true;
 }
 function v366(value: SchemaValue, context: Context): boolean {
-  return d15(value, context);
-}
-function v368(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v369(value: SchemaValue, context: Context): boolean {
   void context;
-  if (!(value === null)) return false;
+  if (value !== 'program.c.practice-first-output') return false;
   return true;
 }
 function v367(value: SchemaValue, context: Context): boolean {
-  {
-    let matches = 0;
-    if (v368(value, context)) matches++;
-    if (v369(value, context)) matches++;
-    if (matches !== 1) return false;
-  }
-  return true;
-}
-function v370(value: SchemaValue, context: Context): boolean {
-  return d16(value, context);
-}
-function v371(value: SchemaValue, context: Context): boolean {
-  return d23(value, context);
-}
-function v372(value: SchemaValue, context: Context): boolean {
-  return d28(value, context);
-}
-function v373(value: SchemaValue, context: Context): boolean {
-  return d30(value, context);
-}
-function v375(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'budget.p0') return false;
-  return true;
-}
-function v376(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
+function v365(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v366(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v367(value['version'], context)) return false;
+  }
+  return true;
+}
+function v369(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'exercise.c.first-output') return false;
+  return true;
+}
+function v370(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v368(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v369(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v370(value['version'], context)) return false;
+  }
+  return true;
+}
+function v373(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'input.c.first-output') return false;
+  return true;
+}
 function v374(value: SchemaValue, context: Context): boolean {
-  if (!isRecord(value)) return false;
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v372(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
-    if (Object.keys(value).length !== 2) return false;
-    if (!v375(value['id'], context)) return false;
-    if (!v376(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v373(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v374(value['version'], context)) return false;
   }
   return true;
 }
-function v377(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 1 || value > 1000)) return false;
-  return true;
-}
-function v380(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'contract-probe') return false;
-  return true;
-}
-function v379(value: SchemaValue, context: Context): boolean {
+function v371(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'mode') && !v380(value['mode'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v372(value['specRef'], context)) return false;
   }
   return true;
 }
-function v382(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (!(value === null)) return false;
-  return true;
-}
-function v383(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (!(value === null)) return false;
-  return true;
-}
-function v384(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (!(value === null)) return false;
-  return true;
-}
-function v385(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (!(value === null)) return false;
-  return true;
-}
-function v387(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (!(value === null)) return false;
-  return true;
-}
-function v386(value: SchemaValue, context: Context): boolean {
+function v364(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'testCaseKey') && !v387(value['testCaseKey'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v365(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v368(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v371(value['input'], context)) return false;
   }
   return true;
 }
-function v381(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v382(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v383(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'learningRevision') && !v384(value['learningRevision'], context))
-      return false;
-    if (Object.hasOwn(value, 'judge') && !v385(value['judge'], context)) return false;
-    if (Object.hasOwn(value, 'identity') && !v386(value['identity'], context)) return false;
+function v360(value: SchemaValue, context: Context): boolean {
+  if (v361(value, context)) {
+    if (!v364(value, context)) return false;
   }
   return true;
 }
 function v378(value: SchemaValue, context: Context): boolean {
-  if (v379(value, context)) {
-    if (!v381(value, context)) return false;
+  void context;
+  if (value !== 'printf-integer-layout') return false;
+  return true;
+}
+function v377(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'rule') && !v378(value['rule'], context)) return false;
   }
   return true;
 }
-function v390(value: SchemaValue, context: Context): boolean {
+function v376(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'judge') && !v377(value['judge'], context)) return false;
+  }
+  return true;
+}
+function v381(value: SchemaValue, context: Context): boolean {
   void context;
-  if (!(value === 'case' || value === 'exercise-test')) return false;
+  if (value !== 'program.c.practice-printf-layout') return false;
+  return true;
+}
+function v382(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v380(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v381(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v382(value['version'], context)) return false;
+  }
+  return true;
+}
+function v384(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'exercise.c.printf-layout') return false;
+  return true;
+}
+function v385(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v383(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v384(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v385(value['version'], context)) return false;
+  }
+  return true;
+}
+function v388(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'input.c.printf-layout') return false;
   return true;
 }
 function v389(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v387(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'mode') && !v390(value['mode'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v388(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v389(value['version'], context)) return false;
   }
   return true;
 }
-function v392(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
+function v386(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'specRef') && !v387(value['specRef'], context)) return false;
+  }
+  return true;
+}
+function v379(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'programRef') && !v380(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v383(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v386(value['input'], context)) return false;
+  }
+  return true;
+}
+function v375(value: SchemaValue, context: Context): boolean {
+  if (v376(value, context)) {
+    if (!v379(value, context)) return false;
+  }
+  return true;
 }
 function v393(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
+  void context;
+  if (value !== 'ordered-output-dependency') return false;
+  return true;
 }
-function v394(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v396(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v395(value: SchemaValue, context: Context): boolean {
+function v392(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v396(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v393(value['rule'], context)) return false;
   }
   return true;
 }
 function v391(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v392(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v393(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'learningRevision') && !v394(value['learningRevision'], context))
-      return false;
-    if (Object.hasOwn(value, 'input') && !v395(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v392(value['judge'], context)) return false;
   }
   return true;
 }
-function v388(value: SchemaValue, context: Context): boolean {
-  if (v389(value, context)) {
-    if (!v391(value, context)) return false;
+function v396(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-ordered-updates') return false;
+  return true;
+}
+function v397(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v395(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v396(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v397(value['version'], context)) return false;
   }
   return true;
 }
 function v399(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'case') return false;
+  if (value !== 'exercise.c.ordered-updates') return false;
+  return true;
+}
+function v400(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v398(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'mode') && !v399(value['mode'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v399(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v400(value['version'], context)) return false;
   }
-  return true;
-}
-function v401(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (!(value === null)) return false;
   return true;
 }
 function v403(value: SchemaValue, context: Context): boolean {
   void context;
-  if (!(value === null)) return false;
+  if (value !== 'input.c.ordered-updates') return false;
+  return true;
+}
+function v404(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v402(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'testCaseKey') && !v403(value['testCaseKey'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v403(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v404(value['version'], context)) return false;
   }
   return true;
 }
-function v400(value: SchemaValue, context: Context): boolean {
+function v401(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v401(value['judge'], context)) return false;
-    if (Object.hasOwn(value, 'identity') && !v402(value['identity'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v402(value['specRef'], context)) return false;
   }
   return true;
 }
-function v397(value: SchemaValue, context: Context): boolean {
-  if (v398(value, context)) {
-    if (!v400(value, context)) return false;
-  }
-  return true;
-}
-function v406(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise-test') return false;
-  return true;
-}
-function v405(value: SchemaValue, context: Context): boolean {
+function v394(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'mode') && !v406(value['mode'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v395(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v398(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v401(value['input'], context)) return false;
+  }
+  return true;
+}
+function v390(value: SchemaValue, context: Context): boolean {
+  if (v391(value, context)) {
+    if (!v394(value, context)) return false;
   }
   return true;
 }
 function v408(value: SchemaValue, context: Context): boolean {
-  return d30(value, context);
-}
-function v410(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v409(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'testCaseKey') && !v410(value['testCaseKey'], context)) return false;
-  }
+  void context;
+  if (value !== 'scalar-reassignment') return false;
   return true;
 }
 function v407(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v408(value['judge'], context)) return false;
-    if (Object.hasOwn(value, 'identity') && !v409(value['identity'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v408(value['rule'], context)) return false;
   }
   return true;
 }
-function v404(value: SchemaValue, context: Context): boolean {
-  if (v405(value, context)) {
-    if (!v407(value, context)) return false;
+function v406(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'judge') && !v407(value['judge'], context)) return false;
+  }
+  return true;
+}
+function v411(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-reassign-value') return false;
+  return true;
+}
+function v412(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v410(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v411(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v412(value['version'], context)) return false;
   }
   return true;
 }
 function v414(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'entry-output') return false;
+  if (value !== 'exercise.c.reassign-value') return false;
+  return true;
+}
+function v415(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v413(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v414(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v414(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v415(value['version'], context)) return false;
   }
-  return true;
-}
-function v412(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v413(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v417(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-first-output') return false;
   return true;
 }
 function v418(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.reassign-value') return false;
+  return true;
+}
+function v419(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v417(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v418(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v419(value['version'], context)) return false;
+  }
   return true;
 }
 function v416(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v417(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v418(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v417(value['specRef'], context)) return false;
   }
   return true;
 }
-function v420(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.first-output') return false;
-  return true;
-}
-function v421(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v419(value: SchemaValue, context: Context): boolean {
+function v409(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v420(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v421(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v410(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v413(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v416(value['input'], context)) return false;
   }
   return true;
 }
-function v424(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.first-output') return false;
-  return true;
-}
-function v425(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v405(value: SchemaValue, context: Context): boolean {
+  if (v406(value, context)) {
+    if (!v409(value, context)) return false;
+  }
   return true;
 }
 function v423(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v424(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v425(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'temporary-swap') return false;
   return true;
 }
 function v422(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v423(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v423(value['rule'], context)) return false;
   }
   return true;
 }
-function v415(value: SchemaValue, context: Context): boolean {
+function v421(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v416(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v419(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v422(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v422(value['judge'], context)) return false;
   }
   return true;
 }
-function v411(value: SchemaValue, context: Context): boolean {
-  if (v412(value, context)) {
-    if (!v415(value, context)) return false;
+function v426(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-swap-with-temp') return false;
+  return true;
+}
+function v427(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v425(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v426(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v427(value['version'], context)) return false;
   }
   return true;
 }
 function v429(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'printf-integer-layout') return false;
+  if (value !== 'exercise.c.swap-with-temp') return false;
+  return true;
+}
+function v430(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v428(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v429(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v429(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v430(value['version'], context)) return false;
   }
-  return true;
-}
-function v427(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v428(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v432(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-printf-layout') return false;
   return true;
 }
 function v433(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.swap-with-temp') return false;
+  return true;
+}
+function v434(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v432(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v433(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v434(value['version'], context)) return false;
+  }
   return true;
 }
 function v431(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v432(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v433(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v432(value['specRef'], context)) return false;
   }
   return true;
 }
-function v435(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.printf-layout') return false;
-  return true;
-}
-function v436(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v434(value: SchemaValue, context: Context): boolean {
+function v424(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v435(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v436(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v425(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v428(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v431(value['input'], context)) return false;
   }
   return true;
 }
-function v439(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.printf-layout') return false;
-  return true;
-}
-function v440(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v420(value: SchemaValue, context: Context): boolean {
+  if (v421(value, context)) {
+    if (!v424(value, context)) return false;
+  }
   return true;
 }
 function v438(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v439(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v440(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'scope-shadow-output') return false;
   return true;
 }
 function v437(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v438(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v438(value['rule'], context)) return false;
   }
   return true;
 }
-function v430(value: SchemaValue, context: Context): boolean {
+function v436(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v431(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v434(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v437(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v437(value['judge'], context)) return false;
   }
   return true;
 }
-function v426(value: SchemaValue, context: Context): boolean {
-  if (v427(value, context)) {
-    if (!v430(value, context)) return false;
+function v441(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-shadowed-values') return false;
+  return true;
+}
+function v442(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v440(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v441(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v442(value['version'], context)) return false;
   }
   return true;
 }
 function v444(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'ordered-output-dependency') return false;
+  if (value !== 'exercise.c.shadowed-values') return false;
+  return true;
+}
+function v445(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v443(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v444(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v444(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v445(value['version'], context)) return false;
   }
-  return true;
-}
-function v442(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v443(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v447(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-ordered-updates') return false;
   return true;
 }
 function v448(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.shadowed-values') return false;
+  return true;
+}
+function v449(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v447(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v448(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v449(value['version'], context)) return false;
+  }
   return true;
 }
 function v446(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v447(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v448(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v447(value['specRef'], context)) return false;
   }
   return true;
 }
-function v450(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.ordered-updates') return false;
-  return true;
-}
-function v451(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v449(value: SchemaValue, context: Context): boolean {
+function v439(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v450(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v451(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v440(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v443(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v446(value['input'], context)) return false;
   }
   return true;
 }
-function v454(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.ordered-updates') return false;
-  return true;
-}
-function v455(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v435(value: SchemaValue, context: Context): boolean {
+  if (v436(value, context)) {
+    if (!v439(value, context)) return false;
+  }
   return true;
 }
 function v453(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v454(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v455(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'safe-wide-product') return false;
   return true;
 }
 function v452(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v453(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v453(value['rule'], context)) return false;
   }
   return true;
 }
-function v445(value: SchemaValue, context: Context): boolean {
+function v451(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v446(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v449(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v452(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v452(value['judge'], context)) return false;
   }
   return true;
 }
-function v441(value: SchemaValue, context: Context): boolean {
-  if (v442(value, context)) {
-    if (!v445(value, context)) return false;
+function v456(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-wide-product') return false;
+  return true;
+}
+function v457(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v455(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v456(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v457(value['version'], context)) return false;
   }
   return true;
 }
 function v459(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'scalar-reassignment') return false;
+  if (value !== 'exercise.c.wide-product') return false;
+  return true;
+}
+function v460(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v458(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v459(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v459(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v460(value['version'], context)) return false;
   }
-  return true;
-}
-function v457(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v458(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v462(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-reassign-value') return false;
   return true;
 }
 function v463(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.wide-product') return false;
+  return true;
+}
+function v464(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v462(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v463(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v464(value['version'], context)) return false;
+  }
   return true;
 }
 function v461(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v462(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v463(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v462(value['specRef'], context)) return false;
   }
   return true;
 }
-function v465(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.reassign-value') return false;
-  return true;
-}
-function v466(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v464(value: SchemaValue, context: Context): boolean {
+function v454(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v465(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v466(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v455(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v458(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v461(value['input'], context)) return false;
   }
   return true;
 }
-function v469(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.reassign-value') return false;
-  return true;
-}
-function v470(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v450(value: SchemaValue, context: Context): boolean {
+  if (v451(value, context)) {
+    if (!v454(value, context)) return false;
+  }
   return true;
 }
 function v468(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v469(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v470(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'integer-quotient-remainder') return false;
   return true;
 }
 function v467(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v468(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v468(value['rule'], context)) return false;
   }
   return true;
 }
-function v460(value: SchemaValue, context: Context): boolean {
+function v466(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v461(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v464(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v467(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v467(value['judge'], context)) return false;
   }
   return true;
 }
-function v456(value: SchemaValue, context: Context): boolean {
-  if (v457(value, context)) {
-    if (!v460(value, context)) return false;
+function v471(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-quotient-remainder') return false;
+  return true;
+}
+function v472(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v470(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v471(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v472(value['version'], context)) return false;
   }
   return true;
 }
 function v474(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'temporary-swap') return false;
+  if (value !== 'exercise.c.quotient-remainder') return false;
+  return true;
+}
+function v475(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v473(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v474(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v474(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v475(value['version'], context)) return false;
   }
-  return true;
-}
-function v472(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v473(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v477(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-swap-with-temp') return false;
   return true;
 }
 function v478(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.quotient-remainder') return false;
+  return true;
+}
+function v479(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v477(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v478(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v479(value['version'], context)) return false;
+  }
   return true;
 }
 function v476(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v477(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v478(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v477(value['specRef'], context)) return false;
   }
   return true;
 }
-function v480(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.swap-with-temp') return false;
-  return true;
-}
-function v481(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v479(value: SchemaValue, context: Context): boolean {
+function v469(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v480(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v481(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v470(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v473(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v476(value['input'], context)) return false;
   }
   return true;
 }
-function v484(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.swap-with-temp') return false;
-  return true;
-}
-function v485(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v465(value: SchemaValue, context: Context): boolean {
+  if (v466(value, context)) {
+    if (!v469(value, context)) return false;
+  }
   return true;
 }
 function v483(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v484(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v485(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'boolean-classification') return false;
   return true;
 }
 function v482(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v483(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v483(value['rule'], context)) return false;
   }
   return true;
 }
-function v475(value: SchemaValue, context: Context): boolean {
+function v481(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v476(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v479(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v482(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v482(value['judge'], context)) return false;
   }
   return true;
 }
-function v471(value: SchemaValue, context: Context): boolean {
-  if (v472(value, context)) {
-    if (!v475(value, context)) return false;
+function v486(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-boolean-flags') return false;
+  return true;
+}
+function v487(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v485(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v486(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v487(value['version'], context)) return false;
   }
   return true;
 }
 function v489(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'scope-shadow-output') return false;
+  if (value !== 'exercise.c.boolean-flags') return false;
+  return true;
+}
+function v490(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v488(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v489(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v489(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v490(value['version'], context)) return false;
   }
-  return true;
-}
-function v487(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v488(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v492(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-shadowed-values') return false;
   return true;
 }
 function v493(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.boolean-flags') return false;
+  return true;
+}
+function v494(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v492(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v493(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v494(value['version'], context)) return false;
+  }
   return true;
 }
 function v491(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v492(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v493(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v492(value['specRef'], context)) return false;
   }
   return true;
 }
-function v495(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.shadowed-values') return false;
-  return true;
-}
-function v496(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v494(value: SchemaValue, context: Context): boolean {
+function v484(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v495(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v496(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v485(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v488(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v491(value['input'], context)) return false;
   }
   return true;
 }
-function v499(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.shadowed-values') return false;
-  return true;
-}
-function v500(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v480(value: SchemaValue, context: Context): boolean {
+  if (v481(value, context)) {
+    if (!v484(value, context)) return false;
+  }
   return true;
 }
 function v498(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v499(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v500(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'short-circuit-guard') return false;
   return true;
 }
 function v497(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v498(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v498(value['rule'], context)) return false;
   }
   return true;
 }
-function v490(value: SchemaValue, context: Context): boolean {
+function v496(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v491(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v494(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v497(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v497(value['judge'], context)) return false;
   }
   return true;
 }
-function v486(value: SchemaValue, context: Context): boolean {
-  if (v487(value, context)) {
-    if (!v490(value, context)) return false;
+function v501(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-guarded-division') return false;
+  return true;
+}
+function v502(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v500(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v501(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v502(value['version'], context)) return false;
   }
   return true;
 }
 function v504(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'safe-wide-product') return false;
+  if (value !== 'exercise.c.guarded-division') return false;
+  return true;
+}
+function v505(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v503(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v504(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v504(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v505(value['version'], context)) return false;
   }
-  return true;
-}
-function v502(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v503(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v507(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-wide-product') return false;
   return true;
 }
 function v508(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.guarded-division') return false;
+  return true;
+}
+function v509(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v507(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v508(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v509(value['version'], context)) return false;
+  }
   return true;
 }
 function v506(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v507(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v508(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v507(value['specRef'], context)) return false;
   }
   return true;
 }
-function v510(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.wide-product') return false;
-  return true;
-}
-function v511(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v509(value: SchemaValue, context: Context): boolean {
+function v499(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v510(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v511(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v500(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v503(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v506(value['input'], context)) return false;
   }
   return true;
 }
-function v514(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.wide-product') return false;
-  return true;
-}
-function v515(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v495(value: SchemaValue, context: Context): boolean {
+  if (v496(value, context)) {
+    if (!v499(value, context)) return false;
+  }
   return true;
 }
 function v513(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v514(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v515(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'if-positive-normalize') return false;
   return true;
 }
 function v512(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v513(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v513(value['rule'], context)) return false;
   }
   return true;
 }
-function v505(value: SchemaValue, context: Context): boolean {
+function v511(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v506(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v509(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v512(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v512(value['judge'], context)) return false;
   }
   return true;
 }
-function v501(value: SchemaValue, context: Context): boolean {
-  if (v502(value, context)) {
-    if (!v505(value, context)) return false;
+function v516(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-absolute-with-if') return false;
+  return true;
+}
+function v517(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v515(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v516(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v517(value['version'], context)) return false;
   }
   return true;
 }
 function v519(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'integer-quotient-remainder') return false;
+  if (value !== 'exercise.c.absolute-with-if') return false;
+  return true;
+}
+function v520(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v518(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v519(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v519(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v520(value['version'], context)) return false;
   }
-  return true;
-}
-function v517(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v518(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v522(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-quotient-remainder') return false;
   return true;
 }
 function v523(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.absolute-with-if') return false;
+  return true;
+}
+function v524(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v522(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v523(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v524(value['version'], context)) return false;
+  }
   return true;
 }
 function v521(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v522(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v523(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v522(value['specRef'], context)) return false;
   }
   return true;
 }
-function v525(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.quotient-remainder') return false;
-  return true;
-}
-function v526(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v524(value: SchemaValue, context: Context): boolean {
+function v514(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v525(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v526(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v515(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v518(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v521(value['input'], context)) return false;
   }
   return true;
 }
-function v529(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.quotient-remainder') return false;
-  return true;
-}
-function v530(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v510(value: SchemaValue, context: Context): boolean {
+  if (v511(value, context)) {
+    if (!v514(value, context)) return false;
+  }
   return true;
 }
 function v528(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v529(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v530(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'nested-sign-branches') return false;
   return true;
 }
 function v527(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v528(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v528(value['rule'], context)) return false;
   }
   return true;
 }
-function v520(value: SchemaValue, context: Context): boolean {
+function v526(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v521(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v524(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v527(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v527(value['judge'], context)) return false;
   }
   return true;
 }
-function v516(value: SchemaValue, context: Context): boolean {
-  if (v517(value, context)) {
-    if (!v520(value, context)) return false;
+function v531(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-sign-classification') return false;
+  return true;
+}
+function v532(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v530(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v531(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v532(value['version'], context)) return false;
   }
   return true;
 }
 function v534(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'boolean-classification') return false;
+  if (value !== 'exercise.c.sign-classification') return false;
+  return true;
+}
+function v535(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v533(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v534(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v534(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v535(value['version'], context)) return false;
   }
-  return true;
-}
-function v532(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v533(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v537(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-boolean-flags') return false;
   return true;
 }
 function v538(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.sign-classification') return false;
+  return true;
+}
+function v539(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v537(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v538(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v539(value['version'], context)) return false;
+  }
   return true;
 }
 function v536(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v537(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v538(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v537(value['specRef'], context)) return false;
   }
   return true;
 }
-function v540(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.boolean-flags') return false;
-  return true;
-}
-function v541(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v539(value: SchemaValue, context: Context): boolean {
+function v529(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v540(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v541(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v530(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v533(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v536(value['input'], context)) return false;
   }
   return true;
 }
-function v544(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.boolean-flags') return false;
-  return true;
-}
-function v545(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v525(value: SchemaValue, context: Context): boolean {
+  if (v526(value, context)) {
+    if (!v529(value, context)) return false;
+  }
   return true;
 }
 function v543(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v544(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v545(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'interval-membership') return false;
   return true;
 }
 function v542(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v543(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v543(value['rule'], context)) return false;
   }
   return true;
 }
-function v535(value: SchemaValue, context: Context): boolean {
+function v541(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v536(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v539(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v542(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v542(value['judge'], context)) return false;
   }
   return true;
 }
-function v531(value: SchemaValue, context: Context): boolean {
-  if (v532(value, context)) {
-    if (!v535(value, context)) return false;
+function v546(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-in-closed-range') return false;
+  return true;
+}
+function v547(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v545(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v546(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v547(value['version'], context)) return false;
   }
   return true;
 }
 function v549(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'short-circuit-guard') return false;
+  if (value !== 'exercise.c.in-closed-range') return false;
+  return true;
+}
+function v550(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v548(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v549(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v549(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v550(value['version'], context)) return false;
   }
-  return true;
-}
-function v547(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v548(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v552(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-guarded-division') return false;
   return true;
 }
 function v553(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.in-closed-range') return false;
+  return true;
+}
+function v554(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v552(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v553(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v554(value['version'], context)) return false;
+  }
   return true;
 }
 function v551(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v552(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v553(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v552(value['specRef'], context)) return false;
   }
   return true;
 }
-function v555(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.guarded-division') return false;
-  return true;
-}
-function v556(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v554(value: SchemaValue, context: Context): boolean {
+function v544(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v555(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v556(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v545(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v548(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v551(value['input'], context)) return false;
   }
   return true;
 }
-function v559(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.guarded-division') return false;
-  return true;
-}
-function v560(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v540(value: SchemaValue, context: Context): boolean {
+  if (v541(value, context)) {
+    if (!v544(value, context)) return false;
+  }
   return true;
 }
 function v558(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v559(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v560(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'while-countdown') return false;
   return true;
 }
 function v557(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v558(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v558(value['rule'], context)) return false;
   }
   return true;
 }
-function v550(value: SchemaValue, context: Context): boolean {
+function v556(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v551(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v554(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v557(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v557(value['judge'], context)) return false;
   }
   return true;
 }
-function v546(value: SchemaValue, context: Context): boolean {
-  if (v547(value, context)) {
-    if (!v550(value, context)) return false;
+function v561(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-while-countdown') return false;
+  return true;
+}
+function v562(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v560(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v561(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v562(value['version'], context)) return false;
   }
   return true;
 }
 function v564(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'if-positive-normalize') return false;
+  if (value !== 'exercise.c.while-countdown') return false;
+  return true;
+}
+function v565(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v563(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v564(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v564(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v565(value['version'], context)) return false;
   }
-  return true;
-}
-function v562(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v563(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v567(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-absolute-with-if') return false;
   return true;
 }
 function v568(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.while-countdown') return false;
+  return true;
+}
+function v569(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v567(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v568(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v569(value['version'], context)) return false;
+  }
   return true;
 }
 function v566(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v567(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v568(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v567(value['specRef'], context)) return false;
   }
   return true;
 }
-function v570(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.absolute-with-if') return false;
-  return true;
-}
-function v571(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v569(value: SchemaValue, context: Context): boolean {
+function v559(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v570(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v571(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v560(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v563(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v566(value['input'], context)) return false;
   }
   return true;
 }
-function v574(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.absolute-with-if') return false;
-  return true;
-}
-function v575(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v555(value: SchemaValue, context: Context): boolean {
+  if (v556(value, context)) {
+    if (!v559(value, context)) return false;
+  }
   return true;
 }
 function v573(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v574(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v575(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'break-continue-odd-sum') return false;
   return true;
 }
 function v572(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v573(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v573(value['rule'], context)) return false;
   }
   return true;
 }
-function v565(value: SchemaValue, context: Context): boolean {
+function v571(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v566(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v569(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v572(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v572(value['judge'], context)) return false;
   }
   return true;
 }
-function v561(value: SchemaValue, context: Context): boolean {
-  if (v562(value, context)) {
-    if (!v565(value, context)) return false;
+function v576(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-odd-sum-until-stop') return false;
+  return true;
+}
+function v577(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v575(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v576(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v577(value['version'], context)) return false;
   }
   return true;
 }
 function v579(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'nested-sign-branches') return false;
+  if (value !== 'exercise.c.odd-sum-until-stop') return false;
+  return true;
+}
+function v580(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v578(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v579(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v579(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v580(value['version'], context)) return false;
   }
-  return true;
-}
-function v577(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v578(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v582(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-sign-classification') return false;
   return true;
 }
 function v583(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.odd-sum-until-stop') return false;
+  return true;
+}
+function v584(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v582(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v583(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v584(value['version'], context)) return false;
+  }
   return true;
 }
 function v581(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v582(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v583(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v582(value['specRef'], context)) return false;
   }
   return true;
 }
-function v585(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.sign-classification') return false;
-  return true;
-}
-function v586(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v584(value: SchemaValue, context: Context): boolean {
+function v574(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v585(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v586(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v575(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v578(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v581(value['input'], context)) return false;
   }
   return true;
 }
-function v589(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.sign-classification') return false;
-  return true;
-}
-function v590(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v570(value: SchemaValue, context: Context): boolean {
+  if (v571(value, context)) {
+    if (!v574(value, context)) return false;
+  }
   return true;
 }
 function v588(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v589(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v590(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'nested-grid-count') return false;
   return true;
 }
 function v587(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v588(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v588(value['rule'], context)) return false;
   }
   return true;
 }
-function v580(value: SchemaValue, context: Context): boolean {
+function v586(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v581(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v584(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v587(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v587(value['judge'], context)) return false;
   }
   return true;
 }
-function v576(value: SchemaValue, context: Context): boolean {
-  if (v577(value, context)) {
-    if (!v580(value, context)) return false;
+function v591(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-grid-count') return false;
+  return true;
+}
+function v592(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v590(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v591(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v592(value['version'], context)) return false;
   }
   return true;
 }
 function v594(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'interval-membership') return false;
+  if (value !== 'exercise.c.grid-count') return false;
+  return true;
+}
+function v595(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v593(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v594(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v594(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v595(value['version'], context)) return false;
   }
-  return true;
-}
-function v592(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v593(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v597(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-in-closed-range') return false;
   return true;
 }
 function v598(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.grid-count') return false;
+  return true;
+}
+function v599(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v597(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v598(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v599(value['version'], context)) return false;
+  }
   return true;
 }
 function v596(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v597(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v598(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v597(value['specRef'], context)) return false;
   }
   return true;
 }
-function v600(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.in-closed-range') return false;
-  return true;
-}
-function v601(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v599(value: SchemaValue, context: Context): boolean {
+function v589(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v600(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v601(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v590(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v593(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v596(value['input'], context)) return false;
   }
   return true;
 }
-function v604(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.in-closed-range') return false;
-  return true;
-}
-function v605(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v585(value: SchemaValue, context: Context): boolean {
+  if (v586(value, context)) {
+    if (!v589(value, context)) return false;
+  }
   return true;
 }
 function v603(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v604(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v605(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'partial-array-initialization') return false;
   return true;
 }
 function v602(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v603(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v603(value['rule'], context)) return false;
   }
   return true;
 }
-function v595(value: SchemaValue, context: Context): boolean {
+function v601(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v596(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v599(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v602(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v602(value['judge'], context)) return false;
   }
   return true;
 }
-function v591(value: SchemaValue, context: Context): boolean {
-  if (v592(value, context)) {
-    if (!v595(value, context)) return false;
+function v606(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-partial-array-init') return false;
+  return true;
+}
+function v607(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v605(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v606(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v607(value['version'], context)) return false;
   }
   return true;
 }
 function v609(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'while-countdown') return false;
+  if (value !== 'exercise.c.partial-array-init') return false;
+  return true;
+}
+function v610(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v608(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v609(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v609(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v610(value['version'], context)) return false;
   }
-  return true;
-}
-function v607(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v608(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v612(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-while-countdown') return false;
   return true;
 }
 function v613(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.partial-array-init') return false;
+  return true;
+}
+function v614(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v612(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v613(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v614(value['version'], context)) return false;
+  }
   return true;
 }
 function v611(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v612(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v613(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v612(value['specRef'], context)) return false;
   }
   return true;
 }
-function v615(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.while-countdown') return false;
-  return true;
-}
-function v616(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v614(value: SchemaValue, context: Context): boolean {
+function v604(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v615(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v616(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v605(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v608(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v611(value['input'], context)) return false;
   }
   return true;
 }
-function v619(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.while-countdown') return false;
-  return true;
-}
-function v620(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v600(value: SchemaValue, context: Context): boolean {
+  if (v601(value, context)) {
+    if (!v604(value, context)) return false;
+  }
   return true;
 }
 function v618(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v619(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v620(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'logical-array-print') return false;
   return true;
 }
 function v617(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v618(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v618(value['rule'], context)) return false;
   }
   return true;
 }
-function v610(value: SchemaValue, context: Context): boolean {
+function v616(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v611(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v614(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v617(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v617(value['judge'], context)) return false;
   }
   return true;
 }
-function v606(value: SchemaValue, context: Context): boolean {
-  if (v607(value, context)) {
-    if (!v610(value, context)) return false;
+function v621(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-print-logical-array') return false;
+  return true;
+}
+function v622(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v620(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v621(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v622(value['version'], context)) return false;
   }
   return true;
 }
 function v624(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'break-continue-odd-sum') return false;
+  if (value !== 'exercise.c.print-logical-array') return false;
+  return true;
+}
+function v625(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v623(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v624(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v624(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v625(value['version'], context)) return false;
   }
-  return true;
-}
-function v622(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v623(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v627(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-odd-sum-until-stop') return false;
   return true;
 }
 function v628(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.print-logical-array') return false;
+  return true;
+}
+function v629(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v627(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v628(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v629(value['version'], context)) return false;
+  }
   return true;
 }
 function v626(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v627(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v628(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v627(value['specRef'], context)) return false;
   }
   return true;
 }
-function v630(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.odd-sum-until-stop') return false;
-  return true;
-}
-function v631(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v629(value: SchemaValue, context: Context): boolean {
+function v619(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v630(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v631(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v620(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v623(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v626(value['input'], context)) return false;
   }
   return true;
 }
-function v634(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.odd-sum-until-stop') return false;
-  return true;
-}
-function v635(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v615(value: SchemaValue, context: Context): boolean {
+  if (v616(value, context)) {
+    if (!v619(value, context)) return false;
+  }
   return true;
 }
 function v633(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v634(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v635(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'guarded-array-access') return false;
   return true;
 }
 function v632(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v633(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v633(value['rule'], context)) return false;
   }
   return true;
 }
-function v625(value: SchemaValue, context: Context): boolean {
+function v631(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v626(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v629(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v632(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v632(value['judge'], context)) return false;
   }
   return true;
 }
-function v621(value: SchemaValue, context: Context): boolean {
-  if (v622(value, context)) {
-    if (!v625(value, context)) return false;
+function v636(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-safe-array-access') return false;
+  return true;
+}
+function v637(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v635(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v636(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v637(value['version'], context)) return false;
   }
   return true;
 }
 function v639(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'nested-grid-count') return false;
+  if (value !== 'exercise.c.safe-array-access') return false;
+  return true;
+}
+function v640(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v638(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v639(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v639(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v640(value['version'], context)) return false;
   }
-  return true;
-}
-function v637(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v638(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v642(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-grid-count') return false;
   return true;
 }
 function v643(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.safe-array-access') return false;
+  return true;
+}
+function v644(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v642(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v643(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v644(value['version'], context)) return false;
+  }
   return true;
 }
 function v641(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v642(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v643(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v642(value['specRef'], context)) return false;
   }
   return true;
 }
-function v645(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.grid-count') return false;
-  return true;
-}
-function v646(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v644(value: SchemaValue, context: Context): boolean {
+function v634(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v645(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v646(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v635(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v638(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v641(value['input'], context)) return false;
   }
   return true;
 }
-function v649(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.grid-count') return false;
-  return true;
-}
-function v650(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v630(value: SchemaValue, context: Context): boolean {
+  if (v631(value, context)) {
+    if (!v634(value, context)) return false;
+  }
   return true;
 }
 function v648(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v649(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v650(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'array-extrema') return false;
   return true;
 }
 function v647(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v648(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v648(value['rule'], context)) return false;
   }
   return true;
 }
-function v640(value: SchemaValue, context: Context): boolean {
+function v646(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v641(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v644(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v647(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v647(value['judge'], context)) return false;
   }
   return true;
 }
-function v636(value: SchemaValue, context: Context): boolean {
-  if (v637(value, context)) {
-    if (!v640(value, context)) return false;
+function v651(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-array-extrema') return false;
+  return true;
+}
+function v652(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v650(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v651(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v652(value['version'], context)) return false;
   }
   return true;
 }
 function v654(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'partial-array-initialization') return false;
+  if (value !== 'exercise.c.array-extrema') return false;
+  return true;
+}
+function v655(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v653(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v654(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v654(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v655(value['version'], context)) return false;
   }
-  return true;
-}
-function v652(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v653(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v657(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-partial-array-init') return false;
   return true;
 }
 function v658(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.array-extrema') return false;
+  return true;
+}
+function v659(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v657(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v658(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v659(value['version'], context)) return false;
+  }
   return true;
 }
 function v656(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v657(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v658(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v657(value['specRef'], context)) return false;
   }
   return true;
 }
-function v660(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.partial-array-init') return false;
-  return true;
-}
-function v661(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v659(value: SchemaValue, context: Context): boolean {
+function v649(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v660(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v661(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v650(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v653(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v656(value['input'], context)) return false;
   }
   return true;
 }
-function v664(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.partial-array-init') return false;
-  return true;
-}
-function v665(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v645(value: SchemaValue, context: Context): boolean {
+  if (v646(value, context)) {
+    if (!v649(value, context)) return false;
+  }
   return true;
 }
 function v663(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v664(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v665(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'array-positive-count') return false;
   return true;
 }
 function v662(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v663(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v663(value['rule'], context)) return false;
   }
   return true;
 }
-function v655(value: SchemaValue, context: Context): boolean {
+function v661(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v656(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v659(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v662(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v662(value['judge'], context)) return false;
   }
   return true;
 }
-function v651(value: SchemaValue, context: Context): boolean {
-  if (v652(value, context)) {
-    if (!v655(value, context)) return false;
+function v666(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-count-positive') return false;
+  return true;
+}
+function v667(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v665(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v666(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v667(value['version'], context)) return false;
   }
   return true;
 }
 function v669(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'logical-array-print') return false;
+  if (value !== 'exercise.c.count-positive') return false;
+  return true;
+}
+function v670(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v668(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v669(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v669(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v670(value['version'], context)) return false;
   }
-  return true;
-}
-function v667(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v668(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v672(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-print-logical-array') return false;
   return true;
 }
 function v673(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.count-positive') return false;
+  return true;
+}
+function v674(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v672(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v673(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v674(value['version'], context)) return false;
+  }
   return true;
 }
 function v671(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v672(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v673(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v672(value['specRef'], context)) return false;
   }
   return true;
 }
-function v675(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.print-logical-array') return false;
-  return true;
-}
-function v676(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v674(value: SchemaValue, context: Context): boolean {
+function v664(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v675(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v676(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v665(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v668(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v671(value['input'], context)) return false;
   }
   return true;
 }
-function v679(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.print-logical-array') return false;
-  return true;
-}
-function v680(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v660(value: SchemaValue, context: Context): boolean {
+  if (v661(value, context)) {
+    if (!v664(value, context)) return false;
+  }
   return true;
 }
 function v678(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v679(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v680(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'linear-first-index') return false;
   return true;
 }
 function v677(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v678(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v678(value['rule'], context)) return false;
   }
   return true;
 }
-function v670(value: SchemaValue, context: Context): boolean {
+function v676(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v671(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v674(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v677(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v677(value['judge'], context)) return false;
   }
   return true;
 }
-function v666(value: SchemaValue, context: Context): boolean {
-  if (v667(value, context)) {
-    if (!v670(value, context)) return false;
+function v681(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-linear-search-first') return false;
+  return true;
+}
+function v682(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v680(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v681(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v682(value['version'], context)) return false;
   }
   return true;
 }
 function v684(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'guarded-array-access') return false;
+  if (value !== 'exercise.c.linear-search-first') return false;
+  return true;
+}
+function v685(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v683(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v684(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v684(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v685(value['version'], context)) return false;
   }
-  return true;
-}
-function v682(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v683(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v687(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-safe-array-access') return false;
   return true;
 }
 function v688(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.linear-search-first') return false;
+  return true;
+}
+function v689(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v687(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v688(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v689(value['version'], context)) return false;
+  }
   return true;
 }
 function v686(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v687(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v688(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v687(value['specRef'], context)) return false;
   }
   return true;
 }
-function v690(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.safe-array-access') return false;
-  return true;
-}
-function v691(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v689(value: SchemaValue, context: Context): boolean {
+function v679(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v690(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v691(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v680(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v683(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v686(value['input'], context)) return false;
   }
   return true;
 }
-function v694(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.safe-array-access') return false;
-  return true;
-}
-function v695(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v675(value: SchemaValue, context: Context): boolean {
+  if (v676(value, context)) {
+    if (!v679(value, context)) return false;
+  }
   return true;
 }
 function v693(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v694(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v695(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'adjacent-order-check') return false;
   return true;
 }
 function v692(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v693(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v693(value['rule'], context)) return false;
   }
   return true;
 }
-function v685(value: SchemaValue, context: Context): boolean {
+function v691(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v686(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v689(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v692(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v692(value['judge'], context)) return false;
   }
   return true;
 }
-function v681(value: SchemaValue, context: Context): boolean {
-  if (v682(value, context)) {
-    if (!v685(value, context)) return false;
+function v696(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-check-nondecreasing') return false;
+  return true;
+}
+function v697(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v695(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v696(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v697(value['version'], context)) return false;
   }
   return true;
 }
 function v699(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'array-extrema') return false;
+  if (value !== 'exercise.c.check-nondecreasing') return false;
+  return true;
+}
+function v700(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v698(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v699(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v699(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v700(value['version'], context)) return false;
   }
-  return true;
-}
-function v697(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v698(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v702(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-array-extrema') return false;
   return true;
 }
 function v703(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.check-nondecreasing') return false;
+  return true;
+}
+function v704(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v702(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v703(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v704(value['version'], context)) return false;
+  }
   return true;
 }
 function v701(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v702(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v703(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v702(value['specRef'], context)) return false;
   }
   return true;
 }
-function v705(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.array-extrema') return false;
-  return true;
-}
-function v706(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v704(value: SchemaValue, context: Context): boolean {
+function v694(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v705(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v706(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v695(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v698(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v701(value['input'], context)) return false;
   }
   return true;
 }
-function v709(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.array-extrema') return false;
-  return true;
-}
-function v710(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v690(value: SchemaValue, context: Context): boolean {
+  if (v691(value, context)) {
+    if (!v694(value, context)) return false;
+  }
   return true;
 }
 function v708(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v709(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v710(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'bubble-ascending') return false;
   return true;
 }
 function v707(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v708(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v708(value['rule'], context)) return false;
   }
   return true;
 }
-function v700(value: SchemaValue, context: Context): boolean {
+function v706(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v701(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v704(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v707(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v707(value['judge'], context)) return false;
   }
   return true;
 }
-function v696(value: SchemaValue, context: Context): boolean {
-  if (v697(value, context)) {
-    if (!v700(value, context)) return false;
+function v711(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-bubble-sort') return false;
+  return true;
+}
+function v712(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v710(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v711(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v712(value['version'], context)) return false;
   }
   return true;
 }
 function v714(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'array-positive-count') return false;
+  if (value !== 'exercise.c.bubble-sort') return false;
+  return true;
+}
+function v715(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v713(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v714(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v714(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v715(value['version'], context)) return false;
   }
-  return true;
-}
-function v712(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v713(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v717(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-count-positive') return false;
   return true;
 }
 function v718(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.bubble-sort') return false;
+  return true;
+}
+function v719(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v717(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v718(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v719(value['version'], context)) return false;
+  }
   return true;
 }
 function v716(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v717(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v718(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v717(value['specRef'], context)) return false;
   }
   return true;
 }
-function v720(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.count-positive') return false;
-  return true;
-}
-function v721(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v719(value: SchemaValue, context: Context): boolean {
+function v709(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v720(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v721(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v710(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v713(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v716(value['input'], context)) return false;
   }
   return true;
 }
-function v724(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.count-positive') return false;
-  return true;
-}
-function v725(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v705(value: SchemaValue, context: Context): boolean {
+  if (v706(value, context)) {
+    if (!v709(value, context)) return false;
+  }
   return true;
 }
 function v723(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v724(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v725(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'selection-ascending') return false;
   return true;
 }
 function v722(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v723(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v723(value['rule'], context)) return false;
   }
   return true;
 }
-function v715(value: SchemaValue, context: Context): boolean {
+function v721(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v716(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v719(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v722(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v722(value['judge'], context)) return false;
   }
   return true;
 }
-function v711(value: SchemaValue, context: Context): boolean {
-  if (v712(value, context)) {
-    if (!v715(value, context)) return false;
+function v726(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-selection-sort') return false;
+  return true;
+}
+function v727(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v725(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v726(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v727(value['version'], context)) return false;
   }
   return true;
 }
 function v729(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'linear-first-index') return false;
+  if (value !== 'exercise.c.selection-sort') return false;
+  return true;
+}
+function v730(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v728(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v729(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v729(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v730(value['version'], context)) return false;
   }
-  return true;
-}
-function v727(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v728(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v732(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-linear-search-first') return false;
   return true;
 }
 function v733(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.selection-sort') return false;
+  return true;
+}
+function v734(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v732(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v733(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v734(value['version'], context)) return false;
+  }
   return true;
 }
 function v731(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v732(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v733(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v732(value['specRef'], context)) return false;
   }
   return true;
 }
-function v735(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.linear-search-first') return false;
-  return true;
-}
-function v736(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v734(value: SchemaValue, context: Context): boolean {
+function v724(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v735(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v736(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v725(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v728(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v731(value['input'], context)) return false;
   }
   return true;
 }
-function v739(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.linear-search-first') return false;
-  return true;
-}
-function v740(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
+function v720(value: SchemaValue, context: Context): boolean {
+  if (v721(value, context)) {
+    if (!v724(value, context)) return false;
+  }
   return true;
 }
 function v738(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v739(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v740(value['version'], context)) return false;
-  }
+  void context;
+  if (value !== 'binary-first-index') return false;
   return true;
 }
 function v737(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v738(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v738(value['rule'], context)) return false;
   }
   return true;
 }
-function v730(value: SchemaValue, context: Context): boolean {
+function v736(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v731(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v734(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v737(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v737(value['judge'], context)) return false;
   }
   return true;
 }
-function v726(value: SchemaValue, context: Context): boolean {
-  if (v727(value, context)) {
-    if (!v730(value, context)) return false;
+function v741(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'program.c.practice-binary-search-first') return false;
+  return true;
+}
+function v742(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v740(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v741(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v742(value['version'], context)) return false;
   }
   return true;
 }
 function v744(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'adjacent-order-check') return false;
+  if (value !== 'exercise.c.binary-search-first') return false;
+  return true;
+}
+function v745(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
   return true;
 }
 function v743(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v744(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !v744(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v745(value['version'], context)) return false;
   }
-  return true;
-}
-function v742(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v743(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v747(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-check-nondecreasing') return false;
   return true;
 }
 function v748(value: SchemaValue, context: Context): boolean {
   void context;
+  if (value !== 'input.c.binary-search-first') return false;
+  return true;
+}
+function v749(value: SchemaValue, context: Context): boolean {
+  void context;
   if (value !== '1.0.0') return false;
+  return true;
+}
+function v747(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v748(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v749(value['version'], context)) return false;
+  }
   return true;
 }
 function v746(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v747(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v748(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !v747(value['specRef'], context)) return false;
   }
   return true;
 }
-function v750(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.check-nondecreasing') return false;
-  return true;
-}
-function v751(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v749(value: SchemaValue, context: Context): boolean {
+function v739(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v750(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v751(value['version'], context)) return false;
+    if (Object.hasOwn(value, 'programRef') && !v740(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v743(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v746(value['input'], context)) return false;
+  }
+  return true;
+}
+function v735(value: SchemaValue, context: Context): boolean {
+  if (v736(value, context)) {
+    if (!v739(value, context)) return false;
   }
   return true;
 }
 function v754(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'input.c.check-nondecreasing') return false;
+  if (value !== 'entry-output') return false;
   return true;
 }
-function v755(value: SchemaValue, context: Context): boolean {
+function v756(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'judge.c.first-output') return false;
+  return true;
+}
+function v757(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
+function v755(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v756(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v757(value['version'], context)) return false;
+  }
+  return true;
+}
 function v753(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v754(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v755(value['version'], context)) return false;
-  }
-  return true;
-}
-function v752(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v753(value['specRef'], context)) return false;
-  }
-  return true;
-}
-function v745(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v746(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v749(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v752(value['input'], context)) return false;
-  }
-  return true;
-}
-function v741(value: SchemaValue, context: Context): boolean {
-  if (v742(value, context)) {
-    if (!v745(value, context)) return false;
+    if (Object.hasOwn(value, 'rule') && !v754(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v755(value['profileRef'], context)) return false;
   }
   return true;
 }
 function v759(value: SchemaValue, context: Context): boolean {
   void context;
-  if (value !== 'bubble-ascending') return false;
+  if (value !== 'partial-array-initialization') return false;
+  return true;
+}
+function v761(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== 'judge.c.partial-array-init') return false;
+  return true;
+}
+function v762(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (value !== '1.0.0') return false;
+  return true;
+}
+function v760(value: SchemaValue, context: Context): boolean {
+  if (isRecord(value)) {
+    if (Object.hasOwn(value, 'id') && !v761(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'version') && !v762(value['version'], context)) return false;
+  }
   return true;
 }
 function v758(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
     if (Object.hasOwn(value, 'rule') && !v759(value['rule'], context)) return false;
+    if (Object.hasOwn(value, 'profileRef') && !v760(value['profileRef'], context)) return false;
   }
   return true;
 }
-function v757(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v758(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v762(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-bubble-sort') return false;
-  return true;
-}
-function v763(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v761(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v762(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v763(value['version'], context)) return false;
-  }
-  return true;
-}
-function v765(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.bubble-sort') return false;
-  return true;
-}
-function v766(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v764(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v765(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v766(value['version'], context)) return false;
-  }
-  return true;
-}
-function v769(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.bubble-sort') return false;
-  return true;
-}
-function v770(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v768(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v769(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v770(value['version'], context)) return false;
-  }
-  return true;
-}
-function v767(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v768(value['specRef'], context)) return false;
-  }
-  return true;
-}
-function v760(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v761(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v764(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v767(value['input'], context)) return false;
-  }
-  return true;
-}
-function v756(value: SchemaValue, context: Context): boolean {
-  if (v757(value, context)) {
-    if (!v760(value, context)) return false;
-  }
-  return true;
-}
-function v774(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'selection-ascending') return false;
-  return true;
-}
-function v773(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v774(value['rule'], context)) return false;
-  }
-  return true;
-}
-function v772(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v773(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v777(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-selection-sort') return false;
-  return true;
-}
-function v778(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v776(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v777(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v778(value['version'], context)) return false;
-  }
-  return true;
-}
-function v780(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.selection-sort') return false;
-  return true;
-}
-function v781(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v779(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v780(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v781(value['version'], context)) return false;
-  }
-  return true;
-}
-function v784(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.selection-sort') return false;
-  return true;
-}
-function v785(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v783(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v784(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v785(value['version'], context)) return false;
-  }
-  return true;
-}
-function v782(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v783(value['specRef'], context)) return false;
-  }
-  return true;
-}
-function v775(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v776(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v779(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v782(value['input'], context)) return false;
-  }
-  return true;
-}
-function v771(value: SchemaValue, context: Context): boolean {
-  if (v772(value, context)) {
-    if (!v775(value, context)) return false;
-  }
-  return true;
-}
-function v789(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'binary-first-index') return false;
-  return true;
-}
-function v788(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v789(value['rule'], context)) return false;
-  }
-  return true;
-}
-function v787(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v788(value['judge'], context)) return false;
-  }
-  return true;
-}
-function v792(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'program.c.practice-binary-search-first') return false;
-  return true;
-}
-function v793(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v791(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v792(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v793(value['version'], context)) return false;
-  }
-  return true;
-}
-function v795(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'exercise.c.binary-search-first') return false;
-  return true;
-}
-function v796(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v794(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v795(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v796(value['version'], context)) return false;
-  }
-  return true;
-}
-function v799(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'input.c.binary-search-first') return false;
-  return true;
-}
-function v800(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v798(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v799(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v800(value['version'], context)) return false;
-  }
-  return true;
-}
-function v797(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v798(value['specRef'], context)) return false;
-  }
-  return true;
-}
-function v790(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v791(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v794(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'input') && !v797(value['input'], context)) return false;
-  }
-  return true;
-}
-function v786(value: SchemaValue, context: Context): boolean {
-  if (v787(value, context)) {
-    if (!v790(value, context)) return false;
-  }
-  return true;
-}
-function v805(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'entry-output') return false;
-  return true;
-}
-function v807(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'judge.c.first-output') return false;
-  return true;
-}
-function v808(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v806(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v807(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v808(value['version'], context)) return false;
-  }
-  return true;
-}
-function v804(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v805(value['rule'], context)) return false;
-    if (Object.hasOwn(value, 'profileRef') && !v806(value['profileRef'], context)) return false;
-  }
-  return true;
-}
-function v810(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'partial-array-initialization') return false;
-  return true;
-}
-function v812(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== 'judge.c.partial-array-init') return false;
-  return true;
-}
-function v813(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (value !== '1.0.0') return false;
-  return true;
-}
-function v811(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v812(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'version') && !v813(value['version'], context)) return false;
-  }
-  return true;
-}
-function v809(value: SchemaValue, context: Context): boolean {
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rule') && !v810(value['rule'], context)) return false;
-    if (Object.hasOwn(value, 'profileRef') && !v811(value['profileRef'], context)) return false;
-  }
-  return true;
-}
-function v803(value: SchemaValue, context: Context): boolean {
+function v752(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v804(value, context)) matches++;
-    if (v809(value, context)) matches++;
+    if (v753(value, context)) matches++;
+    if (v758(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v802(value: SchemaValue, context: Context): boolean {
+function v751(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v803(value['judge'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v752(value['judge'], context)) return false;
   }
   return true;
 }
-function v816(value: SchemaValue, context: Context): boolean {
+function v765(value: SchemaValue, context: Context): boolean {
   void context;
   if (isRecord(value)) {
     if (Object.keys(value).length > 0) return false;
   }
   return true;
 }
-function v817(value: SchemaValue, context: Context): boolean {
+function v766(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v815(value: SchemaValue, context: Context): boolean {
+function v764(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'values') && !v816(value['values'], context)) return false;
-    if (Object.hasOwn(value, 'random') && !v817(value['random'], context)) return false;
+    if (Object.hasOwn(value, 'values') && !v765(value['values'], context)) return false;
+    if (Object.hasOwn(value, 'random') && !v766(value['random'], context)) return false;
   }
   return true;
 }
-function v819(value: SchemaValue, context: Context): boolean {
+function v768(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v818(value: SchemaValue, context: Context): boolean {
+function v767(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'bindingMap') && !v819(value['bindingMap'], context)) return false;
+    if (Object.hasOwn(value, 'bindingMap') && !v768(value['bindingMap'], context)) return false;
   }
   return true;
 }
-function v814(value: SchemaValue, context: Context): boolean {
+function v763(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'input') && !v815(value['input'], context)) return false;
-    if (Object.hasOwn(value, 'source') && !v818(value['source'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v764(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'source') && !v767(value['source'], context)) return false;
   }
   return true;
 }
-function v822(value: SchemaValue, context: Context): boolean {
+function v771(value: SchemaValue, context: Context): boolean {
   void context;
   if (isRecord(value)) {
     if (Object.keys(value).length < 1) return false;
   }
   return true;
 }
-function v821(value: SchemaValue, context: Context): boolean {
+function v770(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'values') && !v822(value['values'], context)) return false;
+    if (Object.hasOwn(value, 'values') && !v771(value['values'], context)) return false;
   }
   return true;
 }
-function v824(value: SchemaValue, context: Context): boolean {
+function v773(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length < 1) return false;
   }
   return true;
 }
-function v823(value: SchemaValue, context: Context): boolean {
+function v772(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'bindingMap') && !v824(value['bindingMap'], context)) return false;
+    if (Object.hasOwn(value, 'bindingMap') && !v773(value['bindingMap'], context)) return false;
   }
   return true;
 }
-function v820(value: SchemaValue, context: Context): boolean {
+function v769(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'input') && !v821(value['input'], context)) return false;
-    if (Object.hasOwn(value, 'source') && !v823(value['source'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v770(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'source') && !v772(value['source'], context)) return false;
   }
   return true;
 }
-function v801(value: SchemaValue, context: Context): boolean {
-  if (v802(value, context)) {
-    if (!v814(value, context)) return false;
-  } else if (!v820(value, context)) return false;
+function v750(value: SchemaValue, context: Context): boolean {
+  if (v751(value, context)) {
+    if (!v763(value, context)) return false;
+  } else if (!v769(value, context)) return false;
   return true;
 }
-function v347(value: SchemaValue, context: Context): boolean {
+function v313(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'protocolVersion') ||
@@ -4771,96 +4618,84 @@ function v347(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 20) return false;
-    if (!v348(value['kind'], context)) return false;
-    if (!v349(value['protocolVersion'], context)) return false;
-    if (!v350(value['traceVersion'], context)) return false;
-    if (!v351(value['diagnosticVersion'], context)) return false;
-    if (!v352(value['judgeVersion'], context)) return false;
-    if (!v353(value['encodingVersion'], context)) return false;
-    if (!v354(value['identity'], context)) return false;
-    if (!v355(value['mode'], context)) return false;
-    if (!v356(value['packageRef'], context)) return false;
-    if (!v359(value['languageRef'], context)) return false;
-    if (!v362(value['subsetRef'], context)) return false;
-    if (!v365(value['programRef'], context)) return false;
-    if (!v366(value['subjectRef'], context)) return false;
-    if (!v367(value['learningRevision'], context)) return false;
-    if (!v370(value['engineRef'], context)) return false;
-    if (!v371(value['source'], context)) return false;
-    if (!v372(value['input'], context)) return false;
-    if (!v373(value['judge'], context)) return false;
-    if (!v374(value['budgetRef'], context)) return false;
-    if (!v377(value['remainingMs'], context)) return false;
+    if (!v314(value['kind'], context)) return false;
+    if (!v315(value['protocolVersion'], context)) return false;
+    if (!d0(value['traceVersion'], context)) return false;
+    if (!d0(value['diagnosticVersion'], context)) return false;
+    if (!v316(value['judgeVersion'], context)) return false;
+    if (!d0(value['encodingVersion'], context)) return false;
+    if (!d17(value['identity'], context)) return false;
+    if (!v317(value['mode'], context)) return false;
+    if (!v318(value['packageRef'], context)) return false;
+    if (!v321(value['languageRef'], context)) return false;
+    if (!v324(value['subsetRef'], context)) return false;
+    if (!d15(value['programRef'], context)) return false;
+    if (!d15(value['subjectRef'], context)) return false;
+    if (!v327(value['learningRevision'], context)) return false;
+    if (!d16(value['engineRef'], context)) return false;
+    if (!d23(value['source'], context)) return false;
+    if (!d28(value['input'], context)) return false;
+    if (!d30(value['judge'], context)) return false;
+    if (!v329(value['budgetRef'], context)) return false;
+    if (!v332(value['remainingMs'], context)) return false;
   }
-  if (!v378(value, context)) return false;
-  if (!v388(value, context)) return false;
-  if (!v397(value, context)) return false;
-  if (!v404(value, context)) return false;
-  if (!v411(value, context)) return false;
-  if (!v426(value, context)) return false;
-  if (!v441(value, context)) return false;
-  if (!v456(value, context)) return false;
-  if (!v471(value, context)) return false;
-  if (!v486(value, context)) return false;
-  if (!v501(value, context)) return false;
-  if (!v516(value, context)) return false;
-  if (!v531(value, context)) return false;
-  if (!v546(value, context)) return false;
-  if (!v561(value, context)) return false;
-  if (!v576(value, context)) return false;
-  if (!v591(value, context)) return false;
-  if (!v606(value, context)) return false;
-  if (!v621(value, context)) return false;
-  if (!v636(value, context)) return false;
-  if (!v651(value, context)) return false;
-  if (!v666(value, context)) return false;
-  if (!v681(value, context)) return false;
-  if (!v696(value, context)) return false;
-  if (!v711(value, context)) return false;
-  if (!v726(value, context)) return false;
-  if (!v741(value, context)) return false;
-  if (!v756(value, context)) return false;
-  if (!v771(value, context)) return false;
-  if (!v786(value, context)) return false;
-  if (!v801(value, context)) return false;
+  if (!v333(value, context)) return false;
+  if (!v343(value, context)) return false;
+  if (!v348(value, context)) return false;
+  if (!v355(value, context)) return false;
+  if (!v360(value, context)) return false;
+  if (!v375(value, context)) return false;
+  if (!v390(value, context)) return false;
+  if (!v405(value, context)) return false;
+  if (!v420(value, context)) return false;
+  if (!v435(value, context)) return false;
+  if (!v450(value, context)) return false;
+  if (!v465(value, context)) return false;
+  if (!v480(value, context)) return false;
+  if (!v495(value, context)) return false;
+  if (!v510(value, context)) return false;
+  if (!v525(value, context)) return false;
+  if (!v540(value, context)) return false;
+  if (!v555(value, context)) return false;
+  if (!v570(value, context)) return false;
+  if (!v585(value, context)) return false;
+  if (!v600(value, context)) return false;
+  if (!v615(value, context)) return false;
+  if (!v630(value, context)) return false;
+  if (!v645(value, context)) return false;
+  if (!v660(value, context)) return false;
+  if (!v675(value, context)) return false;
+  if (!v690(value, context)) return false;
+  if (!v705(value, context)) return false;
+  if (!v720(value, context)) return false;
+  if (!v735(value, context)) return false;
+  if (!v750(value, context)) return false;
   return true;
 }
 function d31(value: SchemaValue, context: Context): boolean {
-  return v347(value, context);
+  return v313(value, context);
 }
-function v826(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v827(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v829(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v830(value: SchemaValue, context: Context): boolean {
+function v776(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v828(value: SchemaValue, context: Context): boolean {
+function v775(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v829(value, context)) matches++;
-    if (v830(value, context)) matches++;
+    if (d7(value, context)) matches++;
+    if (v776(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v832(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v831(value: SchemaValue, context: Context): boolean {
+function v777(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v832(value[index], context)) return false;
+      if (!d6(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -4869,9 +4704,9 @@ function v831(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v825(value: SchemaValue, context: Context): boolean {
+function v774(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'id') ||
       !Object.hasOwn(value, 'functionNodeId') ||
@@ -4880,65 +4715,52 @@ function v825(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v826(value['id'], context)) return false;
-    if (!v827(value['functionNodeId'], context)) return false;
-    if (!v828(value['parentFrameId'], context)) return false;
-    if (!v831(value['scopeIds'], context)) return false;
+    if (!d7(value['id'], context)) return false;
+    if (!d3(value['functionNodeId'], context)) return false;
+    if (!v775(value['parentFrameId'], context)) return false;
+    if (!v777(value['scopeIds'], context)) return false;
   }
   return true;
 }
 function d32(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d32')) return true;
-    if (!v825(value, context)) return false;
-    if (known) known.push('d32');
-    else context.validated.set(value, ['d32']);
+    const known = context.validated.get('d32');
+    if (known?.includes(value)) return true;
+    if (!v774(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d32', [value]);
     return true;
   }
-  return v825(value, context);
+  return v774(value, context);
 }
-function v834(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v835(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v837(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v838(value: SchemaValue, context: Context): boolean {
+function v780(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v836(value: SchemaValue, context: Context): boolean {
+function v779(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v837(value, context)) matches++;
-    if (v838(value, context)) matches++;
+    if (d6(value, context)) matches++;
+    if (v780(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v839(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v840(value: SchemaValue, context: Context): boolean {
+function v781(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'main' || value === 'block' || value === 'for')) return false;
   return true;
 }
-function v842(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v841(value: SchemaValue, context: Context): boolean {
+function v782(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v842(value[index], context)) return false;
+      if (!d5(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -4947,9 +4769,9 @@ function v841(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v833(value: SchemaValue, context: Context): boolean {
+function v778(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'id') ||
       !Object.hasOwn(value, 'frameId') ||
@@ -4960,143 +4782,123 @@ function v833(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v834(value['id'], context)) return false;
-    if (!v835(value['frameId'], context)) return false;
-    if (!v836(value['parentScopeId'], context)) return false;
-    if (!v839(value['nodeId'], context)) return false;
-    if (!v840(value['kind'], context)) return false;
-    if (!v841(value['objectIds'], context)) return false;
+    if (!d6(value['id'], context)) return false;
+    if (!d7(value['frameId'], context)) return false;
+    if (!v779(value['parentScopeId'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!v781(value['kind'], context)) return false;
+    if (!v782(value['objectIds'], context)) return false;
   }
   return true;
 }
 function d33(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d33')) return true;
-    if (!v833(value, context)) return false;
-    if (known) known.push('d33');
-    else context.validated.set(value, ['d33']);
+    const known = context.validated.get('d33');
+    if (known?.includes(value)) return true;
+    if (!v778(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d33', [value]);
     return true;
   }
-  return v833(value, context);
+  return v778(value, context);
 }
-function v844(value: SchemaValue, context: Context): boolean {
+function v784(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 262143)) return false;
+  if (value < 0 || value > 262143) return false;
   return true;
 }
-function v845(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v843(value: SchemaValue, context: Context): boolean {
+function v783(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'index') || !Object.hasOwn(value, 'value')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v844(value['index'], context)) return false;
-    if (!v845(value['value'], context)) return false;
+    if (!v784(value['index'], context)) return false;
+    if (!d10(value['value'], context)) return false;
   }
   return true;
 }
 function d34(value: SchemaValue, context: Context): boolean {
-  return v843(value, context);
+  return v783(value, context);
 }
-function v847(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v848(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v849(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v850(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v851(value: SchemaValue, context: Context): boolean {
+function v786(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size < 1 || size > 32768 || !p7.test(value)) return false;
   }
   return true;
 }
-function v852(value: SchemaValue, context: Context): boolean {
+function v787(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'int' || value === 'int-array')) return false;
   return true;
 }
-function v853(value: SchemaValue, context: Context): boolean {
+function v788(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 1 || value > 262144)) return false;
+  if (value < 1 || value > 262144) return false;
   return true;
 }
-function v854(value: SchemaValue, context: Context): boolean {
+function v789(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 4096 || value > 9007199254740991 || value % 4 !== 0))
-    return false;
+  if (value < 4096 || value > 9007199254740991 || value % 4 !== 0) return false;
   return true;
 }
-function v855(value: SchemaValue, context: Context): boolean {
-  return d11(value, context);
-}
-function v857(value: SchemaValue, context: Context): boolean {
-  return d34(value, context);
-}
-function v856(value: SchemaValue, context: Context): boolean {
+function v790(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 262144) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v857(value[index], context)) return false;
+      if (!d34(value[index], context)) return false;
     }
   }
   return true;
 }
-function v860(value: SchemaValue, context: Context): boolean {
+function v793(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'int') return false;
   return true;
 }
-function v859(value: SchemaValue, context: Context): boolean {
+function v792(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'kind') && !v860(value['kind'], context)) return false;
+    if (Object.hasOwn(value, 'kind') && !v793(value['kind'], context)) return false;
   }
   return true;
 }
-function v862(value: SchemaValue, context: Context): boolean {
+function v795(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 1) return false;
   return true;
 }
-function v863(value: SchemaValue, context: Context): boolean {
+function v796(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 1) return false;
   }
   return true;
 }
-function v861(value: SchemaValue, context: Context): boolean {
+function v794(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'length') && !v862(value['length'], context)) return false;
-    if (Object.hasOwn(value, 'cells') && !v863(value['cells'], context)) return false;
+    if (Object.hasOwn(value, 'length') && !v795(value['length'], context)) return false;
+    if (Object.hasOwn(value, 'cells') && !v796(value['cells'], context)) return false;
   }
   return true;
 }
-function v858(value: SchemaValue, context: Context): boolean {
-  if (v859(value, context)) {
-    if (!v861(value, context)) return false;
+function v791(value: SchemaValue, context: Context): boolean {
+  if (v792(value, context)) {
+    if (!v794(value, context)) return false;
   }
   return true;
 }
-function v846(value: SchemaValue, context: Context): boolean {
+function v785(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'id') ||
       !Object.hasOwn(value, 'declarationNodeId') ||
@@ -5111,35 +4913,34 @@ function v846(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 10) return false;
-    if (!v847(value['id'], context)) return false;
-    if (!v848(value['declarationNodeId'], context)) return false;
-    if (!v849(value['frameId'], context)) return false;
-    if (!v850(value['scopeId'], context)) return false;
-    if (!v851(value['name'], context)) return false;
-    if (!v852(value['kind'], context)) return false;
-    if (!v853(value['length'], context)) return false;
-    if (!v854(value['baseAddress'], context)) return false;
-    if (!v855(value['defaultValue'], context)) return false;
-    if (!v856(value['cells'], context)) return false;
+    if (!d5(value['id'], context)) return false;
+    if (!d3(value['declarationNodeId'], context)) return false;
+    if (!d7(value['frameId'], context)) return false;
+    if (!d6(value['scopeId'], context)) return false;
+    if (!v786(value['name'], context)) return false;
+    if (!v787(value['kind'], context)) return false;
+    if (!v788(value['length'], context)) return false;
+    if (!v789(value['baseAddress'], context)) return false;
+    if (!d11(value['defaultValue'], context)) return false;
+    if (!v790(value['cells'], context)) return false;
   }
-  if (!v858(value, context)) return false;
+  if (!v791(value, context)) return false;
   return true;
 }
 function d35(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d35')) return true;
-    if (!v846(value, context)) return false;
-    if (known) known.push('d35');
-    else context.validated.set(value, ['d35']);
+    const known = context.validated.get('d35');
+    if (known?.includes(value)) return true;
+    if (!v785(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d35', [value]);
     return true;
   }
-  return v846(value, context);
+  return v785(value, context);
 }
-function v865(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v866(value: SchemaValue, context: Context): boolean {
+function v798(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'block' ||
@@ -5151,12 +4952,9 @@ function v866(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v867(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v864(value: SchemaValue, context: Context): boolean {
+function v797(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'nodeId') ||
       !Object.hasOwn(value, 'stage') ||
@@ -5164,60 +4962,48 @@ function v864(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v865(value['nodeId'], context)) return false;
-    if (!v866(value['stage'], context)) return false;
-    if (!v867(value['iteration'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!v798(value['stage'], context)) return false;
+    if (!d8(value['iteration'], context)) return false;
   }
   return true;
 }
 function d36(value: SchemaValue, context: Context): boolean {
-  return v864(value, context);
+  return v797(value, context);
 }
-function v869(value: SchemaValue, context: Context): boolean {
+function v800(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'ready' || value === 'running' || value === 'returned')) return false;
   return true;
 }
-function v870(value: SchemaValue, context: Context): boolean {
-  return d4(value, context);
-}
-function v872(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v873(value: SchemaValue, context: Context): boolean {
+function v802(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v871(value: SchemaValue, context: Context): boolean {
+function v801(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v872(value, context)) matches++;
-    if (v873(value, context)) matches++;
+    if (d7(value, context)) matches++;
+    if (v802(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v874(value: SchemaValue, context: Context): boolean {
-  return d11(value, context);
-}
-function v876(value: SchemaValue, context: Context): boolean {
-  return d36(value, context);
-}
-function v875(value: SchemaValue, context: Context): boolean {
+function v803(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 64) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v876(value[index], context)) return false;
+      if (!d36(value[index], context)) return false;
     }
   }
   return true;
 }
-function v868(value: SchemaValue, context: Context): boolean {
+function v799(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'phase') ||
       !Object.hasOwn(value, 'nextNodeId') ||
@@ -5227,50 +5013,42 @@ function v868(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v869(value['phase'], context)) return false;
-    if (!v870(value['nextNodeId'], context)) return false;
-    if (!v871(value['activeFrameId'], context)) return false;
-    if (!v874(value['returnValue'], context)) return false;
-    if (!v875(value['flowStack'], context)) return false;
+    if (!v800(value['phase'], context)) return false;
+    if (!d4(value['nextNodeId'], context)) return false;
+    if (!v801(value['activeFrameId'], context)) return false;
+    if (!d11(value['returnValue'], context)) return false;
+    if (!v803(value['flowStack'], context)) return false;
   }
   return true;
 }
 function d37(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d37')) return true;
-    if (!v868(value, context)) return false;
-    if (known) known.push('d37');
-    else context.validated.set(value, ['d37']);
+    const known = context.validated.get('d37');
+    if (known?.includes(value)) return true;
+    if (!v799(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d37', [value]);
     return true;
   }
-  return v868(value, context);
+  return v799(value, context);
 }
-function v878(value: SchemaValue, context: Context): boolean {
+function v805(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 4096 || value > 9007199254740991 || value % 4 !== 0))
-    return false;
+  if (value < 4096 || value > 9007199254740991 || value % 4 !== 0) return false;
   return true;
 }
-function v879(value: SchemaValue, context: Context): boolean {
+function v806(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 1048576 || value % 4 !== 0)) return false;
+  if (value < 0 || value > 1048576 || value % 4 !== 0) return false;
   return true;
 }
-function v880(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v881(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v882(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v877(value: SchemaValue, context: Context): boolean {
+function v804(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'nextAddress') ||
       !Object.hasOwn(value, 'liveBytes') ||
@@ -5280,40 +5058,30 @@ function v877(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v878(value['nextAddress'], context)) return false;
-    if (!v879(value['liveBytes'], context)) return false;
-    if (!v880(value['nextObject'], context)) return false;
-    if (!v881(value['nextScope'], context)) return false;
-    if (!v882(value['nextFrame'], context)) return false;
+    if (!v805(value['nextAddress'], context)) return false;
+    if (!v806(value['liveBytes'], context)) return false;
+    if (!d9(value['nextObject'], context)) return false;
+    if (!d9(value['nextScope'], context)) return false;
+    if (!d9(value['nextFrame'], context)) return false;
   }
   return true;
 }
 function d38(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d38')) return true;
-    if (!v877(value, context)) return false;
-    if (known) known.push('d38');
-    else context.validated.set(value, ['d38']);
+    const known = context.validated.get('d38');
+    if (known?.includes(value)) return true;
+    if (!v804(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d38', [value]);
     return true;
   }
-  return v877(value, context);
+  return v804(value, context);
 }
-function v884(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v885(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v886(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v887(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v883(value: SchemaValue, context: Context): boolean {
+function v807(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'comparisons') ||
       !Object.hasOwn(value, 'scalarWrites') ||
@@ -5322,87 +5090,71 @@ function v883(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v884(value['comparisons'], context)) return false;
-    if (!v885(value['scalarWrites'], context)) return false;
-    if (!v886(value['arrayWrites'], context)) return false;
-    if (!v887(value['swaps'], context)) return false;
+    if (!d8(value['comparisons'], context)) return false;
+    if (!d8(value['scalarWrites'], context)) return false;
+    if (!d8(value['arrayWrites'], context)) return false;
+    if (!d8(value['swaps'], context)) return false;
   }
   return true;
 }
 function d39(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d39')) return true;
-    if (!v883(value, context)) return false;
-    if (known) known.push('d39');
-    else context.validated.set(value, ['d39']);
+    const known = context.validated.get('d39');
+    if (known?.includes(value)) return true;
+    if (!v807(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d39', [value]);
     return true;
   }
-  return v883(value, context);
+  return v807(value, context);
 }
-function v890(value: SchemaValue, context: Context): boolean {
-  return d32(value, context);
-}
-function v889(value: SchemaValue, context: Context): boolean {
+function v809(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 1) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v890(value[index], context)) return false;
+      if (!d32(value[index], context)) return false;
     }
   }
   return true;
 }
-function v892(value: SchemaValue, context: Context): boolean {
-  return d33(value, context);
-}
-function v891(value: SchemaValue, context: Context): boolean {
+function v810(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 64) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v892(value[index], context)) return false;
+      if (!d33(value[index], context)) return false;
     }
   }
   return true;
 }
-function v894(value: SchemaValue, context: Context): boolean {
-  return d35(value, context);
-}
-function v893(value: SchemaValue, context: Context): boolean {
+function v811(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 262144) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v894(value[index], context)) return false;
+      if (!d35(value[index], context)) return false;
     }
   }
   return true;
 }
-function v895(value: SchemaValue, context: Context): boolean {
-  return d37(value, context);
-}
-function v896(value: SchemaValue, context: Context): boolean {
-  return d38(value, context);
-}
-function v897(value: SchemaValue, context: Context): boolean {
+function v812(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size > 16384) return false;
   }
   return true;
 }
-function v898(value: SchemaValue, context: Context): boolean {
-  return d39(value, context);
-}
-function v888(value: SchemaValue, context: Context): boolean {
+function v808(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'frames') ||
       !Object.hasOwn(value, 'scopes') ||
@@ -5414,330 +5166,278 @@ function v888(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 7) return false;
-    if (!v889(value['frames'], context)) return false;
-    if (!v891(value['scopes'], context)) return false;
-    if (!v893(value['objects'], context)) return false;
-    if (!v895(value['control'], context)) return false;
-    if (!v896(value['allocator'], context)) return false;
-    if (!v897(value['output'], context)) return false;
-    if (!v898(value['counters'], context)) return false;
+    if (!v809(value['frames'], context)) return false;
+    if (!v810(value['scopes'], context)) return false;
+    if (!v811(value['objects'], context)) return false;
+    if (!d37(value['control'], context)) return false;
+    if (!d38(value['allocator'], context)) return false;
+    if (!v812(value['output'], context)) return false;
+    if (!d39(value['counters'], context)) return false;
   }
   return true;
 }
 function d40(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d40')) return true;
-    if (!v888(value, context)) return false;
-    if (known) known.push('d40');
-    else context.validated.set(value, ['d40']);
+    const known = context.validated.get('d40');
+    if (known?.includes(value)) return true;
+    if (!v808(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d40', [value]);
     return true;
   }
-  return v888(value, context);
+  return v808(value, context);
 }
-function v900(value: SchemaValue, context: Context): boolean {
+function v814(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'record') return false;
   return true;
 }
-function v901(value: SchemaValue, context: Context): boolean {
+function v815(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'frames' || value === 'scopes' || value === 'objects')) return false;
   return true;
 }
-function v903(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v904(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v905(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v902(value: SchemaValue, context: Context): boolean {
+function v816(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v903(value, context)) matches++;
-    if (v904(value, context)) matches++;
-    if (v905(value, context)) matches++;
+    if (d7(value, context)) matches++;
+    if (d6(value, context)) matches++;
+    if (d5(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v906(value: SchemaValue, context: Context): boolean {
+function v817(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 262143)) return false;
+  if (value < 0 || value > 262143) return false;
   return true;
 }
-function v908(value: SchemaValue, context: Context): boolean {
-  return d32(value, context);
-}
-function v909(value: SchemaValue, context: Context): boolean {
-  return d33(value, context);
-}
-function v910(value: SchemaValue, context: Context): boolean {
-  return d35(value, context);
-}
-function v911(value: SchemaValue, context: Context): boolean {
+function v819(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v907(value: SchemaValue, context: Context): boolean {
+function v818(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v908(value, context)) matches++;
-    if (v909(value, context)) matches++;
-    if (v910(value, context)) matches++;
-    if (v911(value, context)) matches++;
+    if (d32(value, context)) matches++;
+    if (d33(value, context)) matches++;
+    if (d35(value, context)) matches++;
+    if (v819(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v913(value: SchemaValue, context: Context): boolean {
-  return d32(value, context);
-}
-function v914(value: SchemaValue, context: Context): boolean {
-  return d33(value, context);
-}
-function v915(value: SchemaValue, context: Context): boolean {
-  return d35(value, context);
-}
-function v916(value: SchemaValue, context: Context): boolean {
+function v821(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v912(value: SchemaValue, context: Context): boolean {
+function v820(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v913(value, context)) matches++;
-    if (v914(value, context)) matches++;
-    if (v915(value, context)) matches++;
-    if (v916(value, context)) matches++;
+    if (d32(value, context)) matches++;
+    if (d33(value, context)) matches++;
+    if (d35(value, context)) matches++;
+    if (v821(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v919(value: SchemaValue, context: Context): boolean {
+function v824(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'frames') return false;
   return true;
 }
-function v918(value: SchemaValue, context: Context): boolean {
+function v823(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'table') && !v919(value['table'], context)) return false;
+    if (Object.hasOwn(value, 'table') && !v824(value['table'], context)) return false;
   }
   return true;
 }
-function v921(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v923(value: SchemaValue, context: Context): boolean {
-  return d32(value, context);
-}
-function v924(value: SchemaValue, context: Context): boolean {
+function v827(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v922(value: SchemaValue, context: Context): boolean {
+function v826(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v923(value, context)) matches++;
-    if (v924(value, context)) matches++;
+    if (d32(value, context)) matches++;
+    if (v827(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v926(value: SchemaValue, context: Context): boolean {
-  return d32(value, context);
-}
-function v927(value: SchemaValue, context: Context): boolean {
+function v829(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v925(value: SchemaValue, context: Context): boolean {
+function v828(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v926(value, context)) matches++;
-    if (v927(value, context)) matches++;
+    if (d32(value, context)) matches++;
+    if (v829(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v928(value: SchemaValue, context: Context): boolean {
+function v830(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v920(value: SchemaValue, context: Context): boolean {
+function v825(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v921(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'before') && !v922(value['before'], context)) return false;
-    if (Object.hasOwn(value, 'after') && !v925(value['after'], context)) return false;
-    if (Object.hasOwn(value, 'index') && !v928(value['index'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !d7(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'before') && !v826(value['before'], context)) return false;
+    if (Object.hasOwn(value, 'after') && !v828(value['after'], context)) return false;
+    if (Object.hasOwn(value, 'index') && !v830(value['index'], context)) return false;
   }
   return true;
 }
-function v917(value: SchemaValue, context: Context): boolean {
-  if (v918(value, context)) {
-    if (!v920(value, context)) return false;
+function v822(value: SchemaValue, context: Context): boolean {
+  if (v823(value, context)) {
+    if (!v825(value, context)) return false;
   }
   return true;
 }
-function v931(value: SchemaValue, context: Context): boolean {
+function v833(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'scopes') return false;
   return true;
 }
-function v930(value: SchemaValue, context: Context): boolean {
+function v832(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'table') && !v931(value['table'], context)) return false;
+    if (Object.hasOwn(value, 'table') && !v833(value['table'], context)) return false;
   }
   return true;
 }
-function v933(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v935(value: SchemaValue, context: Context): boolean {
-  return d33(value, context);
-}
-function v936(value: SchemaValue, context: Context): boolean {
+function v836(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v934(value: SchemaValue, context: Context): boolean {
+function v835(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v935(value, context)) matches++;
-    if (v936(value, context)) matches++;
+    if (d33(value, context)) matches++;
+    if (v836(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v938(value: SchemaValue, context: Context): boolean {
-  return d33(value, context);
-}
-function v939(value: SchemaValue, context: Context): boolean {
+function v838(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v937(value: SchemaValue, context: Context): boolean {
+function v837(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v938(value, context)) matches++;
-    if (v939(value, context)) matches++;
+    if (d33(value, context)) matches++;
+    if (v838(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v940(value: SchemaValue, context: Context): boolean {
+function v839(value: SchemaValue, context: Context): boolean {
   void context;
   if (typeof value === 'number' && value > 63) return false;
   return true;
 }
-function v932(value: SchemaValue, context: Context): boolean {
+function v834(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v933(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'before') && !v934(value['before'], context)) return false;
-    if (Object.hasOwn(value, 'after') && !v937(value['after'], context)) return false;
-    if (Object.hasOwn(value, 'index') && !v940(value['index'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !d6(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'before') && !v835(value['before'], context)) return false;
+    if (Object.hasOwn(value, 'after') && !v837(value['after'], context)) return false;
+    if (Object.hasOwn(value, 'index') && !v839(value['index'], context)) return false;
   }
   return true;
 }
-function v929(value: SchemaValue, context: Context): boolean {
-  if (v930(value, context)) {
-    if (!v932(value, context)) return false;
+function v831(value: SchemaValue, context: Context): boolean {
+  if (v832(value, context)) {
+    if (!v834(value, context)) return false;
   }
   return true;
 }
-function v943(value: SchemaValue, context: Context): boolean {
+function v842(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'objects') return false;
   return true;
 }
-function v942(value: SchemaValue, context: Context): boolean {
+function v841(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'table') && !v943(value['table'], context)) return false;
+    if (Object.hasOwn(value, 'table') && !v842(value['table'], context)) return false;
   }
   return true;
 }
-function v945(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v947(value: SchemaValue, context: Context): boolean {
-  return d35(value, context);
-}
-function v948(value: SchemaValue, context: Context): boolean {
+function v845(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v946(value: SchemaValue, context: Context): boolean {
+function v844(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v947(value, context)) matches++;
-    if (v948(value, context)) matches++;
+    if (d35(value, context)) matches++;
+    if (v845(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v950(value: SchemaValue, context: Context): boolean {
-  return d35(value, context);
-}
-function v951(value: SchemaValue, context: Context): boolean {
+function v847(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v949(value: SchemaValue, context: Context): boolean {
+function v846(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v950(value, context)) matches++;
-    if (v951(value, context)) matches++;
+    if (d35(value, context)) matches++;
+    if (v847(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v944(value: SchemaValue, context: Context): boolean {
+function v843(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v945(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'before') && !v946(value['before'], context)) return false;
-    if (Object.hasOwn(value, 'after') && !v949(value['after'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !d5(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'before') && !v844(value['before'], context)) return false;
+    if (Object.hasOwn(value, 'after') && !v846(value['after'], context)) return false;
   }
   return true;
 }
-function v941(value: SchemaValue, context: Context): boolean {
-  if (v942(value, context)) {
-    if (!v944(value, context)) return false;
+function v840(value: SchemaValue, context: Context): boolean {
+  if (v841(value, context)) {
+    if (!v843(value, context)) return false;
   }
   return true;
 }
-function v953(value: SchemaValue, context: Context): boolean {
+function v849(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v954(value: SchemaValue, context: Context): boolean {
+function v850(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v952(value: SchemaValue, context: Context): boolean {
+function v848(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'before') && !v953(value['before'], context)) return false;
-    if (Object.hasOwn(value, 'after') && !v954(value['after'], context)) return false;
+    if (Object.hasOwn(value, 'before') && !v849(value['before'], context)) return false;
+    if (Object.hasOwn(value, 'after') && !v850(value['after'], context)) return false;
   }
   return true;
 }
-function v899(value: SchemaValue, context: Context): boolean {
+function v813(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'table') ||
@@ -5748,45 +5448,36 @@ function v899(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v900(value['op'], context)) return false;
-    if (!v901(value['table'], context)) return false;
-    if (!v902(value['id'], context)) return false;
-    if (!v906(value['index'], context)) return false;
-    if (!v907(value['before'], context)) return false;
-    if (!v912(value['after'], context)) return false;
+    if (!v814(value['op'], context)) return false;
+    if (!v815(value['table'], context)) return false;
+    if (!v816(value['id'], context)) return false;
+    if (!v817(value['index'], context)) return false;
+    if (!v818(value['before'], context)) return false;
+    if (!v820(value['after'], context)) return false;
   }
-  if (!v917(value, context)) return false;
-  if (!v929(value, context)) return false;
-  if (!v941(value, context)) return false;
-  if (v952(value, context)) return false;
+  if (!v822(value, context)) return false;
+  if (!v831(value, context)) return false;
+  if (!v840(value, context)) return false;
+  if (v848(value, context)) return false;
   return true;
 }
 function d41(value: SchemaValue, context: Context): boolean {
-  return v899(value, context);
+  return v813(value, context);
 }
-function v956(value: SchemaValue, context: Context): boolean {
+function v852(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'cell') return false;
   return true;
 }
-function v957(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v958(value: SchemaValue, context: Context): boolean {
+function v853(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 262143)) return false;
+  if (value < 0 || value > 262143) return false;
   return true;
 }
-function v959(value: SchemaValue, context: Context): boolean {
-  return d11(value, context);
-}
-function v960(value: SchemaValue, context: Context): boolean {
-  return d11(value, context);
-}
-function v955(value: SchemaValue, context: Context): boolean {
+function v851(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'objectId') ||
@@ -5796,31 +5487,25 @@ function v955(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v956(value['op'], context)) return false;
-    if (!v957(value['objectId'], context)) return false;
-    if (!v958(value['index'], context)) return false;
-    if (!v959(value['before'], context)) return false;
-    if (!v960(value['after'], context)) return false;
+    if (!v852(value['op'], context)) return false;
+    if (!d5(value['objectId'], context)) return false;
+    if (!v853(value['index'], context)) return false;
+    if (!d11(value['before'], context)) return false;
+    if (!d11(value['after'], context)) return false;
   }
   return true;
 }
 function d42(value: SchemaValue, context: Context): boolean {
-  return v955(value, context);
+  return v851(value, context);
 }
-function v962(value: SchemaValue, context: Context): boolean {
+function v855(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'control') return false;
   return true;
 }
-function v963(value: SchemaValue, context: Context): boolean {
-  return d37(value, context);
-}
-function v964(value: SchemaValue, context: Context): boolean {
-  return d37(value, context);
-}
-function v961(value: SchemaValue, context: Context): boolean {
+function v854(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'before') ||
@@ -5828,29 +5513,23 @@ function v961(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v962(value['op'], context)) return false;
-    if (!v963(value['before'], context)) return false;
-    if (!v964(value['after'], context)) return false;
+    if (!v855(value['op'], context)) return false;
+    if (!d37(value['before'], context)) return false;
+    if (!d37(value['after'], context)) return false;
   }
   return true;
 }
 function d43(value: SchemaValue, context: Context): boolean {
-  return v961(value, context);
+  return v854(value, context);
 }
-function v966(value: SchemaValue, context: Context): boolean {
+function v857(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'allocator') return false;
   return true;
 }
-function v967(value: SchemaValue, context: Context): boolean {
-  return d38(value, context);
-}
-function v968(value: SchemaValue, context: Context): boolean {
-  return d38(value, context);
-}
-function v965(value: SchemaValue, context: Context): boolean {
+function v856(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'before') ||
@@ -5858,29 +5537,23 @@ function v965(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v966(value['op'], context)) return false;
-    if (!v967(value['before'], context)) return false;
-    if (!v968(value['after'], context)) return false;
+    if (!v857(value['op'], context)) return false;
+    if (!d38(value['before'], context)) return false;
+    if (!d38(value['after'], context)) return false;
   }
   return true;
 }
 function d44(value: SchemaValue, context: Context): boolean {
-  return v965(value, context);
+  return v856(value, context);
 }
-function v970(value: SchemaValue, context: Context): boolean {
+function v859(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'counters') return false;
   return true;
 }
-function v971(value: SchemaValue, context: Context): boolean {
-  return d39(value, context);
-}
-function v972(value: SchemaValue, context: Context): boolean {
-  return d39(value, context);
-}
-function v969(value: SchemaValue, context: Context): boolean {
+function v858(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'before') ||
@@ -5888,44 +5561,44 @@ function v969(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v970(value['op'], context)) return false;
-    if (!v971(value['before'], context)) return false;
-    if (!v972(value['after'], context)) return false;
+    if (!v859(value['op'], context)) return false;
+    if (!d39(value['before'], context)) return false;
+    if (!d39(value['after'], context)) return false;
   }
   return true;
 }
 function d45(value: SchemaValue, context: Context): boolean {
-  return v969(value, context);
+  return v858(value, context);
 }
-function v974(value: SchemaValue, context: Context): boolean {
+function v861(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'output') return false;
   return true;
 }
-function v975(value: SchemaValue, context: Context): boolean {
+function v862(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 16384)) return false;
+  if (value < 0 || value > 16384) return false;
   return true;
 }
-function v976(value: SchemaValue, context: Context): boolean {
+function v863(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 16384)) return false;
+  if (value < 0 || value > 16384) return false;
   return true;
 }
-function v977(value: SchemaValue, context: Context): boolean {
+function v864(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size > 16384) return false;
   }
   return true;
 }
-function v973(value: SchemaValue, context: Context): boolean {
+function v860(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'beforeBytes') ||
@@ -5934,54 +5607,36 @@ function v973(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v974(value['op'], context)) return false;
-    if (!v975(value['beforeBytes'], context)) return false;
-    if (!v976(value['afterBytes'], context)) return false;
-    if (!v977(value['append'], context)) return false;
+    if (!v861(value['op'], context)) return false;
+    if (!v862(value['beforeBytes'], context)) return false;
+    if (!v863(value['afterBytes'], context)) return false;
+    if (!v864(value['append'], context)) return false;
   }
   return true;
 }
 function d46(value: SchemaValue, context: Context): boolean {
-  return v973(value, context);
+  return v860(value, context);
 }
-function v979(value: SchemaValue, context: Context): boolean {
-  return d41(value, context);
-}
-function v980(value: SchemaValue, context: Context): boolean {
-  return d42(value, context);
-}
-function v981(value: SchemaValue, context: Context): boolean {
-  return d43(value, context);
-}
-function v982(value: SchemaValue, context: Context): boolean {
-  return d44(value, context);
-}
-function v983(value: SchemaValue, context: Context): boolean {
-  return d45(value, context);
-}
-function v984(value: SchemaValue, context: Context): boolean {
-  return d46(value, context);
-}
-function v978(value: SchemaValue, context: Context): boolean {
+function v865(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
   switch (value['op']) {
     case 'record':
-      if (!v979(value, context)) return false;
+      if (!d41(value, context)) return false;
       break;
     case 'cell':
-      if (!v980(value, context)) return false;
+      if (!d42(value, context)) return false;
       break;
     case 'control':
-      if (!v981(value, context)) return false;
+      if (!d43(value, context)) return false;
       break;
     case 'allocator':
-      if (!v982(value, context)) return false;
+      if (!d44(value, context)) return false;
       break;
     case 'counters':
-      if (!v983(value, context)) return false;
+      if (!d45(value, context)) return false;
       break;
     case 'output':
-      if (!v984(value, context)) return false;
+      if (!d46(value, context)) return false;
       break;
     default:
       return false;
@@ -5989,9 +5644,9 @@ function v978(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d47(value: SchemaValue, context: Context): boolean {
-  return v978(value, context);
+  return v865(value, context);
 }
-function v985(value: SchemaValue, context: Context): boolean {
+function v866(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'E_LEX_INVALID' ||
@@ -6034,52 +5689,36 @@ function v985(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d48(value: SchemaValue, context: Context): boolean {
-  return v985(value, context);
+  return v866(value, context);
 }
-function v987(value: SchemaValue, context: Context): boolean {
+function v868(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < -9007199254740991 || value > 9007199254740991))
-    return false;
+  if (value < -9007199254740991 || value > 9007199254740991) return false;
   return true;
 }
-function v988(value: SchemaValue, context: Context): boolean {
+function v869(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size > 96) return false;
   }
   return true;
 }
-function v986(value: SchemaValue, context: Context): boolean {
+function v867(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v987(value, context)) matches++;
-    if (v988(value, context)) matches++;
+    if (v868(value, context)) matches++;
+    if (v869(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
 function d49(value: SchemaValue, context: Context): boolean {
-  return v986(value, context);
+  return v867(value, context);
 }
-function v990(value: SchemaValue, context: Context): boolean {
-  return d49(value, context);
-}
-function v991(value: SchemaValue, context: Context): boolean {
-  return d49(value, context);
-}
-function v992(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v993(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v994(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v995(value: SchemaValue, context: Context): boolean {
+function v871(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'sourceBytes' ||
@@ -6099,17 +5738,14 @@ function v995(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v997(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v996(value: SchemaValue, context: Context): boolean {
+function v872(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v997(value[index], context)) return false;
+      if (!d3(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -6118,31 +5754,31 @@ function v996(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v989(value: SchemaValue, context: Context): boolean {
+function v870(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     for (const key of Object.keys(value)) {
       switch (key) {
         case 'expected':
-          if (!v990(value[key], context)) return false;
+          if (!d49(value[key], context)) return false;
           break;
         case 'actual':
-          if (!v991(value[key], context)) return false;
+          if (!d49(value[key], context)) return false;
           break;
         case 'limit':
-          if (!v992(value[key], context)) return false;
+          if (!d8(value[key], context)) return false;
           break;
         case 'used':
-          if (!v993(value[key], context)) return false;
+          if (!d8(value[key], context)) return false;
           break;
         case 'attempted':
-          if (!v994(value[key], context)) return false;
+          if (!d8(value[key], context)) return false;
           break;
         case 'dimension':
-          if (!v995(value[key], context)) return false;
+          if (!v871(value[key], context)) return false;
           break;
         case 'relatedNodeIds':
-          if (!v996(value[key], context)) return false;
+          if (!v872(value[key], context)) return false;
           break;
         default:
           return false;
@@ -6153,23 +5789,20 @@ function v989(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d50(value: SchemaValue, context: Context): boolean {
-  return v989(value, context);
+  return v870(value, context);
 }
-function v999(value: SchemaValue, context: Context): boolean {
-  return d48(value, context);
-}
-function v1000(value: SchemaValue, context: Context): boolean {
+function v874(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'error') return false;
   return true;
 }
-function v1001(value: SchemaValue, context: Context): boolean {
+function v875(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'rust' || value === 'adapter' || value === 'protocol' || value === 'judge'))
     return false;
   return true;
 }
-function v1002(value: SchemaValue, context: Context): boolean {
+function v876(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'preflight' ||
@@ -6185,15 +5818,9 @@ function v1002(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1003(value: SchemaValue, context: Context): boolean {
-  return d21(value, context);
-}
-function v1004(value: SchemaValue, context: Context): boolean {
-  return d50(value, context);
-}
-function v998(value: SchemaValue, context: Context): boolean {
+function v873(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'code') ||
       !Object.hasOwn(value, 'severity') ||
@@ -6204,36 +5831,33 @@ function v998(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v999(value['code'], context)) return false;
-    if (!v1000(value['severity'], context)) return false;
-    if (!v1001(value['origin'], context)) return false;
-    if (!v1002(value['stage'], context)) return false;
-    if (!v1003(value['location'], context)) return false;
-    if (!v1004(value['details'], context)) return false;
+    if (!d48(value['code'], context)) return false;
+    if (!v874(value['severity'], context)) return false;
+    if (!v875(value['origin'], context)) return false;
+    if (!v876(value['stage'], context)) return false;
+    if (!d21(value['location'], context)) return false;
+    if (!d50(value['details'], context)) return false;
   }
   return true;
 }
 function d51(value: SchemaValue, context: Context): boolean {
-  return v998(value, context);
+  return v873(value, context);
 }
-function v1006(value: SchemaValue, context: Context): boolean {
-  return d51(value, context);
-}
-function v1005(value: SchemaValue, context: Context): boolean {
+function v877(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 16) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1006(value[index], context)) return false;
+      if (!d51(value[index], context)) return false;
     }
   }
   return true;
 }
 function d52(value: SchemaValue, context: Context): boolean {
-  return v1005(value, context);
+  return v877(value, context);
 }
-function v1008(value: SchemaValue, context: Context): boolean {
+function v879(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'input-bindings' ||
@@ -6246,22 +5870,19 @@ function v1008(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1009(value: SchemaValue, context: Context): boolean {
+function v880(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'met' || value === 'unmet' || value === 'not-evaluated')) return false;
   return true;
 }
-function v1011(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1010(value: SchemaValue, context: Context): boolean {
+function v881(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1011(value[index], context)) return false;
+      if (!d3(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -6270,17 +5891,14 @@ function v1010(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v1013(value: SchemaValue, context: Context): boolean {
-  return d13(value, context);
-}
-function v1012(value: SchemaValue, context: Context): boolean {
+function v882(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 20000) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1013(value[index], context)) return false;
+      if (!d13(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -6289,7 +5907,7 @@ function v1012(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v1015(value: SchemaValue, context: Context): boolean {
+function v884(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'J_STDOUT_MISMATCH' ||
@@ -6300,14 +5918,14 @@ function v1015(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1014(value: SchemaValue, context: Context): boolean {
+function v883(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 16) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1015(value[index], context)) return false;
+      if (!v884(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -6316,9 +5934,9 @@ function v1014(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v1007(value: SchemaValue, context: Context): boolean {
+function v878(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'key') ||
       !Object.hasOwn(value, 'status') ||
@@ -6328,34 +5946,25 @@ function v1007(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v1008(value['key'], context)) return false;
-    if (!v1009(value['status'], context)) return false;
-    if (!v1010(value['nodeIds'], context)) return false;
-    if (!v1012(value['stepSeqs'], context)) return false;
-    if (!v1014(value['diagnosticCodes'], context)) return false;
+    if (!v879(value['key'], context)) return false;
+    if (!v880(value['status'], context)) return false;
+    if (!v881(value['nodeIds'], context)) return false;
+    if (!v882(value['stepSeqs'], context)) return false;
+    if (!v883(value['diagnosticCodes'], context)) return false;
   }
   return true;
 }
 function d53(value: SchemaValue, context: Context): boolean {
-  return v1007(value, context);
+  return v878(value, context);
 }
-function v1017(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v1018(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1019(value: SchemaValue, context: Context): boolean {
+function v886(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'then' || value === 'else' || value === 'while' || value === 'for')) return false;
   return true;
 }
-function v1020(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v1016(value: SchemaValue, context: Context): boolean {
+function v885(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'siteKey') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -6364,53 +5973,35 @@ function v1016(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v1017(value['siteKey'], context)) return false;
-    if (!v1018(value['nodeId'], context)) return false;
-    if (!v1019(value['branch'], context)) return false;
-    if (!v1020(value['visits'], context)) return false;
+    if (!d2(value['siteKey'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!v886(value['branch'], context)) return false;
+    if (!d8(value['visits'], context)) return false;
   }
   return true;
 }
 function d54(value: SchemaValue, context: Context): boolean {
-  return v1016(value, context);
+  return v885(value, context);
 }
-function v1022(value: SchemaValue, context: Context): boolean {
+function v888(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'array-before-destroy') return false;
   return true;
 }
-function v1023(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v1024(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v1025(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1026(value: SchemaValue, context: Context): boolean {
-  return d12(value, context);
-}
-function v1027(value: SchemaValue, context: Context): boolean {
-  return d22(value, context);
-}
-function v1029(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v1028(value: SchemaValue, context: Context): boolean {
+function v889(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 30) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1029(value[index], context)) return false;
+      if (!d10(value[index], context)) return false;
     }
   }
   return true;
 }
-function v1021(value: SchemaValue, context: Context): boolean {
+function v887(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'bindingKey') ||
@@ -6422,76 +6013,61 @@ function v1021(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 7) return false;
-    if (!v1022(value['kind'], context)) return false;
-    if (!v1023(value['bindingKey'], context)) return false;
-    if (!v1024(value['objectId'], context)) return false;
-    if (!v1025(value['declarationNodeId'], context)) return false;
-    if (!v1026(value['beforeCursor'], context)) return false;
-    if (!v1027(value['location'], context)) return false;
-    if (!v1028(value['values'], context)) return false;
+    if (!v888(value['kind'], context)) return false;
+    if (!d2(value['bindingKey'], context)) return false;
+    if (!d5(value['objectId'], context)) return false;
+    if (!d3(value['declarationNodeId'], context)) return false;
+    if (!d12(value['beforeCursor'], context)) return false;
+    if (!d22(value['location'], context)) return false;
+    if (!v889(value['values'], context)) return false;
   }
   return true;
 }
 function d55(value: SchemaValue, context: Context): boolean {
-  return v1021(value, context);
+  return v887(value, context);
 }
-function v1031(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v1032(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v1033(value: SchemaValue, context: Context): boolean {
+function v891(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'met' || value === 'unmet' || value === 'not-evaluated')) return false;
   return true;
 }
-function v1035(value: SchemaValue, context: Context): boolean {
-  return d53(value, context);
-}
-function v1034(value: SchemaValue, context: Context): boolean {
+function v892(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 4) return false;
     if (value.length > 6) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1035(value[index], context)) return false;
+      if (!d53(value[index], context)) return false;
     }
   }
   return true;
 }
-function v1037(value: SchemaValue, context: Context): boolean {
-  return d54(value, context);
-}
-function v1036(value: SchemaValue, context: Context): boolean {
+function v893(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1037(value[index], context)) return false;
+      if (!d54(value[index], context)) return false;
     }
   }
   return true;
 }
-function v1039(value: SchemaValue, context: Context): boolean {
-  return d55(value, context);
-}
-function v1038(value: SchemaValue, context: Context): boolean {
+function v894(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 20000) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1039(value[index], context)) return false;
+      if (!d55(value[index], context)) return false;
     }
   }
   return true;
 }
-function v1030(value: SchemaValue, context: Context): boolean {
+function v890(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'profileRef') ||
       !Object.hasOwn(value, 'caseKey') ||
@@ -6502,22 +6078,19 @@ function v1030(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v1031(value['profileRef'], context)) return false;
-    if (!v1032(value['caseKey'], context)) return false;
-    if (!v1033(value['status'], context)) return false;
-    if (!v1034(value['checks'], context)) return false;
-    if (!v1036(value['coverage'], context)) return false;
-    if (!v1038(value['observations'], context)) return false;
+    if (!d14(value['profileRef'], context)) return false;
+    if (!d2(value['caseKey'], context)) return false;
+    if (!v891(value['status'], context)) return false;
+    if (!v892(value['checks'], context)) return false;
+    if (!v893(value['coverage'], context)) return false;
+    if (!v894(value['observations'], context)) return false;
   }
   return true;
 }
 function d56(value: SchemaValue, context: Context): boolean {
-  return v1030(value, context);
+  return v890(value, context);
 }
-function v1041(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1042(value: SchemaValue, context: Context): boolean {
+function v896(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'function' ||
@@ -6538,15 +6111,9 @@ function v1042(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1043(value: SchemaValue, context: Context): boolean {
-  return d4(value, context);
-}
-function v1044(value: SchemaValue, context: Context): boolean {
-  return d18(value, context);
-}
-function v1040(value: SchemaValue, context: Context): boolean {
+function v895(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'nodeId') ||
       !Object.hasOwn(value, 'kind') ||
@@ -6555,59 +6122,44 @@ function v1040(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v1041(value['nodeId'], context)) return false;
-    if (!v1042(value['kind'], context)) return false;
-    if (!v1043(value['parentId'], context)) return false;
-    if (!v1044(value['byteRange'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!v896(value['kind'], context)) return false;
+    if (!d4(value['parentId'], context)) return false;
+    if (!d18(value['byteRange'], context)) return false;
   }
   return true;
 }
 function d57(value: SchemaValue, context: Context): boolean {
-  return v1040(value, context);
+  return v895(value, context);
 }
-function v1046(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v1047(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1045(value: SchemaValue, context: Context): boolean {
+function v897(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'bindingKey') || !Object.hasOwn(value, 'declarationNodeId'))
       return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v1046(value['bindingKey'], context)) return false;
-    if (!v1047(value['declarationNodeId'], context)) return false;
+    if (!d2(value['bindingKey'], context)) return false;
+    if (!d3(value['declarationNodeId'], context)) return false;
   }
   return true;
 }
 function d58(value: SchemaValue, context: Context): boolean {
-  return v1045(value, context);
+  return v897(value, context);
 }
-function v1049(value: SchemaValue, context: Context): boolean {
+function v899(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'read') return false;
   return true;
 }
-function v1050(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1051(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v1052(value: SchemaValue, context: Context): boolean {
+function v900(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 262143)) return false;
+  if (value < 0 || value > 262143) return false;
   return true;
 }
-function v1053(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v1048(value: SchemaValue, context: Context): boolean {
+function v898(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -6617,26 +6169,23 @@ function v1048(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v1049(value['kind'], context)) return false;
-    if (!v1050(value['nodeId'], context)) return false;
-    if (!v1051(value['objectId'], context)) return false;
-    if (!v1052(value['index'], context)) return false;
-    if (!v1053(value['value'], context)) return false;
+    if (!v899(value['kind'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!d5(value['objectId'], context)) return false;
+    if (!v900(value['index'], context)) return false;
+    if (!d10(value['value'], context)) return false;
   }
   return true;
 }
 function d59(value: SchemaValue, context: Context): boolean {
-  return v1048(value, context);
+  return v898(value, context);
 }
-function v1055(value: SchemaValue, context: Context): boolean {
+function v902(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'evaluate') return false;
   return true;
 }
-function v1056(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1057(value: SchemaValue, context: Context): boolean {
+function v903(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === '+' ||
@@ -6657,55 +6206,49 @@ function v1057(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1059(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v1058(value: SchemaValue, context: Context): boolean {
+function v904(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 1) return false;
     if (value.length > 2) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1059(value[index], context)) return false;
+      if (!d10(value[index], context)) return false;
     }
   }
   return true;
 }
-function v1060(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v1063(value: SchemaValue, context: Context): boolean {
+function v907(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '!') return false;
   return true;
 }
-function v1062(value: SchemaValue, context: Context): boolean {
+function v906(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'operator') && !v1063(value['operator'], context)) return false;
+    if (Object.hasOwn(value, 'operator') && !v907(value['operator'], context)) return false;
   }
   return true;
 }
-function v1065(value: SchemaValue, context: Context): boolean {
+function v909(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 1) return false;
   }
   return true;
 }
-function v1064(value: SchemaValue, context: Context): boolean {
+function v908(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'operands') && !v1065(value['operands'], context)) return false;
+    if (Object.hasOwn(value, 'operands') && !v909(value['operands'], context)) return false;
   }
   return true;
 }
-function v1061(value: SchemaValue, context: Context): boolean {
-  if (v1062(value, context)) {
-    if (!v1064(value, context)) return false;
+function v905(value: SchemaValue, context: Context): boolean {
+  if (v906(value, context)) {
+    if (!v908(value, context)) return false;
   }
   return true;
 }
-function v1068(value: SchemaValue, context: Context): boolean {
+function v912(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === '*' ||
@@ -6721,34 +6264,34 @@ function v1068(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1067(value: SchemaValue, context: Context): boolean {
+function v911(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'operator') && !v1068(value['operator'], context)) return false;
+    if (Object.hasOwn(value, 'operator') && !v912(value['operator'], context)) return false;
   }
   return true;
 }
-function v1070(value: SchemaValue, context: Context): boolean {
+function v914(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length < 2) return false;
   }
   return true;
 }
-function v1069(value: SchemaValue, context: Context): boolean {
+function v913(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'operands') && !v1070(value['operands'], context)) return false;
+    if (Object.hasOwn(value, 'operands') && !v914(value['operands'], context)) return false;
   }
   return true;
 }
-function v1066(value: SchemaValue, context: Context): boolean {
-  if (v1067(value, context)) {
-    if (!v1069(value, context)) return false;
+function v910(value: SchemaValue, context: Context): boolean {
+  if (v911(value, context)) {
+    if (!v913(value, context)) return false;
   }
   return true;
 }
-function v1054(value: SchemaValue, context: Context): boolean {
+function v901(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -6758,38 +6301,32 @@ function v1054(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v1055(value['kind'], context)) return false;
-    if (!v1056(value['nodeId'], context)) return false;
-    if (!v1057(value['operator'], context)) return false;
-    if (!v1058(value['operands'], context)) return false;
-    if (!v1060(value['value'], context)) return false;
+    if (!v902(value['kind'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!v903(value['operator'], context)) return false;
+    if (!v904(value['operands'], context)) return false;
+    if (!d10(value['value'], context)) return false;
   }
-  if (!v1061(value, context)) return false;
-  if (!v1066(value, context)) return false;
+  if (!v905(value, context)) return false;
+  if (!v910(value, context)) return false;
   return true;
 }
 function d60(value: SchemaValue, context: Context): boolean {
-  return v1054(value, context);
+  return v901(value, context);
 }
-function v1072(value: SchemaValue, context: Context): boolean {
+function v916(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'decision') return false;
   return true;
 }
-function v1073(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1074(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v1075(value: SchemaValue, context: Context): boolean {
+function v917(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'true' || value === 'false')) return false;
   return true;
 }
-function v1071(value: SchemaValue, context: Context): boolean {
+function v915(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -6798,30 +6335,24 @@ function v1071(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v1072(value['kind'], context)) return false;
-    if (!v1073(value['nodeId'], context)) return false;
-    if (!v1074(value['value'], context)) return false;
-    if (!v1075(value['branch'], context)) return false;
+    if (!v916(value['kind'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!d10(value['value'], context)) return false;
+    if (!v917(value['branch'], context)) return false;
   }
   return true;
 }
 function d61(value: SchemaValue, context: Context): boolean {
-  return v1071(value, context);
+  return v915(value, context);
 }
-function v1077(value: SchemaValue, context: Context): boolean {
+function v919(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'short-circuit') return false;
   return true;
 }
-function v1078(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1079(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1076(value: SchemaValue, context: Context): boolean {
+function v918(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -6829,41 +6360,35 @@ function v1076(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v1077(value['kind'], context)) return false;
-    if (!v1078(value['nodeId'], context)) return false;
-    if (!v1079(value['skippedNodeId'], context)) return false;
+    if (!v919(value['kind'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!d3(value['skippedNodeId'], context)) return false;
   }
   return true;
 }
 function d62(value: SchemaValue, context: Context): boolean {
-  return v1076(value, context);
+  return v918(value, context);
 }
-function v1081(value: SchemaValue, context: Context): boolean {
+function v921(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'swap') return false;
   return true;
 }
-function v1082(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1083(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v1085(value: SchemaValue, context: Context): boolean {
+function v923(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 262143)) return false;
+  if (value < 0 || value > 262143) return false;
   return true;
 }
-function v1084(value: SchemaValue, context: Context): boolean {
+function v922(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 2) return false;
     if (value.length > 2) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1085(value[index], context)) return false;
+      if (!v923(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -6872,33 +6397,27 @@ function v1084(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v1087(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v1086(value: SchemaValue, context: Context): boolean {
+function v924(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 2) return false;
     if (value.length > 2) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1087(value[index], context)) return false;
+      if (!d10(value[index], context)) return false;
     }
   }
   return true;
 }
-function v1089(value: SchemaValue, context: Context): boolean {
-  return d13(value, context);
-}
-function v1088(value: SchemaValue, context: Context): boolean {
+function v925(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 2) return false;
     if (value.length > 2) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1089(value[index], context)) return false;
+      if (!d13(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -6907,9 +6426,9 @@ function v1088(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v1080(value: SchemaValue, context: Context): boolean {
+function v920(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -6920,50 +6439,35 @@ function v1080(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v1081(value['kind'], context)) return false;
-    if (!v1082(value['nodeId'], context)) return false;
-    if (!v1083(value['objectId'], context)) return false;
-    if (!v1084(value['indices'], context)) return false;
-    if (!v1086(value['beforeValues'], context)) return false;
-    if (!v1088(value['writeSeqs'], context)) return false;
+    if (!v921(value['kind'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!d5(value['objectId'], context)) return false;
+    if (!v922(value['indices'], context)) return false;
+    if (!v924(value['beforeValues'], context)) return false;
+    if (!v925(value['writeSeqs'], context)) return false;
   }
   return true;
 }
 function d63(value: SchemaValue, context: Context): boolean {
-  return v1080(value, context);
+  return v920(value, context);
 }
-function v1091(value: SchemaValue, context: Context): boolean {
-  return d59(value, context);
-}
-function v1092(value: SchemaValue, context: Context): boolean {
-  return d60(value, context);
-}
-function v1093(value: SchemaValue, context: Context): boolean {
-  return d61(value, context);
-}
-function v1094(value: SchemaValue, context: Context): boolean {
-  return d62(value, context);
-}
-function v1095(value: SchemaValue, context: Context): boolean {
-  return d63(value, context);
-}
-function v1090(value: SchemaValue, context: Context): boolean {
+function v926(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
   switch (value['kind']) {
     case 'read':
-      if (!v1091(value, context)) return false;
+      if (!d59(value, context)) return false;
       break;
     case 'evaluate':
-      if (!v1092(value, context)) return false;
+      if (!d60(value, context)) return false;
       break;
     case 'decision':
-      if (!v1093(value, context)) return false;
+      if (!d61(value, context)) return false;
       break;
     case 'short-circuit':
-      if (!v1094(value, context)) return false;
+      if (!d62(value, context)) return false;
       break;
     case 'swap':
-      if (!v1095(value, context)) return false;
+      if (!d63(value, context)) return false;
       break;
     default:
       return false;
@@ -6971,12 +6475,9 @@ function v1090(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d64(value: SchemaValue, context: Context): boolean {
-  return v1090(value, context);
+  return v926(value, context);
 }
-function v1097(value: SchemaValue, context: Context): boolean {
-  return d13(value, context);
-}
-function v1098(value: SchemaValue, context: Context): boolean {
+function v928(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'program.enter' ||
@@ -6994,40 +6495,31 @@ function v1098(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1099(value: SchemaValue, context: Context): boolean {
-  return d22(value, context);
-}
-function v1101(value: SchemaValue, context: Context): boolean {
-  return d47(value, context);
-}
-function v1100(value: SchemaValue, context: Context): boolean {
+function v929(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 1000000) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1101(value[index], context)) return false;
+      if (!d47(value[index], context)) return false;
     }
   }
   return true;
 }
-function v1103(value: SchemaValue, context: Context): boolean {
-  return d64(value, context);
-}
-function v1102(value: SchemaValue, context: Context): boolean {
+function v930(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 1000000) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1103(value[index], context)) return false;
+      if (!d64(value[index], context)) return false;
     }
   }
   return true;
 }
-function v1096(value: SchemaValue, context: Context): boolean {
+function v927(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'seq') ||
       !Object.hasOwn(value, 'kind') ||
@@ -7037,238 +6529,218 @@ function v1096(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v1097(value['seq'], context)) return false;
-    if (!v1098(value['kind'], context)) return false;
-    if (!v1099(value['location'], context)) return false;
-    if (!v1100(value['changes'], context)) return false;
-    if (!v1102(value['observations'], context)) return false;
+    if (!d13(value['seq'], context)) return false;
+    if (!v928(value['kind'], context)) return false;
+    if (!d22(value['location'], context)) return false;
+    if (!v929(value['changes'], context)) return false;
+    if (!v930(value['observations'], context)) return false;
   }
   return true;
 }
 function d65(value: SchemaValue, context: Context): boolean {
-  return v1096(value, context);
+  return v927(value, context);
 }
-function v1105(value: SchemaValue, context: Context): boolean {
+function v932(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 19968 || value % 128 !== 0)) return false;
+  if (value < 0 || value > 19968 || value % 128 !== 0) return false;
   return true;
 }
-function v1106(value: SchemaValue, context: Context): boolean {
-  return d40(value, context);
-}
-function v1104(value: SchemaValue, context: Context): boolean {
+function v931(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'cursor') || !Object.hasOwn(value, 'state')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v1105(value['cursor'], context)) return false;
-    if (!v1106(value['state'], context)) return false;
+    if (!v932(value['cursor'], context)) return false;
+    if (!d40(value['state'], context)) return false;
   }
   return true;
 }
 function d66(value: SchemaValue, context: Context): boolean {
-  return v1104(value, context);
+  return v931(value, context);
 }
-function v1108(value: SchemaValue, context: Context): boolean {
+function v934(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v1109(value: SchemaValue, context: Context): boolean {
+function v935(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v1110(value: SchemaValue, context: Context): boolean {
+function v936(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v1111(value: SchemaValue, context: Context): boolean {
+function v937(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '') return false;
   return true;
 }
-function v1113(value: SchemaValue, context: Context): boolean {
+function v939(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'ready') return false;
   return true;
 }
-function v1114(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v1115(value: SchemaValue, context: Context): boolean {
+function v940(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1116(value: SchemaValue, context: Context): boolean {
+function v941(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1117(value: SchemaValue, context: Context): boolean {
+function v942(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v1112(value: SchemaValue, context: Context): boolean {
+function v938(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'phase') && !v1113(value['phase'], context)) return false;
-    if (Object.hasOwn(value, 'nextNodeId') && !v1114(value['nextNodeId'], context)) return false;
-    if (Object.hasOwn(value, 'activeFrameId') && !v1115(value['activeFrameId'], context))
+    if (Object.hasOwn(value, 'phase') && !v939(value['phase'], context)) return false;
+    if (Object.hasOwn(value, 'nextNodeId') && !d3(value['nextNodeId'], context)) return false;
+    if (Object.hasOwn(value, 'activeFrameId') && !v940(value['activeFrameId'], context))
       return false;
-    if (Object.hasOwn(value, 'returnValue') && !v1116(value['returnValue'], context)) return false;
-    if (Object.hasOwn(value, 'flowStack') && !v1117(value['flowStack'], context)) return false;
+    if (Object.hasOwn(value, 'returnValue') && !v941(value['returnValue'], context)) return false;
+    if (Object.hasOwn(value, 'flowStack') && !v942(value['flowStack'], context)) return false;
   }
   return true;
 }
-function v1119(value: SchemaValue, context: Context): boolean {
+function v944(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 4096) return false;
   return true;
 }
-function v1120(value: SchemaValue, context: Context): boolean {
+function v945(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v1121(value: SchemaValue, context: Context): boolean {
+function v946(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 1) return false;
   return true;
 }
-function v1122(value: SchemaValue, context: Context): boolean {
+function v947(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 1) return false;
   return true;
 }
-function v1123(value: SchemaValue, context: Context): boolean {
+function v948(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 1) return false;
   return true;
 }
-function v1118(value: SchemaValue, context: Context): boolean {
+function v943(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'nextAddress') && !v1119(value['nextAddress'], context)) return false;
-    if (Object.hasOwn(value, 'liveBytes') && !v1120(value['liveBytes'], context)) return false;
-    if (Object.hasOwn(value, 'nextObject') && !v1121(value['nextObject'], context)) return false;
-    if (Object.hasOwn(value, 'nextScope') && !v1122(value['nextScope'], context)) return false;
-    if (Object.hasOwn(value, 'nextFrame') && !v1123(value['nextFrame'], context)) return false;
+    if (Object.hasOwn(value, 'nextAddress') && !v944(value['nextAddress'], context)) return false;
+    if (Object.hasOwn(value, 'liveBytes') && !v945(value['liveBytes'], context)) return false;
+    if (Object.hasOwn(value, 'nextObject') && !v946(value['nextObject'], context)) return false;
+    if (Object.hasOwn(value, 'nextScope') && !v947(value['nextScope'], context)) return false;
+    if (Object.hasOwn(value, 'nextFrame') && !v948(value['nextFrame'], context)) return false;
   }
   return true;
 }
-function v1125(value: SchemaValue, context: Context): boolean {
+function v950(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v1126(value: SchemaValue, context: Context): boolean {
+function v951(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v1127(value: SchemaValue, context: Context): boolean {
+function v952(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v1128(value: SchemaValue, context: Context): boolean {
+function v953(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v1124(value: SchemaValue, context: Context): boolean {
+function v949(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'comparisons') && !v1125(value['comparisons'], context)) return false;
-    if (Object.hasOwn(value, 'scalarWrites') && !v1126(value['scalarWrites'], context))
-      return false;
-    if (Object.hasOwn(value, 'arrayWrites') && !v1127(value['arrayWrites'], context)) return false;
-    if (Object.hasOwn(value, 'swaps') && !v1128(value['swaps'], context)) return false;
+    if (Object.hasOwn(value, 'comparisons') && !v950(value['comparisons'], context)) return false;
+    if (Object.hasOwn(value, 'scalarWrites') && !v951(value['scalarWrites'], context)) return false;
+    if (Object.hasOwn(value, 'arrayWrites') && !v952(value['arrayWrites'], context)) return false;
+    if (Object.hasOwn(value, 'swaps') && !v953(value['swaps'], context)) return false;
   }
   return true;
 }
-function v1129(value: SchemaValue, context: Context): boolean {
-  return d40(value, context);
-}
-function v1107(value: SchemaValue, context: Context): boolean {
+function v933(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'frames') && !v1108(value['frames'], context)) return false;
-    if (Object.hasOwn(value, 'scopes') && !v1109(value['scopes'], context)) return false;
-    if (Object.hasOwn(value, 'objects') && !v1110(value['objects'], context)) return false;
-    if (Object.hasOwn(value, 'output') && !v1111(value['output'], context)) return false;
-    if (Object.hasOwn(value, 'control') && !v1112(value['control'], context)) return false;
-    if (Object.hasOwn(value, 'allocator') && !v1118(value['allocator'], context)) return false;
-    if (Object.hasOwn(value, 'counters') && !v1124(value['counters'], context)) return false;
+    if (Object.hasOwn(value, 'frames') && !v934(value['frames'], context)) return false;
+    if (Object.hasOwn(value, 'scopes') && !v935(value['scopes'], context)) return false;
+    if (Object.hasOwn(value, 'objects') && !v936(value['objects'], context)) return false;
+    if (Object.hasOwn(value, 'output') && !v937(value['output'], context)) return false;
+    if (Object.hasOwn(value, 'control') && !v938(value['control'], context)) return false;
+    if (Object.hasOwn(value, 'allocator') && !v943(value['allocator'], context)) return false;
+    if (Object.hasOwn(value, 'counters') && !v949(value['counters'], context)) return false;
   }
-  if (!v1129(value, context)) return false;
+  if (!d40(value, context)) return false;
   return true;
 }
 function d67(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d67')) return true;
-    if (!v1107(value, context)) return false;
-    if (known) known.push('d67');
-    else context.validated.set(value, ['d67']);
+    const known = context.validated.get('d67');
+    if (known?.includes(value)) return true;
+    if (!v933(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d67', [value]);
     return true;
   }
-  return v1107(value, context);
+  return v933(value, context);
 }
-function v1131(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v1132(value: SchemaValue, context: Context): boolean {
+function v955(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'complete' || value === 'prefix')) return false;
   return true;
 }
-function v1133(value: SchemaValue, context: Context): boolean {
-  return d67(value, context);
-}
-function v1135(value: SchemaValue, context: Context): boolean {
-  return d65(value, context);
-}
-function v1134(value: SchemaValue, context: Context): boolean {
+function v956(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 20000) return false;
     if (!context.deferTrace)
       for (let index = 0; index < value.length; index++) {
         if ((index & 1023) === 0) context.guard();
-        if (!v1135(value[index], context)) return false;
+        if (!d65(value[index], context)) return false;
       }
   }
   return true;
 }
-function v1137(value: SchemaValue, context: Context): boolean {
-  return d66(value, context);
-}
-function v1136(value: SchemaValue, context: Context): boolean {
+function v957(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 1) return false;
     if (value.length > 157) return false;
     if (!context.deferTrace)
       for (let index = 0; index < value.length; index++) {
         if ((index & 1023) === 0) context.guard();
-        if (!v1137(value[index], context)) return false;
+        if (!d66(value[index], context)) return false;
       }
   }
   return true;
 }
-function v1130(value: SchemaValue, context: Context): boolean {
+function v954(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'dslVersion') ||
       !Object.hasOwn(value, 'completeness') ||
@@ -7278,26 +6750,28 @@ function v1130(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v1131(value['dslVersion'], context)) return false;
-    if (!v1132(value['completeness'], context)) return false;
-    if (!v1133(value['initialState'], context)) return false;
-    if (!v1134(value['steps'], context)) return false;
-    if (!v1136(value['checkpoints'], context)) return false;
+    if (!d0(value['dslVersion'], context)) return false;
+    if (!v955(value['completeness'], context)) return false;
+    if (!d67(value['initialState'], context)) return false;
+    if (!v956(value['steps'], context)) return false;
+    if (!v957(value['checkpoints'], context)) return false;
   }
   return true;
 }
 function d68(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d68')) return true;
-    if (!v1130(value, context)) return false;
-    if (known) known.push('d68');
-    else context.validated.set(value, ['d68']);
+    const known = context.validated.get('d68');
+    if (known?.includes(value)) return true;
+    if (!v954(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d68', [value]);
     return true;
   }
-  return v1130(value, context);
+  return v954(value, context);
 }
-function v1139(value: SchemaValue, context: Context): boolean {
+function v959(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'completed' ||
@@ -7310,71 +6784,53 @@ function v1139(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1140(value: SchemaValue, context: Context): boolean {
-  return d11(value, context);
-}
-function v1142(value: SchemaValue, context: Context): boolean {
-  return d12(value, context);
-}
-function v1143(value: SchemaValue, context: Context): boolean {
+function v961(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1141(value: SchemaValue, context: Context): boolean {
+function v960(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v1142(value, context)) matches++;
-    if (v1143(value, context)) matches++;
+    if (d12(value, context)) matches++;
+    if (v961(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v1144(value: SchemaValue, context: Context): boolean {
-  return d21(value, context);
-}
-function v1145(value: SchemaValue, context: Context): boolean {
-  return d52(value, context);
-}
-function v1148(value: SchemaValue, context: Context): boolean {
+function v964(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'completed') return false;
   return true;
 }
-function v1147(value: SchemaValue, context: Context): boolean {
+function v963(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v1148(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v964(value['status'], context)) return false;
   }
   return true;
 }
-function v1150(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v1151(value: SchemaValue, context: Context): boolean {
-  return d12(value, context);
-}
-function v1152(value: SchemaValue, context: Context): boolean {
+function v966(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v1149(value: SchemaValue, context: Context): boolean {
+function v965(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'exitCode') && !v1150(value['exitCode'], context)) return false;
-    if (Object.hasOwn(value, 'cursor') && !v1151(value['cursor'], context)) return false;
-    if (Object.hasOwn(value, 'diagnostics') && !v1152(value['diagnostics'], context)) return false;
+    if (Object.hasOwn(value, 'exitCode') && !d10(value['exitCode'], context)) return false;
+    if (Object.hasOwn(value, 'cursor') && !d12(value['cursor'], context)) return false;
+    if (Object.hasOwn(value, 'diagnostics') && !v966(value['diagnostics'], context)) return false;
   }
   return true;
 }
-function v1146(value: SchemaValue, context: Context): boolean {
-  if (v1147(value, context)) {
-    if (!v1149(value, context)) return false;
+function v962(value: SchemaValue, context: Context): boolean {
+  if (v963(value, context)) {
+    if (!v965(value, context)) return false;
   }
   return true;
 }
-function v1155(value: SchemaValue, context: Context): boolean {
+function v969(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'program-error' ||
@@ -7386,40 +6842,40 @@ function v1155(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1154(value: SchemaValue, context: Context): boolean {
+function v968(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v1155(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v969(value['status'], context)) return false;
   }
   return true;
 }
-function v1157(value: SchemaValue, context: Context): boolean {
+function v971(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1158(value: SchemaValue, context: Context): boolean {
+function v972(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length < 1) return false;
   }
   return true;
 }
-function v1156(value: SchemaValue, context: Context): boolean {
+function v970(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'exitCode') && !v1157(value['exitCode'], context)) return false;
-    if (Object.hasOwn(value, 'diagnostics') && !v1158(value['diagnostics'], context)) return false;
+    if (Object.hasOwn(value, 'exitCode') && !v971(value['exitCode'], context)) return false;
+    if (Object.hasOwn(value, 'diagnostics') && !v972(value['diagnostics'], context)) return false;
   }
   return true;
 }
-function v1153(value: SchemaValue, context: Context): boolean {
-  if (v1154(value, context)) {
-    if (!v1156(value, context)) return false;
+function v967(value: SchemaValue, context: Context): boolean {
+  if (v968(value, context)) {
+    if (!v970(value, context)) return false;
   }
   return true;
 }
-function v1138(value: SchemaValue, context: Context): boolean {
+function v958(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'status') ||
       !Object.hasOwn(value, 'exitCode') ||
@@ -7429,63 +6885,60 @@ function v1138(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v1139(value['status'], context)) return false;
-    if (!v1140(value['exitCode'], context)) return false;
-    if (!v1141(value['cursor'], context)) return false;
-    if (!v1144(value['location'], context)) return false;
-    if (!v1145(value['diagnostics'], context)) return false;
+    if (!v959(value['status'], context)) return false;
+    if (!d11(value['exitCode'], context)) return false;
+    if (!v960(value['cursor'], context)) return false;
+    if (!d21(value['location'], context)) return false;
+    if (!d52(value['diagnostics'], context)) return false;
   }
-  if (!v1146(value, context)) return false;
-  if (!v1153(value, context)) return false;
+  if (!v962(value, context)) return false;
+  if (!v967(value, context)) return false;
   return true;
 }
 function d69(value: SchemaValue, context: Context): boolean {
-  return v1138(value, context);
+  return v958(value, context);
 }
-function v1160(value: SchemaValue, context: Context): boolean {
+function v974(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 1000000)) return false;
+  if (value < 0 || value > 1000000) return false;
   return true;
 }
-function v1161(value: SchemaValue, context: Context): boolean {
+function v975(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 1048576 || value % 4 !== 0)) return false;
+  if (value < 0 || value > 1048576 || value % 4 !== 0) return false;
   return true;
 }
-function v1162(value: SchemaValue, context: Context): boolean {
+function v976(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 64)) return false;
+  if (value < 0 || value > 64) return false;
   return true;
 }
-function v1163(value: SchemaValue, context: Context): boolean {
+function v977(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 64)) return false;
+  if (value < 0 || value > 64) return false;
   return true;
 }
-function v1165(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v1166(value: SchemaValue, context: Context): boolean {
+function v979(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1164(value: SchemaValue, context: Context): boolean {
+function v978(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v1165(value, context)) matches++;
-    if (v1166(value, context)) matches++;
+    if (d8(value, context)) matches++;
+    if (v979(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v1159(value: SchemaValue, context: Context): boolean {
+function v973(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'fuelUsed') ||
       !Object.hasOwn(value, 'peakVirtualBytes') ||
@@ -7495,241 +6948,190 @@ function v1159(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v1160(value['fuelUsed'], context)) return false;
-    if (!v1161(value['peakVirtualBytes'], context)) return false;
-    if (!v1162(value['maxSyntaxDepth'], context)) return false;
-    if (!v1163(value['maxAstDepth'], context)) return false;
-    if (!v1164(value['rustMicros'], context)) return false;
+    if (!v974(value['fuelUsed'], context)) return false;
+    if (!v975(value['peakVirtualBytes'], context)) return false;
+    if (!v976(value['maxSyntaxDepth'], context)) return false;
+    if (!v977(value['maxAstDepth'], context)) return false;
+    if (!v978(value['rustMicros'], context)) return false;
   }
   return true;
 }
 function d70(value: SchemaValue, context: Context): boolean {
-  return v1159(value, context);
+  return v973(value, context);
 }
-function v1168(value: SchemaValue, context: Context): boolean {
+function v981(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'result') return false;
   return true;
 }
-function v1169(value: SchemaValue, context: Context): boolean {
+function v982(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.1.0') return false;
   return true;
 }
-function v1170(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v1171(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v1172(value: SchemaValue, context: Context): boolean {
+function v983(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.1.0') return false;
   return true;
 }
-function v1173(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v1174(value: SchemaValue, context: Context): boolean {
-  return d17(value, context);
-}
-function v1175(value: SchemaValue, context: Context): boolean {
+function v984(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'rust' || value === 'adapter' || value === 'fixture')) return false;
   return true;
 }
-function v1176(value: SchemaValue, context: Context): boolean {
-  return d16(value, context);
-}
-function v1178(value: SchemaValue, context: Context): boolean {
+function v986(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'content.c.p05') return false;
   return true;
 }
-function v1179(value: SchemaValue, context: Context): boolean {
+function v987(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v1177(value: SchemaValue, context: Context): boolean {
+function v985(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v1178(value['id'], context)) return false;
-    if (!v1179(value['version'], context)) return false;
+    if (!v986(value['id'], context)) return false;
+    if (!v987(value['version'], context)) return false;
   }
   return true;
 }
-function v1180(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v1181(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v1182(value: SchemaValue, context: Context): boolean {
-  return d15(value, context);
-}
-function v1183(value: SchemaValue, context: Context): boolean {
-  return d15(value, context);
-}
-function v1185(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v1186(value: SchemaValue, context: Context): boolean {
+function v989(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1184(value: SchemaValue, context: Context): boolean {
+function v988(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v1185(value, context)) matches++;
-    if (v1186(value, context)) matches++;
+    if (d9(value, context)) matches++;
+    if (v989(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v1187(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v1189(value: SchemaValue, context: Context): boolean {
-  return d57(value, context);
-}
-function v1188(value: SchemaValue, context: Context): boolean {
+function v990(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1189(value[index], context)) return false;
+      if (!d57(value[index], context)) return false;
     }
   }
   return true;
 }
-function v1191(value: SchemaValue, context: Context): boolean {
-  return d58(value, context);
-}
-function v1190(value: SchemaValue, context: Context): boolean {
+function v991(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v1191(value[index], context)) return false;
+      if (!d58(value[index], context)) return false;
     }
   }
   return true;
 }
-function v1193(value: SchemaValue, context: Context): boolean {
-  return d68(value, context);
-}
-function v1194(value: SchemaValue, context: Context): boolean {
+function v993(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1192(value: SchemaValue, context: Context): boolean {
+function v992(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v1193(value, context)) matches++;
-    if (v1194(value, context)) matches++;
+    if (d68(value, context)) matches++;
+    if (v993(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v1195(value: SchemaValue, context: Context): boolean {
-  return d69(value, context);
-}
-function v1197(value: SchemaValue, context: Context): boolean {
-  return d56(value, context);
-}
-function v1198(value: SchemaValue, context: Context): boolean {
+function v995(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1196(value: SchemaValue, context: Context): boolean {
+function v994(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v1197(value, context)) matches++;
-    if (v1198(value, context)) matches++;
+    if (d56(value, context)) matches++;
+    if (v995(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v1200(value: SchemaValue, context: Context): boolean {
-  return d70(value, context);
-}
-function v1201(value: SchemaValue, context: Context): boolean {
+function v997(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1199(value: SchemaValue, context: Context): boolean {
+function v996(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v1200(value, context)) matches++;
-    if (v1201(value, context)) matches++;
+    if (d70(value, context)) matches++;
+    if (v997(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v1204(value: SchemaValue, context: Context): boolean {
+function v1000(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'fixture') return false;
   return true;
 }
-function v1203(value: SchemaValue, context: Context): boolean {
+function v999(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'producer') && !v1204(value['producer'], context)) return false;
+    if (Object.hasOwn(value, 'producer') && !v1000(value['producer'], context)) return false;
   }
   return true;
 }
-function v1206(value: SchemaValue, context: Context): boolean {
+function v1002(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1205(value: SchemaValue, context: Context): boolean {
+function v1001(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'stats') && !v1206(value['stats'], context)) return false;
+    if (Object.hasOwn(value, 'stats') && !v1002(value['stats'], context)) return false;
   }
   return true;
 }
-function v1202(value: SchemaValue, context: Context): boolean {
-  if (v1203(value, context)) {
-    if (!v1205(value, context)) return false;
+function v998(value: SchemaValue, context: Context): boolean {
+  if (v999(value, context)) {
+    if (!v1001(value, context)) return false;
   }
   return true;
 }
-function v1209(value: SchemaValue, context: Context): boolean {
+function v1005(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'adapter') return false;
   return true;
 }
-function v1208(value: SchemaValue, context: Context): boolean {
+function v1004(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'producer') && !v1209(value['producer'], context)) return false;
+    if (Object.hasOwn(value, 'producer') && !v1005(value['producer'], context)) return false;
   }
   return true;
 }
-function v1211(value: SchemaValue, context: Context): boolean {
+function v1007(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1212(value: SchemaValue, context: Context): boolean {
+function v1008(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1213(value: SchemaValue, context: Context): boolean {
+function v1009(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1215(value: SchemaValue, context: Context): boolean {
+function v1011(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'rejected' ||
@@ -7740,58 +7142,52 @@ function v1215(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1216(value: SchemaValue, context: Context): boolean {
+function v1012(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1214(value: SchemaValue, context: Context): boolean {
+function v1010(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v1215(value['status'], context)) return false;
-    if (Object.hasOwn(value, 'cursor') && !v1216(value['cursor'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v1011(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'cursor') && !v1012(value['cursor'], context)) return false;
   }
   return true;
 }
-function v1210(value: SchemaValue, context: Context): boolean {
+function v1006(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'trace') && !v1211(value['trace'], context)) return false;
-    if (Object.hasOwn(value, 'stats') && !v1212(value['stats'], context)) return false;
-    if (Object.hasOwn(value, 'judgeResult') && !v1213(value['judgeResult'], context)) return false;
-    if (Object.hasOwn(value, 'terminal') && !v1214(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'trace') && !v1007(value['trace'], context)) return false;
+    if (Object.hasOwn(value, 'stats') && !v1008(value['stats'], context)) return false;
+    if (Object.hasOwn(value, 'judgeResult') && !v1009(value['judgeResult'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v1010(value['terminal'], context)) return false;
   }
   return true;
 }
-function v1207(value: SchemaValue, context: Context): boolean {
-  if (v1208(value, context)) {
-    if (!v1210(value, context)) return false;
+function v1003(value: SchemaValue, context: Context): boolean {
+  if (v1004(value, context)) {
+    if (!v1006(value, context)) return false;
   }
   return true;
 }
-function v1219(value: SchemaValue, context: Context): boolean {
+function v1015(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'rust') return false;
   return true;
 }
-function v1218(value: SchemaValue, context: Context): boolean {
+function v1014(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'producer') && !v1219(value['producer'], context)) return false;
+    if (Object.hasOwn(value, 'producer') && !v1015(value['producer'], context)) return false;
   }
   return true;
 }
-function v1222(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v1223(value: SchemaValue, context: Context): boolean {
-  return d70(value, context);
-}
-function v1221(value: SchemaValue, context: Context): boolean {
+function v1017(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rustMicros') && !v1222(value['rustMicros'], context)) return false;
+    if (Object.hasOwn(value, 'rustMicros') && !d8(value['rustMicros'], context)) return false;
   }
-  if (!v1223(value, context)) return false;
+  if (!d70(value, context)) return false;
   return true;
 }
-function v1225(value: SchemaValue, context: Context): boolean {
+function v1019(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'completed' ||
@@ -7802,234 +7198,225 @@ function v1225(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1224(value: SchemaValue, context: Context): boolean {
+function v1018(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v1225(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v1019(value['status'], context)) return false;
   }
   return true;
 }
-function v1220(value: SchemaValue, context: Context): boolean {
+function v1016(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'stats') && !v1221(value['stats'], context)) return false;
-    if (Object.hasOwn(value, 'terminal') && !v1224(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'stats') && !v1017(value['stats'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v1018(value['terminal'], context)) return false;
   }
   return true;
 }
-function v1217(value: SchemaValue, context: Context): boolean {
-  if (v1218(value, context)) {
-    if (!v1220(value, context)) return false;
+function v1013(value: SchemaValue, context: Context): boolean {
+  if (v1014(value, context)) {
+    if (!v1016(value, context)) return false;
   }
   return true;
 }
-function v1229(value: SchemaValue, context: Context): boolean {
+function v1023(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'completed') return false;
   return true;
 }
-function v1228(value: SchemaValue, context: Context): boolean {
+function v1022(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v1229(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v1023(value['status'], context)) return false;
   }
   return true;
 }
-function v1227(value: SchemaValue, context: Context): boolean {
+function v1021(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v1228(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v1022(value['terminal'], context)) return false;
   }
   return true;
 }
-function v1232(value: SchemaValue, context: Context): boolean {
+function v1026(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'complete') return false;
   return true;
 }
-function v1233(value: SchemaValue, context: Context): boolean {
+function v1027(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length < 2) return false;
   }
   return true;
 }
-function v1234(value: SchemaValue, context: Context): boolean {
-  return d68(value, context);
-}
-function v1231(value: SchemaValue, context: Context): boolean {
+function v1025(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'completeness') && !v1232(value['completeness'], context))
+    if (Object.hasOwn(value, 'completeness') && !v1026(value['completeness'], context))
       return false;
-    if (Object.hasOwn(value, 'steps') && !v1233(value['steps'], context)) return false;
+    if (Object.hasOwn(value, 'steps') && !v1027(value['steps'], context)) return false;
   }
-  if (!v1234(value, context)) return false;
+  if (!d68(value, context)) return false;
   return true;
 }
-function v1230(value: SchemaValue, context: Context): boolean {
+function v1024(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'trace') && !v1231(value['trace'], context)) return false;
+    if (Object.hasOwn(value, 'trace') && !v1025(value['trace'], context)) return false;
   }
   return true;
 }
-function v1226(value: SchemaValue, context: Context): boolean {
-  if (v1227(value, context)) {
-    if (!v1230(value, context)) return false;
+function v1020(value: SchemaValue, context: Context): boolean {
+  if (v1021(value, context)) {
+    if (!v1024(value, context)) return false;
   }
   return true;
 }
-function v1238(value: SchemaValue, context: Context): boolean {
+function v1031(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'program-error' || value === 'resource-limit')) return false;
   return true;
 }
-function v1237(value: SchemaValue, context: Context): boolean {
+function v1030(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v1238(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v1031(value['status'], context)) return false;
   }
   return true;
 }
-function v1236(value: SchemaValue, context: Context): boolean {
+function v1029(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v1237(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v1030(value['terminal'], context)) return false;
   }
   return true;
 }
-function v1241(value: SchemaValue, context: Context): boolean {
+function v1034(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1243(value: SchemaValue, context: Context): boolean {
+function v1036(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'prefix') return false;
   return true;
 }
-function v1244(value: SchemaValue, context: Context): boolean {
-  return d68(value, context);
-}
-function v1242(value: SchemaValue, context: Context): boolean {
+function v1035(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'completeness') && !v1243(value['completeness'], context))
+    if (Object.hasOwn(value, 'completeness') && !v1036(value['completeness'], context))
       return false;
   }
-  if (!v1244(value, context)) return false;
+  if (!d68(value, context)) return false;
   return true;
 }
-function v1240(value: SchemaValue, context: Context): boolean {
+function v1033(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v1241(value, context)) matches++;
-    if (v1242(value, context)) matches++;
+    if (v1034(value, context)) matches++;
+    if (v1035(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v1239(value: SchemaValue, context: Context): boolean {
+function v1032(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'trace') && !v1240(value['trace'], context)) return false;
+    if (Object.hasOwn(value, 'trace') && !v1033(value['trace'], context)) return false;
   }
   return true;
 }
-function v1235(value: SchemaValue, context: Context): boolean {
-  if (v1236(value, context)) {
-    if (!v1239(value, context)) return false;
+function v1028(value: SchemaValue, context: Context): boolean {
+  if (v1029(value, context)) {
+    if (!v1032(value, context)) return false;
   }
   return true;
 }
-function v1248(value: SchemaValue, context: Context): boolean {
+function v1040(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'rejected' || value === 'cancelled' || value === 'infrastructure-failure'))
     return false;
   return true;
 }
-function v1247(value: SchemaValue, context: Context): boolean {
+function v1039(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v1248(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v1040(value['status'], context)) return false;
   }
   return true;
 }
-function v1246(value: SchemaValue, context: Context): boolean {
+function v1038(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v1247(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v1039(value['terminal'], context)) return false;
   }
   return true;
 }
-function v1250(value: SchemaValue, context: Context): boolean {
+function v1042(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1252(value: SchemaValue, context: Context): boolean {
+function v1044(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1251(value: SchemaValue, context: Context): boolean {
+function v1043(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'cursor') && !v1252(value['cursor'], context)) return false;
+    if (Object.hasOwn(value, 'cursor') && !v1044(value['cursor'], context)) return false;
   }
   return true;
 }
-function v1249(value: SchemaValue, context: Context): boolean {
+function v1041(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'trace') && !v1250(value['trace'], context)) return false;
-    if (Object.hasOwn(value, 'terminal') && !v1251(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'trace') && !v1042(value['trace'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v1043(value['terminal'], context)) return false;
   }
   return true;
 }
-function v1245(value: SchemaValue, context: Context): boolean {
-  if (v1246(value, context)) {
-    if (!v1249(value, context)) return false;
+function v1037(value: SchemaValue, context: Context): boolean {
+  if (v1038(value, context)) {
+    if (!v1041(value, context)) return false;
   }
   return true;
 }
-function v1255(value: SchemaValue, context: Context): boolean {
+function v1047(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1254(value: SchemaValue, context: Context): boolean {
+function v1046(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'trace') && !v1255(value['trace'], context)) return false;
+    if (Object.hasOwn(value, 'trace') && !v1047(value['trace'], context)) return false;
   }
   return true;
 }
-function v1258(value: SchemaValue, context: Context): boolean {
+function v1050(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1257(value: SchemaValue, context: Context): boolean {
+function v1049(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'cursor') && !v1258(value['cursor'], context)) return false;
+    if (Object.hasOwn(value, 'cursor') && !v1050(value['cursor'], context)) return false;
   }
   return true;
 }
-function v1256(value: SchemaValue, context: Context): boolean {
+function v1048(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v1257(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v1049(value['terminal'], context)) return false;
   }
   return true;
 }
-function v1261(value: SchemaValue, context: Context): boolean {
-  return d12(value, context);
-}
-function v1260(value: SchemaValue, context: Context): boolean {
+function v1052(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'cursor') && !v1261(value['cursor'], context)) return false;
+    if (Object.hasOwn(value, 'cursor') && !d12(value['cursor'], context)) return false;
   }
   return true;
 }
-function v1259(value: SchemaValue, context: Context): boolean {
+function v1051(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v1260(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v1052(value['terminal'], context)) return false;
   }
   return true;
 }
-function v1253(value: SchemaValue, context: Context): boolean {
-  if (v1254(value, context)) {
-    if (!v1256(value, context)) return false;
-  } else if (!v1259(value, context)) return false;
+function v1045(value: SchemaValue, context: Context): boolean {
+  if (v1046(value, context)) {
+    if (!v1048(value, context)) return false;
+  } else if (!v1051(value, context)) return false;
   return true;
 }
-function v1265(value: SchemaValue, context: Context): boolean {
+function v1056(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'program-error' ||
@@ -8041,59 +7428,59 @@ function v1265(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v1264(value: SchemaValue, context: Context): boolean {
+function v1055(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v1265(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v1056(value['status'], context)) return false;
   }
   return true;
 }
-function v1263(value: SchemaValue, context: Context): boolean {
+function v1054(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v1264(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v1055(value['terminal'], context)) return false;
   }
   return true;
 }
-function v1268(value: SchemaValue, context: Context): boolean {
+function v1059(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v1270(value: SchemaValue, context: Context): boolean {
+function v1061(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'unmet' || value === 'not-evaluated')) return false;
   return true;
 }
-function v1269(value: SchemaValue, context: Context): boolean {
+function v1060(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v1270(value['status'], context)) return false;
+  {
+    if (Object.hasOwn(value, 'status') && !v1061(value['status'], context)) return false;
   }
   return true;
 }
-function v1267(value: SchemaValue, context: Context): boolean {
+function v1058(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v1268(value, context)) matches++;
-    if (v1269(value, context)) matches++;
+    if (v1059(value, context)) matches++;
+    if (v1060(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v1266(value: SchemaValue, context: Context): boolean {
+function v1057(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judgeResult') && !v1267(value['judgeResult'], context)) return false;
+    if (Object.hasOwn(value, 'judgeResult') && !v1058(value['judgeResult'], context)) return false;
   }
   return true;
 }
-function v1262(value: SchemaValue, context: Context): boolean {
-  if (v1263(value, context)) {
-    if (!v1266(value, context)) return false;
+function v1053(value: SchemaValue, context: Context): boolean {
+  if (v1054(value, context)) {
+    if (!v1057(value, context)) return false;
   }
   return true;
 }
-function v1167(value: SchemaValue, context: Context): boolean {
+function v980(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'protocolVersion') ||
@@ -8120,44 +7507,44 @@ function v1167(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 22) return false;
-    if (!v1168(value['kind'], context)) return false;
-    if (!v1169(value['protocolVersion'], context)) return false;
-    if (!v1170(value['traceVersion'], context)) return false;
-    if (!v1171(value['diagnosticVersion'], context)) return false;
-    if (!v1172(value['judgeVersion'], context)) return false;
-    if (!v1173(value['encodingVersion'], context)) return false;
-    if (!v1174(value['identity'], context)) return false;
-    if (!v1175(value['producer'], context)) return false;
-    if (!v1176(value['engineRef'], context)) return false;
-    if (!v1177(value['packageRef'], context)) return false;
-    if (!v1180(value['languageRef'], context)) return false;
-    if (!v1181(value['subsetRef'], context)) return false;
-    if (!v1182(value['programRef'], context)) return false;
-    if (!v1183(value['subjectRef'], context)) return false;
-    if (!v1184(value['learningRevision'], context)) return false;
-    if (!v1187(value['budgetRef'], context)) return false;
-    if (!v1188(value['nodeMap'], context)) return false;
-    if (!v1190(value['resolvedBindings'], context)) return false;
-    if (!v1192(value['trace'], context)) return false;
-    if (!v1195(value['terminal'], context)) return false;
-    if (!v1196(value['judgeResult'], context)) return false;
-    if (!v1199(value['stats'], context)) return false;
+    if (!v981(value['kind'], context)) return false;
+    if (!v982(value['protocolVersion'], context)) return false;
+    if (!d0(value['traceVersion'], context)) return false;
+    if (!d0(value['diagnosticVersion'], context)) return false;
+    if (!v983(value['judgeVersion'], context)) return false;
+    if (!d0(value['encodingVersion'], context)) return false;
+    if (!d17(value['identity'], context)) return false;
+    if (!v984(value['producer'], context)) return false;
+    if (!d16(value['engineRef'], context)) return false;
+    if (!v985(value['packageRef'], context)) return false;
+    if (!d14(value['languageRef'], context)) return false;
+    if (!d14(value['subsetRef'], context)) return false;
+    if (!d15(value['programRef'], context)) return false;
+    if (!d15(value['subjectRef'], context)) return false;
+    if (!v988(value['learningRevision'], context)) return false;
+    if (!d14(value['budgetRef'], context)) return false;
+    if (!v990(value['nodeMap'], context)) return false;
+    if (!v991(value['resolvedBindings'], context)) return false;
+    if (!v992(value['trace'], context)) return false;
+    if (!d69(value['terminal'], context)) return false;
+    if (!v994(value['judgeResult'], context)) return false;
+    if (!v996(value['stats'], context)) return false;
   }
-  if (!v1202(value, context)) return false;
-  if (!v1207(value, context)) return false;
-  if (!v1217(value, context)) return false;
-  if (!v1226(value, context)) return false;
-  if (!v1235(value, context)) return false;
-  if (!v1245(value, context)) return false;
-  if (!v1253(value, context)) return false;
-  if (!v1262(value, context)) return false;
+  if (!v998(value, context)) return false;
+  if (!v1003(value, context)) return false;
+  if (!v1013(value, context)) return false;
+  if (!v1020(value, context)) return false;
+  if (!v1028(value, context)) return false;
+  if (!v1037(value, context)) return false;
+  if (!v1045(value, context)) return false;
+  if (!v1053(value, context)) return false;
   return true;
 }
 function d71(value: SchemaValue, context: Context): boolean {
-  return v1167(value, context);
+  return v980(value, context);
 }
 function context(guard: () => void, deferTrace: boolean): Context {
-  return { guard, deferTrace, validated: new WeakMap() };
+  return { guard, deferTrace, validated: new Map() };
 }
 export function validateRequestSchema(value: SchemaValue): boolean {
   return d31(

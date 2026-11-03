@@ -6,7 +6,7 @@ export type SchemaValue =
 interface Context {
   guard: () => void;
   deferTrace: boolean;
-  validated: WeakMap<object, string[]>;
+  validated: Map<string, object[]>;
 }
 function isRecord(value: SchemaValue): value is { [key: string]: SchemaValue } {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -41,8 +41,8 @@ function d0(value: SchemaValue, context: Context): boolean {
 function v73(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size < 1 || size > 96 || !p0.test(value)) return false;
   }
   return true;
@@ -53,8 +53,8 @@ function d1(value: SchemaValue, context: Context): boolean {
 function v74(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size < 1 || size > 96 || !p1.test(value)) return false;
   }
   return true;
@@ -65,8 +65,8 @@ function d2(value: SchemaValue, context: Context): boolean {
 function v75(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size > 96 || !p2.test(value)) return false;
   }
   return true;
@@ -75,9 +75,6 @@ function d3(value: SchemaValue, context: Context): boolean {
   return v75(value, context);
 }
 function v77(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v78(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
@@ -85,8 +82,8 @@ function v78(value: SchemaValue, context: Context): boolean {
 function v76(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
+    if (d3(value, context)) matches++;
     if (v77(value, context)) matches++;
-    if (v78(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
@@ -94,165 +91,150 @@ function v76(value: SchemaValue, context: Context): boolean {
 function d4(value: SchemaValue, context: Context): boolean {
   return v76(value, context);
 }
-function v79(value: SchemaValue, context: Context): boolean {
+function v78(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size > 96 || !p3.test(value)) return false;
   }
   return true;
 }
 function d5(value: SchemaValue, context: Context): boolean {
-  return v79(value, context);
+  return v78(value, context);
 }
-function v80(value: SchemaValue, context: Context): boolean {
+function v79(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size > 96 || !p4.test(value)) return false;
   }
   return true;
 }
 function d6(value: SchemaValue, context: Context): boolean {
-  return v80(value, context);
+  return v79(value, context);
 }
-function v81(value: SchemaValue, context: Context): boolean {
+function v80(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size > 96 || !p5.test(value)) return false;
   }
   return true;
 }
 function d7(value: SchemaValue, context: Context): boolean {
+  return v80(value, context);
+}
+function v81(value: SchemaValue, context: Context): boolean {
+  void context;
+  if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
+  if (value < 0 || value > 9007199254740991) return false;
+  return true;
+}
+function d8(value: SchemaValue, context: Context): boolean {
   return v81(value, context);
 }
 function v82(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 9007199254740991)) return false;
+  if (value < 1 || value > 9007199254740991) return false;
   return true;
 }
-function d8(value: SchemaValue, context: Context): boolean {
+function d9(value: SchemaValue, context: Context): boolean {
   return v82(value, context);
 }
 function v83(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 1 || value > 9007199254740991)) return false;
-  return true;
-}
-function d9(value: SchemaValue, context: Context): boolean {
-  return v83(value, context);
-}
-function v84(value: SchemaValue, context: Context): boolean {
-  void context;
-  if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < -2147483648 || value > 2147483647)) return false;
+  if (value < -2147483648 || value > 2147483647) return false;
   return true;
 }
 function d10(value: SchemaValue, context: Context): boolean {
-  return v84(value, context);
+  return v83(value, context);
 }
-function v86(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v87(value: SchemaValue, context: Context): boolean {
+function v85(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v85(value: SchemaValue, context: Context): boolean {
+function v84(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v86(value, context)) matches++;
-    if (v87(value, context)) matches++;
+    if (d10(value, context)) matches++;
+    if (v85(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
 function d11(value: SchemaValue, context: Context): boolean {
-  return v85(value, context);
+  return v84(value, context);
 }
-function v88(value: SchemaValue, context: Context): boolean {
+function v86(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 20000)) return false;
+  if (value < 0 || value > 20000) return false;
   return true;
 }
 function d12(value: SchemaValue, context: Context): boolean {
-  return v88(value, context);
+  return v86(value, context);
 }
-function v89(value: SchemaValue, context: Context): boolean {
+function v87(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 1 || value > 20000)) return false;
+  if (value < 1 || value > 20000) return false;
   return true;
 }
 function d13(value: SchemaValue, context: Context): boolean {
-  return v89(value, context);
+  return v87(value, context);
 }
-function v91(value: SchemaValue, context: Context): boolean {
-  return d1(value, context);
-}
-function v92(value: SchemaValue, context: Context): boolean {
+function v89(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     if (!p6.test(value)) return false;
   }
   return true;
 }
-function v90(value: SchemaValue, context: Context): boolean {
+function v88(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v91(value['id'], context)) return false;
-    if (!v92(value['version'], context)) return false;
+    if (!d1(value['id'], context)) return false;
+    if (!v89(value['version'], context)) return false;
   }
   return true;
 }
 function d14(value: SchemaValue, context: Context): boolean {
-  return v90(value, context);
+  return v88(value, context);
 }
-function v94(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v95(value: SchemaValue, context: Context): boolean {
+function v91(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v93(value: SchemaValue, context: Context): boolean {
+function v90(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v94(value, context)) matches++;
-    if (v95(value, context)) matches++;
+    if (d14(value, context)) matches++;
+    if (v91(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
 function d15(value: SchemaValue, context: Context): boolean {
-  return v93(value, context);
+  return v90(value, context);
 }
-function v97(value: SchemaValue, context: Context): boolean {
-  return d1(value, context);
-}
-function v98(value: SchemaValue, context: Context): boolean {
+function v93(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v99(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v96(value: SchemaValue, context: Context): boolean {
+function v92(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'id') ||
       !Object.hasOwn(value, 'version') ||
@@ -260,50 +242,32 @@ function v96(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v97(value['id'], context)) return false;
-    if (!v98(value['version'], context)) return false;
-    if (!v99(value['buildId'], context)) return false;
+    if (!d1(value['id'], context)) return false;
+    if (!v93(value['version'], context)) return false;
+    if (!d2(value['buildId'], context)) return false;
   }
   return true;
 }
 function d16(value: SchemaValue, context: Context): boolean {
-  return v96(value, context);
+  return v92(value, context);
 }
-function v101(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v102(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v103(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v104(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v105(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v107(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v108(value: SchemaValue, context: Context): boolean {
+function v96(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v106(value: SchemaValue, context: Context): boolean {
+function v95(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v107(value, context)) matches++;
-    if (v108(value, context)) matches++;
+    if (d2(value, context)) matches++;
+    if (v96(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v100(value: SchemaValue, context: Context): boolean {
+function v94(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'contextId') ||
       !Object.hasOwn(value, 'contextRevision') ||
@@ -314,90 +278,84 @@ function v100(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v101(value['contextId'], context)) return false;
-    if (!v102(value['contextRevision'], context)) return false;
-    if (!v103(value['submissionId'], context)) return false;
-    if (!v104(value['runId'], context)) return false;
-    if (!v105(value['sourceRevision'], context)) return false;
-    if (!v106(value['testCaseKey'], context)) return false;
+    if (!d2(value['contextId'], context)) return false;
+    if (!d9(value['contextRevision'], context)) return false;
+    if (!d2(value['submissionId'], context)) return false;
+    if (!d2(value['runId'], context)) return false;
+    if (!d9(value['sourceRevision'], context)) return false;
+    if (!v95(value['testCaseKey'], context)) return false;
   }
   return true;
 }
 function d17(value: SchemaValue, context: Context): boolean {
-  return v100(value, context);
+  return v94(value, context);
 }
-function v110(value: SchemaValue, context: Context): boolean {
+function v98(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 32768)) return false;
+  if (value < 0 || value > 32768) return false;
   return true;
 }
-function v111(value: SchemaValue, context: Context): boolean {
+function v99(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 32768)) return false;
+  if (value < 0 || value > 32768) return false;
   return true;
 }
-function v109(value: SchemaValue, context: Context): boolean {
+function v97(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'start') || !Object.hasOwn(value, 'end')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v110(value['start'], context)) return false;
-    if (!v111(value['end'], context)) return false;
+    if (!v98(value['start'], context)) return false;
+    if (!v99(value['end'], context)) return false;
   }
   return true;
 }
 function d18(value: SchemaValue, context: Context): boolean {
-  return v109(value, context);
+  return v97(value, context);
 }
-function v113(value: SchemaValue, context: Context): boolean {
+function v101(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'source') return false;
   return true;
 }
-function v114(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v115(value: SchemaValue, context: Context): boolean {
+function v102(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'start' || value === 'whole' || value === 'end')) return false;
   return true;
 }
-function v116(value: SchemaValue, context: Context): boolean {
-  return d18(value, context);
-}
-function v117(value: SchemaValue, context: Context): boolean {
+function v103(value: SchemaValue, context: Context): boolean {
   void context;
   if (isRecord(value)) {
     if (!Object.hasOwn(value, 'nodeId') || !Object.hasOwn(value, 'edge')) return false;
   }
   return true;
 }
-function v118(value: SchemaValue, context: Context): boolean {
+function v104(value: SchemaValue, context: Context): boolean {
   void context;
   if (isRecord(value)) {
     if (!Object.hasOwn(value, 'byteRange')) return false;
   }
   return true;
 }
-function v112(value: SchemaValue, context: Context): boolean {
+function v100(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'kind')) return false;
     for (const key of Object.keys(value)) {
       switch (key) {
         case 'kind':
-          if (!v113(value[key], context)) return false;
+          if (!v101(value[key], context)) return false;
           break;
         case 'nodeId':
-          if (!v114(value[key], context)) return false;
+          if (!d3(value[key], context)) return false;
           break;
         case 'edge':
-          if (!v115(value[key], context)) return false;
+          if (!v102(value[key], context)) return false;
           break;
         case 'byteRange':
-          if (!v116(value[key], context)) return false;
+          if (!d18(value[key], context)) return false;
           break;
         default:
           return false;
@@ -407,18 +365,18 @@ function v112(value: SchemaValue, context: Context): boolean {
     if (Object.hasOwn(value, 'nodeId') && !Object.hasOwn(value, 'edge')) return false;
     if (Object.hasOwn(value, 'edge') && !Object.hasOwn(value, 'nodeId')) return false;
   }
-  if (!(v117(value, context) || v118(value, context))) return false;
+  if (!(v103(value, context) || v104(value, context))) return false;
   return true;
 }
 function d19(value: SchemaValue, context: Context): boolean {
-  return v112(value, context);
+  return v100(value, context);
 }
-function v120(value: SchemaValue, context: Context): boolean {
+function v106(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'synthetic') return false;
   return true;
 }
-function v121(value: SchemaValue, context: Context): boolean {
+function v107(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'initial-state' ||
@@ -434,23 +392,20 @@ function v121(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v122(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v119(value: SchemaValue, context: Context): boolean {
+function v105(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'kind') || !Object.hasOwn(value, 'reason')) return false;
     for (const key of Object.keys(value)) {
       switch (key) {
         case 'kind':
-          if (!v120(value[key], context)) return false;
+          if (!v106(value[key], context)) return false;
           break;
         case 'reason':
-          if (!v121(value[key], context)) return false;
+          if (!v107(value[key], context)) return false;
           break;
         case 'anchorNodeId':
-          if (!v122(value[key], context)) return false;
+          if (!d3(value[key], context)) return false;
           break;
         default:
           return false;
@@ -461,22 +416,16 @@ function v119(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d20(value: SchemaValue, context: Context): boolean {
-  return v119(value, context);
+  return v105(value, context);
 }
-function v124(value: SchemaValue, context: Context): boolean {
-  return d19(value, context);
-}
-function v125(value: SchemaValue, context: Context): boolean {
-  return d20(value, context);
-}
-function v123(value: SchemaValue, context: Context): boolean {
+function v108(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
   switch (value['kind']) {
     case 'source':
-      if (!v124(value, context)) return false;
+      if (!d19(value, context)) return false;
       break;
     case 'synthetic':
-      if (!v125(value, context)) return false;
+      if (!d20(value, context)) return false;
       break;
     default:
       return false;
@@ -484,73 +433,61 @@ function v123(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d21(value: SchemaValue, context: Context): boolean {
-  return v123(value, context);
+  return v108(value, context);
 }
-function v128(value: SchemaValue, context: Context): boolean {
-  return d19(value, context);
-}
-function v127(value: SchemaValue, context: Context): boolean {
+function v110(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
     if (!Object.hasOwn(value, 'nodeId') || !Object.hasOwn(value, 'edge')) return false;
   }
-  if (!v128(value, context)) return false;
+  if (!d19(value, context)) return false;
   return true;
 }
-function v129(value: SchemaValue, context: Context): boolean {
-  return d20(value, context);
-}
-function v126(value: SchemaValue, context: Context): boolean {
+function v109(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v127(value, context)) matches++;
-    if (v129(value, context)) matches++;
+    if (v110(value, context)) matches++;
+    if (d20(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
 function d22(value: SchemaValue, context: Context): boolean {
-  return v126(value, context);
+  return v109(value, context);
 }
-function v131(value: SchemaValue, context: Context): boolean {
+function v112(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size > 32768) return false;
   }
   return true;
 }
-function v133(value: SchemaValue, context: Context): boolean {
-  return d24(value, context);
-}
-function v132(value: SchemaValue, context: Context): boolean {
+function v113(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v133(value[index], context)) return false;
+      if (!d24(value[index], context)) return false;
     }
   }
   return true;
 }
-function v135(value: SchemaValue, context: Context): boolean {
-  return d25(value, context);
-}
-function v134(value: SchemaValue, context: Context): boolean {
+function v114(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v135(value[index], context)) return false;
+      if (!d25(value[index], context)) return false;
     }
   }
   return true;
 }
-function v130(value: SchemaValue, context: Context): boolean {
+function v111(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'text') ||
       !Object.hasOwn(value, 'blockMap') ||
@@ -558,152 +495,122 @@ function v130(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v131(value['text'], context)) return false;
-    if (!v132(value['blockMap'], context)) return false;
-    if (!v134(value['bindingMap'], context)) return false;
+    if (!v112(value['text'], context)) return false;
+    if (!v113(value['blockMap'], context)) return false;
+    if (!v114(value['bindingMap'], context)) return false;
   }
   return true;
 }
 function d23(value: SchemaValue, context: Context): boolean {
-  return v130(value, context);
+  return v111(value, context);
 }
-function v137(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v138(value: SchemaValue, context: Context): boolean {
-  return d18(value, context);
-}
-function v136(value: SchemaValue, context: Context): boolean {
+function v115(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'blockId') || !Object.hasOwn(value, 'byteRange')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v137(value['blockId'], context)) return false;
-    if (!v138(value['byteRange'], context)) return false;
+    if (!d2(value['blockId'], context)) return false;
+    if (!d18(value['byteRange'], context)) return false;
   }
   return true;
 }
 function d24(value: SchemaValue, context: Context): boolean {
-  return v136(value, context);
+  return v115(value, context);
 }
-function v140(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v141(value: SchemaValue, context: Context): boolean {
-  return d18(value, context);
-}
-function v139(value: SchemaValue, context: Context): boolean {
+function v116(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'bindingKey') || !Object.hasOwn(value, 'byteRange')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v140(value['bindingKey'], context)) return false;
-    if (!v141(value['byteRange'], context)) return false;
+    if (!d2(value['bindingKey'], context)) return false;
+    if (!d18(value['byteRange'], context)) return false;
   }
   return true;
 }
 function d25(value: SchemaValue, context: Context): boolean {
-  return v139(value, context);
+  return v116(value, context);
 }
-function v143(value: SchemaValue, context: Context): boolean {
+function v118(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size > 96 || !p7.test(value)) return false;
   }
   return true;
 }
-function v145(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v147(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v146(value: SchemaValue, context: Context): boolean {
+function v120(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 30) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v147(value[index], context)) return false;
+      if (!d10(value[index], context)) return false;
     }
   }
   return true;
 }
-function v144(value: SchemaValue, context: Context): boolean {
+function v119(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v145(value, context)) matches++;
-    if (v146(value, context)) matches++;
+    if (d10(value, context)) matches++;
+    if (v120(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v142(value: SchemaValue, context: Context): boolean {
+function v117(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     for (const key of Object.keys(value)) {
-      if (!v143(key, context)) return false;
-      if (!v144(value[key], context)) return false;
+      if (!v118(key, context)) return false;
+      if (!v119(value[key], context)) return false;
     }
   }
   return true;
 }
 function d26(value: SchemaValue, context: Context): boolean {
-  return v142(value, context);
+  return v117(value, context);
 }
-function v149(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v150(value: SchemaValue, context: Context): boolean {
+function v122(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size < 1 || size > 128) return false;
   }
   return true;
 }
-function v148(value: SchemaValue, context: Context): boolean {
+function v121(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'generatorRef') || !Object.hasOwn(value, 'seed')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v149(value['generatorRef'], context)) return false;
-    if (!v150(value['seed'], context)) return false;
+    if (!d14(value['generatorRef'], context)) return false;
+    if (!v122(value['seed'], context)) return false;
   }
   return true;
 }
 function d27(value: SchemaValue, context: Context): boolean {
-  return v148(value, context);
+  return v121(value, context);
 }
-function v152(value: SchemaValue, context: Context): boolean {
-  return d15(value, context);
-}
-function v153(value: SchemaValue, context: Context): boolean {
-  return d26(value, context);
-}
-function v155(value: SchemaValue, context: Context): boolean {
-  return d27(value, context);
-}
-function v156(value: SchemaValue, context: Context): boolean {
+function v125(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v154(value: SchemaValue, context: Context): boolean {
+function v124(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v155(value, context)) matches++;
-    if (v156(value, context)) matches++;
+    if (d27(value, context)) matches++;
+    if (v125(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v151(value: SchemaValue, context: Context): boolean {
+function v123(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'specRef') ||
       !Object.hasOwn(value, 'values') ||
@@ -711,16 +618,16 @@ function v151(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v152(value['specRef'], context)) return false;
-    if (!v153(value['values'], context)) return false;
-    if (!v154(value['random'], context)) return false;
+    if (!d15(value['specRef'], context)) return false;
+    if (!d26(value['values'], context)) return false;
+    if (!v124(value['random'], context)) return false;
   }
   return true;
 }
 function d28(value: SchemaValue, context: Context): boolean {
-  return v151(value, context);
+  return v123(value, context);
 }
-function v157(value: SchemaValue, context: Context): boolean {
+function v126(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'input-read-output' ||
@@ -734,45 +641,36 @@ function v157(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d29(value: SchemaValue, context: Context): boolean {
-  return v157(value, context);
+  return v126(value, context);
 }
-function v159(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v160(value: SchemaValue, context: Context): boolean {
-  return d29(value, context);
-}
-function v161(value: SchemaValue, context: Context): boolean {
+function v128(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size > 16384) return false;
   }
   return true;
 }
-function v162(value: SchemaValue, context: Context): boolean {
+function v129(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v164(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v163(value: SchemaValue, context: Context): boolean {
+function v130(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 30) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v164(value[index], context)) return false;
+      if (!d10(value[index], context)) return false;
     }
   }
   return true;
 }
-function v158(value: SchemaValue, context: Context): boolean {
+function v127(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'profileRef') ||
       !Object.hasOwn(value, 'rule') ||
@@ -783,19 +681,19 @@ function v158(value: SchemaValue, context: Context): boolean {
     for (const key of Object.keys(value)) {
       switch (key) {
         case 'profileRef':
-          if (!v159(value[key], context)) return false;
+          if (!d14(value[key], context)) return false;
           break;
         case 'rule':
-          if (!v160(value[key], context)) return false;
+          if (!d29(value[key], context)) return false;
           break;
         case 'expectedStdout':
-          if (!v161(value[key], context)) return false;
+          if (!v128(value[key], context)) return false;
           break;
         case 'expectedExitCode':
-          if (!v162(value[key], context)) return false;
+          if (!v129(value[key], context)) return false;
           break;
         case 'expectedArray':
-          if (!v163(value[key], context)) return false;
+          if (!v130(value[key], context)) return false;
           break;
         default:
           return false;
@@ -806,345 +704,285 @@ function v158(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d30(value: SchemaValue, context: Context): boolean {
-  return v158(value, context);
+  return v127(value, context);
 }
-function v166(value: SchemaValue, context: Context): boolean {
+function v132(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'execute') return false;
   return true;
 }
-function v167(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v168(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v169(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v170(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v171(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v172(value: SchemaValue, context: Context): boolean {
-  return d17(value, context);
-}
-function v173(value: SchemaValue, context: Context): boolean {
+function v133(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'case' || value === 'exercise-test' || value === 'contract-probe')) return false;
   return true;
 }
-function v174(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v176(value: SchemaValue, context: Context): boolean {
+function v135(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'lang.c') return false;
   return true;
 }
-function v177(value: SchemaValue, context: Context): boolean {
+function v136(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v175(value: SchemaValue, context: Context): boolean {
+function v134(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v176(value['id'], context)) return false;
-    if (!v177(value['version'], context)) return false;
+    if (!v135(value['id'], context)) return false;
+    if (!v136(value['version'], context)) return false;
   }
   return true;
 }
-function v179(value: SchemaValue, context: Context): boolean {
+function v138(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'subset.c.p0') return false;
   return true;
 }
-function v180(value: SchemaValue, context: Context): boolean {
+function v139(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v178(value: SchemaValue, context: Context): boolean {
+function v137(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v179(value['id'], context)) return false;
-    if (!v180(value['version'], context)) return false;
+    if (!v138(value['id'], context)) return false;
+    if (!v139(value['version'], context)) return false;
   }
   return true;
 }
-function v181(value: SchemaValue, context: Context): boolean {
-  return d15(value, context);
-}
-function v182(value: SchemaValue, context: Context): boolean {
-  return d15(value, context);
-}
-function v184(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v185(value: SchemaValue, context: Context): boolean {
+function v141(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v183(value: SchemaValue, context: Context): boolean {
+function v140(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v184(value, context)) matches++;
-    if (v185(value, context)) matches++;
+    if (d9(value, context)) matches++;
+    if (v141(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v186(value: SchemaValue, context: Context): boolean {
-  return d16(value, context);
-}
-function v187(value: SchemaValue, context: Context): boolean {
-  return d23(value, context);
-}
-function v188(value: SchemaValue, context: Context): boolean {
-  return d28(value, context);
-}
-function v190(value: SchemaValue, context: Context): boolean {
-  return d30(value, context);
-}
-function v191(value: SchemaValue, context: Context): boolean {
+function v143(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v189(value: SchemaValue, context: Context): boolean {
+function v142(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v190(value, context)) matches++;
-    if (v191(value, context)) matches++;
+    if (d30(value, context)) matches++;
+    if (v143(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v193(value: SchemaValue, context: Context): boolean {
+function v145(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'budget.p0') return false;
   return true;
 }
-function v194(value: SchemaValue, context: Context): boolean {
+function v146(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '1.0.0') return false;
   return true;
 }
-function v192(value: SchemaValue, context: Context): boolean {
+function v144(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'id') || !Object.hasOwn(value, 'version')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v193(value['id'], context)) return false;
-    if (!v194(value['version'], context)) return false;
+    if (!v145(value['id'], context)) return false;
+    if (!v146(value['version'], context)) return false;
   }
   return true;
 }
-function v195(value: SchemaValue, context: Context): boolean {
+function v147(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 1 || value > 1000)) return false;
+  if (value < 1 || value > 1000) return false;
   return true;
 }
-function v198(value: SchemaValue, context: Context): boolean {
+function v150(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'contract-probe') return false;
   return true;
 }
-function v197(value: SchemaValue, context: Context): boolean {
+function v149(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'mode') && !v198(value['mode'], context)) return false;
+    if (Object.hasOwn(value, 'mode') && !v150(value['mode'], context)) return false;
   }
   return true;
 }
-function v200(value: SchemaValue, context: Context): boolean {
+function v152(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v201(value: SchemaValue, context: Context): boolean {
+function v153(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v202(value: SchemaValue, context: Context): boolean {
+function v154(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v203(value: SchemaValue, context: Context): boolean {
+function v155(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v205(value: SchemaValue, context: Context): boolean {
+function v157(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v204(value: SchemaValue, context: Context): boolean {
+function v156(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'testCaseKey') && !v205(value['testCaseKey'], context)) return false;
+    if (Object.hasOwn(value, 'testCaseKey') && !v157(value['testCaseKey'], context)) return false;
   }
   return true;
 }
-function v199(value: SchemaValue, context: Context): boolean {
+function v151(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v200(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v201(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'learningRevision') && !v202(value['learningRevision'], context))
+    if (Object.hasOwn(value, 'programRef') && !v152(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !v153(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'learningRevision') && !v154(value['learningRevision'], context))
       return false;
-    if (Object.hasOwn(value, 'judge') && !v203(value['judge'], context)) return false;
-    if (Object.hasOwn(value, 'identity') && !v204(value['identity'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v155(value['judge'], context)) return false;
+    if (Object.hasOwn(value, 'identity') && !v156(value['identity'], context)) return false;
   }
   return true;
 }
-function v196(value: SchemaValue, context: Context): boolean {
-  if (v197(value, context)) {
-    if (!v199(value, context)) return false;
+function v148(value: SchemaValue, context: Context): boolean {
+  if (v149(value, context)) {
+    if (!v151(value, context)) return false;
   }
   return true;
 }
-function v208(value: SchemaValue, context: Context): boolean {
+function v160(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'case' || value === 'exercise-test')) return false;
   return true;
 }
-function v207(value: SchemaValue, context: Context): boolean {
+function v159(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'mode') && !v208(value['mode'], context)) return false;
+    if (Object.hasOwn(value, 'mode') && !v160(value['mode'], context)) return false;
   }
   return true;
 }
-function v210(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v211(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v212(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v214(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v215(value: SchemaValue, context: Context): boolean {
+function v163(value: SchemaValue, context: Context): boolean {
   void context;
   if (isRecord(value)) {
     if (Object.keys(value).length < 1) return false;
   }
   return true;
 }
-function v213(value: SchemaValue, context: Context): boolean {
+function v162(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'specRef') && !v214(value['specRef'], context)) return false;
-    if (Object.hasOwn(value, 'values') && !v215(value['values'], context)) return false;
+    if (Object.hasOwn(value, 'specRef') && !d14(value['specRef'], context)) return false;
+    if (Object.hasOwn(value, 'values') && !v163(value['values'], context)) return false;
   }
   return true;
 }
-function v209(value: SchemaValue, context: Context): boolean {
+function v161(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'programRef') && !v210(value['programRef'], context)) return false;
-    if (Object.hasOwn(value, 'subjectRef') && !v211(value['subjectRef'], context)) return false;
-    if (Object.hasOwn(value, 'learningRevision') && !v212(value['learningRevision'], context))
+    if (Object.hasOwn(value, 'programRef') && !d14(value['programRef'], context)) return false;
+    if (Object.hasOwn(value, 'subjectRef') && !d14(value['subjectRef'], context)) return false;
+    if (Object.hasOwn(value, 'learningRevision') && !d9(value['learningRevision'], context))
       return false;
-    if (Object.hasOwn(value, 'input') && !v213(value['input'], context)) return false;
+    if (Object.hasOwn(value, 'input') && !v162(value['input'], context)) return false;
   }
   return true;
 }
-function v206(value: SchemaValue, context: Context): boolean {
-  if (v207(value, context)) {
-    if (!v209(value, context)) return false;
+function v158(value: SchemaValue, context: Context): boolean {
+  if (v159(value, context)) {
+    if (!v161(value, context)) return false;
   }
   return true;
 }
-function v218(value: SchemaValue, context: Context): boolean {
+function v166(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'case') return false;
   return true;
 }
-function v217(value: SchemaValue, context: Context): boolean {
+function v165(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'mode') && !v218(value['mode'], context)) return false;
+    if (Object.hasOwn(value, 'mode') && !v166(value['mode'], context)) return false;
   }
   return true;
 }
-function v220(value: SchemaValue, context: Context): boolean {
+function v168(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v222(value: SchemaValue, context: Context): boolean {
+function v170(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v221(value: SchemaValue, context: Context): boolean {
+function v169(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'testCaseKey') && !v222(value['testCaseKey'], context)) return false;
+    if (Object.hasOwn(value, 'testCaseKey') && !v170(value['testCaseKey'], context)) return false;
   }
   return true;
 }
-function v219(value: SchemaValue, context: Context): boolean {
+function v167(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v220(value['judge'], context)) return false;
-    if (Object.hasOwn(value, 'identity') && !v221(value['identity'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !v168(value['judge'], context)) return false;
+    if (Object.hasOwn(value, 'identity') && !v169(value['identity'], context)) return false;
   }
   return true;
 }
-function v216(value: SchemaValue, context: Context): boolean {
-  if (v217(value, context)) {
-    if (!v219(value, context)) return false;
+function v164(value: SchemaValue, context: Context): boolean {
+  if (v165(value, context)) {
+    if (!v167(value, context)) return false;
   }
   return true;
 }
-function v225(value: SchemaValue, context: Context): boolean {
+function v173(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'exercise-test') return false;
   return true;
 }
-function v224(value: SchemaValue, context: Context): boolean {
+function v172(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'mode') && !v225(value['mode'], context)) return false;
+    if (Object.hasOwn(value, 'mode') && !v173(value['mode'], context)) return false;
   }
   return true;
 }
-function v227(value: SchemaValue, context: Context): boolean {
-  return d30(value, context);
-}
-function v229(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v228(value: SchemaValue, context: Context): boolean {
+function v175(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'testCaseKey') && !v229(value['testCaseKey'], context)) return false;
+    if (Object.hasOwn(value, 'testCaseKey') && !d2(value['testCaseKey'], context)) return false;
   }
   return true;
 }
-function v226(value: SchemaValue, context: Context): boolean {
+function v174(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judge') && !v227(value['judge'], context)) return false;
-    if (Object.hasOwn(value, 'identity') && !v228(value['identity'], context)) return false;
+    if (Object.hasOwn(value, 'judge') && !d30(value['judge'], context)) return false;
+    if (Object.hasOwn(value, 'identity') && !v175(value['identity'], context)) return false;
   }
   return true;
 }
-function v223(value: SchemaValue, context: Context): boolean {
-  if (v224(value, context)) {
-    if (!v226(value, context)) return false;
+function v171(value: SchemaValue, context: Context): boolean {
+  if (v172(value, context)) {
+    if (!v174(value, context)) return false;
   }
   return true;
 }
-function v165(value: SchemaValue, context: Context): boolean {
+function v131(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'protocolVersion') ||
@@ -1169,69 +1007,57 @@ function v165(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 20) return false;
-    if (!v166(value['kind'], context)) return false;
-    if (!v167(value['protocolVersion'], context)) return false;
-    if (!v168(value['traceVersion'], context)) return false;
-    if (!v169(value['diagnosticVersion'], context)) return false;
-    if (!v170(value['judgeVersion'], context)) return false;
-    if (!v171(value['encodingVersion'], context)) return false;
-    if (!v172(value['identity'], context)) return false;
-    if (!v173(value['mode'], context)) return false;
-    if (!v174(value['packageRef'], context)) return false;
-    if (!v175(value['languageRef'], context)) return false;
-    if (!v178(value['subsetRef'], context)) return false;
-    if (!v181(value['programRef'], context)) return false;
-    if (!v182(value['subjectRef'], context)) return false;
-    if (!v183(value['learningRevision'], context)) return false;
-    if (!v186(value['engineRef'], context)) return false;
-    if (!v187(value['source'], context)) return false;
-    if (!v188(value['input'], context)) return false;
-    if (!v189(value['judge'], context)) return false;
-    if (!v192(value['budgetRef'], context)) return false;
-    if (!v195(value['remainingMs'], context)) return false;
+    if (!v132(value['kind'], context)) return false;
+    if (!d0(value['protocolVersion'], context)) return false;
+    if (!d0(value['traceVersion'], context)) return false;
+    if (!d0(value['diagnosticVersion'], context)) return false;
+    if (!d0(value['judgeVersion'], context)) return false;
+    if (!d0(value['encodingVersion'], context)) return false;
+    if (!d17(value['identity'], context)) return false;
+    if (!v133(value['mode'], context)) return false;
+    if (!d14(value['packageRef'], context)) return false;
+    if (!v134(value['languageRef'], context)) return false;
+    if (!v137(value['subsetRef'], context)) return false;
+    if (!d15(value['programRef'], context)) return false;
+    if (!d15(value['subjectRef'], context)) return false;
+    if (!v140(value['learningRevision'], context)) return false;
+    if (!d16(value['engineRef'], context)) return false;
+    if (!d23(value['source'], context)) return false;
+    if (!d28(value['input'], context)) return false;
+    if (!v142(value['judge'], context)) return false;
+    if (!v144(value['budgetRef'], context)) return false;
+    if (!v147(value['remainingMs'], context)) return false;
   }
-  if (!v196(value, context)) return false;
-  if (!v206(value, context)) return false;
-  if (!v216(value, context)) return false;
-  if (!v223(value, context)) return false;
+  if (!v148(value, context)) return false;
+  if (!v158(value, context)) return false;
+  if (!v164(value, context)) return false;
+  if (!v171(value, context)) return false;
   return true;
 }
 function d31(value: SchemaValue, context: Context): boolean {
-  return v165(value, context);
+  return v131(value, context);
 }
-function v231(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v232(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v234(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v235(value: SchemaValue, context: Context): boolean {
+function v178(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v233(value: SchemaValue, context: Context): boolean {
+function v177(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v234(value, context)) matches++;
-    if (v235(value, context)) matches++;
+    if (d7(value, context)) matches++;
+    if (v178(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v237(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v236(value: SchemaValue, context: Context): boolean {
+function v179(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v237(value[index], context)) return false;
+      if (!d6(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -1240,9 +1066,9 @@ function v236(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v230(value: SchemaValue, context: Context): boolean {
+function v176(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'id') ||
       !Object.hasOwn(value, 'functionNodeId') ||
@@ -1251,65 +1077,52 @@ function v230(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v231(value['id'], context)) return false;
-    if (!v232(value['functionNodeId'], context)) return false;
-    if (!v233(value['parentFrameId'], context)) return false;
-    if (!v236(value['scopeIds'], context)) return false;
+    if (!d7(value['id'], context)) return false;
+    if (!d3(value['functionNodeId'], context)) return false;
+    if (!v177(value['parentFrameId'], context)) return false;
+    if (!v179(value['scopeIds'], context)) return false;
   }
   return true;
 }
 function d32(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d32')) return true;
-    if (!v230(value, context)) return false;
-    if (known) known.push('d32');
-    else context.validated.set(value, ['d32']);
+    const known = context.validated.get('d32');
+    if (known?.includes(value)) return true;
+    if (!v176(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d32', [value]);
     return true;
   }
-  return v230(value, context);
+  return v176(value, context);
 }
-function v239(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v240(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v242(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v243(value: SchemaValue, context: Context): boolean {
+function v182(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v241(value: SchemaValue, context: Context): boolean {
+function v181(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v242(value, context)) matches++;
-    if (v243(value, context)) matches++;
+    if (d6(value, context)) matches++;
+    if (v182(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v244(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v245(value: SchemaValue, context: Context): boolean {
+function v183(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'main' || value === 'block' || value === 'for')) return false;
   return true;
 }
-function v247(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v246(value: SchemaValue, context: Context): boolean {
+function v184(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v247(value[index], context)) return false;
+      if (!d5(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -1318,9 +1131,9 @@ function v246(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v238(value: SchemaValue, context: Context): boolean {
+function v180(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'id') ||
       !Object.hasOwn(value, 'frameId') ||
@@ -1331,143 +1144,123 @@ function v238(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v239(value['id'], context)) return false;
-    if (!v240(value['frameId'], context)) return false;
-    if (!v241(value['parentScopeId'], context)) return false;
-    if (!v244(value['nodeId'], context)) return false;
-    if (!v245(value['kind'], context)) return false;
-    if (!v246(value['objectIds'], context)) return false;
+    if (!d6(value['id'], context)) return false;
+    if (!d7(value['frameId'], context)) return false;
+    if (!v181(value['parentScopeId'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!v183(value['kind'], context)) return false;
+    if (!v184(value['objectIds'], context)) return false;
   }
   return true;
 }
 function d33(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d33')) return true;
-    if (!v238(value, context)) return false;
-    if (known) known.push('d33');
-    else context.validated.set(value, ['d33']);
+    const known = context.validated.get('d33');
+    if (known?.includes(value)) return true;
+    if (!v180(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d33', [value]);
     return true;
   }
-  return v238(value, context);
+  return v180(value, context);
 }
-function v249(value: SchemaValue, context: Context): boolean {
+function v186(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 262143)) return false;
+  if (value < 0 || value > 262143) return false;
   return true;
 }
-function v250(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v248(value: SchemaValue, context: Context): boolean {
+function v185(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'index') || !Object.hasOwn(value, 'value')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v249(value['index'], context)) return false;
-    if (!v250(value['value'], context)) return false;
+    if (!v186(value['index'], context)) return false;
+    if (!d10(value['value'], context)) return false;
   }
   return true;
 }
 function d34(value: SchemaValue, context: Context): boolean {
-  return v248(value, context);
+  return v185(value, context);
 }
-function v252(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v253(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v254(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v255(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v256(value: SchemaValue, context: Context): boolean {
+function v188(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
-    const size = scalarLength(value);
+  {
+    const size = value.length;
     if (size < 1 || size > 32768 || !p7.test(value)) return false;
   }
   return true;
 }
-function v257(value: SchemaValue, context: Context): boolean {
+function v189(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'int' || value === 'int-array')) return false;
   return true;
 }
-function v258(value: SchemaValue, context: Context): boolean {
+function v190(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 1 || value > 262144)) return false;
+  if (value < 1 || value > 262144) return false;
   return true;
 }
-function v259(value: SchemaValue, context: Context): boolean {
+function v191(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 4096 || value > 9007199254740991 || value % 4 !== 0))
-    return false;
+  if (value < 4096 || value > 9007199254740991 || value % 4 !== 0) return false;
   return true;
 }
-function v260(value: SchemaValue, context: Context): boolean {
-  return d11(value, context);
-}
-function v262(value: SchemaValue, context: Context): boolean {
-  return d34(value, context);
-}
-function v261(value: SchemaValue, context: Context): boolean {
+function v192(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 262144) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v262(value[index], context)) return false;
+      if (!d34(value[index], context)) return false;
     }
   }
   return true;
 }
-function v265(value: SchemaValue, context: Context): boolean {
+function v195(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'int') return false;
   return true;
 }
-function v264(value: SchemaValue, context: Context): boolean {
+function v194(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'kind') && !v265(value['kind'], context)) return false;
+    if (Object.hasOwn(value, 'kind') && !v195(value['kind'], context)) return false;
   }
   return true;
 }
-function v267(value: SchemaValue, context: Context): boolean {
+function v197(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 1) return false;
   return true;
 }
-function v268(value: SchemaValue, context: Context): boolean {
+function v198(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 1) return false;
   }
   return true;
 }
-function v266(value: SchemaValue, context: Context): boolean {
+function v196(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'length') && !v267(value['length'], context)) return false;
-    if (Object.hasOwn(value, 'cells') && !v268(value['cells'], context)) return false;
+    if (Object.hasOwn(value, 'length') && !v197(value['length'], context)) return false;
+    if (Object.hasOwn(value, 'cells') && !v198(value['cells'], context)) return false;
   }
   return true;
 }
-function v263(value: SchemaValue, context: Context): boolean {
-  if (v264(value, context)) {
-    if (!v266(value, context)) return false;
+function v193(value: SchemaValue, context: Context): boolean {
+  if (v194(value, context)) {
+    if (!v196(value, context)) return false;
   }
   return true;
 }
-function v251(value: SchemaValue, context: Context): boolean {
+function v187(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'id') ||
       !Object.hasOwn(value, 'declarationNodeId') ||
@@ -1482,35 +1275,34 @@ function v251(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 10) return false;
-    if (!v252(value['id'], context)) return false;
-    if (!v253(value['declarationNodeId'], context)) return false;
-    if (!v254(value['frameId'], context)) return false;
-    if (!v255(value['scopeId'], context)) return false;
-    if (!v256(value['name'], context)) return false;
-    if (!v257(value['kind'], context)) return false;
-    if (!v258(value['length'], context)) return false;
-    if (!v259(value['baseAddress'], context)) return false;
-    if (!v260(value['defaultValue'], context)) return false;
-    if (!v261(value['cells'], context)) return false;
+    if (!d5(value['id'], context)) return false;
+    if (!d3(value['declarationNodeId'], context)) return false;
+    if (!d7(value['frameId'], context)) return false;
+    if (!d6(value['scopeId'], context)) return false;
+    if (!v188(value['name'], context)) return false;
+    if (!v189(value['kind'], context)) return false;
+    if (!v190(value['length'], context)) return false;
+    if (!v191(value['baseAddress'], context)) return false;
+    if (!d11(value['defaultValue'], context)) return false;
+    if (!v192(value['cells'], context)) return false;
   }
-  if (!v263(value, context)) return false;
+  if (!v193(value, context)) return false;
   return true;
 }
 function d35(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d35')) return true;
-    if (!v251(value, context)) return false;
-    if (known) known.push('d35');
-    else context.validated.set(value, ['d35']);
+    const known = context.validated.get('d35');
+    if (known?.includes(value)) return true;
+    if (!v187(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d35', [value]);
     return true;
   }
-  return v251(value, context);
+  return v187(value, context);
 }
-function v270(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v271(value: SchemaValue, context: Context): boolean {
+function v200(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'block' ||
@@ -1522,12 +1314,9 @@ function v271(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v272(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v269(value: SchemaValue, context: Context): boolean {
+function v199(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'nodeId') ||
       !Object.hasOwn(value, 'stage') ||
@@ -1535,60 +1324,48 @@ function v269(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v270(value['nodeId'], context)) return false;
-    if (!v271(value['stage'], context)) return false;
-    if (!v272(value['iteration'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!v200(value['stage'], context)) return false;
+    if (!d8(value['iteration'], context)) return false;
   }
   return true;
 }
 function d36(value: SchemaValue, context: Context): boolean {
-  return v269(value, context);
+  return v199(value, context);
 }
-function v274(value: SchemaValue, context: Context): boolean {
+function v202(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'ready' || value === 'running' || value === 'returned')) return false;
   return true;
 }
-function v275(value: SchemaValue, context: Context): boolean {
-  return d4(value, context);
-}
-function v277(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v278(value: SchemaValue, context: Context): boolean {
+function v204(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v276(value: SchemaValue, context: Context): boolean {
+function v203(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v277(value, context)) matches++;
-    if (v278(value, context)) matches++;
+    if (d7(value, context)) matches++;
+    if (v204(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v279(value: SchemaValue, context: Context): boolean {
-  return d11(value, context);
-}
-function v281(value: SchemaValue, context: Context): boolean {
-  return d36(value, context);
-}
-function v280(value: SchemaValue, context: Context): boolean {
+function v205(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 64) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v281(value[index], context)) return false;
+      if (!d36(value[index], context)) return false;
     }
   }
   return true;
 }
-function v273(value: SchemaValue, context: Context): boolean {
+function v201(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'phase') ||
       !Object.hasOwn(value, 'nextNodeId') ||
@@ -1598,50 +1375,42 @@ function v273(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v274(value['phase'], context)) return false;
-    if (!v275(value['nextNodeId'], context)) return false;
-    if (!v276(value['activeFrameId'], context)) return false;
-    if (!v279(value['returnValue'], context)) return false;
-    if (!v280(value['flowStack'], context)) return false;
+    if (!v202(value['phase'], context)) return false;
+    if (!d4(value['nextNodeId'], context)) return false;
+    if (!v203(value['activeFrameId'], context)) return false;
+    if (!d11(value['returnValue'], context)) return false;
+    if (!v205(value['flowStack'], context)) return false;
   }
   return true;
 }
 function d37(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d37')) return true;
-    if (!v273(value, context)) return false;
-    if (known) known.push('d37');
-    else context.validated.set(value, ['d37']);
+    const known = context.validated.get('d37');
+    if (known?.includes(value)) return true;
+    if (!v201(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d37', [value]);
     return true;
   }
-  return v273(value, context);
+  return v201(value, context);
 }
-function v283(value: SchemaValue, context: Context): boolean {
+function v207(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 4096 || value > 9007199254740991 || value % 4 !== 0))
-    return false;
+  if (value < 4096 || value > 9007199254740991 || value % 4 !== 0) return false;
   return true;
 }
-function v284(value: SchemaValue, context: Context): boolean {
+function v208(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 1048576 || value % 4 !== 0)) return false;
+  if (value < 0 || value > 1048576 || value % 4 !== 0) return false;
   return true;
 }
-function v285(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v286(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v287(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v282(value: SchemaValue, context: Context): boolean {
+function v206(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'nextAddress') ||
       !Object.hasOwn(value, 'liveBytes') ||
@@ -1651,40 +1420,30 @@ function v282(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v283(value['nextAddress'], context)) return false;
-    if (!v284(value['liveBytes'], context)) return false;
-    if (!v285(value['nextObject'], context)) return false;
-    if (!v286(value['nextScope'], context)) return false;
-    if (!v287(value['nextFrame'], context)) return false;
+    if (!v207(value['nextAddress'], context)) return false;
+    if (!v208(value['liveBytes'], context)) return false;
+    if (!d9(value['nextObject'], context)) return false;
+    if (!d9(value['nextScope'], context)) return false;
+    if (!d9(value['nextFrame'], context)) return false;
   }
   return true;
 }
 function d38(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d38')) return true;
-    if (!v282(value, context)) return false;
-    if (known) known.push('d38');
-    else context.validated.set(value, ['d38']);
+    const known = context.validated.get('d38');
+    if (known?.includes(value)) return true;
+    if (!v206(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d38', [value]);
     return true;
   }
-  return v282(value, context);
+  return v206(value, context);
 }
-function v289(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v290(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v291(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v292(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v288(value: SchemaValue, context: Context): boolean {
+function v209(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'comparisons') ||
       !Object.hasOwn(value, 'scalarWrites') ||
@@ -1693,87 +1452,71 @@ function v288(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v289(value['comparisons'], context)) return false;
-    if (!v290(value['scalarWrites'], context)) return false;
-    if (!v291(value['arrayWrites'], context)) return false;
-    if (!v292(value['swaps'], context)) return false;
+    if (!d8(value['comparisons'], context)) return false;
+    if (!d8(value['scalarWrites'], context)) return false;
+    if (!d8(value['arrayWrites'], context)) return false;
+    if (!d8(value['swaps'], context)) return false;
   }
   return true;
 }
 function d39(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d39')) return true;
-    if (!v288(value, context)) return false;
-    if (known) known.push('d39');
-    else context.validated.set(value, ['d39']);
+    const known = context.validated.get('d39');
+    if (known?.includes(value)) return true;
+    if (!v209(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d39', [value]);
     return true;
   }
-  return v288(value, context);
+  return v209(value, context);
 }
-function v295(value: SchemaValue, context: Context): boolean {
-  return d32(value, context);
-}
-function v294(value: SchemaValue, context: Context): boolean {
+function v211(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 1) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v295(value[index], context)) return false;
+      if (!d32(value[index], context)) return false;
     }
   }
   return true;
 }
-function v297(value: SchemaValue, context: Context): boolean {
-  return d33(value, context);
-}
-function v296(value: SchemaValue, context: Context): boolean {
+function v212(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 64) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v297(value[index], context)) return false;
+      if (!d33(value[index], context)) return false;
     }
   }
   return true;
 }
-function v299(value: SchemaValue, context: Context): boolean {
-  return d35(value, context);
-}
-function v298(value: SchemaValue, context: Context): boolean {
+function v213(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 262144) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v299(value[index], context)) return false;
+      if (!d35(value[index], context)) return false;
     }
   }
   return true;
 }
-function v300(value: SchemaValue, context: Context): boolean {
-  return d37(value, context);
-}
-function v301(value: SchemaValue, context: Context): boolean {
-  return d38(value, context);
-}
-function v302(value: SchemaValue, context: Context): boolean {
+function v214(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size > 16384) return false;
   }
   return true;
 }
-function v303(value: SchemaValue, context: Context): boolean {
-  return d39(value, context);
-}
-function v293(value: SchemaValue, context: Context): boolean {
+function v210(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'frames') ||
       !Object.hasOwn(value, 'scopes') ||
@@ -1785,330 +1528,278 @@ function v293(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 7) return false;
-    if (!v294(value['frames'], context)) return false;
-    if (!v296(value['scopes'], context)) return false;
-    if (!v298(value['objects'], context)) return false;
-    if (!v300(value['control'], context)) return false;
-    if (!v301(value['allocator'], context)) return false;
-    if (!v302(value['output'], context)) return false;
-    if (!v303(value['counters'], context)) return false;
+    if (!v211(value['frames'], context)) return false;
+    if (!v212(value['scopes'], context)) return false;
+    if (!v213(value['objects'], context)) return false;
+    if (!d37(value['control'], context)) return false;
+    if (!d38(value['allocator'], context)) return false;
+    if (!v214(value['output'], context)) return false;
+    if (!d39(value['counters'], context)) return false;
   }
   return true;
 }
 function d40(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d40')) return true;
-    if (!v293(value, context)) return false;
-    if (known) known.push('d40');
-    else context.validated.set(value, ['d40']);
+    const known = context.validated.get('d40');
+    if (known?.includes(value)) return true;
+    if (!v210(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d40', [value]);
     return true;
   }
-  return v293(value, context);
+  return v210(value, context);
 }
-function v305(value: SchemaValue, context: Context): boolean {
+function v216(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'record') return false;
   return true;
 }
-function v306(value: SchemaValue, context: Context): boolean {
+function v217(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'frames' || value === 'scopes' || value === 'objects')) return false;
   return true;
 }
-function v308(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v309(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v310(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v307(value: SchemaValue, context: Context): boolean {
+function v218(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v308(value, context)) matches++;
-    if (v309(value, context)) matches++;
-    if (v310(value, context)) matches++;
+    if (d7(value, context)) matches++;
+    if (d6(value, context)) matches++;
+    if (d5(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v311(value: SchemaValue, context: Context): boolean {
+function v219(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 262143)) return false;
+  if (value < 0 || value > 262143) return false;
   return true;
 }
-function v313(value: SchemaValue, context: Context): boolean {
-  return d32(value, context);
-}
-function v314(value: SchemaValue, context: Context): boolean {
-  return d33(value, context);
-}
-function v315(value: SchemaValue, context: Context): boolean {
-  return d35(value, context);
-}
-function v316(value: SchemaValue, context: Context): boolean {
+function v221(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v312(value: SchemaValue, context: Context): boolean {
+function v220(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v313(value, context)) matches++;
-    if (v314(value, context)) matches++;
-    if (v315(value, context)) matches++;
-    if (v316(value, context)) matches++;
+    if (d32(value, context)) matches++;
+    if (d33(value, context)) matches++;
+    if (d35(value, context)) matches++;
+    if (v221(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v318(value: SchemaValue, context: Context): boolean {
-  return d32(value, context);
-}
-function v319(value: SchemaValue, context: Context): boolean {
-  return d33(value, context);
-}
-function v320(value: SchemaValue, context: Context): boolean {
-  return d35(value, context);
-}
-function v321(value: SchemaValue, context: Context): boolean {
+function v223(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v317(value: SchemaValue, context: Context): boolean {
+function v222(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v318(value, context)) matches++;
-    if (v319(value, context)) matches++;
-    if (v320(value, context)) matches++;
-    if (v321(value, context)) matches++;
+    if (d32(value, context)) matches++;
+    if (d33(value, context)) matches++;
+    if (d35(value, context)) matches++;
+    if (v223(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v324(value: SchemaValue, context: Context): boolean {
+function v226(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'frames') return false;
   return true;
 }
-function v323(value: SchemaValue, context: Context): boolean {
+function v225(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'table') && !v324(value['table'], context)) return false;
+    if (Object.hasOwn(value, 'table') && !v226(value['table'], context)) return false;
   }
   return true;
 }
-function v326(value: SchemaValue, context: Context): boolean {
-  return d7(value, context);
-}
-function v328(value: SchemaValue, context: Context): boolean {
-  return d32(value, context);
-}
-function v329(value: SchemaValue, context: Context): boolean {
+function v229(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v327(value: SchemaValue, context: Context): boolean {
+function v228(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v328(value, context)) matches++;
-    if (v329(value, context)) matches++;
+    if (d32(value, context)) matches++;
+    if (v229(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v331(value: SchemaValue, context: Context): boolean {
-  return d32(value, context);
-}
-function v332(value: SchemaValue, context: Context): boolean {
+function v231(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v330(value: SchemaValue, context: Context): boolean {
+function v230(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v331(value, context)) matches++;
-    if (v332(value, context)) matches++;
+    if (d32(value, context)) matches++;
+    if (v231(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v333(value: SchemaValue, context: Context): boolean {
+function v232(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v325(value: SchemaValue, context: Context): boolean {
+function v227(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v326(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'before') && !v327(value['before'], context)) return false;
-    if (Object.hasOwn(value, 'after') && !v330(value['after'], context)) return false;
-    if (Object.hasOwn(value, 'index') && !v333(value['index'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !d7(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'before') && !v228(value['before'], context)) return false;
+    if (Object.hasOwn(value, 'after') && !v230(value['after'], context)) return false;
+    if (Object.hasOwn(value, 'index') && !v232(value['index'], context)) return false;
   }
   return true;
 }
-function v322(value: SchemaValue, context: Context): boolean {
-  if (v323(value, context)) {
-    if (!v325(value, context)) return false;
+function v224(value: SchemaValue, context: Context): boolean {
+  if (v225(value, context)) {
+    if (!v227(value, context)) return false;
   }
   return true;
 }
-function v336(value: SchemaValue, context: Context): boolean {
+function v235(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'scopes') return false;
   return true;
 }
-function v335(value: SchemaValue, context: Context): boolean {
+function v234(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'table') && !v336(value['table'], context)) return false;
+    if (Object.hasOwn(value, 'table') && !v235(value['table'], context)) return false;
   }
   return true;
 }
-function v338(value: SchemaValue, context: Context): boolean {
-  return d6(value, context);
-}
-function v340(value: SchemaValue, context: Context): boolean {
-  return d33(value, context);
-}
-function v341(value: SchemaValue, context: Context): boolean {
+function v238(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v339(value: SchemaValue, context: Context): boolean {
+function v237(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v340(value, context)) matches++;
-    if (v341(value, context)) matches++;
+    if (d33(value, context)) matches++;
+    if (v238(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v343(value: SchemaValue, context: Context): boolean {
-  return d33(value, context);
-}
-function v344(value: SchemaValue, context: Context): boolean {
+function v240(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v342(value: SchemaValue, context: Context): boolean {
+function v239(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v343(value, context)) matches++;
-    if (v344(value, context)) matches++;
+    if (d33(value, context)) matches++;
+    if (v240(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v345(value: SchemaValue, context: Context): boolean {
+function v241(value: SchemaValue, context: Context): boolean {
   void context;
   if (typeof value === 'number' && value > 63) return false;
   return true;
 }
-function v337(value: SchemaValue, context: Context): boolean {
+function v236(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v338(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'before') && !v339(value['before'], context)) return false;
-    if (Object.hasOwn(value, 'after') && !v342(value['after'], context)) return false;
-    if (Object.hasOwn(value, 'index') && !v345(value['index'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !d6(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'before') && !v237(value['before'], context)) return false;
+    if (Object.hasOwn(value, 'after') && !v239(value['after'], context)) return false;
+    if (Object.hasOwn(value, 'index') && !v241(value['index'], context)) return false;
   }
   return true;
 }
-function v334(value: SchemaValue, context: Context): boolean {
-  if (v335(value, context)) {
-    if (!v337(value, context)) return false;
+function v233(value: SchemaValue, context: Context): boolean {
+  if (v234(value, context)) {
+    if (!v236(value, context)) return false;
   }
   return true;
 }
-function v348(value: SchemaValue, context: Context): boolean {
+function v244(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'objects') return false;
   return true;
 }
-function v347(value: SchemaValue, context: Context): boolean {
+function v243(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'table') && !v348(value['table'], context)) return false;
+    if (Object.hasOwn(value, 'table') && !v244(value['table'], context)) return false;
   }
   return true;
 }
-function v350(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v352(value: SchemaValue, context: Context): boolean {
-  return d35(value, context);
-}
-function v353(value: SchemaValue, context: Context): boolean {
+function v247(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v351(value: SchemaValue, context: Context): boolean {
+function v246(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v352(value, context)) matches++;
-    if (v353(value, context)) matches++;
+    if (d35(value, context)) matches++;
+    if (v247(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v355(value: SchemaValue, context: Context): boolean {
-  return d35(value, context);
-}
-function v356(value: SchemaValue, context: Context): boolean {
+function v249(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v354(value: SchemaValue, context: Context): boolean {
+function v248(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v355(value, context)) matches++;
-    if (v356(value, context)) matches++;
+    if (d35(value, context)) matches++;
+    if (v249(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v349(value: SchemaValue, context: Context): boolean {
+function v245(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'id') && !v350(value['id'], context)) return false;
-    if (Object.hasOwn(value, 'before') && !v351(value['before'], context)) return false;
-    if (Object.hasOwn(value, 'after') && !v354(value['after'], context)) return false;
+    if (Object.hasOwn(value, 'id') && !d5(value['id'], context)) return false;
+    if (Object.hasOwn(value, 'before') && !v246(value['before'], context)) return false;
+    if (Object.hasOwn(value, 'after') && !v248(value['after'], context)) return false;
   }
   return true;
 }
-function v346(value: SchemaValue, context: Context): boolean {
-  if (v347(value, context)) {
-    if (!v349(value, context)) return false;
+function v242(value: SchemaValue, context: Context): boolean {
+  if (v243(value, context)) {
+    if (!v245(value, context)) return false;
   }
   return true;
 }
-function v358(value: SchemaValue, context: Context): boolean {
+function v251(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v359(value: SchemaValue, context: Context): boolean {
+function v252(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v357(value: SchemaValue, context: Context): boolean {
+function v250(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'before') && !v358(value['before'], context)) return false;
-    if (Object.hasOwn(value, 'after') && !v359(value['after'], context)) return false;
+    if (Object.hasOwn(value, 'before') && !v251(value['before'], context)) return false;
+    if (Object.hasOwn(value, 'after') && !v252(value['after'], context)) return false;
   }
   return true;
 }
-function v304(value: SchemaValue, context: Context): boolean {
+function v215(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'table') ||
@@ -2119,45 +1810,36 @@ function v304(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v305(value['op'], context)) return false;
-    if (!v306(value['table'], context)) return false;
-    if (!v307(value['id'], context)) return false;
-    if (!v311(value['index'], context)) return false;
-    if (!v312(value['before'], context)) return false;
-    if (!v317(value['after'], context)) return false;
+    if (!v216(value['op'], context)) return false;
+    if (!v217(value['table'], context)) return false;
+    if (!v218(value['id'], context)) return false;
+    if (!v219(value['index'], context)) return false;
+    if (!v220(value['before'], context)) return false;
+    if (!v222(value['after'], context)) return false;
   }
-  if (!v322(value, context)) return false;
-  if (!v334(value, context)) return false;
-  if (!v346(value, context)) return false;
-  if (v357(value, context)) return false;
+  if (!v224(value, context)) return false;
+  if (!v233(value, context)) return false;
+  if (!v242(value, context)) return false;
+  if (v250(value, context)) return false;
   return true;
 }
 function d41(value: SchemaValue, context: Context): boolean {
-  return v304(value, context);
+  return v215(value, context);
 }
-function v361(value: SchemaValue, context: Context): boolean {
+function v254(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'cell') return false;
   return true;
 }
-function v362(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v363(value: SchemaValue, context: Context): boolean {
+function v255(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 262143)) return false;
+  if (value < 0 || value > 262143) return false;
   return true;
 }
-function v364(value: SchemaValue, context: Context): boolean {
-  return d11(value, context);
-}
-function v365(value: SchemaValue, context: Context): boolean {
-  return d11(value, context);
-}
-function v360(value: SchemaValue, context: Context): boolean {
+function v253(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'objectId') ||
@@ -2167,31 +1849,25 @@ function v360(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v361(value['op'], context)) return false;
-    if (!v362(value['objectId'], context)) return false;
-    if (!v363(value['index'], context)) return false;
-    if (!v364(value['before'], context)) return false;
-    if (!v365(value['after'], context)) return false;
+    if (!v254(value['op'], context)) return false;
+    if (!d5(value['objectId'], context)) return false;
+    if (!v255(value['index'], context)) return false;
+    if (!d11(value['before'], context)) return false;
+    if (!d11(value['after'], context)) return false;
   }
   return true;
 }
 function d42(value: SchemaValue, context: Context): boolean {
-  return v360(value, context);
+  return v253(value, context);
 }
-function v367(value: SchemaValue, context: Context): boolean {
+function v257(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'control') return false;
   return true;
 }
-function v368(value: SchemaValue, context: Context): boolean {
-  return d37(value, context);
-}
-function v369(value: SchemaValue, context: Context): boolean {
-  return d37(value, context);
-}
-function v366(value: SchemaValue, context: Context): boolean {
+function v256(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'before') ||
@@ -2199,29 +1875,23 @@ function v366(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v367(value['op'], context)) return false;
-    if (!v368(value['before'], context)) return false;
-    if (!v369(value['after'], context)) return false;
+    if (!v257(value['op'], context)) return false;
+    if (!d37(value['before'], context)) return false;
+    if (!d37(value['after'], context)) return false;
   }
   return true;
 }
 function d43(value: SchemaValue, context: Context): boolean {
-  return v366(value, context);
+  return v256(value, context);
 }
-function v371(value: SchemaValue, context: Context): boolean {
+function v259(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'allocator') return false;
   return true;
 }
-function v372(value: SchemaValue, context: Context): boolean {
-  return d38(value, context);
-}
-function v373(value: SchemaValue, context: Context): boolean {
-  return d38(value, context);
-}
-function v370(value: SchemaValue, context: Context): boolean {
+function v258(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'before') ||
@@ -2229,29 +1899,23 @@ function v370(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v371(value['op'], context)) return false;
-    if (!v372(value['before'], context)) return false;
-    if (!v373(value['after'], context)) return false;
+    if (!v259(value['op'], context)) return false;
+    if (!d38(value['before'], context)) return false;
+    if (!d38(value['after'], context)) return false;
   }
   return true;
 }
 function d44(value: SchemaValue, context: Context): boolean {
-  return v370(value, context);
+  return v258(value, context);
 }
-function v375(value: SchemaValue, context: Context): boolean {
+function v261(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'counters') return false;
   return true;
 }
-function v376(value: SchemaValue, context: Context): boolean {
-  return d39(value, context);
-}
-function v377(value: SchemaValue, context: Context): boolean {
-  return d39(value, context);
-}
-function v374(value: SchemaValue, context: Context): boolean {
+function v260(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'before') ||
@@ -2259,44 +1923,44 @@ function v374(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v375(value['op'], context)) return false;
-    if (!v376(value['before'], context)) return false;
-    if (!v377(value['after'], context)) return false;
+    if (!v261(value['op'], context)) return false;
+    if (!d39(value['before'], context)) return false;
+    if (!d39(value['after'], context)) return false;
   }
   return true;
 }
 function d45(value: SchemaValue, context: Context): boolean {
-  return v374(value, context);
+  return v260(value, context);
 }
-function v379(value: SchemaValue, context: Context): boolean {
+function v263(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'output') return false;
   return true;
 }
-function v380(value: SchemaValue, context: Context): boolean {
+function v264(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 16384)) return false;
+  if (value < 0 || value > 16384) return false;
   return true;
 }
-function v381(value: SchemaValue, context: Context): boolean {
+function v265(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 16384)) return false;
+  if (value < 0 || value > 16384) return false;
   return true;
 }
-function v382(value: SchemaValue, context: Context): boolean {
+function v266(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size > 16384) return false;
   }
   return true;
 }
-function v378(value: SchemaValue, context: Context): boolean {
+function v262(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'op') ||
       !Object.hasOwn(value, 'beforeBytes') ||
@@ -2305,54 +1969,36 @@ function v378(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v379(value['op'], context)) return false;
-    if (!v380(value['beforeBytes'], context)) return false;
-    if (!v381(value['afterBytes'], context)) return false;
-    if (!v382(value['append'], context)) return false;
+    if (!v263(value['op'], context)) return false;
+    if (!v264(value['beforeBytes'], context)) return false;
+    if (!v265(value['afterBytes'], context)) return false;
+    if (!v266(value['append'], context)) return false;
   }
   return true;
 }
 function d46(value: SchemaValue, context: Context): boolean {
-  return v378(value, context);
+  return v262(value, context);
 }
-function v384(value: SchemaValue, context: Context): boolean {
-  return d41(value, context);
-}
-function v385(value: SchemaValue, context: Context): boolean {
-  return d42(value, context);
-}
-function v386(value: SchemaValue, context: Context): boolean {
-  return d43(value, context);
-}
-function v387(value: SchemaValue, context: Context): boolean {
-  return d44(value, context);
-}
-function v388(value: SchemaValue, context: Context): boolean {
-  return d45(value, context);
-}
-function v389(value: SchemaValue, context: Context): boolean {
-  return d46(value, context);
-}
-function v383(value: SchemaValue, context: Context): boolean {
+function v267(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
   switch (value['op']) {
     case 'record':
-      if (!v384(value, context)) return false;
+      if (!d41(value, context)) return false;
       break;
     case 'cell':
-      if (!v385(value, context)) return false;
+      if (!d42(value, context)) return false;
       break;
     case 'control':
-      if (!v386(value, context)) return false;
+      if (!d43(value, context)) return false;
       break;
     case 'allocator':
-      if (!v387(value, context)) return false;
+      if (!d44(value, context)) return false;
       break;
     case 'counters':
-      if (!v388(value, context)) return false;
+      if (!d45(value, context)) return false;
       break;
     case 'output':
-      if (!v389(value, context)) return false;
+      if (!d46(value, context)) return false;
       break;
     default:
       return false;
@@ -2360,9 +2006,9 @@ function v383(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d47(value: SchemaValue, context: Context): boolean {
-  return v383(value, context);
+  return v267(value, context);
 }
-function v390(value: SchemaValue, context: Context): boolean {
+function v268(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'E_LEX_INVALID' ||
@@ -2405,52 +2051,36 @@ function v390(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d48(value: SchemaValue, context: Context): boolean {
-  return v390(value, context);
+  return v268(value, context);
 }
-function v392(value: SchemaValue, context: Context): boolean {
+function v270(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < -9007199254740991 || value > 9007199254740991))
-    return false;
+  if (value < -9007199254740991 || value > 9007199254740991) return false;
   return true;
 }
-function v393(value: SchemaValue, context: Context): boolean {
+function v271(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'string')) return false;
-  if (typeof value === 'string') {
+  {
     const size = scalarLength(value);
     if (size > 96) return false;
   }
   return true;
 }
-function v391(value: SchemaValue, context: Context): boolean {
+function v269(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v392(value, context)) matches++;
-    if (v393(value, context)) matches++;
+    if (v270(value, context)) matches++;
+    if (v271(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
 function d49(value: SchemaValue, context: Context): boolean {
-  return v391(value, context);
+  return v269(value, context);
 }
-function v395(value: SchemaValue, context: Context): boolean {
-  return d49(value, context);
-}
-function v396(value: SchemaValue, context: Context): boolean {
-  return d49(value, context);
-}
-function v397(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v398(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v399(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v400(value: SchemaValue, context: Context): boolean {
+function v273(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'sourceBytes' ||
@@ -2470,17 +2100,14 @@ function v400(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v402(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v401(value: SchemaValue, context: Context): boolean {
+function v274(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v402(value[index], context)) return false;
+      if (!d3(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -2489,31 +2116,31 @@ function v401(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v394(value: SchemaValue, context: Context): boolean {
+function v272(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     for (const key of Object.keys(value)) {
       switch (key) {
         case 'expected':
-          if (!v395(value[key], context)) return false;
+          if (!d49(value[key], context)) return false;
           break;
         case 'actual':
-          if (!v396(value[key], context)) return false;
+          if (!d49(value[key], context)) return false;
           break;
         case 'limit':
-          if (!v397(value[key], context)) return false;
+          if (!d8(value[key], context)) return false;
           break;
         case 'used':
-          if (!v398(value[key], context)) return false;
+          if (!d8(value[key], context)) return false;
           break;
         case 'attempted':
-          if (!v399(value[key], context)) return false;
+          if (!d8(value[key], context)) return false;
           break;
         case 'dimension':
-          if (!v400(value[key], context)) return false;
+          if (!v273(value[key], context)) return false;
           break;
         case 'relatedNodeIds':
-          if (!v401(value[key], context)) return false;
+          if (!v274(value[key], context)) return false;
           break;
         default:
           return false;
@@ -2524,23 +2151,20 @@ function v394(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d50(value: SchemaValue, context: Context): boolean {
-  return v394(value, context);
+  return v272(value, context);
 }
-function v404(value: SchemaValue, context: Context): boolean {
-  return d48(value, context);
-}
-function v405(value: SchemaValue, context: Context): boolean {
+function v276(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'error') return false;
   return true;
 }
-function v406(value: SchemaValue, context: Context): boolean {
+function v277(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'rust' || value === 'adapter' || value === 'protocol' || value === 'judge'))
     return false;
   return true;
 }
-function v407(value: SchemaValue, context: Context): boolean {
+function v278(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'preflight' ||
@@ -2556,15 +2180,9 @@ function v407(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v408(value: SchemaValue, context: Context): boolean {
-  return d21(value, context);
-}
-function v409(value: SchemaValue, context: Context): boolean {
-  return d50(value, context);
-}
-function v403(value: SchemaValue, context: Context): boolean {
+function v275(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'code') ||
       !Object.hasOwn(value, 'severity') ||
@@ -2575,36 +2193,33 @@ function v403(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v404(value['code'], context)) return false;
-    if (!v405(value['severity'], context)) return false;
-    if (!v406(value['origin'], context)) return false;
-    if (!v407(value['stage'], context)) return false;
-    if (!v408(value['location'], context)) return false;
-    if (!v409(value['details'], context)) return false;
+    if (!d48(value['code'], context)) return false;
+    if (!v276(value['severity'], context)) return false;
+    if (!v277(value['origin'], context)) return false;
+    if (!v278(value['stage'], context)) return false;
+    if (!d21(value['location'], context)) return false;
+    if (!d50(value['details'], context)) return false;
   }
   return true;
 }
 function d51(value: SchemaValue, context: Context): boolean {
-  return v403(value, context);
+  return v275(value, context);
 }
-function v411(value: SchemaValue, context: Context): boolean {
-  return d51(value, context);
-}
-function v410(value: SchemaValue, context: Context): boolean {
+function v279(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 16) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v411(value[index], context)) return false;
+      if (!d51(value[index], context)) return false;
     }
   }
   return true;
 }
 function d52(value: SchemaValue, context: Context): boolean {
-  return v410(value, context);
+  return v279(value, context);
 }
-function v413(value: SchemaValue, context: Context): boolean {
+function v281(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'input-bindings' ||
@@ -2617,22 +2232,19 @@ function v413(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v414(value: SchemaValue, context: Context): boolean {
+function v282(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'met' || value === 'unmet' || value === 'not-evaluated')) return false;
   return true;
 }
-function v416(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v415(value: SchemaValue, context: Context): boolean {
+function v283(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v416(value[index], context)) return false;
+      if (!d3(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -2641,17 +2253,14 @@ function v415(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v418(value: SchemaValue, context: Context): boolean {
-  return d13(value, context);
-}
-function v417(value: SchemaValue, context: Context): boolean {
+function v284(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 20000) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v418(value[index], context)) return false;
+      if (!d13(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -2660,7 +2269,7 @@ function v417(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v420(value: SchemaValue, context: Context): boolean {
+function v286(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'J_STDOUT_MISMATCH' ||
@@ -2671,14 +2280,14 @@ function v420(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v419(value: SchemaValue, context: Context): boolean {
+function v285(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 16) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v420(value[index], context)) return false;
+      if (!v286(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -2687,9 +2296,9 @@ function v419(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v412(value: SchemaValue, context: Context): boolean {
+function v280(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'key') ||
       !Object.hasOwn(value, 'status') ||
@@ -2699,34 +2308,25 @@ function v412(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v413(value['key'], context)) return false;
-    if (!v414(value['status'], context)) return false;
-    if (!v415(value['nodeIds'], context)) return false;
-    if (!v417(value['stepSeqs'], context)) return false;
-    if (!v419(value['diagnosticCodes'], context)) return false;
+    if (!v281(value['key'], context)) return false;
+    if (!v282(value['status'], context)) return false;
+    if (!v283(value['nodeIds'], context)) return false;
+    if (!v284(value['stepSeqs'], context)) return false;
+    if (!v285(value['diagnosticCodes'], context)) return false;
   }
   return true;
 }
 function d53(value: SchemaValue, context: Context): boolean {
-  return v412(value, context);
+  return v280(value, context);
 }
-function v422(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v423(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v424(value: SchemaValue, context: Context): boolean {
+function v288(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'then' || value === 'else' || value === 'while' || value === 'for')) return false;
   return true;
 }
-function v425(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v421(value: SchemaValue, context: Context): boolean {
+function v287(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'siteKey') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -2735,53 +2335,35 @@ function v421(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v422(value['siteKey'], context)) return false;
-    if (!v423(value['nodeId'], context)) return false;
-    if (!v424(value['branch'], context)) return false;
-    if (!v425(value['visits'], context)) return false;
+    if (!d2(value['siteKey'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!v288(value['branch'], context)) return false;
+    if (!d8(value['visits'], context)) return false;
   }
   return true;
 }
 function d54(value: SchemaValue, context: Context): boolean {
-  return v421(value, context);
+  return v287(value, context);
 }
-function v427(value: SchemaValue, context: Context): boolean {
+function v290(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'array-before-destroy') return false;
   return true;
 }
-function v428(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v429(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v430(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v431(value: SchemaValue, context: Context): boolean {
-  return d12(value, context);
-}
-function v432(value: SchemaValue, context: Context): boolean {
-  return d22(value, context);
-}
-function v434(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v433(value: SchemaValue, context: Context): boolean {
+function v291(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 30) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v434(value[index], context)) return false;
+      if (!d10(value[index], context)) return false;
     }
   }
   return true;
 }
-function v426(value: SchemaValue, context: Context): boolean {
+function v289(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'bindingKey') ||
@@ -2793,76 +2375,61 @@ function v426(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 7) return false;
-    if (!v427(value['kind'], context)) return false;
-    if (!v428(value['bindingKey'], context)) return false;
-    if (!v429(value['objectId'], context)) return false;
-    if (!v430(value['declarationNodeId'], context)) return false;
-    if (!v431(value['beforeCursor'], context)) return false;
-    if (!v432(value['location'], context)) return false;
-    if (!v433(value['values'], context)) return false;
+    if (!v290(value['kind'], context)) return false;
+    if (!d2(value['bindingKey'], context)) return false;
+    if (!d5(value['objectId'], context)) return false;
+    if (!d3(value['declarationNodeId'], context)) return false;
+    if (!d12(value['beforeCursor'], context)) return false;
+    if (!d22(value['location'], context)) return false;
+    if (!v291(value['values'], context)) return false;
   }
   return true;
 }
 function d55(value: SchemaValue, context: Context): boolean {
-  return v426(value, context);
+  return v289(value, context);
 }
-function v436(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v437(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v438(value: SchemaValue, context: Context): boolean {
+function v293(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'met' || value === 'unmet' || value === 'not-evaluated')) return false;
   return true;
 }
-function v440(value: SchemaValue, context: Context): boolean {
-  return d53(value, context);
-}
-function v439(value: SchemaValue, context: Context): boolean {
+function v294(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 4) return false;
     if (value.length > 6) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v440(value[index], context)) return false;
+      if (!d53(value[index], context)) return false;
     }
   }
   return true;
 }
-function v442(value: SchemaValue, context: Context): boolean {
-  return d54(value, context);
-}
-function v441(value: SchemaValue, context: Context): boolean {
+function v295(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v442(value[index], context)) return false;
+      if (!d54(value[index], context)) return false;
     }
   }
   return true;
 }
-function v444(value: SchemaValue, context: Context): boolean {
-  return d55(value, context);
-}
-function v443(value: SchemaValue, context: Context): boolean {
+function v296(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 20000) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v444(value[index], context)) return false;
+      if (!d55(value[index], context)) return false;
     }
   }
   return true;
 }
-function v435(value: SchemaValue, context: Context): boolean {
+function v292(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'profileRef') ||
       !Object.hasOwn(value, 'caseKey') ||
@@ -2873,22 +2440,19 @@ function v435(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v436(value['profileRef'], context)) return false;
-    if (!v437(value['caseKey'], context)) return false;
-    if (!v438(value['status'], context)) return false;
-    if (!v439(value['checks'], context)) return false;
-    if (!v441(value['coverage'], context)) return false;
-    if (!v443(value['observations'], context)) return false;
+    if (!d14(value['profileRef'], context)) return false;
+    if (!d2(value['caseKey'], context)) return false;
+    if (!v293(value['status'], context)) return false;
+    if (!v294(value['checks'], context)) return false;
+    if (!v295(value['coverage'], context)) return false;
+    if (!v296(value['observations'], context)) return false;
   }
   return true;
 }
 function d56(value: SchemaValue, context: Context): boolean {
-  return v435(value, context);
+  return v292(value, context);
 }
-function v446(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v447(value: SchemaValue, context: Context): boolean {
+function v298(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'function' ||
@@ -2909,15 +2473,9 @@ function v447(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v448(value: SchemaValue, context: Context): boolean {
-  return d4(value, context);
-}
-function v449(value: SchemaValue, context: Context): boolean {
-  return d18(value, context);
-}
-function v445(value: SchemaValue, context: Context): boolean {
+function v297(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'nodeId') ||
       !Object.hasOwn(value, 'kind') ||
@@ -2926,59 +2484,44 @@ function v445(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v446(value['nodeId'], context)) return false;
-    if (!v447(value['kind'], context)) return false;
-    if (!v448(value['parentId'], context)) return false;
-    if (!v449(value['byteRange'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!v298(value['kind'], context)) return false;
+    if (!d4(value['parentId'], context)) return false;
+    if (!d18(value['byteRange'], context)) return false;
   }
   return true;
 }
 function d57(value: SchemaValue, context: Context): boolean {
-  return v445(value, context);
+  return v297(value, context);
 }
-function v451(value: SchemaValue, context: Context): boolean {
-  return d2(value, context);
-}
-function v452(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v450(value: SchemaValue, context: Context): boolean {
+function v299(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'bindingKey') || !Object.hasOwn(value, 'declarationNodeId'))
       return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v451(value['bindingKey'], context)) return false;
-    if (!v452(value['declarationNodeId'], context)) return false;
+    if (!d2(value['bindingKey'], context)) return false;
+    if (!d3(value['declarationNodeId'], context)) return false;
   }
   return true;
 }
 function d58(value: SchemaValue, context: Context): boolean {
-  return v450(value, context);
+  return v299(value, context);
 }
-function v454(value: SchemaValue, context: Context): boolean {
+function v301(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'read') return false;
   return true;
 }
-function v455(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v456(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v457(value: SchemaValue, context: Context): boolean {
+function v302(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 262143)) return false;
+  if (value < 0 || value > 262143) return false;
   return true;
 }
-function v458(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v453(value: SchemaValue, context: Context): boolean {
+function v300(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -2988,26 +2531,23 @@ function v453(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v454(value['kind'], context)) return false;
-    if (!v455(value['nodeId'], context)) return false;
-    if (!v456(value['objectId'], context)) return false;
-    if (!v457(value['index'], context)) return false;
-    if (!v458(value['value'], context)) return false;
+    if (!v301(value['kind'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!d5(value['objectId'], context)) return false;
+    if (!v302(value['index'], context)) return false;
+    if (!d10(value['value'], context)) return false;
   }
   return true;
 }
 function d59(value: SchemaValue, context: Context): boolean {
-  return v453(value, context);
+  return v300(value, context);
 }
-function v460(value: SchemaValue, context: Context): boolean {
+function v304(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'evaluate') return false;
   return true;
 }
-function v461(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v462(value: SchemaValue, context: Context): boolean {
+function v305(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === '+' ||
@@ -3028,55 +2568,49 @@ function v462(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v464(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v463(value: SchemaValue, context: Context): boolean {
+function v306(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 1) return false;
     if (value.length > 2) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v464(value[index], context)) return false;
+      if (!d10(value[index], context)) return false;
     }
   }
   return true;
 }
-function v465(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v468(value: SchemaValue, context: Context): boolean {
+function v309(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '!') return false;
   return true;
 }
-function v467(value: SchemaValue, context: Context): boolean {
+function v308(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'operator') && !v468(value['operator'], context)) return false;
+    if (Object.hasOwn(value, 'operator') && !v309(value['operator'], context)) return false;
   }
   return true;
 }
-function v470(value: SchemaValue, context: Context): boolean {
+function v311(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 1) return false;
   }
   return true;
 }
-function v469(value: SchemaValue, context: Context): boolean {
+function v310(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'operands') && !v470(value['operands'], context)) return false;
+    if (Object.hasOwn(value, 'operands') && !v311(value['operands'], context)) return false;
   }
   return true;
 }
-function v466(value: SchemaValue, context: Context): boolean {
-  if (v467(value, context)) {
-    if (!v469(value, context)) return false;
+function v307(value: SchemaValue, context: Context): boolean {
+  if (v308(value, context)) {
+    if (!v310(value, context)) return false;
   }
   return true;
 }
-function v473(value: SchemaValue, context: Context): boolean {
+function v314(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === '*' ||
@@ -3092,34 +2626,34 @@ function v473(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v472(value: SchemaValue, context: Context): boolean {
+function v313(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'operator') && !v473(value['operator'], context)) return false;
+    if (Object.hasOwn(value, 'operator') && !v314(value['operator'], context)) return false;
   }
   return true;
 }
-function v475(value: SchemaValue, context: Context): boolean {
+function v316(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length < 2) return false;
   }
   return true;
 }
-function v474(value: SchemaValue, context: Context): boolean {
+function v315(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'operands') && !v475(value['operands'], context)) return false;
+    if (Object.hasOwn(value, 'operands') && !v316(value['operands'], context)) return false;
   }
   return true;
 }
-function v471(value: SchemaValue, context: Context): boolean {
-  if (v472(value, context)) {
-    if (!v474(value, context)) return false;
+function v312(value: SchemaValue, context: Context): boolean {
+  if (v313(value, context)) {
+    if (!v315(value, context)) return false;
   }
   return true;
 }
-function v459(value: SchemaValue, context: Context): boolean {
+function v303(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -3129,38 +2663,32 @@ function v459(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v460(value['kind'], context)) return false;
-    if (!v461(value['nodeId'], context)) return false;
-    if (!v462(value['operator'], context)) return false;
-    if (!v463(value['operands'], context)) return false;
-    if (!v465(value['value'], context)) return false;
+    if (!v304(value['kind'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!v305(value['operator'], context)) return false;
+    if (!v306(value['operands'], context)) return false;
+    if (!d10(value['value'], context)) return false;
   }
-  if (!v466(value, context)) return false;
-  if (!v471(value, context)) return false;
+  if (!v307(value, context)) return false;
+  if (!v312(value, context)) return false;
   return true;
 }
 function d60(value: SchemaValue, context: Context): boolean {
-  return v459(value, context);
+  return v303(value, context);
 }
-function v477(value: SchemaValue, context: Context): boolean {
+function v318(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'decision') return false;
   return true;
 }
-function v478(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v479(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v480(value: SchemaValue, context: Context): boolean {
+function v319(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'true' || value === 'false')) return false;
   return true;
 }
-function v476(value: SchemaValue, context: Context): boolean {
+function v317(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -3169,30 +2697,24 @@ function v476(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 4) return false;
-    if (!v477(value['kind'], context)) return false;
-    if (!v478(value['nodeId'], context)) return false;
-    if (!v479(value['value'], context)) return false;
-    if (!v480(value['branch'], context)) return false;
+    if (!v318(value['kind'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!d10(value['value'], context)) return false;
+    if (!v319(value['branch'], context)) return false;
   }
   return true;
 }
 function d61(value: SchemaValue, context: Context): boolean {
-  return v476(value, context);
+  return v317(value, context);
 }
-function v482(value: SchemaValue, context: Context): boolean {
+function v321(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'short-circuit') return false;
   return true;
 }
-function v483(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v484(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v481(value: SchemaValue, context: Context): boolean {
+function v320(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -3200,41 +2722,35 @@ function v481(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 3) return false;
-    if (!v482(value['kind'], context)) return false;
-    if (!v483(value['nodeId'], context)) return false;
-    if (!v484(value['skippedNodeId'], context)) return false;
+    if (!v321(value['kind'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!d3(value['skippedNodeId'], context)) return false;
   }
   return true;
 }
 function d62(value: SchemaValue, context: Context): boolean {
-  return v481(value, context);
+  return v320(value, context);
 }
-function v486(value: SchemaValue, context: Context): boolean {
+function v323(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'swap') return false;
   return true;
 }
-function v487(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v488(value: SchemaValue, context: Context): boolean {
-  return d5(value, context);
-}
-function v490(value: SchemaValue, context: Context): boolean {
+function v325(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 262143)) return false;
+  if (value < 0 || value > 262143) return false;
   return true;
 }
-function v489(value: SchemaValue, context: Context): boolean {
+function v324(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 2) return false;
     if (value.length > 2) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v490(value[index], context)) return false;
+      if (!v325(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -3243,33 +2759,27 @@ function v489(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v492(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v491(value: SchemaValue, context: Context): boolean {
+function v326(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 2) return false;
     if (value.length > 2) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v492(value[index], context)) return false;
+      if (!d10(value[index], context)) return false;
     }
   }
   return true;
 }
-function v494(value: SchemaValue, context: Context): boolean {
-  return d13(value, context);
-}
-function v493(value: SchemaValue, context: Context): boolean {
+function v327(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 2) return false;
     if (value.length > 2) return false;
     const seen = new Set<unknown>();
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v494(value[index], context)) return false;
+      if (!d13(value[index], context)) return false;
       const item = value[index],
         key = item !== null && typeof item === 'object' ? JSON.stringify(item) : item;
       if (seen.has(key)) return false;
@@ -3278,9 +2788,9 @@ function v493(value: SchemaValue, context: Context): boolean {
   }
   return true;
 }
-function v485(value: SchemaValue, context: Context): boolean {
+function v322(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'nodeId') ||
@@ -3291,50 +2801,35 @@ function v485(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 6) return false;
-    if (!v486(value['kind'], context)) return false;
-    if (!v487(value['nodeId'], context)) return false;
-    if (!v488(value['objectId'], context)) return false;
-    if (!v489(value['indices'], context)) return false;
-    if (!v491(value['beforeValues'], context)) return false;
-    if (!v493(value['writeSeqs'], context)) return false;
+    if (!v323(value['kind'], context)) return false;
+    if (!d3(value['nodeId'], context)) return false;
+    if (!d5(value['objectId'], context)) return false;
+    if (!v324(value['indices'], context)) return false;
+    if (!v326(value['beforeValues'], context)) return false;
+    if (!v327(value['writeSeqs'], context)) return false;
   }
   return true;
 }
 function d63(value: SchemaValue, context: Context): boolean {
-  return v485(value, context);
+  return v322(value, context);
 }
-function v496(value: SchemaValue, context: Context): boolean {
-  return d59(value, context);
-}
-function v497(value: SchemaValue, context: Context): boolean {
-  return d60(value, context);
-}
-function v498(value: SchemaValue, context: Context): boolean {
-  return d61(value, context);
-}
-function v499(value: SchemaValue, context: Context): boolean {
-  return d62(value, context);
-}
-function v500(value: SchemaValue, context: Context): boolean {
-  return d63(value, context);
-}
-function v495(value: SchemaValue, context: Context): boolean {
+function v328(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
   switch (value['kind']) {
     case 'read':
-      if (!v496(value, context)) return false;
+      if (!d59(value, context)) return false;
       break;
     case 'evaluate':
-      if (!v497(value, context)) return false;
+      if (!d60(value, context)) return false;
       break;
     case 'decision':
-      if (!v498(value, context)) return false;
+      if (!d61(value, context)) return false;
       break;
     case 'short-circuit':
-      if (!v499(value, context)) return false;
+      if (!d62(value, context)) return false;
       break;
     case 'swap':
-      if (!v500(value, context)) return false;
+      if (!d63(value, context)) return false;
       break;
     default:
       return false;
@@ -3342,12 +2837,9 @@ function v495(value: SchemaValue, context: Context): boolean {
   return true;
 }
 function d64(value: SchemaValue, context: Context): boolean {
-  return v495(value, context);
+  return v328(value, context);
 }
-function v502(value: SchemaValue, context: Context): boolean {
-  return d13(value, context);
-}
-function v503(value: SchemaValue, context: Context): boolean {
+function v330(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'program.enter' ||
@@ -3365,40 +2857,31 @@ function v503(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v504(value: SchemaValue, context: Context): boolean {
-  return d22(value, context);
-}
-function v506(value: SchemaValue, context: Context): boolean {
-  return d47(value, context);
-}
-function v505(value: SchemaValue, context: Context): boolean {
+function v331(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 1000000) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v506(value[index], context)) return false;
+      if (!d47(value[index], context)) return false;
     }
   }
   return true;
 }
-function v508(value: SchemaValue, context: Context): boolean {
-  return d64(value, context);
-}
-function v507(value: SchemaValue, context: Context): boolean {
+function v332(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 1000000) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v508(value[index], context)) return false;
+      if (!d64(value[index], context)) return false;
     }
   }
   return true;
 }
-function v501(value: SchemaValue, context: Context): boolean {
+function v329(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'seq') ||
       !Object.hasOwn(value, 'kind') ||
@@ -3408,237 +2891,218 @@ function v501(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v502(value['seq'], context)) return false;
-    if (!v503(value['kind'], context)) return false;
-    if (!v504(value['location'], context)) return false;
-    if (!v505(value['changes'], context)) return false;
-    if (!v507(value['observations'], context)) return false;
+    if (!d13(value['seq'], context)) return false;
+    if (!v330(value['kind'], context)) return false;
+    if (!d22(value['location'], context)) return false;
+    if (!v331(value['changes'], context)) return false;
+    if (!v332(value['observations'], context)) return false;
   }
   return true;
 }
 function d65(value: SchemaValue, context: Context): boolean {
-  return v501(value, context);
+  return v329(value, context);
 }
-function v510(value: SchemaValue, context: Context): boolean {
+function v334(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 19968 || value % 128 !== 0)) return false;
+  if (value < 0 || value > 19968 || value % 128 !== 0) return false;
   return true;
 }
-function v511(value: SchemaValue, context: Context): boolean {
-  return d40(value, context);
-}
-function v509(value: SchemaValue, context: Context): boolean {
+function v333(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (!Object.hasOwn(value, 'cursor') || !Object.hasOwn(value, 'state')) return false;
     if (Object.keys(value).length !== 2) return false;
-    if (!v510(value['cursor'], context)) return false;
-    if (!v511(value['state'], context)) return false;
+    if (!v334(value['cursor'], context)) return false;
+    if (!d40(value['state'], context)) return false;
   }
   return true;
 }
 function d66(value: SchemaValue, context: Context): boolean {
-  return v509(value, context);
+  return v333(value, context);
 }
-function v513(value: SchemaValue, context: Context): boolean {
+function v336(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v514(value: SchemaValue, context: Context): boolean {
+function v337(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v515(value: SchemaValue, context: Context): boolean {
+function v338(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v516(value: SchemaValue, context: Context): boolean {
+function v339(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== '') return false;
   return true;
 }
-function v518(value: SchemaValue, context: Context): boolean {
+function v341(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'ready') return false;
   return true;
 }
-function v519(value: SchemaValue, context: Context): boolean {
-  return d3(value, context);
-}
-function v520(value: SchemaValue, context: Context): boolean {
+function v342(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v521(value: SchemaValue, context: Context): boolean {
+function v343(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v522(value: SchemaValue, context: Context): boolean {
+function v344(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v517(value: SchemaValue, context: Context): boolean {
+function v340(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'phase') && !v518(value['phase'], context)) return false;
-    if (Object.hasOwn(value, 'nextNodeId') && !v519(value['nextNodeId'], context)) return false;
-    if (Object.hasOwn(value, 'activeFrameId') && !v520(value['activeFrameId'], context))
+    if (Object.hasOwn(value, 'phase') && !v341(value['phase'], context)) return false;
+    if (Object.hasOwn(value, 'nextNodeId') && !d3(value['nextNodeId'], context)) return false;
+    if (Object.hasOwn(value, 'activeFrameId') && !v342(value['activeFrameId'], context))
       return false;
-    if (Object.hasOwn(value, 'returnValue') && !v521(value['returnValue'], context)) return false;
-    if (Object.hasOwn(value, 'flowStack') && !v522(value['flowStack'], context)) return false;
+    if (Object.hasOwn(value, 'returnValue') && !v343(value['returnValue'], context)) return false;
+    if (Object.hasOwn(value, 'flowStack') && !v344(value['flowStack'], context)) return false;
   }
   return true;
 }
-function v524(value: SchemaValue, context: Context): boolean {
+function v346(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 4096) return false;
   return true;
 }
-function v525(value: SchemaValue, context: Context): boolean {
+function v347(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v526(value: SchemaValue, context: Context): boolean {
+function v348(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 1) return false;
   return true;
 }
-function v527(value: SchemaValue, context: Context): boolean {
+function v349(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 1) return false;
   return true;
 }
-function v528(value: SchemaValue, context: Context): boolean {
+function v350(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 1) return false;
   return true;
 }
-function v523(value: SchemaValue, context: Context): boolean {
+function v345(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'nextAddress') && !v524(value['nextAddress'], context)) return false;
-    if (Object.hasOwn(value, 'liveBytes') && !v525(value['liveBytes'], context)) return false;
-    if (Object.hasOwn(value, 'nextObject') && !v526(value['nextObject'], context)) return false;
-    if (Object.hasOwn(value, 'nextScope') && !v527(value['nextScope'], context)) return false;
-    if (Object.hasOwn(value, 'nextFrame') && !v528(value['nextFrame'], context)) return false;
+    if (Object.hasOwn(value, 'nextAddress') && !v346(value['nextAddress'], context)) return false;
+    if (Object.hasOwn(value, 'liveBytes') && !v347(value['liveBytes'], context)) return false;
+    if (Object.hasOwn(value, 'nextObject') && !v348(value['nextObject'], context)) return false;
+    if (Object.hasOwn(value, 'nextScope') && !v349(value['nextScope'], context)) return false;
+    if (Object.hasOwn(value, 'nextFrame') && !v350(value['nextFrame'], context)) return false;
   }
   return true;
 }
-function v530(value: SchemaValue, context: Context): boolean {
+function v352(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v531(value: SchemaValue, context: Context): boolean {
+function v353(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v532(value: SchemaValue, context: Context): boolean {
+function v354(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v533(value: SchemaValue, context: Context): boolean {
+function v355(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 0) return false;
   return true;
 }
-function v529(value: SchemaValue, context: Context): boolean {
+function v351(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'comparisons') && !v530(value['comparisons'], context)) return false;
-    if (Object.hasOwn(value, 'scalarWrites') && !v531(value['scalarWrites'], context)) return false;
-    if (Object.hasOwn(value, 'arrayWrites') && !v532(value['arrayWrites'], context)) return false;
-    if (Object.hasOwn(value, 'swaps') && !v533(value['swaps'], context)) return false;
+    if (Object.hasOwn(value, 'comparisons') && !v352(value['comparisons'], context)) return false;
+    if (Object.hasOwn(value, 'scalarWrites') && !v353(value['scalarWrites'], context)) return false;
+    if (Object.hasOwn(value, 'arrayWrites') && !v354(value['arrayWrites'], context)) return false;
+    if (Object.hasOwn(value, 'swaps') && !v355(value['swaps'], context)) return false;
   }
   return true;
 }
-function v534(value: SchemaValue, context: Context): boolean {
-  return d40(value, context);
-}
-function v512(value: SchemaValue, context: Context): boolean {
+function v335(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'frames') && !v513(value['frames'], context)) return false;
-    if (Object.hasOwn(value, 'scopes') && !v514(value['scopes'], context)) return false;
-    if (Object.hasOwn(value, 'objects') && !v515(value['objects'], context)) return false;
-    if (Object.hasOwn(value, 'output') && !v516(value['output'], context)) return false;
-    if (Object.hasOwn(value, 'control') && !v517(value['control'], context)) return false;
-    if (Object.hasOwn(value, 'allocator') && !v523(value['allocator'], context)) return false;
-    if (Object.hasOwn(value, 'counters') && !v529(value['counters'], context)) return false;
+    if (Object.hasOwn(value, 'frames') && !v336(value['frames'], context)) return false;
+    if (Object.hasOwn(value, 'scopes') && !v337(value['scopes'], context)) return false;
+    if (Object.hasOwn(value, 'objects') && !v338(value['objects'], context)) return false;
+    if (Object.hasOwn(value, 'output') && !v339(value['output'], context)) return false;
+    if (Object.hasOwn(value, 'control') && !v340(value['control'], context)) return false;
+    if (Object.hasOwn(value, 'allocator') && !v345(value['allocator'], context)) return false;
+    if (Object.hasOwn(value, 'counters') && !v351(value['counters'], context)) return false;
   }
-  if (!v534(value, context)) return false;
+  if (!d40(value, context)) return false;
   return true;
 }
 function d67(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d67')) return true;
-    if (!v512(value, context)) return false;
-    if (known) known.push('d67');
-    else context.validated.set(value, ['d67']);
+    const known = context.validated.get('d67');
+    if (known?.includes(value)) return true;
+    if (!v335(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d67', [value]);
     return true;
   }
-  return v512(value, context);
+  return v335(value, context);
 }
-function v536(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v537(value: SchemaValue, context: Context): boolean {
+function v357(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'complete' || value === 'prefix')) return false;
   return true;
 }
-function v538(value: SchemaValue, context: Context): boolean {
-  return d67(value, context);
-}
-function v540(value: SchemaValue, context: Context): boolean {
-  return d65(value, context);
-}
-function v539(value: SchemaValue, context: Context): boolean {
+function v358(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 20000) return false;
     if (!context.deferTrace)
       for (let index = 0; index < value.length; index++) {
         if ((index & 1023) === 0) context.guard();
-        if (!v540(value[index], context)) return false;
+        if (!d65(value[index], context)) return false;
       }
   }
   return true;
 }
-function v542(value: SchemaValue, context: Context): boolean {
-  return d66(value, context);
-}
-function v541(value: SchemaValue, context: Context): boolean {
+function v359(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length < 1) return false;
     if (value.length > 157) return false;
     if (!context.deferTrace)
       for (let index = 0; index < value.length; index++) {
         if ((index & 1023) === 0) context.guard();
-        if (!v542(value[index], context)) return false;
+        if (!d66(value[index], context)) return false;
       }
   }
   return true;
 }
-function v535(value: SchemaValue, context: Context): boolean {
+function v356(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'dslVersion') ||
       !Object.hasOwn(value, 'completeness') ||
@@ -3648,26 +3112,28 @@ function v535(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v536(value['dslVersion'], context)) return false;
-    if (!v537(value['completeness'], context)) return false;
-    if (!v538(value['initialState'], context)) return false;
-    if (!v539(value['steps'], context)) return false;
-    if (!v541(value['checkpoints'], context)) return false;
+    if (!d0(value['dslVersion'], context)) return false;
+    if (!v357(value['completeness'], context)) return false;
+    if (!d67(value['initialState'], context)) return false;
+    if (!v358(value['steps'], context)) return false;
+    if (!v359(value['checkpoints'], context)) return false;
   }
   return true;
 }
 function d68(value: SchemaValue, context: Context): boolean {
   if (value !== null && typeof value === 'object') {
-    const known = context.validated.get(value);
-    if (known?.includes('d68')) return true;
-    if (!v535(value, context)) return false;
-    if (known) known.push('d68');
-    else context.validated.set(value, ['d68']);
+    const known = context.validated.get('d68');
+    if (known?.includes(value)) return true;
+    if (!v356(value, context)) return false;
+    if (known) {
+      known.push(value);
+      if (known.length > 32) known.shift();
+    } else context.validated.set('d68', [value]);
     return true;
   }
-  return v535(value, context);
+  return v356(value, context);
 }
-function v544(value: SchemaValue, context: Context): boolean {
+function v361(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'completed' ||
@@ -3680,71 +3146,53 @@ function v544(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v545(value: SchemaValue, context: Context): boolean {
-  return d11(value, context);
-}
-function v547(value: SchemaValue, context: Context): boolean {
-  return d12(value, context);
-}
-function v548(value: SchemaValue, context: Context): boolean {
+function v363(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v546(value: SchemaValue, context: Context): boolean {
+function v362(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v547(value, context)) matches++;
-    if (v548(value, context)) matches++;
+    if (d12(value, context)) matches++;
+    if (v363(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v549(value: SchemaValue, context: Context): boolean {
-  return d21(value, context);
-}
-function v550(value: SchemaValue, context: Context): boolean {
-  return d52(value, context);
-}
-function v553(value: SchemaValue, context: Context): boolean {
+function v366(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'completed') return false;
   return true;
 }
-function v552(value: SchemaValue, context: Context): boolean {
+function v365(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v553(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v366(value['status'], context)) return false;
   }
   return true;
 }
-function v555(value: SchemaValue, context: Context): boolean {
-  return d10(value, context);
-}
-function v556(value: SchemaValue, context: Context): boolean {
-  return d12(value, context);
-}
-function v557(value: SchemaValue, context: Context): boolean {
+function v368(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length > 0) return false;
   }
   return true;
 }
-function v554(value: SchemaValue, context: Context): boolean {
+function v367(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'exitCode') && !v555(value['exitCode'], context)) return false;
-    if (Object.hasOwn(value, 'cursor') && !v556(value['cursor'], context)) return false;
-    if (Object.hasOwn(value, 'diagnostics') && !v557(value['diagnostics'], context)) return false;
+    if (Object.hasOwn(value, 'exitCode') && !d10(value['exitCode'], context)) return false;
+    if (Object.hasOwn(value, 'cursor') && !d12(value['cursor'], context)) return false;
+    if (Object.hasOwn(value, 'diagnostics') && !v368(value['diagnostics'], context)) return false;
   }
   return true;
 }
-function v551(value: SchemaValue, context: Context): boolean {
-  if (v552(value, context)) {
-    if (!v554(value, context)) return false;
+function v364(value: SchemaValue, context: Context): boolean {
+  if (v365(value, context)) {
+    if (!v367(value, context)) return false;
   }
   return true;
 }
-function v560(value: SchemaValue, context: Context): boolean {
+function v371(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'program-error' ||
@@ -3756,40 +3204,40 @@ function v560(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v559(value: SchemaValue, context: Context): boolean {
+function v370(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v560(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v371(value['status'], context)) return false;
   }
   return true;
 }
-function v562(value: SchemaValue, context: Context): boolean {
+function v373(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v563(value: SchemaValue, context: Context): boolean {
+function v374(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length < 1) return false;
   }
   return true;
 }
-function v561(value: SchemaValue, context: Context): boolean {
+function v372(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'exitCode') && !v562(value['exitCode'], context)) return false;
-    if (Object.hasOwn(value, 'diagnostics') && !v563(value['diagnostics'], context)) return false;
+    if (Object.hasOwn(value, 'exitCode') && !v373(value['exitCode'], context)) return false;
+    if (Object.hasOwn(value, 'diagnostics') && !v374(value['diagnostics'], context)) return false;
   }
   return true;
 }
-function v558(value: SchemaValue, context: Context): boolean {
-  if (v559(value, context)) {
-    if (!v561(value, context)) return false;
+function v369(value: SchemaValue, context: Context): boolean {
+  if (v370(value, context)) {
+    if (!v372(value, context)) return false;
   }
   return true;
 }
-function v543(value: SchemaValue, context: Context): boolean {
+function v360(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'status') ||
       !Object.hasOwn(value, 'exitCode') ||
@@ -3799,63 +3247,60 @@ function v543(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v544(value['status'], context)) return false;
-    if (!v545(value['exitCode'], context)) return false;
-    if (!v546(value['cursor'], context)) return false;
-    if (!v549(value['location'], context)) return false;
-    if (!v550(value['diagnostics'], context)) return false;
+    if (!v361(value['status'], context)) return false;
+    if (!d11(value['exitCode'], context)) return false;
+    if (!v362(value['cursor'], context)) return false;
+    if (!d21(value['location'], context)) return false;
+    if (!d52(value['diagnostics'], context)) return false;
   }
-  if (!v551(value, context)) return false;
-  if (!v558(value, context)) return false;
+  if (!v364(value, context)) return false;
+  if (!v369(value, context)) return false;
   return true;
 }
 function d69(value: SchemaValue, context: Context): boolean {
-  return v543(value, context);
+  return v360(value, context);
 }
-function v565(value: SchemaValue, context: Context): boolean {
+function v376(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 1000000)) return false;
+  if (value < 0 || value > 1000000) return false;
   return true;
 }
-function v566(value: SchemaValue, context: Context): boolean {
+function v377(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 1048576 || value % 4 !== 0)) return false;
+  if (value < 0 || value > 1048576 || value % 4 !== 0) return false;
   return true;
 }
-function v567(value: SchemaValue, context: Context): boolean {
+function v378(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 64)) return false;
+  if (value < 0 || value > 64) return false;
   return true;
 }
-function v568(value: SchemaValue, context: Context): boolean {
+function v379(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(typeof value === 'number' && Number.isSafeInteger(value))) return false;
-  if (typeof value === 'number' && (value < 0 || value > 64)) return false;
+  if (value < 0 || value > 64) return false;
   return true;
 }
-function v570(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v571(value: SchemaValue, context: Context): boolean {
+function v381(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v569(value: SchemaValue, context: Context): boolean {
+function v380(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v570(value, context)) matches++;
-    if (v571(value, context)) matches++;
+    if (d8(value, context)) matches++;
+    if (v381(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v564(value: SchemaValue, context: Context): boolean {
+function v375(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'fuelUsed') ||
       !Object.hasOwn(value, 'peakVirtualBytes') ||
@@ -3865,220 +3310,160 @@ function v564(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 5) return false;
-    if (!v565(value['fuelUsed'], context)) return false;
-    if (!v566(value['peakVirtualBytes'], context)) return false;
-    if (!v567(value['maxSyntaxDepth'], context)) return false;
-    if (!v568(value['maxAstDepth'], context)) return false;
-    if (!v569(value['rustMicros'], context)) return false;
+    if (!v376(value['fuelUsed'], context)) return false;
+    if (!v377(value['peakVirtualBytes'], context)) return false;
+    if (!v378(value['maxSyntaxDepth'], context)) return false;
+    if (!v379(value['maxAstDepth'], context)) return false;
+    if (!v380(value['rustMicros'], context)) return false;
   }
   return true;
 }
 function d70(value: SchemaValue, context: Context): boolean {
-  return v564(value, context);
+  return v375(value, context);
 }
-function v573(value: SchemaValue, context: Context): boolean {
+function v383(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'result') return false;
   return true;
 }
-function v574(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v575(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v576(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v577(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v578(value: SchemaValue, context: Context): boolean {
-  return d0(value, context);
-}
-function v579(value: SchemaValue, context: Context): boolean {
-  return d17(value, context);
-}
-function v580(value: SchemaValue, context: Context): boolean {
+function v384(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'rust' || value === 'adapter' || value === 'fixture')) return false;
   return true;
 }
-function v581(value: SchemaValue, context: Context): boolean {
-  return d16(value, context);
-}
-function v582(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v583(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v584(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v585(value: SchemaValue, context: Context): boolean {
-  return d15(value, context);
-}
-function v586(value: SchemaValue, context: Context): boolean {
-  return d15(value, context);
-}
-function v588(value: SchemaValue, context: Context): boolean {
-  return d9(value, context);
-}
-function v589(value: SchemaValue, context: Context): boolean {
+function v386(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v587(value: SchemaValue, context: Context): boolean {
+function v385(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v588(value, context)) matches++;
-    if (v589(value, context)) matches++;
+    if (d9(value, context)) matches++;
+    if (v386(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v590(value: SchemaValue, context: Context): boolean {
-  return d14(value, context);
-}
-function v592(value: SchemaValue, context: Context): boolean {
-  return d57(value, context);
-}
-function v591(value: SchemaValue, context: Context): boolean {
+function v387(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v592(value[index], context)) return false;
+      if (!d57(value[index], context)) return false;
     }
   }
   return true;
 }
-function v594(value: SchemaValue, context: Context): boolean {
-  return d58(value, context);
-}
-function v593(value: SchemaValue, context: Context): boolean {
+function v388(value: SchemaValue, context: Context): boolean {
   if (!Array.isArray(value)) return false;
-  if (Array.isArray(value)) {
+  {
     if (value.length > 32768) return false;
     for (let index = 0; index < value.length; index++) {
       if ((index & 1023) === 0) context.guard();
-      if (!v594(value[index], context)) return false;
+      if (!d58(value[index], context)) return false;
     }
   }
   return true;
 }
-function v596(value: SchemaValue, context: Context): boolean {
-  return d68(value, context);
-}
-function v597(value: SchemaValue, context: Context): boolean {
+function v390(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v595(value: SchemaValue, context: Context): boolean {
+function v389(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v596(value, context)) matches++;
-    if (v597(value, context)) matches++;
+    if (d68(value, context)) matches++;
+    if (v390(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v598(value: SchemaValue, context: Context): boolean {
-  return d69(value, context);
-}
-function v600(value: SchemaValue, context: Context): boolean {
-  return d56(value, context);
-}
-function v601(value: SchemaValue, context: Context): boolean {
+function v392(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v599(value: SchemaValue, context: Context): boolean {
+function v391(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v600(value, context)) matches++;
-    if (v601(value, context)) matches++;
+    if (d56(value, context)) matches++;
+    if (v392(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v603(value: SchemaValue, context: Context): boolean {
-  return d70(value, context);
-}
-function v604(value: SchemaValue, context: Context): boolean {
+function v394(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v602(value: SchemaValue, context: Context): boolean {
+function v393(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v603(value, context)) matches++;
-    if (v604(value, context)) matches++;
+    if (d70(value, context)) matches++;
+    if (v394(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v607(value: SchemaValue, context: Context): boolean {
+function v397(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'fixture') return false;
   return true;
 }
-function v606(value: SchemaValue, context: Context): boolean {
+function v396(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'producer') && !v607(value['producer'], context)) return false;
+    if (Object.hasOwn(value, 'producer') && !v397(value['producer'], context)) return false;
   }
   return true;
 }
-function v609(value: SchemaValue, context: Context): boolean {
+function v399(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v608(value: SchemaValue, context: Context): boolean {
+function v398(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'stats') && !v609(value['stats'], context)) return false;
+    if (Object.hasOwn(value, 'stats') && !v399(value['stats'], context)) return false;
   }
   return true;
 }
-function v605(value: SchemaValue, context: Context): boolean {
-  if (v606(value, context)) {
-    if (!v608(value, context)) return false;
+function v395(value: SchemaValue, context: Context): boolean {
+  if (v396(value, context)) {
+    if (!v398(value, context)) return false;
   }
   return true;
 }
-function v612(value: SchemaValue, context: Context): boolean {
+function v402(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'adapter') return false;
   return true;
 }
-function v611(value: SchemaValue, context: Context): boolean {
+function v401(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'producer') && !v612(value['producer'], context)) return false;
+    if (Object.hasOwn(value, 'producer') && !v402(value['producer'], context)) return false;
   }
   return true;
 }
-function v614(value: SchemaValue, context: Context): boolean {
+function v404(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v615(value: SchemaValue, context: Context): boolean {
+function v405(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v616(value: SchemaValue, context: Context): boolean {
+function v406(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v618(value: SchemaValue, context: Context): boolean {
+function v408(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'rejected' ||
@@ -4089,58 +3474,52 @@ function v618(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v619(value: SchemaValue, context: Context): boolean {
+function v409(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v617(value: SchemaValue, context: Context): boolean {
+function v407(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v618(value['status'], context)) return false;
-    if (Object.hasOwn(value, 'cursor') && !v619(value['cursor'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v408(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'cursor') && !v409(value['cursor'], context)) return false;
   }
   return true;
 }
-function v613(value: SchemaValue, context: Context): boolean {
+function v403(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'trace') && !v614(value['trace'], context)) return false;
-    if (Object.hasOwn(value, 'stats') && !v615(value['stats'], context)) return false;
-    if (Object.hasOwn(value, 'judgeResult') && !v616(value['judgeResult'], context)) return false;
-    if (Object.hasOwn(value, 'terminal') && !v617(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'trace') && !v404(value['trace'], context)) return false;
+    if (Object.hasOwn(value, 'stats') && !v405(value['stats'], context)) return false;
+    if (Object.hasOwn(value, 'judgeResult') && !v406(value['judgeResult'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v407(value['terminal'], context)) return false;
   }
   return true;
 }
-function v610(value: SchemaValue, context: Context): boolean {
-  if (v611(value, context)) {
-    if (!v613(value, context)) return false;
+function v400(value: SchemaValue, context: Context): boolean {
+  if (v401(value, context)) {
+    if (!v403(value, context)) return false;
   }
   return true;
 }
-function v622(value: SchemaValue, context: Context): boolean {
+function v412(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'rust') return false;
   return true;
 }
-function v621(value: SchemaValue, context: Context): boolean {
+function v411(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'producer') && !v622(value['producer'], context)) return false;
+    if (Object.hasOwn(value, 'producer') && !v412(value['producer'], context)) return false;
   }
   return true;
 }
-function v625(value: SchemaValue, context: Context): boolean {
-  return d8(value, context);
-}
-function v626(value: SchemaValue, context: Context): boolean {
-  return d70(value, context);
-}
-function v624(value: SchemaValue, context: Context): boolean {
+function v414(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'rustMicros') && !v625(value['rustMicros'], context)) return false;
+    if (Object.hasOwn(value, 'rustMicros') && !d8(value['rustMicros'], context)) return false;
   }
-  if (!v626(value, context)) return false;
+  if (!d70(value, context)) return false;
   return true;
 }
-function v628(value: SchemaValue, context: Context): boolean {
+function v416(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'completed' ||
@@ -4151,232 +3530,223 @@ function v628(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v627(value: SchemaValue, context: Context): boolean {
+function v415(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v628(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v416(value['status'], context)) return false;
   }
   return true;
 }
-function v623(value: SchemaValue, context: Context): boolean {
+function v413(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'stats') && !v624(value['stats'], context)) return false;
-    if (Object.hasOwn(value, 'terminal') && !v627(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'stats') && !v414(value['stats'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v415(value['terminal'], context)) return false;
   }
   return true;
 }
-function v620(value: SchemaValue, context: Context): boolean {
-  if (v621(value, context)) {
-    if (!v623(value, context)) return false;
+function v410(value: SchemaValue, context: Context): boolean {
+  if (v411(value, context)) {
+    if (!v413(value, context)) return false;
   }
   return true;
 }
-function v632(value: SchemaValue, context: Context): boolean {
+function v420(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'completed') return false;
   return true;
 }
-function v631(value: SchemaValue, context: Context): boolean {
+function v419(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v632(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v420(value['status'], context)) return false;
   }
   return true;
 }
-function v630(value: SchemaValue, context: Context): boolean {
+function v418(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v631(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v419(value['terminal'], context)) return false;
   }
   return true;
 }
-function v635(value: SchemaValue, context: Context): boolean {
+function v423(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'complete') return false;
   return true;
 }
-function v636(value: SchemaValue, context: Context): boolean {
+function v424(value: SchemaValue, context: Context): boolean {
   void context;
   if (Array.isArray(value)) {
     if (value.length < 2) return false;
   }
   return true;
 }
-function v637(value: SchemaValue, context: Context): boolean {
-  return d68(value, context);
-}
-function v634(value: SchemaValue, context: Context): boolean {
+function v422(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'completeness') && !v635(value['completeness'], context)) return false;
-    if (Object.hasOwn(value, 'steps') && !v636(value['steps'], context)) return false;
+    if (Object.hasOwn(value, 'completeness') && !v423(value['completeness'], context)) return false;
+    if (Object.hasOwn(value, 'steps') && !v424(value['steps'], context)) return false;
   }
-  if (!v637(value, context)) return false;
+  if (!d68(value, context)) return false;
   return true;
 }
-function v633(value: SchemaValue, context: Context): boolean {
+function v421(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'trace') && !v634(value['trace'], context)) return false;
+    if (Object.hasOwn(value, 'trace') && !v422(value['trace'], context)) return false;
   }
   return true;
 }
-function v629(value: SchemaValue, context: Context): boolean {
-  if (v630(value, context)) {
-    if (!v633(value, context)) return false;
+function v417(value: SchemaValue, context: Context): boolean {
+  if (v418(value, context)) {
+    if (!v421(value, context)) return false;
   }
   return true;
 }
-function v641(value: SchemaValue, context: Context): boolean {
+function v428(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'program-error' || value === 'resource-limit')) return false;
   return true;
 }
-function v640(value: SchemaValue, context: Context): boolean {
+function v427(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v641(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v428(value['status'], context)) return false;
   }
   return true;
 }
-function v639(value: SchemaValue, context: Context): boolean {
+function v426(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v640(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v427(value['terminal'], context)) return false;
   }
   return true;
 }
-function v644(value: SchemaValue, context: Context): boolean {
+function v431(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v646(value: SchemaValue, context: Context): boolean {
+function v433(value: SchemaValue, context: Context): boolean {
   void context;
   if (value !== 'prefix') return false;
   return true;
 }
-function v647(value: SchemaValue, context: Context): boolean {
-  return d68(value, context);
-}
-function v645(value: SchemaValue, context: Context): boolean {
+function v432(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'completeness') && !v646(value['completeness'], context)) return false;
+    if (Object.hasOwn(value, 'completeness') && !v433(value['completeness'], context)) return false;
   }
-  if (!v647(value, context)) return false;
+  if (!d68(value, context)) return false;
   return true;
 }
-function v643(value: SchemaValue, context: Context): boolean {
+function v430(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v644(value, context)) matches++;
-    if (v645(value, context)) matches++;
+    if (v431(value, context)) matches++;
+    if (v432(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v642(value: SchemaValue, context: Context): boolean {
+function v429(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'trace') && !v643(value['trace'], context)) return false;
+    if (Object.hasOwn(value, 'trace') && !v430(value['trace'], context)) return false;
   }
   return true;
 }
-function v638(value: SchemaValue, context: Context): boolean {
-  if (v639(value, context)) {
-    if (!v642(value, context)) return false;
+function v425(value: SchemaValue, context: Context): boolean {
+  if (v426(value, context)) {
+    if (!v429(value, context)) return false;
   }
   return true;
 }
-function v651(value: SchemaValue, context: Context): boolean {
+function v437(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'rejected' || value === 'cancelled' || value === 'infrastructure-failure'))
     return false;
   return true;
 }
-function v650(value: SchemaValue, context: Context): boolean {
+function v436(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v651(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v437(value['status'], context)) return false;
   }
   return true;
 }
-function v649(value: SchemaValue, context: Context): boolean {
+function v435(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v650(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v436(value['terminal'], context)) return false;
   }
   return true;
 }
-function v653(value: SchemaValue, context: Context): boolean {
+function v439(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v655(value: SchemaValue, context: Context): boolean {
+function v441(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v654(value: SchemaValue, context: Context): boolean {
+function v440(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'cursor') && !v655(value['cursor'], context)) return false;
+    if (Object.hasOwn(value, 'cursor') && !v441(value['cursor'], context)) return false;
   }
   return true;
 }
-function v652(value: SchemaValue, context: Context): boolean {
+function v438(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'trace') && !v653(value['trace'], context)) return false;
-    if (Object.hasOwn(value, 'terminal') && !v654(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'trace') && !v439(value['trace'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v440(value['terminal'], context)) return false;
   }
   return true;
 }
-function v648(value: SchemaValue, context: Context): boolean {
-  if (v649(value, context)) {
-    if (!v652(value, context)) return false;
+function v434(value: SchemaValue, context: Context): boolean {
+  if (v435(value, context)) {
+    if (!v438(value, context)) return false;
   }
   return true;
 }
-function v658(value: SchemaValue, context: Context): boolean {
+function v444(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v657(value: SchemaValue, context: Context): boolean {
+function v443(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'trace') && !v658(value['trace'], context)) return false;
+    if (Object.hasOwn(value, 'trace') && !v444(value['trace'], context)) return false;
   }
   return true;
 }
-function v661(value: SchemaValue, context: Context): boolean {
+function v447(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v660(value: SchemaValue, context: Context): boolean {
+function v446(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'cursor') && !v661(value['cursor'], context)) return false;
+    if (Object.hasOwn(value, 'cursor') && !v447(value['cursor'], context)) return false;
   }
   return true;
 }
-function v659(value: SchemaValue, context: Context): boolean {
+function v445(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v660(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v446(value['terminal'], context)) return false;
   }
   return true;
 }
-function v664(value: SchemaValue, context: Context): boolean {
-  return d12(value, context);
-}
-function v663(value: SchemaValue, context: Context): boolean {
+function v449(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'cursor') && !v664(value['cursor'], context)) return false;
+    if (Object.hasOwn(value, 'cursor') && !d12(value['cursor'], context)) return false;
   }
   return true;
 }
-function v662(value: SchemaValue, context: Context): boolean {
+function v448(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v663(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v449(value['terminal'], context)) return false;
   }
   return true;
 }
-function v656(value: SchemaValue, context: Context): boolean {
-  if (v657(value, context)) {
-    if (!v659(value, context)) return false;
-  } else if (!v662(value, context)) return false;
+function v442(value: SchemaValue, context: Context): boolean {
+  if (v443(value, context)) {
+    if (!v445(value, context)) return false;
+  } else if (!v448(value, context)) return false;
   return true;
 }
-function v668(value: SchemaValue, context: Context): boolean {
+function v453(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(
     value === 'program-error' ||
@@ -4388,59 +3758,59 @@ function v668(value: SchemaValue, context: Context): boolean {
     return false;
   return true;
 }
-function v667(value: SchemaValue, context: Context): boolean {
+function v452(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v668(value['status'], context)) return false;
+    if (Object.hasOwn(value, 'status') && !v453(value['status'], context)) return false;
   }
   return true;
 }
-function v666(value: SchemaValue, context: Context): boolean {
+function v451(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'terminal') && !v667(value['terminal'], context)) return false;
+    if (Object.hasOwn(value, 'terminal') && !v452(value['terminal'], context)) return false;
   }
   return true;
 }
-function v671(value: SchemaValue, context: Context): boolean {
+function v456(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === null)) return false;
   return true;
 }
-function v673(value: SchemaValue, context: Context): boolean {
+function v458(value: SchemaValue, context: Context): boolean {
   void context;
   if (!(value === 'unmet' || value === 'not-evaluated')) return false;
   return true;
 }
-function v672(value: SchemaValue, context: Context): boolean {
+function v457(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
-    if (Object.hasOwn(value, 'status') && !v673(value['status'], context)) return false;
+  {
+    if (Object.hasOwn(value, 'status') && !v458(value['status'], context)) return false;
   }
   return true;
 }
-function v670(value: SchemaValue, context: Context): boolean {
+function v455(value: SchemaValue, context: Context): boolean {
   {
     let matches = 0;
-    if (v671(value, context)) matches++;
-    if (v672(value, context)) matches++;
+    if (v456(value, context)) matches++;
+    if (v457(value, context)) matches++;
     if (matches !== 1) return false;
   }
   return true;
 }
-function v669(value: SchemaValue, context: Context): boolean {
+function v454(value: SchemaValue, context: Context): boolean {
   if (isRecord(value)) {
-    if (Object.hasOwn(value, 'judgeResult') && !v670(value['judgeResult'], context)) return false;
+    if (Object.hasOwn(value, 'judgeResult') && !v455(value['judgeResult'], context)) return false;
   }
   return true;
 }
-function v665(value: SchemaValue, context: Context): boolean {
-  if (v666(value, context)) {
-    if (!v669(value, context)) return false;
+function v450(value: SchemaValue, context: Context): boolean {
+  if (v451(value, context)) {
+    if (!v454(value, context)) return false;
   }
   return true;
 }
-function v572(value: SchemaValue, context: Context): boolean {
+function v382(value: SchemaValue, context: Context): boolean {
   if (!isRecord(value)) return false;
-  if (isRecord(value)) {
+  {
     if (
       !Object.hasOwn(value, 'kind') ||
       !Object.hasOwn(value, 'protocolVersion') ||
@@ -4467,44 +3837,44 @@ function v572(value: SchemaValue, context: Context): boolean {
     )
       return false;
     if (Object.keys(value).length !== 22) return false;
-    if (!v573(value['kind'], context)) return false;
-    if (!v574(value['protocolVersion'], context)) return false;
-    if (!v575(value['traceVersion'], context)) return false;
-    if (!v576(value['diagnosticVersion'], context)) return false;
-    if (!v577(value['judgeVersion'], context)) return false;
-    if (!v578(value['encodingVersion'], context)) return false;
-    if (!v579(value['identity'], context)) return false;
-    if (!v580(value['producer'], context)) return false;
-    if (!v581(value['engineRef'], context)) return false;
-    if (!v582(value['packageRef'], context)) return false;
-    if (!v583(value['languageRef'], context)) return false;
-    if (!v584(value['subsetRef'], context)) return false;
-    if (!v585(value['programRef'], context)) return false;
-    if (!v586(value['subjectRef'], context)) return false;
-    if (!v587(value['learningRevision'], context)) return false;
-    if (!v590(value['budgetRef'], context)) return false;
-    if (!v591(value['nodeMap'], context)) return false;
-    if (!v593(value['resolvedBindings'], context)) return false;
-    if (!v595(value['trace'], context)) return false;
-    if (!v598(value['terminal'], context)) return false;
-    if (!v599(value['judgeResult'], context)) return false;
-    if (!v602(value['stats'], context)) return false;
+    if (!v383(value['kind'], context)) return false;
+    if (!d0(value['protocolVersion'], context)) return false;
+    if (!d0(value['traceVersion'], context)) return false;
+    if (!d0(value['diagnosticVersion'], context)) return false;
+    if (!d0(value['judgeVersion'], context)) return false;
+    if (!d0(value['encodingVersion'], context)) return false;
+    if (!d17(value['identity'], context)) return false;
+    if (!v384(value['producer'], context)) return false;
+    if (!d16(value['engineRef'], context)) return false;
+    if (!d14(value['packageRef'], context)) return false;
+    if (!d14(value['languageRef'], context)) return false;
+    if (!d14(value['subsetRef'], context)) return false;
+    if (!d15(value['programRef'], context)) return false;
+    if (!d15(value['subjectRef'], context)) return false;
+    if (!v385(value['learningRevision'], context)) return false;
+    if (!d14(value['budgetRef'], context)) return false;
+    if (!v387(value['nodeMap'], context)) return false;
+    if (!v388(value['resolvedBindings'], context)) return false;
+    if (!v389(value['trace'], context)) return false;
+    if (!d69(value['terminal'], context)) return false;
+    if (!v391(value['judgeResult'], context)) return false;
+    if (!v393(value['stats'], context)) return false;
   }
-  if (!v605(value, context)) return false;
-  if (!v610(value, context)) return false;
-  if (!v620(value, context)) return false;
-  if (!v629(value, context)) return false;
-  if (!v638(value, context)) return false;
-  if (!v648(value, context)) return false;
-  if (!v656(value, context)) return false;
-  if (!v665(value, context)) return false;
+  if (!v395(value, context)) return false;
+  if (!v400(value, context)) return false;
+  if (!v410(value, context)) return false;
+  if (!v417(value, context)) return false;
+  if (!v425(value, context)) return false;
+  if (!v434(value, context)) return false;
+  if (!v442(value, context)) return false;
+  if (!v450(value, context)) return false;
   return true;
 }
 function d71(value: SchemaValue, context: Context): boolean {
-  return v572(value, context);
+  return v382(value, context);
 }
 function context(guard: () => void, deferTrace: boolean): Context {
-  return { guard, deferTrace, validated: new WeakMap() };
+  return { guard, deferTrace, validated: new Map() };
 }
 export function validateRequestSchema(value: SchemaValue): boolean {
   return d31(

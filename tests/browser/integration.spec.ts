@@ -4,17 +4,28 @@ import type { APIResponse, Page, Response } from '@playwright/test';
 import type { ContentPackage } from '../../web/src/content/types';
 import type { CaseExecutionCatalog } from '../../web/src/content/case-learning';
 import { openBlockKeyboardEditor } from './block-ui';
+import type { C6TeachingNode } from '../../web/src/content/c6-teaching-types';
+import { currentSnapshot, currentLocalReady } from './current-practice-observation';
+import { C6_RESET_STORES, C6_RESET_CLEAR_STORES } from '../../web/src/storage/c6-reset';
+import { openIndependentEchoRepair } from './current-course-helpers';
 
 const wasmPattern = /\/assets\/c_viz_wasm_bg-[^/]+\.wasm$/;
 const frozenBytes = readFileSync(
   new URL('../../shared/contracts/02.1-内容样例.json', import.meta.url),
 );
-const frozen = JSON.parse(frozenBytes.toString('utf8')) as ContentPackage;
-const reviewedCourse = JSON.parse(
-  readFileSync(new URL('../../content/c/p0/course-1.0.1.json', import.meta.url), 'utf8'),
-) as ContentPackage;
+const teaching = JSON.parse(
+  readFileSync('content/c/primer6-teaching/source-2.0.0.json', 'utf8'),
+) as {
+  chapters: { nodes: C6TeachingNode[] }[];
+};
+const currentLesson = teaching.chapters
+  .flatMap((c) => c.nodes)
+  .find((n) => n.sourceNodeId === 'c6.s2.1')!;
 const reviewedCases = JSON.parse(
-  readFileSync(new URL('../../content/c/p0/case-view-1.0.1.json', import.meta.url), 'utf8'),
+  readFileSync(
+    new URL('../../content/c/primer6-learning/cases-1.0.0.json', import.meta.url),
+    'utf8',
+  ),
 ) as { catalogs: CaseExecutionCatalog[] };
 
 interface IntegratedProbe {
@@ -279,16 +290,17 @@ test('continuous public learning navigation integrates reviewed reading, validat
   );
   page.on('pageerror', (error) => pageErrors.push(error.message));
   const routeReady = async (pageId: string, path: string) => {
-    await expect(page.locator(`[data-page-id="${pageId}"]`)).toBeVisible();
+    await expect(
+      pageId.startsWith('C6-')
+        ? page.locator('.c6-course-page, .c6-workbench').first()
+        : page.locator(`[data-page-id="${pageId}"]`),
+    ).toBeVisible();
     await expect(page.locator('main h1')).toBeVisible();
     const url = new URL(page.url());
     expect(url.search).toBe('');
     expect(url.hash || '#/').toBe(`#${path}`);
     routes.push({ pageId, hash: url.hash || '#/' });
   };
-  const lesson = reviewedCourse.lessons.find((item) => item.id === 'lesson.c.variables-output')!;
-  const exercise = reviewedCourse.exercises.find((item) => item.id === 'exercise.c.echo')!;
-  const example = frozen.programs.find((item) => item.id === 'program.c.echo')!;
   const algorithmCatalog = reviewedCases.catalogs.find(
     (item) => item.subject.id === 'case.c.bubble-sort',
   )!;
@@ -296,7 +308,7 @@ test('continuous public learning navigation integrates reviewed reading, validat
   const algorithmProgram = algorithmCatalog.program;
 
   await page.goto('/');
-  await routeReady('PAGE-01', '/');
+  await routeReady('C6-HOME', '/');
   expect(requests.some((entry) => wasmPattern.test(new URL(entry.url).pathname))).toBe(false);
   expect(await page.evaluate(() => window.__integrationObservation.workers.length)).toBe(0);
   await expect(page.getByRole('link', { name: /登录|注册|排行榜/ })).toHaveCount(0);
@@ -304,7 +316,7 @@ test('continuous public learning navigation integrates reviewed reading, validat
     .getByRole('navigation', { name: '主导航' })
     .getByRole('link', { name: 'C 语言课程' })
     .click();
-  await routeReady('PAGE-02', '/courses');
+  await routeReady('C6-DIRECTORY', '/courses');
   const fetchedBytes = await publicSampleResponse.body();
   expect(fetchedBytes.equals(frozenBytes)).toBe(true);
   const fetched = JSON.parse(fetchedBytes.toString('utf8')) as ContentPackage;
@@ -314,81 +326,112 @@ test('continuous public learning navigation integrates reviewed reading, validat
     packageVersion: '1.0.0',
     packageId: 'content.c.p0',
   });
-  await expect(page.getByTestId('course-reading')).toHaveAttribute('data-state', 'ready');
-
-  // The catalog links to lessons; their breadcrumb provides the chapter route.
-  await page.locator('[data-course-lesson] a[href="#/lessons/lesson.c.variables-output"]').click();
-  await routeReady('PAGE-03', '/lessons/lesson.c.variables-output');
+  await currentLocalReady(page);
+  await expect(page.getByRole('region', { name: '正文章节' }).getByRole('link')).toHaveCount(17);
+  await expect(page.getByRole('region', { name: '参考资料' }).getByRole('link')).toHaveCount(2);
+  await page.locator('a[href="#/courses/c6.ch02"]').click();
+  await routeReady('C6-CHAPTER', '/courses/c6.ch02');
+  await page.locator('a[href="#/lessons/lesson.c6.s2.1"]').click();
+  await routeReady('C6-READING', '/lessons/lesson.c6.s2.1');
   await page
     .getByRole('navigation', { name: '当前位置' })
-    .getByRole('link', { name: '变量与表达式' })
+    .getByRole('link', { name: '课程目录', exact: true })
     .click();
-  await routeReady('PAGE-02', '/courses/chapter.c.values');
-  await expect(page.getByTestId('course-reading')).toHaveAttribute('data-state', 'ready');
-  await expect(page.locator('[data-course-lesson]')).toHaveCount(2);
+  await routeReady('C6-DIRECTORY', '/courses');
   await page.goBack();
-  await routeReady('PAGE-03', '/lessons/lesson.c.variables-output');
+  await routeReady('C6-READING', '/lessons/lesson.c6.s2.1');
   await page.goForward();
-  await routeReady('PAGE-02', '/courses/chapter.c.values');
-  await page.locator('[data-course-lesson] a[href="#/lessons/lesson.c.variables-output"]').click();
-  await routeReady('PAGE-03', '/lessons/lesson.c.variables-output');
-  const lessonSample = page.getByTestId('lesson-reading');
-  await expect(lessonSample).toHaveAttribute('data-state', 'ready');
-  for (const objective of lesson.teaching.objectives)
-    await expect(lessonSample).toContainText(objective);
-  for (const prose of lesson.teaching.explanation
-    .split('```')
-    .filter((_, index) => index % 2 === 0)) {
-    if (prose.trim()) await expect(lessonSample).toContainText(prose);
-  }
-  expect(await lessonSample.getByLabel(`${example.title}参考源码`).textContent()).toBe(
-    example.sourceExample,
-  );
-  await expect(page.getByRole('button', { name: '确认已学习', exact: true })).toBeEnabled();
+  await routeReady('C6-DIRECTORY', '/courses');
+  await page.goBack();
+  await routeReady('C6-READING', '/lessons/lesson.c6.s2.1');
+  const lessonSample = page.locator('.c6-teaching-reading');
+  await expect(lessonSample).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(currentLesson.titleDisplay);
+  const rendered = await lessonSample.locator('pre code').allTextContents();
+  const fences = [...currentLesson.body.matchAll(/```[^\n]*\n([\s\S]*?)```/g)];
+  expect(fences.length).toBeGreaterThan(0);
+  for (const fence of fences)
+    expect(rendered.some((text) => text.trim() === fence[1].trim())).toBe(true);
+  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeEnabled();
   await page.screenshot({
     path: testInfo.outputPath('integrated-lesson-reference.png'),
     fullPage: true,
   });
-
-  await page.getByRole('link', { name: '进入练习工作区', exact: true }).click();
-  await routeReady('PAGE-04', '/practice/exercise.c.echo');
-  const practiceSample = page.getByTestId('practice-execution');
-  await expect(practiceSample).toHaveAttribute('data-state', 'ready');
-  await expect(practiceSample).toContainText(exercise.prompt);
-  const blocks = practiceSample.getByRole('region', { name: '积木工作区', exact: true });
-  await expect(blocks).toBeVisible();
-  await openBlockKeyboardEditor(page);
-  await expect(
-    blocks.getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option'),
-  ).toHaveCount(20);
-  await expect(blocks.getByRole('combobox', { name: '积木列表', exact: true })).toBeVisible();
-  await expect(blocks.locator('.blocklySvg')).toBeVisible();
-  await expect(page.getByTestId('code-panel')).toBeVisible();
-  await expect(page.getByTestId('code-panel').locator('textarea')).not.toHaveValue('');
-  await expect(page.getByRole('button', { name: '准备代码', exact: true })).toBeEnabled();
-  await expect(page.getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
+  await page.getByRole('link', { name: '完成配套执行练习', exact: true }).click();
+  await routeReady('C6-PRACTICE', '/practice/exercise.c6.s2.1');
+  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).toBeEditable();
+  await expect(page.getByRole('button', { name: '判定全部四组', exact: true })).toBeEnabled();
   await expect(page.getByTestId('engine-connection')).toHaveCount(0);
   const passivePractice = await page.evaluate(() => window.__integrationObservation);
   expect(passivePractice.compileCalls).toBe(0);
   expect(passivePractice.workers).toEqual([]);
   expect(requests.filter((entry) => wasmPattern.test(new URL(entry.url).pathname))).toHaveLength(0);
-
-  await page.getByRole('link', { name: '查看本次复盘', exact: true }).click();
-  await routeReady('PAGE-06', '/practice/exercise.c.echo/review');
-  await expect(page.getByTestId('engine-connection')).toHaveCount(0);
-  await expect(page.getByTestId('practice-feedback')).toContainText('还没有可复盘的运行');
-  await expect(page.getByTestId('code-panel')).toHaveCount(0);
-  await expect(page.getByTestId('animation-panel')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: '播放', exact: true })).toHaveCount(0);
-  expect(await page.evaluate(() => window.__integrationObservation.workers.length)).toBe(0);
-  await page.screenshot({
+  // Native editing intentionally creates editor history. Keep that explicit
+  // branch isolated from the main passive browsing/build-probe archive.
+  const repairContext = await browser.newContext({ baseURL: new URL(page.url()).origin });
+  const repairPage = await repairContext.newPage();
+  const repairRequests: typeof requests = [];
+  repairPage.on('request', (request) =>
+    repairRequests.push({
+      url: request.url(),
+      method: request.method(),
+      hasBody: request.postData() !== null,
+    }),
+  );
+  await observeIntegration(repairPage);
+  await openIndependentEchoRepair(repairPage);
+  const practiceSample = repairPage.getByTestId('practice-execution');
+  await expect(practiceSample).toHaveAttribute('data-state', 'ready');
+  const blocks = practiceSample.getByRole('region', { name: '积木工作区', exact: true });
+  await repairPage.getByRole('combobox', { name: '积木显示', exact: true }).selectOption('show');
+  await openBlockKeyboardEditor(repairPage);
+  await expect(
+    blocks.getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option'),
+  ).toHaveCount(20);
+  await expect(blocks.getByRole('combobox', { name: '积木列表', exact: true })).toBeVisible();
+  await expect(blocks.locator('.blocklySvg')).toBeVisible();
+  await expect(
+    repairPage.getByRole('textbox', { name: '编辑 C 代码', exact: true }),
+  ).not.toHaveValue('');
+  await expect(repairPage.getByRole('button', { name: '准备代码', exact: true })).toBeEnabled();
+  await expect(repairPage.getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
+  const editObservation = await repairPage.evaluate(() => window.__integrationObservation);
+  expect(editObservation.workers.length).toBeGreaterThan(0);
+  for (const worker of editObservation.workers) {
+    expect(['prepare-case', 'analyze-code']).toContain(worker.requestKind);
+    expect(worker.terminated).toBe(true);
+    expect(worker.resultKeys).not.toContain('trace');
+    expect(worker.resultKeys).not.toContain('judgeResult');
+  }
+  await repairPage.getByRole('link', { name: '查看本次复盘', exact: true }).click();
+  await expect(repairPage).toHaveURL(/#\/practice\/exercise\.c\.bug-semicolon\/review$/);
+  await expect(repairPage.getByTestId('engine-connection')).toHaveCount(0);
+  await expect(repairPage.getByTestId('practice-feedback')).toContainText('还没有可复盘的运行');
+  await expect(repairPage.getByTestId('code-panel')).toHaveCount(0);
+  await expect(repairPage.getByTestId('animation-panel')).toHaveCount(0);
+  await expect(repairPage.getByRole('button', { name: '播放', exact: true })).toHaveCount(0);
+  expect((await repairPage.evaluate(() => window.__integrationObservation)).workers).toEqual(
+    editObservation.workers,
+  );
+  await repairPage.screenshot({
     path: testInfo.outputPath('integrated-empty-review.png'),
     fullPage: true,
   });
-  await page.getByRole('link', { name: '返回练习工作区', exact: true }).click();
-  await routeReady('PAGE-04', '/practice/exercise.c.echo');
-  await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('engine-connection')).toHaveCount(0);
+  await repairPage.getByRole('link', { name: '返回练习工作区', exact: true }).click();
+  await expect(practiceSample).toHaveAttribute('data-state', 'ready');
+  await expect(repairPage.getByTestId('engine-connection')).toHaveCount(0);
+  const edited = (await currentSnapshot(repairPage)) as unknown as Record<string, unknown>;
+  for (const name of C6_RESET_CLEAR_STORES.filter((name) => name !== 'editHistory'))
+    expect(edited[name]).toEqual([]);
+  const histories = edited.editHistory as { scope: { exerciseRef: { id: string } } }[];
+  expect(histories.length).toBeGreaterThan(0);
+  for (const history of histories)
+    expect(history.scope.exerciseRef.id).toBe('exercise.c.bug-semicolon');
+  await testInfo.attach('isolated-native-edit-and-empty-review', {
+    body: JSON.stringify({ repairRequests, editObservation, edited }),
+    contentType: 'application/json',
+  });
+  await repairContext.close();
 
   await page
     .getByRole('navigation', { name: '主导航' })
@@ -472,55 +515,25 @@ test('continuous public learning navigation integrates reviewed reading, validat
   // The recovery/clear flow is available; navigation itself still writes no facts.
   await expect(page.getByRole('button', { name: '清除本地数据', exact: true })).toBeEnabled();
   await expect(page.getByRole('tabpanel')).toContainText('学习档案保存在当前浏览器');
-  const counts = await page.evaluate(async () => {
-    const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const req = indexedDB.open('c-viz-learning', 2);
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
-    });
-    try {
-      const names = ['progress', 'dailyFacts', 'goals', 'ledger', 'receipts', 'aliases'];
-      const tx = db.transaction(names, 'readonly');
-      const businessCounts = await Promise.all(
-        names.map(
-          (name) =>
-            new Promise<number>((resolve, reject) => {
-              const req = tx.objectStore(name).count();
-              req.onsuccess = () => resolve(req.result);
-              req.onerror = () => reject(req.error);
-            }),
-        ),
-      );
-      return { storeNames: Array.from(db.objectStoreNames).sort(), businessCounts };
-    } finally {
-      db.close();
-    }
-  });
-  expect(counts.storeNames).toEqual([
-    'aliases',
-    'appearance',
-    'appearanceAssets',
-    'avatar',
-    'dailyFacts',
-    'goals',
-    'ledger',
-    'meta',
-    'progress',
-    'receipts',
-    'settings',
-  ]);
-  expect(counts.businessCounts).toEqual([0, 0, 0, 0, 0, 0]);
+  await currentLocalReady(page);
+  const archive = await currentSnapshot(page);
+  expect(Object.keys(archive).sort()).toEqual([...C6_RESET_STORES].sort());
+  expect(archive.meta.dbVersion).toBe(10);
+  for (const name of C6_RESET_CLEAR_STORES)
+    expect((archive as unknown as Record<string, unknown>)[name]).toEqual([]);
   await expect(page.getByTestId('engine-connection')).toHaveCount(0);
   verifyProbes(await page.evaluate(() => window.__integrationObservation), 1);
   expect(pageErrors).toEqual([]);
   const origin = new URL(page.url()).origin;
-  for (const request of requests) {
+  for (const request of [...requests, ...repairRequests]) {
     const url = new URL(request.url);
     expect(url.origin).toBe(origin);
     expect(url.search).toBe('');
     expect(request.method).toBe('GET');
     expect(request.hasBody).toBe(false);
-    expect(url.pathname).not.toMatch(/execute|submission|reward|progress|login|session/i);
+    expect(url.pathname).not.toMatch(
+      /\/(?:execute|submission|reward|progress|login|session)(?:\/|$)/i,
+    );
   }
   await testInfo.attach('browser-version', { body: browser.version(), contentType: 'text/plain' });
   await testInfo.attach('continuous-integration-observations', {
