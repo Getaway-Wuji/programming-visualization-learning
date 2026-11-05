@@ -1,0 +1,680 @@
+[
+  {
+    "slug": "bubble",
+    "title": "冒泡排序",
+    "category": "排序算法",
+    "kind": "bars",
+    "inputKind": "sequence",
+    "description": "相邻比较，把较大元素逐次移到末尾。",
+    "complexity": "O(n²)",
+    "defaults": {
+      "values": "8 3 6 2 7 1"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "selection",
+    "title": "选择排序",
+    "category": "排序算法",
+    "kind": "bars",
+    "inputKind": "sequence",
+    "description": "从未排序区选出最小元素，放到当前起点。",
+    "complexity": "O(n²)",
+    "defaults": {
+      "values": "8 3 6 2 7 1"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "insertion",
+    "title": "插入排序",
+    "category": "排序算法",
+    "kind": "bars",
+    "inputKind": "sequence",
+    "description": "把当前元素插入前面已排好的部分。",
+    "complexity": "O(n²)",
+    "defaults": {
+      "values": "8 3 6 2 7 1"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "quick",
+    "title": "快速排序",
+    "category": "排序算法",
+    "kind": "bars",
+    "inputKind": "sequence",
+    "description": "以末项为基准分区，再递归处理两侧。",
+    "complexity": "平均 O(n log n)",
+    "defaults": {
+      "values": "8 3 6 2 7 1"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "merge",
+    "title": "归并排序",
+    "category": "排序算法",
+    "kind": "bars",
+    "inputKind": "sequence",
+    "description": "拆分到单项，再把两个有序区间合并。",
+    "complexity": "O(n log n)",
+    "defaults": {
+      "values": "8 3 6 2 7 1"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "shell",
+    "title": "希尔排序",
+    "category": "排序算法",
+    "kind": "bars",
+    "inputKind": "sequence",
+    "description": "先按较大间隔插入，逐步缩小到间隔一。",
+    "complexity": "取决于增量序列，最坏 O(n²)",
+    "defaults": {
+      "values": "8 3 6 2 7 1"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "heap-sort",
+    "title": "堆排序",
+    "category": "排序算法",
+    "kind": "bars",
+    "inputKind": "sequence",
+    "description": "建立大根堆，把堆顶交换到末尾后重新下沉。",
+    "complexity": "O(n log n)",
+    "defaults": {
+      "values": "8 3 6 2 7 1"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "counting",
+    "title": "计数排序",
+    "category": "排序算法",
+    "kind": "bars",
+    "inputKind": "sequence",
+    "description": "统计每个值的频次，再按频次写回数组。",
+    "complexity": "O(n + k)",
+    "defaults": {
+      "values": "8 3 6 2 7 1"
+    },
+    "arrays": [
+      "a",
+      "count"
+    ]
+  },
+  {
+    "slug": "radix",
+    "title": "基数排序",
+    "category": "排序算法",
+    "kind": "bars",
+    "inputKind": "sequence",
+    "description": "按个位、十位、百位依次进行稳定计数排序。",
+    "complexity": "O(d(n + k))",
+    "defaults": {
+      "values": "8 3 6 2 7 1"
+    },
+    "arrays": [
+      "a",
+      "count"
+    ]
+  },
+  {
+    "slug": "linear",
+    "title": "线性查找",
+    "category": "查找算法",
+    "kind": "array",
+    "inputKind": "search",
+    "description": "逐项比较，找到目标便停止。",
+    "complexity": "O(n)",
+    "defaults": {
+      "values": "2 4 6 8 10 12",
+      "target": "8"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "binary",
+    "title": "二分查找",
+    "category": "查找算法",
+    "kind": "array",
+    "inputKind": "search",
+    "description": "在有序数组中比较中点，排除一半范围。",
+    "complexity": "O(log n)",
+    "defaults": {
+      "values": "2 4 6 8 10 12",
+      "target": "8"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "hash",
+    "title": "哈希查找",
+    "category": "查找算法",
+    "kind": "hash",
+    "inputKind": "search",
+    "description": "按模七分桶，用链地址解决冲突。",
+    "complexity": "平均 O(1)，最坏 O(n)",
+    "defaults": {
+      "values": "10 3 17 24 8 15",
+      "target": "17"
+    },
+    "arrays": [
+      "a",
+      "head",
+      "next"
+    ]
+  },
+  {
+    "slug": "block",
+    "title": "分块查找",
+    "category": "查找算法",
+    "kind": "array",
+    "inputKind": "search",
+    "description": "每三项建立一块，先比较块最大值，再在块内扫描。",
+    "complexity": "O(块数 + 块长)",
+    "defaults": {
+      "values": "2 4 6 8 10 12",
+      "target": "8"
+    },
+    "arrays": [
+      "a",
+      "index"
+    ]
+  },
+  {
+    "slug": "array",
+    "title": "数组",
+    "category": "数据结构",
+    "kind": "array",
+    "inputKind": "array",
+    "description": "观察插入时元素后移、删除时前移，以及数组反转。",
+    "complexity": "访问 O(1)，插删 O(n)",
+    "defaults": {
+      "values": "3 6 9 12",
+      "action": "1",
+      "position": "2",
+      "value": "7"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "linked-list",
+    "title": "链表",
+    "category": "数据结构",
+    "kind": "links",
+    "inputKind": "array",
+    "description": "跟随节点连接，观察插入、删除和反转时指针怎样变化。",
+    "complexity": "定位 O(n)，已定位插删 O(1)",
+    "defaults": {
+      "values": "3 6 9 12",
+      "action": "3",
+      "position": "0",
+      "value": "7"
+    },
+    "arrays": [
+      "a",
+      "next"
+    ]
+  },
+  {
+    "slug": "doubly-linked-list",
+    "title": "双向链表",
+    "category": "数据结构",
+    "kind": "links",
+    "inputKind": "array",
+    "description": "跟随节点连接，观察插入、删除和反转时指针怎样变化。",
+    "complexity": "定位 O(n)，已定位插删 O(1)",
+    "defaults": {
+      "values": "3 6 9 12",
+      "action": "3",
+      "position": "0",
+      "value": "7"
+    },
+    "arrays": [
+      "a",
+      "next",
+      "prev"
+    ]
+  },
+  {
+    "slug": "stack",
+    "title": "栈",
+    "category": "数据结构",
+    "kind": "array",
+    "inputKind": "operations",
+    "description": "后进先出：入栈压到顶部，出栈取出最近一项。",
+    "complexity": "每次 O(1)",
+    "defaults": {
+      "operations": "入 4\n入 7\n出\n入 2\n出"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "queue",
+    "title": "队列",
+    "category": "数据结构",
+    "kind": "array",
+    "inputKind": "operations",
+    "description": "输入入队或出队操作，观察元素与头尾位置。",
+    "complexity": "本例出队移动数组 O(n)",
+    "defaults": {
+      "operations": "入 4\n入 7\n出\n入 2\n出"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "circular-queue",
+    "title": "循环队列",
+    "category": "数据结构",
+    "kind": "array",
+    "inputKind": "operations",
+    "description": "输入入队或出队操作，观察元素与头尾位置。",
+    "complexity": "每次 O(1)",
+    "defaults": {
+      "operations": "入 4\n入 7\n出\n入 2\n出"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "union-find",
+    "title": "并查集",
+    "category": "数据结构",
+    "kind": "parents",
+    "inputKind": "unions",
+    "description": "合并集合时按秩连接，查询时压缩路径。",
+    "complexity": "均摊近似 O(1)",
+    "defaults": {
+      "number": "5",
+      "operations": "合 0 1\n合 2 3\n合 1 3\n查 3"
+    },
+    "arrays": [
+      "parent",
+      "rank"
+    ]
+  },
+  {
+    "slug": "trie",
+    "title": "Trie 字典树",
+    "category": "数据结构",
+    "kind": "trie",
+    "inputKind": "trie",
+    "description": "共享单词前缀，沿字符边插入和查询。",
+    "complexity": "O(字符总数)",
+    "defaults": {
+      "words": "ab abc ac",
+      "pattern": "ab"
+    },
+    "arrays": [
+      "link",
+      "terminal"
+    ]
+  },
+  {
+    "slug": "binary-tree",
+    "title": "二叉树",
+    "category": "树与图",
+    "kind": "tree",
+    "inputKind": "sequence",
+    "description": "按层次创建二叉树，查看每个节点的左右孩子。",
+    "complexity": "创建 O(n)",
+    "defaults": {
+      "values": "8 4 12 2 6 10 14"
+    },
+    "arrays": [
+      "a",
+      "left",
+      "right"
+    ]
+  },
+  {
+    "slug": "traversal",
+    "title": "树的遍历",
+    "category": "树与图",
+    "kind": "tree",
+    "inputKind": "traversal",
+    "description": "选择先序、中序或后序，跟随访问顺序与递归过程。",
+    "complexity": "O(n)",
+    "defaults": {
+      "values": "8 4 12 2 6 10 14",
+      "order": "2"
+    },
+    "arrays": [
+      "a",
+      "left",
+      "right"
+    ]
+  },
+  {
+    "slug": "bst",
+    "title": "二叉搜索树",
+    "category": "树与图",
+    "kind": "tree",
+    "inputKind": "tree-query",
+    "description": "按大小插入，再沿左右分支查找指定值。",
+    "complexity": "O(h)",
+    "defaults": {
+      "values": "8 4 12 2 6 10 14",
+      "target": "10"
+    },
+    "arrays": [
+      "a",
+      "left",
+      "right"
+    ]
+  },
+  {
+    "slug": "priority-queue",
+    "title": "堆 / 优先队列",
+    "category": "树与图",
+    "kind": "heap",
+    "inputKind": "operations",
+    "description": "入队后上浮，取出最大值后让替补元素下沉。",
+    "complexity": "每次 O(log n)",
+    "defaults": {
+      "operations": "入 4\n入 7\n出\n入 2\n出"
+    },
+    "arrays": [
+      "a"
+    ]
+  },
+  {
+    "slug": "rbtree",
+    "title": "红黑树",
+    "category": "树与图",
+    "kind": "tree",
+    "inputKind": "sequence",
+    "description": "用左倾红黑树插入，观察旋转、变色与根节点变黑。",
+    "complexity": "O(log n)",
+    "defaults": {
+      "values": "1 2 3 4 5 6 7"
+    },
+    "arrays": [
+      "a",
+      "left",
+      "right",
+      "red"
+    ]
+  },
+  {
+    "slug": "bfs-dfs",
+    "title": "图 BFS / DFS",
+    "category": "树与图",
+    "kind": "graph",
+    "inputKind": "graph",
+    "description": "广度优先借助队列，深度优先沿未访问邻点递归。",
+    "complexity": "本例邻接矩阵 O(n²)",
+    "defaults": {
+      "number": "4",
+      "edges": "0 1 4\n0 2 1\n2 1 2\n1 3 1\n2 3 5",
+      "start": "0",
+      "order": "1"
+    },
+    "arrays": [
+      "seen",
+      "queue"
+    ]
+  },
+  {
+    "slug": "topological",
+    "title": "拓扑排序",
+    "category": "树与图",
+    "kind": "graph",
+    "inputKind": "graph",
+    "description": "把入度为零的节点放入队列，删除它们的出边；有环时报告无法完成。",
+    "complexity": "本例邻接矩阵 O(n²)",
+    "defaults": {
+      "number": "4",
+      "edges": "0 1 4\n0 2 1\n2 1 2\n1 3 1\n2 3 5",
+      "start": "0",
+      "order": "1"
+    },
+    "arrays": [
+      "indegree",
+      "seen",
+      "queue"
+    ]
+  },
+  {
+    "slug": "dijkstra",
+    "title": "Dijkstra",
+    "category": "树与图",
+    "kind": "graph",
+    "inputKind": "graph",
+    "description": "每次确定当前最短的未访问节点，再松弛相邻边。",
+    "complexity": "O(n²)",
+    "defaults": {
+      "number": "4",
+      "edges": "0 1 4\n0 2 1\n2 1 2\n1 3 1\n2 3 5",
+      "start": "0",
+      "order": "1"
+    },
+    "arrays": [
+      "distance",
+      "parent",
+      "seen"
+    ]
+  },
+  {
+    "slug": "prim",
+    "title": "Prim",
+    "category": "树与图",
+    "kind": "graph",
+    "inputKind": "graph",
+    "description": "每次选取离树最近的节点，逐步构造最小生成树。",
+    "complexity": "O(n²)",
+    "defaults": {
+      "number": "4",
+      "edges": "0 1 4\n0 2 1\n2 1 2\n1 3 1\n2 3 5",
+      "start": "0",
+      "order": "1"
+    },
+    "arrays": [
+      "distance",
+      "parent",
+      "seen"
+    ]
+  },
+  {
+    "slug": "floyd",
+    "title": "Floyd-Warshall",
+    "category": "树与图",
+    "kind": "matrix",
+    "inputKind": "graph",
+    "description": "逐个允许中转节点，用两段距离尝试更新全部点对距离。",
+    "complexity": "O(n³)",
+    "defaults": {
+      "number": "4",
+      "edges": "0 1 4\n0 2 1\n2 1 2\n1 3 1\n2 3 5",
+      "start": "0",
+      "order": "1"
+    },
+    "arrays": [
+      "dp"
+    ]
+  },
+  {
+    "slug": "kruskal",
+    "title": "Kruskal",
+    "category": "树与图",
+    "kind": "graph",
+    "inputKind": "graph",
+    "description": "按边权从小到大检查，用并查集排除成环边。",
+    "complexity": "O(e²)，本例用插入排序整理边",
+    "defaults": {
+      "number": "4",
+      "edges": "0 1 4\n0 2 1\n2 1 2\n1 3 1\n2 3 5",
+      "start": "0",
+      "order": "1"
+    },
+    "arrays": [
+      "from",
+      "to",
+      "weight",
+      "chosen",
+      "parent"
+    ]
+  },
+  {
+    "slug": "01-knapsack",
+    "title": "0-1 背包",
+    "category": "动态规划",
+    "kind": "matrix",
+    "inputKind": "knapsack",
+    "description": "每件物品至多选一次，用上一行的结果计算当前最优值。",
+    "complexity": "O(n × 容量)",
+    "defaults": {
+      "capacity": "7",
+      "items": "2 3\n3 4\n4 5"
+    },
+    "arrays": [
+      "dp",
+      "weight",
+      "value"
+    ]
+  },
+  {
+    "slug": "complete-knapsack",
+    "title": "完全背包",
+    "category": "动态规划",
+    "kind": "matrix",
+    "inputKind": "knapsack",
+    "description": "每种物品可重复选取，比较不选与再选一次的最优值。",
+    "complexity": "O(n × 容量)",
+    "defaults": {
+      "capacity": "7",
+      "items": "2 3\n3 4\n4 5"
+    },
+    "arrays": [
+      "dp",
+      "weight",
+      "value"
+    ]
+  },
+  {
+    "slug": "lcs",
+    "title": "LCS 最长公共子序列",
+    "category": "动态规划",
+    "kind": "matrix",
+    "inputKind": "strings",
+    "description": "字符相同沿左上角递增，否则取上方与左方的较大值。",
+    "complexity": "O(mn)",
+    "defaults": {
+      "text": "abcbdab",
+      "pattern": "bdcab"
+    },
+    "arrays": [
+      "dp"
+    ]
+  },
+  {
+    "slug": "edit-distance",
+    "title": "编辑距离",
+    "category": "动态规划",
+    "kind": "matrix",
+    "inputKind": "strings",
+    "description": "比较插入、删除和替换三种操作的代价。",
+    "complexity": "O(mn)",
+    "defaults": {
+      "text": "kitten",
+      "pattern": "sitting"
+    },
+    "arrays": [
+      "dp"
+    ]
+  },
+  {
+    "slug": "stairs",
+    "title": "爬楼梯",
+    "category": "动态规划",
+    "kind": "array",
+    "inputKind": "scalar",
+    "description": "每次走一级或两级，当前方案数等于前两项之和。",
+    "complexity": "O(n)",
+    "defaults": {
+      "number": "6"
+    },
+    "arrays": [
+      "dp"
+    ]
+  },
+  {
+    "slug": "lis",
+    "title": "LIS 最长递增子序列",
+    "category": "动态规划",
+    "kind": "array",
+    "inputKind": "sequence",
+    "description": "dp[i] 记录以第 i 项结尾的最长严格递增子序列。",
+    "complexity": "O(n²)",
+    "defaults": {
+      "values": "3 1 5 2 6 4 9"
+    },
+    "arrays": [
+      "a",
+      "dp"
+    ]
+  },
+  {
+    "slug": "hanoi",
+    "title": "汉诺塔",
+    "category": "经典算法",
+    "kind": "hanoi",
+    "inputKind": "scalar",
+    "description": "先移开上面的盘，移动最大盘，再把小盘搬到目标柱。",
+    "complexity": "O(2ⁿ)",
+    "defaults": {
+      "number": "3"
+    },
+    "arrays": [
+      "rods",
+      "height"
+    ]
+  },
+  {
+    "slug": "kmp",
+    "title": "KMP 字符串匹配",
+    "category": "经典算法",
+    "kind": "array",
+    "inputKind": "strings",
+    "description": "先构建前缀表，失配时按前缀长度回退，避免重复比较。",
+    "complexity": "O(m+n)",
+    "defaults": {
+      "text": "abababa",
+      "pattern": "aba"
+    },
+    "arrays": [
+      "a",
+      "b",
+      "prefix"
+    ]
+  }
+]

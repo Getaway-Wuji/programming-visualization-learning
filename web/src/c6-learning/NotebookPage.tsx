@@ -36,9 +36,6 @@ function Notebook() {
         description="保留真实练习中的困难，主动标记还不熟悉的知识。"
       />
       <div className="c6-action-row">
-        <Link className="text-link" to="/reviews">
-          打开复习队列
-        </Link>
         <Link className="text-link" to="/weaknesses">
           查看薄弱点依据
         </Link>
@@ -54,7 +51,12 @@ function Notebook() {
         {!mistakes ? (
           <p>学习记录暂不能确认，请恢复本地档案。</p>
         ) : !mistakes.length ? (
-          <p>暂无已保存的错题。</p>
+          <p>
+            暂无已保存的错题。
+            <Link className="text-link" to="/practice">
+              去做一道练习 →
+            </Link>
+          </p>
         ) : (
           <ul className="c6-mistake-list">
             {mistakes.map((m) => {
@@ -83,7 +85,14 @@ function Notebook() {
       <section className="c6-section">
         <h2>陌生知识 · {marked.length} 项</h2>
         <KnowledgeMarksStatus />
-        {!marked.length && <p>在课程正文或知识图谱中标记陌生点，它们会出现在这里。</p>}
+        {!marked.length && (
+          <p>
+            在课程正文或知识图谱中标记陌生点，它们会出现在这里。
+            <Link className="text-link" to="/courses">
+              浏览课程 →
+            </Link>
+          </p>
+        )}
         <ul className="c6-knowledge-list">
           {marked.map((m) => (
             <li key={m.knowledgeRef.id}>

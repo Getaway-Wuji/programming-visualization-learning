@@ -124,11 +124,12 @@ function lessonCompleted(
 ): boolean {
   return (
     hasProgress(snapshot, 'lesson.study-confirmed', lesson) &&
-    (catalog.purpose === 'c6-course-practice' || lesson.requiredExerciseRefs.length > 0) &&
-    lesson.requiredExerciseRefs.every((ref) => {
-      const exercise = catalog.exercises.find((value) => sameRef(value.ref, ref));
-      return !!exercise && hasProgress(snapshot, 'exercise.passed', exercise);
-    })
+    (catalog.purpose === 'c6-course-practice' ||
+      (lesson.requiredExerciseRefs.length > 0 &&
+        lesson.requiredExerciseRefs.every((ref) => {
+          const exercise = catalog.exercises.find((value) => sameRef(value.ref, ref));
+          return !!exercise && hasProgress(snapshot, 'exercise.passed', exercise);
+        })))
   );
 }
 function countsAt(snapshot: StorageSnapshot, date: string): GoalTargets {

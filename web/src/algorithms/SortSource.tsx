@@ -1,4 +1,5 @@
 import { createSourceIndex } from '../player/source-location';
+import { HighlightedCode } from '../components/HighlightedCode';
 export function SortSource({
   source,
   range,
@@ -15,21 +16,7 @@ export function SortSource({
         {location ? `当前第${location.start.line}行。` : '尚无对应步骤。'}
       </p>
       <pre tabIndex={0} aria-label="本侧实际C++源码" data-testid="pair-source">
-        {location ? (
-          <>
-            {source.slice(0, location.utf16Range.start)}
-            <mark
-              data-testid="pair-source-highlight"
-              data-byte-start={location.byteRange.start}
-              data-byte-end={location.byteRange.end}
-            >
-              {source.slice(location.utf16Range.start, location.utf16Range.end)}
-            </mark>
-            {source.slice(location.utf16Range.end)}
-          </>
-        ) : (
-          source
-        )}
+        <HighlightedCode source={source} range={range} testId="pair-source-highlight" />
       </pre>
       <details>
         <summary>复制本侧完整源码</summary>

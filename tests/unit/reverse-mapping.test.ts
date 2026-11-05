@@ -301,6 +301,33 @@ return 0;`);
     expect(explicit.program.body.at(-1)?.kind).toBe('return');
     expect(explicit.provenance.syntheticSegments).toHaveLength(0);
   });
+  it.each([0, 7])(
+    'preserves an explicit final return %s through repeated canonical conversion',
+    (exitCode) => {
+      let program = project(`return ${exitCode};`).program;
+      const base = prepare();
+      for (let turn = 0; turn < 5; turn++) {
+        const generated = generateBlockSource(program, base, catalog.program.bindings);
+        expect(occurrences(generated.text, 'return ')).toBe(1);
+        const synthetic = generatedSyntheticRanges(generated, program);
+        expect(synthetic).toEqual([]);
+        const result = reverseAnalysis(
+          analyze(generated.text),
+          generated.text,
+          catalog.program.bindings,
+          {
+            stableProgram: program,
+            generationMode: 'canonical',
+            trustedSyntheticRanges: synthetic,
+          },
+        );
+        expect(result.provenance.syntheticSegments).toEqual([]);
+        expect(programStructure(result.program)).toBe(programStructure(program));
+        program = result.program;
+      }
+    },
+  );
+
   it('does not suppress an arbitrary return just because its bytes look generated', () => {
     const before = project('return 0;');
     expect(() =>

@@ -53,7 +53,7 @@ describe('real Blockly finite teaching workspace', () => {
       { text: '', bindingMap: [], blockMap: [] },
       [],
     );
-    expect(source.text).toContain('return 0;');
+    expect(source.text.match(/return 0;/g)).toHaveLength(1);
     expect(source.blockMap.some((entry) => entry.blockId === protocolBlockId(number.id))).toBe(
       true,
     );

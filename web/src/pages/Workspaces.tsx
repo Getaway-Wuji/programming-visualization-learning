@@ -5,7 +5,6 @@ import { Icon } from '../components/Icon';
 import { cases, lessons, paths } from '../navigation';
 import { CaseSample } from '../components/ContentSample';
 import { PracticeExecution } from '../components/PracticeExecution';
-import { EngineConnection } from '../components/EngineConnection';
 import { CaseExecution } from '../components/CaseExecution';
 import { SubjectLearningStatus, useLearning } from '../learning/react';
 import { bugQuestions } from '../bugs/content';
@@ -189,7 +188,6 @@ export function VisualizePage() {
       <WorkspaceContext label="案例与输入说明">
         <SubjectLearningStatus kind="case" id={item.id} />
         <CaseSample key={item.id} id={item.id} />
-        <EngineConnection key={`case:${item.id}`} />
       </WorkspaceContext>
       <CaseExecution key={item.id} id={item.id}>
         <TraceWorkspace review={false} />

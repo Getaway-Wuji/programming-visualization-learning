@@ -1913,9 +1913,23 @@ svg {
   background: #c9dfb7;
 }
 .source-step-mark {
-  color: #26361d;
-  background: #e8edb3;
-  border-bottom: 2px solid #7f963b;
+  color: inherit;
+  background: color-mix(in srgb, var(--p05-accent, var(--green)) 18%, transparent);
+  border: 0;
+  outline: 0;
+  display: inline-block;
+  min-width: 100%;
+}
+.code-line-highlight,
+.memory-source mark.code-line-highlight,
+.sort-source mark.code-line-highlight {
+  display: inline-block;
+  min-width: 100%;
+  color: inherit;
+  background: color-mix(in srgb, var(--p05-accent, var(--green)) 18%, transparent);
+  outline: 0;
+  border: 0;
+  box-shadow: none;
 }
 .source-terminal-mark {
   color: #5d2517;
@@ -1965,4 +1979,11 @@ svg {
     position: relative;
     height: 360px;
   }
+}
+.points-toggle {
+  white-space: nowrap;
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
 }

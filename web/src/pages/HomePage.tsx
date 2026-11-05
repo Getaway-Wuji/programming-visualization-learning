@@ -6,11 +6,7 @@ import { PageHeading } from '../components/Ui';
 import { chapters, lessons, paths } from '../navigation';
 import { LearningSaveStatus, useLearning } from '../learning/react';
 import { DailyGoalSummary } from '../learning/goal-components';
-import {
-  AvatarPicture,
-  ProfileSummary,
-  savedCourseProjection,
-} from '../learning/profile-components';
+import { savedCourseProjection } from '../learning/profile-components';
 import '../learning/rewards.css';
 import { HomePanel, homePanels } from '../learning/HomePanel';
 import { KnowledgeMap } from '../knowledge/KnowledgeMap';
@@ -114,7 +110,6 @@ export function HomePage() {
               <span>已完成小节</span>
             </div>
           </div>
-          <ProfileSummary />
           <div className="metric-grid">
             {[
               {
@@ -237,16 +232,10 @@ export function HomePage() {
           <div className="home-profile-link">
             <div className="module-title">
               <h2 className="card-title">自己的学习空间</h2>
-              {state.snapshot && (
-                <AvatarPicture
-                  avatar={state.snapshot.avatar}
-                  configuration={state.profileConfiguration}
-                />
-              )}
             </div>
-            <p className="muted">基础形象、显示偏好与本地数据说明，集中在本地设置中。</p>
-            <Link className="card-link" to="/settings?panel=avatar">
-              查看基础形象
+            <p className="muted">显示偏好与本地数据说明，集中在本地设置中。</p>
+            <Link className="card-link" to="/settings?panel=display">
+              显示设置
               <Icon name="arrow" />
             </Link>
           </div>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 import type { ByteRange, ExecutionNode } from '../engine/protocol';
 import type { PlayerSnapshot } from '../player/model';
 import { createSourceIndex, mapSourceLocation, type SourceRange } from '../player/source-location';
+import { stepLineRange } from './HighlightedCode';
 
 type Highlight = { kind: 'step' | 'terminal'; range: SourceRange };
 
@@ -135,7 +136,8 @@ export function SourcePanel({
     diagnosticFocus?.request,
   ]);
   const highlights: Highlight[] = [];
-  if (current.range) highlights.push({ kind: 'step', range: current.range });
+  const line = stepLineRange(source, current.range?.byteRange ?? null);
+  if (line) highlights.push({ kind: 'step', range: line });
   if (terminal?.range) highlights.push({ kind: 'terminal', range: terminal.range });
   return (
     <section

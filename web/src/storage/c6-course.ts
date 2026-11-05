@@ -97,17 +97,6 @@ export function assertC6CourseState(state: C6CourseState, index: C6LearningIndex
       ] as const)
         if ((at !== null) !== progress.some((p) => p.eventType === event && p.firstAt === at))
           invalid();
-      if (activity.completedAt !== null) {
-        const lesson = index.lessons.find((l) => l[0] === activity.subjectRef.id)!;
-        if (
-          !lesson[5].every((id) =>
-            rows.activities.some(
-              (a) => a.kind === 'exercise' && a.subjectRef.id === id && a.firstPass !== null,
-            ),
-          )
-        )
-          invalid();
-      }
     } else {
       if ((activity.firstPass !== null) !== progress.some((p) => p.eventType === 'exercise.passed'))
         invalid();

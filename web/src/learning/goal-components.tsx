@@ -1,9 +1,11 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
+import { Link } from 'react-router';
 import { StatePanel } from '../components/Ui';
 import type { GoalTargets } from '../storage/model';
-import { localDateAt } from '../storage/validation';
 import { useLearning } from './react';
 import './goals.css';
+import { useLocalLearningDate } from './use-local-date';
+export { useLocalLearningDate } from './use-local-date';
 
 const kinds = ['exercise', 'lesson', 'case'] as const;
 const labels = { exercise: '练习', lesson: '小节', case: '案例' };
@@ -11,27 +13,6 @@ const units = { exercise: '道', lesson: '个', case: '个' };
 
 export function targetText(targets: GoalTargets) {
   return `${targets.exercise} 道练习 · ${targets.lesson} 个小节 · ${targets.case} 个案例`;
-}
-
-/** Calendar labels follow the archive's fixed zone, including after a suspended tab resumes. */
-export function useLocalLearningDate(timeZone: string | undefined) {
-  const read = () => (timeZone ? localDateAt(new Date().toISOString(), timeZone) : null);
-  const [observed, setObserved] = useState(read);
-  useEffect(() => {
-    const update = () => setObserved(read());
-    update();
-    const timer = window.setInterval(update, 1000);
-    document.addEventListener('visibilitychange', update);
-    window.addEventListener('focus', update);
-    return () => {
-      clearInterval(timer);
-      document.removeEventListener('visibilitychange', update);
-      window.removeEventListener('focus', update);
-    };
-    // The only external input to the calendar is the archive's zone.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeZone]);
-  return timeZone ? (observed ?? read()) : null;
 }
 
 export function DailyGoalSummary() {
@@ -84,7 +65,12 @@ export function DailyGoalSummary() {
           <ul className="goal-progress-list">
             {kinds.map((kind) => (
               <li key={kind} data-testid={`goal-progress-${kind}`}>
-                <span>{labels[kind]}</span>
+                <Link
+                  className="text-link"
+                  to={kind === 'exercise' ? '/practice' : kind === 'lesson' ? '/courses' : '/cases'}
+                >
+                  {labels[kind]} →
+                </Link>
                 <span className="goal-count">
                   {targets[kind]
                     ? `${counts[kind]} / ${targets[kind]} ${units[kind]}`
@@ -102,7 +88,7 @@ export function DailyGoalSummary() {
           </ul>
           <p className="muted">
             {status === 'preview'
-              ? '这是待开始的目标。首次主动学习时固定今天的目标；刷新不会产生进度或打卡。'
+              ? '选一节课或一道练习，开始今天的学习。'
               : status === 'achieved'
                 ? dailyReward?.status === 'posted'
                   ? `打卡已保存，${dailyReward.points} 分已入账。`

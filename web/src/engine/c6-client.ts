@@ -1,4 +1,5 @@
 import { engineBuild } from '../generated/c6-teaching/engine-build';
+import { c6OutputVerdict } from '../c6-learning/output-policy';
 import { c6DiagnosticCodes } from '../generated/c6/diagnostic-codes';
 import { c6ModuleStore, createC6ModuleStore } from './c6-module';
 import { claimEngineSlot, type ModuleDependencies, type ModuleStore } from './module';
@@ -39,6 +40,7 @@ export interface C6AcceptedProof {
     caseKeys: string[];
     failedCaseKey: string | null;
     failure: 'wrong-answer' | 'teaching-goal-unmet' | 'program-error' | null;
+    outputPolicy: 'line-end-1.0.0';
   };
 }
 const acceptedProofs = new WeakMap<C6Response, C6AcceptedProof>();
@@ -250,12 +252,8 @@ export class C6ExecutionClient {
                 if (production) freezeAccepted(value, guard);
                 guard();
                 if (production) {
-                  const failed =
-                    'cases' in value
-                      ? value.cases.find(
-                          (c) => !c.stdoutMatches || !c.returnMatches || !c.observationMatches,
-                        )
-                      : undefined;
+                  const verdict = 'cases' in value ? c6OutputVerdict(value) : null;
+                  guard();
                   acceptedRequests.set(value, snapshot);
                   acceptedProofs.set(value, {
                     requestSha256,
@@ -264,17 +262,12 @@ export class C6ExecutionClient {
                     judge:
                       'cases' in value
                         ? {
-                            status: value.status,
+                            status: verdict!.status,
                             profileId: value.profileRef.id,
                             caseKeys: value.cases.map((c) => c.caseKey),
-                            failedCaseKey: failed?.caseKey ?? null,
-                            failure: !failed
-                              ? null
-                              : !failed.returnMatches
-                                ? 'program-error'
-                                : !failed.stdoutMatches
-                                  ? 'wrong-answer'
-                                  : 'teaching-goal-unmet',
+                            failedCaseKey: verdict!.failedCaseKey,
+                            failure: verdict!.failure,
+                            outputPolicy: 'line-end-1.0.0',
                           }
                         : null,
                   });

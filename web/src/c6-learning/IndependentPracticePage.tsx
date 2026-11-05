@@ -18,12 +18,7 @@ export default function IndependentPracticePage({ review = false }: { review?: b
             {question.title}
             {review ? ' · 本次复盘' : ''}
           </h1>
-          <p>
-            {review
-              ? '查看本题当前有效提交的真实轨迹。复盘不会重新运行或获得奖励；刷新后不恢复临时结果。'
-              : question.prompt}
-          </p>
-          <PracticeExecution id={question.exerciseRef.id} review={review} />
+          <PracticeExecution id={question.exerciseRef.id} />
         </div>
       ) : (
         <MissingPage />

@@ -295,6 +295,77 @@ describe('10.2 stable block generation with actual Rust/WASM', () => {
     expect(program).toEqual(starterProgram(id, catalog.program.bindings));
   });
 
+  it.each([0, 7])(
+    'keeps an explicit return %s without appending an unreachable default',
+    async (exitCode) => {
+      const { catalog, program, source } = plain((f) => [
+        f.print('中文🙂\n'),
+        { id: f.id(), kind: 'return', value: f.integer(exitCode) },
+      ]);
+      expect(source.text.match(/return /g)).toHaveLength(1);
+      expect(source.text).toMatch(new RegExp(`return ${exitCode};\\n}\\n$`));
+      const { result } = await execute(catalog, source, catalog.subject.tests[0]);
+      expect(result.terminal).toMatchObject({ status: 'completed', exitCode });
+      expect(stdout(result)).toBe('中文🙂\n');
+      assertRanges(program, source, result);
+    },
+  );
+
+  it.each(['empty', 'conditional', 'while', 'for'] as const)(
+    'keeps the default return for a reachable end: %s',
+    async (kind) => {
+      const { catalog, program, source } = plain((f) => {
+        const returned: BlockStatement = { id: f.id(), kind: 'return', value: f.integer(7) };
+        if (kind === 'empty') return [];
+        if (kind === 'conditional')
+          return [
+            { id: f.id(), kind: 'if', condition: f.integer(0), then: [returned], else: null },
+          ];
+        if (kind === 'while')
+          return [{ id: f.id(), kind: 'while', condition: f.integer(0), body: [returned] }];
+        return [
+          {
+            id: f.id(),
+            kind: 'for',
+            init: null,
+            condition: f.integer(0),
+            update: null,
+            body: [returned],
+          },
+        ];
+      });
+      expect(source.text.match(/return 0;/g)).toHaveLength(1);
+      const { result } = await execute(catalog, source, catalog.subject.tests[0]);
+      expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0 });
+      assertRanges(program, source, result);
+    },
+  );
+
+  it.each([0, 1])(
+    'omits the default when a nested scope returns on both branches: %s',
+    async (condition) => {
+      const { catalog, program, source } = plain((f) => [
+        {
+          id: f.id(),
+          kind: 'scope',
+          body: [
+            {
+              id: f.id(),
+              kind: 'if',
+              condition: f.integer(condition),
+              then: [{ id: f.id(), kind: 'return', value: f.integer(7) }],
+              else: [{ id: f.id(), kind: 'return', value: f.integer(0) }],
+            },
+          ],
+        },
+      ]);
+      expect(source.text.match(/return /g)).toHaveLength(2);
+      const { result } = await execute(catalog, source, catalog.subject.tests[0]);
+      expect(result.terminal).toMatchObject({ status: 'completed', exitCode: condition ? 7 : 0 });
+      assertRanges(program, source, result);
+    },
+  );
+
   it('preserves all twenty teaching block classes, priority, scopes, for continue and innermost break', async () => {
     const { catalog, program, source } = plain((f) => [
       f.declare(

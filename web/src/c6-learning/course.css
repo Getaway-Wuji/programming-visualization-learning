@@ -91,7 +91,86 @@
   margin-bottom: 32px;
 }
 .c6-next-section {
-  padding: 24px 0;
+  padding: 28px;
+}
+.c6-home-columns > .card {
+  height: 100%;
+}
+.c6-goal-section {
+  padding: 28px;
+}
+.c6-home-columns {
+  align-items: stretch;
+}
+.c6-home-practice-shortcuts {
+  margin-top: 24px;
+}
+.c6-home-practice-shortcuts h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.c6-home-practice-shortcuts .inline-actions {
+  margin-top: 8px;
+}
+.c6-course-page progress,
+.daily-goal-summary progress {
+  appearance: none;
+  border: 0;
+  border-radius: 8px;
+  background: var(--p05-border, var(--line));
+  overflow: hidden;
+}
+.c6-course-page progress::-webkit-progress-bar,
+.daily-goal-summary progress::-webkit-progress-bar {
+  background: var(--p05-border, var(--line));
+  border-radius: 8px;
+}
+.c6-course-page progress::-webkit-progress-value,
+.daily-goal-summary progress::-webkit-progress-value {
+  background: var(--p05-accent, var(--green));
+  border-radius: 8px;
+}
+.c6-course-page progress::-moz-progress-bar,
+.daily-goal-summary progress::-moz-progress-bar {
+  background: var(--p05-accent, var(--green));
+  border-radius: 8px;
+}
+.c6-home-practice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-top: 24px;
+}
+.c6-home-practice h2,
+.c6-home-practice p {
+  margin-bottom: 8px;
+}
+.c6-home-practice .inline-actions {
+  margin: 0;
+}
+.c6-reading-end {
+  display: flex;
+  justify-content: flex-end;
+  margin: 24px 0;
+}
+.c6-reading-end button {
+  font-size: 13px;
+}
+.c6-practice-catalog {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 18px;
+}
+.c6-practice-entry h2 {
+  font-size: 18px;
+  margin: 12px 0;
+}
+.c6-practice-entry:hover {
+  border-color: var(--p05-accent, var(--green));
+}
+.c6-reading-page .c6-section-practice {
+  margin-top: 28px;
 }
 .c6-next-section > progress {
   width: 100%;
@@ -108,8 +187,7 @@
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   gap: 32px;
-  padding: 28px 0;
-  border-top: 1px solid var(--border-tone, #e3e8df);
+  padding: 28px;
 }
 .c6-ledger-list {
   list-style: none;
@@ -159,6 +237,10 @@
   .c6-profile-section {
     grid-template-columns: minmax(0, 1fr);
     gap: 16px;
+  }
+  .c6-home-practice {
+    align-items: flex-start;
+    flex-direction: column;
   }
   .c6-reading-confirmation {
     padding: 20px;

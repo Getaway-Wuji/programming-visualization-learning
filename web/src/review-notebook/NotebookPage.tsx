@@ -45,9 +45,6 @@ export default function NotebookPage() {
       <Link className="text-link" to="/weaknesses">
         查看薄弱点与学习依据 →
       </Link>
-      <Link className="text-link" to="/reviews">
-        打开复习队列 →
-      </Link>
       <div className="notebook-layout">
         <section className="card section-card" aria-labelledby="mistake-title">
           <h2 id="mistake-title">错题记录 {rows ? `· ${rows.length} 题` : ''}</h2>

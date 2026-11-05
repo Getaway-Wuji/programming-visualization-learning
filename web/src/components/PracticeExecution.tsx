@@ -9,10 +9,10 @@ import { BasicTraceView } from './BasicTraceView';
 import { PlayerControls } from './PlayerControls';
 import { Workbench, WorkspaceContext, type WorkbenchHandle } from '../workbench/Workbench';
 import { PracticeGuidance } from './PracticeGuidance';
+import { PracticeExamples } from './PracticeExamples';
 import { LessonCompletion } from './LessonCompletion';
 import { reviewedDurableSnapshot } from '../learning/reviewed-release';
 import { resolveBlockAccess, lockedProgramKinds } from '../blocks/permissions';
-import { BlockPermissions } from '../blocks/BlockPermissions';
 import { BLOCK_LABELS } from '../blocks/block-kinds';
 import { EditorHistory } from '../practice/EditorHistory';
 import { reconstructionQuestion } from '../practice/reconstruction';
@@ -21,10 +21,7 @@ import { DiagnosticPanel } from '../diagnostics/DiagnosticPanel';
 import { bugQuestion } from '../bugs/content';
 import { BugGuidance } from '../bugs/BugPanel';
 import type { ByteRange } from '../engine/protocol';
-import {
-  BlockWorkspacePreference,
-  useBlockWorkspacePreference,
-} from '../appearance/BlockWorkspacePreference';
+import { useBlockWorkspacePreference } from '../appearance/BlockWorkspacePreference';
 import {
   loadTeachingPresentation,
   resolvePreferredEditor,
@@ -64,6 +61,7 @@ const teachingHelp: Record<string, string> = {
 };
 export function PracticeExecution({ id, review = false }: { id: string; review?: boolean }) {
   const { session, state, player } = usePractice();
+  useEffect(() => session.player.setDetail('key'), [session, id]);
   const traceVisible = useRef(true);
   const traceVisibility = useCallback(
     (visible: boolean) => {
@@ -129,9 +127,10 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
     catalog?.subject.lessonRef,
   );
   const blocksVisible =
-    reconstructing ||
-    preference.value === 'show' ||
-    (preference.value === 'auto' && recommendation === 'blocks');
+    !bug &&
+    (reconstructing ||
+      preference.value === 'show' ||
+      (preference.value === 'auto' && recommendation === 'blocks'));
   // Once mounted, retain the native canvas and undo history while hidden.
   const [canvasOwner, setCanvasOwner] = useState('');
   const canvasKey = `${id}:${state.modeRevision}`;
@@ -212,6 +211,77 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
         step.changes.flatMap((change) => (change.op === 'output' ? [change.append] : [])),
       )
       .join('') ?? '';
+  if (bug && catalog)
+    return (
+      <section
+        className="card section-card"
+        data-testid="practice-execution"
+        data-state={phase === 'met' ? 'passed' : phase}
+        data-save-state={retrySavedHistory ? 'saved-history' : state.saveStatus}
+      >
+        <h2>题目描述</h2>
+        <p>{catalog.subject.prompt}</p>
+        <PracticeExamples
+          key={id}
+          inputFormat={`本题使用给定数据：${catalog.inputSpec.fields.map((field) => field.key).join('、')}。`}
+          outputFormat="按题目要求输出结果。"
+          samples={catalog.subject.tests.map((test) => ({
+            input: catalog.inputSpec.fields
+              .map(
+                (field) =>
+                  `${field.key} = ${Array.isArray(test.input[field.key]) ? (test.input[field.key] as readonly number[]).join(' ') || '[]' : test.input[field.key]}`,
+              )
+              .join('\n'),
+            output: test.expectedStdout,
+          }))}
+        />
+        {edit ? (
+          <Suspense fallback={<p role="status">正在准备代码编辑区…</p>}>
+            <DraftCodeEditor
+              document={edit}
+              selection={state.selectedCodeRange}
+              selectionRevision={state.selectionRevision}
+              commentsMoved={state.commentsMoved}
+              editRejection={state.editRejection}
+              onChange={(text, range) => session.editCode(text, range)}
+              onSelect={(range) => session.selectCode(range)}
+              onRetry={() => void session.retryAnalysis()}
+            />
+          </Suspense>
+        ) : (
+          <p role="status">正在准备代码…</p>
+        )}
+        <div className="inline-actions practice-actions">
+          <button
+            className="button button-primary"
+            onClick={() => void session.submit()}
+            disabled={
+              busy || syncBlocked || permissionBlocked || !source || state.issues.length > 0
+            }
+          >
+            {busy ? '提交中…' : '提交'}
+          </button>
+          {busy && (
+            <button className="button button-secondary" onClick={() => session.cancel()}>
+              取消
+            </button>
+          )}
+        </div>
+        {['met', 'unmet', 'failed'].includes(phase) && (
+          <p
+            role="status"
+            className="oj-verdict"
+            data-testid="practice-feedback"
+            data-verdict={phase === 'met' ? 'passed' : phase === 'unmet' ? 'failed' : 'incomplete'}
+          >
+            {phase === 'met' ? '通过' : phase === 'unmet' ? '未通过' : '提交未完成，请重试'}
+          </p>
+        )}
+        <EditorHistory session={session} busy={busy || !edit} />
+        <BugGuidance key={id} question={bug} />
+        <LearningSaveStatus />
+      </section>
+    );
   return (
     <section
       className="card section-card"
@@ -224,6 +294,20 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
             <h2>{review ? '本次提交复盘' : '题目与答题区'}</h2>
             <p>{catalog.subject.prompt}</p>
             <p className="notice">教学目标：{catalog.judgeProfile.targetDescription}</p>
+            <PracticeExamples
+              key={id}
+              inputFormat={`本题使用给定数据：${catalog.inputSpec.fields.map((field) => field.key).join('、')}。`}
+              outputFormat="按题目要求输出结果，空格与换行须与示例一致。"
+              samples={catalog.subject.tests.map((test) => ({
+                input: catalog.inputSpec.fields
+                  .map((field) => {
+                    const value = test.input[field.key];
+                    return `${field.key} = ${Array.isArray(value) ? value.join(' ') || '[]' : value}`;
+                  })
+                  .join('\n'),
+                output: test.expectedStdout,
+              }))}
+            />
             <details className="practice-storage-note muted">
               <summary>练习与保存说明</summary>
               <p>
@@ -236,9 +320,7 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
       )}
       {!review && catalog && (
         <>
-          {bug ? (
-            <BugGuidance key={id} question={bug} />
-          ) : (
+          {!bug && (
             <PracticeGuidance
               key={id}
               id={id}
@@ -251,97 +333,15 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
           {reconstructing && question && state.reconstructionSource && (
             <ReconstructionReference question={question} source={state.reconstructionSource} />
           )}
-          <div className="inline-actions practice-actions">
-            <button
-              className="button button-secondary"
-              onClick={() => void session.run()}
-              disabled={
-                busy || syncBlocked || permissionBlocked || !source || state.issues.length > 0
-              }
-            >
-              运行本组
-            </button>
-            <button
-              className="button button-secondary"
-              onClick={() => void session.preview()}
-              disabled={busy || syncBlocked || permissionBlocked || !state.program}
-            >
-              准备代码
-            </button>
-            <button
-              className="button button-primary"
-              onClick={() => void session.submit()}
-              disabled={
-                busy || syncBlocked || permissionBlocked || !source || state.issues.length > 0
-              }
-            >
-              提交练习
-            </button>
-            <button
-              className="button button-secondary"
-              onClick={() => session.cancel()}
-              disabled={!busy && !edit?.analysisPending}
-            >
-              {state.action === 'run' ? '取消运行' : '取消提交'}
-            </button>
-            <Link className="text-link" to={paths.review(id)}>
-              查看本次复盘
-            </Link>
-            {!reconstructing &&
-              (!state.codeEditing ? (
-                <button
-                  className="button button-secondary"
-                  disabled={
-                    busy || (!edit && (!source || !state.program || state.issues.length > 0))
-                  }
-                  onClick={() => void session.enableCodeEditing()}
-                >
-                  编辑 C 并同步积木
-                </button>
-              ) : blocksVisible ? (
-                <button
-                  className="button button-secondary"
-                  onClick={() => session.setCodeEditing(false)}
-                >
-                  收起代码编辑
-                </button>
-              ) : null)}
-            {edit && !state.codeEditing && (
-              <span role="status">
-                {syncBlocked ? '当前草稿尚未同步，无法运行。' : '当前代码与积木已同步。'}
-              </span>
-            )}
-          </div>
-          <p className="muted">
-            运行本组只检查第一组输入，不记录通过或积分；提交练习才检查全部
-            {catalog.subject.tests.length} 组与教学目标。准备代码只生成源码。
-            修改积木或代码会立即使旧判定和轨迹失效；已保存的历史通过仍保留。
-          </p>
-          {reconstructing ? (
-            <p className="muted">
-              本模式显示积木并保留你的显示偏好；切回其他模式后继续使用原设置。
-            </p>
-          ) : (
-            <BlockWorkspacePreference control={preference} recommendation={recommendation} />
-          )}
-          {access && catalog && (
-            <BlockPermissions access={access} packageRef={catalog.packageRef} />
-          )}
-          <EditorHistory session={session} busy={busy || !edit} />
           {permissionBlocked && (
             <p role="alert" data-testid="block-permission-blocked">
               {access?.available
-                ? `当前程序含未解锁积木：${lockedKinds.map((kind) => BLOCK_LABELS[kind] ?? kind).join('、')}。`
-                : '当前课程版本的积木权限尚未就绪。'}
-              草稿已保留；请展开“积木权限”学习相应小节，或修改当前程序。
+                ? `请先学习对应知识，解锁${lockedKinds.map((kind) => BLOCK_LABELS[kind] ?? kind).join('、')}。`
+                : '正在准备本题编辑权限。'}{' '}
+              <Link to="/courses">查看课程</Link>
             </p>
           )}
           {!edit && <p role="status">正在准备本题代码与积木，请稍候……</p>}
-          {presentation?.status === 'fallback' && (
-            <p className="notice" role="status">
-              课程展示推荐暂不可用，自动模式已使用代码作答。你仍可选择显示积木。
-            </p>
-          )}
           <div
             id="practice-answer"
             tabIndex={-1}
@@ -470,6 +470,63 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
               }
             />
           </div>
+          <div className="inline-actions practice-actions">
+            <button
+              className="button button-secondary"
+              onClick={() => void session.run()}
+              disabled={
+                busy || syncBlocked || permissionBlocked || !source || state.issues.length > 0
+              }
+            >
+              运行本组
+            </button>
+
+            <button
+              className="button button-primary"
+              onClick={() => void session.submit()}
+              disabled={
+                busy || syncBlocked || permissionBlocked || !source || state.issues.length > 0
+              }
+            >
+              提交练习
+            </button>
+            <button
+              className="button button-secondary"
+              onClick={() => session.cancel()}
+              disabled={!busy && !edit?.analysisPending}
+            >
+              {state.action === 'run' ? '取消运行' : '取消提交'}
+            </button>
+            <Link className="text-link" to={paths.review(id)}>
+              查看本次复盘
+            </Link>
+            {!reconstructing &&
+              (!state.codeEditing ? (
+                <button
+                  className="button button-secondary"
+                  disabled={
+                    busy || (!edit && (!source || !state.program || state.issues.length > 0))
+                  }
+                  onClick={() => void session.enableCodeEditing()}
+                >
+                  编辑 C 并同步积木
+                </button>
+              ) : blocksVisible ? (
+                <button
+                  className="button button-secondary"
+                  onClick={() => session.setCodeEditing(false)}
+                >
+                  收起代码编辑
+                </button>
+              ) : null)}
+            {edit && !state.codeEditing && (
+              <span role="status">
+                {syncBlocked ? '当前草稿尚未同步，无法运行。' : '当前代码与积木已同步。'}
+              </span>
+            )}
+          </div>
+          {bug && <BugGuidance key={id} question={bug} />}
+          <EditorHistory session={session} busy={busy || !edit} />
         </>
       )}
       {!catalog && (
@@ -486,7 +543,11 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
           重试读取练习
         </button>
       )}
-      <section aria-live="polite" data-testid="practice-feedback">
+      <section
+        aria-live="polite"
+        data-testid="practice-feedback"
+        hidden={!result && !busy && !state.message && !review}
+      >
         {review && catalog && !result && (
           <p>还没有可复盘的运行。返回练习工作区完成真实提交后再查看。</p>
         )}
@@ -634,7 +695,9 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
       {catalog && (
         <>
           <LearningSaveStatus />
-          <LessonCompletion lessonId={catalog.subject.lessonRef.id} currentExerciseId={id} />
+          {!bug && (
+            <LessonCompletion lessonId={catalog.subject.lessonRef.id} currentExerciseId={id} />
+          )}
           {learning.practiceStatus === 'failed' && (
             <p className="notice" data-testid="practice-learning-unavailable">
               本地通过记录暂不可用，可以继续临时练习。
@@ -645,7 +708,7 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
           )}
         </>
       )}
-      {source && (!review || result) && (
+      {source && result && (
         <>
           <p data-testid="practice-retained-case">
             当前源码{result ? '与复盘' : ''}对应测试组：{state.caseKey}。

@@ -1,4 +1,73 @@
 /* Six adopted profiles. Geometry changes do not remount the learning workspace. */
+.topbar-more {
+  display: contents;
+}
+.topbar-more > summary {
+  display: none;
+}
+.topbar-tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+@media (max-width: 1100px) {
+  :root[data-appearance] .p05-app .topbar {
+    height: 64px;
+    min-height: 64px;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+  .p05-app .topbar-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+  }
+  .p05-app .local-note {
+    flex: 0 0 auto;
+    gap: 8px;
+  }
+  .topbar-more {
+    position: relative;
+    display: block;
+  }
+  .topbar-more > summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    cursor: pointer;
+    list-style: none;
+    border: 1px solid var(--p05-border);
+    border-radius: 10px;
+    padding: 0 8px;
+  }
+  .topbar-more > summary::-webkit-details-marker {
+    display: none;
+  }
+  .topbar-tools {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 20;
+    display: grid;
+    gap: 16px;
+    min-width: 176px;
+    padding: 16px;
+    border: 1px solid var(--p05-border);
+    border-radius: 10px;
+    background: var(--p05-surface);
+    color: var(--p05-text);
+  }
+  .topbar-tools .preview-badge {
+    display: inline;
+  }
+  .topbar-tools > a {
+    min-height: 44px;
+  }
+}
 :root[data-appearance] {
   font-family: 'Microsoft YaHei UI', 'Microsoft YaHei', system-ui, sans-serif;
   color: var(--p05-text);

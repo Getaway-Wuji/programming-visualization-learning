@@ -1,15 +1,16 @@
+import { CodeEditor } from '../components/CodeEditor';
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { Link } from 'react-router';
 import { PageHeading } from '../components/Ui';
 import { useLearning } from '../learning/react';
 import { WeaknessController } from '../weaknesses/WeaknessPage';
 import { weaknessReasons } from '../weaknesses/model';
-import { CustomViews } from '../custom-code/Views';
 import '../custom-code/custom-code.css';
 import { GeneratedPracticeController } from './controller';
 import { practiceKnowledgeIds } from './protocol';
 import './practice.css';
 import { c6GeneratedFoundation } from '../c6-learning/independent';
+import { PracticeExamples } from '../components/PracticeExamples';
 
 const labels: Record<string, string> = {
   'knowledge.c.expressions': '表达式',
@@ -29,19 +30,13 @@ const errors: Record<string, string> = {
   E_MODULE_LOAD: '执行资源未能加载，请检查连接后重试。',
   E_GENERATED_REFERENCE: '参考解未通过真实验证，未交付题目，请重试。',
 };
-const outcomes = {
-  passed: '通过',
-  'wrong-answer': '输出不符',
-  'program-error': '程序错误',
-  'resource-limit': '达到预算',
-};
 export default function GeneratedPracticePage() {
   const { service, state: learning } = useLearning();
   const [controller] = useState(() => new GeneratedPracticeController());
   const [weakness] = useState(() => new WeaknessController(service));
   const snap = useSyncExternalStore(controller.subscribe, controller.getSnapshot);
   const summary = useSyncExternalStore(weakness.subscribe, weakness.getSnapshot);
-  const [mode, setMode] = useState('basic');
+
   useEffect(() => {
     void weakness.reload();
   }, [
@@ -107,20 +102,14 @@ export default function GeneratedPracticePage() {
     : learning.reading?.lessons.find((l) =>
         l.knowledgeRefs.some((k) => k.id === snap.selection.knowledgeId),
       );
-  const { problem, assessment, view } = snap;
+  const { problem, assessment } = snap;
   const running = snap.status === 'running';
   const validSource = new TextEncoder().encode(snap.source).length <= 32768;
-  const replay = assessment?.replay;
-  const range = view.byteRange;
-  const sourceBytes = new TextEncoder().encode(replay?.request.source ?? '');
-  const decode = (start: number, end?: number) =>
-    new TextDecoder().decode(sourceBytes.slice(start, end));
   return (
     <div
       className="generated-practice-page"
       data-testid="generated-practice"
       data-status={snap.status}
-      data-cursor={view.cursor}
     >
       <PageHeading
         kicker="规则生成 · C 基础"
@@ -161,7 +150,6 @@ export default function GeneratedPracticePage() {
         )}
         <div className="practice-links">
           <Link to="/weaknesses">核对学习依据 →</Link>
-          <Link to="/reviews">复习队列 →</Link>
           {lesson && <Link to={`/lessons/${lesson.id}`}>原课程：{lesson.title} →</Link>}
         </div>
       </section>
@@ -242,8 +230,17 @@ export default function GeneratedPracticePage() {
             <p>{problem.prompt}</p>
             <p>
               输入为整数 {problem.inputMin} 至 {problem.inputMax}，共{problem.cases.length}
-              个。提交将穷尽该范围；试运行只检查你输入的一个值。
+              个。提交会检查该范围内的全部输入。
             </p>
+            <PracticeExamples
+              key={problem.problemId}
+              inputFormat={`输入一个 ${problem.inputMin} 至 ${problem.inputMax} 之间的整数。`}
+              outputFormat="按题目要求输出计算结果，末尾换行。"
+              samples={problem.cases.map((test) => ({
+                input: test.inputText,
+                output: test.expectedStdout,
+              }))}
+            />
             <details>
               <summary>查看可复现题目标识与输入预期</summary>
               <p className="practice-id">{problem.problemId}</p>
@@ -261,39 +258,21 @@ export default function GeneratedPracticePage() {
               <h2 id="generated-editor-title">02 / 写下你的解法</h2>
               <span className="muted">教学 C 子集 · 32 KiB以内</span>
             </div>
-            <label className="practice-editor-label">
-              C 代码
-              <textarea
-                spellCheck={false}
-                data-testid="generated-source"
-                value={snap.source}
-                onChange={(e) => controller.edit(e.target.value)}
-              />
-            </label>
+            <p>C 代码</p>
+            <CodeEditor
+              label="C 代码"
+              dialect="c"
+              value={snap.source}
+              onChange={(text) => controller.edit(text)}
+            />
             {!validSource && <p role="alert">代码超过32 KiB。</p>}
             <div className="practice-config practice-submit">
-              <label>
-                试运行输入
-                <input
-                  aria-label="试运行输入"
-                  value={snap.input}
-                  maxLength={256}
-                  onChange={(e) => controller.setInput(e.target.value)}
-                />
-              </label>
-              <button
-                className="button"
-                disabled={running || !validSource}
-                onClick={() => void controller.run('preview')}
-              >
-                试运行一个输入
-              </button>
               <button
                 className="button button-primary"
                 disabled={running || !validSource}
                 onClick={() => void controller.run('grade')}
               >
-                提交全部输入
+                提交
               </button>
               {running && (
                 <button className="button" onClick={() => controller.cancel()}>
@@ -314,144 +293,17 @@ export default function GeneratedPracticePage() {
       {assessment && (
         <section
           className="card section-card"
-          aria-labelledby="generated-result-title"
           data-testid="generated-assessment"
           data-verdict={assessment.verdict}
           data-complete={String(assessment.complete)}
         >
-          <h2 id="generated-result-title">
-            {snap.operation === 'preview'
-              ? '单个输入试运行'
-              : assessment.verdict === 'passed'
-                ? '全部输入通过'
-                : '本次提交尚未通过'}
+          <h2 role="status">
+            {assessment.verdict === 'passed'
+              ? '通过'
+              : assessment.complete
+                ? '未通过'
+                : '提交未完成，请重试'}
           </h2>
-          <p>
-            已检查{assessment.checkedCases}/{assessment.totalCases}个输入，{assessment.passedCases}
-            个通过。
-            {snap.operation === 'preview'
-              ? '单次试运行不表示整题通过。'
-              : !assessment.complete
-                ? '执行中止，其余输入未检查。'
-                : ''}
-            本次结果不计分。
-          </p>
-          <div className="practice-results">
-            <table>
-              <thead>
-                <tr>
-                  <th>输入</th>
-                  <th>预期输出</th>
-                  <th>实际输出</th>
-                  <th>结果</th>
-                </tr>
-              </thead>
-              <tbody>
-                {assessment.results.map((c) => (
-                  <tr key={c.caseId}>
-                    <td>
-                      <code>{c.inputText}</code>
-                    </td>
-                    <td>
-                      <code>{c.expectedStdout.trimEnd()}</code>
-                    </td>
-                    <td>
-                      <code>{c.actualStdout.trimEnd() || '（无输出）'}</code>
-                    </td>
-                    <td>
-                      {outcomes[c.status]}
-                      {c.code ? ` · ${c.code}` : ''}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <h3>03 / 沿真实执行回看</h3>
-          <p>
-            当前回放输入 {replay!.inputText}
-            。提交保留首个未通过输入的轨迹；全部通过时保留最后一个输入。虚拟地址用于教学。
-          </p>
-          {view.state ? (
-            <>
-              <div className="practice-playback">
-                <button
-                  className="button"
-                  disabled={view.cursor === 0}
-                  onClick={() => controller.step(-1)}
-                >
-                  后退一步
-                </button>
-                <button
-                  className="button"
-                  disabled={view.cursor === view.length}
-                  onClick={() => controller.step(1)}
-                >
-                  前进一步
-                </button>
-                <button
-                  className="button"
-                  onClick={() => (view.playing ? controller.pause() : controller.play())}
-                >
-                  {view.playing ? '暂停' : '播放'}
-                </button>
-                <button className="button" onClick={() => controller.replay()}>
-                  重新播放
-                </button>
-                <label>
-                  速度
-                  <select
-                    value={snap.rate}
-                    onChange={(e) => controller.setRate(Number(e.target.value))}
-                  >
-                    {[0.25, 0.5, 1, 1.5, 2, 4].map((n) => (
-                      <option key={n} value={n}>
-                        {n}×
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  执行位置
-                  <input
-                    aria-label="执行位置"
-                    type="range"
-                    min={0}
-                    max={view.length}
-                    value={view.cursor}
-                    onChange={(e) => controller.seek(Number(e.target.value))}
-                  />
-                </label>
-                <span>
-                  {view.cursor}/{view.length}
-                </span>
-              </div>
-              <pre className="practice-replay-source" data-testid="generated-highlight">
-                {range ? (
-                  <>
-                    {decode(0, range.start)}
-                    <mark>{decode(range.start, range.end)}</mark>
-                    {decode(range.end)}
-                  </>
-                ) : (
-                  replay!.request.source
-                )}
-              </pre>
-              <label>
-                观察视图
-                <select value={mode} onChange={(e) => setMode(e.target.value)}>
-                  <option value="basic">变量与输出</option>
-                  <option value="memory">内存</option>
-                  <option value="stack">调用栈</option>
-                </select>
-              </label>
-              <div data-testid="generated-state" data-state={JSON.stringify(view.state)}>
-                <CustomViews state={view.state} result={replay!.result} mode={mode} />
-              </div>
-            </>
-          ) : (
-            <p>程序未产生可回放轨迹。请按诊断修正代码。</p>
-          )}
         </section>
       )}
     </div>

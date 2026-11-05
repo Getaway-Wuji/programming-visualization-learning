@@ -9,6 +9,11 @@ import { openCurrentAnswer, submitCurrent } from './current-course-helpers';
 import { installC6Packets } from './c6-observation';
 import { assertCurrentJudge } from './current-practice-observation';
 
+const text = (p: Page) =>
+  p
+    .locator('.code-editor .cm-line')
+    .allTextContents()
+    .then((lines) => lines.join('\n'));
 const panel = (p: Page) => p.getByTestId('practice-execution');
 const code = (p: Page) => p.getByRole('textbox', { name: '编辑 C 代码', exact: true });
 const action = (p: Page, name: string) => panel(p).getByRole('button', { name, exact: true });
@@ -51,23 +56,23 @@ async function open(p: Page, id = bugQuestions[0].exerciseRef.id) {
   await expect(panel(p)).toHaveAttribute('data-state', 'ready');
   await expect(code(p)).toBeVisible();
   const q = bugQuestions.find((q) => q.exerciseRef.id === id)!;
-  await expect.poll(() => code(p).inputValue()).toContain(q.brokenBody);
+  await expect.poll(() => text(p)).toContain(q.brokenBody);
   await expect(p.getByTestId('draft-code-editor')).toHaveAttribute(
     'data-sync',
     q.category === 'syntax' ? 'invalid' : 'synced',
   );
   await expect(history(p)).toHaveAttribute('data-save-state', 'ready');
-  return code(p).inputValue();
+  return text(p);
 }
 async function repair(p: Page, broken: string, from: string, to: string) {
   await code(p).fill(broken.replace(from, to));
   await expect(p.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
-  await expect(action(p, '提交练习')).toBeEnabled();
+  await expect(action(p, '提交')).toBeEnabled();
 }
 async function submit(p: Page) {
-  await action(p, '提交练习').click();
+  await action(p, '提交').click();
   await expect(panel(p)).toHaveAttribute('data-state', 'passed');
-  await expect(p.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state', saved);
+  await expect(panel(p)).toHaveAttribute('data-save-state', saved);
 }
 test.beforeEach(async ({ page }) => observeCaseSetExecution(page));
 
@@ -79,9 +84,9 @@ for (const q of bugQuestions)
         'data-code',
         'E_PARSE_INVALID',
       );
-      await expect(action(page, '提交练习')).toBeDisabled();
+      await expect(action(page, '提交')).toBeDisabled();
     } else {
-      await action(page, '提交练习').click();
+      await action(page, '提交').click();
       await expect(panel(page)).toHaveAttribute('data-state', 'unmet');
     }
     expect(
@@ -138,7 +143,7 @@ test('saved broken and repaired drafts restore exactly after refresh without res
   const q = bugQuestions[0],
     broken = await open(page);
   await repair(page, broken, q.brokenBody, q.solutionBody);
-  const fixed = await code(page).inputValue();
+  const fixed = await text(page);
   await submit(page);
   await expect(history(page)).toHaveAttribute('data-save-state', 'ready');
   const versions = (await rows(page)).editHistory.filter(
@@ -159,17 +164,20 @@ test('saved broken and repaired drafts restore exactly after refresh without res
       .getByRole('combobox', { name: '历史版本', exact: true })
       .selectOption(record.entryId);
     await history(page).getByRole('button', { name: '恢复所选版本', exact: true }).click();
-    await expect(code(page)).toHaveValue(text);
+    await expect
+      .poll(() =>
+        page
+          .locator('.code-editor .cm-line')
+          .allTextContents()
+          .then((lines) => lines.join('\n')),
+      )
+      .toBe(text);
     await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', status);
     if (status === 'synced') {
-      await expect(page.getByTestId('player-controls')).toHaveAttribute('data-cursor', '');
-      await expect(page.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
-      await expect(
-        page.getByTestId('player-controls').getByRole('button', { name: '播放', exact: true }),
-      ).toBeDisabled();
+      await expect(page.getByTestId('player-controls')).toHaveCount(0);
     } else await expect(page.getByTestId('player-controls')).toHaveCount(0);
   }
-  await expect(action(page, '提交练习')).toBeDisabled();
+  await expect(action(page, '提交')).toBeDisabled();
 });
 
 test('catalog and editor remain operable at three widths and reveal the authored explanation explicitly', async ({
@@ -242,12 +250,9 @@ if (p05CourseRelease.registered) {
     await page.evaluate(() => {
       (window as unknown as { __bugFault: { armed: boolean } }).__bugFault.armed = true;
     });
-    await action(page, '提交练习').click();
+    await action(page, '提交').click();
     await expect(panel(page)).toHaveAttribute('data-state', 'passed');
-    await expect(page.getByTestId('practice-pass-save')).toHaveAttribute(
-      'data-save-state',
-      'unsaved',
-    );
+    await expect(panel(page)).toHaveAttribute('data-save-state', 'unsaved');
     expect((await rows(page)).ledger).toHaveLength(0);
     const fault = await page.evaluate(() => {
       const f = (
@@ -258,10 +263,11 @@ if (p05CourseRelease.registered) {
     });
     expect(fault.hits).toBeGreaterThan(0);
     await page.getByRole('button', { name: '重试未保存操作', exact: true }).click();
-    await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-      'data-save-status',
+    await expect(page.locator('.app-shell')).toHaveAttribute(
+      'data-learning-storage-status',
       'ready',
     );
+    await expect(page.getByTestId('learning-save-status')).toHaveCount(0);
     const savedRows = await rows(page);
     expect(savedRows.receipts.some((r) => r.eventId === fault.eventId)).toBe(true);
     expect(savedRows.ledger).toHaveLength(1);

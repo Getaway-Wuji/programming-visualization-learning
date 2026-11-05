@@ -129,20 +129,6 @@ async function render(component: ComponentType = components.ProfileSummary, path
 function level() {
   return container.querySelector('[data-testid="learning-level"]')!;
 }
-async function fillHex(value: string) {
-  const input = container.querySelector<HTMLInputElement>('input[aria-label="强调色十六进制"]')!;
-  await act(async () => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-}
-async function click(text: string) {
-  const button = [...container.querySelectorAll('button')].find(
-    (element) => element.textContent === text,
-  );
-  expect(button).toBeDefined();
-  await act(async () => button!.click());
-}
 function confirmedAwards(snapshot: StorageSnapshot) {
   const subjects = [
     {
@@ -400,63 +386,16 @@ describe('11.3 saved profile presentation and continuation', () => {
     expect(learning.state!.snapshot).toEqual(before);
   });
 
-  it('retains a new avatar draft edited during a pending refresh, clearing only the identical draft after a later confirmed refresh', async () => {
+  it('removes avatar controls from settings while preserving compatible saved archives', async () => {
     const original = structuredClone(learning.state!.snapshot!);
-    await render(pages.SettingsPage, '/settings?panel=avatar');
-    await fillHex('#A246C8');
-    let complete!: () => void;
-    const readingPending = new Promise<void>((resolve) => {
-      complete = resolve;
-    });
-    learning.service.refresh.mockImplementationOnce(() => readingPending);
-    await click('重新读取档案');
-    expect(learning.service.refresh).toHaveBeenCalledTimes(1);
-    await fillHex('#CC3366');
-
-    const reread = structuredClone(original);
-    reread.meta.revision += 1;
-    reread.avatar.accentColor = '#123456';
-    learning.state = { ...learning.state!, snapshot: reread, status: 'ready' };
-    await act(async () => {
-      complete();
-      await readingPending;
-    });
-    const input = container.querySelector<HTMLInputElement>('input[aria-label="强调色十六进制"]')!;
-    expect(input.value).toBe('#CC3366');
+    await render(pages.SettingsPage, '/settings?panel=data');
+    expect(container.querySelector('input[aria-label="强调色十六进制"]')).toBeNull();
+    expect(container.querySelector('[data-testid="avatar-preview"]')).toBeNull();
     expect(
-      container.querySelector('[data-testid="avatar-preview"]')!.getAttribute('data-avatar-color'),
-    ).toBe('#CC3366');
-    expect(container.textContent).toContain('形象预览尚未保存');
-    expect(
-      container
-        .querySelector('[data-testid="learning-save-status"]')!
-        .getAttribute('data-save-status'),
-    ).toBe('unsaved');
-    expect(reread.avatar.accentColor).toBe('#123456');
-
-    // The preserved draft still carries the revision at first edit, never the just-read revision.
-    await click('保存基础形象');
-    expect(learning.service.saveAvatar).toHaveBeenLastCalledWith(
-      { presetId: 'avatar.basic.01', accentColor: '#CC3366' },
-      original.meta.revision,
-    );
-    const latest = structuredClone(reread);
-    latest.meta.revision += 1;
-    latest.avatar.accentColor = '#765432';
-    learning.service.refresh.mockImplementationOnce(async () => {
-      learning.state = { ...learning.state!, snapshot: latest, status: 'ready' };
-    });
-    await click('重新读取档案');
-    expect(input.value).toBe('#765432');
-    expect(container.textContent).not.toContain('形象预览尚未保存');
-    expect(
-      container
-        .querySelector('[data-testid="learning-save-status"]')!
-        .getAttribute('data-save-status'),
-    ).toBe('ready');
-    expect(original.avatar.accentColor).toBe('#168A72');
-    expect(latest.progress).toEqual([]);
-    expect(latest.ledger).toEqual([]);
+      [...container.querySelectorAll('[role="tab"]')].map((tab) => tab.textContent),
+    ).not.toContain('基础形象');
+    expect(learning.service.saveAvatar).not.toHaveBeenCalled();
+    expect(learning.state!.snapshot).toEqual(original);
   });
 
   it('keeps temporary reward rights out of the actual home points dialog and offers no durable settlement retry for them', async () => {

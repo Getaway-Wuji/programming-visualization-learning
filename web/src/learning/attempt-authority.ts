@@ -8,7 +8,7 @@ import type { ResultCategory } from '../storage/model';
 import type { MemoryResult } from '../engine/memory-protocol';
 import { acceptedBugJudgement, acceptedBugBinding } from '../memory-bugs/protocol';
 import { memoryBugQuestion } from '../memory-bugs/content';
-import { submissionMet, type CaseSummary } from '../practice/submission';
+import { caseSummary, submissionMet, type CaseSummary } from '../practice/submission';
 
 const facts = new WeakSet<object>();
 export function assertAttemptFact(fact: VerifiedFact) {
@@ -33,13 +33,26 @@ export function createPracticeAttemptFact(
   current: () => boolean,
   summaries: readonly CaseSummary[] = [],
 ): VerifiedFact {
+  const effective = caseSummary(request, result);
   const aggregateUnmet =
     result.terminal.status === 'completed' &&
-    result.judgeResult?.status === 'met' &&
+    effective.met &&
     summaries.length === selected.subject.tests.length &&
     summaries.every((summary) => summary.met) &&
     !submissionMet(selected, summaries);
-  const category = classifyAttempt(result) ?? (aggregateUnmet ? 'teaching-goal-unmet' : null);
+  const category =
+    result.terminal.status !== 'completed'
+      ? classifyAttempt(result)
+      : result.judgeResult && !effective.met
+        ? effective.checks.some(
+            (check) =>
+              ['stdout-exact', 'exit-zero'].includes(check.key) && check.status === 'unmet',
+          )
+          ? 'wrong-answer'
+          : 'teaching-goal-unmet'
+        : aggregateUnmet
+          ? 'teaching-goal-unmet'
+          : null;
   const exercise = catalog.exercises.find((e) => sameRef(e.ref, selected.subject));
   const verify = () =>
     current() &&

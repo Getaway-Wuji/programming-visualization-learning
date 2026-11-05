@@ -1,8 +1,4 @@
-import {
-  teachingManifestSchema,
-  teachingChunkSchema,
-  teachingSourceSchema,
-} from './c6-teaching-schema.generated.mjs';
+import { teachingManifestSchema } from './c6-teaching-manifest.generated.mjs';
 
 export const C6_TEACHING_LIMITS = Object.freeze({
   manifest: 262144,
@@ -289,6 +285,7 @@ async function validateProgram(program, manifest) {
   }
 }
 export async function validateC6TeachingChunk(value, manifest, id) {
+  const { teachingChunkSchema } = await import('./c6-teaching-chunk.generated.mjs');
   safe(value);
   assert(teachingChunkSchema(value), 'C6_TEACHING_INVALID');
   const context = getContext(manifest),
@@ -619,7 +616,8 @@ export async function validateCompleteC6Teaching(manifest, chapters) {
     referenceNodes: 111,
   });
 }
-export function parseC6TeachingSource(bytes) {
+export async function parseC6TeachingSource(bytes) {
+  const { teachingSourceSchema } = await import('./c6-teaching-source.generated.mjs');
   const value = json(bytes, C6_TEACHING_LIMITS.package);
   safe(value, 500000);
   assert(teachingSourceSchema(value), 'C6_TEACHING_INVALID');

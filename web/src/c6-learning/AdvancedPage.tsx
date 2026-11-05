@@ -100,7 +100,6 @@ export function C6AdvancedPage({ lessonId }: { lessonId?: string }) {
                 <p>{entry.reviewQuestion}</p>
                 <C6Foundation prior={entry.lessonRef} />
                 <p>拓展阅读与算法观察不增加课程完成或积分。</p>
-                <Link to="/reviews">今日复习</Link>
               </aside>
             </div>
           </>

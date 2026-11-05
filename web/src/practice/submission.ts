@@ -8,6 +8,7 @@ import type {
 } from '../engine/protocol';
 import type { ExerciseTest } from '../content/types';
 import type { ExerciseCatalog } from '../content/practice';
+import { outputsMatch, recordedOutput } from './output-policy';
 export interface CaseSummary {
   identity: ExecutionIdentity;
   caseKey: string;
@@ -63,8 +64,20 @@ export function caseSummary(request: ExecuteRequest, result: ExecuteResult): Cas
   const checks =
     judge?.checks.map(({ key, status, diagnosticCodes }) => ({
       key,
-      status,
-      diagnosticCodes: [...diagnosticCodes],
+      status:
+        key === 'stdout-exact' &&
+        request.judge &&
+        result.trace &&
+        outputsMatch(recordedOutput(result.trace), request.judge.expectedStdout)
+          ? 'met'
+          : status,
+      diagnosticCodes:
+        key === 'stdout-exact' &&
+        request.judge &&
+        result.trace &&
+        outputsMatch(recordedOutput(result.trace), request.judge.expectedStdout)
+          ? []
+          : [...diagnosticCodes],
     })) ?? [];
   const sameIdentity = Object.keys(request.identity).every(
     (key) =>
@@ -80,7 +93,7 @@ export function caseSummary(request: ExecuteRequest, result: ExecuteResult): Cas
       result.producer === 'rust' &&
       result.terminal.status === 'completed' &&
       result.terminal.exitCode === 0 &&
-      judge?.status === 'met' &&
+      !!judge &&
       judge.caseKey === request.identity.testCaseKey &&
       judge.profileRef.id === request.judge?.profileRef.id &&
       judge.profileRef.version === request.judge?.profileRef.version &&

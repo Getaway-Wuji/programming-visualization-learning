@@ -535,8 +535,23 @@ export function generatedSyntheticRanges(
   program: BlockProgram,
 ): ByteRange[] {
   const tail = '    return 0;\n}\n';
-  if (!source.text.endsWith(tail) || !source.blockMap.some((entry) => entry.blockId === program.id))
+  const length = encoder.encode(source.text).length;
+  const main = source.blockMap.find((entry) => entry.blockId === program.id);
+  if (!source.text.endsWith('}\n') || !main || main.byteRange.end !== length - 1)
     throw new Error('UNTRUSTED_GENERATED_SOURCE');
-  const start = encoder.encode(source.text).length - encoder.encode(tail).length + 4;
-  return [{ start, end: start + encoder.encode('return 0;').length }];
+  if (!source.text.endsWith(tail)) return [];
+  const start = length - encoder.encode(tail).length + 4;
+  const end = start + encoder.encode('return 0;').length;
+  // Explicit returns already have a block mapping, even when their bytes match
+  // the default tail. Only an unmapped return belongs to the generator.
+  if (
+    source.blockMap.some(
+      (entry) =>
+        entry.blockId !== program.id &&
+        entry.byteRange.start <= start &&
+        entry.byteRange.end >= end,
+    )
+  )
+    return [];
+  return [{ start, end }];
 }

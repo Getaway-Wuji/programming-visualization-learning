@@ -77,7 +77,7 @@ export function registerTeachingBlocks() {
     init(this: Blockly.Block) {
       this.appendDummyInput().appendField('主程序 int main');
       body(this, 'BODY', '执行');
-      this.appendDummyInput().appendField('结尾默认返回 0');
+      this.appendDummyInput().appendField('未返回时默认返回 0');
       this.setColour(180);
       this.setTooltip('整个工作区只能有一个主程序。语句顺次放入执行槽；生成的 C 代码只读。');
     },

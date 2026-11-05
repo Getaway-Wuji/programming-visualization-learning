@@ -4,6 +4,7 @@ import type { EditDocumentSnapshot } from '../practice/edit-document';
 import { createSourceIndex } from '../player/source-location';
 import { DiagnosticPanel } from '../diagnostics/DiagnosticPanel';
 import './draft-code-editor.css';
+import { CodeEditor, type CodeEditorHandle } from './CodeEditor';
 
 const reasons: Record<string, string> = {
   EMPTY_STATEMENT: '单独的空语句目前没有对应积木，请删除多余的分号。',
@@ -34,9 +35,7 @@ export function DraftCodeEditor({
   onRetry(): void;
 }) {
   const text = document.codeDraft;
-  const area = useRef<HTMLTextAreaElement>(null);
-  const overlay = useRef<HTMLElement>(null);
-  const inputRange = useRef<ByteRange | undefined>(undefined);
+  const area = useRef<CodeEditorHandle>(null);
   const descriptionId = useId();
   const index = useMemo(() => createSourceIndex(text), [text]);
   const selected = useMemo(() => (selection ? index.range(selection) : null), [index, selection]);
@@ -55,54 +54,17 @@ export function DraftCodeEditor({
         : document.syncStatus === 'unmapped'
           ? '代码合法，当前尚未映射'
           : '当前草稿未同步';
-  const highlight = selected?.utf16Range;
-  const scroll = () => {
-    if (overlay.current && area.current)
-      overlay.current.style.transform = `translate(${-area.current.scrollLeft}px, ${-area.current.scrollTop}px)`;
-  };
   const issueLocation = (range: ByteRange | null) => (range ? index.range(range) : null);
   const locateIssue = (range: ByteRange) => {
     const location = issueLocation(range);
     const target = area.current;
     if (!location || !target) return;
-    target.focus({ preventScroll: true });
-    target.setSelectionRange(location.utf16Range.start, location.utf16Range.end);
-    const style = getComputedStyle(target);
-    const lineHeight = parseFloat(style.lineHeight);
-    target.scrollTop = Math.max(0, (location.start.line - 3) * lineHeight);
-    const prefix =
-      text
-        .slice(0, location.utf16Range.start)
-        .split(/\r\n|\r|\n/)
-        .at(-1) ?? '';
-    const context = window.document.createElement('canvas').getContext('2d');
-    if (context) {
-      context.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-      const tab = context.measureText(' ').width * (parseFloat(style.tabSize) || 4);
-      const parts = prefix.split('\t');
-      let width = 0;
-      parts.forEach((part, index) => {
-        width += context.measureText(part).width;
-        if (index < parts.length - 1 && tab > 0) width = (Math.floor(width / tab) + 1) * tab;
-      });
-      target.scrollLeft = Math.max(0, width - 24);
-    }
-    target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-    scroll();
+    target.select(location.utf16Range.start, location.utf16Range.end);
   };
   useEffect(() => {
     const target = area.current;
     if (!target || !selected) return;
-    target.setSelectionRange(selected.utf16Range.start, selected.utf16Range.end);
-    const before = text.slice(0, selected.utf16Range.start);
-    const line = (before.match(/\r\n|\r|\n/g) ?? []).length;
-    const lineHeight = parseFloat(getComputedStyle(target).lineHeight);
-    if (
-      line * lineHeight < target.scrollTop ||
-      line * lineHeight > target.scrollTop + target.clientHeight - lineHeight
-    )
-      target.scrollTop = Math.max(0, line * lineHeight - lineHeight * 2);
-    scroll();
+    target.select(selected.utf16Range.start, selected.utf16Range.end, false);
   }, [selected, selectionRevision, text]);
   return (
     <section
@@ -120,67 +82,21 @@ export function DraftCodeEditor({
         </span>
       </header>
       <p
-        className="source-position draft-sync-status"
+        className={valid ? 'screen-reader-only' : 'source-position draft-sync-status'}
         id={descriptionId}
         role="status"
         data-testid="code-sync-status"
       >
         {status}。{!valid && '运行与提交暂不可用。'}
       </p>
-      <div className="source-view">
-        <pre className="source-highlight" aria-hidden="true">
-          <code className="source-highlight-text" ref={overlay}>
-            {highlight ? (
-              <>
-                {text.slice(0, highlight.start)}
-                <mark className="source-step-mark" data-testid="code-block-highlight">
-                  {text.slice(highlight.start, highlight.end)}
-                </mark>
-                {text.slice(highlight.end)}
-              </>
-            ) : (
-              text
-            )}
-          </code>
-        </pre>
-        <textarea
-          ref={area}
-          className="source-copyarea"
-          aria-label="编辑 C 代码"
-          aria-describedby={descriptionId}
-          value={text}
-          onBeforeInput={(event) => {
-            const target = event.currentTarget;
-            inputRange.current = {
-              start: new TextEncoder().encode(text.slice(0, target.selectionStart)).byteLength,
-              end: new TextEncoder().encode(text.slice(0, target.selectionEnd)).byteLength,
-            };
-          }}
-          onChange={(event) => {
-            const range = inputRange.current;
-            inputRange.current = undefined;
-            onChange(event.target.value, range);
-          }}
-          spellCheck={false}
-          wrap="off"
-          autoCapitalize="off"
-          autoCorrect="off"
-          onScroll={scroll}
-          onSelect={(event) => {
-            const target = event.currentTarget;
-            const byte = (offset: number) => {
-              if (
-                offset > 0 &&
-                /[\uD800-\uDBFF]/.test(text[offset - 1]) &&
-                /[\uDC00-\uDFFF]/.test(text[offset] ?? '')
-              )
-                offset--;
-              return new TextEncoder().encode(text.slice(0, offset)).byteLength;
-            };
-            onSelect({ start: byte(target.selectionStart), end: byte(target.selectionEnd) });
-          }}
-        />
-      </div>
+      <CodeEditor
+        ref={area}
+        label="编辑 C 代码"
+        dialect="c"
+        value={text}
+        onChange={onChange}
+        onSelect={onSelect}
+      />
       {document.analysisError && (
         <p className="draft-code-notice" role="alert">
           {document.analysisError.code === 'budget'
@@ -226,10 +142,6 @@ export function DraftCodeEditor({
       {commentsMoved && (
         <p className="draft-code-notice">本次积木编辑调整了注释位置，注释文字已保留。</p>
       )}
-      <p className="source-position">
-        编辑稿使用本题第一组输入：<code>{JSON.stringify(document.input.values)}</code>
-        。已保存的编辑历史可在刷新后选择恢复，未保存内容仅在本次页面保留；选择代码或积木可查看对应位置。
-      </p>
     </section>
   );
 }

@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { flushSync } from 'react-dom';
 import { caseExecutionCatalog } from '../content/case-learning';
-import { LearningSaveStatus, useLearning } from '../learning/react';
+import { useLearning } from '../learning/react';
 import {
   caseRequest,
   executionClient,
@@ -491,15 +491,7 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
   );
   return (
     <section className="card section-card" data-testid="case-execution" data-state={state}>
-      <h2>运行内容样例</h2>
-      <p className="notice">
-        逐步看完真实运行后，主动确认可获得案例首次观看奖励。浏览、运行和重播本身不会发放奖励。
-      </p>
-      <p className="muted">
-        程序由此浏览器中的 Rust
-        解释器执行。代码、输入和轨迹不会上传到执行服务器；网页和课程资源加载需要网络。
-      </p>
-      <LearningSaveStatus />
+      <h2>运行演示</h2>
       {catalog && draft && (
         <InputPanel
           spec={catalog.inputSpec}
@@ -532,17 +524,6 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
         <div data-testid="execution-input">
           <p>
             本次输入：<code>{JSON.stringify(preparedInput.values)}</code>
-          </p>
-          <p>
-            {preparedInput.random ? (
-              <>
-                随机数据 · {preparedInput.random.generatorRef.id}@
-                {preparedInput.random.generatorRef.version} · 种子：
-                <code>{preparedInput.random.seed}</code>
-              </>
-            ) : (
-              '手动或示例输入'
-            )}
           </p>
         </div>
       )}

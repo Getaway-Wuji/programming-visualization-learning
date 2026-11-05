@@ -53,7 +53,7 @@ function ResetAppearanceDialog({ close }: { close: () => void }) {
         <h2 id="appearance-reset-title">恢复全部外观默认</h2>
       </div>
       <div className="modal-body">
-        <p>将恢复清爽浅色、六套默认配色和默认布局。学习进度、积分、每日目标与基础形象保留。</p>
+        <p>将恢复清爽浅色、六套默认配色和默认布局。学习进度、积分与每日目标保留。</p>
         <div className="inline-actions">
           <button ref={cancel} className="button button-secondary" onClick={close}>
             取消

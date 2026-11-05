@@ -248,7 +248,8 @@ function ExampleWorkspace({ spec }: { spec: ExampleSpec }) {
               <p>对应基础记录暂不可用；例题仍可独立阅读与运行。</p>
             )}
             <p>
-              <Link to="/reviews">今日复习</Link> · <Link to="/notebook">错题与陌生点</Link>
+              {' '}
+              <Link to="/notebook">错题与陌生点</Link>
             </p>
           </section>
         </div>

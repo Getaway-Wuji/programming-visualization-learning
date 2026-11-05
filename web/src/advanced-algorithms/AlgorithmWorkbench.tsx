@@ -1,4 +1,4 @@
-import { useState, useCallback, type ReactNode } from 'react';
+import { useState, useCallback, useEffect, type ReactNode } from 'react';
 import { CustomCodeController } from '../custom-code/controller';
 import { CustomViews } from '../custom-code/Views';
 import { Workbench } from '../workbench/Workbench';
@@ -17,6 +17,10 @@ export function AlgorithmWorkbench({
   renderArrays: (state: AdvancedState) => ReactNode;
 }) {
   const { view, result, status } = snap;
+  useEffect(() => {
+    controller.setTeachingPlayback(true);
+    return () => controller.setTeachingPlayback(false);
+  }, [controller]);
   const [mode, setMode] = useState('basic');
   const visibility = useCallback(
     (visible: boolean) => {

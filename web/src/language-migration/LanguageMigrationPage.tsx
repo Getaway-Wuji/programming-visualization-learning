@@ -230,8 +230,8 @@ export default function LanguageMigrationPage() {
             </p>
           )}
           <p>
-            <Link to="/reviews">今日复习</Link> · <Link to="/notebook">错题与陌生点</Link> ·{' '}
-            <Link to="/courses">C课程目录</Link>
+            {' '}
+            <Link to="/notebook">错题与陌生点</Link> · <Link to="/courses">C课程目录</Link>
           </p>
         </section>
         <section aria-labelledby="migration-execution-title">

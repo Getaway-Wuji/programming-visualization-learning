@@ -11,6 +11,7 @@ import type { CustomDraft } from '../storage/custom-draft';
 import { useAi } from '../ai-debug/react';
 import { AiPanel } from '../ai-debug/Panel';
 import './custom-code.css';
+import { useUnsavedChanges } from '../workbench/use-unsaved-changes';
 const initial =
   '#include <stdio.h>\n\nint main() {\n  int number;\n  scanf("%d", &number);\n  printf("%d\\n", number * 2);\n  return 0;\n}\n';
 export default function CustomCodePage() {
@@ -53,6 +54,7 @@ export default function CustomCodePage() {
     [saveError, setSaveError] = useState('');
   const editor = useRef<HTMLTextAreaElement>(null);
   const edits = useRef(0);
+  useUnsavedChanges(source !== (savedText ?? initial));
   const lease = useRef(0);
   const invalidateLease = useCallback(() => {
     lease.current++;

@@ -163,12 +163,12 @@ it('completes a reading-only lesson only on explicit confirmation, with no inven
     ),
   ).toThrow();
 });
-it('requires both reading confirmation and the bound real-judge pass; later failures keep the first pass proof', () => {
+it('completes reading independently and preserves a separately judged exercise pass after later failures', () => {
   const lesson = index.lessons.find((l) => l[5].length === 1)!;
   let state = commit(fresh(), command(lesson[0], 'lesson.study-confirmed'));
   expect(
     projectC6Learning(state.snapshot, index).lessons.find((l) => l.id === lesson[0])?.completed,
-  ).toBe(false);
+  ).toBe(true);
   state = commit(state, command(lesson[5][0], 'exercise.passed'));
   expect(
     projectC6Learning(state.snapshot, index).lessons.find((l) => l.id === lesson[0])?.completed,

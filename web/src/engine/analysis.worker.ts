@@ -1,7 +1,5 @@
 import init, { analyze_code_draft } from '../generated/c_viz_wasm';
-import { exerciseCatalog, loadCoursePractice } from '../content/practice';
-import type { AnalysisRequest } from '../blocks/analysis-types';
-import { encodeAnalysisRequest } from './analysis-protocol';
+import { loadAnalysisCatalog } from './analysis-catalog';
 
 interface WorkerRequest {
   kind: 'analyze-code';
@@ -42,26 +40,19 @@ scope.onmessage = async ({ data }) => {
       throw new Error('E_PROTOCOL_INVALID');
     // The static exercise package is independently integrity checked here.
     // Caller-selected answer/catalog objects never enter this Worker.
-    const content = await loadCoursePractice(controller.signal).catch(() => {
+    const catalog = await loadAnalysisCatalog(data.exerciseId, controller.signal).catch((error) => {
       guard();
+      if (error instanceof Error && error.message === 'E_CONTENT_MISMATCH') throw error;
       throw new Error('E_MODULE_LOAD');
     });
     guard();
-    const catalog = exerciseCatalog(content, data.exerciseId);
-    const request = JSON.parse(
-      new TextDecoder('utf-8', { fatal: true }).decode(data.buffer),
-    ) as AnalysisRequest;
-    const canonical = encodeAnalysisRequest(request, catalog);
-    if (
-      canonical.byteLength !== data.buffer.byteLength ||
-      canonical.some((byte, index) => byte !== new Uint8Array(data.buffer)[index])
-    )
-      throw new Error('E_PROTOCOL_INVALID');
-    guard();
+    // Rust's bounded codec checks the request shape, duplicate keys, identities,
+    // controlled input and source. Avoid a second JS schema graph in this Worker.
+    const requestJson = new TextDecoder('utf-8', { fatal: true }).decode(data.buffer);
     await init({ module_or_path: data.module });
     guard();
     const bytes = analyze_code_draft(
-      new TextDecoder('utf-8', { fatal: true }).decode(canonical),
+      requestJson,
       JSON.stringify(catalog),
       Math.max(0, Math.floor(data.remainingMs - (performance.now() - start))),
     );

@@ -126,9 +126,6 @@ function TeachingText({
           <li key={value}>{value}</li>
         ))}
       </ul>
-      <p className="muted">
-        样例来源：{teaching.source.document} · {teaching.source.locator}
-      </p>
     </div>
   );
 }
@@ -167,11 +164,6 @@ export function CaseSample({ id }: { id: string }) {
     >
       {catalog ? (
         <>
-          <p className="notice sample-label">已审核案例 · 独立观看</p>
-          <p className="muted">
-            内容版本 {catalog.packageRef.version} · 讲解与运行使用同一份已审核案例。
-            完整观看真实运行后，还需主动确认才记录观看奖励。
-          </p>
           <h2>案例讲解</h2>
           <TeachingText teaching={catalog.subject.teaching} programs={[catalog.program]} />
         </>

@@ -24,7 +24,7 @@ const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const encode = (value) => Buffer.from(`${JSON.stringify(value)}\n`);
 
 export async function produceC6Teaching(bytes) {
-  const source = parseC6TeachingSource(bytes);
+  const source = await parseC6TeachingSource(bytes);
   const { chapters, ...metadata } = source;
   const assets = new Map();
   const chunks = [];

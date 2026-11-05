@@ -48,4 +48,4 @@ export function validateCompleteC6Teaching(
     referenceNodes: 111;
   }>
 >;
-export function parseC6TeachingSource(bytes: Uint8Array): C6TeachingSource;
+export function parseC6TeachingSource(bytes: Uint8Array): Promise<C6TeachingSource>;

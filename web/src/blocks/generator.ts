@@ -493,9 +493,20 @@ export function generateBlockSource(
   };
   for (const item of program.body.slice(rangeBindings.length))
     statement(item, rootScope, rootLocal, 1, 0, 1);
-  // An explicit return keeps its own position; the default only covers paths
-  // reaching the end and is not a user-editable extra block.
-  append('    return 0;\n}\n');
+  // Check only the validated block structure, without evaluating conditions.
+  // A return inside a loop or just one branch still needs the default exit.
+  const alwaysReturns = (list: readonly BlockStatement[]): boolean =>
+    list.some(
+      (item) =>
+        item.kind === 'return' ||
+        (item.kind === 'scope' && alwaysReturns(item.body)) ||
+        (item.kind === 'if' &&
+          item.else !== null &&
+          alwaysReturns(item.then) &&
+          alwaysReturns(item.else)),
+    );
+  if (!alwaysReturns(program.body)) append('    return 0;\n');
+  append('}\n');
   const mainStart = text.indexOf('int main');
   if (mainStart < 0) fail('BLOCK_PREPARATION');
   blockMap.push({

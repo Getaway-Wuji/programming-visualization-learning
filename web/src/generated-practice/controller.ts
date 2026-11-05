@@ -1,4 +1,5 @@
 import { AdvancedPlayer } from '../engine/advanced-player';
+import { outputsMatch } from '../practice/output-policy';
 import { PracticeClient } from './client';
 import type { Assessment, GeneratedProblem, PracticeRequest, Selection } from './protocol';
 
@@ -131,7 +132,19 @@ export class GeneratedPracticeController {
         this.input = String(response.problem.inputMin);
         this.status = 'generated';
       } else {
-        this.assessment = response.assessment;
+        const raw = response.assessment;
+        const results = raw.results.map((row) =>
+          row.status === 'wrong-answer' && outputsMatch(row.actualStdout, row.expectedStdout)
+            ? { ...row, status: 'passed' as const }
+            : { ...row },
+        );
+        const passedCases = results.filter((row) => row.status === 'passed').length;
+        this.assessment = {
+          ...raw,
+          results,
+          passedCases,
+          verdict: raw.complete && passedCases === raw.totalCases ? 'passed' : raw.verdict,
+        };
         this.player.accept(response.assessment.replay.result);
         this.status = 'assessed';
       }

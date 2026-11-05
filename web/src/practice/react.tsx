@@ -18,6 +18,8 @@ const Context = createContext<PracticeSession | null>(null);
 export function PracticeProvider({ children }: { children: ReactNode }) {
   const { service, state } = useLearning();
   const isC6 = !!state.c6;
+  const archiveGeneration = state.snapshot?.meta.generation;
+  const currentCourseReady = state.c6?.status === 'ready';
   const [session] = useState(
     () =>
       new PracticeSession(
@@ -49,6 +51,9 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
   const lifecycle = useRef({ token: 0 });
   useLayoutEffect(() => {
+    // Bind editor history to the real archive generation before a fast analysis
+    // creates the initial draft, including on refresh.
+    if (isC6 && (!archiveGeneration || !currentCourseReady)) return;
     // Settings is a temporary utility visit, not another exercise. Keep the
     // current draft/accepted run while changing appearance, and pause playback
     // while its view is hidden. Storage generation/epoch invalidation still
@@ -66,7 +71,15 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
         ? 'reconstruction'
         : undefined,
     );
-  }, [session, location.pathname, location.search, state.sessionEpoch, isC6]);
+  }, [
+    session,
+    location.pathname,
+    location.search,
+    state.sessionEpoch,
+    isC6,
+    archiveGeneration,
+    currentCourseReady,
+  ]);
   useEffect(() => {
     const lease = lifecycle.current;
     const token = ++lease.token;

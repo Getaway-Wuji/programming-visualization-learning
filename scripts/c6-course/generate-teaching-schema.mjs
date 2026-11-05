@@ -33,4 +33,20 @@ if (process.argv.includes('--check')) {
   assert.ok(existsSync(path));
   assert.equal(readFileSync(path, 'utf8'), source);
 } else writeFileSync(path, source);
+// The browser needs the small directory validator before any chapter is read.
+// Compile each entry from the same schemas without changing validation rules.
+for (const [name, id] of Object.entries({
+  teachingManifestSchema: 'teachingManifest',
+  teachingChunkSchema: 'teachingChunk',
+  teachingSourceSchema: 'teachingSource',
+})) {
+  const code = standaloneCode(ajv, { [name]: id });
+  const split = await format(
+    `/* eslint-disable */\n// Generated from the independent closed CONTENT3 schema.\nimport ucs2length from 'ajv/dist/runtime/ucs2length.js';\n${code.replaceAll('require("ajv/dist/runtime/ucs2length").default', '(ucs2length.default ?? ucs2length)')}`,
+    { ...(await resolveConfig('.prettierrc.json')), parser: 'babel' },
+  );
+  const entry = `web/src/content/c6-teaching-${id.slice('teaching'.length).toLowerCase()}.generated.mjs`;
+  if (process.argv.includes('--check')) assert.equal(readFileSync(entry, 'utf8'), split);
+  else writeFileSync(entry, split);
+}
 console.log('C6 CONTENT3 standalone schema verified.');

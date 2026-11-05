@@ -207,7 +207,7 @@ export default function AdvancedCoursePage() {
                   </ul>
                   <KnowledgeMarksStatus />
                   <p>
-                    <Link to="/notebook">错题与陌生点</Link> · <Link to="/reviews">今日复习</Link>
+                    <Link to="/notebook">错题与陌生点</Link> ·
                   </p>
                 </section>
               </aside>

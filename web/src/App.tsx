@@ -1,6 +1,13 @@
-import { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense, useState } from 'react';
 import type { ReactNode } from 'react';
-import { HashRouter, Route, Routes, useLocation } from 'react-router';
+import {
+  createHashRouter,
+  RouterProvider,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router';
 import { Layout } from './components/Layout';
 import { MissingPage, StatePanel } from './components/Ui';
 const HomePage = lazy(() =>
@@ -17,7 +24,6 @@ import { ReviewProvider } from './review-scheduler/react';
 import { AiProvider } from './ai-debug/react';
 import { NotesProvider } from './study-notes/session';
 const NotesPage = lazy(() => import('./c6-learning/NotesPage'));
-const ReviewsPage = lazy(() => import('./review-scheduler/ReviewsPage'));
 const NotebookPage = lazy(() => import('./c6-learning/NotebookPage'));
 const WeaknessPage = lazy(() => import('./weaknesses/WeaknessPage'));
 const GeneratedPracticePage = lazy(() => import('./generated-practice/GeneratedPracticePage'));
@@ -33,6 +39,9 @@ const LessonPage = lazy(() =>
 );
 const PracticePage = lazy(() =>
   import('./c6-learning/Workbench').then((module) => ({ default: module.C6PracticePage })),
+);
+const PracticeCatalog = lazy(() =>
+  import('./c6-learning/PracticeCatalog').then((m) => ({ default: m.C6PracticeCatalog })),
 );
 const VisualizePage = lazy(() =>
   import('./pages/Workspaces').then((module) => ({ default: module.VisualizePage })),
@@ -51,6 +60,7 @@ const ExampleComparisonPage = lazy(() => import('./example-comparison/ExampleCom
 const MemoryPage = lazy(() => import('./pages/MemoryPage'));
 const ComparisonPage = lazy(() => import('./comparison/ComparisonPage'));
 const AlgorithmPage = lazy(() => import('./algorithms/AlgorithmPage'));
+const VisualLab = lazy(() => import('./visual-lab/VisualLab'));
 const StructurePage = lazy(() => import('./structures/StructurePage'));
 const NodeCasePage = lazy(() => import('./node-cases/NodeCasePage'));
 const ClassicPage = lazy(() => import('./classics/ClassicPage'));
@@ -134,11 +144,13 @@ function AppRoutes() {
             <Route path="/advanced/:lessonId" element={<AdvancedCoursePage />} />
             <Route path="/lessons/:lessonId" element={<LessonPage />} />
             <Route path="/practice/:exerciseId" element={<PracticeRoute />} />
+            <Route path="/practice" element={<PracticeCatalog />} />
             <Route path="/practice/:exerciseId/review" element={<PracticeRoute review />} />
             <Route path="/c6/program/:programId" element={<C6ProgramPage />} />
             <Route path="/cases" element={<CasesPage />} />
             <Route path="/compare" element={<ComparisonPage />} />
             <Route path="/algorithms/:algorithmId" element={<AlgorithmPage />} />
+            <Route path="/algorithms/lab/:slug" element={<VisualLab />} />
             <Route path="/structures/:structureId" element={<StructurePage />} />
             <Route path="/nodes/:nodeCaseId" element={<NodeCasePage />} />
             <Route path="/classics/:classicId" element={<ClassicPage />} />
@@ -153,7 +165,7 @@ function AppRoutes() {
             <Route path="/study-notes" element={<NotesPage />} />
             <Route path="/weaknesses" element={<WeaknessPage />} />
             <Route path="/generated-practice" element={<GeneratedPracticePage />} />
-            <Route path="/reviews" element={<ReviewsPage />} />
+            <Route path="/reviews" element={<Navigate to="/notebook" replace />} />
             <Route path="/achievements" element={<AchievementsPage />} />
             <Route path="*" element={<MissingPage />} />
           </Routes>
@@ -164,6 +176,22 @@ function AppRoutes() {
 }
 
 export function App() {
+  const [router] = useState(() =>
+    createHashRouter([
+      {
+        path: '*',
+        element: (
+          <AiProvider>
+            <PracticeProvider>
+              <NotesProvider>
+                <AppRoutes />
+              </NotesProvider>
+            </PracticeProvider>
+          </AiProvider>
+        ),
+      },
+    ]),
+  );
   return (
     <LearningProvider>
       <KnowledgeMarksProvider>
@@ -171,15 +199,7 @@ export function App() {
           <AchievementProvider>
             <AppearanceProvider>
               <WorkbenchProvider>
-                <HashRouter>
-                  <AiProvider>
-                    <PracticeProvider>
-                      <NotesProvider>
-                        <AppRoutes />
-                      </NotesProvider>
-                    </PracticeProvider>
-                  </AiProvider>
-                </HashRouter>
+                <RouterProvider router={router} />
               </WorkbenchProvider>
             </AppearanceProvider>
           </AchievementProvider>

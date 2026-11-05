@@ -169,9 +169,6 @@ export default function WeaknessPage() {
         <Link className="text-link" to="/generated-practice">
           生成一道同类加练题 →
         </Link>
-        <Link className="text-link" to="/reviews">
-          打开复习队列 →
-        </Link>
         <Link className="text-link" to="/notebook">
           核对错题与陌生点 →
         </Link>

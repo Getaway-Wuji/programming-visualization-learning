@@ -1,3 +1,4 @@
+import { outputsMatch, recordedOutput } from '../practice/output-policy';
 import {
   MemoryExecutionClient,
   memoryRequest,
@@ -135,7 +136,27 @@ export const decodeBugResult: typeof decodeMemoryResult = async (
         result.terminal.returnValue === 0 &&
         result.trace?.completeness === 'complete'),
   );
-  judgements.set(result, freeze(judgement));
+  const test = q.tests.find((row) => row.caseKey === request.bug.caseKey)!;
+  const checks = judgement.checks.map((check) =>
+    check.id === 'stdout-exact' && result.trace
+      ? { ...check, met: outputsMatch(recordedOutput(result.trace), test.expectedStdout) }
+      : { ...check },
+  );
+  guard();
+  judgements.set(
+    result,
+    freeze({
+      ...judgement,
+      checks,
+      status:
+        result.terminal.status === 'completed' &&
+        result.terminal.returnValue === 0 &&
+        result.trace?.completeness === 'complete' &&
+        checks.every((check) => check.met)
+          ? 'met'
+          : 'unmet',
+    }),
+  );
   return result;
 };
 export class MemoryBugClient {

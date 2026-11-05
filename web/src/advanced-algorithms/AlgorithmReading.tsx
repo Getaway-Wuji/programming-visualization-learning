@@ -71,7 +71,8 @@ export function AlgorithmReading({
             <p>基础记录暂不可用，仍可独立阅读和运行本案例。</p>
           )}
           <p>
-            <Link to="/reviews">今日复习</Link> · <Link to="/notebook">错题与陌生点</Link>
+            {' '}
+            <Link to="/notebook">错题与陌生点</Link>
           </p>
           <p>
             讲解、代码与样例为本项目独立编写。这里只提供有界教学算法，不是新可提交练习或通用C++编辑器。

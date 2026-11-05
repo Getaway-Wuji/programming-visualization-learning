@@ -3,21 +3,19 @@ import { useSearchParams } from 'react-router';
 import { Icon } from '../components/Icon';
 import { Breadcrumbs, PageHeading, StatePanel } from '../components/Ui';
 import { LearningSaveStatus, useLearning } from '../learning/react';
-import type { Avatar, Settings } from '../storage/model';
-import { AvatarPicture } from '../learning/profile-components';
+import type { Settings } from '../storage/model';
 import { AppearanceSettings } from '../appearance/AppearanceSettings';
 import { SavedBlockWorkspacePreference } from '../appearance/BlockWorkspacePreference';
 import { AiSettings } from '../ai-debug/Settings';
 
 const tabs = [
   { id: 'appearance', label: '外观与主题' },
-  { id: 'avatar', label: '基础形象' },
   { id: 'display', label: '显示设置' },
   { id: 'ai', label: 'AI解释（可选）' },
   { id: 'data', label: '本地数据' },
 ] as const;
 
-type LocalAction = 'clear' | 'settings' | 'avatar';
+type LocalAction = 'clear' | 'settings';
 
 function LocalDataConfirmation({
   action,
@@ -36,19 +34,14 @@ function LocalDataConfirmation({
     clear: {
       title: '确认清除本地数据',
       description:
-        '这会清除当前浏览器中的学习进度、练习记录、积分账本及防重记录、每日目标与打卡、形象、显示设置、外观偏好与背景资源、编辑历史、C工作台草稿与薄弱点依据，以及当前临时内容与待保存操作。清除后无法在本平台找回这些记录。',
+        '这会清除当前浏览器中的学习进度、练习记录、积分账本及防重记录、每日目标与打卡、显示设置、外观偏好与背景资源、编辑历史、C工作台草稿与薄弱点依据，以及当前临时内容与待保存操作。清除后无法在本平台找回这些记录。',
       button: '确认清除',
     },
     settings: {
       title: '确认重置显示设置',
       description:
-        '明暗模式、动画效果、默认播放速度和后续日期目标模板会恢复默认。已记录的每日目标、学习进度、积分账本、形象和六套主题配色保持不变。',
+        '明暗模式、动画效果、默认播放速度和后续日期目标模板会恢复默认。已记录的每日目标、学习进度、积分账本和六套主题配色保持不变。',
       button: '确认重置显示设置',
-    },
-    avatar: {
-      title: '确认重置基础形象',
-      description: '基础形象与强调色会恢复默认。学习进度、积分账本、目标和显示设置保持不变。',
-      button: '确认重置基础形象',
     },
   }[action];
   useEffect(() => {
@@ -121,19 +114,8 @@ function SettingsContent() {
     generation: string;
     epoch: number;
   } | null>(null);
-  const [avatarDraft, setAvatarDraft] = useState<{
-    value: Avatar;
-    revision: number;
-    generation: string;
-    epoch: number;
-  } | null>(null);
   const snapshot = state.snapshot;
   const display = displayDraft?.value ?? snapshot?.settings;
-  const avatar = avatarDraft?.value ?? snapshot?.avatar;
-  const avatarChoices = state.profileConfiguration?.avatars ?? [
-    { presetId: 'avatar.basic.01', label: '嫩叶', shapeId: 'leaf' as const },
-  ];
-  const avatarColorValid = !!avatar && /^#[0-9A-Fa-f]{6}$/.test(avatar.accentColor);
   const busy = state.status === 'loading' || state.status === 'saving';
   const writable =
     !!snapshot && !busy && state.status !== 'readonly' && state.recovery?.writable !== false;
@@ -144,20 +126,12 @@ function SettingsContent() {
     setConfirmation(null);
     if (action === 'clear' && canClear) {
       setDisplayDraft(null);
-      setAvatarDraft(null);
       void service.clearLocalData();
-    } else if (
-      (action === 'settings' || action === 'avatar') &&
-      resettable.includes(action) &&
-      !busy
-    ) {
+    } else if (action === 'settings' && resettable.includes('settings') && !busy) {
       const previousDisplay = displayDraft;
-      const previousAvatar = avatarDraft;
-      void service.resetLocalPreference(action).then(() => {
-        if (!service.getState().lastSaved) return;
-        if (action === 'settings')
+      void service.resetLocalPreference('settings').then(() => {
+        if (service.getState().lastSaved)
           setDisplayDraft((current) => (current === previousDisplay ? null : current));
-        else setAvatarDraft((current) => (current === previousAvatar ? null : current));
       });
     }
   };
@@ -165,7 +139,6 @@ function SettingsContent() {
     const generation = snapshot?.meta.generation;
     const epoch = state.sessionEpoch;
     const previousDisplay = displayDraft;
-    const previousAvatar = avatarDraft;
     await service.refresh();
     const current = service.getState();
     if (
@@ -174,17 +147,7 @@ function SettingsContent() {
       current.sessionEpoch === epoch
     ) {
       setDisplayDraft((draft) => (draft === previousDisplay ? null : draft));
-      setAvatarDraft((draft) => (draft === previousAvatar ? null : draft));
     }
-  };
-  const editAvatar = (value: Avatar) => {
-    if (!snapshot) return;
-    setAvatarDraft({
-      value,
-      revision: avatarDraft?.revision ?? snapshot.meta.revision,
-      generation: avatarDraft?.generation ?? snapshot.meta.generation,
-      epoch: avatarDraft?.epoch ?? state.sessionEpoch,
-    });
   };
   const editDisplay = <K extends 'theme' | 'reducedMotion' | 'playbackRate'>(
     key: K,
@@ -211,10 +174,7 @@ function SettingsContent() {
         title="本地设置"
         description="学习档案保存在当前浏览器，不跨设备同步。存储不可用时仅临时使用，未保存内容会在关闭或刷新后丢失。"
       />
-      <LearningSaveStatus
-        onRefresh={() => void refresh()}
-        dirty={displayDraft !== null || avatarDraft !== null}
-      />
+      <LearningSaveStatus onRefresh={() => void refresh()} dirty={displayDraft !== null} />
       <div className="settings-layout">
         <div className="settings-nav" role="tablist" aria-label="设置分类">
           {tabs.map((tab, index) => (
@@ -263,164 +223,6 @@ function SettingsContent() {
           tabIndex={0}
         >
           {selected === 'appearance' && <AppearanceSettings />}
-          {selected === 'avatar' && (
-            <>
-              <h2>基础形象</h2>
-              <div className="profile-avatar-standalone">
-                {avatar && (
-                  <AvatarPicture
-                    avatar={avatar}
-                    configuration={state.profileConfiguration}
-                    testId="avatar-preview"
-                    label={avatarDraft ? '基础形象更改预览，尚未保存' : '当前基础形象'}
-                  />
-                )}
-              </div>
-              <p className="muted">
-                选择一个基础图案和喜欢的强调色。保存后会显示在学习首页，无需账号。
-              </p>
-              {state.profileStatus === 'failed' && (
-                <p className="notice">
-                  形象配置暂不可用，当前只可选择默认嫩叶。已有形象记录保留。
-                  <button
-                    type="button"
-                    className="text-link profile-retry"
-                    onClick={() => void service.reloadProfileConfiguration()}
-                  >
-                    重试形象与等级规则
-                  </button>
-                </p>
-              )}
-              {avatar && !avatarChoices.some((item) => item.presetId === avatar.presetId) && (
-                <p className="notice">
-                  已保存的形象资源暂不可用，原选择和强调色已保留。你可以重试配置，或明确选择一个可用形象后保存。
-                </p>
-              )}
-              {resettable.includes('avatar') && (
-                <p className="notice">
-                  形象记录损坏，当前使用临时默认形象，尚未覆盖原记录。请在本地数据中确认重置。
-                </p>
-              )}
-              {avatar && snapshot ? (
-                <form
-                  className="settings-form"
-                  onSubmit={async (event) => {
-                    event.preventDefault();
-                    if (
-                      !avatarDraft ||
-                      !avatarColorValid ||
-                      avatarDraft.generation !== snapshot.meta.generation ||
-                      avatarDraft.epoch !== state.sessionEpoch
-                    )
-                      return;
-                    const submitted = avatarDraft;
-                    await service.saveAvatar(submitted.value, submitted.revision);
-                    const current = service.getState();
-                    if (
-                      current.lastSaved &&
-                      current.status === 'ready' &&
-                      current.sessionEpoch === submitted.epoch &&
-                      current.snapshot?.meta.generation === submitted.generation &&
-                      current.snapshot.avatar.presetId === submitted.value.presetId &&
-                      current.snapshot.avatar.accentColor === submitted.value.accentColor
-                    ) {
-                      setAvatarDraft((current) => (current === submitted ? null : current));
-                    }
-                  }}
-                >
-                  <fieldset
-                    className="avatar-choice-group"
-                    role="radiogroup"
-                    aria-label="选择基础形象"
-                    disabled={!writable}
-                  >
-                    <legend>选择基础形象</legend>
-                    <div className="avatar-options">
-                      {avatarChoices.map((item) => (
-                        <label key={item.presetId}>
-                          <AvatarPicture
-                            avatar={{
-                              presetId: item.presetId,
-                              accentColor: avatarColorValid ? avatar.accentColor : '#168A72',
-                            }}
-                            configuration={state.profileConfiguration}
-                            label={item.label}
-                          />
-                          <span>{item.label}</span>
-                          <input
-                            type="radio"
-                            name="avatar-preset"
-                            aria-label={item.label}
-                            checked={avatar.presetId === item.presetId}
-                            onChange={() => editAvatar({ ...avatar, presetId: item.presetId })}
-                          />
-                        </label>
-                      ))}
-                    </div>
-                  </fieldset>
-                  <label className="settings-field">
-                    <span>形象强调色</span>
-                    <input
-                      type="color"
-                      value={avatarColorValid ? avatar.accentColor : '#168A72'}
-                      disabled={!writable}
-                      onChange={(event) =>
-                        editAvatar({ ...avatar, accentColor: event.target.value.toUpperCase() })
-                      }
-                    />
-                  </label>
-                  <label className="settings-field">
-                    <span>强调色十六进制</span>
-                    <input
-                      type="text"
-                      aria-label="强调色十六进制"
-                      pattern="#[0-9A-Fa-f]{6}"
-                      maxLength={7}
-                      required
-                      value={avatar.accentColor}
-                      disabled={!writable}
-                      spellCheck={false}
-                      onChange={(event) =>
-                        editAvatar({ ...avatar, accentColor: event.target.value.toUpperCase() })
-                      }
-                    />
-                  </label>
-                  {!avatarColorValid && (
-                    <p role="alert">请输入 # 加六位十六进制颜色，例如 #168A72。</p>
-                  )}
-                  <div className="inline-actions">
-                    <button
-                      className="button button-primary"
-                      disabled={
-                        !writable ||
-                        !avatarColorValid ||
-                        !avatarChoices.some((item) => item.presetId === avatar.presetId) ||
-                        !avatarDraft ||
-                        avatarDraft.generation !== snapshot.meta.generation ||
-                        avatarDraft.epoch !== state.sessionEpoch
-                      }
-                    >
-                      保存基础形象
-                    </button>
-                    {avatarDraft && (
-                      <button
-                        type="button"
-                        className="button button-secondary"
-                        onClick={() => setAvatarDraft(null)}
-                      >
-                        {state.temporary || resettable.includes('avatar')
-                          ? '放弃这次形象更改'
-                          : '采用已保存形象'}
-                      </button>
-                    )}
-                  </div>
-                  {avatarDraft && <p className="muted">形象预览尚未保存。</p>}
-                </form>
-              ) : (
-                <p className="muted">读取本地档案后可以调整基础形象。</p>
-              )}
-            </>
-          )}
           {selected === 'display' && (
             <>
               <h2>显示设置</h2>
@@ -550,7 +352,7 @@ function SettingsContent() {
               <dl className="info-list">
                 <div className="info-item">
                   <dt>学习记录</dt>
-                  <dd>进度、积分、目标、形象与设置保存在当前浏览器。</dd>
+                  <dd>进度、积分、目标与设置保存在当前浏览器。</dd>
                 </div>
                 <div className="info-item">
                   <dt>保存边界</dt>
@@ -576,7 +378,7 @@ function SettingsContent() {
                         {(
                           {
                             settings: '显示设置',
-                            avatar: '基础形象',
+                            avatar: '旧偏好',
                             progress: '学习进度',
                             dailyFacts: '每日学习记录',
                             goals: '每日目标',
@@ -607,22 +409,12 @@ function SettingsContent() {
                         重置显示设置
                       </button>
                     )}
-                    {resettable.includes('avatar') && (
-                      <button
-                        type="button"
-                        className="button button-secondary"
-                        disabled={busy}
-                        onClick={() => setConfirmation('avatar')}
-                      >
-                        重置基础形象
-                      </button>
-                    )}
                   </div>
                 </section>
               )}
               <h3>清除本地数据</h3>
               <p className="notice">
-                清除会移除学习进度、练习记录、积分账本及防重记录、每日目标与打卡、形象、显示设置和C工作台草稿与薄弱点依据，并丢弃当前临时内容与待保存操作。清除后无法在本平台找回。
+                清除会移除学习进度、练习记录、积分账本及防重记录、每日目标与打卡、显示设置和C工作台草稿与薄弱点依据，并丢弃当前临时内容与待保存操作。清除后无法在本平台找回。
               </p>
               {!canClear && !busy && (
                 <p className="muted">

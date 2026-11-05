@@ -8,17 +8,18 @@ import { ThemeModeToggle } from '../appearance/ThemeModeToggle';
 import { useWorkbench } from '../workbench/react';
 import { useAchievements } from '../achievements/react';
 import { useReviews } from '../review-scheduler/react';
+import { HomePanel } from '../learning/HomePanel';
 
 const navigation = [
   { to: '/', label: '学习首页', icon: 'home' },
   { to: '/courses', label: 'C 语言课程', icon: 'book' },
+  { to: '/practice', label: '练习', icon: 'code' },
   { to: '/advanced', label: '进阶课程', icon: 'book' },
   { to: '/cases', label: '算法与演示', icon: 'chart' },
   { to: '/custom-code', label: 'C 代码工作台', icon: 'code' },
   { to: '/compilation', label: '编译流程', icon: 'code' },
   { to: '/notebook', label: '错题与陌生点', icon: 'book' },
   { to: '/study-notes', label: '学习笔记', icon: 'book' },
-  { to: '/reviews', label: '今日复习', icon: 'book' },
   { to: '/achievements', label: '学习成就', icon: 'book' },
   { to: '/settings', label: '本地设置', icon: 'settings' },
 ] as const;
@@ -30,7 +31,15 @@ export function Layout({ children }: { children: ReactNode }) {
   const workbench = useWorkbench();
   const achievementState = useAchievements().state;
   const reviewState = useReviews().state;
+  const [pointsOpen, setPointsOpen] = useState(false);
+  const points =
+    learning.snapshot && !learning.recovery?.ledgerUncertain
+      ? learning.snapshot.ledger
+          .reduce((sum, row) => sum + (row.status === 'posted' ? BigInt(row.points) : 0n), 0n)
+          .toString()
+      : null;
   const [menu, setMenu] = useState({ path: '', open: false });
+  const [tools, setTools] = useState({ path: '', open: false });
   const [narrow, setNarrow] = useState(() => matchMedia('(max-width: 1100px)').matches);
   const menuOpen = narrow && menu.path === location.pathname && menu.open;
   const navToggle = useRef<HTMLButtonElement>(null);
@@ -79,9 +88,7 @@ export function Layout({ children }: { children: ReactNode }) {
     if (main) observer.observe(main, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, [location.pathname]);
-  const courseRoute =
-    /^\/(lessons|practice|c6\/program)\//.test(location.pathname) ||
-    location.pathname.startsWith('/bugs');
+  const courseRoute = /^\/(lessons|c6\/program)\//.test(location.pathname);
   const caseRoute =
     location.pathname.startsWith('/visualize/') ||
     location.pathname.startsWith('/algorithms/') ||
@@ -184,10 +191,11 @@ export function Layout({ children }: { children: ReactNode }) {
               onClick={() => {
                 if (menuOpen) closeMenu(item.to === location.pathname);
               }}
-              className={`nav-link${location.pathname === item.to || (item.to !== '/' && location.pathname.startsWith(`${item.to}/`)) || (item.to === '/courses' && courseRoute) || (item.to === '/cases' && caseRoute) ? ' active' : ''}`}
+              className={`nav-link${location.pathname === item.to || (item.to !== '/' && location.pathname.startsWith(`${item.to}/`)) || (item.to === '/practice' && location.pathname.startsWith('/bugs')) || (item.to === '/courses' && courseRoute) || (item.to === '/cases' && caseRoute) ? ' active' : ''}`}
               aria-current={
                 location.pathname === item.to ||
                 (item.to !== '/' && location.pathname.startsWith(`${item.to}/`)) ||
+                (item.to === '/practice' && location.pathname.startsWith('/bugs')) ||
                 (item.to === '/courses' && courseRoute) ||
                 (item.to === '/cases' && caseRoute)
                   ? 'page'
@@ -224,7 +232,13 @@ export function Layout({ children }: { children: ReactNode }) {
           <span className="topbar-title">
             {location.pathname.startsWith('/bugs/memory/')
               ? '受限 C++ · Bug 闯关'
-              : 'C 语言 · 从零开始'}
+              : /^\/(algorithms|nodes|structures|classics)\//.test(location.pathname)
+                ? '算法演示 · C++'
+                : location.pathname.startsWith('/advanced')
+                  ? '进阶课程 · C / C++'
+                  : ['/memory', '/compare'].includes(location.pathname)
+                    ? '程序执行观察'
+                    : 'C 语言 · 从零开始'}
           </span>
           <div className="local-note">
             {toolRoute && (
@@ -243,12 +257,44 @@ export function Layout({ children }: { children: ReactNode }) {
                 <span>{focused ? '退出专注' : '专注'}</span>
               </button>
             )}
-            <span className="preview-badge">本地学习</span>
-            <Link to="/settings?panel=data">
-              <Icon name="settings" />
-              <span>本地数据</span>
-            </Link>
             <ThemeModeToggle />
+            <details
+              className="topbar-more"
+              open={!narrow || (tools.path === location.pathname && tools.open)}
+              onToggle={(event) => {
+                if (narrow) setTools({ path: location.pathname, open: event.currentTarget.open });
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Escape') {
+                  event.preventDefault();
+                  event.currentTarget.open = false;
+                  event.currentTarget.querySelector('summary')?.focus();
+                }
+              }}
+            >
+              <summary>更多</summary>
+              <div className="topbar-tools">
+                <span className="preview-badge">本地学习</span>
+                <Link to="/settings?panel=data">
+                  <Icon name="settings" />
+                  <span>本地数据</span>
+                </Link>
+                <button
+                  type="button"
+                  className="button points-toggle"
+                  onClick={() => {
+                    setPointsOpen(true);
+                    setTools({ path: location.pathname, open: false });
+                  }}
+                  aria-haspopup="dialog"
+                  aria-label={
+                    points === null ? '积分暂不可确认，查看明细' : `积分 ${points}，查看明细`
+                  }
+                >
+                  积分 {points ?? '—'}
+                </button>
+              </div>
+            </details>
           </div>
         </header>
         {workbench.failed && (
@@ -284,6 +330,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <main id="main-content" tabIndex={-1} className="main-content">
           {children}
         </main>
+        {pointsOpen && <HomePanel panel="points" dismiss={() => setPointsOpen(false)} />}
       </div>
     </div>
   );

@@ -1,19 +1,41 @@
 import { Link } from 'react-router';
 import { useLearning } from '../learning/react';
 import { KnowledgeMarkButton } from '../review-notebook/marks';
+import { useMemo } from 'react';
 
 export function C6KnowledgeOverview() {
   const { state } = useLearning();
   const index = state.c6!.index!,
     manifest = state.c6!.manifest!;
-  const completed = new Set(state.projection?.lessons.filter((l) => l.completed).map((l) => l.id));
-  const chapters = index.knowledge.filter((k) => k[2] === 'chapter');
-  const chapterLit = chapters.filter((k) =>
-    index.lessons.filter((l) => l[2] === k[1]).every((l) => completed.has(l[0])),
+  const completed = useMemo(
+    () => new Set(state.projection?.lessons.filter((l) => l.completed).map((l) => l.id)),
+    [state.projection],
+  );
+  const chapters = useMemo(() => {
+    const titles = new Map(manifest.nodes.map((node) => [`node.${node.id}`, node.titleDisplay]));
+    const byChapter = new Map<string, (typeof index.lessons)[number][]>();
+    for (const lesson of index.lessons) {
+      const group = byChapter.get(lesson[2]) ?? [];
+      group.push(lesson);
+      byChapter.set(lesson[2], group);
+    }
+    return index.knowledge
+      .filter((k) => k[2] === 'chapter')
+      .map((chapter) => ({
+        id: chapter[0],
+        title: titles.get(chapter[1])!,
+        lessons: (byChapter.get(chapter[1]) ?? []).map((lesson) => ({
+          lesson,
+          title: titles.get(lesson[1])!,
+        })),
+      }));
+  }, [index, manifest]);
+  const chapterLit = chapters.filter((chapter) =>
+    chapter.lessons.every(({ lesson }) => completed.has(lesson[0])),
   ).length;
   return (
     <section
-      className="c6-section"
+      className="card c6-section"
       aria-labelledby="c6-knowledge-title"
       data-testid="c6-knowledge-map"
     >
@@ -22,24 +44,21 @@ export function C6KnowledgeOverview() {
         {state.projection ? `${completed.size + chapterLit} / 421 已点亮` : '学习记录待确认'}
       </h2>
       <p className="muted">
-        完成小节后点亮对应知识；章内小节全部完成后点亮整章。陌生标记用于复习安排。
+        完成小节后点亮对应知识；章内小节全部完成后点亮整章。不熟悉的知识可以单独标记。
       </p>
       {chapters.map((chapter) => {
-        const node = manifest.nodes.find((n) => `node.${n.id}` === chapter[1])!;
-        const lessons = index.lessons.filter((l) => l[2] === chapter[1]);
+        const lessons = chapter.lessons;
         return (
-          <details key={chapter[0]}>
+          <details key={chapter.id}>
             <summary>
-              {node.titleDisplay} · {lessons.filter((l) => completed.has(l[0])).length} /{' '}
+              {chapter.title} · {lessons.filter(({ lesson }) => completed.has(lesson[0])).length} /{' '}
               {lessons.length}
             </summary>
             <ul className="c6-knowledge-list">
-              {lessons.map((lesson) => (
+              {lessons.map(({ lesson, title }) => (
                 <li key={lesson[0]}>
                   <div>
-                    <Link to={`/lessons/${lesson[0]}`}>
-                      {manifest.nodes.find((n) => `node.${n.id}` === lesson[1])!.titleDisplay}
-                    </Link>
+                    <Link to={`/lessons/${lesson[0]}`}>{title}</Link>
                     <small>
                       {state.projection
                         ? completed.has(lesson[0])

@@ -139,7 +139,7 @@ function savingMessage(state: LearningServiceState, dirty: boolean) {
   if (state.cleared && !dirty)
     return {
       title: '本地数据已清除',
-      description: '学习档案与待保存操作已清除，形象和显示设置已恢复默认。',
+      description: '学习档案与待保存操作已清除，显示设置已恢复默认。',
     };
   if (state.temporary)
     return {
@@ -174,6 +174,15 @@ export function LearningSaveStatus({
   const { state, service } = useLearning();
   const status = state.status === 'ready' && (dirty || state.temporary) ? 'unsaved' : state.status;
   const display = savingMessage(state, dirty);
+  if (
+    (state.status === 'ready' || state.status === 'saving') &&
+    !state.temporary &&
+    (state.status === 'saving' || !state.pendingCount) &&
+    !state.recovery?.issues.length &&
+    !state.errorCode &&
+    !state.timeZoneFallback
+  )
+    return null;
   return (
     <div data-testid="learning-save-status" data-save-status={status}>
       <StatePanel

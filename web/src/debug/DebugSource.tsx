@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { sourceLines } from './breakpoints';
 import './debug.css';
+import { HighlightedCode } from '../components/HighlightedCode';
 
 export function DebugSource({
   source,
@@ -18,11 +19,18 @@ export function DebugSource({
   onToggle: (line: number) => void;
 }) {
   const lines = useMemo(() => sourceLines(source), [source]);
-  const bytes = new TextEncoder().encode(source);
-  const start = byteRange ? new TextDecoder().decode(bytes.slice(0, byteRange.start)).length : 0;
-  const end = byteRange ? new TextDecoder().decode(bytes.slice(0, byteRange.end)).length : 0;
+  const scroller = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const box = scroller.current;
+    const mark = box?.querySelector('mark');
+    if (!box || !mark) return;
+    const viewport = box.getBoundingClientRect(),
+      target = mark.getBoundingClientRect();
+    if (target.top < viewport.top) box.scrollTop += target.top - viewport.top - 12;
+    else if (target.bottom > viewport.bottom) box.scrollTop += target.bottom - viewport.bottom + 12;
+  }, [byteRange?.start, byteRange?.end, source]);
   return (
-    <div className="debug-code-scroll" tabIndex={0} aria-label="源码与行断点">
+    <div ref={scroller} className="debug-code-scroll" tabIndex={0} aria-label="源码与行断点">
       <div className="debug-code-grid">
         <div className="debug-gutter" role="group" aria-label="行断点">
           {lines.map((line) => {
@@ -51,21 +59,7 @@ export function DebugSource({
           })}
         </div>
         <pre tabIndex={0} aria-label="本次执行的只读源码">
-          {byteRange ? (
-            <>
-              {source.slice(0, start)}
-              <mark
-                data-testid="memory-source-highlight"
-                data-byte-start={byteRange.start}
-                data-byte-end={byteRange.end}
-              >
-                {source.slice(start, end)}
-              </mark>
-              {source.slice(end)}
-            </>
-          ) : (
-            source
-          )}
+          <HighlightedCode source={source} range={byteRange} />
         </pre>
       </div>
     </div>

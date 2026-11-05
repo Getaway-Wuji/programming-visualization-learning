@@ -19,9 +19,9 @@ export async function openCurrentAnswer(page: Page, id: string) {
 }
 
 export async function submitCurrent(page: Page) {
-  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
+  await expect(page.getByTestId('oj-verdict')).toHaveText('通过');
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 
 export async function completeCurrentFirstGroup(page: Page) {
@@ -35,10 +35,10 @@ export async function completeCurrentFirstGroup(page: Page) {
 export async function confirmCurrentLesson(page: Page, id: string) {
   if (!id.startsWith('lesson.c6.')) throw new Error(`Not a current C6 lesson: ${id}`);
   await page.goto(`/#/lessons/${id}`);
-  const confirmation = page.getByRole('button', { name: '我已读完本节', exact: true });
-  await expect(page.locator('.c6-reading-confirmation')).toBeVisible();
-  if (await confirmation.count()) await confirmation.click();
-  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  const end = page.getByTestId('reading-end');
+  await expect(end).toBeAttached();
+  await page.keyboard.press('End');
+  await expect(end).toHaveAttribute('data-read', 'true');
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 
@@ -64,8 +64,23 @@ export async function openIndependentRepair(page: Page, id: string) {
   await expect(editor).toBeEditable();
   const saved = repairSources.get(page) ?? new Map<string, string>();
   if (!saved.has(id)) {
-    await expect.poll(() => editor.inputValue()).toContain(question.brokenBody);
-    saved.set(id, (await editor.inputValue()).replace(question.brokenBody, question.solutionBody));
+    await expect
+      .poll(() =>
+        page
+          .locator('.code-editor .cm-line')
+          .allTextContents()
+          .then((lines) => lines.join('\n')),
+      )
+      .toContain(question.brokenBody);
+    saved.set(
+      id,
+      (
+        await page
+          .locator('.code-editor .cm-line')
+          .allTextContents()
+          .then((lines) => lines.join('\n'))
+      ).replace(question.brokenBody, question.solutionBody),
+    );
     repairSources.set(page, saved);
   }
   // Re-entering the same route restores its real last draft. Reuse only the
@@ -75,7 +90,14 @@ export async function openIndependentRepair(page: Page, id: string) {
     /^(synced|invalid|unmapped)$/,
   );
   await editor.clear();
-  await expect(editor).toHaveValue('');
+  await expect
+    .poll(() =>
+      page
+        .locator('.code-editor .cm-line')
+        .allTextContents()
+        .then((lines) => lines.join('\n')),
+    )
+    .toBe('');
   await editor.fill(saved.get(id)!);
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
 }

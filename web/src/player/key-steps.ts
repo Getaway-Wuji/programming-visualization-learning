@@ -12,6 +12,7 @@ export function keyStepCursors(result: Result): readonly number[] {
   if (cached) return cached;
   const steps: readonly (TraceStep | AlgorithmStep | MemoryStep)[] = result.trace?.steps ?? [];
   const stops = [0];
+  const nodes = new Map(result.nodeMap.map((node) => [node.nodeId, node]));
   for (let index = 0; index < steps.length; index++) {
     const step = steps[index];
     const bookkeeping = [
@@ -31,7 +32,22 @@ export function keyStepCursors(result: Result): readonly number[] {
     const unchangedWrite =
       step.kind === 'value.write' &&
       !step.changes.some((change) => change.op === 'cell' && change.before !== change.after);
-    if (!bookkeeping && !loopUpdate && !unchangedWrite) stops.push(index + 1);
+    const nodeId =
+      'nodeId' in step
+        ? step.nodeId
+        : step.location.kind === 'source'
+          ? step.location.nodeId
+          : undefined;
+    const node = nodeId ? nodes.get(nodeId) : undefined;
+    const parent =
+      node && 'parentId' in node && typeof node.parentId === 'string'
+        ? nodes.get(node.parentId)
+        : undefined;
+    const loopCondition =
+      step.kind === 'condition' &&
+      (['while', 'for'].includes(node?.kind ?? '') ||
+        ['while', 'for'].includes(parent?.kind ?? ''));
+    if (!bookkeeping && !loopUpdate && !unchangedWrite && !loopCondition) stops.push(index + 1);
   }
   if (steps.length && stops.at(-1) !== steps.length) stops.push(steps.length);
   cache.set(result, stops);

@@ -1,18 +1,17 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
-import { BugCatalogLink } from '../bugs/BugPanel';
+import { BugCatalogLink } from '../bugs/BugCatalogLink';
 import { Breadcrumbs, PageHeading, StatePanel } from '../components/Ui';
 import { C6TeachingReading } from '../components/C6TeachingReading';
 import { LearningSaveStatus, useLearning } from '../learning/react';
 import { DailyGoalSummary } from '../learning/goal-components';
-import { ProfileSummary } from '../learning/profile-components';
 import { HomePanel, homePanels } from '../learning/HomePanel';
 import type { C6NavigationNode } from '../content/c6-course-types';
 import type { C6TeachingChunk, C6TeachingNode } from '../content/c6-teaching-types';
 import type { C6LearningIndex } from './index';
 import './course.css';
 import { C6KnowledgeOverview } from './Knowledge';
-import { KnowledgeMarkButton, KnowledgeMarksStatus } from '../review-notebook/marks';
+import { ReadingEnd } from './ReadingEnd';
 
 export function C6Boundary({ children }: { children: ReactNode }) {
   const { state, service } = useLearning();
@@ -103,7 +102,7 @@ export function C6HomePage() {
   );
 }
 function Home() {
-  const { state, service } = useLearning();
+  const { state } = useLearning();
   const [search, setSearch] = useSearchParams();
   const requested = search.get('panel');
   const panel =
@@ -122,12 +121,6 @@ function Home() {
     index.lessons.find((l) => l[0] === started?.id) ??
     index.lessons.find((l) => !state.projection?.lessons.find((p) => p.id === l[0])?.completed);
   const title = manifest.nodes.find((n) => `node.${n.id}` === next?.[1])?.titleDisplay;
-  const pointsConfirmed = !!state.snapshot && !state.recovery?.ledgerUncertain;
-  const points = pointsConfirmed
-    ? state
-        .snapshot!.ledger.reduce((n, l) => n + (l.status === 'posted' ? BigInt(l.points) : 0n), 0n)
-        .toString()
-    : null;
   return (
     <div className="c6-course-page">
       <PageHeading
@@ -136,7 +129,7 @@ function Home() {
         description="按《C Primer Plus》第 6 版的章节顺序，阅读、运行，再动手练习。"
       />
       <div className="c6-home-columns">
-        <section className="c6-next-section" aria-labelledby="c6-next-title">
+        <section className="card c6-next-section" aria-labelledby="c6-next-title">
           <p className="muted">
             {state.projection ? `${completed} / 404 个小节已完成` : '正在确认学习进度'}
           </p>
@@ -154,9 +147,20 @@ function Home() {
           <Link className="text-link" to="/courses">
             查看课程目录
           </Link>
-          <p className="muted">每节主动确认阅读；有配套执行题的小节，还需通过全部判题组。</p>
+          <p className="muted">读到页末自动完成小节，练习可以从左侧菜单随时进入。</p>
+          <div className="c6-home-practice-shortcuts">
+            <h3>动手练习</h3>
+            <div className="inline-actions">
+              <Link className="text-link" to="/practice">
+                进入练习 →
+              </Link>
+              <Link className="text-link" to="/bugs">
+                Bug 修复闯关 →
+              </Link>
+            </div>
+          </div>
         </section>
-        <div>
+        <div className="card c6-goal-section">
           <DailyGoalSummary />
           <p className="inline-actions">
             <Link className="text-link" to="/?panel=goals">
@@ -168,49 +172,6 @@ function Home() {
           </p>
         </div>
       </div>
-      <section className="c6-profile-section" aria-label="学习积累">
-        <ProfileSummary />
-        <div>
-          <h2>已入账 {points === null ? '暂不可确认' : `${points} 分`}</h2>
-          <p>每个教学组首次完成 20 分，组内首次通过执行题 10 分；每日目标达成 5 分。</p>
-          <Link className="text-link" to="/?panel=points">
-            查看积分明细
-          </Link>
-          {state.projection?.ledger.pending.length ? (
-            <button className="text-link" onClick={() => void service.settleRewards()}>
-              重试待入账奖励
-            </button>
-          ) : null}
-          <details>
-            <summary>查看积分记录</summary>
-            <ul className="c6-ledger-list">
-              {state.snapshot?.ledger
-                .slice()
-                .reverse()
-                .map((l) => (
-                  <li key={`${l.sourceId}:${l.subjectId}:${l.localDate}`}>
-                    <span>
-                      {l.localDate} ·{' '}
-                      {l.sourceId === 'reward.lesson.first-completion'
-                        ? '教学组完成'
-                        : l.sourceId === 'reward.exercise.first-pass'
-                          ? '执行练习通过'
-                          : l.sourceId === 'reward.daily-goal.once'
-                            ? '每日目标'
-                            : '学习奖励'}
-                    </span>
-                    <span>{l.status === 'posted' ? `+${l.points} 分` : '待入账'}</span>
-                  </li>
-                ))}
-            </ul>
-            {!pointsConfirmed ? (
-              <p className="muted">积分记录暂不可确认，请先恢复本地档案。</p>
-            ) : !state.snapshot?.ledger.length ? (
-              <p className="muted">完成学习后，积分记录会显示在这里。</p>
-            ) : null}
-          </details>
-        </div>
-      </section>
       <C6KnowledgeOverview />
       <LearningSaveStatus />
       {panel && (
@@ -264,6 +225,11 @@ function Directory() {
             <p className="muted">附录 A、B 用于查阅，不计入课程完成进度与奖励。</p>
             <NodeRows nodes={roots.filter((n) => n.chunkId === 'chA' || n.chunkId === 'chB')} />
           </section>
+          <p className="inline-actions">
+            <Link className="button button-primary" to="/practice">
+              进入练习
+            </Link>
+          </p>
           <BugCatalogLink />
         </>
       )}
@@ -290,7 +256,6 @@ function SourcePage({ nodeId }: { nodeId: string }) {
   } | null>(null);
   const [failed, setFailed] = useState('');
   const [attempt, retry] = useState(0);
-  const [saveError, setSaveError] = useState<{ nodeId: string; epoch: number } | null>(null);
   useEffect(() => {
     if (!nav) return;
     const abort = new AbortController();
@@ -316,7 +281,6 @@ function SourcePage({ nodeId }: { nodeId: string }) {
   const node = loaded?.key === nodeId ? loaded.node : null;
   const chunk = loaded?.key === nodeId ? loaded.chunk : null;
   const lesson = index.lessons.find((l) => l[1] === `node.${nodeId}`);
-  const progress = state.projection?.lessons.find((l) => l.id === lesson?.[0]);
   const parent = manifest.nodes.find((n) => n.id === nav.parentId);
   const children = manifest.nodes.filter((n) => n.parentId === nodeId);
   const currentAt = index.lessons.findIndex((l) => l[0] === lesson?.[0]);
@@ -363,26 +327,6 @@ function SourcePage({ nodeId }: { nodeId: string }) {
                 : node.body
             }
           />
-          {node.programRefs.length > 0 && (
-            <section className="c6-section" aria-labelledby="c6-programs-title">
-              <h2 id="c6-programs-title">本节完整程序</h2>
-              <ul className="c6-node-list">
-                {node.programRefs.map((ref) => {
-                  const program = chunk!.programs.find((p) => p.ref.id === ref.id)!;
-                  return (
-                    <li key={ref.id}>
-                      <Link to={`/c6/program/${ref.id}?node=${encodeURIComponent(nodeId)}`}>
-                        <span>{program.title}</span>
-                        <span className="c6-node-detail">
-                          {program.mode === 'reading' ? '阅读完整代码与边界' : '打开运行与逐步回放'}
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-          )}
           {guides.length > 0 && (
             <section className="c6-section">
               <h2>来源习题指导 · 选做</h2>
@@ -398,66 +342,19 @@ function SourcePage({ nodeId }: { nodeId: string }) {
               )}
             </section>
           )}
-          {lesson && (
-            <section className="c6-reading-confirmation" aria-label="本节学习要求">
-              <h2>{progress?.completed ? '本节已完成' : '本节学习要求'}</h2>
-              <p>
-                {progress?.studyConfirmed ? '已确认阅读。' : '读完本节后，请主动确认阅读。'}
-                {lesson[5].length ? '配套练习全部通过后完成本节。' : '本节完成阅读确认即可完成。'}
-              </p>
-              <button
-                className="button button-primary"
-                disabled={
-                  !state.capabilities.learning ||
-                  state.status === 'saving' ||
-                  state.status === 'readonly' ||
-                  !!progress?.studyConfirmed
-                }
-                onClick={() => {
-                  setSaveError(null);
-                  void service
-                    .recordLesson(lesson[0], true, state.sessionEpoch)
-                    .catch(() => setSaveError({ nodeId, epoch: state.sessionEpoch }));
-                }}
-              >
-                {progress?.studyConfirmed ? '已确认阅读' : '我已读完本节'}
-              </button>
-              {progress?.studyConfirmed && (
-                <button
-                  className="button button-secondary"
-                  disabled={
-                    !state.capabilities.learning ||
-                    state.status === 'saving' ||
-                    state.status === 'readonly'
-                  }
-                  onClick={() => {
-                    setSaveError(null);
-                    void service
-                      .recordLesson(lesson[0], true, state.sessionEpoch)
-                      .catch(() => setSaveError({ nodeId, epoch: state.sessionEpoch }));
-                  }}
-                >
-                  确认今日复习
-                </button>
-              )}
-              {saveError?.nodeId === nodeId &&
-                saveError.epoch === state.sessionEpoch &&
-                !progress?.studyConfirmed && <p role="alert">阅读确认未保存，请重试。</p>}
+          {lesson && lesson[5].length > 0 && (
+            <section className="c6-section c6-section-practice">
+              <h2>动手练习</h2>
               {lesson[5].map((id) => (
-                <p key={id}>
-                  <Link className="text-link" to={`/practice/${id}`}>
-                    {state.projection?.exercises.find((e) => e.id === id)?.passed
-                      ? '回顾已通过的配套练习'
-                      : '完成配套执行练习'}
-                  </Link>
-                </p>
+                <Link key={id} className="button button-secondary" to={`/practice/${id}`}>
+                  {state.projection?.exercises.find((e) => e.id === id)?.passed
+                    ? '去练习（已通过）'
+                    : '去练习'}
+                </Link>
               ))}
-              <p>
-                <KnowledgeMarkButton lessonId={lesson[0]} knowledgeId={lesson[3]} />
-              </p>
-              <KnowledgeMarksStatus />
             </section>
           )}
+          {lesson && <ReadingEnd key={lesson[0]} lessonId={lesson[0]} knowledgeId={lesson[3]} />}
           {children.length > 0 && (
             <section className="c6-section">
               <h2>本部分目录</h2>

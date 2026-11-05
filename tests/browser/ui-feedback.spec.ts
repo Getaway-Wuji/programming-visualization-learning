@@ -18,7 +18,7 @@ for (const width of [1440, 768, 390])
     const composition = page.locator('.c6-course-page');
     expect(
       await composition.locator('.c6-home-columns > section').first().getAttribute('class'),
-    ).toBe('c6-next-section');
+    ).toMatch(/\bc6-next-section\b/);
     await expect(composition.locator(':scope > section').last()).toHaveAttribute(
       'data-testid',
       'c6-knowledge-map',
@@ -40,13 +40,15 @@ test('catalog follows syntax, basic sorting/search, C++ sorting, structures and 
   page,
 }) => {
   await page.goto('/#/cases');
+  await expect(page.locator('.lab-category a')).toHaveCount(40);
+  await page.getByText('基础语法与更多案例', { exact: true }).click();
   await expect(page.getByRole('heading', { name: '基础语法演示', exact: true })).toBeVisible();
   const headings = await page.locator('main h2').allTextContents();
   const groups = ['基础语法演示', '排序与查找', 'C++ · 迭代排序', 'C++ · 递归排序', 'C++ · 桶排序'];
   expect(groups.map((text) => headings.indexOf(text))).toEqual(
     [...groups.map((text) => headings.indexOf(text))].sort((a, b) => a - b),
   );
-  expect(headings[0]).toBe('基础语法演示');
+  expect(headings[0]).toMatch(/算法可视化/);
   expect(headings.at(-1)).toBe('进阶观察 · 内存与调用栈');
   expect(await page.locator('main a[href*="/visualize/"]').count()).toBe(7);
   await page.screenshot({ path: `${folder}/catalog.png`, fullPage: true });

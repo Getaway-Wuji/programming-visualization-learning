@@ -7,10 +7,10 @@ import { PageHeading, StatePanel } from '../components/Ui';
 import { DiagnosticPanel } from '../diagnostics/DiagnosticPanel';
 import type { DisplayDiagnostic } from '../diagnostics/presentation';
 import { createSourceIndex } from '../player/source-location';
-import { C6ExecutionClient, c6RunRequest } from '../engine/c6-client';
-import { c6BlockProgram, c6SourceHash } from '../engine/c6-protocol';
+import { C6ExecutionClient, c6RunRequest, acceptedC6Proof } from '../engine/c6-client';
+import { c6BlockProgram } from '../engine/c6-protocol';
 import { C6Player } from '../engine/c6-player';
-import type { C6EditResult, C6JudgeResult, C6Result } from '../engine/c6-types';
+import type { C6JudgeResult, C6Result } from '../engine/c6-types';
 import type { C6CourseExercise } from '../content/c6-course-types';
 import type { C6TeachingProgram } from '../content/c6-teaching-types';
 import { LearningSaveStatus, useLearning } from '../learning/react';
@@ -19,6 +19,11 @@ import type { BlockProgram } from '../blocks/model';
 import type { C6RunLease } from './authority';
 import { C6Boundary, C6LegacyLink, c6NodePath } from './CoursePages';
 import './workbench.css';
+import { useBlockWorkspacePreference } from '../appearance/BlockWorkspacePreference';
+import { PracticeExamples } from '../components/PracticeExamples';
+import { CodeEditor, type CodeEditorHandle } from '../components/CodeEditor';
+import { useBlockMapping } from './use-block-mapping';
+import { useUnsavedChanges } from '../workbench/use-unsaved-changes';
 
 const BlockWorkspace = lazy(() =>
   import('../blocks/BlockWorkspace').then((m) => ({ default: m.BlockWorkspace })),
@@ -366,24 +371,49 @@ function Workbench({ document }: { document: Document }) {
   const [engine] = useState(() => new C6ExecutionClient());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
   const [result, setResult] = useState<C6Result | C6JudgeResult | null>(null);
   const [caseIndex, setCaseIndex] = useState(0);
-  const [edit, setEdit] = useState<C6EditResult | null>(null);
   const [blockCandidate, setBlockCandidate] = useState('');
   const [undoBlockSource, setUndoBlockSource] = useState<string | null>(null);
-  const [showBlocks, setShowBlocks] = useState(false);
+  const [blocksRequested, setBlocksRequested] = useState(false);
+  const [practicePane, setPracticePane] = useState<'question' | 'code' | 'blocks'>('code');
+  const blockPreference = useBlockWorkspacePreference();
+  const showBlocks =
+    blockPreference.value === 'show' ||
+    (blockPreference.value === 'auto' &&
+      (blocksRequested || /^c6\.s[123](\.|$)/.test(document.nodeId)));
   const active = useRef({ token: 0, lease: null as C6RunLease | null });
-  const area = useRef<HTMLTextAreaElement>(null);
+  const area = useRef<CodeEditorHandle>(null);
   const reading = document.program?.mode === 'reading';
   const sourceBytes = new TextEncoder().encode(source).length;
   const tooLarge = sourceBytes > 32768;
+  const blockMapping = useBlockMapping({
+    enabled: showBlocks && !reading && !tooLarge,
+    suspended: busy,
+    documentId: document.id,
+    source,
+    sourceRevision,
+  });
+  const { edit, presentedBlocks, mapping, error: mappingError } = blockMapping;
+  useUnsavedChanges(dirty);
   const validInput = input.length <= 256 && [...input].every((c) => c.charCodeAt(0) <= 127);
-  const savedPass = state.c6!.rows?.activities.find(
-    (a) => a.kind === 'exercise' && a.subjectRef.id === document.id,
-  );
   const packet = result && 'cases' in result ? result.cases[caseIndex]?.packet : result;
   const mapped = useMemo(() => (edit?.status === 'mapped' ? c6BlockProgram(edit) : null), [edit]);
+  const currentMapping = edit?.sourceRevision === sourceRevision;
+  const emptyBlocks = useMemo<BlockProgram>(
+    () => ({
+      id: 'main.practice',
+      kind: 'main',
+      body: [
+        {
+          id: 'return.practice',
+          kind: 'return',
+          value: { id: 'zero.practice', kind: 'integer', value: '0' },
+        },
+      ],
+    }),
+    [],
+  );
   useEffect(() => {
     const current = active.current;
     return () => {
@@ -392,28 +422,19 @@ function Workbench({ document }: { document: Document }) {
       if (current.lease) service.invalidateC6Practice(current.lease);
     };
   }, [engine, service]);
-  useEffect(() => {
-    if (!dirty) return;
-    const beforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-    };
-    window.addEventListener('beforeunload', beforeUnload);
-    return () => window.removeEventListener('beforeunload', beforeUnload);
-  }, [dirty]);
-  const invalidate = () => {
+  const invalidate = (sourceChanged = false) => {
     active.current.token++;
     engine.invalidate();
     if (active.current.lease) service.invalidateC6Practice(active.current.lease);
     active.current.lease = null;
     setResult(null);
-    setEdit(null);
+    if (sourceChanged) blockMapping.clearError();
     setBlockCandidate('');
     setBusy(false);
     setError('');
-    setMessage('');
   };
   const changeSource = (text: string) => {
-    invalidate();
+    invalidate(true);
     setSource(text);
     setSourceRevision(crypto.randomUUID());
     setDirty(true);
@@ -421,12 +442,10 @@ function Workbench({ document }: { document: Document }) {
   const locate = (start: number, end: number) => {
     const range = createSourceIndex(source).range({ start, end });
     if (!range || !area.current) return;
-    area.current.focus({ preventScroll: true });
-    area.current.setSelectionRange(range.utf16Range.start, range.utf16Range.end);
-    area.current.scrollTop = Math.max(0, (range.start.line - 3) * 22);
-    area.current.scrollIntoView({ block: 'nearest' });
+    area.current.select(range.utf16Range.start, range.utf16Range.end);
   };
   const run = async (judge: boolean) => {
+    blockMapping.pause();
     invalidate();
     const token = active.current.token,
       started = performance.now();
@@ -467,7 +486,6 @@ function Workbench({ document }: { document: Document }) {
         const saving = service.recordC6Judge(active.current.lease, response, state.sessionEpoch);
         active.current.lease = null;
         await saving;
-        if (token === active.current.token) setMessage('本次判题记录已保存。');
       }
     } catch (failure) {
       if (token === active.current.token)
@@ -482,39 +500,12 @@ function Workbench({ document }: { document: Document }) {
       if (token === active.current.token) setBusy(false);
     }
   };
-  const analyze = async () => {
-    invalidate();
-    const token = active.current.token,
-      started = performance.now();
-    setBusy(true);
-    try {
-      const response = await engine.execute(
-        {
-          editVersion: '2.0.0',
-          documentId: document.id,
-          packageRef: { id: 'content.c.primer6', version: '1.0.0' },
-          engine: { id: 'engine.rust.c6', version: '0.1.0' },
-          sourceRevision,
-          sourceSha256: await c6SourceHash(source),
-          source,
-        },
-        { started },
-      );
-      if (!('editVersion' in response)) throw Error('E_PROTOCOL_INVALID');
-      if (token === active.current.token) {
-        setEdit(response);
-        setShowBlocks(true);
-      }
-    } catch (failure) {
-      if (token === active.current.token)
-        setError(failure instanceof Error ? failure.message : '映射未完成');
-    } finally {
-      if (token === active.current.token) setBusy(false);
-    }
+  const analyze = () => {
+    setBlocksRequested(true);
+    blockMapping.retry();
   };
   const save = async () => {
     setError('');
-    setMessage('');
     const capturedSource = source,
       capturedInput = input;
     const token = active.current.token;
@@ -535,7 +526,6 @@ function Workbench({ document }: { document: Document }) {
       setSavedDocumentRevision(current?.revision ?? savedDocumentRevision);
       if (active.current.token === token && source === capturedSource && input === capturedInput)
         setDirty(false);
-      setMessage('完整草稿已保存在此浏览器。');
     } catch (failure) {
       setError(
         failure && typeof failure === 'object' && 'code' in failure
@@ -545,6 +535,7 @@ function Workbench({ document }: { document: Document }) {
     }
   };
   const blocksChanged = (program: BlockProgram | null) => {
+    if (!currentMapping || mapping || busy || mappingError || tooLarge) return;
     if (!program) {
       setBlockCandidate('');
       return;
@@ -560,8 +551,15 @@ function Workbench({ document }: { document: Document }) {
   };
   const title =
     state.c6!.manifest!.nodes.find((n) => n.id === document.nodeId)?.titleDisplay ?? '所属章节';
+  const exerciseOnly = Boolean(document.exercise);
+  const verdict =
+    result && 'cases' in result ? (acceptedC6Proof(result)?.judge?.status ?? result.status) : null;
   return (
-    <div className="c6-workbench" data-document-id={document.id}>
+    <div
+      className="c6-workbench"
+      data-document-id={document.id}
+      data-practice-pane={exerciseOnly ? practicePane : undefined}
+    >
       <Link className="text-link" to={c6NodePath(state.c6!.index!, document.nodeId)}>
         返回 {title}
       </Link>
@@ -569,297 +567,401 @@ function Workbench({ document }: { document: Document }) {
         kicker={document.exercise ? 'C 配套执行练习' : reading ? 'C 程序阅读' : 'C 程序运行'}
         title={document.title}
       />
-      {document.exercise && (
-        <section className="c6-exercise-description">
-          <p>{document.exercise.prompt}</p>
-          <p>输入：{document.exercise.inputContract}</p>
-          <p>输出：{document.exercise.outputContract}</p>
-          <p>{document.exercise.nodeSpecificRequirement}</p>
-          <details>
-            <summary>提示与边界</summary>
-            <ul>
-              {document.exercise.hints.map((h) => (
-                <li key={h}>{h}</li>
-              ))}
-            </ul>
-            <p>{document.exercise.boundaryExplanation}</p>
-          </details>
-          {savedPass?.kind === 'exercise' && savedPass.firstPass && (
-            <p className="notice">已保存首次通过记录。当前代码的运行和判题结果显示在下方。</p>
+      {exerciseOnly && (
+        <div className="c6-practice-switch" role="group" aria-label="练习视图">
+          {(['question', 'code', ...(showBlocks ? (['blocks'] as const) : [])] as const).map(
+            (pane) => (
+              <button
+                key={pane}
+                type="button"
+                className="button button-secondary"
+                aria-pressed={practicePane === pane}
+                onClick={() => {
+                  setPracticePane(pane);
+                  if (pane === 'code') requestAnimationFrame(() => area.current?.focus());
+                }}
+              >
+                {pane === 'question' ? '题目' : pane === 'code' ? '代码' : '积木'}
+              </button>
+            ),
           )}
-        </section>
+        </div>
       )}
-      {reading && (
-        <section>
-          <p className="notice">
-            {document.program!.mode === 'reading' && document.program!.boundary}
-          </p>
-          <p>{document.program!.mode === 'reading' && document.program!.prediction}</p>
-          {document.program!.files.map((f) => (
-            <section key={f.name}>
-              <h2>{f.name}</h2>
-              <pre className="c6-source-read" tabIndex={0}>
-                <code>{f.source}</code>
-              </pre>
-            </section>
-          ))}
-        </section>
-      )}
-      {!reading && (
-        <>
-          <div className="c6-workbench-grid">
-            <section className="c6-source-pane">
+      <div className={exerciseOnly ? 'c6-exercise-shell' : undefined}>
+        {document.exercise && (
+          <section className="c6-exercise-description" aria-label="题目和样例" tabIndex={0}>
+            <h2>题目描述</h2>
+            <p>{document.exercise.prompt}</p>
+            <p>{document.exercise.nodeSpecificRequirement}</p>
+            <PracticeExamples
+              key={document.id}
+              inputFormat={document.exercise.inputContract}
+              outputFormat={document.exercise.outputContract}
+              samples={document.exercise.tests.map((test) => ({
+                input: test.stdin,
+                output: test.expectedStdout,
+              }))}
+            />
+            <details>
+              <summary>提示与边界</summary>
+              <ul>
+                {document.exercise.hints.map((h) => (
+                  <li key={h}>{h}</li>
+                ))}
+              </ul>
+              <p>{document.exercise.boundaryExplanation}</p>
+            </details>
+          </section>
+        )}
+        <div
+          className={`c6-practice-body${exerciseOnly && showBlocks ? ' c6-practice-layout' : ''}`}
+        >
+          {exerciseOnly && (
+            <section className="card oj-answer" aria-label="提交代码">
+              <h2>提交代码</h2>
+              <p>C 代码</p>
+              <CodeEditor
+                ref={area}
+                label="完整 C 源码 · main.c"
+                value={source}
+                onChange={changeSource}
+              />
               <div className="c6-action-row">
                 <button
                   className="button button-primary"
-                  disabled={busy || tooLarge || !validInput}
-                  onClick={() => void run(false)}
+                  disabled={
+                    busy || tooLarge || !state.capabilities.learning || state.status === 'readonly'
+                  }
+                  onClick={() => void run(true)}
                 >
-                  运行当前代码
+                  {busy ? '提交中…' : '提交'}
                 </button>
-                {document.exercise && (
-                  <button
-                    className="button button-primary"
-                    disabled={
-                      busy ||
-                      tooLarge ||
-                      !state.capabilities.learning ||
-                      state.status === 'readonly'
-                    }
-                    onClick={() => void run(true)}
-                  >
-                    判定全部四组
-                  </button>
-                )}
                 <button
                   className="button button-secondary"
-                  disabled={
-                    busy ||
-                    tooLarge ||
-                    !validInput ||
-                    !state.snapshot ||
-                    state.status === 'readonly'
-                  }
+                  disabled={busy || tooLarge || !state.snapshot || state.status === 'readonly'}
                   onClick={() => void save()}
                 >
                   保存草稿
                 </button>
-                <button
-                  className="button button-secondary"
-                  disabled={busy || tooLarge}
-                  onClick={() => void analyze()}
-                >
-                  同步到积木
-                </button>
+                {blockPreference.value !== 'hide' && (
+                  <button
+                    className="button button-secondary"
+                    disabled={busy || tooLarge}
+                    onClick={() => void analyze()}
+                  >
+                    同步到积木
+                  </button>
+                )}
                 {busy && (
-                  <button className="button button-secondary" onClick={invalidate}>
-                    取消本次操作
+                  <button className="button button-secondary" onClick={() => invalidate()}>
+                    取消
                   </button>
                 )}
               </div>
-              <label htmlFor="c6-source">完整 C 源码 · main.c</label>
-              <textarea
-                ref={area}
-                id="c6-source"
-                className="c6-source-editor"
-                value={source}
-                onChange={(e) => changeSource(e.target.value)}
-                spellCheck={false}
-                wrap="off"
-              />
-              <p className="muted">
-                {sourceBytes} / 32768 字节{dirty ? ' · 有未保存修改' : ''}
+              {tooLarge && <p role="alert">代码超过32 KiB，请缩短后提交。</p>}
+              {verdict && (
+                <p
+                  className="oj-verdict"
+                  role="status"
+                  data-testid="oj-verdict"
+                  data-verdict={verdict}
+                >
+                  {verdict === 'passed'
+                    ? '通过'
+                    : verdict === 'failed'
+                      ? '未通过'
+                      : '提交未完成，请重试'}
+                </p>
+              )}
+              {error && <p role="alert">{error}。代码已保留，请重试。</p>}
+              <LearningSaveStatus dirty={dirty} />
+            </section>
+          )}
+          {reading && (
+            <section>
+              <p className="notice">
+                {document.program!.mode === 'reading' && document.program!.boundary}
               </p>
-              <label htmlFor="c6-stdin">本次试运行输入（ASCII，最多 256 字节）</label>
-              <textarea
-                id="c6-stdin"
-                className="c6-input-editor"
-                value={input}
-                onChange={(e) => {
-                  invalidate();
-                  setInput(e.target.value);
-                  setDirty(true);
-                }}
-              />
-              {(!validInput || tooLarge) && (
-                <p role="alert">
-                  {tooLarge
-                    ? '源码超过当前 32KiB 上限，原稿仍保留在编辑区。'
-                    : '输入须为 ASCII，且不超过 256 字节。'}
-                </p>
-              )}
-              {busy && <p role="status">正在检查当前代码……</p>}
-              {message && <p role="status">{message}</p>}
-              {error && <p role="alert">{error} · 原稿已保留。</p>}
-              <details className="c6-saved-drafts">
-                <summary>管理已保存草稿 · {state.c6!.rows?.drafts.length ?? 0} / 64</summary>
-                <p className="muted">
-                  达到上限后，可先删除不再需要的草稿，再保存当前代码。删除草稿不改变已获得的学习记录。
-                </p>
-                {(state.c6!.rows?.drafts ?? []).map((draft) => {
-                  const title =
-                    state.c6!.manifest!.nodes.find((n) => `node.${n.id}` === draft.nodeRef.id)
-                      ?.titleDisplay ?? '课程草稿';
-                  return (
-                    <details key={draft.documentId}>
-                      <summary>
-                        {title} · {new Date(draft.updatedAt).toLocaleString('zh-CN')}
-                      </summary>
-                      <p>
-                        <code>{draft.documentId}</code>
-                      </p>
-                      <pre className="c6-source-read">
-                        <code>{draft.source}</code>
-                      </pre>
-                      <button
-                        className="button button-secondary"
-                        disabled={state.status === 'saving' || state.status === 'readonly'}
-                        onClick={() => {
-                          void service
-                            .deleteC6Draft(draft.documentId, draft.revision, state.sessionEpoch)
-                            .then(() => {
-                              if (draft.documentId === document.id) setSavedDocumentRevision(0);
-                              setMessage('所选草稿已删除，当前编辑区代码保留。');
-                            })
-                            .catch(() => setError('草稿未能删除，请重新读取档案后再试。'));
-                        }}
-                      >
-                        删除此草稿
-                      </button>
-                    </details>
-                  );
-                })}
-              </details>
-            </section>
-            <section className="c6-result-pane" aria-label="当前运行结果">
-              {!result && (
-                <StatePanel
-                  kind="empty"
-                  title="等待运行"
-                  description="运行后可逐步查看当前代码的输出、调用栈与虚拟内存。"
-                />
-              )}
-              {result && 'cases' in result && (
-                <section>
-                  <h2>
-                    {result.status === 'passed'
-                      ? '四组全部通过'
-                      : result.status === 'failed'
-                        ? '本次尚未通过'
-                        : '本次判题未完成'}
-                  </h2>
-                  <div className="c6-case-tabs" role="group" aria-label="选择判题组">
-                    {result.cases.map((c, i) => (
-                      <button
-                        className={i === caseIndex ? 'c6-case-selected' : ''}
-                        key={c.caseKey}
-                        aria-pressed={i === caseIndex}
-                        onClick={() => setCaseIndex(i)}
-                      >
-                        第 {i + 1} 组 ·{' '}
-                        {c.stdoutMatches && c.returnMatches && c.observationMatches
-                          ? '通过'
-                          : '待修正'}
-                      </button>
-                    ))}
-                  </div>
-                  {result.cases[caseIndex] && (
-                    <p className="muted">
-                      输出：{result.cases[caseIndex].stdoutMatches ? '符合' : '不符'} · 返回值：
-                      {result.cases[caseIndex].returnMatches ? '符合' : '不符'} · 本节教学目标：
-                      {result.cases[caseIndex].observationMatches ? '符合' : '尚未满足'}
-                    </p>
-                  )}
+              <p>{document.program!.mode === 'reading' && document.program!.prediction}</p>
+              {document.program!.files.map((f) => (
+                <section key={f.name}>
+                  <h2>{f.name}</h2>
+                  <pre className="c6-source-read" tabIndex={0}>
+                    <code>{f.source}</code>
+                  </pre>
                 </section>
-              )}
-              {packet && (
-                <TraceView
-                  key={`${packet.identity.runId}:${caseIndex}`}
-                  result={packet}
-                  source={source}
-                  locate={locate}
-                  disabled={busy}
-                  capture={{
-                    result: result!,
-                    caseIndex,
-                    title: document.title,
-                    documentId: document.id,
-                    nodeRef: { id: `node.${document.nodeId}`, version: '2.0.0' },
-                    exerciseId: document.exercise ? document.id : null,
-                  }}
-                />
-              )}
+              ))}
             </section>
-          </div>
-          {showBlocks && edit && (
-            <section className="c6-block-pane">
-              <h2>积木视图</h2>
-              {!mapped ? (
-                <p className="notice">
-                  {edit.status === 'code-only'
-                    ? '代码可执行，当前语法没有对应积木，请继续在代码区编辑。'
-                    : '当前草稿尚不能映射为积木，请根据诊断修正。'}
-                  完整原稿已保留。
-                </p>
-              ) : (
-                <>
-                  <p className="muted">
-                    常用整数积木由当前代码的真实语法映射生成。积木生成的新程序会先预览，再应用到编辑区。
-                  </p>
-                  <Suspense fallback={<p role="status">正在准备积木编辑器……</p>}>
-                    <BlockWorkspace value={mapped} onChange={blocksChanged} disabled={busy} />
-                  </Suspense>
-                  {blockCandidate && blockCandidate !== source && (
-                    <details open>
-                      <summary>积木生成的完整程序预览</summary>
-                      <p>生成程序会重新排版，当前原稿中的注释不会复制；应用后可撤销这次替换。</p>
-                      <pre className="c6-source-read">
-                        <code>{blockCandidate}</code>
-                      </pre>
+          )}
+          {!reading && !exerciseOnly && (
+            <>
+              <div className="c6-workbench-grid">
+                <section className="c6-source-pane">
+                  <div className="c6-action-row">
+                    <button
+                      className="button button-primary"
+                      disabled={busy || tooLarge || !validInput}
+                      onClick={() => void run(false)}
+                    >
+                      运行当前代码
+                    </button>
+                    {document.exercise && (
                       <button
                         className="button button-primary"
-                        onClick={() => {
-                          setUndoBlockSource(source);
-                          changeSource(blockCandidate);
-                        }}
+                        disabled={
+                          busy ||
+                          tooLarge ||
+                          !state.capabilities.learning ||
+                          state.status === 'readonly'
+                        }
+                        onClick={() => void run(true)}
                       >
-                        应用生成代码
+                        判定全部四组
                       </button>
-                    </details>
+                    )}
+                    <button
+                      className="button button-secondary"
+                      disabled={
+                        busy ||
+                        tooLarge ||
+                        !validInput ||
+                        !state.snapshot ||
+                        state.status === 'readonly'
+                      }
+                      onClick={() => void save()}
+                    >
+                      保存草稿
+                    </button>
+                    {blockPreference.value !== 'hide' && (
+                      <button
+                        className="button button-secondary"
+                        disabled={busy || tooLarge}
+                        onClick={() => void analyze()}
+                      >
+                        同步到积木
+                      </button>
+                    )}
+                    {busy && (
+                      <button className="button button-secondary" onClick={() => invalidate()}>
+                        取消本次操作
+                      </button>
+                    )}
+                  </div>
+                  <p>完整 C 源码 · main.c</p>
+                  <CodeEditor
+                    ref={area}
+                    label="完整 C 源码 · main.c"
+                    value={source}
+                    onChange={changeSource}
+                  />
+                  <p className="muted">
+                    {sourceBytes} / 32768 字节{dirty ? ' · 有未保存修改' : ''}
+                  </p>
+                  <label htmlFor="c6-stdin">本次试运行输入（ASCII，最多 256 字节）</label>
+                  <textarea
+                    id="c6-stdin"
+                    className="c6-input-editor"
+                    value={input}
+                    onChange={(e) => {
+                      invalidate();
+                      setInput(e.target.value);
+                      setDirty(true);
+                    }}
+                  />
+                  {(!validInput || tooLarge) && (
+                    <p role="alert">
+                      {tooLarge
+                        ? '源码超过当前 32KiB 上限，原稿仍保留在编辑区。'
+                        : '输入须为 ASCII，且不超过 256 字节。'}
+                    </p>
                   )}
-                </>
-              )}
-              {edit.diagnostics.length > 0 && (
-                <DiagnosticPanel
-                  diagnostics={edit.diagnostics.map((d) => ({
-                    code: d.code,
-                    location: {
-                      kind: 'source',
-                      nodeId: 'unmapped',
-                      byteRange: d.byteRange,
-                      edge: 'whole',
-                    },
-                  }))}
-                  source={{ text: source, language: 'c', nodes: edit.nodeMap }}
-                  onLocateSource={(r) => locate(r.start, r.end)}
+                  {busy && <p role="status">正在检查当前代码……</p>}
+                  {error && <p role="alert">{error} · 原稿已保留。</p>}
+                  <details className="c6-saved-drafts">
+                    <summary>管理已保存草稿 · {state.c6!.rows?.drafts.length ?? 0} / 64</summary>
+                    <p className="muted">
+                      达到上限后，可先删除不再需要的草稿，再保存当前代码。删除草稿不改变已获得的学习记录。
+                    </p>
+                    {(state.c6!.rows?.drafts ?? []).map((draft) => {
+                      const title =
+                        state.c6!.manifest!.nodes.find((n) => `node.${n.id}` === draft.nodeRef.id)
+                          ?.titleDisplay ?? '课程草稿';
+                      return (
+                        <details key={draft.documentId}>
+                          <summary>
+                            {title} · {new Date(draft.updatedAt).toLocaleString('zh-CN')}
+                          </summary>
+                          <p>
+                            <code>{draft.documentId}</code>
+                          </p>
+                          <pre className="c6-source-read">
+                            <code>{draft.source}</code>
+                          </pre>
+                          <button
+                            className="button button-secondary"
+                            disabled={state.status === 'saving' || state.status === 'readonly'}
+                            onClick={() => {
+                              void service
+                                .deleteC6Draft(draft.documentId, draft.revision, state.sessionEpoch)
+                                .then(() => {
+                                  if (draft.documentId === document.id) setSavedDocumentRevision(0);
+                                })
+                                .catch(() => setError('草稿未能删除，请重新读取档案后再试。'));
+                            }}
+                          >
+                            删除此草稿
+                          </button>
+                        </details>
+                      );
+                    })}
+                  </details>
+                </section>
+                <section className="c6-result-pane" aria-label="当前运行结果">
+                  {!result && (
+                    <StatePanel
+                      kind="empty"
+                      title="等待运行"
+                      description="运行后可逐步查看当前代码的输出、调用栈与虚拟内存。"
+                    />
+                  )}
+                  {result && 'cases' in result && (
+                    <section>
+                      <h2>
+                        {result.status === 'passed'
+                          ? '四组全部通过'
+                          : result.status === 'failed'
+                            ? '本次尚未通过'
+                            : '本次判题未完成'}
+                      </h2>
+                      <div className="c6-case-tabs" role="group" aria-label="选择判题组">
+                        {result.cases.map((c, i) => (
+                          <button
+                            className={i === caseIndex ? 'c6-case-selected' : ''}
+                            key={c.caseKey}
+                            aria-pressed={i === caseIndex}
+                            onClick={() => setCaseIndex(i)}
+                          >
+                            第 {i + 1} 组 ·{' '}
+                            {c.stdoutMatches && c.returnMatches && c.observationMatches
+                              ? '通过'
+                              : '待修正'}
+                          </button>
+                        ))}
+                      </div>
+                      {result.cases[caseIndex] && (
+                        <p className="muted">
+                          输出：{result.cases[caseIndex].stdoutMatches ? '符合' : '不符'} · 返回值：
+                          {result.cases[caseIndex].returnMatches ? '符合' : '不符'} · 本节教学目标：
+                          {result.cases[caseIndex].observationMatches ? '符合' : '尚未满足'}
+                        </p>
+                      )}
+                    </section>
+                  )}
+                  {packet && (
+                    <TraceView
+                      key={`${packet.identity.runId}:${caseIndex}`}
+                      result={packet}
+                      source={source}
+                      locate={locate}
+                      disabled={busy}
+                      capture={{
+                        result: result!,
+                        caseIndex,
+                        title: document.title,
+                        documentId: document.id,
+                        nodeRef: { id: `node.${document.nodeId}`, version: '2.0.0' },
+                        exerciseId: document.exercise ? document.id : null,
+                      }}
+                    />
+                  )}
+                </section>
+              </div>
+            </>
+          )}
+          {!reading && showBlocks && (
+            <section
+              className={`c6-block-pane${exerciseOnly ? ' card' : ''}`}
+              aria-busy={mapping || !currentMapping}
+            >
+              <div className="c6-block-title">
+                <h2>积木视图</h2>
+                <div className="c6-block-status">
+                  {mappingError ? (
+                    <p role="alert">
+                      {mappingError}{' '}
+                      <button className="text-link" onClick={analyze}>
+                        重试同步
+                      </button>
+                    </p>
+                  ) : (
+                    currentMapping && !mapped && <p className="muted">仅支持部分语法，原稿保留。</p>
+                  )}
+                </div>
+              </div>
+              <Suspense fallback={<div className="c6-block-placeholder" />}>
+                <BlockWorkspace
+                  value={presentedBlocks ?? emptyBlocks}
+                  onChange={blocksChanged}
+                  disabled={busy || mapping || !currentMapping || !!mappingError || tooLarge}
                 />
+              </Suspense>
+              {blockCandidate && blockCandidate !== source && (
+                <details open>
+                  <summary>积木生成的完整程序预览</summary>
+                  <p>生成程序会重新排版，当前原稿中的注释不会复制；应用后可撤销这次替换。</p>
+                  <pre className="c6-source-read">
+                    <code>{blockCandidate}</code>
+                  </pre>
+                  <button
+                    className="button button-primary"
+                    onClick={() => {
+                      setUndoBlockSource(source);
+                      changeSource(blockCandidate);
+                    }}
+                  >
+                    应用生成代码
+                  </button>
+                </details>
               )}
+              <details className="c6-block-diagnostics">
+                <summary>代码提示</summary>
+                <div>
+                  {currentMapping && !mapped && (
+                    <p>当前代码暂不能完整转为积木。可另行搭建积木，预览后应用；原稿会保留。</p>
+                  )}
+                  {currentMapping && edit.diagnostics.length > 0 && (
+                    <DiagnosticPanel
+                      diagnostics={edit.diagnostics.map((d) => ({
+                        code: d.code,
+                        location: {
+                          kind: 'source',
+                          nodeId: 'unmapped',
+                          byteRange: d.byteRange,
+                          edge: 'whole',
+                        },
+                      }))}
+                      source={{ text: source, language: 'c', nodes: edit.nodeMap }}
+                      onLocateSource={(r) => locate(r.start, r.end)}
+                    />
+                  )}
+                </div>
+              </details>
             </section>
           )}
-          {undoBlockSource !== null && (
-            <button
-              className="text-link"
-              onClick={() => {
-                changeSource(undoBlockSource);
-                setUndoBlockSource(null);
-              }}
-            >
-              撤销上次积木代码替换
-            </button>
-          )}
-          <LearningSaveStatus dirty={dirty} />
-        </>
+        </div>
+      </div>
+      {undoBlockSource !== null && (
+        <button
+          className="text-link"
+          onClick={() => {
+            changeSource(undoBlockSource);
+            setUndoBlockSource(null);
+          }}
+        >
+          撤销上次积木代码替换
+        </button>
       )}
+      {!exerciseOnly && <LearningSaveStatus dirty={dirty} />}
     </div>
   );
 }

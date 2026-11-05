@@ -209,6 +209,24 @@ test('controller consumes the full reversible state and invalidates source, inpu
   expect(c.getSnapshot().problem).toBeNull();
   c.clear();
 });
+
+test.each(['%d', '%d  \\n\\n'])(
+  'OJ controller accepts Rust whitespace variant %s and rejects wrong content',
+  async (format) => {
+    const client = new PracticeClient();
+    vi.spyOn(client, 'run').mockImplementation(run);
+    const controller = new GeneratedPracticeController(client);
+    await controller.run('generate');
+    const source = controller.getSnapshot().problem!.referenceSource;
+    controller.edit(source.replace('%d\\n', format));
+    await controller.run('grade');
+    expect(controller.getSnapshot().assessment?.verdict).toBe('passed');
+    controller.edit(source.replace('printf("', 'printf("wrong='));
+    await controller.run('grade');
+    expect(controller.getSnapshot().assessment?.verdict).not.toBe('passed');
+    controller.invalidate();
+  },
+);
 test.each(['edit', 'input', 'selection', 'clear', 'unmount'])(
   'late controller result discarded after %s',
   async (action) => {

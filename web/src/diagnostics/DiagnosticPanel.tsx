@@ -19,7 +19,6 @@ export function DiagnosticPanel({
   return (
     <section className="diagnostic-panel" aria-labelledby={heading} data-testid="diagnostic-panel">
       <h4 id={heading}>错误诊断</h4>
-      <p className="diagnostic-caption">GCC 风格教学展示 · 错误来自当前检查或执行；未调用 GCC。</p>
       <ol className="diagnostic-list">
         {diagnostics.map((diagnostic, i) => {
           const view = presentDiagnostic(diagnostic, source);
@@ -32,9 +31,6 @@ export function DiagnosticPanel({
             >
               <p className="diagnostic-heading" role="alert">
                 <code data-testid="diagnostic-gcc">{view.gcc}</code>
-              </p>
-              <p className="diagnostic-caption">
-                {view.stage} · {view.origin} · 当前教学文件 {view.file}
               </p>
               {view.range && view.excerpt ? (
                 <>
@@ -52,8 +48,7 @@ export function DiagnosticPanel({
                     第 {view.range.start.line} 行，第 {view.range.start.column} 列
                     {view.range.end.line !== view.range.start.line &&
                       `，范围至第 ${view.range.end.line} 行`}
-                    {view.range.byteRange.start === view.range.byteRange.end && '（插入位置）'}
-                    。列从 1 开始，按 Unicode 字符计数，制表符计一列。
+                    {view.range.byteRange.start === view.range.byteRange.end && '（插入位置）'}。
                   </p>
                 </>
               ) : (

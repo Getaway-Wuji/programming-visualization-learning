@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { act, createElement, Fragment, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
+import { MemoryRouter } from 'react-router';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { LearningServiceState } from '../../web/src/learning/service';
 import { loadGoalConfiguration } from '../../web/src/learning/goals';
@@ -65,11 +66,11 @@ function initialState(): LearningServiceState {
 }
 function publish(state: LearningServiceState) {
   learning.state = state;
-  root.render(createElement(currentComponent));
+  root.render(createElement(MemoryRouter, null, createElement(currentComponent)));
 }
 async function render(component: ComponentType) {
   currentComponent = component;
-  await act(async () => root.render(createElement(component)));
+  await act(async () => root.render(createElement(MemoryRouter, null, createElement(component))));
 }
 function input(label: string) {
   const element = container.querySelector<HTMLInputElement>(`input[aria-label="${label}"]`);

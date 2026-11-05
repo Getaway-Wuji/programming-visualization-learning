@@ -288,3 +288,28 @@ it('code-only history keeps original text and rejects old generations or foreign
   await history.reload();
   expect(history.restoreCandidate(row!.entryId)).toBeNull();
 });
+
+it.each(memoryBugQuestions)(
+  '$exerciseRef.id accepts whitespace and rejects changed output in actual Rust',
+  async (question) => {
+    const c = client();
+    for (const [suffix, passed] of [
+      ['', true],
+      ['  \n\n', true],
+      ['wrong', false],
+    ] as const) {
+      const source = question.solutionSource.replace('"\\n"', JSON.stringify(suffix));
+      const result = await c.execute(
+        bugRequest(question, source, question.tests[0].caseKey, '1'),
+        0,
+      );
+      expect(acceptedBugJudgement(result)?.status).toBe(passed ? 'met' : 'unmet');
+      if (passed)
+        expect(
+          JSON.parse(Buffer.from(raw.at(-1)!.resultBase64, 'base64').toString()).bugJudgement
+            .status,
+        ).toBe('unmet');
+    }
+    c.invalidate();
+  },
+);
