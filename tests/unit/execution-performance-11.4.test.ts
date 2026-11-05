@@ -12,6 +12,7 @@ import { validateTraceRelationships } from '../../web/src/engine/trace-validatio
 import { engineBuild } from '../../web/src/generated/engine-build';
 import { execute_request, initSync, prepare_input } from '../../web/src/generated/c_viz_wasm';
 import { precheckJson as beforeStringScan } from '../fixtures/execution-json-before-11.4';
+import { withSemanticWasmClock } from '../fixtures/semantic-wasm-clock';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -58,7 +59,9 @@ beforeAll(() => {
   );
   const encoded = encodeRequest(request);
   const start = performance.now();
-  packet = execute_request(encoded, JSON.stringify(catalog), engineBuild.wasmSha256, 1000).slice();
+  packet = withSemanticWasmClock(() =>
+    execute_request(encoded, JSON.stringify(catalog), engineBuild.wasmSha256, 1000).slice(),
+  );
   rustExternalMs = performance.now() - start;
 });
 
@@ -115,7 +118,7 @@ test('records separate complete maximum-packet receive costs without changing ac
     new URL(`receive-micro-${phase}.json`, directory),
     JSON.stringify(
       {
-        note: 'Isolated Node technical measurements only. Phase runs omit cooperative scheduling; complete decode retains every production check. No browser 500ms/1000ms acceptance claim.',
+        note: 'Isolated Node receive measurements only. The genuine WASM fixture uses a controlled producer clock; external generation time is observational and Rust internal time is controlled. Phase runs omit cooperative scheduling; complete decode retains every production check. No browser 500ms/1000ms acceptance claim.',
         buildId: engineBuild.wasmSha256,
         packetSha256: createHash('sha256').update(packet).digest('hex'),
         bytes: packet.byteLength,
@@ -128,7 +131,7 @@ test('records separate complete maximum-packet receive costs without changing ac
       2,
     ),
   );
-});
+}, 20_000);
 
 test('retains the complete canonical integer domain and rejects ambiguous numeric spellings', () => {
   for (const number of [

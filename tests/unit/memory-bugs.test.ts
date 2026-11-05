@@ -26,6 +26,7 @@ import {
 } from '../../web/src/memory-bugs/authority';
 import { MemoryBugHistory, emptyMemoryWorkspace } from '../../web/src/memory-bugs/history';
 import type { EditorSnapshot } from '../../web/src/storage/editor-history';
+import { withSemanticWasmClock } from '../fixtures/semantic-wasm-clock';
 
 const bytes = Uint8Array.from(readFileSync('web/src/generated/memory/c_viz_memory_bg.wasm'));
 const compiled = new WebAssembly.Module(bytes);
@@ -66,7 +67,8 @@ afterAll(() => {
     JSON.stringify(
       {
         semanticAdapter: true,
-        clientClock: 'controlled; real browser checks actual 1000ms',
+        clientClock:
+          'client and synchronous WASM fixture producer controlled; real browser checks actual 1000ms',
         buildId: engineBuild.wasmSha256,
         rawGzipSha256: createHash('sha256').update(compressed).digest('hex'),
         summaries,
@@ -97,13 +99,15 @@ function client() {
           remainingMs: number;
         }) {
           const request = JSON.parse(new TextDecoder().decode(message.buffer));
-          const output = wasm
-            .execute_memory_bug(
-              new Uint8Array(message.buffer),
-              message.buildId,
-              message.remainingMs,
-            )
-            .slice();
+          const output = withSemanticWasmClock(() =>
+            wasm
+              .execute_memory_bug(
+                new Uint8Array(message.buffer),
+                message.buildId,
+                message.remainingMs,
+              )
+              .slice(),
+          );
           raw.push({
             request,
             resultBase64: Buffer.from(output).toString('base64'),

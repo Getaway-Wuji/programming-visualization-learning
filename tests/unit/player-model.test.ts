@@ -5,6 +5,7 @@ import { decodeResult, encodeRequest, makeAdapterResult } from '../../web/src/en
 import type { ExecuteRequest, ExecuteResult } from '../../web/src/engine/protocol';
 import { initSync, prepare_input, execute_request } from '../../web/src/generated/c_viz_wasm';
 import { engineBuild } from '../../web/src/generated/engine-build';
+import { withSemanticWasmClock } from '../fixtures/semantic-wasm-clock';
 
 const base = new URL('../../tests/fixtures/execution/', import.meta.url);
 const read = (key: string, file: string) => readFileSync(new URL(`${key}/${file}`, base));
@@ -229,7 +230,11 @@ describe('08.1 state and restoration using validated real Rust traces', () => {
     request.input.values = values;
     request.engineRef.buildId = engineBuild.wasmSha256;
     const result = await decodeResult(
-      execute_request(encodeRequest(request), catalog, engineBuild.wasmSha256, 1000).slice().buffer,
+      withSemanticWasmClock(
+        () =>
+          execute_request(encodeRequest(request), catalog, engineBuild.wasmSha256, 1000).slice()
+            .buffer,
+      ),
       request,
     );
     expect(result.trace!.steps).toHaveLength(5330);

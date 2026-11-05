@@ -14,6 +14,7 @@ import {
 } from '../../web/src/engine/execution-schema.generated';
 import type { SchemaValue } from '../../web/src/engine/execution-schema.generated';
 import { parseChunked, precheckJson } from '../../web/src/engine/execution-json';
+import { withSemanticWasmClock } from '../fixtures/semantic-wasm-clock';
 
 const encoder = new TextEncoder(),
   decoder = new TextDecoder();
@@ -102,12 +103,14 @@ describe('specialized protocol validation with real maximum-input Rust packets',
       remainingMs: 1000,
     };
     const start = performance.now();
-    packet = execute_request(
-      encodeRequest(request),
-      JSON.stringify(catalog),
-      engineBuild.wasmSha256,
-      1000,
-    ).slice();
+    packet = withSemanticWasmClock(() =>
+      execute_request(
+        encodeRequest(request),
+        JSON.stringify(catalog),
+        engineBuild.wasmSha256,
+        1000,
+      ).slice(),
+    );
     rustMs = performance.now() - start;
   });
   it('keeps the generated validator exactly reproducible from the frozen schema', () => {
@@ -156,7 +159,7 @@ describe('specialized protocol validation with real maximum-input Rust packets',
       evidence + 'performance-unit.json',
       JSON.stringify(
         {
-          note: 'Real current Rust/WASM in Node; timings are technical observations, browser original-deadline acceptance is tested separately.',
+          note: 'Real current Rust/WASM fixture with a controlled producer clock; external generation and receive timings are technical observations, not original-deadline acceptance. Browser deadlines use real clocks.',
           buildId: engineBuild.wasmSha256,
           bytes: packet.length,
           steps: 5330,

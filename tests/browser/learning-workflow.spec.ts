@@ -6,8 +6,8 @@ const answer =
 const editor = (page: Page) =>
   page.getByRole('textbox', { name: '完整 C 源码 · main.c', exact: true });
 
-async function delayedWorker(page: Page) {
-  await page.addInitScript(() => {
+async function delayedWorker(page: Page, delayMs = 350) {
+  await page.addInitScript((delayMs: number) => {
     const NativeWorker = window.Worker;
     window.Worker = class extends NativeWorker {
       override postMessage(
@@ -17,10 +17,10 @@ async function delayedWorker(page: Page) {
         setTimeout(() => {
           if (Array.isArray(transferOrOptions)) super.postMessage(message, transferOrOptions);
           else super.postMessage(message, transferOrOptions);
-        }, 350);
+        }, delayMs);
       }
     };
-  });
+  }, delayMs);
 }
 
 test('immediate submission takes priority over background block mapping', async ({ page }) => {
@@ -43,6 +43,19 @@ test('cancelling a run allows a subsequent submission', async ({ page }) => {
   await expect(page.getByTestId('oj-verdict')).toHaveCount(0);
   await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(page.getByTestId('oj-verdict')).toHaveText('通过');
+});
+
+test('the original real deadline rejects a delayed Worker without accepting late success', async ({
+  page,
+}) => {
+  await delayedWorker(page, 1_300);
+  await page.goto(exercise);
+  await editor(page).fill(answer);
+  await page.getByRole('button', { name: '提交', exact: true }).click();
+  await expect(page.getByRole('alert').filter({ hasText: 'E_DEADLINE' }).first()).toBeVisible();
+  await page.waitForTimeout(500);
+  await expect(page.getByTestId('oj-verdict')).toHaveCount(0);
+  await expect(page.getByRole('alert').filter({ hasText: 'E_DEADLINE' }).first()).toBeVisible();
 });
 
 test('unsaved edits are protected on sidebar navigation and browser back', async ({ page }) => {

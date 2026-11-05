@@ -31,6 +31,7 @@ jobs:
       - name: Install locked dependencies
         run: pwsh -NoProfile -File scripts/task.ps1 ci
       - name: Build Rust and Vite application
+        id: product_build
         run: pwsh -NoProfile -File scripts/task.ps1 build
       - name: Check TypeScript
         run: pwsh -NoProfile -File scripts/task.ps1 typecheck
@@ -39,12 +40,16 @@ jobs:
       - name: Check formatting
         run: pwsh -NoProfile -File scripts/task.ps1 format:check
       - name: Run frontend unit tests
-        run: pwsh -NoProfile -File scripts/task.ps1 test --maxWorkers=2
+        run: pwsh -NoProfile -File scripts/task.ps1 test --maxWorkers=1
       - name: Check Rust and run workspace tests
+        if: ${{ !cancelled() && steps.product_build.outcome == 'success' }}
         run: pwsh -NoProfile -File scripts/task.ps1 check:rust
       - name: Test optional AI gateway
+        if: ${{ !cancelled() && steps.product_build.outcome == 'success' }}
         run: pwsh -NoProfile -File scripts/task.ps1 test:ai-proxy
       - name: Install the pinned Chromium browser
+        if: ${{ !cancelled() && steps.product_build.outcome == 'success' }}
         run: pwsh -NoProfile -File scripts/task.ps1 browser:install:chromium
       - name: Check learning and editing workflows
+        if: ${{ !cancelled() && steps.product_build.outcome == 'success' }}
         run: pwsh -NoProfile -File scripts/task.ps1 test:workflow
