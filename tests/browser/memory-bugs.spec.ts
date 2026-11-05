@@ -171,9 +171,19 @@ test.afterEach(async ({ page }, info) => {
 for (const [index, q] of memoryBugQuestions.entries())
   test(`real pointer/loop failure and durable repair: ${q.exerciseRef.id}`, async ({ page }) => {
     await open(page, index);
+    const before = await rows(page);
     await page.getByRole('button', { name: '提交', exact: true }).click();
-    await expect(root(page)).toHaveAttribute('data-state', 'unmet');
-    await expect(page.getByTestId('oj-verdict')).toHaveText('未通过');
+    if (index < 2) {
+      await expect(root(page)).toHaveAttribute('data-state', 'unmet');
+      await expect(page.getByTestId('oj-verdict')).toHaveText('未通过');
+    } else {
+      await expect(root(page)).toHaveAttribute('data-state', 'failed');
+      await expect(page.getByTestId('oj-verdict')).toHaveText('提交未完成，请重试');
+      await expect(page.getByTestId('oj-verdict')).toHaveAttribute('data-verdict', 'incomplete');
+      const incomplete = await rows(page);
+      for (const store of ['progress', 'receipts', 'ledger'] as const)
+        expect(incomplete[store]).toEqual(before[store]);
+    }
     expect((await rows(page)).ledger).toHaveLength(0);
     const code = ['E_UNINITIALIZED', 'E_DANGLING_POINTER', 'E_STEP_LIMIT', 'E_STEP_LIMIT'][index];
     const failed = await capture(page, q.exerciseRef.id + '-broken');

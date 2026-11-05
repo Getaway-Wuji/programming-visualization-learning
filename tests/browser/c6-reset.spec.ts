@@ -305,7 +305,15 @@ test('actual Rust proofs, reading, group reward and invalid drafts persist atomi
   });
   const beforeLesson = result.before.activities.find((a) => a.kind === 'lesson');
   const afterLesson = result.after.activities.find((a) => a.kind === 'lesson');
-  expect(beforeLesson?.kind === 'lesson' && beforeLesson.completedAt).toBeNull();
+  expect(beforeLesson?.kind === 'lesson' && beforeLesson.completedAt).toBeTruthy();
+  const { revision: beforeRevision, lastEventId: beforeEvent, ...beforeContent } = beforeLesson!;
+  const { revision: afterRevision, lastEventId: afterEvent, ...afterContent } = afterLesson!;
+  expect(afterContent).toEqual(beforeContent);
+  // A later genuine pass can update tracking metadata after automatic reading
+  // already completed this lesson. The completed content and dates stay fixed.
+  expect(afterRevision).toBe(beforeRevision + (afterEvent === beforeEvent ? 0 : 1));
+  expect(result.receiptIds).toContain(beforeEvent);
+  expect(result.receiptIds).toContain(afterEvent);
   expect(afterLesson?.kind === 'lesson' && afterLesson.completedAt).toBeTruthy();
   const exercise = result.after.activities.find((a) => a.kind === 'exercise');
   expect(exercise?.kind === 'exercise' && exercise.firstPass?.caseKeys).toEqual([

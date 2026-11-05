@@ -216,10 +216,9 @@ test('course entries, exact original preparation and existing real C/C++ destina
     await page.goBack();
     await expect(root(page)).toBeVisible();
   }
-  await expect(page.getByRole('link', { name: '今日复习', exact: true }).last()).toHaveAttribute(
-    'href',
-    '#/reviews',
-  );
+  await page.goto('/#/reviews');
+  await expect(page).toHaveURL(/#\/notebook$/);
+  await expect(page.getByRole('heading', { name: '错题与陌生点', exact: true })).toBeVisible();
 });
 test('missing expanded course never impersonates preparation while bundled static teaching remains available', async ({
   page,

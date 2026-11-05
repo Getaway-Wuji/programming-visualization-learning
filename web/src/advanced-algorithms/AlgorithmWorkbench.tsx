@@ -5,6 +5,8 @@ import { Workbench } from '../workbench/Workbench';
 import { DebugSource } from '../debug/DebugSource';
 import { memoryDiagnostics, memoryStepLabels } from '../memory/presentation';
 import type { AdvancedState } from '../engine/advanced-protocol';
+import { StepDetailControl } from '../components/StepDetailControl';
+import type { StepDetail } from '../player/key-steps';
 export function AlgorithmWorkbench({
   controller,
   snap,
@@ -17,10 +19,11 @@ export function AlgorithmWorkbench({
   renderArrays: (state: AdvancedState) => ReactNode;
 }) {
   const { view, result, status } = snap;
+  const [detail, setDetail] = useState<StepDetail>('key');
   useEffect(() => {
-    controller.setTeachingPlayback(true);
+    controller.setTeachingPlayback(detail === 'key');
     return () => controller.setTeachingPlayback(false);
-  }, [controller]);
+  }, [controller, detail]);
   const [mode, setMode] = useState('basic');
   const visibility = useCallback(
     (visible: boolean) => {
@@ -95,6 +98,13 @@ export function AlgorithmWorkbench({
             </p>
           )}
           <div className="custom-playback">
+            <StepDetailControl
+              detail={detail}
+              onChange={(value) => {
+                controller.pause();
+                setDetail(value);
+              }}
+            />
             <button
               className="button button-small"
               disabled={!view.state || !view.cursor}

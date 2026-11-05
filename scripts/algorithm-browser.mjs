@@ -1,3 +1,4 @@
+import { browserScope } from './browser-projects.mjs';
 // Production-built, isolated Chrome harness for the P1 interpreter branch.
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
@@ -110,7 +111,7 @@ try {
         startedAt,
         completedAt: new Date().toISOString(),
         label,
-        browserScope: ['chrome'],
+        browserScope,
         productionBuiltHarness: true,
         isolatedLearningStorage: true,
         files: hashedFiles,

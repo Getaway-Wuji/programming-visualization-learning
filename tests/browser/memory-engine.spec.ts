@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { observeMemoryPackets } from './memory-observation';
 
 const fixture = (name: string) =>
   readFileSync(new URL(`../../shared/fixtures/memory/${name}`, import.meta.url), 'utf8');
@@ -10,14 +11,35 @@ const tree = fixture('tree.cpp');
 const buckets = fixture('buckets.cpp');
 
 test.beforeEach(async ({ page }) => {
+  await page.addInitScript(observeMemoryPackets);
   await page.goto('/memory-harness.html');
   await page.waitForFunction(() => Boolean(window.memoryTest));
 });
 async function execute(page: Page, source: string, language: 'c' | 'cpp', input: number[] = []) {
-  return page.evaluate(
-    ({ source, language, input }) => window.memoryTest.run(source, language, input),
-    { source, language, input },
-  );
+  try {
+    return await page.evaluate(
+      ({ source, language, input }) => window.memoryTest.run(source, language, input),
+      { source, language, input },
+    );
+  } catch (error) {
+    const observed = await page.evaluate(() => {
+      const packet = window.memoryPacketObservations.at(-1);
+      return packet
+        ? {
+            postedAt: packet.postedAt,
+            receivedAt: packet.receivedAt,
+            failedAt: performance.now(),
+            request: packet.request ? new TextDecoder().decode(packet.request) : null,
+            response: packet.response ? new TextDecoder().decode(packet.response) : null,
+          }
+        : null;
+    });
+    await test.info().attach('actual-memory-failure-packet', {
+      body: JSON.stringify(observed),
+      contentType: 'application/json',
+    });
+    throw error;
+  }
 }
 async function restored(page: Page) {
   const replay = await page.evaluate(() => window.memoryTest.replay());

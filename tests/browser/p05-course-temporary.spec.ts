@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
 import { installC6Packets } from './c6-observation';
-import { openCurrentAnswer } from './current-course-helpers';
+import { currentProgramPath } from './current-c6-ui';
 import {
   currentSnapshot,
   currentLocalReady,
@@ -14,7 +14,7 @@ const exercises = (
     chapters: { exercises: C6CourseExercise[] }[];
   }
 ).chapters.flatMap((c) => c.exercises);
-test('P05 review candidate: normal code editing and real AST maps temporarily pass all 32 exercises and 140 groups without granting any learning record', async ({
+test('missing course authority fails closed; current 44 exercises and 176 real unscored runs grant no learning record', async ({
   page,
 }, info) => {
   test.setTimeout(300_000);
@@ -41,11 +41,18 @@ test('P05 review candidate: normal code editing and real AST maps temporarily pa
   await page.unroute(manifest);
   await page.getByRole('button', { name: '重试读取', exact: true }).click();
   await currentLocalReady(page);
+  await page.goto('/#/');
+  await currentLocalReady(page);
   await expect.poll(async () => (await currentSnapshot(page)).settings.goalTemplate).not.toBeNull();
   const before = await currentSnapshot(page);
   const runs = [];
+  // Unscored execution now lives in the ordinary program workbench. Keep each
+  // authored answer and all four real inputs; exercise submission stays scored.
+  await page.goto(currentProgramPath);
+  const editor = page.getByLabel('完整 C 源码 · main.c', { exact: true });
+  await expect(editor).toBeEditable();
   for (const subject of exercises) {
-    await openCurrentAnswer(page, subject.ref.id);
+    await editor.fill(subject.referenceSource);
     for (const group of subject.tests) {
       await page
         .getByLabel('本次试运行输入（ASCII，最多 256 字节）', { exact: true })

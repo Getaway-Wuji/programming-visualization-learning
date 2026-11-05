@@ -199,7 +199,7 @@ for (const slug of ['bubble', 'selection', 'quick'])
     }
     expect(found).toBe(true);
   });
-test('block display preference persists and is honoured by ordinary practice, while repairs never show blocks', async ({
+test('block display preference persists for C practice and repairs, while C++ repairs retain their code editor', async ({
   page,
 }) => {
   await page.goto('/#/settings?panel=display');
@@ -217,7 +217,7 @@ test('block display preference persists and is honoured by ordinary practice, wh
   await expect(page.locator('.blocklySvg')).toBeVisible();
   await page.goto('/#/practice/exercise.c.bug-semicolon');
   await expect(page.getByRole('textbox', { name: '编辑 C 代码', exact: true })).toBeEditable();
-  await expect(page.locator('.blocklySvg')).toHaveCount(0);
+  await expect(page.locator('.blocklySvg')).toBeVisible();
   await page.goto('/#/bugs/memory/exercise.cpp.bug-missing-update');
   await expect(
     page.getByRole('textbox', { name: '编辑关卡 C++ 代码', exact: true }),

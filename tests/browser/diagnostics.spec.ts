@@ -1,9 +1,15 @@
+import { editorValue, editorSelection, expectEditorValue } from './editor-value';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
 import { presentDiagnostic } from '../../web/src/diagnostics/presentation';
-import { blockOptions, blockWorkspace, openBlockKeyboardEditor } from './block-ui';
+import {
+  blockOptions,
+  blockWorkspace,
+  openBlockKeyboardEditor,
+  showPracticeBlocks,
+} from './block-ui';
 import type { AnalysisResult } from '../../web/src/blocks/analysis-types';
 import { openIndependentRepair } from './current-course-helpers';
 
@@ -19,11 +25,11 @@ async function open(page: Page, id = 'exercise.c.bug-semicolon') {
   await openIndependentRepair(page, id);
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
   await expect(page.getByTestId('editor-history')).toHaveAttribute('data-save-state', 'ready');
-  await page.getByRole('combobox', { name: '积木显示', exact: true }).selectOption('show');
+  await showPracticeBlocks(page, { readOnly: false });
   const button = action(page, '编辑 C 并同步积木');
   if (await button.isVisible()) await button.click();
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-  return code(page).inputValue();
+  return editorValue(code(page));
 }
 const withBody = (base: string, body: string) =>
   `${base.slice(0, base.lastIndexOf('return 0;'))}// 中文😀：保留原稿\n${body}\n}\n`;
@@ -99,13 +105,8 @@ for (const [label, body, errorCode] of [
       .getByRole('button', { name: /^定位问题/ })
       .click();
     await expect(code(page)).toBeFocused();
-    expect(
-      await code(page).evaluate((el) => ({
-        start: (el as HTMLTextAreaElement).selectionStart,
-        end: (el as HTMLTextAreaElement).selectionEnd,
-      })),
-    ).toEqual(shown.range!.utf16Range);
-    await expect(code(page)).toHaveValue(draft);
+    expect(await editorSelection(code(page))).toEqual(shown.range!.utf16Range);
+    await expectEditorValue(code(page), draft);
     await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
     expect(
       await page.evaluate(
@@ -170,7 +171,7 @@ test('runtime error locates the frozen executed source and native block, then cl
     .click();
   const actual = page.getByTestId('executed-source-details').getByRole('textbox');
   await expect(actual).toBeFocused();
-  await expect(actual).toHaveValue(request.source.text);
+  await expectEditorValue(actual, request.source.text);
   expect(
     await actual.evaluate((el) => ({
       start: (el as HTMLTextAreaElement).selectionStart,
@@ -192,9 +193,10 @@ test('runtime error locates the frozen executed source and native block, then cl
     'true',
   );
   await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
-  await expect(
+  await expectEditorValue(
     page.getByRole('textbox', { name: '编辑 C 代码', exact: true, includeHidden: true }),
-  ).toHaveValue(draft);
+    draft,
+  );
   expect(await page.evaluate(() => window.__verticalObservation.workers.length)).toBe(count);
   expect(await learning(page)).toEqual(before);
   await mkdir(directory, { recursive: true });
@@ -230,9 +232,10 @@ test('incomplete native blocks can be located without losing the broken draft', 
     .first();
   await expect(locate).toBeVisible();
   await locate.click();
-  await expect(
+  await expectEditorValue(
     blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true }),
-  ).toHaveValue(added);
+    added,
+  );
   expect(await blockOptions(page, /./)).toContain(added);
   await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
   await expect(action(page, '提交练习')).toBeDisabled();
@@ -247,7 +250,7 @@ test('invalid draft survives history save, refresh and explicit restoration', as
   await expect(history).toHaveAttribute('data-save-state', 'ready');
   await history.locator('summary').click();
   await expect(page.getByLabel('所选历史源码', { exact: true })).toHaveText(draft);
-  const entry = await history.getByRole('combobox', { name: '历史版本', exact: true }).inputValue();
+  const entry = await editorValue(history.getByRole('combobox', { name: '历史版本', exact: true }));
   await page.reload();
   await expect(history).toHaveAttribute('data-save-state', 'ready');
   await history.locator('summary').click();
@@ -256,7 +259,7 @@ test('invalid draft survives history save, refresh and explicit restoration', as
   if (await action(page, '编辑 C 并同步积木').isVisible())
     await action(page, '编辑 C 并同步积木').click();
   await settled(page, 'invalid');
-  await expect(code(page)).toHaveValue(draft);
+  await expectEditorValue(code(page), draft);
   await expect(editor(page).getByTestId('diagnostic-item')).toHaveAttribute(
     'data-code',
     'E_PARSE_INVALID',

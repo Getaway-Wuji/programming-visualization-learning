@@ -9,6 +9,7 @@ export function installPhase2Probe() {
     raf: [],
     ticks: [],
     commits: [],
+    foregroundChanges: [],
     longTasks: [],
     configuration: null,
     recording: false,
@@ -16,6 +17,18 @@ export function installPhase2Probe() {
     lastCursor: null,
   };
   scope.phase2Perf = audit;
+  const recordForeground = ({ type }: Event) => {
+    if (audit.recording)
+      audit.foregroundChanges.push({
+        at: performance.now(),
+        type,
+        visibility: document.visibilityState,
+        focus: document.hasFocus(),
+      });
+  };
+  document.addEventListener('visibilitychange', recordForeground);
+  window.addEventListener('focus', recordForeground);
+  window.addEventListener('blur', recordForeground);
   const compile = WebAssembly.compile.bind(WebAssembly);
   WebAssembly.compile = (...args) => {
     audit.compilations++;
@@ -95,11 +108,11 @@ export function installPhase2Probe() {
     if (!config) return;
     const readState = () =>
       config.currentC6
-        ? [...document.querySelectorAll('.c6-result-pane h2')].some(
-            (e) => e.textContent === '四组全部通过',
-          ) &&
-          [...document.querySelectorAll('[role="status"]')].some(
-            (e) => e.textContent === '本次判题记录已保存。',
+        ? document.querySelector('[data-testid="oj-verdict"]')?.textContent === '通过' &&
+          document.querySelector('.app-shell')?.getAttribute('data-learning-storage-status') ===
+            'ready' &&
+          ![...document.querySelectorAll('.oj-answer button')].some(
+            (e) => e.textContent === '提交中…',
           )
           ? 'passed'
           : null

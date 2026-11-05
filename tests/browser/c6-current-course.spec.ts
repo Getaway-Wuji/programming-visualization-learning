@@ -1,4 +1,5 @@
-import { installC6Packets, observedC6Packet } from './c6-observation';
+import { observedC6Execution } from './c6-execution-observation';
+import { installC6Packets } from './c6-observation';
 import { readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { expect, test } from '@playwright/test';
@@ -6,6 +7,12 @@ import { decodeC6Response, type C6JudgeRequest } from '../../web/src/engine/c6-p
 import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
 import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
 import type { LedgerEntry, Progress } from '../../web/src/storage/model';
+import {
+  assertCompleteC6Replay,
+  currentSource,
+  expectCurrentSource,
+  submitCurrentVerdict,
+} from './current-c6-ui';
 
 const source = JSON.parse(readFileSync('content/c/primer6-teaching/source-2.0.0.json', 'utf8')) as {
   chapters: { exercises: C6CourseExercise[] }[];
@@ -25,14 +32,12 @@ for (const exercise of exercises) {
   }, info) => {
     await page.addInitScript(installC6Packets);
     await page.goto(`/#/practice/${exercise.ref.id}`);
-    const editor = page.getByLabel('完整 C 源码 · main.c', { exact: true });
-    await expect(editor).toHaveValue(exercise.starterSource);
+    const editor = currentSource(page);
+    await expectCurrentSource(page, exercise.starterSource);
     await editor.fill(exercise.referenceSource);
-    await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-    await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
-    await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
-    const captured = await observedC6Packet(page);
-    expect(captured).toMatchObject({ count: 1, moduleSeen: true, terminated: true });
+    await submitCurrentVerdict(page);
+    await expect(page.locator('.c6-trace')).toHaveCount(0);
+    const captured = await observedC6Execution(page, 'judge');
     expect(captured.request).not.toBeNull();
     expect(captured.response).not.toBeNull();
     const request = JSON.parse(
@@ -50,21 +55,7 @@ for (const exercise of exercises) {
       expect(actual.packet.engine.buildId).toBe(engineBuild.wasmSha256);
       expect(actual.packet.terminal.status).toBe('completed');
       expect(actual.packet.trace?.completeness).toBe('complete');
-      await page
-        .getByRole('group', { name: '选择判题组', exact: true })
-        .getByRole('button', { name: `第 ${index + 1} 组 · 通过`, exact: true })
-        .click();
-      await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
-      await expect(page.locator('.c6-trace')).toHaveAttribute(
-        'data-cursor',
-        String(actual.packet.terminal.cursor),
-      );
-      expect(await page.getByLabel('当前游标标准输出', { exact: true }).textContent()).toBe(
-        exercise.tests[index].expectedStdout || '（暂无输出）',
-      );
-      await page.getByRole('button', { name: '回到开始', exact: true }).click();
-      await expect(page.locator('.c6-trace')).toHaveAttribute('data-cursor', '0');
-      await expect(page.getByLabel('当前游标标准输出', { exact: true })).toHaveText('（暂无输出）');
+      assertCompleteC6Replay(actual.packet, exercise.tests[index].expectedStdout);
     }
     await info.attach('real-current-course-worker-packet', {
       body: gzipSync(JSON.stringify(captured)),
@@ -126,6 +117,8 @@ for (const exercise of exercises) {
     });
     await page.goto('/#/');
     await page.reload();
-    await expect(page.getByText('0 / 404 个小节已完成', { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('progressbar', { name: 'C 课程完成进度', exact: true }),
+    ).toHaveAttribute('value', '0');
   });
 }

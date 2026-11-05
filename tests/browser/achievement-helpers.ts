@@ -53,7 +53,7 @@ export async function pointerPass(p: Page, index = 0) {
   await expect(editor).toBeEditable();
   await achievementReady(p);
   await editor.fill(q.solutionSource);
-  await p.getByRole('button', { name: '提交全部4组', exact: true }).click();
+  await p.getByRole('button', { name: '提交', exact: true }).click();
   await expect(p.getByTestId('memory-bug-session')).toHaveAttribute('data-state', 'passed');
   await expect(p.getByTestId('memory-bug-session')).toHaveAttribute('data-save-state', 'saved');
 }

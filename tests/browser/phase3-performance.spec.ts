@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- Passive CDP/Worker measurements have variable technical metadata. */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { expect, test, type Page } from '@playwright/test';
 import { installPhase2Probe, readPhase2Probe } from './phase2-performance-probe';
 import { waitForPhase2Archive } from './phase2-ready';
@@ -82,7 +83,10 @@ test('P2 current entry pages and maximum supported interactive workloads keep qu
   mkdirSync(output, { recursive: true });
   const report: any = {
     task: '20.4',
-    registration: '1.0.79',
+    registration: JSON.parse(readFileSync('content/build/source-lock.json', 'utf8')).releaseVersion,
+    sourceLockSha256: createHash('sha256')
+      .update(readFileSync('content/build/source-lock.json'))
+      .digest('hex'),
     method:
       '11.4 shared aggregate 20/5Mbps, 40ms RTT, Brotli HTTPS; trusted click to full accepted result plus two animation frames',
     navigation: [],

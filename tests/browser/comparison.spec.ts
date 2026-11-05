@@ -1,3 +1,4 @@
+import { expectEditorValue, editorValue } from './editor-value';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import { test, expect, type Page } from '@playwright/test';
@@ -13,10 +14,18 @@ test.use({ timezoneId: 'Asia/Shanghai' });
 test.beforeAll(() => mkdir(folder, { recursive: true }));
 async function ready(p: Page) {
   await p.bringToFront();
+  await p.goto('/#/');
+  await expect(p.getByTestId('daily-goal-summary')).toBeVisible();
+  await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
   await p.goto('/#/compare');
   await expect(p.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
   await expect(p.getByTestId('input-field-values')).toBeVisible();
+  const seedOptions = p.getByText('复现随机数据', { exact: true });
+  if (await seedOptions.count()) {
+    const details = seedOptions.locator('..');
+    if ((await details.getAttribute('open')) === null) await seedOptions.click();
+  }
 }
 async function prepare(p: Page, values?: string) {
   if (values !== undefined) await p.getByTestId('input-field-values').fill(values);
@@ -103,7 +112,8 @@ test('two independent real C programs receive identical data; controls and full-
   expect(real[0].request.identity.contextId).not.toBe(real[1].request.identity.contextId);
   for (let i = 0; i < 2; i++) {
     await lane(p, i).locator('.comparison-source > summary').click();
-    await expect(lane(p, i).getByRole('textbox', { name: '当前执行的 C 代码' })).toHaveValue(
+    await expectEditorValue(
+      lane(p, i).getByRole('textbox', { name: '当前执行的 C 代码' }),
       real[i].request.source.text,
     );
     await expect(lane(p, i).getByTestId('lane-input')).toContainText('[7,-3,0,5,-3,2,9]');
@@ -219,14 +229,14 @@ test('algorithm swap, text, seed, length, generation and reset immediately inval
   await expect(group(p)).toHaveAttribute('data-phase', 'idle');
   await p.getByTestId('input-length-values').fill('5');
   await p.getByRole('button', { name: '按种子复现', exact: true }).click();
-  const draft = await p.getByTestId('input-field-values').inputValue();
+  const draft = await editorValue(p.getByTestId('input-field-values'));
   await prepare(p);
   await p.locator('.comparison-input-settings > summary').click();
   await p.getByRole('button', { name: '按种子复现', exact: true }).click();
   await expect(group(p)).toHaveAttribute('data-phase', 'idle');
-  await expect(p.getByTestId('input-field-values')).toHaveValue(draft);
+  await expectEditorValue(p.getByTestId('input-field-values'), draft);
   await p.getByRole('button', { name: '恢复示例输入', exact: true }).click();
-  await expect(p.getByTestId('input-field-values')).toHaveValue('7, -3, 0, 5, -3, 2, 9');
+  await expectEditorValue(p.getByTestId('input-field-values'), '7, -3, 0, 5, -3, 2, 9');
   expect(await count(p)).toBe(4);
 });
 
@@ -306,8 +316,9 @@ test('editing during pending execution cancels old group; navigation and reload 
   await expect(lane(p, 0)).toHaveAttribute('data-length', '0');
   await expect(lane(p, 1)).toHaveAttribute('data-length', '0');
   await p.goto('/#/cases');
+  await p.getByText('基础语法与更多案例', { exact: true }).click();
   await p.getByRole('link', { name: '打开同数据双算法对比' }).click();
-  await expect(p.getByTestId('input-field-values')).toHaveValue('7, -3, 0, 5, -3, 2, 9');
+  await expectEditorValue(p.getByTestId('input-field-values'), '7, -3, 0, 5, -3, 2, 9');
   await expect(group(p)).toHaveAttribute('data-phase', 'idle');
   await p.reload();
   await expect(group(p)).toHaveAttribute('data-phase', 'idle');

@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import { expect, test, type Page } from '@playwright/test';
 
 async function ready(page: Page) {
@@ -127,9 +128,7 @@ test('UTF-8 source quota keeps exact 32 KiB and retains oversized original text'
   await edit(page, source + 'x');
   await expect(page.getByRole('button', { name: '运行代码', exact: true })).toBeDisabled();
   await expect(page.getByRole('button', { name: '保存草稿', exact: true })).toBeDisabled();
-  await expect(page.getByRole('textbox', { name: 'C 代码', exact: true })).toHaveValue(
-    source + 'x',
-  );
+  await expectEditorValue(page.getByRole('textbox', { name: 'C 代码', exact: true }), source + 'x');
   await recover(page);
 });
 
@@ -396,7 +395,7 @@ test('HTML remains literal text and code, input, output and trace never enter im
   await expect(page.getByTestId('custom-output')).toHaveText(payload);
   await expect(page.getByTestId('custom-output').locator('img,script')).toHaveCount(0);
   await page.getByRole('button', { name: '编辑代码', exact: true }).click();
-  await expect(page.getByRole('textbox', { name: 'C 代码', exact: true })).toHaveValue(source);
+  await expectEditorValue(page.getByRole('textbox', { name: 'C 代码', exact: true }), source);
   expect(
     await page.evaluate(() => (window as unknown as { qaPwn?: number }).qaPwn),
   ).toBeUndefined();
@@ -433,7 +432,7 @@ test('HTML remains literal text and code, input, output and trace never enter im
     contentType: 'application/json',
   });
   await page.reload();
-  await expect(page.getByRole('textbox', { name: 'C 代码', exact: true })).toHaveValue(source);
-  await expect(page.getByRole('textbox', { name: '整数输入' })).toHaveValue('7');
+  await expectEditorValue(page.getByRole('textbox', { name: 'C 代码', exact: true }), source);
+  await expectEditorValue(page.getByRole('textbox', { name: '整数输入' }), '7');
   await expect(page.getByTestId('custom-output')).toHaveCount(0);
 });

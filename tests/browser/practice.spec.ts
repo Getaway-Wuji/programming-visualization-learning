@@ -1,3 +1,8 @@
+import { showPracticeBlocks } from './block-ui';
+import { assertEveryC6State } from './current-c6-ui';
+import { editorValue, expectEditorValue } from './editor-value';
+import { waitForPhase2Archive } from './phase2-ready';
+import { expectCurrentSaved } from './current-c6-ui';
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
@@ -33,18 +38,18 @@ const exercises = (
   .slice(0, 6);
 const editor = (p: Page) => p.getByLabel('完整 C 源码 · main.c', { exact: true });
 const panel = (p: Page) => p.getByTestId('practice-execution');
-const action = (p: Page) => p.getByRole('button', { name: '判定全部四组', exact: true });
+const action = (p: Page) => p.getByRole('button', { name: '提交', exact: true });
 const exercise = exercises[0];
 test.beforeEach(async ({ context }) => {
   await context.addInitScript(installC6Packets);
 });
 async function saved(page: Page) {
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await expectCurrentSaved(page);
   await localReady(page);
 }
 async function submit(page: Page) {
   await action(page).click();
-  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+  await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toBeVisible();
   await saved(page);
   return assertCurrentJudge(page, exercise, 'passed');
 }
@@ -65,16 +70,16 @@ for (const [index, e] of exercises.entries()) {
     await localReady(page);
     const before = await snapshot(page);
     await page.goto(`/#/practice/${e.ref.id}`);
-    await expect(editor(page)).toHaveValue(e.starterSource);
+    await expectEditorValue(editor(page), e.starterSource);
     const wrong = e.referenceSource.replace('printf("', 'printf("wrong=');
     expect(wrong).not.toBe(e.referenceSource);
     await editor(page).fill(wrong);
     await action(page).click();
-    await expect(page.getByRole('heading', { name: '本次尚未通过', exact: true })).toBeVisible();
+    await expect(page.getByTestId('oj-verdict')).toHaveText('未通过');
     await saved(page);
     const failed = await assertCurrentJudge(page, e, 'failed', wrong);
-    await expect(page.getByRole('button', { name: /第 1 组 · 待修正/ })).toBeVisible();
-    await expect(page.locator('.c6-result-pane')).toContainText('输出：不符');
+    expect(failed.result.cases[0].stdoutMatches).toBe(false);
+    await expect(page.locator('.c6-trace')).toHaveCount(0);
     const failedState = await snapshot(page);
     expect(failedState.ledger).toEqual(before.ledger);
     expect(failedState.dailyFacts).toEqual(before.dailyFacts);
@@ -93,15 +98,14 @@ for (const [index, e] of exercises.entries()) {
     await editor(page).fill(e.referenceSource);
     await expect(page.locator('.c6-trace')).toHaveCount(0);
     await action(page).click();
-    await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+    await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toBeVisible();
     await saved(page);
     const passed = await assertCurrentJudge(page, e, 'passed');
     expect(passed.request.runId).not.toBe(failed.request.runId);
     expect(passed.request.sourceRevision).not.toBe(failed.request.sourceRevision);
-    await page.getByRole('button', { name: '第 4 组 · 通过', exact: true }).click();
-    await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
-    await expect(page.getByLabel('当前游标标准输出')).toHaveText(e.tests[3].expectedStdout);
-    await expect(editor(page)).toHaveValue(passed.request.source);
+    passed.result.cases.forEach((c, n) => assertEveryC6State(c.packet, e.tests[n].expectedStdout));
+    await expect(page.locator('.c6-trace')).toHaveCount(0);
+    await expectEditorValue(editor(page), passed.request.source);
     const after = await snapshot(page);
     expect(after.progress.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(1);
     expect(after.progress.filter((r) => r.eventType === 'lesson.completed')).toEqual([]);
@@ -130,8 +134,9 @@ test('same exercise review and return preserve one accepted trace and cursor; ed
 }) => {
   await observeCaseSetExecution(page);
   await openIndependentRepair(page, 'exercise.c.bug-semicolon');
+  await showPracticeBlocks(page, { readOnly: false });
   const code = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
-  const source = await code.inputValue();
+  const source = await editorValue(code);
   await panel(page).getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'passed');
   const raw = await observedCaseSetExecute(page),
@@ -149,7 +154,8 @@ test('same exercise review and return preserve one accepted trace and cursor; ed
   await panel(page).getByRole('link', { name: '查看本次复盘', exact: true }).click();
   await expect(controls).toHaveAttribute('data-cursor', cursor!);
   await expect(page.getByTestId('trace-view')).toBeInViewport({ ratio: 0.75 });
-  await expect(page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true })).toHaveValue(
+  await expectEditorValue(
+    page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
     request.source.text,
   );
   await expect(
@@ -164,13 +170,14 @@ test('same exercise review and return preserve one accepted trace and cursor; ed
     ),
   ).toBe(count);
   await code.clear();
-  await expect(code).toHaveValue('');
+  await expectEditorValue(code, '');
   await code.fill(source.replace('printf("%d', 'printf("wrong=%d'));
   await expect(page.getByTestId('practice-stdout')).toHaveCount(0);
   await panel(page).getByRole('link', { name: '查看本次复盘', exact: true }).click();
   await expect(page.getByText(/还没有可复盘的运行/)).toBeVisible();
   await page.getByRole('link', { name: '返回练习工作区', exact: true }).click();
   await openIndependentRepair(page, 'exercise.c.bug-semicolon');
+  await showPracticeBlocks(page, { readOnly: false });
   await panel(page).getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'passed');
   await page.goto('/#/courses');
@@ -201,6 +208,8 @@ test('another page clearing local data destroys the accepted practice session an
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
+  await expect(page.getByTestId('oj-verdict')).toHaveCount(0);
+  await waitForPhase2Archive(page);
   await expect(page.locator('.c6-trace')).toHaveCount(0);
   const cleared = await snapshot(page);
   expect(cleared.meta.generation).not.toBe(before.meta.generation);
@@ -230,7 +239,7 @@ test('cancel drops a held real result and a fresh visible submission recovers', 
   });
   await action(page).click();
   await expect.poll(() => page.evaluate(() => window.currentRunGate.held)).toBe(1);
-  await page.getByRole('button', { name: '取消本次操作', exact: true }).click();
+  await page.getByRole('button', { name: '取消', exact: true }).click();
   await expect(action(page)).toBeEnabled();
   await expect(page.locator('.c6-trace')).toHaveCount(0);
   const held = await heldCurrentResult(page);
@@ -301,7 +310,7 @@ test('a missing practice release fails closed and its visible retry loads only t
   expect(await snapshot(page)).toEqual(before);
   await page.unroute(resource);
   await page.getByRole('button', { name: '重试读取', exact: true }).click();
-  await expect(editor(page)).toHaveValue(exercise.starterSource);
+  await expectEditorValue(editor(page), exercise.starterSource);
   assertLearningEqual(before, await snapshot(page));
   expect(await currentJudgeCount(page)).toBe(0);
   await testInfo.attach('projection-fault-scope', {

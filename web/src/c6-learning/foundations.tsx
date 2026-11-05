@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import type { EntityRef } from '../content/types';
 import type { LearningServiceState } from '../learning/service';
 import { useLearning } from '../learning/react';
-import { KnowledgeMarkButton } from '../review-notebook/marks';
+import { KnowledgeMarkButton, KnowledgeMarksStatus } from '../review-notebook/marks';
 
 // These are current prerequisites, not equivalences or imported old completions.
 const preparations: Record<string, readonly string[]> = {
@@ -48,8 +48,9 @@ export function C6Foundation({ prior }: { prior: EntityRef }) {
             ? '基础准备完成'
             : '基础准备尚未完成'
           : '学习记录待确认'}
-        · 按新书小节的阅读确认与绑定练习记录判断。
+        · 按新书小节的阅读进度与绑定练习记录判断。
       </p>
+      <KnowledgeMarksStatus />
       <ul>
         {foundation.lessons.map((lesson) => (
           <li key={lesson.id}>

@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import { useLearning } from '../learning/react';
-import { KnowledgeMarkButton } from '../review-notebook/marks';
+import { KnowledgeMarkButton, KnowledgeMarksStatus } from '../review-notebook/marks';
 import { useMemo } from 'react';
 
 export function C6KnowledgeOverview() {
@@ -46,6 +46,7 @@ export function C6KnowledgeOverview() {
       <p className="muted">
         完成小节后点亮对应知识；章内小节全部完成后点亮整章。不熟悉的知识可以单独标记。
       </p>
+      <KnowledgeMarksStatus />
       {chapters.map((chapter) => {
         const lessons = chapter.lessons;
         return (

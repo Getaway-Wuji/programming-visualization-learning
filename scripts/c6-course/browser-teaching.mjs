@@ -1,3 +1,4 @@
+import { browserScope } from '../browser-projects.mjs';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
@@ -96,6 +97,7 @@ try {
     env: {
       ...process.env,
       PATH: dirname(process.execPath) + delimiter + process.env.PATH,
+      PLAYWRIGHT_BROWSERS_PATH: resolve('.tools/playwright'),
       PLAYWRIGHT_JSON_OUTPUT_FILE: resolve(folder, 'results.json'),
     },
   });
@@ -115,7 +117,7 @@ try {
   });
   writeFileSync(
     resolve(folder, 'run.json'),
-    JSON.stringify({ label, code, sources: hashed, stdout, stderr }, null, 2) + '\n',
+    JSON.stringify({ label, code, browserScope, sources: hashed, stdout, stderr }, null, 2) + '\n',
   );
   assert.equal(code, 0);
 } finally {

@@ -1,8 +1,11 @@
+import { finishCurrentReading } from './current-c6-ui';
+import { editorValue } from './editor-value';
+import { expectCurrentSaved } from './current-c6-ui';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import { decodeC6Response, type C6JudgeRequest } from '../../web/src/engine/c6-protocol';
+import { decodeC6Response, type C6Request } from '../../web/src/engine/c6-protocol';
 import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
 import { installC6Packets, observedC6Packet } from './c6-observation';
 import { readFileSync } from 'node:fs';
@@ -186,7 +189,7 @@ async function evidence(testInfo: TestInfo, page: Page, label: string, value: un
 }
 
 async function localReady(page: Page) {
-  await expect(saveStatus(page)).toHaveAttribute('data-save-status', 'ready');
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 
 async function openHome(page: Page) {
@@ -221,12 +224,10 @@ async function saveTargets(page: Page, targets: GoalTargets) {
 async function confirmLesson(page: Page, review = false) {
   for (const id of review ? [lessonId] : [lessonId, 'lesson.c6.s2.2.1']) {
     await page.goto(`/#/lessons/${id}`);
-    await expect(page.locator('.c6-reading-confirmation')).toBeVisible();
+    await expect(page.getByTestId('reading-end')).toBeAttached();
     await localReady(page);
     const before = await snapshot(page);
-    await page
-      .getByRole('button', { name: review ? '确认今日复习' : '我已读完本节', exact: true })
-      .click();
+    await finishCurrentReading(page);
     await expect
       .poll(async () => (await snapshot(page)).receipts.length)
       .toBeGreaterThan(before.receipts.length);
@@ -242,14 +243,14 @@ async function openPractice(page: Page) {
 
 async function preparePass(page: Page) {
   await page.getByLabel('完整 C 源码 · main.c', { exact: true }).fill(exercise.referenceSource);
-  await expect(page.getByRole('button', { name: '判定全部四组', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: '提交', exact: true })).toBeEnabled();
 }
 
 async function submitPrepared(page: Page, saved = true) {
-  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
+  await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toBeVisible();
   if (saved) {
-    await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+    await expectCurrentSaved(page);
     await expect(page.locator('.app-shell')).toHaveAttribute(
       'data-learning-storage-status',
       'ready',
@@ -258,6 +259,17 @@ async function submitPrepared(page: Page, saved = true) {
     await expect(
       saveStatus(page).getByRole('button', { name: '重试未保存操作', exact: true }),
     ).toBeVisible();
+}
+
+/** Background EDIT synchronization can restart after peer archive updates. */
+async function formalJudges(page: Page) {
+  return page.evaluate(() =>
+    window.c6CurrentPackets.flatMap((packet) => {
+      if (!packet.request) return [];
+      const request = JSON.parse(new TextDecoder().decode(packet.request)) as object;
+      return 'judgeVersion' in request ? [request] : [];
+    }),
+  );
 }
 
 /** Preserve genuine public Worker bytes after the complete submission has settled. */
@@ -275,15 +287,25 @@ async function captureRuns(page: Page, testInfo: TestInfo, label: string) {
     'runs',
   );
   await mkdir(directory, { recursive: true });
+  await testInfo.attach(`passively-observed-workers-${label}`, {
+    body: JSON.stringify(captured),
+    contentType: 'application/json',
+  });
   const identities = [];
   for (const [index, worker] of captured.entries()) {
     expect(worker.moduleSeen).toBe(true);
     expect(worker.terminated).toBe(true);
     expect(worker.request).toBeTruthy();
-    expect(worker.response).toBeTruthy();
     const requestBytes = Buffer.from(worker.request!, 'base64');
+    const request = JSON.parse(requestBytes.toString('utf8')) as C6Request;
+    if (!('judgeVersion' in request)) {
+      // Submission may terminate a genuine background EDIT before it replies.
+      // Account for that request; only the formal judge must have a result.
+      expect(request).toMatchObject({ editVersion: '2.0.0' });
+      continue;
+    }
+    expect(worker.response).toBeTruthy();
     const resultBytes = Buffer.from(worker.response!, 'base64');
-    const request = JSON.parse(requestBytes.toString('utf8')) as C6JudgeRequest;
     expect(request.source).toBe(exercise.referenceSource);
     expect(request.profileRef).toEqual(exercise.profileRef);
     const result = await decodeC6Response(
@@ -317,6 +339,7 @@ async function captureRuns(page: Page, testInfo: TestInfo, label: string) {
       sourceSha256: request.sourceSha256,
     });
   }
+  expect(identities.length).toBeGreaterThan(0);
   return identities;
 }
 
@@ -532,15 +555,49 @@ test('two real tabs passing the same exercise share one daily award and one set 
     await openPractice(target);
     await preparePass(target);
   }
-  await Promise.all([submitPrepared(page), submitPrepared(other)]);
+  const targets = [page, other];
+  await Promise.all(
+    targets.map(async (target) => {
+      await target.getByRole('button', { name: '提交', exact: true }).click();
+      await expect(target.getByTestId('oj-verdict')).toHaveText('通过');
+      await expect(target.getByRole('button', { name: '提交', exact: true })).toBeEnabled();
+    }),
+  );
+  const a = await captureRuns(page, testInfo, 'concurrent-a');
+  const b = await captureRuns(other, testInfo, 'concurrent-b');
+  expect(a).toHaveLength(1);
+  expect(b).toHaveLength(1);
+  for (const target of targets) {
+    const judgesBeforeRetry = await formalJudges(target);
+    expect(judgesBeforeRetry).toHaveLength(1);
+    await expect(target.locator('.app-shell')).toHaveAttribute(
+      'data-learning-storage-status',
+      /^(ready|conflict)$/,
+    );
+    if (
+      (await target.locator('.app-shell').getAttribute('data-learning-storage-status')) ===
+      'conflict'
+    ) {
+      await expect(saveStatus(target)).toHaveAttribute('data-save-status', 'conflict');
+      await saveStatus(target).getByRole('button', { name: '重试未保存操作', exact: true }).click();
+    }
+    await localReady(target);
+    expect(await formalJudges(target)).toEqual(judgesBeforeRetry);
+  }
+  // A shared progress row can exist before this page's own receipt is durable.
+  // Require both actual submissions, without creating a replacement judgment.
+  await expect
+    .poll(
+      async () =>
+        (await snapshot(page)).receipts.filter((row) => row.eventType === 'exercise.passed').length,
+    )
+    .toBe(2);
   const merged = await snapshot(page);
   assertPoints(merged, 35, 1);
   expect(merged.dailyFacts).toHaveLength(3);
   expect(merged.goals).toHaveLength(1);
   expect(merged.receipts.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(2);
   expect(new Set(merged.receipts.map((row) => row.eventId)).size).toBe(merged.receipts.length);
-  const a = await captureRuns(page, testInfo, 'concurrent-a');
-  const b = await captureRuns(other, testInfo, 'concurrent-b');
   await evidence(testInfo, page, 'concurrent-one-daily-award', { merged, a, b });
 });
 
@@ -568,7 +625,9 @@ test('two open goal forms detect a stale template revision and preserve the winn
   await expect
     .poll(async () => {
       const states = await Promise.all(
-        [page, other].map((target) => saveStatus(target).getAttribute('data-save-status')),
+        [page, other].map((target) =>
+          target.locator('.app-shell').getAttribute('data-learning-storage-status'),
+        ),
       );
       return states.filter((value) => value === 'conflict').length;
     })
@@ -579,7 +638,7 @@ test('two open goal forms detect a stale template revision and preserve the winn
   noLearningChange(before, saved);
   const states = await Promise.all(
     [page, other].map(async (target) => ({
-      status: await saveStatus(target).getAttribute('data-save-status'),
+      status: await target.locator('.app-shell').getAttribute('data-learning-storage-status'),
       form: await goalForm(target).innerText(),
     })),
   );
@@ -610,10 +669,12 @@ test('a native daily-award failure aborts the whole pass and retry after midnigh
   );
   expect(attempted.map((row) => row.sourceId)).toEqual([
     'reward.exercise.first-pass',
-    'reward.lesson.first-completion',
     'reward.daily-goal.once',
   ]);
   const runs = await captureRuns(page, testInfo, 'quota-original-submission');
+  expect(runs).toHaveLength(1);
+  const judgesBeforeRetry = await formalJudges(page);
+  expect(judgesBeforeRetry).toHaveLength(1);
   await page.clock.setFixedTime(secondDay);
   await page.goto('/#/');
   await saveStatus(page).getByRole('button', { name: '重试未保存操作', exact: true }).click();
@@ -621,7 +682,7 @@ test('a native daily-award failure aborts the whole pass and retry after midnigh
   const retried = await snapshot(page);
   assertPoints(retried, 35, 1);
   expect([...retried.ledger].sort((a, b) => a.sourceId.localeCompare(b.sourceId))).toEqual(
-    [...attempted].sort((a, b) => a.sourceId.localeCompare(b.sourceId)),
+    [...before.ledger, ...attempted].sort((a, b) => a.sourceId.localeCompare(b.sourceId)),
   );
   expect(retried.goals).toHaveLength(1);
   const pass = retried.receipts.find((row) => row.eventType === 'exercise.passed')!;
@@ -629,7 +690,7 @@ test('a native daily-award failure aborts the whole pass and retry after midnigh
   expect(pass.occurredAt).toBe(firstDay.toISOString());
   expect(retried.goals[0].achievedAt).toBe(firstDay.toISOString());
   expect(retried.dailyFacts.every((row) => row.localDate === pass.localDate)).toBe(true);
-  expect(await page.evaluate(() => window.c6CurrentPackets.length)).toBe(1);
+  expect(await formalJudges(page)).toEqual(judgesBeforeRetry);
   await openHome(page);
   await expect(summary(page)).toHaveAttribute('data-goal-state', 'preview');
   await page.reload();
@@ -738,7 +799,8 @@ test('clearing creates a new generation with a valid recommended template and re
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
-  await expect(saveStatus(page)).toContainText('本地数据已清除');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await openHome(page);
   await expect(summary(page)).toHaveAttribute('data-goal-state', 'preview');
   const cleared = await snapshot(page);
@@ -789,7 +851,7 @@ test('a reachable custom case-only goal requires genuine adjacent viewing and ac
   expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0, diagnostics: [] });
   expect(result.trace?.completeness).toBe('complete');
   expect(request.source.text).toBe(
-    await casePanel.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }).inputValue(),
+    await editorValue(casePanel.getByRole('textbox', { name: '当前执行的 C 代码', exact: true })),
   );
   const length = result.trace!.steps.length;
   expect(length).toBe(6);

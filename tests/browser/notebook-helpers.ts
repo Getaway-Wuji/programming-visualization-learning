@@ -17,11 +17,18 @@ const solutions = JSON.parse(
 const folder = `.artifacts/15.2/browser/${process.env.TASK_EVIDENCE_LABEL ?? 'local'}`;
 const panel = (page: Page) => page.getByTestId('practice-execution');
 const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
+// Historical migration hosts retain the old banner; the current app exposes
+// storage readiness on its shell and shows a banner only for unresolved saves.
 const ready = (page: Page) =>
-  expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
-  );
+  expect
+    .poll(async () => {
+      const shell = page.locator('.app-shell');
+      return (
+        (await shell.getAttribute('data-learning-storage-status')) ??
+        (await page.getByTestId('learning-save-status').getAttribute('data-save-status'))
+      );
+    })
+    .toMatch(p05CourseRelease.registered ? /^ready$/ : /^(ready|unsaved)$/);
 async function archive(page: Page): Promise<StorageSnapshot> {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {

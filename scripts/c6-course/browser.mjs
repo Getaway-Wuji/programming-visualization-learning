@@ -1,3 +1,4 @@
+import { browserScope } from '../browser-projects.mjs';
 // Production-built, isolated Chrome harness for the CONTENT2 repository.
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
@@ -121,7 +122,7 @@ try {
         completedAt: new Date().toISOString(),
         label,
         node: process.version,
-        browserScope: ['chrome'],
+        browserScope,
         productionBuiltHarness: true,
         isolatedLearningStorage: true,
         files: hashedFiles,

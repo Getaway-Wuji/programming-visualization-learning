@@ -137,7 +137,7 @@ test('15.1 formal: real completion lights only related nodes and both-end edges,
   await expect(row(page, 'lesson.c6.s1.1').locator('small')).toHaveText('已点亮');
   await confirm(page, 'lesson.c6.s2.1');
   await home(page);
-  await expect(row(page, 'lesson.c6.s2.1').locator('small')).toHaveText('未学完');
+  await expect(row(page, 'lesson.c6.s2.1').locator('small')).toHaveText('已点亮');
   await openAnswer(page, 'exercise.c6.s2.1');
   await submit(page);
   await capture(page, 'current-four-cases');
@@ -175,7 +175,7 @@ test('15.1 formal: real completion lights only related nodes and both-end edges,
   await expect(count(other)).toHaveText('我的知识图谱 · 0 / 421 已点亮');
 });
 
-test('15.1 formal: failed native transaction keeps graph unlearned until original event retry is acknowledged', async ({
+test('15.1 formal: failed exercise transaction preserves already-read nodes until the original exercise event retry is acknowledged', async ({
   page,
 }) => {
   await page.addInitScript(installC6Packets);
@@ -203,8 +203,8 @@ test('15.1 formal: failed native transaction keeps graph unlearned until origina
   await page.evaluate(() => {
     (window as unknown as { __knowledgeQuota: { armed: boolean } }).__knowledgeQuota.armed = true;
   });
-  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
+  await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toBeVisible();
   await expect(page.getByTestId('learning-save-status')).toContainText('尚未保存');
   await expect(page.getByRole('button', { name: '重试未保存操作', exact: true })).toBeVisible();
   await capture(page, 'quota-accepted-current-four-cases');
@@ -216,7 +216,7 @@ test('15.1 formal: failed native transaction keeps graph unlearned until origina
   expect(failed.progress).toEqual(before.progress);
   expect(failed.ledger).toEqual(before.ledger);
   await page.goto('/#/');
-  await expect(count(page)).toHaveText('我的知识图谱 · 0 / 421 已点亮');
+  await expect(count(page)).toHaveText('我的知识图谱 · 1 / 421 已点亮');
   await page
     .getByTestId('learning-save-status')
     .getByRole('button', { name: '重试未保存操作', exact: true })

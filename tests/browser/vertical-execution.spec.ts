@@ -1,3 +1,4 @@
+import { expectEditorValue, editorValue } from './editor-value';
 import { createHash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -140,7 +141,8 @@ async function prepareAndRun(page: Page, item: VerticalCase, reload = false) {
   await panel(page).getByRole('button', { name: '应用输入并准备', exact: true }).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   for (const fragment of item.sourceFragments)
-    await expect(code(page)).toHaveValue(
+    await expectEditorValue(
+      code(page),
       new RegExp(fragment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
     );
   await expect(code(page)).toHaveAttribute('readonly', '');
@@ -158,7 +160,7 @@ async function prepareAndRun(page: Page, item: VerticalCase, reload = false) {
     await expect(diagnostic.getByTestId('diagnostic-gcc')).toContainText(
       `[${item.diagnosticCode}]`,
     );
-    await expect(diagnostic).toContainText('运行 · Rust 解释器');
+    await expect(diagnostic.getByRole('button', { name: /定位问题/ })).toBeVisible();
   }
 }
 
@@ -178,7 +180,7 @@ async function saveCapture(
     subject: { id: string };
     program: { id: string; sourceExample: string; exampleInput: InputValues };
   };
-  const displayedSource = await code(page).inputValue();
+  const displayedSource = await editorValue(code(page));
   const inputText = await page.getByTestId('execution-input').locator('code').first().textContent();
   const inputValues = JSON.parse(inputText!) as InputValues;
   const stdout = await page.getByTestId('execution-output').textContent();
@@ -191,7 +193,7 @@ async function saveCapture(
   );
   const draft: Record<string, string> = {};
   for (const key of Object.keys(item.draft))
-    draft[key] = await page.getByTestId(`input-field-${key}`).inputValue();
+    draft[key] = await editorValue(page.getByTestId(`input-field-${key}`));
   const ui = {
     caseId: item.caseId,
     route: new URL(page.url()).hash,

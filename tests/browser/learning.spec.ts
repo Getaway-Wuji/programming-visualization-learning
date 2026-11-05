@@ -1,3 +1,5 @@
+import { expectEditorValue } from './editor-value';
+import { waitForPhase2Archive } from './phase2-ready';
 import { randomUUID } from 'node:crypto';
 import { expect, test, type Page } from '@playwright/test';
 import type { StorageSnapshot } from '../../web/src/storage/model';
@@ -78,22 +80,16 @@ async function productionSnapshot(page: Page): Promise<StorageSnapshot> {
 
 async function readySettings(page: Page, panel = 'display') {
   await page.goto(`/#/settings?panel=${panel}`);
-  await expect(page.getByTestId('learning-save-status')).not.toHaveAttribute(
-    'data-save-status',
+  await expect(page.locator('.app-shell')).not.toHaveAttribute(
+    'data-learning-storage-status',
     'loading',
   );
 }
 async function saved(page: Page) {
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
-  await expect(
-    page.getByTestId('learning-save-status').getByText('已保存', { exact: true }),
-  ).toBeVisible();
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 
-test('production display and basic avatar settings survive refresh and closing/reopening the page in the same browser', async ({
+test('production display settings and the retained avatar survive refresh and closing/reopening the page', async ({
   page,
   context,
 }, testInfo) => {
@@ -107,36 +103,36 @@ test('production display and basic avatar settings survive refresh and closing/r
   await expect(page.locator('html')).toHaveAttribute('data-appearance', 'minimal');
   await expect(page.locator('html')).toHaveAttribute('data-reduced-motion', 'on');
   await expect(page.locator('html')).toHaveCSS('background-color', 'rgb(16, 17, 18)');
-  await page.getByRole('tab', { name: '基础形象', exact: true }).click();
-  await page.getByLabel('形象强调色', { exact: true }).fill('#a246c8');
-  await page.getByRole('button', { name: '保存基础形象', exact: true }).click();
-  await saved(page);
+  await expect(page.getByRole('tab', { name: '基础形象', exact: true })).toHaveCount(0);
   const persisted = await productionSnapshot(page);
   expect(persisted.settings).toMatchObject({
     theme: 'dark',
     reducedMotion: 'on',
     playbackRate: 1.5,
   });
-  expect(persisted.avatar).toEqual({ presetId: 'avatar.basic.01', accentColor: '#A246C8' });
+  expect(persisted.avatar).toEqual({ presetId: 'avatar.basic.01', accentColor: '#168A72' });
   expect(persisted.progress).toEqual([]);
   expect(persisted.receipts).toEqual([]);
   expect(persisted.ledger).toEqual([]);
 
   await page.reload();
-  await expect(page.getByLabel('形象强调色', { exact: true })).toHaveValue('#a246c8');
+  await expectEditorValue(page.getByRole('combobox', { name: '主题', exact: true }), 'dark');
   expect(await productionSnapshot(page)).toEqual(persisted);
   await page.close();
   const reopened = await context.newPage();
   await readySettings(reopened);
-  await expect(reopened.getByRole('combobox', { name: '主题', exact: true })).toHaveValue('dark');
-  await expect(reopened.getByRole('combobox', { name: '动画效果', exact: true })).toHaveValue('on');
-  await expect(reopened.getByRole('combobox', { name: '默认播放速度', exact: true })).toHaveValue(
+  await expectEditorValue(reopened.getByRole('combobox', { name: '主题', exact: true }), 'dark');
+  await expectEditorValue(reopened.getByRole('combobox', { name: '动画效果', exact: true }), 'on');
+  await expectEditorValue(
+    reopened.getByRole('combobox', { name: '默认播放速度', exact: true }),
     '1.5',
   );
   expect(await productionSnapshot(reopened)).toEqual(persisted);
   await reopened.getByRole('link', { name: '学习首页', exact: true }).first().click();
-  await reopened.getByRole('link', { name: '查看积分明细', exact: true }).click();
-  await expect(reopened.getByRole('heading', { name: '已入账 0 分', exact: true })).toBeVisible();
+  await reopened.getByRole('button', { name: '积分 0，查看明细', exact: true }).click();
+  await expect(
+    reopened.getByRole('button', { name: '积分 0，查看明细', exact: true }),
+  ).toBeVisible();
   await expect(
     reopened.getByRole('dialog').getByRole('heading', { name: '暂无积分记录', exact: true }),
   ).toBeVisible();
@@ -170,6 +166,9 @@ test('production save failure shows unsaved and preserves the prior settings, th
     };
   });
   await readySettings(page);
+  await expect
+    .poll(async () => (await productionSnapshot(page)).settings.goalTemplate)
+    .not.toBeNull();
   const before = await productionSnapshot(page);
   await page.getByRole('combobox', { name: '主题', exact: true }).selectOption('dark');
   await page.evaluate(() =>
@@ -254,21 +253,24 @@ test('an older queued save preserves a newer draft created while a completed nat
     ).releaseReadonlyAcknowledgment(),
   );
   await expect.poll(async () => (await productionSnapshot(page)).settings.theme).toBe('dark');
-  await expect(page.getByTestId('learning-save-status')).toContainText('当前更改尚未保存');
-  await expect(theme).toHaveValue('light');
+  await expect(page.getByText('这次显示设置更改尚未保存。', { exact: true })).toBeVisible();
+  await expectEditorValue(theme, 'light');
 });
 
 test('passive course reading, finite practice options and case previews leave all local learning data unchanged', async ({
   page,
 }) => {
   await readySettings(page);
+  await waitForPhase2Archive(page);
   const before = await productionSnapshot(page);
   await page.goto('/#/lessons/lesson.c6.s2.1');
   await expect(page.locator('.c6-teaching-reading')).toBeVisible();
-  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeEnabled();
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'false');
   await page.goto('/#/practice/exercise.c6.s2.1');
-  await expect(page.getByRole('button', { name: '判定全部四组', exact: true })).toBeEnabled();
-  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).not.toHaveValue('');
+  await expect(page.getByRole('button', { name: '提交', exact: true })).toBeEnabled();
+  await expectEditorValue(page.getByLabel('完整 C 源码 · main.c', { exact: true }), '', {
+    not: true,
+  });
   await page.goto('/#/visualize/case.c.bubble-sort');
   await expect(page.getByTestId('content-sample')).toHaveAttribute(
     'data-content-scope',
@@ -324,7 +326,7 @@ test('an outdated production settings draft reports a revision conflict and cann
   await expect(page.getByTestId('learning-save-status')).toContainText('冲突');
   expect(await productionSnapshot(page)).toEqual(newer);
   await page.reload();
-  await expect(page.getByRole('combobox', { name: '主题', exact: true })).toHaveValue('dark');
+  await expectEditorValue(page.getByRole('combobox', { name: '主题', exact: true }), 'dark');
   await page.getByRole('combobox', { name: '主题', exact: true }).selectOption('light');
   await page.getByRole('button', { name: '保存显示设置', exact: true }).click();
   await saved(page);

@@ -1,3 +1,7 @@
+import { assertCurrentJudge } from './current-practice-observation';
+import { assertEveryC6State } from './current-c6-ui';
+import { editorValue } from './editor-value';
+import { expectCurrentSaved } from './current-c6-ui';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { readFileSync } from 'node:fs';
@@ -255,9 +259,9 @@ async function runCase(page: Page, testInfo: TestInfo, label: string) {
   expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0, diagnostics: [] });
   expect(result.trace?.completeness).toBe('complete');
   expect(request.source.text).toBe(
-    await casePanel(page)
-      .getByRole('textbox', { name: '当前执行的 C 代码', exact: true })
-      .inputValue(),
+    await editorValue(
+      casePanel(page).getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
+    ),
   );
   const length = result.trace!.steps.length;
   expect(length).toBeGreaterThan(1);
@@ -275,9 +279,9 @@ async function runCase(page: Page, testInfo: TestInfo, label: string) {
     steps: length,
     requestSourceMatchesDisplayed:
       request.source.text ===
-      (await casePanel(page)
-        .getByRole('textbox', { name: '当前执行的 C 代码', exact: true })
-        .inputValue()),
+      (await editorValue(
+        casePanel(page).getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
+      )),
   });
   await writeFile(join(directory, 'request.json'), requestBytes);
   await writeFile(join(directory, 'result.json'), resultBytes);
@@ -330,19 +334,16 @@ async function openPractice(page: Page) {
 }
 
 async function preparePractice(page: Page) {
-  await expect(page.getByRole('button', { name: '判定全部四组', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: '提交', exact: true })).toBeEnabled();
 }
 
 async function submitPractice(page: Page, terminal: 'passed' | 'unmet' = 'passed') {
   await preparePractice(page);
-  const submitted = await editor(page).inputValue();
-  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-  await expect(
-    page.getByRole('heading', {
-      name: terminal === 'passed' ? '四组全部通过' : '本次尚未通过',
-      exact: true,
-    }),
-  ).toBeVisible();
+  const submitted = await editorValue(editor(page));
+  await page.getByRole('button', { name: '提交', exact: true }).click();
+  await expect(page.getByTestId('oj-verdict')).toHaveText(
+    terminal === 'passed' ? '通过' : '未通过',
+  );
   const worker = await observedC6Packet(page);
   expect(worker.moduleSeen && worker.terminated).toBe(true);
   const requestBytes = Buffer.from(worker.request!, 'base64'),
@@ -381,7 +382,7 @@ async function submitPractice(page: Page, terminal: 'passed' | 'unmet' = 'passed
 }
 
 async function savedPass(page: Page) {
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await expectCurrentSaved(page);
   await localReady(page);
 }
 
@@ -444,7 +445,8 @@ async function clearArchive(page: Page) {
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
-  await expect(saveStatus(page)).toContainText('本地数据已清除');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 
 test('a real complete adjacent case viewing requires active confirmation and awards five only once across replay, refresh and another run', async ({
@@ -560,15 +562,15 @@ test('a real exercise first pass awards ten and confirmed lesson completion adds
   const passed = await snapshot(page);
   assertRewards(passed, 10);
   expect(passed.ledger).toHaveLength(1);
-  await expect(
-    page.getByRole('group', { name: '选择判题组', exact: true }).getByRole('button'),
-  ).toHaveCount(4);
-  await page.getByRole('button', { name: '第 4 组 · 通过', exact: true }).click();
-  await expect(page.locator('.c6-trace')).toBeVisible();
+  const judged = await assertCurrentJudge(page, exercise, 'passed');
+  judged.result.cases.forEach((c, i) =>
+    assertEveryC6State(c.packet, exercise.tests[i].expectedStdout),
+  );
+  await expect(page.locator('.c6-trace')).toHaveCount(0);
   await expect(confirmation(page)).toHaveCount(0);
   await expect(page.getByRole('button', { name: '确认已观看', exact: true })).toHaveCount(0);
   await confirmLesson(page);
-  await expect(page.locator('.c6-reading-confirmation')).toContainText('本节已完成');
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
   const completed = await snapshot(page);
   assertRewards(completed, 35);
   expect(completed.ledger).toHaveLength(3);
@@ -656,8 +658,34 @@ test('two real exercise pages concurrently passing share one ten-point first rew
     await preparePractice(target);
   }
   await Promise.all([page, other].map((target) => submitPractice(target)));
-  await savedPass(page);
-  await savedPass(other);
+  for (const target of [page, other]) {
+    // Concurrent CAS writes can require an explicit retry. Preserve the
+    // original accepted judgment instead of submitting or minting another fact.
+    await expect(target.getByRole('button', { name: '提交', exact: true })).toBeEnabled();
+    await expect(target.locator('.app-shell')).toHaveAttribute(
+      'data-learning-storage-status',
+      /^(ready|conflict)$/,
+    );
+    const judgeCount = () =>
+      target.evaluate(
+        () =>
+          window.c6CurrentPackets.filter((packet) =>
+            packet.request
+              ? 'judgeVersion' in JSON.parse(new TextDecoder().decode(packet.request))
+              : false,
+          ).length,
+      );
+    expect(await judgeCount()).toBe(1);
+    if (
+      (await target.locator('.app-shell').getAttribute('data-learning-storage-status')) ===
+      'conflict'
+    ) {
+      await expect(saveStatus(target)).toHaveAttribute('data-save-status', 'conflict');
+      await saveStatus(target).getByRole('button', { name: '重试未保存操作', exact: true }).click();
+    }
+    await savedPass(target);
+    expect(await judgeCount()).toBe(1);
+  }
   const merged = await snapshot(page);
   assertRewards(merged, 10);
   expect(merged.ledger).toHaveLength(1);
@@ -677,7 +705,7 @@ test('a native second-ledger quota failure rolls all awards and pass effects bac
   const before = await snapshot(page);
   await openPractice(page);
   await editor(page).fill(exercise.referenceSource);
-  await armLedgerQuota(page, 'reward.lesson.first-completion');
+  await armLedgerQuota(page, 'reward.daily-goal.once');
   await submitPractice(page);
   await expect(
     saveStatus(page).getByRole('button', { name: '重试未保存操作', exact: true }),
@@ -688,7 +716,7 @@ test('a native second-ledger quota failure rolls all awards and pass effects bac
   const attempted = (await ledgerFault(page)).attempted;
   expect(attempted.map((row) => row.sourceId)).toEqual([
     'reward.exercise.first-pass',
-    'reward.lesson.first-completion',
+    'reward.daily-goal.once',
   ]);
   const runsBefore = await page.evaluate(
     () => window.c6CurrentPackets.filter((worker) => worker.request).length,
@@ -698,8 +726,10 @@ test('a native second-ledger quota failure rolls all awards and pass effects bac
   await retryOriginal(page);
   const retried = await snapshot(page);
   assertRewards(retried, 35);
-  expect(retried.ledger.filter((entry) => entry.sourceId !== 'reward.daily-goal.once')).toEqual(
-    attempted,
+  expect(retried.ledger).toEqual(
+    [...before.ledger, ...attempted].sort((a, b) =>
+      `${a.sourceId}:${a.subjectId}`.localeCompare(`${b.sourceId}:${b.subjectId}`),
+    ),
   );
   expect(retried.ledger).toHaveLength(3);
   expect(retried.receipts.filter((row) => row.eventType === 'exercise.passed')).toHaveLength(1);
@@ -718,42 +748,51 @@ test('a native second-ledger quota failure rolls all awards and pass effects bac
   });
 });
 
-test('a case ledger quota failure remains unsaved and original accepted confirmation can retry after input invalidation', async ({
-  page,
-}, testInfo) => {
-  await installLedgerQuota(page);
-  await observeCaseSetExecution(page);
-  await openCase(page);
-  const before = await snapshot(page);
-  await prepareCase(page);
-  const run = await runCase(page, testInfo, 'case-ledger-quota-real-run');
-  await walk(page, 0, run.length);
-  await armLedgerQuota(page, 'reward.case.first-view');
-  await confirmViewing(page).click();
-  await expect(confirmation(page)).toHaveAttribute('data-view-state', 'unsaved');
-  await expect(saveStatus(page)).toHaveAttribute('data-save-status', 'unsaved');
-  const failed = await snapshot(page);
-  assertNoLearningChange(before, failed, true);
-  const attempted = (await ledgerFault(page)).attempted;
-  expect(attempted).toHaveLength(1);
-  await page.getByTestId('input-field-x').fill('12');
-  await expect(confirmViewing(page)).toBeDisabled();
-  await page.goto('/#/');
-  await retryOriginal(page);
-  const retried = await snapshot(page);
-  assertRewards(retried, 5);
-  expect(retried.ledger).toEqual(attempted);
-  expect(retried.receipts.filter((row) => row.eventType === 'case.view-confirmed')).toHaveLength(1);
-  await page.reload();
-  await localReady(page);
-  expect(await snapshot(page)).toEqual(retried);
-  await evidence(testInfo, 'native-case-quota-and-original-retry', {
-    before,
-    failed,
-    attempted,
-    retried,
+for (const invalidate of [false, true])
+  test(`a case ledger quota failure retries its original confirmation ${invalidate ? 'after input invalidation' : 'on the same case screen'}`, async ({
+    page,
+  }, testInfo) => {
+    await installLedgerQuota(page);
+    await observeCaseSetExecution(page);
+    await openCase(page);
+    const before = await snapshot(page);
+    await prepareCase(page);
+    const run = await runCase(page, testInfo, 'case-ledger-quota-real-run');
+    await walk(page, 0, run.length);
+    await armLedgerQuota(page, 'reward.case.first-view');
+    await confirmViewing(page).click();
+    await expect(confirmation(page)).toHaveAttribute('data-view-state', 'unsaved');
+    await expect(saveStatus(page)).toHaveAttribute('data-save-status', 'unsaved');
+    const failed = await snapshot(page);
+    assertNoLearningChange(before, failed, true);
+    const attempted = (await ledgerFault(page)).attempted;
+    expect(attempted).toHaveLength(1);
+    if (invalidate) {
+      await page.getByTestId('input-field-x').fill('12');
+      await expect(confirmViewing(page)).toBeDisabled();
+      await page.goto('/#/');
+    }
+    await retryOriginal(page);
+    if (!invalidate) {
+      await expect(confirmation(page)).toHaveAttribute('data-view-state', 'saved');
+      await expect(confirmation(page).getByRole('alert')).toHaveCount(0);
+    }
+    const retried = await snapshot(page);
+    assertRewards(retried, 5);
+    expect(retried.ledger).toEqual(attempted);
+    expect(retried.receipts.filter((row) => row.eventType === 'case.view-confirmed')).toHaveLength(
+      1,
+    );
+    await page.reload();
+    await localReady(page);
+    expect(await snapshot(page)).toEqual(retried);
+    await evidence(testInfo, `native-case-quota-and-original-retry-${invalidate}`, {
+      before,
+      failed,
+      attempted,
+      retried,
+    });
   });
-});
 
 test('clearing from another page discards a pending case award and prevents old-generation revival', async ({
   page,
@@ -801,7 +840,7 @@ test('the points detail explains the native ledger and fixed first-reward rules 
   const saved = await snapshot(page);
   assertRewards(saved, 35);
   await page.goto('/#/?panel=points');
-  await expect(page.getByRole('heading', { name: '已入账 35 分', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: '积分 35，查看明细', exact: true })).toBeVisible();
   const dialog = page.getByRole('dialog', { name: '积分明细', exact: true });
   await expect(dialog).toBeVisible();
   await expect(dialog.locator('.learning-history-list li')).toHaveCount(3);

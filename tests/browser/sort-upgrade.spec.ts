@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import { C6_RESET_STORES } from '../../web/src/storage/c6-reset';
 import { fileURLToPath } from 'node:url';
 import { build, type Rollup } from 'vite';
@@ -44,10 +45,7 @@ const coverage = (page: Page) => page.getByTestId('case-view-coverage');
 
 async function ready(page: Page) {
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 
 /** Read the real database without creating facts, receipts or execution evidence. */
@@ -301,9 +299,10 @@ test('old rewarded sorting history survives the reviewed upgrade and genuine rep
       expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0 });
       expect(result.trace?.completeness).toBe('complete');
       expect(result.identity).toEqual(request.identity);
-      await expect(
+      await expectEditorValue(
         panel(page).getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
-      ).toHaveValue(request.source.text.replace(/\r\n?/gu, '\n'));
+        request.source.text.replace(/\r\n?/gu, '\n'),
+      );
       await controls(page)
         .getByRole('combobox', { name: '步骤显示', exact: true })
         .selectOption('all');

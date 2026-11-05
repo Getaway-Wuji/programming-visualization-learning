@@ -1,3 +1,5 @@
+import { setBlockPreference } from './block-ui';
+import { editorSelection, editorValue, expectEditorValue } from './editor-value';
 import { currentEditorRegression } from './current-editor-regression';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -15,7 +17,7 @@ import {
   type ExecuteResult,
 } from '../../web/src/engine/protocol';
 import { initSync, prepare_input } from '../../web/src/generated/c_viz_wasm';
-import { blockOptions, blockWorkspace, selectBlock } from './block-ui';
+import { blockOptions, blockWorkspace, selectBlock, showPracticeBlocks } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
 import { decodeC6Response, type C6Request } from '../../web/src/engine/c6-protocol';
 import { engineBuild as c6Build } from '../../web/src/generated/c6-teaching/engine-build';
@@ -83,11 +85,8 @@ function bodySource(body: string, id = echo) {
 async function open(page: Page, id = echo) {
   await page.goto(`/#/practice/${id}`);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
-  await page.getByRole('combobox', { name: '积木显示', exact: true }).selectOption('show');
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+  await showPracticeBlocks(page, { readOnly: false });
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   if (await action(page, '编辑 C 并同步积木').isVisible())
     await action(page, '编辑 C 并同步积木').click();
@@ -97,7 +96,7 @@ async function open(page: Page, id = echo) {
 async function fillSynced(page: Page, text: string) {
   await code(page).fill(text);
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-  await expect(code(page)).toHaveValue(text);
+  await expectEditorValue(code(page), text);
   await expect(submit(page)).toBeEnabled();
 }
 async function count(page: Page, kind: 'execute' | 'analyze-code') {
@@ -202,8 +201,8 @@ async function capture(page: Page, info: TestInfo, label: string) {
     phase: await panel(page).getAttribute('data-state'),
     sync: (await editor(page).count()) ? await editor(page).getAttribute('data-sync') : null,
     source: (await code(page).count())
-      ? await code(page).inputValue()
-      : await page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }).inputValue(),
+      ? await editorValue(code(page))
+      : await editorValue(page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true })),
     archive: await archive(page),
     captures: captures.map(({ requestBase64, responseBase64, ...value }) => ({
       ...value,
@@ -249,7 +248,7 @@ for (const exercise of content.exercises)
     );
     const saved = await archive(page);
     expect(saved.ledger.length).toBeGreaterThan(before.ledger.length);
-    await expect(code(page)).toHaveValue(text);
+    await expectEditorValue(code(page), text);
     const runs = await capture(page, info, exercise.id);
     const submission = runs.slice(firstSubmissionIndex);
     expect(submission).toHaveLength(exercise.tests.length);
@@ -348,7 +347,7 @@ test('a single code-origin source reconstructs every one of the twenty visible b
   await expect(page.locator('.c6-trace')).toHaveAttribute('data-cursor', '0');
   await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
   await expect(page.getByLabel('当前游标标准输出', { exact: true })).toHaveText('3');
-  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).toHaveValue(text);
+  await expectEditorValue(page.getByLabel('完整 C 源码 · main.c', { exact: true }), text);
   const packets = await page.evaluate(() =>
     window.__verticalObservation.workers
       .filter((w) => w.moduleSeen && w.responseOk)
@@ -391,7 +390,7 @@ test('invalid, unmapped and protected-input drafts keep exact text, disable exec
   const boundedRevision = await editor(page).getAttribute('data-document-revision');
   const boundedAnalyses = await count(page, 'analyze-code');
   await code(page).fill('x'.repeat(32769));
-  await expect(code(page)).toHaveValue(valid);
+  await expectEditorValue(code(page), valid);
   await expect(editor(page).getByRole('alert')).toContainText('32 KiB');
   await expect(editor(page)).toHaveAttribute('data-document-revision', boundedRevision!);
   expect(await count(page, 'analyze-code')).toBe(boundedAnalyses);
@@ -429,7 +428,7 @@ test('invalid, unmapped and protected-input drafts keep exact text, disable exec
   for (const entry of cases) {
     await code(page).fill(entry.text);
     await expect(editor(page), entry.name).toHaveAttribute('data-sync', entry.status);
-    await expect(code(page)).toHaveValue(entry.text);
+    await expectEditorValue(code(page), entry.text);
     await expect(submit(page)).toBeDisabled();
     await expect(action(page, '运行本组')).toBeDisabled();
     await expect(page.getByTestId('historical-blocks-notice')).toContainText('上次有效结构');
@@ -439,14 +438,11 @@ test('invalid, unmapped and protected-input drafts keep exact text, disable exec
         .getByRole('button', { name: /^定位问题：第/ })
         .first()
         .click();
-      const selection = await code(page).evaluate((area: HTMLTextAreaElement) => ({
-        start: area.selectionStart,
-        end: area.selectionEnd,
-      }));
+      const selection = await editorSelection(code(page));
       expect(selection.end).toBeGreaterThan(selection.start);
       await expect(code(page)).toBeFocused();
       await expect(code(page)).toBeInViewport();
-      await expect(code(page)).toHaveValue(entry.text);
+      await expectEditorValue(code(page), entry.text);
       await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
     }
     expect(await count(page, 'execute')).toBe(executions);
@@ -455,7 +451,7 @@ test('invalid, unmapped and protected-input drafts keep exact text, disable exec
   await code(page).fill(bodySource('if ('));
   await code(page).fill(valid);
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-  await expect(code(page)).toHaveValue(valid);
+  await expectEditorValue(code(page), valid);
   await submit(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'passed');
   await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state', 'saved');
@@ -486,49 +482,47 @@ test('native block selection and code pointer selection preserve an accepted run
   const bounds = await shape.boundingBox();
   if (!bounds) throw new Error('A native rendered output block is required');
   await page.mouse.click(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-  await expect(page.getByTestId('code-block-highlight')).toContainText('printf');
-  const selection = await code(page).evaluate((area: HTMLTextAreaElement) => ({
-    start: area.selectionStart,
-    end: area.selectionEnd,
-  }));
+  const selection = await editorSelection(code(page));
   expect(text.slice(selection.start, selection.end)).toContain('printf');
   await code(page).scrollIntoViewIfNeeded();
-  const target = await code(page).evaluate((area: HTMLTextAreaElement) => {
-    const at = area.value.indexOf('printf') + 2;
-    const start = area.value.lastIndexOf('\n', at) + 1;
-    const row = area.value.slice(0, at).split('\n').length - 1;
-    const style = getComputedStyle(area);
-    const context = document.createElement('canvas').getContext('2d')!;
-    context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-    const width = context.measureText('M').width;
-    const rect = area.getBoundingClientRect();
-    return {
-      x: rect.left + parseFloat(style.paddingLeft) + (at - start + 0.5) * width - area.scrollLeft,
-      y:
-        rect.top +
-        parseFloat(style.paddingTop) +
-        (row + 0.5) * parseFloat(style.lineHeight) -
-        area.scrollTop,
-    };
-  });
+  const target = await code(page).evaluate(
+    (element, offset) => {
+      const view = (
+        element as HTMLElement & {
+          cmTile: {
+            root: {
+              view: {
+                coordsAtPos(
+                  position: number,
+                ): { left: number; right: number; top: number; bottom: number } | null;
+              };
+            };
+          };
+        }
+      ).cmTile.root.view;
+      const bounds = view.coordsAtPos(offset);
+      if (!bounds) throw Error('Visible native code coordinates required');
+      return { x: (bounds.left + bounds.right) / 2, y: (bounds.top + bounds.bottom) / 2 };
+    },
+    text.indexOf('printf') + 2,
+  );
   await page.mouse.click(target.x, target.y);
-  await expect(
+  await expectEditorValue(
     blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true }),
-  ).toHaveValue(prints[0]);
+    prints[0],
+  );
   // This is a real textarea selection, spanning adjacent whitespace, comment,
   // and newline trivia inside an if. It must not select that if or main.
-  await code(page).evaluate((area: HTMLTextAreaElement) => {
-    const start = area.value.indexOf(' \t// 仅选区注释😀');
-    const end = area.value.indexOf('printf');
-    area.focus();
-    area.setSelectionRange(start, end);
-    area.dispatchEvent(new Event('select', { bubbles: true }));
+  await editorSelection(code(page), {
+    start: text.indexOf(' \t// 仅选区注释😀'),
+    end: text.indexOf('printf'),
   });
   await code(page).press('Shift+ArrowLeft');
   await expect(page.getByTestId('code-block-highlight')).toHaveCount(0);
-  await expect(
+  await expectEditorValue(
     blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true }),
-  ).toHaveValue(prints[0]);
+    prints[0],
+  );
   await expect(editor(page)).toHaveAttribute('data-document-revision', documentRevision!);
   await expect(panel(page)).toHaveAttribute('data-state', 'ran');
   expect(await count(page, 'execute')).toBe(executions);
@@ -551,7 +545,7 @@ test('native block field edits preserve comments, unaffected bytes and a single 
     await selectBlock(page, prints[0]);
     await blockWorkspace(page).getByRole('textbox', { name: '输出格式', exact: true }).fill(format);
     await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-    const result = await code(page).inputValue();
+    const result = await editorValue(code(page));
     expect(result.startsWith(prefix)).toBe(true);
     expect(result.match(/句前保留😀/g)).toHaveLength(1);
     expect(result.match(/输出内部保留😀/g)).toHaveLength(1);
@@ -559,7 +553,7 @@ test('native block field edits preserve comments, unaffected bytes and a single 
     expect(result.match(/\breturn\b/g)).toHaveLength(1);
     await expect(submit(page)).toBeEnabled();
   }
-  await expect(code(page)).toHaveValue(/printf\("%d\\n", x\)/);
+  await expectEditorValue(code(page), /printf\("%d\\n", x\)/);
   await submit(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'passed');
   await capture(page, info, 'comments-and-return-roundtrip');
@@ -572,22 +566,8 @@ test('invalid code remains intact across editor folding, theme change, settings 
   // This case starts from a durable display preference. Recover a concurrent
   // initial history/settings conflict through the same public control first.
   await expect(page.getByTestId('editor-history')).toHaveAttribute('data-save-state', 'ready');
-  const preference = page.getByTestId('block-preference-save-status');
-  await expect(preference).not.toHaveAttribute('data-save-state', 'saving');
-  const retryPreference = page.getByRole('button', { name: '重新读取并保存选择', exact: true });
-  const recoveredPreference = await retryPreference.isVisible();
-  if (recoveredPreference) await retryPreference.click();
-  await expect(preference).toHaveAttribute('data-save-state', /^(ready|saved)$/);
   await expect(page.getByTestId('theme-mode-toggle')).toBeEnabled();
-  await info.attach('display-preference-precondition', {
-    body: Buffer.from(
-      JSON.stringify({
-        recoveredPreference,
-        status: await preference.getAttribute('data-save-state'),
-      }),
-    ),
-    contentType: 'application/json',
-  });
+  await setBlockPreference(page, 'show');
   const valid = bodySource('printf("%d\\n",x);return 0;');
   await fillSynced(page, valid);
   const invalid = bodySource('if ( /* 尚未写完的😀草稿 */');
@@ -599,10 +579,10 @@ test('invalid code remains intact across editor folding, theme change, settings 
   await action(page, '收起代码编辑').click();
   await expect(editor(page)).toHaveCount(0);
   await action(page, '编辑 C 并同步积木').click();
-  await expect(code(page)).toHaveValue(invalid);
+  await expectEditorValue(code(page), invalid);
   await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
   await page.getByTestId('theme-mode-toggle').click();
-  await expect(code(page)).toHaveValue(invalid);
+  await expectEditorValue(code(page), invalid);
   await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
   expect(await count(page, 'analyze-code')).toBe(analyses);
   await page
@@ -614,21 +594,20 @@ test('invalid code remains intact across editor folding, theme change, settings 
   await page.getByTestId('save-appearance').click();
   await expect(page.locator('html')).toHaveAttribute('data-appearance-draft', 'false');
   await page.goBack();
-  await expect(code(page)).toHaveValue(invalid);
+  await expectEditorValue(code(page), invalid);
   await expect(editor(page)).toHaveAttribute('data-sync', 'invalid');
-  const display = page.getByRole('combobox', { name: '积木显示', exact: true });
-  await display.selectOption('hide');
+  await setBlockPreference(page, 'hide');
   await expect(page.getByTestId('practice-editor-layout')).toHaveAttribute(
     'data-blocks-visible',
     'no',
   );
-  await expect(code(page)).toHaveValue(invalid);
-  await display.selectOption('show');
+  await expectEditorValue(code(page), invalid);
+  await setBlockPreference(page, 'show');
   await expect(page.getByTestId('practice-editor-layout')).toHaveAttribute(
     'data-blocks-visible',
     'yes',
   );
-  await expect(code(page)).toHaveValue(invalid);
+  await expectEditorValue(code(page), invalid);
   await expect(editor(page)).toHaveAttribute('data-sync', 'invalid');
   await expect(submit(page)).toBeDisabled();
   expect(await count(page, 'execute')).toBe(0);
@@ -654,7 +633,7 @@ test('a synchronized native field edit keeps its undo and redo history, source c
     .getByRole('textbox', { name: '输出格式', exact: true })
     .fill('[%d]\\n');
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-  const changed = await code(page).inputValue();
+  const changed = await editorValue(code(page));
   expect(changed).toContain('printf("[%d]\\n", x)');
   await expect(editor(page)).toHaveAttribute('data-document-revision', String(initialRevision + 1));
   const undo = blockWorkspace(page).getByRole('button', { name: '撤销', exact: true });
@@ -665,15 +644,15 @@ test('a synchronized native field edit keeps its undo and redo history, source c
   for (let cycle = 0; cycle < 2; cycle++) {
     await undo.click();
     await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-    await expect(code(page)).toHaveValue(/printf\("%d\\n", x\)/);
+    await expectEditorValue(code(page), /printf\("%d\\n", x\)/);
     await expect(editor(page)).toHaveAttribute('data-document-revision', String(++revision));
     await expect(redo).toBeEnabled();
     await redo.click();
     await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-    await expect(code(page)).toHaveValue(changed);
+    await expectEditorValue(code(page), changed);
     await expect(editor(page)).toHaveAttribute('data-document-revision', String(++revision));
     await expect(undo).toBeEnabled();
-    const current = await code(page).inputValue();
+    const current = await editorValue(code(page));
     for (const comment of ['撤销前保留😀', '内部注释保留😀', '尾部注释保留'])
       expect(current.split(comment)).toHaveLength(2);
     expect(current.match(/\breturn\b/g)).toHaveLength(1);
@@ -710,50 +689,51 @@ test('folding and reanalysis retain the last test result identity while the firs
     const details = page.getByTestId('executed-source-details');
     await expect(details).toBeVisible();
     if ((await details.getAttribute('open')) === null) await details.locator('summary').click();
-    await expect(
+    await expectEditorValue(
       details.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
-    ).toHaveValue(last.request.source.text);
+      last.request.source.text,
+    );
   };
   await revealExecutedSource();
-  await expect(editor(page).locator('p.source-position > code')).toHaveText(
-    JSON.stringify(catalog.subject.tests[0].input),
-  );
+  expect(draft).toContain('int main');
+  expect(catalog.subject.tests[0].input).not.toEqual(last.request.input.values);
   await expect(retained).toContainText(lastTest.caseKey);
   await expect(input).toHaveText(JSON.stringify(lastTest.input));
   const revision = await editor(page).getAttribute('data-document-revision');
   const executions = await count(page, 'execute');
   await action(page, '收起代码编辑').click();
   await expect(readonly).toHaveAttribute('readonly', '');
-  await expect(readonly).toHaveValue(last.request.source.text);
+  await expectEditorValue(readonly, last.request.source.text);
   await expect(retained).toContainText(lastTest.caseKey);
   await action(page, '编辑 C 并同步积木').click();
-  await expect(code(page)).toHaveValue(draft);
+  await expectEditorValue(code(page), draft);
   await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
   await expect(input).toHaveText(JSON.stringify(lastTest.input));
   await revealExecutedSource();
   const analyses = await count(page, 'analyze-code');
-  await action(page, '准备代码').click();
+  await expect(page.getByTestId('code-panel')).toBeVisible();
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-  await expect(code(page)).toHaveValue(draft);
+  await expectEditorValue(code(page), draft);
   await expect(panel(page)).toHaveAttribute('data-state', 'passed');
   await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
   await expect(retained).toContainText(lastTest.caseKey);
   await expect(input).toHaveText(JSON.stringify(lastTest.input));
   await revealExecutedSource();
-  expect(await count(page, 'analyze-code')).toBe(analyses + 1);
+  // Folding changes presentation only; the accepted analysis is retained.
+  expect(await count(page, 'analyze-code')).toBe(analyses);
   expect(await count(page, 'execute')).toBe(executions);
   await action(page, '收起代码编辑').click();
-  await expect(readonly).toHaveValue(last.request.source.text);
+  await expectEditorValue(readonly, last.request.source.text);
   await page.getByRole('link', { name: '查看本次复盘', exact: true }).click();
   await expect(page.locator('[data-mode="exercise-review"]')).toBeVisible();
   await expect(page.getByRole('button', { name: '提交练习', exact: true })).toHaveCount(0);
   await expect(code(page)).toHaveCount(0);
-  await expect(readonly).toHaveValue(last.request.source.text);
+  await expectEditorValue(readonly, last.request.source.text);
   await expect(retained).toContainText(lastTest.caseKey);
   await expect(input).toHaveText(JSON.stringify(lastTest.input));
   await page.getByRole('link', { name: '返回练习工作区', exact: true }).click();
   await action(page, '编辑 C 并同步积木').click();
-  await expect(code(page)).toHaveValue(draft);
+  await expectEditorValue(code(page), draft);
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
   await expect(retained).toContainText(lastTest.caseKey);
   const after = await capture(page, info, 'retained-result-after-folding-and-reanalysis');

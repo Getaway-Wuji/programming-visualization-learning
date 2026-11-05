@@ -149,6 +149,10 @@ export class MemoryBugSession {
         if (performance.now() - started >= 1000) throw new Error('E_DEADLINE');
         this.set({ summaries: [...summaries], elapsedMs: performance.now() - started });
         if (verdict.status !== 'met') {
+          if (result.terminal.status === 'limited' || result.terminal.status === 'cancelled') {
+            this.set({ phase: 'failed', message: '本次检查未完成，请重试。' });
+            return;
+          }
           this.set({ phase: 'unmet', message: '本组尚未满足；可查看实际诊断，有轨迹时可复盘。' });
           if (submit && context.catalog && this.learning.saveAttempt) {
             const fact = createMemoryAttemptFact(

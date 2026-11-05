@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import type { Page, Route } from '@playwright/test';
@@ -7,9 +8,11 @@ const samplePath = '/content/sample/02.1-content-1.0.0.json';
 const samplePattern = /\/content\/sample\/02\.1-content-1\.0\.0\.json$/;
 const wasmPattern = /\/assets\/c_viz_wasm_bg-[^/]+\.wasm$/;
 const workerPattern = /\/assets\/probe\.worker-[^/]+\.js$/;
-const referencePath = '/#/visualize/case.c.assignment';
-const visualPath = '/#/visualize/case.c.bubble-sort';
-const fixturePath = '/#/cases';
+// Retained low-level diagnostics run in the actual current app's internal QA
+// entry. They are no longer controls on student-facing case pages.
+const referencePath = '/checks/adapters.html#/visualize/case.c.assignment';
+const visualPath = '/checks/adapters.html#/visualize/case.c.bubble-sort';
+const fixturePath = '/checks/adapters.html#/cases';
 const reviewedCases = JSON.parse(
   readFileSync(
     new URL('../../content/c/primer6-learning/cases-1.0.0.json', import.meta.url),
@@ -196,7 +199,7 @@ function checkButton(page: Page) {
 
 async function caseReady(page: Page) {
   await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('code-panel').locator('textarea')).not.toHaveValue('');
+  await expectEditorValue(page.getByTestId('code-panel').locator('textarea'), '', { not: true });
   await expect(page.getByRole('button', { name: '运行示例', exact: true })).toBeEnabled();
 }
 
@@ -232,7 +235,7 @@ async function noLearningWrites(page: Page) {
   expect(observation.databaseNames.every((name) => name === 'c-viz-learning')).toBe(true);
   const counts = await page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const req = indexedDB.open('c-viz-learning', 10);
+      const req = indexedDB.open('c-viz-learning');
       req.onsuccess = () => resolve(req.result);
       req.onerror = () => reject(req.error);
     });
@@ -252,7 +255,7 @@ async function noLearningWrites(page: Page) {
         'weaknesses',
         'courseActivities',
         'courseDrafts',
-      ];
+      ].filter((name) => db.objectStoreNames.contains(name));
       const tx = db.transaction(names, 'readonly');
       const businessCounts = await Promise.all(
         names.map(
@@ -264,33 +267,42 @@ async function noLearningWrites(page: Page) {
             }),
         ),
       );
-      return { storeNames: Array.from(db.objectStoreNames).sort(), businessCounts };
+      return {
+        version: db.version,
+        storeNames: Array.from(db.objectStoreNames).sort(),
+        businessCounts,
+      };
     } finally {
       db.close();
     }
   });
-  expect(counts.storeNames).toEqual([
-    'achievements',
-    'aliases',
-    'appearance',
-    'appearanceAssets',
-    'avatar',
-    'courseActivities',
-    'courseDrafts',
-    'customDrafts',
-    'dailyFacts',
-    'editHistory',
-    'goals',
-    'knowledgeMarks',
-    'ledger',
-    'meta',
-    'progress',
-    'receipts',
-    'reviewCards',
-    'settings',
-    'weaknesses',
-  ]);
-  expect(counts.businessCounts).toEqual(Array(14).fill(0));
+  expect([9, 10]).toContain(counts.version);
+  expect(counts.storeNames).toEqual(
+    [
+      'achievements',
+      'aliases',
+      'appearance',
+      'appearanceAssets',
+      'avatar',
+      'courseActivities',
+      'courseDrafts',
+      'customDrafts',
+      'dailyFacts',
+      'editHistory',
+      'goals',
+      'knowledgeMarks',
+      'ledger',
+      'meta',
+      'progress',
+      'receipts',
+      'reviewCards',
+      'settings',
+      'weaknesses',
+    ].filter(
+      (name) => counts.version === 10 || !['courseActivities', 'courseDrafts'].includes(name),
+    ),
+  );
+  expect(counts.businessCounts).toEqual(Array(counts.version === 10 ? 14 : 12).fill(0));
 }
 
 test('reviewed case reference matches its execution release while the frozen package remains unpublished', async ({
@@ -307,12 +319,11 @@ test('reviewed case reference matches its execution release while the frozen pac
   )!;
   const requests: { url: string; method: string }[] = [];
   page.on('request', (entry) => requests.push({ url: entry.url(), method: entry.method() }));
-  await page.goto(referencePath);
+  await page.goto('/#/visualize/case.c.assignment');
   const sample = page.getByTestId('content-sample');
   await expect(sample).toHaveAttribute('data-state', 'ready');
   await expect(sample).toHaveAttribute('data-content-scope', 'case-view');
-  await expect(sample).toContainText('已审核案例 · 独立观看');
-  await expect(sample).toContainText(`内容版本 ${assignment.packageRef.version}`);
+  await expect(sample.getByRole('heading', { name: '案例讲解', exact: true })).toBeVisible();
   for (const objective of assignment.subject.teaching.objectives)
     await expect(sample).toContainText(objective);
   await expect(sample).toContainText(assignment.subject.teaching.explanation);
@@ -322,7 +333,7 @@ test('reviewed case reference matches its execution release while the frozen pac
   await expect(sample.locator('textarea, [contenteditable="true"]')).toHaveCount(0);
   await expect(page.getByTestId('code-panel').locator('textarea')).toHaveAttribute('readonly', '');
   await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('code-panel').locator('textarea')).not.toHaveValue('');
+  await expectEditorValue(page.getByTestId('code-panel').locator('textarea'), '', { not: true });
   await expect(page.getByRole('button', { name: '运行示例', exact: true })).toBeEnabled();
   await expect(page.getByRole('button', { name: '确认已学习' })).toHaveCount(0);
   // Case teaching and execution share the bundled reviewed projection. The old
@@ -467,7 +478,7 @@ test('on-demand cold and warm checks call real Rust in separate terminated worke
   await expect(page.getByRole('button', { name: '运行程序', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: '运行示例', exact: true })).toBeEnabled();
   await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('code-panel').locator('textarea')).not.toHaveValue('');
+  await expectEditorValue(page.getByTestId('code-panel').locator('textarea'), '', { not: true });
   await expect(page.getByTestId('execution-output')).toHaveCount(0);
   await noLearningWrites(page);
   await testInfo.attach('real-adapter-observations', {

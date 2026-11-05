@@ -117,14 +117,45 @@ export function algorithmAssert(condition: unknown): asserts condition {
   if (!condition) throw new Error('E_PROTOCOL_INVALID');
 }
 const enc = new TextEncoder();
-const size = (text: string) => enc.encode(text).length;
+const size = (text: string) => (text === '' ? 0 : enc.encode(text).length);
 const record = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
-function keys(value: unknown, expected: string[]): asserts value is Record<string, unknown> {
+function keys(
+  value: unknown,
+  expected: readonly string[],
+): asserts value is Record<string, unknown> {
   algorithmAssert(record(value));
-  const actual = Object.keys(value);
-  algorithmAssert(actual.length === expected.length && expected.every((key) => key in value));
+  algorithmAssert(Object.keys(value).length === expected.length);
+  for (const key of expected) algorithmAssert(key in value);
 }
+// Reuse closed schemas throughout long traces instead of allocating the same
+// key arrays for every state, delta and record. Every key is still checked.
+const fields = {
+  state: ['frames', 'scopes', 'objects', 'control', 'allocator', 'output', 'counters'],
+  frame: ['id', 'functionNodeId', 'functionName', 'parentFrameId', 'callNodeId', 'scopeIds'],
+  scope: ['id', 'frameId', 'nodeId', 'objectIds', 'aliases'],
+  object: [
+    'id',
+    'declarationNodeId',
+    'frameId',
+    'scopeId',
+    'name',
+    'kind',
+    'length',
+    'baseAddress',
+    'defaultValue',
+    'cells',
+  ],
+  control: ['activeFrameId', 'nextNodeId', 'returnValue', 'inputCursor'],
+  allocator: ['nextAddress', 'liveBytes', 'nextObject', 'nextScope', 'nextFrame'],
+  counters: ['comparisons', 'scalarWrites', 'arrayWrites', 'swaps'],
+  step: ['seq', 'kind', 'nodeId', 'changes'],
+  recordChange: ['op', 'table', 'id', 'index', 'before', 'after'],
+  cellChange: ['op', 'objectId', 'index', 'before', 'after'],
+  outputChange: ['op', 'beforeBytes', 'afterBytes', 'append'],
+  singletonChange: ['op', 'before', 'after'],
+  checkpoint: ['cursor', 'state'],
+} as const;
 const uint = (n: unknown): n is number => Number.isSafeInteger(n) && (n as number) >= 0;
 const int = (n: unknown): n is number =>
   Number.isInteger(n) && (n as number) >= -2147483648 && (n as number) <= 2147483647;
@@ -228,14 +259,16 @@ export function canonicalAlgorithmJson(value: unknown): string {
 }
 function equal(a: unknown, b: unknown): boolean {
   if (a === b) return true;
-  if (Array.isArray(a) && Array.isArray(b))
-    return a.length === b.length && a.every((item, i) => equal(item, b[i]));
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) if (i in a && !equal(a[i], b[i])) return false;
+    return true;
+  }
   if (!record(a) || !record(b)) return false;
   const aKeys = Object.keys(a);
-  return (
-    aKeys.length === Object.keys(b).length &&
-    aKeys.every((key) => key in b && equal(a[key], b[key]))
-  );
+  if (aKeys.length !== Object.keys(b).length) return false;
+  for (const key of aKeys) if (!(key in b) || !equal(a[key], b[key])) return false;
+  return true;
 }
 function yieldAlgorithmTask(): Promise<void> {
   return new Promise((resolve) => {
@@ -286,16 +319,41 @@ export function encodeAlgorithmRequest(request: AlgorithmRequest): Uint8Array<Ar
   return bytes;
 }
 
-function validateRecord(table: string, value: unknown, nodes: Map<string, AlgorithmNode>) {
+interface ValidationCache {
+  records: WeakMap<object, string>;
+  singletons: WeakMap<object, string>;
+  tables: WeakMap<object, string>;
+  frames?: {
+    rows: AlgorithmFrame[];
+    byId: Map<string, AlgorithmFrame>;
+    positions: Map<string, number>;
+    maximumId: number;
+  };
+  scopes?: {
+    rows: AlgorithmScope[];
+    byId: Map<string, AlgorithmScope>;
+    byFrame: Map<string, string[]>;
+    maximumId: number;
+  };
+  objects?: {
+    rows: AlgorithmObject[];
+    byId: Map<string, AlgorithmObject>;
+    byScope: Map<string, string[]>;
+    maximumId: number;
+    endAddress: number;
+    liveBytes: number;
+  };
+  relationships?: Pick<AlgorithmState, 'frames' | 'scopes' | 'objects'>;
+}
+function validateRecord(
+  table: string,
+  value: unknown,
+  nodes: Map<string, AlgorithmNode>,
+  cache?: ValidationCache,
+) {
+  if (record(value) && cache?.records.get(value) === table) return;
   if (table === 'frames') {
-    keys(value, [
-      'id',
-      'functionNodeId',
-      'functionName',
-      'parentFrameId',
-      'callNodeId',
-      'scopeIds',
-    ]);
+    keys(value, fields.frame);
     algorithmAssert(id(value.id, 'f') && name(value.functionName));
     algorithmAssert(
       typeof value.functionNodeId === 'string' &&
@@ -308,7 +366,7 @@ function validateRecord(table: string, value: unknown, nodes: Map<string, Algori
     );
     ids(value.scopeIds, 's');
   } else if (table === 'scopes') {
-    keys(value, ['id', 'frameId', 'nodeId', 'objectIds', 'aliases']);
+    keys(value, fields.scope);
     algorithmAssert(
       id(value.id, 's') &&
         id(value.frameId, 'f') &&
@@ -328,18 +386,7 @@ function validateRecord(table: string, value: unknown, nodes: Map<string, Algori
     );
   } else {
     algorithmAssert(table === 'objects');
-    keys(value, [
-      'id',
-      'declarationNodeId',
-      'frameId',
-      'scopeId',
-      'name',
-      'kind',
-      'length',
-      'baseAddress',
-      'defaultValue',
-      'cells',
-    ]);
+    keys(value, fields.object);
     algorithmAssert(
       id(value.id, 'o') && id(value.frameId, 'f') && id(value.scopeId, 's') && name(value.name),
     );
@@ -376,15 +423,18 @@ function validateRecord(table: string, value: unknown, nodes: Map<string, Algori
       previous = cell.index;
     }
   }
+  if (record(value)) cache?.records.set(value, table);
 }
 function validateSingleton(
   op: string,
   value: unknown,
   nodes: Map<string, AlgorithmNode>,
   inputLength: number,
+  cache?: ValidationCache,
 ) {
+  if (record(value) && cache?.singletons.get(value) === op) return;
   if (op === 'control') {
-    keys(value, ['activeFrameId', 'nextNodeId', 'returnValue', 'inputCursor']);
+    keys(value, fields.control);
     algorithmAssert(value.activeFrameId === null || id(value.activeFrameId, 'f'));
     algorithmAssert(
       value.nextNodeId === null ||
@@ -394,7 +444,7 @@ function validateSingleton(
       nullableInt(value.returnValue) && uint(value.inputCursor) && value.inputCursor <= inputLength,
     );
   } else if (op === 'allocator') {
-    keys(value, ['nextAddress', 'liveBytes', 'nextObject', 'nextScope', 'nextFrame']);
+    keys(value, fields.allocator);
     algorithmAssert(
       uint(value.nextAddress) && value.nextAddress >= 4096 && value.nextAddress % 4 === 0,
     );
@@ -405,16 +455,18 @@ function validateSingleton(
       algorithmAssert(uint(value[key]) && value[key] > 0);
   } else {
     algorithmAssert(op === 'counters');
-    keys(value, ['comparisons', 'scalarWrites', 'arrayWrites', 'swaps']);
+    keys(value, fields.counters);
     algorithmAssert(Object.values(value).every(uint));
   }
+  if (record(value)) cache?.singletons.set(value, op);
 }
 function validateState(
   state: AlgorithmState,
   nodes: Map<string, AlgorithmNode>,
   inputLength: number,
+  cache: ValidationCache,
 ) {
-  keys(state, ['frames', 'scopes', 'objects', 'control', 'allocator', 'output', 'counters']);
+  keys(state, fields.state);
   algorithmAssert(
     Array.isArray(state.frames) &&
       state.frames.length <= 32 &&
@@ -422,62 +474,99 @@ function validateState(
       Array.isArray(state.objects),
   );
   for (const table of ['frames', 'scopes', 'objects'] as const) {
-    for (const item of state[table]) validateRecord(table, item, nodes);
-    algorithmAssert(new Set(state[table].map((item) => item.id)).size === state[table].length);
+    const rows = state[table];
+    if (cache.tables.get(rows) !== table) {
+      for (const item of rows) validateRecord(table, item, nodes, cache);
+      algorithmAssert(new Set(rows.map((item) => item.id)).size === rows.length);
+      cache.tables.set(rows, table);
+    }
   }
   for (const op of ['control', 'allocator', 'counters'] as const)
-    validateSingleton(op, state[op], nodes, inputLength);
+    validateSingleton(op, state[op], nodes, inputLength, cache);
   algorithmAssert(typeof state.output === 'string' && size(state.output) <= 16384);
-  const frames = new Map(state.frames.map((frame) => [frame.id, frame]));
-  const framePositions = new Map(state.frames.map((frame, index) => [frame.id, index]));
-  const scopes = new Map(state.scopes.map((scope) => [scope.id, scope]));
-  const objects = new Map(state.objects.map((object) => [object.id, object]));
-  const scopeIdsByFrame = new Map<string, string[]>();
-  const objectIdsByScope = new Map<string, string[]>();
-  for (const scope of state.scopes) {
-    const list = scopeIdsByFrame.get(scope.frameId) ?? [];
-    list.push(scope.id);
-    scopeIdsByFrame.set(scope.frameId, list);
-  }
-  for (const object of state.objects) {
-    const list = objectIdsByScope.get(object.scopeId) ?? [];
-    list.push(object.id);
-    objectIdsByScope.set(object.scopeId, list);
-  }
-  let liveBytes = 0;
-  for (const [i, frame] of state.frames.entries()) {
-    algorithmAssert(frame.parentFrameId === (i ? state.frames[i - 1].id : null));
-    algorithmAssert((i === 0) === (frame.callNodeId === null));
-    algorithmAssert(Number(frame.id.slice(1)) < state.allocator.nextFrame);
-    algorithmAssert(equal(frame.scopeIds, scopeIdsByFrame.get(frame.id) ?? []));
-  }
-  for (const scope of state.scopes) {
-    algorithmAssert(
-      frames.has(scope.frameId) && Number(scope.id.slice(1)) < state.allocator.nextScope,
-    );
-    algorithmAssert(equal(scope.objectIds, objectIdsByScope.get(scope.id) ?? []));
-    const names = scope.objectIds.map((key) => objects.get(key)!.name);
-    for (const alias of scope.aliases) {
-      const target = objects.get(alias.objectId);
-      algorithmAssert(target?.kind === 'int-array');
-      algorithmAssert(framePositions.get(target.frameId)! < framePositions.get(scope.frameId)!);
-      names.push(alias.name);
+  // These facts depend only on immutable private table snapshots. Allocator
+  // ceilings and control still have to be checked for every projected state.
+  let frames = cache.frames;
+  if (frames?.rows !== state.frames) {
+    frames = { rows: state.frames, byId: new Map(), positions: new Map(), maximumId: 0 };
+    for (const [i, frame] of state.frames.entries()) {
+      algorithmAssert(frame.parentFrameId === (i ? state.frames[i - 1].id : null));
+      algorithmAssert((i === 0) === (frame.callNodeId === null));
+      frames.byId.set(frame.id, frame);
+      frames.positions.set(frame.id, i);
+      frames.maximumId = Math.max(frames.maximumId, Number(frame.id.slice(1)));
     }
-    algorithmAssert(new Set(names).size === names.length);
+    cache.frames = frames;
   }
-  const addresses = [...state.objects].sort((a, b) => a.baseAddress - b.baseAddress);
-  let end = 4096;
-  for (const object of addresses) {
-    algorithmAssert(
-      scopes.get(object.scopeId)?.frameId === object.frameId &&
-        Number(object.id.slice(1)) < state.allocator.nextObject,
-    );
-    algorithmAssert(object.baseAddress >= end);
-    end = object.baseAddress + object.length * 4;
-    algorithmAssert(Number.isSafeInteger(end) && end <= state.allocator.nextAddress);
-    liveBytes += object.length * 4;
+  let scopes = cache.scopes;
+  if (scopes?.rows !== state.scopes) {
+    scopes = { rows: state.scopes, byId: new Map(), byFrame: new Map(), maximumId: 0 };
+    for (const scope of state.scopes) {
+      scopes.byId.set(scope.id, scope);
+      scopes.maximumId = Math.max(scopes.maximumId, Number(scope.id.slice(1)));
+      const list = scopes.byFrame.get(scope.frameId) ?? [];
+      list.push(scope.id);
+      scopes.byFrame.set(scope.frameId, list);
+    }
+    cache.scopes = scopes;
   }
-  algorithmAssert(liveBytes === state.allocator.liveBytes);
+  let objects = cache.objects;
+  if (objects?.rows !== state.objects) {
+    objects = {
+      rows: state.objects,
+      byId: new Map(),
+      byScope: new Map(),
+      maximumId: 0,
+      endAddress: 4096,
+      liveBytes: 0,
+    };
+    for (const object of [...state.objects].sort((a, b) => a.baseAddress - b.baseAddress)) {
+      algorithmAssert(object.baseAddress >= objects.endAddress);
+      objects.endAddress = object.baseAddress + object.length * 4;
+      algorithmAssert(Number.isSafeInteger(objects.endAddress));
+      objects.liveBytes += object.length * 4;
+      objects.maximumId = Math.max(objects.maximumId, Number(object.id.slice(1)));
+      objects.byId.set(object.id, object);
+    }
+    // Scope object IDs follow declaration order rather than address order.
+    for (const object of state.objects) {
+      const list = objects.byScope.get(object.scopeId) ?? [];
+      list.push(object.id);
+      objects.byScope.set(object.scopeId, list);
+    }
+    cache.objects = objects;
+  }
+  algorithmAssert(frames.maximumId < state.allocator.nextFrame);
+  algorithmAssert(scopes.maximumId < state.allocator.nextScope);
+  algorithmAssert(objects.maximumId < state.allocator.nextObject);
+  algorithmAssert(objects.endAddress <= state.allocator.nextAddress);
+  algorithmAssert(objects.liveBytes === state.allocator.liveBytes);
+  const prior = cache.relationships;
+  if (
+    prior?.frames !== state.frames ||
+    prior.scopes !== state.scopes ||
+    prior.objects !== state.objects
+  ) {
+    for (const frame of state.frames)
+      algorithmAssert(equal(frame.scopeIds, scopes.byFrame.get(frame.id) ?? []));
+    for (const scope of state.scopes) {
+      algorithmAssert(frames.byId.has(scope.frameId));
+      algorithmAssert(equal(scope.objectIds, objects.byScope.get(scope.id) ?? []));
+      const names = scope.objectIds.map((key) => objects.byId.get(key)!.name);
+      for (const alias of scope.aliases) {
+        const target = objects.byId.get(alias.objectId);
+        algorithmAssert(target?.kind === 'int-array');
+        algorithmAssert(
+          frames.positions.get(target.frameId)! < frames.positions.get(scope.frameId)!,
+        );
+        names.push(alias.name);
+      }
+      algorithmAssert(new Set(names).size === names.length);
+    }
+    for (const object of state.objects)
+      algorithmAssert(scopes.byId.get(object.scopeId)?.frameId === object.frameId);
+    cache.relationships = state;
+  }
   algorithmAssert(state.control.activeFrameId === (state.frames.at(-1)?.id ?? null));
 }
 
@@ -490,6 +579,15 @@ export function projectAlgorithmStep(
   return projectStep(state, step, backward);
 }
 
+function writableTable<K extends 'frames' | 'scopes' | 'objects'>(
+  next: AlgorithmState,
+  state: AlgorithmState,
+  table: K,
+): AlgorithmState[K] {
+  if (next[table] === state[table]) next[table] = state[table].slice() as AlgorithmState[K];
+  return next[table];
+}
+
 function projectStep(
   state: AlgorithmState,
   step: AlgorithmStep,
@@ -498,16 +596,21 @@ function projectStep(
 ): AlgorithmState {
   // Copy only touched records. Earlier states and checkpoint records remain
   // immutable; a deep copy of the whole live stack per delta is unnecessary.
-  const next: AlgorithmState = {
-    ...state,
-    frames: [...state.frames],
-    scopes: [...state.scopes],
-    objects: [...state.objects],
-  };
-  const changes = backward ? [...step.changes].reverse() : step.changes;
-  for (const change of changes) {
+  // Private validation can retain untouched immutable tables, allowing the
+  // per-decode cache to recognize them. Public playback keeps distinct arrays.
+  const next: AlgorithmState = reuseParsed
+    ? { ...state }
+    : {
+        ...state,
+        frames: [...state.frames],
+        scopes: [...state.scopes],
+        objects: [...state.objects],
+      };
+  const { changes } = step;
+  for (let i = 0; i < changes.length; i++) {
+    const change = changes[backward ? changes.length - 1 - i : i];
     if (change.op === 'record') {
-      const table = next[change.table] as RecordValue[];
+      const table: RecordValue[] = writableTable(next, state, change.table);
       const before = backward ? change.after : change.before;
       const after = backward ? change.before : change.after;
       algorithmAssert(
@@ -521,11 +624,12 @@ function projectStep(
       else if (after === null) table.splice(change.index, 1);
       else table[change.index] = reuseParsed ? after : structuredClone(after);
     } else if (change.op === 'cell') {
-      const position = next.objects.findIndex((item) => item.id === change.objectId);
+      const objects = writableTable(next, state, 'objects');
+      const position = objects.findIndex((item) => item.id === change.objectId);
       algorithmAssert(position >= 0);
-      const previous = next.objects[position];
+      const previous = objects[position];
       const object = { ...previous, cells: [...previous.cells] };
-      next.objects[position] = object;
+      objects[position] = object;
       algorithmAssert(change.index < object.length);
       const before = backward ? change.after : change.before;
       const after = backward ? change.before : change.after;
@@ -558,20 +662,25 @@ function validateChange(
   change: AlgorithmChange,
   nodes: Map<string, AlgorithmNode>,
   inputLength: number,
+  cache: ValidationCache,
 ) {
   algorithmAssert(record(change));
   if (change.op === 'record') {
-    keys(change, ['op', 'table', 'id', 'index', 'before', 'after']);
+    keys(change, fields.recordChange);
     algorithmAssert(
       ['frames', 'scopes', 'objects'].includes(change.table) &&
         uint(change.index) &&
         (change.before !== null || change.after !== null),
     );
-    for (const item of [change.before, change.after])
-      if (item !== null) {
-        validateRecord(change.table, item, nodes);
-        algorithmAssert(item.id === change.id);
-      }
+    // Projection compares every before value with the fully validated current
+    // state, including all keys and nested values. Only the new after record
+    // needs another shape check; keep the change identity check for deletions.
+    if (change.before !== null)
+      algorithmAssert(record(change.before) && change.before.id === change.id);
+    if (change.after !== null) {
+      validateRecord(change.table, change.after, nodes, cache);
+      algorithmAssert(change.after.id === change.id);
+    }
     if (change.before && change.after && change.table === 'objects') {
       const before = change.before as AlgorithmObject;
       const after = change.after as AlgorithmObject;
@@ -606,7 +715,7 @@ function validateChange(
         algorithmAssert(before[key] === after[key]);
     }
   } else if (change.op === 'cell') {
-    keys(change, ['op', 'objectId', 'index', 'before', 'after']);
+    keys(change, fields.cellChange);
     algorithmAssert(
       id(change.objectId, 'o') &&
         uint(change.index) &&
@@ -614,7 +723,7 @@ function validateChange(
         nullableInt(change.after),
     );
   } else if (change.op === 'output') {
-    keys(change, ['op', 'beforeBytes', 'afterBytes', 'append']);
+    keys(change, fields.outputChange);
     algorithmAssert(
       uint(change.beforeBytes) &&
         uint(change.afterBytes) &&
@@ -624,9 +733,8 @@ function validateChange(
     );
   } else {
     algorithmAssert(['control', 'allocator', 'counters'].includes(change.op));
-    keys(change, ['op', 'before', 'after']);
-    validateSingleton(change.op, change.before, nodes, inputLength);
-    validateSingleton(change.op, change.after, nodes, inputLength);
+    keys(change, fields.singletonChange);
+    validateSingleton(change.op, change.after, nodes, inputLength, cache);
   }
 }
 
@@ -652,6 +760,13 @@ export async function decodeAlgorithmResult(
     }
     guard();
     const result = JSON.parse(text) as AlgorithmResult;
+    // Private to one decode; immutable parsed records are reused by projection.
+    // Cross-table references and allocator/control bounds remain state-specific.
+    const cache: ValidationCache = {
+      records: new WeakMap(),
+      singletons: new WeakMap(),
+      tables: new WeakMap(),
+    };
     keys(result, [
       'execVersion',
       'dslVersion',
@@ -748,7 +863,7 @@ export async function decodeAlgorithmResult(
         Array.isArray(trace.checkpoints),
     );
     algorithmAssert(trace.checkpoints.length === Math.floor(trace.steps.length / 128) + 1);
-    validateState(trace.initialState, nodes, request.input.length);
+    validateState(trace.initialState, nodes, request.input.length, cache);
     algorithmAssert(
       trace.initialState.frames.length === 0 &&
         trace.initialState.scopes.length === 0 &&
@@ -774,7 +889,7 @@ export async function decodeAlgorithmResult(
     for (let cursor = 0; cursor <= trace.steps.length; cursor++) {
       if (cursor % 128 === 0) {
         const checkpoint = trace.checkpoints[cursor / 128];
-        keys(checkpoint, ['cursor', 'state']);
+        keys(checkpoint, fields.checkpoint);
         algorithmAssert(checkpoint.cursor === cursor && equal(checkpoint.state, state));
       }
       if (cursor === trace.steps.length) break;
@@ -787,16 +902,16 @@ export async function decodeAlgorithmResult(
         }
       }
       const step = trace.steps[cursor];
-      keys(step, ['seq', 'kind', 'nodeId', 'changes']);
+      keys(step, fields.step);
       algorithmAssert(
         step.seq === cursor + 1 &&
           stepKinds.includes(step.kind) &&
           nodes.has(step.nodeId) &&
           Array.isArray(step.changes),
       );
-      for (const change of step.changes) validateChange(change, nodes, request.input.length);
+      for (const change of step.changes) validateChange(change, nodes, request.input.length, cache);
       const next = projectStep(state, step, false, true);
-      validateState(next, nodes, request.input.length);
+      validateState(next, nodes, request.input.length, cache);
       const count = next.frames.length - state.frames.length;
       algorithmAssert(
         count ===

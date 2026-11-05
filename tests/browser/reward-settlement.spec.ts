@@ -1,15 +1,16 @@
+import { observedC6Execution } from './c6-execution-observation';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { StorageSnapshot } from '../../web/src/storage/model';
 import { completeCurrentFirstGroup } from './current-course-helpers';
-import { installC6Packets, observedC6Packet } from './c6-observation';
+import { installC6Packets } from './c6-observation';
 import { decodeC6Response, type C6JudgeRequest } from '../../web/src/engine/c6-protocol';
 import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
 
 const status = (page: Page) => page.getByTestId('learning-save-status');
 const posted = (page: Page, points: number) =>
-  page.getByRole('heading', { name: `已入账 ${points} 分`, exact: true });
+  page.getByRole('button', { name: `积分 ${points}，查看明细`, exact: true });
 test.beforeEach(async ({ context }) => {
   await context.addInitScript(installC6Packets);
 });
@@ -48,8 +49,7 @@ async function read(page: Page): Promise<StorageSnapshot> {
 }
 async function genuineRights(page: Page) {
   const exercise = await completeCurrentFirstGroup(page);
-  const captured = await observedC6Packet(page);
-  expect(captured).toMatchObject({ count: 1, moduleSeen: true, terminated: true });
+  const captured = await observedC6Execution(page, 'judge');
   const requestBytes = Buffer.from(captured.request!, 'base64'),
     resultBytes = Buffer.from(captured.response!, 'base64');
   const request = JSON.parse(requestBytes.toString('utf8')) as C6JudgeRequest;
@@ -192,14 +192,20 @@ test('two pages settle simulated prior pending rights only once without new lear
   const other = await context.newPage();
   await Promise.all([page.reload(), other.goto('/#/?panel=points')]);
   for (const target of [page, other])
-    await expect(status(target)).toHaveAttribute('data-save-status', 'ready');
+    await expect(target.locator('.app-shell')).toHaveAttribute(
+      'data-learning-storage-status',
+      'ready',
+    );
   await expect(posted(other, 35)).toBeVisible();
   const settled = await read(other);
   expect(settled.ledger).toEqual(genuine.ledger);
   expect(settled.meta.revision).toBe(pending.meta.revision + 1);
   unchangedFacts(pending, settled);
   await other.reload();
-  await expect(status(other)).toHaveAttribute('data-save-status', 'ready');
+  await expect(other.locator('.app-shell')).toHaveAttribute(
+    'data-learning-storage-status',
+    'ready',
+  );
   expect(await read(other)).toEqual(settled);
   await evidence(info, { genuine, pending, settled });
 });

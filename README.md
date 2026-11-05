@@ -37,6 +37,19 @@ pwsh -NoProfile -File scripts/task.ps1 test:schemas
 pwsh -NoProfile -File scripts/task.ps1 check:repository
 ```
 
+浏览器回归先安装本机 Chrome、Edge 和 Playwright Firefox，再运行：
+
+```powershell
+pwsh -NoProfile -File scripts/task.ps1 browser:install:firefox
+pwsh -NoProfile -File scripts/task.ps1 test:cross-browser
+```
+
+完整入口依次运行三浏览器主套件、七套独立解释器和课程检查、四类历史数据迁移、原生 Firefox，以及保留原阈值的性能检查。每次使用独立证据目录，核对源码在测试期间未变化，失败不重试。也可加 `--suite=main`、`engines`、`migrations`、`stock` 或 `performance` 单独运行一组；单组通过不代表完整回归通过。
+
+内部 QA 构建单独挂载保留的执行诊断与复习调度组件，直接使用产品组件、真实解释器和浏览器存储。主套件同时检查现行公开入口；旧 `/reviews` 地址跳转到错题与陌生点。
+
+迁移检查需要本机保留的历史构建；尚未支持 Firefox 的旧版先在 Chrome 中真实完成学习，再将原始物理分区完整读入 Firefox，核对结构与数据全等后检查其实际升级、清除和新课学习。历史构建保持原样，不将此过程称为旧版 Firefox 执行支持。原生 Firefox 使用 `.tools/firefox/core/firefox.exe` 和 `.tools/geckodriver/geckodriver.exe`。性能检查使用现有 Windows 主机采样与本地 HTTPS 证书配置，要求可见浏览器和符合既定条件的显示环境；不满足条件会报告失败，不降低阈值。所有截图、执行原包和报告保存在 `.artifacts/`，不上传仓库。
+
 `content/` 保存课程和案例，`engine/` 保存 Rust 解释器，`web/` 保存前端，`server/ai-proxy/` 保存可选 AI 网关，`shared/contracts/` 和 `tests/fixtures/` 保存程序与测试实际使用的协议和固定输入。
 
 构建核对源码输入和 WASM 哈希，不依赖历史交接、截图或测试日志。历史发布元数据保留既有程序与机器协议的稳定身份，不会恢复已清除的学习档案，也不代表本次重新执行过历史验收。修改构建输入后，运行 `lock:build` 更新输入清单，再执行相应检查。

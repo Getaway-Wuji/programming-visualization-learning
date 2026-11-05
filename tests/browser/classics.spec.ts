@@ -1,3 +1,4 @@
+import { editorValue } from './editor-value';
 import { waitForPhase2Archive } from './phase2-ready';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
@@ -205,7 +206,7 @@ for (const spec of specs) {
       expect(request.engineId).toBe('engine.rust.memory');
       expect(result.terminal).toMatchObject({ status: 'completed', returnValue: 0 });
       await expect(p.getByTestId('classic-source')).toHaveText(request.source);
-      expect(await p.getByLabel('可复制的完整经典C++源码').inputValue()).toBe(request.source);
+      expect(await editorValue(p.getByLabel('可复制的完整经典C++源码'))).toBe(request.source);
       const hanoi = spec.kind === 'hanoi' ? verifyHanoi(result, sample.input[0]) : null,
         expected = hanoi?.output ?? numericExpected(spec, sample.input);
       player.seek(length);
@@ -613,20 +614,21 @@ test('catalog, presets, fixed arity, fresh case identity and unknown route', asy
   for (const s of specs[0].boundarySamples) {
     await p.getByRole('combobox', { name: '经典边界样例' }).selectOption(s.id);
     await expect(workspace(p)).toHaveAttribute('data-run-id', '');
-    expect(await p.getByTestId('classic-input').inputValue()).toBe(s.input.join(' '));
+    expect(await editorValue(p.getByTestId('classic-input'))).toBe(s.input.join(' '));
   }
   await p.getByRole('button', { name: '恢复示例', exact: true }).click();
-  expect(await p.getByTestId('classic-input').inputValue()).toBe('3');
+  expect(await editorValue(p.getByTestId('classic-input'))).toBe('3');
   await p.getByRole('link', { name: specs[1].title, exact: true }).click();
   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
   await run(p, [84, -30]);
   const b = await captured(p, 'identity-gcd');
   expect(b.result.identity.runId).not.toBe(a.result.identity.runId);
   await p.goto('/#/cases');
+  await p.getByText('基础语法与更多案例', { exact: true }).click();
   await expect(p.getByTestId('cpp-classic-catalog').getByRole('link')).toHaveCount(4);
   await expect(p.getByTestId('cpp-node-catalog').getByRole('link')).toHaveCount(2);
   await expect(p.getByTestId('cpp-structure-catalog').getByRole('link')).toHaveCount(2);
-  await expect(p.locator('main a[href^="#/algorithms/"]')).toHaveCount(6);
+  await expect(p.locator('main details a[href^="#/algorithms/"]')).toHaveCount(6);
   await expect(p.locator('main a[href^="#/visualize/"]')).toHaveCount(7);
   await p.goto('/#/classics/missing');
   await expect(p.getByRole('heading', { name: '找不到这个经典案例' })).toBeVisible();

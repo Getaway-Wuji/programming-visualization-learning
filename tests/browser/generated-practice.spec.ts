@@ -1,9 +1,18 @@
+import { expectEditorValue, editorValue } from './editor-value';
 import { expect, test, type Page } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import { ready, code, panel, observeCaseSetExecution } from './notebook-helpers';
 import { openIndependentRepair as openAnswer } from './current-course-helpers';
 import { observedCaseSetExecute } from './case-set-observation';
+import type {} from './harness/generated-practice';
+import {
+  decodePracticeResponse,
+  type PracticeRequest,
+  type GeneratedProblem,
+} from '../../web/src/generated-practice/protocol';
+import { AdvancedPlayer } from '../../web/src/engine/advanced-player';
+import { engineBuild } from '../../web/src/generated/practice/engine-build';
 declare global {
   interface Window {
     practiceQA: { requests: unknown[]; responses: unknown[]; timings: number[] };
@@ -11,7 +20,7 @@ declare global {
 }
 const folder = `.artifacts/19.2/browser/${process.env.TASK_EVIDENCE_LABEL ?? 'local'}`;
 const root = (p: Page) => p.getByTestId('generated-practice'),
-  editor = (p: Page) => p.getByTestId('generated-source'),
+  editor = (p: Page) => p.getByRole('textbox', { name: 'C 代码', exact: true }),
   result = (p: Page) => p.getByTestId('generated-assessment');
 test.beforeAll(() => mkdir(folder, { recursive: true }));
 test.beforeEach(async ({ page }) => {
@@ -71,6 +80,51 @@ async function reference(p: Page) {
   await p.getByText('查看已验证的参考解', { exact: true }).click();
   await p.getByRole('button', { name: '用参考解替换当前草稿', exact: true }).click();
 }
+async function assertGeneratedReplays(p: Page) {
+  const qa = await p.evaluate(() => window.practiceQA);
+  const requests = qa.requests as PracticeRequest[];
+  let problem: GeneratedProblem | undefined;
+  let checked = 0;
+  for (const request of requests) {
+    const raw = qa.responses.find(
+      (r) => (r as { requestId: string }).requestId === request.requestId,
+    );
+    expect(raw).toBeDefined();
+    const decoded = await decodePracticeResponse(
+      new TextEncoder().encode(JSON.stringify(raw)).buffer,
+      request,
+      engineBuild.wasmSha256,
+      undefined,
+      problem,
+    );
+    if (decoded.operation === 'generate') {
+      problem = decoded.problem;
+      continue;
+    }
+    checked++;
+    const trace = decoded.assessment.replay.result;
+    const player = new AdvancedPlayer();
+    player.accept(trace);
+    const states = [player.snapshot().state];
+    expect(states[0]).toEqual(trace.trace!.initialState);
+    for (let i = 1; i <= trace.trace!.steps.length; i++) {
+      expect(player.seek(i)).toBe(true);
+      states.push(player.snapshot().state);
+    }
+    expect(player.snapshot().state!.output).toBe(
+      decoded.assessment.replay.result
+        .trace!.steps.flatMap((s) =>
+          s.changes.flatMap((c) => (c.op === 'output' ? [c.append] : [])),
+        )
+        .join(''),
+    );
+    for (let i = states.length - 2; i >= 0; i--) {
+      expect(player.seek(i)).toBe(true);
+      expect(player.snapshot().state).toEqual(states[i]);
+    }
+  }
+  expect(checked).toBeGreaterThan(0);
+}
 async function capture(p: Page, name: string) {
   await writeFile(
     `${folder}/${name}.json.gz`,
@@ -124,21 +178,14 @@ for (const [knowledge, name] of [
       await open(page);
       await gen(page, knowledge, difficulty, difficulty === '1' ? '0' : '4294967295');
       await editor(page).fill('#include <stdio.h>\nint main(){printf("999\\n");return 0;}');
-      await page.getByRole('button', { name: '提交全部输入', exact: true }).click();
+      await page.getByRole('button', { name: '提交', exact: true }).click();
       await expect(result(page)).toHaveAttribute('data-verdict', 'unmet');
       await reference(page);
       await expect(result(page)).toHaveCount(0);
-      await page.getByRole('button', { name: '提交全部输入', exact: true }).click();
+      await page.getByRole('button', { name: '提交', exact: true }).click();
       await expect(result(page)).toHaveAttribute('data-verdict', 'passed');
       await expect(result(page)).toHaveAttribute('data-complete', 'true');
-      const initial = await page.getByTestId('generated-state').getAttribute('data-state');
-      const slider = page.getByRole('slider', { name: '执行位置' });
-      await slider.fill((await slider.getAttribute('max')) ?? '0');
-      await expect(root(page)).not.toHaveAttribute('data-cursor', '0');
-      await slider.fill('0');
-      expect(await page.getByTestId('generated-state').getAttribute('data-state')).toBe(initial);
-      await page.getByLabel('观察视图').selectOption('memory');
-      await page.getByLabel('观察视图').selectOption('stack');
+      await assertGeneratedReplays(page);
       const qa = await page.evaluate(() => window.practiceQA);
       expect(qa.requests).toHaveLength(3);
       expect(qa.responses).toHaveLength(3);
@@ -171,21 +218,30 @@ test('19.2 candidate strict seed, raw input, preview scope, program error, edits
   await gen(page, 'knowledge.c.expressions', '2', '00042');
   await expect(page.getByText('C · 难度2 · 种子42', { exact: true })).toBeVisible();
   await reference(page);
-  await page.getByLabel('试运行输入', { exact: true }).fill('1 2');
-  await page.getByRole('button', { name: '试运行一个输入', exact: true }).click();
-  await expect(page.getByTestId('generated-status')).toContainText('E_GEN_INPUT');
-  await expect(result(page)).toHaveCount(0);
-  await page.getByLabel('试运行输入', { exact: true }).fill('  -12\n');
-  await page.getByRole('button', { name: '试运行一个输入', exact: true }).click();
-  await expect(result(page)).toHaveAttribute('data-complete', 'false');
-  await expect(result(page)).toContainText('单次试运行不表示整题通过');
+  const preview = await page.context().newPage();
+  try {
+    await preview.goto('/checks/');
+    await preview.waitForFunction(() => !!window.previewPracticeInputs);
+    const checked = await preview.evaluate(() => window.previewPracticeInputs());
+    expect(checked[0].error).toBe('E_GEN_INPUT');
+    expect(checked[0].assessment).toBeNull();
+    expect(checked[1].assessment?.complete).toBe(false);
+    expect(checked[1].input).toBe('  -12\n');
+    expect(checked[1].assessment?.replay.inputText).toBe('-12');
+    await test.info().attach('retained-native-preview-adapter', {
+      body: JSON.stringify(checked),
+      contentType: 'application/json',
+    });
+  } finally {
+    await preview.close();
+  }
   await editor(page).fill('int main( {');
   await expect(result(page)).toHaveCount(0);
-  await page.getByRole('button', { name: '提交全部输入', exact: true }).click();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(result(page)).toHaveAttribute('data-verdict', 'rejected');
-  await expect(result(page)).toContainText('其余输入未检查');
+  await expect(result(page)).toHaveAttribute('data-complete', 'false');
   await editor(page).fill('int main(){while(1){}return 0;}');
-  await page.getByRole('button', { name: '提交全部输入', exact: true }).click();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(root(page)).toHaveAttribute('data-status', /^(assessed|failed)$/);
   await expect(page.getByRole('heading', { name: '全部输入通过', exact: true })).toHaveCount(0);
   await page.getByLabel('种子', { exact: true }).fill('4294967296');
@@ -247,13 +303,13 @@ test('19.2 candidate responsive widths and representative minimal theme keep con
   await gen(page);
   await page.screenshot({ path: `${folder}/minimal-1440.png`, fullPage: true });
   await reference(page);
-  await page.getByRole('button', { name: '提交全部输入', exact: true }).click();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(result(page)).toHaveAttribute('data-verdict', 'passed');
-  await page.getByRole('slider', { name: '执行位置' }).fill('4');
+  await assertGeneratedReplays(page);
   for (const width of [1440, 768, 390]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const mode of ['basic', 'memory', 'stack']) {
-      await page.getByLabel('观察视图').selectOption(mode);
+    {
+      await expect(result(page)).toHaveAttribute('data-verdict', 'passed');
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true,
       );
@@ -273,7 +329,7 @@ test('19.2 formal empty evidence and whole keyed DB stay unchanged by transient 
   expect(before).toHaveLength(19);
   await gen(page);
   await reference(page);
-  await page.getByRole('button', { name: '提交全部输入', exact: true }).click();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(result(page)).toHaveAttribute('data-verdict', 'passed');
   await page.getByRole('button', { name: '清空本次加练', exact: true }).click();
   expect(await stores(page)).toEqual(before);
@@ -295,7 +351,7 @@ test('19.2 formal confirmed manual evidence recommends only supported exact know
   await expect(page.getByTestId('generated-recommendation')).toContainText('手动自评');
   const before = await stores(page);
   await page.getByRole('button', { name: '采用此知识建议' }).click();
-  await expect(page.getByLabel('知识', { exact: true })).toHaveValue('knowledge.c.variables');
+  await expectEditorValue(page.getByLabel('知识', { exact: true }), 'knowledge.c.variables');
   await expect(page.getByRole('link', { name: /原课程：/ })).toHaveAttribute(
     'href',
     '#/lessons/lesson.c6.s2.2.2',
@@ -330,7 +386,7 @@ test('19.2 formal actual exercise failure supplies explainable recommendation wi
   await page.goto('/#/');
   await ready(page);
   await openAnswer(page, 'exercise.c.bug-parenthesis');
-  const source = await code(page).inputValue();
+  const source = await editorValue(code(page));
   await code(page).fill(source.replace(/printf\([^;]+;/, 'printf("%d\\n", x + 1);'));
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await panel(page).getByRole('button', { name: '提交练习', exact: true }).click();
@@ -364,5 +420,5 @@ test('19.2 formal unsupported marked knowledge has honest original-course fallba
   await open(page);
   await expect(page.getByTestId('generated-recommendation')).toContainText('尚未提供的题型');
   await expect(page.getByRole('button', { name: '采用此知识建议' })).toHaveCount(0);
-  await expect(page.getByRole('link', { name: '复习队列 →' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '核对学习依据 →' })).toBeVisible();
 });

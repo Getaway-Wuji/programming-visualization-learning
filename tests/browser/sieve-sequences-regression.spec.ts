@@ -1,3 +1,4 @@
+import { editorValue } from './editor-value';
 import { test, expect } from '@playwright/test';
 import { caseSetIds, caseSetSamples } from '../fixtures/case-set';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
@@ -68,7 +69,7 @@ for (const id of caseSetIds) {
     expect(request.subjectRef?.id).toBe(id);
     expect(request.input.values).toEqual(sample.values);
     expect(request.source.text).toBe(
-      await panel.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }).inputValue(),
+      await editorValue(panel.getByRole('textbox', { name: '当前执行的 C 代码', exact: true })),
     );
     const result = await decodeResult(Uint8Array.from(resultBytes).buffer, request);
     expect(result.terminal.status).toBe('completed');

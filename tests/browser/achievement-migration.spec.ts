@@ -7,6 +7,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { native, openAnswer, submit, achievementReady } from './achievement-helpers';
 import { ready } from './notebook-helpers';
 import { memoryBugQuestions } from '../../web/src/memory-bugs/content';
+import { archivedPredecessor } from './archived-predecessor';
 const label = process.env.TASK_EVIDENCE_LABEL ?? 'local';
 async function physical(page: Page) {
   return page.evaluate(async () => {
@@ -44,33 +45,41 @@ test('15.4 actual29 DB5 genuine bubble and pointer passes, marks, review and his
   page,
 }) => {
   await page.clock.setFixedTime(new Date('2026-10-31T04:00:00.000Z'));
-  await page.goto('/#/lessons/lesson.c.variables-output');
-  await ready(page);
-  await expect(page.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
-  await page.getByRole('button', { name: '开始本节学习', exact: true }).click();
-  await ready(page);
-  await page.getByRole('button', { name: '确认已学习', exact: true }).click();
-  await expect(page.getByTestId('lesson-confirmation-check')).toHaveAttribute('data-saved', 'yes');
-  await page.locator('[data-knowledge-mark="knowledge.c.variables"]').click();
-  await expect(page.locator('[data-knowledge-mark="knowledge.c.variables"]')).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
-  await openAnswer(page, 'exercise.c.bubble-sort');
-  await submit(page);
-  const q = memoryBugQuestions[0];
-  await page.goto(`/#/bugs/memory/${q.exerciseRef.id}`);
-  await ready(page);
-  const editor = page.getByRole('textbox', { name: '编辑关卡 C++ 代码', exact: true });
-  await expect(editor).toBeEditable();
-  await editor.fill(q.solutionSource);
-  await page.getByRole('button', { name: '提交全部4组', exact: true }).click();
-  await expect(page.getByTestId('memory-bug-session')).toHaveAttribute('data-save-state', 'saved');
-  await page.goto('/#/reviews');
-  await expect(page.locator('.app-shell')).toHaveAttribute('data-review-storage-status', 'ready');
-  await expect(page.getByTestId('review-counts')).toHaveText('到期 1 · 未到期 0 · 暂停 0');
-  await page.locator('[data-review-rating="good"]').click();
-  await expect(page.getByTestId('review-counts')).toHaveText('到期 0 · 未到期 1 · 暂停 0');
+  await archivedPredecessor(page, async (page) => {
+    await page.goto('/#/lessons/lesson.c.variables-output');
+    await ready(page);
+    await expect(page.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
+    await page.getByRole('button', { name: '开始本节学习', exact: true }).click();
+    await ready(page);
+    await page.getByRole('button', { name: '确认已学习', exact: true }).click();
+    await expect(page.getByTestId('lesson-confirmation-check')).toHaveAttribute(
+      'data-saved',
+      'yes',
+    );
+    await page.locator('[data-knowledge-mark="knowledge.c.variables"]').click();
+    await expect(page.locator('[data-knowledge-mark="knowledge.c.variables"]')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await openAnswer(page, 'exercise.c.bubble-sort');
+    await submit(page);
+    const q = memoryBugQuestions[0];
+    await page.goto(`/#/bugs/memory/${q.exerciseRef.id}`);
+    await ready(page);
+    const editor = page.getByRole('textbox', { name: '编辑关卡 C++ 代码', exact: true });
+    await expect(editor).toBeEditable();
+    await editor.fill(q.solutionSource);
+    await page.getByRole('button', { name: '提交全部4组', exact: true }).click();
+    await expect(page.getByTestId('memory-bug-session')).toHaveAttribute(
+      'data-save-state',
+      'saved',
+    );
+    await page.goto('/#/reviews');
+    await expect(page.locator('.app-shell')).toHaveAttribute('data-review-storage-status', 'ready');
+    await expect(page.getByTestId('review-counts')).toHaveText('到期 1 · 未到期 0 · 暂停 0');
+    await page.locator('[data-review-rating="good"]').click();
+    await expect(page.getByTestId('review-counts')).toHaveText('到期 0 · 未到期 1 · 暂停 0');
+  });
   const before = await native(page),
     physicalBefore = await physical(page);
   expect(physicalBefore.version).toBe(5);

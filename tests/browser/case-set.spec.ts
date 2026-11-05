@@ -1,3 +1,5 @@
+import { editorValue, expectEditorValue } from './editor-value';
+import { expectedSourceLine } from './source-highlight';
 import { createHash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -277,7 +279,10 @@ function assertFrame(run: Run, frame: VisibleSnapshot, cursor: number) {
   expect(frame.counters).toEqual(
     Object.fromEntries(Object.entries(state.counters).map(([key, value]) => [key, String(value)])),
   );
-  const expectedRange = step ? rangeFor(run, step.location) : null;
+  const expectedRange = expectedSourceLine(
+    run.request.source.text,
+    step ? rangeFor(run, step.location) : null,
+  );
   if (!expectedRange) expect(frame.marks).toEqual([]);
   else {
     expect(frame.marks.length).toBeGreaterThan(0);
@@ -383,7 +388,7 @@ async function prepareRun(page: Page, sample: CaseSetSample): Promise<Run> {
   expect(request.subjectRef?.id).toBe(sample.caseId);
   expect(request.input.values).toEqual(sample.values);
   expect(request.input.random).toBeNull();
-  expect(request.source.text).toBe(await source(page).inputValue());
+  expect(request.source.text).toBe(await editorValue(source(page)));
   expect(result.identity).toEqual(request.identity);
   expect(result.producer).toBe('rust');
   expect(result.judgeResult).toBeNull();
@@ -623,7 +628,7 @@ async function saveCapture(
   expect(after).toEqual(before);
   const requestBytes = Buffer.from(run.worker.requestBytes!);
   const resultBytes = Buffer.from(run.worker.responseBytes!);
-  const displayedSource = await source(page).inputValue();
+  const displayedSource = await editorValue(source(page));
   const values = JSON.parse(
     (await page.getByTestId('execution-input').locator('code').first().textContent())!,
   ) as InputValues;
@@ -761,7 +766,7 @@ test('binary input refuses unsorted and invalid drafts before preparing, preserv
     await expect(
       panel(page).getByRole('button', { name: '准备运行样例', exact: true }),
     ).toBeDisabled();
-    await expect(page.getByTestId('input-field-values')).toHaveValue(draft.values);
+    await expectEditorValue(page.getByTestId('input-field-values'), draft.values);
     expect(
       await page.evaluate(() =>
         window.__verticalObservation.workers.filter((worker) =>
@@ -795,6 +800,7 @@ test('all four demonstration and three algorithm catalog links open the correct 
   page,
 }, testInfo) => {
   await page.goto('/#/cases');
+  await page.getByText('基础语法与更多案例', { exact: true }).click();
   await expect(page.locator('.case-card a[href^="#/visualize/case.c."]')).toHaveCount(7);
   const visited = [];
   for (const caseId of caseSetIds) {
@@ -805,12 +811,15 @@ test('all four demonstration and three algorithm catalog links open the correct 
     await expect(page.getByTestId('input-panel')).toBeVisible();
     await expect(panel(page)).toHaveAttribute('data-state', 'ready');
     await expect(panel(page).getByRole('button', { name: '运行示例', exact: true })).toBeEnabled();
-    await expect(
+    await expectEditorValue(
       page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
-    ).not.toHaveValue('');
+      '',
+      { not: true },
+    );
     visited.push({ caseId, route: new URL(page.url()).hash });
     await page.getByRole('link', { name: '返回案例目录', exact: true }).click();
     await expect(page).toHaveURL(/#\/cases$/u);
+    await page.getByText('基础语法与更多案例', { exact: true }).click();
   }
   await testInfo.attach('08.4-seven-catalog-links', {
     body: JSON.stringify(visited),

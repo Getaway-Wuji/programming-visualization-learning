@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import { expect, test, type Page } from '@playwright/test';
 
 const exercise = '/#/practice/exercise.c6.s2.1';
@@ -63,20 +64,21 @@ test('unsaved edits are protected on sidebar navigation and browser back', async
   await page.locator('.c6-practice-entry').first().click();
   const changed = '// preserved unsaved text\n' + answer;
   await editor(page).fill(changed);
-  page.once('dialog', (dialog) => dialog.dismiss());
-  await page
+  const home = page
     .getByRole('navigation', { name: '主导航' })
-    .getByRole('link', { name: '学习首页', exact: true })
-    .click();
+    .getByRole('link', { name: '学习首页', exact: true });
+  const confirm = (accept: boolean) =>
+    page.waitForEvent('dialog').then(async (dialog) => {
+      expect(dialog.type()).toBe('confirm');
+      expect(dialog.message()).toContain('未保存');
+      if (accept) await dialog.accept();
+      else await dialog.dismiss();
+    });
+  await Promise.all([confirm(false), home.click()]);
   await expect(editor(page)).toContainText('// preserved unsaved text');
-  page.once('dialog', (dialog) => dialog.dismiss());
-  await page.goBack();
+  await Promise.all([confirm(false), page.goBack()]);
   await expect(editor(page)).toContainText('// preserved unsaved text');
-  page.once('dialog', (dialog) => dialog.accept());
-  await page
-    .getByRole('navigation', { name: '主导航' })
-    .getByRole('link', { name: '学习首页', exact: true })
-    .click();
+  await Promise.all([confirm(true), home.click()]);
   await expect(page.getByRole('heading', { name: '继续学 C', exact: true })).toBeVisible();
 });
 
@@ -162,7 +164,7 @@ test('custom code also protects unsaved edits and allows leaving after saving', 
     .getByRole('link', { name: '学习首页', exact: true });
   page.once('dialog', (dialog) => dialog.dismiss());
   await home.click();
-  await expect(source).toHaveValue(answer);
+  await expectEditorValue(source, answer);
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByTestId('custom-save-status')).toContainText('草稿已保存');
   await home.click();

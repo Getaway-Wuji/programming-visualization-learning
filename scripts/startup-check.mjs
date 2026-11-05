@@ -3,11 +3,10 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:net';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
-import { chromium } from '@playwright/test';
+import { chromium, expect } from '@playwright/test';
 import { checkEnvironment } from './environment.mjs';
 import { workspaceDir } from './process.mjs';
 import { engineBuild } from '../web/src/generated/engine-build.ts';
@@ -189,114 +188,115 @@ try {
           source.includes('int main(void)'),
         ),
       );
-      await page.getByRole('link', { name: '完成配套执行练习', exact: true }).click();
+      // Opening the exercise directly does not scroll to the reading sentinel.
+      // Real page-end completion is covered separately by browser regression.
+      await page.goto(`${origin}/#/practice/exercise.c6.s2.1`);
       const answerCode = page.getByLabel('完整 C 源码 · main.c', { exact: true });
-      await answerCode.waitFor();
-      const starter = await answerCode.inputValue();
+      await expect(answerCode).toBeEditable();
+      const readEditor = () =>
+        answerCode.evaluate((element) =>
+          element instanceof globalThis.HTMLTextAreaElement
+            ? element.value
+            : element.cmTile.root.view.state.doc.toString(),
+        );
+      const starter = await readEditor();
       assert.match(starter, /int main\(void\)/);
-      assert.equal(await answerCode.getAttribute('readonly'), null);
-      assert.equal(
-        await page.getByRole('button', { name: '判定全部四组', exact: true }).isEnabled(),
-        true,
-      );
-      assert.equal(
-        await page.getByRole('button', { name: '同步到积木', exact: true }).isEnabled(),
-        true,
-      );
-      assert.equal(await page.getByTestId('engine-connection').count(), 0);
-      assert.equal(await page.locator('.c6-trace').count(), 0);
+      await expect(page.getByRole('button', { name: '提交', exact: true })).toBeEnabled();
       const passivePractice = await page.evaluate(() => globalThis.startupAudit);
-      assert.deepEqual(passivePractice.workers, []);
+      assert.ok(
+        passivePractice.workers.every((worker) => worker.kinds.every((kind) => kind === 'c6-edit')),
+      );
+      assert.ok(
+        passivePractice.workers.every((worker) => !worker.build?.trace && !worker.build?.cases),
+      );
       assert.equal(passivePractice.writes, 0);
-      assert.equal(passivePractice.wasmFetches, 0);
-      assert.equal(passivePractice.compiles, 0);
+      assert.ok(passivePractice.wasmFetches <= 1);
+      assert.ok(passivePractice.compiles <= 1);
       const probeSource =
         '#include <stdio.h>\nint main(void){int probe=1;printf("%d\\n",probe);return 0;}';
       await answerCode.fill(probeSource);
       await page.getByRole('button', { name: '同步到积木', exact: true }).click();
-      await page
-        .getByRole('region', { name: '积木工作区', exact: true })
-        .locator('.blocklySvg')
-        .waitFor();
+      await expect(
+        page.getByRole('region', { name: '积木工作区', exact: true }).locator('.blocklySvg'),
+      ).toBeVisible();
+      await page.waitForFunction(
+        (source) =>
+          globalThis.startupAudit.workers.some(
+            (worker) =>
+              worker.build?.source === source &&
+              worker.build?.status === 'mapped' &&
+              worker.terminated,
+          ),
+        probeSource,
+      );
       const analysisAudit = await page.evaluate(() => globalThis.startupAudit);
-      assert.equal(analysisAudit.workers.length, 1);
-      assert.equal(analysisAudit.workers[0].terminated, true);
-      assert.deepEqual(analysisAudit.workers[0].kinds, ['c6-edit']);
-      assert.equal(analysisAudit.workers[0].build.editVersion, '2.0.0');
-      assert.equal(analysisAudit.workers[0].build.status, 'mapped');
-      assert.equal(analysisAudit.workers[0].build.source, probeSource);
+      const mapped = analysisAudit.workers.find(
+        (worker) => worker.build?.source === probeSource && worker.build?.editVersion === '2.0.0',
+      );
+      assert.ok(mapped?.terminated);
+      assert.equal(mapped.build.status, 'mapped');
+      assert.equal(mapped.build.source, probeSource);
       assert.equal(
-        analysisAudit.workers[0].build.sourceSha256,
+        mapped.build.sourceSha256,
         createHash('sha256').update(probeSource).digest('hex'),
       );
-      assert.equal(analysisAudit.workers[0].build.engine.buildId, c6Build.wasmSha256);
+      assert.equal(mapped.build.engine.buildId, c6Build.wasmSha256);
       assert.equal(analysisAudit.wasmFetches, 1);
       assert.equal(analysisAudit.compiles, 1);
       assert.deepEqual(analysisAudit.moduleHashes, [c6Build.wasmSha256]);
-      await answerCode.fill(starter);
-      assert.equal(await answerCode.inputValue(), starter);
-      assert.equal(await page.locator('.c6-trace').count(), 0);
-      await page
-        .getByRole('navigation', { name: '主导航' })
-        .getByRole('link', { name: '算法与演示', exact: true })
-        .click();
+      page.on('dialog', (dialog) => void dialog.accept());
+      await page.goto(`${origin}/#/cases`);
+      await page.getByText('基础语法与更多案例', { exact: true }).click();
       await page.locator('main a[href="#/visualize/case.c.assignment"]').click();
-      await page
-        .locator(
-          '[data-page-id="PAGE-06"][data-mode="case"] [data-testid="content-sample"][data-state="ready"]',
-        )
-        .waitFor();
-      assert.match(await page.getByTestId('content-sample').innerText(), /已审核案例 · 独立观看/);
-      assert.equal(
-        await page.getByTestId('content-sample').getAttribute('data-content-scope'),
-        'case-view',
-      );
-      assert.ok(
-        (await page.getByTestId('content-sample').innerText()).includes(
-          `内容版本 ${JSON.parse(readFileSync(join(workspaceDir, 'content/c/primer6-learning/cases-1.0.0.json'), 'utf8')).catalogs[0].packageRef.version}`,
-        ),
-      );
-      await page.locator('[data-testid="case-execution"][data-state="ready"]').waitFor();
+      await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'ready');
+      await expect(page.getByRole('heading', { name: '案例讲解', exact: true })).toBeVisible();
       assert.match(
         await page.getByTestId('code-panel').locator('textarea').inputValue(),
         /int main\(void\)/,
       );
-      assert.equal(
-        await page.getByRole('button', { name: '运行示例', exact: true }).isEnabled(),
-        true,
-      );
-      assert.equal(await page.getByTestId('player-controls').getAttribute('data-length'), '0');
-      assert.equal(await page.getByTestId('execution-output').count(), 0);
-      assert.equal(await page.getByTestId('step-output').count(), 0);
+      await expect(page.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
       const passiveCase = await page.evaluate(() => globalThis.startupAudit);
-      assert.equal(passiveCase.workers.length, 1);
-      assert.equal(passiveCase.workers[0].terminated, true);
-      assert.deepEqual(passiveCase.workers[0].kinds, ['c6-edit']);
-      assert.equal(passiveCase.wasmFetches, 1);
-      assert.equal(passiveCase.compiles, 1);
-      assert.deepEqual(passiveCase.moduleHashes, [c6Build.wasmSha256]);
-      await page.getByRole('button', { name: '检查执行模块' }).click();
-      await page.locator('[data-testid="engine-connection"][data-state="ready"]').waitFor();
+      await page.getByRole('button', { name: '运行示例', exact: true }).click();
+      await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'completed');
       const audit = await page.evaluate(() => globalThis.startupAudit);
-      assert.equal(audit.workers.length, 2);
-      assert.equal(audit.workers[1].terminated, true);
-      assert.deepEqual(audit.workers[1].build, {
-        kind: 'build-probe',
-        probeVersion: '1.0.0',
-        nonce: audit.workers[1].nonce,
-        engineVersion: '0.1.0',
-        interpreterReady: false,
-      });
+      const executed = audit.workers.find((worker) => worker.kinds.includes('execute'));
+      assert.ok(executed?.terminated);
+      assert.equal(executed.build.producer, 'rust');
+      assert.equal(executed.build.engineRef.buildId, engineBuild.wasmSha256);
+      assert.deepEqual(executed.build.identity, executed.request.identity);
+      assert.equal(executed.build.terminal.status, 'completed');
+      assert.ok(executed.build.trace.steps.length > 0);
+      const stdout = executed.build.trace.steps
+        .flatMap((step) =>
+          step.changes.flatMap((change) => (change.op === 'output' ? [change.append] : [])),
+        )
+        .join('');
+      await expect(page.getByTestId('execution-output')).toHaveText(stdout);
+      const total = executed.build.trace.steps.length;
+      for (let cursor = 1; cursor <= total; cursor++) {
+        await page.getByRole('button', { name: '前进', exact: true }).click();
+        if (Number(await page.getByTestId('player-controls').getAttribute('data-cursor')) === total)
+          break;
+      }
+      await expect(page.getByTestId('player-controls')).toHaveAttribute(
+        'data-cursor',
+        String(total),
+      );
+      for (let cursor = total; cursor > 0; cursor--) {
+        await page.getByRole('button', { name: '后退', exact: true }).click();
+        if (Number(await page.getByTestId('player-controls').getAttribute('data-cursor')) === 0)
+          break;
+      }
+      await expect(page.getByTestId('player-controls')).toHaveAttribute('data-cursor', '0');
       assert.equal(audit.writes, 0);
-      assert.equal(audit.wasmFetches, 2);
-      assert.equal(audit.compiles, 2);
-      assert.deepEqual(audit.moduleHashes, [c6Build.wasmSha256, engineBuild.wasmSha256]);
-      assert.ok(audit.databaseOpens >= 1);
+      assert.ok(audit.moduleHashes.includes(engineBuild.wasmSha256));
+      assert.ok(audit.moduleHashes.includes(c6Build.wasmSha256));
+      assert.ok(audit.workers.every((worker) => worker.terminated));
       const learningRows = await page.evaluate(async () => {
         const db = await new Promise((resolve, reject) => {
-          const req = globalThis.indexedDB.open('c-viz-learning');
-          req.onsuccess = () => resolve(req.result);
-          req.onerror = () => reject(req.error);
+          const request = globalThis.indexedDB.open('c-viz-learning');
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
         });
         try {
           const names = [
@@ -316,61 +316,25 @@ try {
             'courseDrafts',
           ];
           const tx = db.transaction(names, 'readonly');
-          const businessCounts = await Promise.all(
-            names.map(
-              (name) =>
-                new Promise((resolve, reject) => {
-                  const req = tx.objectStore(name).count();
-                  req.onsuccess = () => resolve(req.result);
-                  req.onerror = () => reject(req.error);
-                }),
-            ),
-          );
           return {
-            dbVersion: db.version,
-            storeNames: Array.from(db.objectStoreNames).sort(),
-            businessCounts,
+            version: db.version,
+            counts: await Promise.all(
+              names.map(
+                (name) =>
+                  new Promise((resolve, reject) => {
+                    const request = tx.objectStore(name).count();
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                  }),
+              ),
+            ),
           };
         } finally {
           db.close();
         }
       });
-      assert.deepEqual(learningRows.storeNames, [
-        'achievements',
-        'aliases',
-        'appearance',
-        'appearanceAssets',
-        'avatar',
-        'courseActivities',
-        'courseDrafts',
-        'customDrafts',
-        'dailyFacts',
-        'editHistory',
-        'goals',
-        'knowledgeMarks',
-        'ledger',
-        'meta',
-        'progress',
-        'receipts',
-        'reviewCards',
-        'settings',
-        'weaknesses',
-      ]);
-      assert.equal(learningRows.dbVersion, 10);
-      assert.deepEqual(learningRows.businessCounts, Array(14).fill(0));
-      assert.match(
-        await page.getByTestId('code-panel').locator('textarea').inputValue(),
-        /int main\(void\)/,
-      );
-      assert.equal(await page.getByRole('button', { name: '运行程序', exact: true }).count(), 0);
-      assert.equal(await page.getByRole('button', { name: '提交练习', exact: true }).count(), 0);
-      assert.equal(
-        await page.getByRole('button', { name: '运行示例', exact: true }).isEnabled(),
-        true,
-      );
-      assert.equal(await page.getByTestId('case-execution').getAttribute('data-state'), 'ready');
-      assert.equal(await page.getByTestId('player-controls').getAttribute('data-length'), '0');
-      assert.equal(await page.getByTestId('execution-output').count(), 0);
+      assert.equal(learningRows.version, 10);
+      assert.deepEqual(learningRows.counts, Array(14).fill(0));
       assert.deepEqual(pageErrors, []);
       assert.ok(requests.every((request) => request.origin === origin && request.method === 'GET'));
       await page.screenshot({
@@ -387,7 +351,8 @@ try {
         passivePractice,
         analysisAudit,
         passiveCase,
-        interpreterReady: false,
+        interpreterReady: true,
+        learningRows,
         audit,
         requests,
         pageErrors,

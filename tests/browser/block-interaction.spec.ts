@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { openIndependentRepair } from './current-course-helpers';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
@@ -220,7 +221,7 @@ test('keyboard editing starts folded, remains keyboard reachable and opening it 
   await summary.focus();
   await page.keyboard.press('Enter');
   await expect(disclosure(page)).toHaveAttribute('open', '');
-  await practice(page).getByRole('button', { name: '准备代码', exact: true }).click();
+  await expect(page.getByTestId('code-panel')).toBeVisible();
   await practice(page).getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(practice(page)).toHaveAttribute('data-state', 'passed');
   const worker = await observedCaseSetExecute(page);
@@ -231,9 +232,9 @@ test('keyboard editing starts folded, remains keyboard reachable and opening it 
   await controls(page).getByRole('button', { name: '前进', exact: true }).click();
   const cursor = await controls(page).getAttribute('data-cursor');
   const ids = await nativeIds(page);
-  const source = await page
-    .getByRole('textbox', { name: '当前执行的 C 代码', exact: true, includeHidden: true })
-    .inputValue();
+  const source = await editorValue(
+    page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true, includeHidden: true }),
+  );
   await summary.focus();
   await page.keyboard.press('Enter');
   await expect(disclosure(page)).not.toHaveAttribute('open', '');
@@ -266,9 +267,13 @@ test('keyboard editing starts folded, remains keyboard reachable and opening it 
       expect(await nativeIds(page)).toEqual(ids);
       await expect(controls(page)).toHaveAttribute('data-cursor', cursor!);
       expect(
-        await page
-          .getByRole('textbox', { name: '当前执行的 C 代码', exact: true, includeHidden: true })
-          .inputValue(),
+        await editorValue(
+          page.getByRole('textbox', {
+            name: '当前执行的 C 代码',
+            exact: true,
+            includeHidden: true,
+          }),
+        ),
       ).toBe(source);
       samples.push({ theme, width, cursor, ids });
     }
@@ -362,7 +367,7 @@ test('native flyout dragging builds nested arithmetic and rejects wrong connecti
   await blockWorkspace(page).getByRole('button', { name: '重做', exact: true }).click();
   await expect.poll(async () => (await nativeIds(page)).includes(invalid.id)).toBe(false);
   await expect(page.getByTestId('block-issues')).toHaveCount(0);
-  await practice(page).getByRole('button', { name: '准备代码', exact: true }).click();
+  await expect(page.getByTestId('code-panel')).toBeVisible();
   await practice(page).getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(practice(page)).toHaveAttribute('data-state', 'passed');
   const worker = await observedCaseSetExecute(page);
@@ -371,9 +376,10 @@ test('native flyout dragging builds nested arithmetic and rejects wrong connecti
   expect(result.producer).toBe('rust');
   expect(result.judgeResult?.status).toBe('met');
   expect(request.source.text).toMatch(/\(\(\(x \* 2\) \+ 3\) \+ 0\)/);
-  await expect(
+  await expectEditorValue(
     page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true, includeHidden: true }),
-  ).toHaveValue(request.source.text);
+    request.source.text,
+  );
   await attach(info, 'native-pointer-nesting-delete-undo-redo-and-real-rust', {
     detached,
     arithmetic,
@@ -446,13 +452,13 @@ test('a statement stack reconnects by native pointer with its child retained and
   await open(page);
   if ((await disclosure(page).getAttribute('open')) !== null)
     await disclosure(page).locator('summary').click();
-  await practice(page).getByRole('button', { name: '准备代码', exact: true }).click();
+  await expect(page.getByTestId('code-panel')).toBeVisible();
   const source = page.getByRole('textbox', {
     name: '当前执行的 C 代码',
     exact: true,
     includeHidden: true,
   });
-  const before = await source.inputValue();
+  const before = await editorValue(source);
   await canvas(page).scrollIntoViewIfNeeded();
   const ids = await echoBlocks(page),
     id = ids.output;
@@ -479,8 +485,8 @@ test('a statement stack reconnects by native pointer with its child retained and
   await page.mouse.up();
   await expect.poll(() => parent(page, id)).toBe(beforeParent);
   await expect.poll(() => parent(page, child)).toBe(id);
-  await practice(page).getByRole('button', { name: '准备代码', exact: true }).click();
-  await expect(source).toHaveValue(before);
+  await expect(page.getByTestId('code-panel')).toBeVisible();
+  await expectEditorValue(source, before);
   await attach(info, 'native-statement-stack-detach-and-reconnect', {
     id,
     child,

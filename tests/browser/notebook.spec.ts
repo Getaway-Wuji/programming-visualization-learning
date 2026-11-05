@@ -1,3 +1,7 @@
+import { editorValue, expectEditorValue } from './editor-value';
+import { decodeMemoryResult } from '../../web/src/engine/memory-protocol';
+import type { MemoryBugRequest } from '../../web/src/memory-bugs/protocol';
+import { engineBuild } from '../../web/src/generated/memory/engine-build';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import {
@@ -24,7 +28,7 @@ const mistake = (page: Page, id: string) =>
   });
 const errorRow = (page: Page) => mistake(page, 'exercise.c.bug-parenthesis');
 const unfamiliarRows = (page: Page) => page.locator('.c6-knowledge-list > li');
-const emptyMistakes = (page: Page) => page.getByText('暂无已保存的错题。', { exact: true });
+const emptyMistakes = (page: Page) => page.locator('p').filter({ hasText: /^暂无已保存的错题。/ });
 
 test('15.2 formal stale mark retry cannot overwrite a peer command and re-reading enables a fresh explicit action', async ({
   page,
@@ -78,10 +82,11 @@ test('15.2 formal actual C++ pointer errors collect while loop resource or deadl
   page,
 }) => {
   test.setTimeout(60000);
+  await observeCaseSetExecution(page);
   await page.goto('/#/bugs/memory/exercise.cpp.bug-uninitialized-pointer');
   await ready(page);
-  await expect(page.getByRole('button', { name: '提交全部4组', exact: true })).toBeEnabled();
-  await page.getByRole('button', { name: '提交全部4组', exact: true }).click();
+  await expect(page.getByRole('button', { name: '提交', exact: true })).toBeEnabled();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(page.getByTestId('memory-bug-session')).toHaveAttribute('data-state', 'unmet');
   await expect(page.getByTestId('memory-bug-session')).toHaveAttribute('data-save-state', 'saved');
   await notebook(page);
@@ -89,13 +94,43 @@ test('15.2 formal actual C++ pointer errors collect while loop resource or deadl
   const before = await archive(page);
   await page.goto('/#/bugs/memory/exercise.cpp.bug-missing-update');
   await ready(page);
-  await expect(page.getByRole('button', { name: '提交全部4组', exact: true })).toBeEnabled();
-  await page.getByRole('button', { name: '提交全部4组', exact: true }).click();
+  await expect(page.getByRole('button', { name: '提交', exact: true })).toBeEnabled();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(page.getByTestId('memory-bug-session')).toHaveAttribute(
     'data-state',
     /^(unmet|failed)$/,
   );
-  await expect(page.getByTestId('memory-bug-session')).toContainText(/E_STEP_LIMIT|E_DEADLINE/);
+  await expect(page.getByTestId('oj-verdict')).toHaveText('提交未完成，请重试');
+  const captures = await page.evaluate(() =>
+    window.__verticalObservation.workers.map((worker) =>
+      (
+        worker as unknown as {
+          captureEncoded: () => { requestBase64: string | null; responseBase64: string | null };
+        }
+      ).captureEncoded(),
+    ),
+  );
+  const incomplete = [];
+  for (const capture of captures) {
+    if (!capture.requestBase64 || !capture.responseBase64) continue;
+    const request = JSON.parse(
+      Buffer.from(capture.requestBase64, 'base64').toString('utf8'),
+    ) as MemoryBugRequest;
+    if (request.bug?.exerciseId !== 'exercise.cpp.bug-missing-update') continue;
+    const { bugJudgement, ...packet } = JSON.parse(
+      Buffer.from(capture.responseBase64, 'base64').toString('utf8'),
+    );
+    expect(bugJudgement.exerciseRef.id).toBe(request.bug.exerciseId);
+    expect(bugJudgement.caseKey).toBe(request.bug.caseKey);
+    expect(bugJudgement.status).toBe('unmet');
+    const { bug, ...base } = request;
+    expect(bug.version).toBe('1.0.0');
+    const bytes = new TextEncoder().encode(JSON.stringify(packet));
+    const result = await decodeMemoryResult(bytes.buffer, base, engineBuild.wasmSha256);
+    expect(result.terminal.code).toMatch(/^E_(STEP_LIMIT|DEADLINE)$/);
+    incomplete.push(result.terminal);
+  }
+  expect(incomplete.length).toBeGreaterThan(0);
   await notebook(page);
   await expect(mistake(page, 'exercise.cpp.bug-missing-update')).toHaveCount(0);
   expect((await archive(page)).receipts).toEqual(before.receipts);
@@ -122,12 +157,12 @@ async function failed(page: Page) {
   await ready(page);
 }
 async function changePrint(page: Page, expression: string) {
-  const source = await code(page).inputValue();
+  const source = await editorValue(code(page));
   const changed = source.replace(/printf\([^;]+;/, `printf("%d\\n", ${expression});`);
   await code(page).clear();
-  await expect(code(page)).toHaveValue('');
+  await expectEditorValue(code(page), '');
   await code(page).fill(changed);
-  await expect(code(page)).toHaveValue(changed);
+  await expectEditorValue(code(page), changed);
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
 }
 async function prepareArithmeticRepair(page: Page) {
@@ -162,7 +197,7 @@ test('15.2 common three widths keep notebook navigation and meaningful empty act
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth - innerWidth),
     ).toBeLessThanOrEqual(1);
-    const action = page.getByRole('link', { name: '打开复习队列', exact: true });
+    const action = page.getByRole('link', { name: '去做一道练习 →', exact: true });
     await action.focus();
     await expect(action).toBeFocused();
     await page.screenshot({ path: `${folder}/empty-${width}.png`, fullPage: true });
@@ -285,7 +320,9 @@ test('15.2 formal double mark, refresh, source review and familiar tombstone hav
   page,
   context,
 }) => {
+  await confirm(page, 'lesson.c6.s2.1');
   await lesson(page);
+  await expect.poll(async () => (await archive(page)).goals.length).toBe(1);
   const before = await archive(page);
   await variableMark(page).evaluate((button) => {
     (button as HTMLButtonElement).click();
@@ -340,7 +377,9 @@ test('15.2 formal native mark rollback and exact retry preserve the original com
       return key === undefined ? put.call(this, value) : put.call(this, value, key);
     };
   });
+  await confirm(page, 'lesson.c6.s2.1');
   await lesson(page);
+  await expect.poll(async () => (await archive(page)).goals.length).toBe(1);
   const before = await archive(page);
   await page.evaluate(() => {
     (window as unknown as { __markQuota: { armed: boolean } }).__markQuota.armed = true;

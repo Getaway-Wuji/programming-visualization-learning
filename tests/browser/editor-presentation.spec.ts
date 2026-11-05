@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { currentEditorRegression } from './current-editor-regression';
 import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -32,10 +33,13 @@ const panel = (page: Page) => page.getByTestId('practice-execution');
 const layout = (page: Page) => page.getByTestId('practice-editor-layout');
 const editor = (page: Page) => page.getByTestId('draft-code-editor');
 const code = (page: Page) => page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
-const preference = (page: Page) => page.getByTestId('block-workspace-preference');
+const preferencePages = new WeakMap<Page, Page>();
+const preferencePage = (page: Page) =>
+  page.url().includes('/settings') ? page : (preferencePages.get(page) ?? page);
+const preference = (page: Page) => preferencePage(page).getByTestId('block-workspace-preference');
 const select = (page: Page) =>
   preference(page).getByRole('combobox', { name: '积木显示', exact: true });
-const prefStatus = (page: Page) => page.getByTestId('block-preference-save-status');
+const prefStatus = (page: Page) => preferencePage(page).getByTestId('block-preference-save-status');
 const action = (page: Page, name: string) => panel(page).getByRole('button', { name, exact: true });
 type Preference = 'auto' | 'show' | 'hide';
 
@@ -153,15 +157,26 @@ async function counts(page: Page) {
     ).length,
   }));
 }
+async function ensurePreference(page: Page) {
+  if (page.url().includes('/settings') || preferencePages.has(page)) return;
+  const settings = await page.context().newPage();
+  await settings.setViewportSize(page.viewportSize()!);
+  await settings.goto('/#/settings?panel=display');
+  await expect(settings.getByTestId('block-workspace-preference')).toBeVisible();
+  preferencePages.set(page, settings);
+}
 async function choose(page: Page, value: Preference) {
+  await ensurePreference(page);
   await expect(select(page)).toBeEnabled();
-  const changed = (await select(page).inputValue()) !== value;
+  const changed = (await editorValue(select(page))) !== value;
   if (changed) await select(page).selectOption(value);
-  await expect(select(page)).toHaveValue(value);
+  await expectEditorValue(select(page), value);
   if (changed) {
     await expect(prefStatus(page)).toHaveAttribute('data-save-state', /^(saved|temporary)$/);
     if ((await prefStatus(page).getAttribute('data-save-state')) === 'temporary') {
-      await page.getByRole('button', { name: '重新读取并保存选择', exact: true }).click();
+      await preference(page)
+        .getByRole('button', { name: '重新读取并保存选择', exact: true })
+        .click();
       await expect(prefStatus(page)).toHaveAttribute('data-save-state', 'saved');
     }
   }
@@ -171,7 +186,8 @@ async function choose(page: Page, value: Preference) {
 async function open(page: Page, id = echo, mode: Preference = 'hide') {
   await page.goto(`/#/practice/${id}`);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(select(page)).toBeVisible();
+  await ensurePreference(page);
+  await choose(page, 'show');
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await choose(page, mode);
   if (mode !== 'hide' && !(await code(page).isVisible()))
@@ -182,7 +198,7 @@ async function open(page: Page, id = echo, mode: Preference = 'hide') {
 }
 async function fillSynced(page: Page, text: string) {
   await code(page).fill(text);
-  await expect(code(page)).toHaveValue(text);
+  await expectEditorValue(code(page), text);
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
   await expect(action(page, '提交练习')).toBeEnabled();
 }
@@ -242,9 +258,11 @@ async function evidence(page: Page, info: TestInfo, label: string, details: unkn
   const values = {
     label,
     browser: info.project.name,
-    preference: await select(page).inputValue(),
-    blocksVisible: await layout(page).getAttribute('data-blocks-visible'),
-    source: await code(page).inputValue(),
+    preference: await editorValue(select(page)),
+    blocksVisible: (await layout(page).count())
+      ? await layout(page).getAttribute('data-blocks-visible')
+      : 'unmounted',
+    source: await editorValue(code(page)),
     documentRevision: await editor(page).getAttribute('data-document-revision'),
     archive: await snapshot(page),
     runs: runs.map((run) => ({
@@ -283,7 +301,7 @@ for (const exercise of content.exercises)
       'data-save-state',
       'saved',
     );
-    await expect(code(page)).toHaveValue(answer);
+    await expectEditorValue(code(page), answer);
     const saved = await snapshot(page);
     const workersBeforeVisibility = await counts(page);
     const revision = await editor(page).getAttribute('data-document-revision');
@@ -293,7 +311,7 @@ for (const exercise of content.exercises)
     await expect(panel(page)).toHaveAttribute('data-state', 'passed');
     await choose(page, 'hide');
     await expect(blockWorkspace(page)).toBeHidden();
-    await expect(code(page)).toHaveValue(answer);
+    await expectEditorValue(code(page), answer);
     expect(await counts(page)).toEqual(workersBeforeVisibility);
     sameLearning(saved, await snapshot(page));
     const runs = await evidence(page, info, exercise.id);
@@ -341,9 +359,11 @@ test('automatic presentation follows each lesson recommendation and explicit pre
       'data-learning-storage-status',
       'ready',
     );
+    await choose(page, 'show');
     await choose(page, 'auto');
     const baseId = retained.find((q) => q.exerciseRef.id === exercise.id)!.baseExerciseRef.id;
-    const visible = guidance.find((g) => g.exerciseRef.id === baseId)!.preferredEditor === 'blocks';
+    expect(guidance.some((g) => g.exerciseRef.id === baseId)).toBe(true);
+    const visible = false; // Independent Bug exercises now default to code answers.
     await expect(layout(page)).toHaveAttribute('data-blocks-visible', visible ? 'yes' : 'no');
     if (visible) await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
     else await expect(code(page)).toBeEditable();
@@ -385,7 +405,7 @@ test('invalid and unmapped code survives hide-show, settings return and mode swi
     await choose(page, 'show');
     await expect(page.getByTestId('historical-blocks-notice')).toContainText('上次有效结构');
     await choose(page, 'hide');
-    await expect(code(page)).toHaveValue(entry.text);
+    await expectEditorValue(code(page), entry.text);
     await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
     expect(await counts(page)).toEqual(work);
     await page
@@ -398,12 +418,12 @@ test('invalid and unmapped code survives hide-show, settings return and mode swi
     // The settings category changes its query string. Return through the actual
     // retained practice route without reloading the document.
     if (!page.url().includes('/practice/')) await page.goBack();
-    await expect(code(page)).toHaveValue(entry.text);
+    await expectEditorValue(code(page), entry.text);
     await expect(editor(page)).toHaveAttribute('data-sync', entry.sync);
     await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
     await choose(page, 'hide');
     await choose(page, 'show');
-    await expect(code(page)).toHaveValue(entry.text);
+    await expectEditorValue(code(page), entry.text);
     await expect(action(page, '提交练习')).toBeDisabled();
     await choose(page, 'hide');
   }
@@ -433,7 +453,7 @@ test('presentation changes preserve the accepted run, cursor, document bytes and
   const before = await snapshot(page);
   for (const value of ['show', 'hide', 'auto', 'show', 'hide'] as const) {
     await choose(page, value);
-    await expect(code(page)).toHaveValue(text);
+    await expectEditorValue(code(page), text);
     await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
     await expect(panel(page)).toHaveAttribute('data-state', 'passed');
     await expect(controls).toHaveAttribute('data-cursor', cursor!);
@@ -466,7 +486,7 @@ test('native block edits keep comments, coordinates and undo-redo across hide-sh
     .getByRole('textbox', { name: '输出格式', exact: true })
     .fill('[%d]\\n');
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-  const changed = await code(page).inputValue();
+  const changed = await editorValue(code(page));
   expect(changed).toContain('printf("[%d]\\n", x)');
   const shape = () =>
     blockWorkspace(page)
@@ -486,14 +506,14 @@ test('native block edits keep comments, coordinates and undo-redo across hide-sh
   await expect(undo).toBeEnabled();
   await undo.click();
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-  await expect(code(page)).toHaveValue(/printf\("%d\\n", x\)/);
-  await expect(code(page)).toHaveValue(/保存注释😀/);
+  await expectEditorValue(code(page), /printf\("%d\\n", x\)/);
+  await expectEditorValue(code(page), /保存注释😀/);
   await expect(redo).toBeEnabled();
   await choose(page, 'hide');
   await choose(page, 'show');
   await redo.click();
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-  await expect(code(page)).toHaveValue(changed);
+  await expectEditorValue(code(page), changed);
   expect((await counts(page)).execute).toBe(0);
   await evidence(page, info, 'native-undo-redo-through-presentation', { position, revision });
 });
@@ -514,18 +534,22 @@ test('display settings save only the block preference, preserve an unfinished an
   const saved = await snapshot(page);
   sparsePreference(before, saved, 'show');
   await page.goBack();
-  await expect(code(page)).toHaveValue(invalid);
+  await expectEditorValue(code(page), invalid);
   await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
   await expect(layout(page)).toHaveAttribute('data-blocks-visible', 'yes');
   await choose(page, 'hide');
   const hidden = await snapshot(page);
   await page.reload();
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(select(page)).toHaveValue('hide');
+  await expectEditorValue(select(page), 'hide');
+  await choose(page, 'show');
+  await choose(page, 'hide');
   await expect(layout(page)).toHaveAttribute('data-blocks-visible', 'no');
   await expect(code(page)).toBeEditable();
-  await expect(code(page)).not.toHaveValue(invalid);
-  expect(await snapshot(page)).toEqual(hidden);
+  await expectEditorValue(code(page), invalid, { not: true });
+  const restored = await snapshot(page);
+  expect(restored.meta.revision).toBe(hidden.meta.revision + 2);
+  expect({ ...restored, meta: hidden.meta }).toEqual(hidden);
   await evidence(page, info, 'settings-persistence-and-ephemeral-draft-boundary', {
     before,
     saved,
@@ -537,7 +561,7 @@ interface PreferenceFault {
   arm(kind: 'quota' | 'abort-after-success'): void;
 }
 async function installFault(page: Page) {
-  await page.addInitScript(() => {
+  await page.context().addInitScript(() => {
     const native = IDBObjectStore.prototype.put;
     let selected: 'quota' | 'abort-after-success' | null = null;
     Object.assign(window, {
@@ -560,7 +584,7 @@ async function installFault(page: Page) {
   });
 }
 async function armFault(page: Page, kind: 'quota' | 'abort-after-success') {
-  await page.evaluate(
+  await preferencePage(page).evaluate(
     (kind) =>
       (window as unknown as { __preferenceFault: PreferenceFault }).__preferenceFault.arm(kind),
     kind,
@@ -583,8 +607,9 @@ test('native appearance quota and transaction abort retain an honest temporary c
     await select(page).selectOption('hide');
     await expect(prefStatus(page)).toHaveAttribute('data-save-state', 'temporary');
     await expect(prefStatus(page)).toContainText('未保存');
-    await expect(layout(page)).toHaveAttribute('data-blocks-visible', 'no');
-    await expect(code(page)).toHaveValue(text);
+    // A failed choice remains temporary in the settings tab and is not broadcast.
+    await expect(layout(page)).toHaveAttribute('data-blocks-visible', 'yes');
+    await expectEditorValue(code(page), text);
     expect(await snapshot(page)).toEqual(before);
     await preference(page).getByRole('button', { name: '重新读取并保存选择', exact: true }).click();
     await expect(prefStatus(page)).toHaveAttribute('data-save-state', 'saved');
@@ -620,14 +645,14 @@ test('a stale failed preference cannot overwrite peer settings and explicit retr
   expect(peerSaved.appearance.preset).toBe('cute');
   expect(peerSaved.appearance.blockWorkspace).toBe('show');
   await page.bringToFront();
-  await expect(select(page)).toHaveValue('hide');
+  await expectEditorValue(select(page), 'hide');
   await expect(prefStatus(page)).toHaveAttribute('data-save-state', 'temporary');
   expect(await snapshot(page)).toEqual(peerSaved);
   await preference(page).getByRole('button', { name: '重新读取并保存选择', exact: true }).click();
   await expect(prefStatus(page)).toHaveAttribute('data-save-state', 'saved');
   const after = await snapshot(page);
   sparsePreference(peerSaved, after, 'hide');
-  await expect(code(page)).toHaveValue(text);
+  await expectEditorValue(code(page), text);
   sameLearning(before, after);
   await evidence(page, info, 'peer-appearance-save-and-sparse-preference-retry', {
     before,
@@ -663,16 +688,16 @@ test('a peer clear discards a failed preference and unfinished answer instead of
     .not.toBe(before.meta.generation);
   await page.bringToFront();
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(select(page)).toHaveValue('auto');
+  await expectEditorValue(select(page), 'auto');
   await expect(
     preference(page).getByRole('button', { name: '重新读取并保存选择', exact: true }),
   ).toHaveCount(0);
-  await expect(code(page)).not.toHaveValue(invalid);
+  await expectEditorValue(code(page), invalid, { not: true });
   await expect(editor(page)).toHaveAttribute('data-sync', 'invalid');
-  expect(await code(page).inputValue()).toContain(
+  expect(await editorValue(code(page))).toContain(
     retained.find((q) => q.exerciseRef.id === echo)!.brokenBody,
   );
-  await expect(action(page, '提交练习')).toBeDisabled();
+  await expect(panel(page).getByRole('button', { name: /^(提交|提交练习)$/ })).toBeDisabled();
   expect((await snapshot(page)).appearance.blockWorkspace).toBe('auto');
   await evidence(page, info, 'generation-clear-discards-temporary-choice', {
     before,
@@ -700,7 +725,7 @@ test('hidden blocks do not bypass the same teaching checks or accepted source id
   const hidden = await counts(page);
   await choose(page, 'show');
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
-  await expect(code(page)).toHaveValue(text);
+  await expectEditorValue(code(page), text);
   await expect(panel(page)).toHaveAttribute('data-state', 'unmet');
   expect(await counts(page)).toEqual(hidden);
   await action(page, '提交练习').click();
@@ -725,14 +750,14 @@ test('narrow-screen keyboard preference controls keep the current code editable 
   const revision = await editor(page).getAttribute('data-document-revision');
   const before = await snapshot(page);
   await select(page).focus();
-  await page.keyboard.press('Home');
-  await expect(select(page)).toHaveValue('auto');
+  await preferencePage(page).keyboard.press('Home');
+  await expectEditorValue(select(page), 'auto');
   await expect.poll(async () => (await snapshot(page)).appearance.blockWorkspace).toBe('auto');
   await expect(code(page)).toBeEditable();
-  await expect(code(page)).toHaveValue(text);
+  await expectEditorValue(code(page), text);
   await select(page).focus();
-  await page.keyboard.press('End');
-  await expect(select(page)).toHaveValue('hide');
+  await preferencePage(page).keyboard.press('End');
+  await expectEditorValue(select(page), 'hide');
   await expect.poll(async () => (await snapshot(page)).appearance.blockWorkspace).toBe('hide');
   await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
   await action(page, '运行本组').scrollIntoViewIfNeeded();
@@ -756,7 +781,8 @@ test('a blocks-first lesson retains an incomplete block draft when hiding before
   await page.goto(`/#/practice/${id}`);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
-  await expect(select(page)).toHaveValue('auto');
+  await ensurePreference(page);
+  await expectEditorValue(select(page), 'auto');
   await choose(page, 'show');
   await expect(layout(page)).toHaveAttribute('data-blocks-visible', 'yes');
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
@@ -787,7 +813,7 @@ test('a blocks-first lesson retains an incomplete block draft when hiding before
   await expect(blockWorkspace(page)).toBeHidden();
   await expect(code(page)).toBeEditable();
   await expect(editor(page)).toHaveAttribute('data-sync', 'invalid');
-  const retainedText = await code(page).inputValue();
+  const retainedText = await editorValue(code(page));
   const revision = await editor(page).getAttribute('data-document-revision');
   await expect(action(page, '运行本组')).toBeDisabled();
   await expect(action(page, '提交练习')).toBeDisabled();
@@ -797,7 +823,7 @@ test('a blocks-first lesson retains an incomplete block draft when hiding before
   expect(await blockOptions(page, /./)).toContain(disconnected[0]);
   await expect(editor(page)).toHaveAttribute('data-sync', 'invalid');
   await expect(editor(page)).toHaveAttribute('data-document-revision', revision!);
-  await expect(code(page)).toHaveValue(retainedText);
+  await expectEditorValue(code(page), retainedText);
   await choose(page, 'hide');
   await fillSynced(page, withBody(id, answers[id]));
   sameLearning(before, await snapshot(page));

@@ -73,10 +73,7 @@ test('retry preserves an initial confirmation when its separate start transactio
   );
   await page.goto('/#/lessons/lesson.c.variables-output');
   await expect(page.getByTestId('lesson-reading')).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await page.evaluate(() => (window as unknown as { armStartFailure(): void }).armStartFailure());
   await page.getByRole('button', { name: '确认已学习', exact: true }).click();
   const status = page.getByTestId('learning-save-status');

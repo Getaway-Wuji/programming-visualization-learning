@@ -249,6 +249,22 @@ interface ValidationCache {
   records: WeakMap<object, string>;
   singletons: WeakMap<object, string>;
   tables: WeakMap<object, string>;
+  objects?: { table: MemoryObject[]; facts: ObjectFacts };
+  stacks: WeakMap<MemoryFrame[], WeakMap<MemoryScope[], StackFacts>>;
+}
+interface StackFacts {
+  positions: Map<string, number>;
+  scopes: Map<string, MemoryScope>;
+  maxFrame: number;
+  maxScope: number;
+}
+interface ObjectFacts {
+  byId: Map<string, MemoryObject>;
+  idsByScope: Map<string, string[]>;
+  automatic: MemoryObject[];
+  liveBytes: number;
+  heap: number;
+  end: number;
 }
 function validateTypes(value: unknown): TypeMap {
   memoryAssert(Array.isArray(value) && value.length >= 1 && value.length <= 18);
@@ -617,7 +633,7 @@ function validateState(
   nodes: Map<string, MemoryNode>,
   inputLength: number,
   types: TypeMap,
-  cache?: ValidationCache,
+  cache: ValidationCache,
 ) {
   keys(state, ['frames', 'scopes', 'objects', 'control', 'allocator', 'output', 'counters']);
   memoryAssert(
@@ -638,35 +654,81 @@ function validateState(
   for (const op of ['control', 'allocator', 'counters'] as const)
     validateSingleton(op, state[op], nodes, inputLength, types, cache);
   memoryAssert(typeof state.output === 'string' && size(state.output) <= 16384);
-  const frames = new Map(state.frames.map((frame) => [frame.id, frame]));
-  const framePositions = new Map(state.frames.map((frame, index) => [frame.id, index]));
-  const scopes = new Map(state.scopes.map((scope) => [scope.id, scope]));
-  const objects = new Map(state.objects.map((object) => [object.id, object]));
-  const scopeIdsByFrame = new Map<string, string[]>();
-  const objectIdsByScope = new Map<string, string[]>();
+  let byScope = cache.stacks.get(state.frames);
+  if (!byScope) {
+    byScope = new WeakMap();
+    cache.stacks.set(state.frames, byScope);
+  }
+  let stack = byScope.get(state.scopes);
+  if (!stack) {
+    const frames = new Map(state.frames.map((frame) => [frame.id, frame]));
+    const positions = new Map(state.frames.map((frame, index) => [frame.id, index]));
+    const scopes = new Map(state.scopes.map((scope) => [scope.id, scope]));
+    const scopeIdsByFrame = new Map<string, string[]>();
+    let maxFrame = 0,
+      maxScope = 0;
+    for (const scope of state.scopes) {
+      memoryAssert(frames.has(scope.frameId));
+      maxScope = Math.max(maxScope, Number(scope.id.slice(1)));
+      const list = scopeIdsByFrame.get(scope.frameId) ?? [];
+      list.push(scope.id);
+      scopeIdsByFrame.set(scope.frameId, list);
+    }
+    for (const [i, frame] of state.frames.entries()) {
+      memoryAssert(frame.parentFrameId === (i ? state.frames[i - 1].id : null));
+      memoryAssert((i === 0) === (frame.callNodeId === null));
+      memoryAssert(equal(frame.scopeIds, scopeIdsByFrame.get(frame.id) ?? []));
+      maxFrame = Math.max(maxFrame, Number(frame.id.slice(1)));
+    }
+    stack = { positions, scopes, maxFrame, maxScope };
+    byScope.set(state.scopes, stack);
+  }
+  // Only immutable frame/scope relationships are cached. Allocator ceilings,
+  // object membership, aliases and active control are checked on every state.
+  memoryAssert(
+    stack.maxFrame < state.allocator.nextFrame && stack.maxScope < state.allocator.nextScope,
+  );
+  const framePositions = stack.positions;
+  const scopes = stack.scopes;
+  // Object tables are immutable within this decode. Reuse only facts whose
+  // dependencies are entirely inside that exact table; allocator, scopes and
+  // control references are still checked against every new state below.
+  let facts = cache.objects?.table === state.objects ? cache.objects.facts : undefined;
+  if (!facts) {
+    const byId = new Map(state.objects.map((object) => [object.id, object]));
+    const idsByScope = new Map<string, string[]>();
+    const automatic: MemoryObject[] = [];
+    let liveBytes = 0;
+    let end = 4096;
+    let heap = 0;
+    for (const [index, object] of state.objects.entries()) {
+      memoryAssert(object.id === `o${index + 1}`);
+      if (object.alive) {
+        liveBytes += object.byteLength;
+        if (object.storage === 'heap') heap++;
+        else {
+          automatic.push(object);
+          const ids = idsByScope.get(object.scopeId!) ?? [];
+          ids.push(object.id);
+          idsByScope.set(object.scopeId!, ids);
+        }
+      }
+      for (const cell of object.cells)
+        if (cell.value !== null && typeof cell.value === 'object')
+          pointerTarget(cell.value, byId, types);
+    }
+    for (const object of [...state.objects].sort((a, b) => a.baseAddress - b.baseAddress)) {
+      memoryAssert(object.baseAddress >= end);
+      end = object.baseAddress + object.byteLength;
+      memoryAssert(Number.isSafeInteger(end));
+    }
+    memoryAssert(heap <= 128);
+    facts = { byId, idsByScope, automatic, liveBytes, heap, end };
+    cache.objects = { table: state.objects, facts };
+  }
+  const objects = facts.byId;
   for (const scope of state.scopes) {
-    const list = scopeIdsByFrame.get(scope.frameId) ?? [];
-    list.push(scope.id);
-    scopeIdsByFrame.set(scope.frameId, list);
-  }
-  for (const object of state.objects) {
-    if (!object.alive || object.storage !== 'automatic') continue;
-    const list = objectIdsByScope.get(object.scopeId!) ?? [];
-    list.push(object.id);
-    objectIdsByScope.set(object.scopeId!, list);
-  }
-  let liveBytes = 0;
-  for (const [i, frame] of state.frames.entries()) {
-    memoryAssert(frame.parentFrameId === (i ? state.frames[i - 1].id : null));
-    memoryAssert((i === 0) === (frame.callNodeId === null));
-    memoryAssert(Number(frame.id.slice(1)) < state.allocator.nextFrame);
-    memoryAssert(equal(frame.scopeIds, scopeIdsByFrame.get(frame.id) ?? []));
-  }
-  for (const scope of state.scopes) {
-    memoryAssert(
-      frames.has(scope.frameId) && Number(scope.id.slice(1)) < state.allocator.nextScope,
-    );
-    memoryAssert(equal(scope.objectIds, objectIdsByScope.get(scope.id) ?? []));
+    memoryAssert(equal(scope.objectIds, facts.idsByScope.get(scope.id) ?? []));
     const names = scope.objectIds.map((key) => objects.get(key)!.name);
     for (const alias of scope.aliases) {
       const target = objects.get(alias.objectId);
@@ -676,32 +738,84 @@ function validateState(
     }
     memoryAssert(new Set(names).size === names.length);
   }
-  const addresses = [...state.objects].sort((a, b) => a.baseAddress - b.baseAddress);
   memoryAssert(state.allocator.nextObject === state.objects.length + 1);
-  for (const [index, object] of state.objects.entries())
-    memoryAssert(object.id === `o${index + 1}`);
-  let end = 4096;
-  let heap = 0;
-  for (const object of addresses) {
-    memoryAssert(Number(object.id.slice(1)) < state.allocator.nextObject);
-    if (object.alive && object.storage === 'automatic')
-      memoryAssert(scopes.get(object.scopeId!)?.frameId === object.frameId);
-    memoryAssert(object.baseAddress >= end);
-    end = object.baseAddress + object.byteLength;
-    memoryAssert(Number.isSafeInteger(end) && end <= state.allocator.nextAddress);
-    if (object.alive) {
-      liveBytes += object.byteLength;
-      if (object.storage === 'heap') heap++;
-    }
-    for (const cell of object.cells)
-      if (cell.value !== null && typeof cell.value === 'object')
-        pointerTarget(cell.value, objects, types);
-  }
-  memoryAssert(heap <= 128);
+  memoryAssert(facts.end <= state.allocator.nextAddress);
+  for (const object of facts.automatic)
+    memoryAssert(scopes.get(object.scopeId!)?.frameId === object.frameId);
   if (state.control.returnValue !== null && typeof state.control.returnValue === 'object')
     pointerTarget(state.control.returnValue, objects, types);
-  memoryAssert(liveBytes === state.allocator.liveBytes);
+  memoryAssert(facts.liveBytes === state.allocator.liveBytes);
   memoryAssert(state.control.activeFrameId === (state.frames.at(-1)?.id ?? null));
+}
+
+/** Maintain only the current forward decoder table. Never cache mutable facts
+ * against historical tables or expose this rolling index to public playback. */
+function advanceObjectFacts(
+  state: MemoryState,
+  next: MemoryState,
+  step: MemoryStep,
+  types: TypeMap,
+  cache: ValidationCache,
+) {
+  if (next.objects === state.objects || cache.objects?.table !== state.objects) return;
+  const facts = cache.objects.facts;
+  let expected = state.objects.length;
+  let end = facts.end;
+  // Unusual but valid insertion/address orders retain the complete validator.
+  for (const change of step.changes) {
+    if (change.op !== 'record' || change.table !== 'objects' || change.before !== null) continue;
+    const object = change.after as MemoryObject;
+    if (change.index !== expected || object.id !== `o${expected + 1}` || object.baseAddress < end) {
+      cache.objects = undefined;
+      return;
+    }
+    expected++;
+    end = object.baseAddress + object.byteLength;
+    memoryAssert(Number.isSafeInteger(end));
+  }
+  for (const change of step.changes) {
+    if (change.op !== 'record' || change.table !== 'objects') continue;
+    const before = change.before as MemoryObject | null;
+    const after = change.after as MemoryObject;
+    if (before?.alive) {
+      facts.liveBytes -= before.byteLength;
+      if (before.storage === 'heap') facts.heap--;
+      else {
+        facts.automatic = facts.automatic.filter((object) => object.id !== before.id);
+        const ids = facts.idsByScope.get(before.scopeId!)!;
+        facts.idsByScope.set(
+          before.scopeId!,
+          ids.filter((id) => id !== before.id),
+        );
+      }
+    }
+    facts.byId.set(after.id, after);
+    if (after.alive) {
+      facts.liveBytes += after.byteLength;
+      if (after.storage === 'heap') facts.heap++;
+      else {
+        facts.automatic.push(after);
+        const ids = facts.idsByScope.get(after.scopeId!) ?? [];
+        ids.push(after.id);
+        ids.sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
+        facts.idsByScope.set(after.scopeId!, ids);
+      }
+    }
+  }
+  for (const change of step.changes) {
+    if (change.op === 'record' && change.table === 'objects') {
+      for (const cell of (change.after as MemoryObject).cells)
+        if (cell.value !== null && typeof cell.value === 'object')
+          pointerTarget(cell.value, facts.byId, types);
+    } else if (change.op === 'cell' && change.after !== null && typeof change.after === 'object')
+      pointerTarget(change.after, facts.byId, types);
+  }
+  memoryAssert(facts.heap <= 128);
+  facts.end = end;
+  cache.objects = { table: next.objects, facts };
+  // New records were checked in validateChange; cell projection preserves all
+  // record fields and validates typed offsets, values and canonical cell order.
+  cache.tables.set(next.objects, 'objects');
 }
 
 /** Applies only recorded deltas, in either direction; never evaluates source. */
@@ -899,6 +1013,7 @@ export async function decodeMemoryResult(
       records: new WeakMap(),
       singletons: new WeakMap(),
       tables: new WeakMap(),
+      stacks: new WeakMap(),
     };
     keys(result, [
       'execVersion',
@@ -1071,6 +1186,7 @@ export async function decodeMemoryResult(
       // These parsed records remain private for this decode. Projection never
       // mutates them; public playback keeps the default deep-copy boundary.
       const next = projectStep(state, step, types, false, true);
+      advanceObjectFacts(state, next, step, types, cache);
       validateState(next, nodes, request.input.length, types, cache);
       const count = next.frames.length - state.frames.length;
       memoryAssert(

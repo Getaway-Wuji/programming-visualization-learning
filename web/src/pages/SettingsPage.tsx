@@ -15,7 +15,7 @@ const tabs = [
   { id: 'data', label: '本地数据' },
 ] as const;
 
-type LocalAction = 'clear' | 'settings';
+type LocalAction = 'clear' | 'settings' | 'avatar';
 
 function LocalDataConfirmation({
   action,
@@ -42,6 +42,11 @@ function LocalDataConfirmation({
       description:
         '明暗模式、动画效果、默认播放速度和后续日期目标模板会恢复默认。已记录的每日目标、学习进度、积分账本和六套主题配色保持不变。',
       button: '确认重置显示设置',
+    },
+    avatar: {
+      title: '确认重置旧偏好',
+      description: '恢复损坏的旧版偏好，保留学习记录、积分和当前显示设置。',
+      button: '确认重置旧偏好',
     },
   }[action];
   useEffect(() => {
@@ -127,10 +132,14 @@ function SettingsContent() {
     if (action === 'clear' && canClear) {
       setDisplayDraft(null);
       void service.clearLocalData();
-    } else if (action === 'settings' && resettable.includes('settings') && !busy) {
+    } else if (
+      (action === 'settings' || action === 'avatar') &&
+      resettable.includes(action) &&
+      !busy
+    ) {
       const previousDisplay = displayDraft;
-      void service.resetLocalPreference('settings').then(() => {
-        if (service.getState().lastSaved)
+      void service.resetLocalPreference(action).then(() => {
+        if (action === 'settings' && service.getState().lastSaved)
           setDisplayDraft((current) => (current === previousDisplay ? null : current));
       });
     }
@@ -399,6 +408,16 @@ function SettingsContent() {
                     <p className="notice">积分暂不可确认。不会跳过损坏账目显示一个更少的总分。</p>
                   )}
                   <div className="inline-actions">
+                    {resettable.includes('avatar') && (
+                      <button
+                        type="button"
+                        className="button button-secondary"
+                        disabled={busy}
+                        onClick={() => setConfirmation('avatar')}
+                      >
+                        重置旧偏好
+                      </button>
+                    )}
                     {resettable.includes('settings') && (
                       <button
                         type="button"

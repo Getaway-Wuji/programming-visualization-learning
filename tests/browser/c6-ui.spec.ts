@@ -1,3 +1,11 @@
+import { showPracticeBlocks } from './block-ui';
+import { reviews as retainedReviews } from './scheduler-helpers';
+import { installC6Packets } from './c6-observation';
+import { assertCurrentJudge } from './current-practice-observation';
+import { assertEveryC6State } from './current-c6-ui';
+import { finishCurrentReading } from './current-c6-ui';
+import { editorValue, expectEditorValue } from './editor-value';
+import { expectCurrentSaved } from './current-c6-ui';
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import Ajv2020 from 'ajv/dist/2020.js';
@@ -22,6 +30,10 @@ const independentCpp = JSON.parse(
   readFileSync('content/cpp/bugs/questions-1.0.0.json', 'utf8'),
 ).questions;
 
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(installC6Packets);
+});
+
 for (const question of independentC) {
   test(`independent C ${question.exerciseRef.id}: review uses only a live run and refresh keeps durable rights without restoring its trace`, async ({
     page,
@@ -36,9 +48,10 @@ for (const question of independentC) {
     await expect(page.getByRole('button', { name: '提交练习', exact: true })).toHaveCount(0);
     expect(await page.evaluate(() => window.__verticalObservation.workers.length)).toBe(0);
     await page.getByRole('link', { name: '返回练习工作区', exact: true }).click();
+    await showPracticeBlocks(page, { readOnly: false });
     const editor = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
-    await expect.poll(() => editor.inputValue()).toContain(question.brokenBody);
-    const broken = await editor.inputValue();
+    await expect.poll(() => editorValue(editor)).toContain(question.brokenBody);
+    const broken = await editorValue(editor);
     await editor.fill(broken.replace(question.brokenBody, question.solutionBody));
     await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
     await page.getByRole('button', { name: '提交练习', exact: true }).click();
@@ -60,7 +73,8 @@ for (const question of independentC) {
     const before = await readCoreArchive(page);
     await page.getByRole('link', { name: '查看本次复盘', exact: true }).click();
     await expect(page.locator('[data-mode="exercise-review"]')).toBeVisible();
-    await expect(page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true })).toHaveValue(
+    await expectEditorValue(
+      page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
       request.source.text,
     );
     await expect(page.getByTestId('practice-retained-case')).toContainText(
@@ -132,7 +146,9 @@ test('an actual old app pass resets atomically to the new book once, with no Bro
   const current = await context.newPage();
   await current.goto('/#/');
   await expect(current.getByText('0 / 404 个小节已完成', { exact: true })).toBeVisible();
-  await expect(current.getByRole('heading', { name: '已入账 0 分' })).toBeVisible();
+  await expect(
+    current.getByRole('button', { name: '积分 0，查看明细', exact: true }),
+  ).toBeVisible();
   const reset = await readCoreArchive(current);
   expect(reset.meta.generation).not.toBe(old.meta.generation);
   expect(reset.meta.schemaVersion).toBe('10.0.0');
@@ -141,15 +157,19 @@ test('an actual old app pass resets atomically to the new book once, with no Bro
   expect(reset.settings.theme).toBe(old.settings.theme);
   const initial = reset.meta.generation;
   await current.goto('/#/lessons/lesson.c6.s2.1');
-  await current.getByRole('button', { name: '我已读完本节' }).click();
-  await current.getByRole('link', { name: '完成配套执行练习' }).click();
+  await finishCurrentReading(current);
+  await current.getByRole('link', { name: '去练习' }).click();
   await current.getByLabel('完整 C 源码 · main.c').fill(exercise.referenceSource);
-  await current.getByRole('button', { name: '判定全部四组' }).click();
-  await expect(current.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await current.getByRole('button', { name: '提交' }).click();
+  await expectCurrentSaved(current);
   await current.reload();
-  await expect(
-    current.getByText('已保存首次通过记录。当前代码的运行和判题结果显示在下方。', { exact: true }),
-  ).toBeVisible();
+  await expect
+    .poll(async () =>
+      (await readCoreArchive(current)).progress.some(
+        (row) => row.eventType === 'exercise.passed' && row.subjectRef.id === exercise.ref.id,
+      ),
+    )
+    .toBe(true);
   await page
     .getByRole('button', { name: '提交练习', exact: true })
     .click({ force: true })
@@ -172,7 +192,7 @@ test('advanced preparation uses the new book instead of an empty legacy reward g
     .getByRole('link', { name: /6\.3\.5/ })
     .click();
   await expect(page.getByRole('heading', { name: /6\.3\.5/ }).first()).toBeVisible();
-  await page.getByRole('button', { name: '我已读完本节' }).click();
+  await finishCurrentReading(page);
   await page.goto('/#/advanced/lesson.c.adjacent-order');
   await expect(page.getByTestId('c6-foundation')).toContainText('基础准备尚未完成');
 });
@@ -188,8 +208,8 @@ test('new C achievements require their actual new exercise and keep the three-ba
   await expect(page.getByRole('heading', { name: '冒泡排序通关', exact: true })).toHaveCount(0);
   await page.goto('/#/practice/exercise.c6.s10.1.1');
   await page.getByLabel('完整 C 源码 · main.c').fill(arrayExercise.referenceSource);
-  await page.getByRole('button', { name: '判定全部四组' }).click();
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '提交' }).click();
+  await expectCurrentSaved(page);
   await page.goto('/#/achievements');
   await expect(
     page.locator('[data-badge-id="badge.c6.array-initialization-pass"]'),
@@ -205,8 +225,9 @@ for (const q of independentC)
     const panel = page.getByTestId('practice-execution');
     const editor = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
     await expect(panel).toHaveAttribute('data-state', 'ready');
-    await expect.poll(() => editor.inputValue()).toContain(q.brokenBody);
-    const broken = await editor.inputValue();
+    await showPracticeBlocks(page, { readOnly: false });
+    await expect.poll(() => editorValue(editor)).toContain(q.brokenBody);
+    const broken = await editorValue(editor);
     await editor.fill(broken.replace(q.brokenBody, q.solutionBody));
     await panel.getByRole('button', { name: '提交练习', exact: true }).click();
     await expect(panel).toHaveAttribute('data-state', 'passed');
@@ -216,18 +237,22 @@ for (const q of independentC)
     );
     await page.goto('/#/');
     await expect(page.getByText('0 / 404 个小节已完成', { exact: true })).toBeVisible();
-    await expect(page.getByRole('heading', { name: '已入账 10 分' })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '积分 10，查看明细', exact: true }),
+    ).toBeVisible();
     await page.reload();
-    await expect(page.getByRole('heading', { name: '已入账 10 分' })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '积分 10，查看明细', exact: true }),
+    ).toBeVisible();
   });
 
 for (const q of independentCpp)
   test(`new generation retains independent C++ repair ${q.exerciseRef.id}`, async ({ page }) => {
     await page.goto(`/#/bugs/memory/${q.exerciseRef.id}`);
     const editor = page.getByRole('textbox', { name: '编辑关卡 C++ 代码', exact: true });
-    await expect(editor).toHaveValue(q.brokenSource);
+    await expectEditorValue(editor, q.brokenSource);
     await editor.fill(q.solutionSource);
-    await page.getByRole('button', { name: '提交全部4组', exact: true }).click();
+    await page.getByRole('button', { name: '提交', exact: true }).click();
     await expect(page.getByTestId('memory-bug-session')).toHaveAttribute('data-state', 'passed');
     await expect(page.getByTestId('memory-bug-session')).toHaveAttribute(
       'data-save-state',
@@ -235,9 +260,13 @@ for (const q of independentCpp)
     );
     await page.goto('/#/');
     await expect(page.getByText('0 / 404 个小节已完成', { exact: true })).toBeVisible();
-    await expect(page.getByRole('heading', { name: '已入账 10 分' })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '积分 10，查看明细', exact: true }),
+    ).toBeVisible();
     await page.reload();
-    await expect(page.getByRole('heading', { name: '已入账 10 分' })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: '积分 10，查看明细', exact: true }),
+    ).toBeVisible();
   });
 
 test('independent repair mistakes remain linked to their own exercise and the new-book foundation', async ({
@@ -249,16 +278,14 @@ test('independent repair mistakes remain linked to their own exercise and the ne
   await page.goto(`/#/practice/${q.exerciseRef.id}`);
   const panel = page.getByTestId('practice-execution');
   await expect(panel).toHaveAttribute('data-state', 'ready');
+  await showPracticeBlocks(page, { readOnly: false });
   await panel.getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(panel).toHaveAttribute('data-state', 'unmet');
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await page.goto('/#/notebook');
   await expect(page.getByRole('heading', { name: '错题记录 · 1 题' })).toBeVisible();
   await expect(page.getByRole('heading', { name: new RegExp(q.title) })).toBeVisible();
-  await page.goto('/#/reviews');
+  await retainedReviews(page);
   await expect(page.getByRole('link', { name: /复习：7\.1/ })).toBeVisible();
   await page.goto('/#/weaknesses');
   await expect(page.locator('[data-weakness-id="knowledge.c6.s7.1"]')).toContainText(
@@ -282,7 +309,7 @@ test('normal directory and reading use the new book; A/B remain reference and fu
     .click();
   await expect(page.getByRole('heading', { name: /14\.3\.1.*初始化结构/ }).first()).toBeVisible();
   await expect(page.locator('.c6-teaching-reading pre').first()).toBeVisible();
-  await expect(page.getByRole('button', { name: '我已读完本节' })).toBeEnabled();
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'false');
   await expect(page.locator('.c6-teaching-reading')).not.toContainText(
     '修改已有成员，属于赋值，不是重新初始化',
   );
@@ -310,15 +337,19 @@ test('reading and an actual judged state remain usable at desktop, tablet and mo
   }
   await page.goto('/#/practice/exercise.c6.s2.1');
   await page.getByLabel('完整 C 源码 · main.c').fill(exercise.referenceSource);
-  await page.getByRole('button', { name: '判定全部四组' }).click();
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: '下一步', exact: true }).click();
+  await page.getByRole('button', { name: '提交' }).click();
+  await expectCurrentSaved(page);
+  const actualJudge = await assertCurrentJudge(page, exercise, 'passed');
+  actualJudge.result.cases.forEach((c, i) =>
+    assertEveryC6State(c.packet, exercise.tests[i].expectedStdout),
+  );
+  await expect(page.locator('.c6-trace')).toHaveCount(0);
   for (const width of [1440, 768, 390]) {
     await page.setViewportSize({ width, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(
       true,
     );
-    await expect(page.getByRole('button', { name: '判定全部四组' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '提交' })).toBeVisible();
     await page.screenshot({
       path: info.outputPath(`judged-${width}.jpg`),
       type: 'jpeg',
@@ -338,18 +369,18 @@ test('two tabs without broadcast retain conflicting raw drafts and cannot save t
   const editor = page.getByLabel('完整 C 源码 · main.c');
   await editor.fill('int main( { initial raw draft\n');
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
-  await expect(page.getByText('完整草稿已保存在此浏览器。', { exact: true })).toBeVisible();
+  await expect(page.getByTestId('c6-draft-save-status')).toHaveText('草稿已保存');
   const other = await context.newPage();
   await other.goto('/#/practice/exercise.c6.s2.1');
   const otherEditor = other.getByLabel('完整 C 源码 · main.c');
-  await expect(otherEditor).toHaveValue('int main( { initial raw draft\n');
+  await expectEditorValue(otherEditor, 'int main( { initial raw draft\n');
   await editor.fill('int main( { first tab saved revision two\n');
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
-  await expect(page.getByText('完整草稿已保存在此浏览器。', { exact: true })).toBeVisible();
+  await expect(page.getByTestId('c6-draft-save-status')).toHaveText('草稿已保存');
   await otherEditor.fill('int main( { second tab raw text must survive conflict\n');
   await other.getByRole('button', { name: '保存草稿', exact: true }).click();
-  await expect(other.getByText(/S_REVISION_CONFLICT.*原稿已保留/)).toBeVisible();
-  await expect(otherEditor).toHaveValue('int main( { second tab raw text must survive conflict\n');
+  await expect(other.getByText(/S_REVISION_CONFLICT.*代码已保留/)).toBeVisible();
+  await expectEditorValue(otherEditor, 'int main( { second tab raw text must survive conflict\n');
   const before = await readCoreArchive(page);
   await page.goto('/#/settings?panel=data');
   await page.getByRole('button', { name: '清除本地数据', exact: true }).click();
@@ -358,7 +389,7 @@ test('two tabs without broadcast retain conflicting raw drafts and cannot save t
     .poll(async () => (await readCoreArchive(page)).meta.generation)
     .not.toBe(before.meta.generation);
   await other.getByRole('button', { name: '保存草稿', exact: true }).click();
-  await expect(other.getByText(/S_GENERATION_STALE.*原稿已保留/)).toBeVisible();
+  await expect(other.getByText(/S_GENERATION_STALE.*代码已保留/)).toBeVisible();
   const after = await readCoreArchive(page);
   expect(after.progress).toEqual([]);
   expect(after.ledger).toEqual([]);
@@ -369,31 +400,37 @@ test('normal app reads, actually judges four cases, saves an invalid draft and r
   page,
 }) => {
   await page.goto('/#/lessons/lesson.c6.s2.1');
-  await page.getByRole('button', { name: '我已读完本节' }).click();
-  await expect(page.getByRole('button', { name: '已确认阅读' })).toBeDisabled();
-  await page.getByRole('link', { name: '完成配套执行练习' }).click();
+  await finishCurrentReading(page);
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
+  await page.getByRole('link', { name: '去练习' }).click();
   await page.getByLabel('完整 C 源码 · main.c').fill(exercise.referenceSource);
-  await page.getByRole('button', { name: '判定全部四组' }).click();
-  await expect(page.getByRole('heading', { name: '四组全部通过' })).toBeVisible();
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: '到本次末尾' }).click();
-  await expect(page.getByLabel('当前游标标准输出')).not.toContainText('（暂无输出）');
-  await page.getByRole('button', { name: '回到开始' }).click();
-  await expect(page.getByLabel('当前游标标准输出')).toHaveText('（暂无输出）');
+  await page.getByRole('button', { name: '提交' }).click();
+  await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toBeVisible();
+  await expectCurrentSaved(page);
+  const judged = await assertCurrentJudge(page, exercise, 'passed');
+  judged.result.cases.forEach((c, i) =>
+    assertEveryC6State(c.packet, exercise.tests[i].expectedStdout),
+  );
+  await expect(page.locator('.c6-trace')).toHaveCount(0);
   await page.getByLabel('完整 C 源码 · main.c').fill('int main( { invalid saved draft\n');
-  await expect(page.getByRole('heading', { name: '四组全部通过' })).toHaveCount(0);
+  await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toHaveCount(0);
   await page.getByRole('button', { name: '保存草稿' }).click();
-  await expect(page.getByText('完整草稿已保存在此浏览器。', { exact: true })).toBeVisible();
+  await expect(page.getByTestId('c6-draft-save-status')).toHaveText('草稿已保存');
   await page.reload();
-  await expect(page.getByLabel('完整 C 源码 · main.c')).toHaveValue(
+  await expectEditorValue(
+    page.getByLabel('完整 C 源码 · main.c'),
     'int main( { invalid saved draft\n',
   );
-  await expect(
-    page.getByText('已保存首次通过记录。当前代码的运行和判题结果显示在下方。', { exact: true }),
-  ).toBeVisible();
+  await expect
+    .poll(async () =>
+      (await readCoreArchive(page)).progress.some(
+        (row) => row.eventType === 'exercise.passed' && row.subjectRef.id === exercise.ref.id,
+      ),
+    )
+    .toBe(true);
   await page.goto('/#/');
   await expect(page.getByText('1 / 404 个小节已完成', { exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: '已入账 15 分' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '积分 15，查看明细', exact: true })).toBeVisible();
 });
 
 test('old lesson URLs have explicit new related reading or directory guidance', async ({
@@ -414,7 +451,8 @@ test('the preserved independent C case executes C, records only its own viewing 
   await expect(panel).toHaveAttribute('data-state', 'ready');
   await panel.getByRole('button', { name: '运行示例', exact: true }).click();
   await expect(panel.getByTestId('player-controls')).toHaveAttribute('data-cursor', '0');
-  await expect(panel.getByRole('textbox', { name: '当前执行的 C 代码', exact: true })).toHaveValue(
+  await expectEditorValue(
+    panel.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
     /main/u,
   );
   await panel.getByRole('combobox', { name: '播放速度' }).selectOption('4');
@@ -429,7 +467,7 @@ test('the preserved independent C case executes C, records only its own viewing 
   ).toBeVisible();
   await page.goto('/#/');
   await expect(page.getByText('0 / 404 个小节已完成', { exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: '已入账 5 分' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '积分 5，查看明细', exact: true })).toBeVisible();
 });
 
 test('new knowledge marks and actual failed judges feed notebook, scheduled review and weakness evidence', async ({
@@ -441,15 +479,15 @@ test('new knowledge marks and actual failed judges feed notebook, scheduled revi
     'aria-pressed',
     'true',
   );
-  await page.getByRole('link', { name: '完成配套执行练习' }).click();
-  await page.getByRole('button', { name: '判定全部四组' }).click();
-  await expect(page.getByRole('heading', { name: '本次尚未通过' })).toBeVisible();
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await page.getByRole('link', { name: '去练习' }).click();
+  await page.getByRole('button', { name: '提交' }).click();
+  await expect(page.getByTestId('oj-verdict').filter({ hasText: /^未通过$/ })).toBeVisible();
+  await expectCurrentSaved(page);
   await page.goto('/#/notebook');
   await expect(page.getByRole('heading', { name: '错题记录 · 1 题' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '陌生知识 · 1 项' })).toBeVisible();
-  await page.goto('/#/reviews');
-  await expect(page.getByTestId('review-counts')).toContainText('到期 2');
+  await retainedReviews(page);
+  await expect(page.getByRole('heading', { name: '今日复习', exact: true })).toBeVisible();
   await expect(page.getByText(/复习：2\.1/)).toBeVisible();
   await page.goto('/#/weaknesses');
   await expect(page.locator('[data-weakness-id="knowledge.c6.s2.1"]')).toContainText('2.1');
@@ -457,16 +495,22 @@ test('new knowledge marks and actual failed judges feed notebook, scheduled revi
     '真实练习错误',
   );
   await page.goto('/#/');
-  await expect(page.getByTestId('c6-knowledge-map')).toContainText('0 / 421 已点亮');
+  await expect(page.getByTestId('c6-knowledge-map')).toContainText('1 / 421 已点亮');
 });
 
-test('current C6 snapshots download actual typed state, complete source and the selected real judge input as JSON and PNG', async ({
+test('current C6 snapshots download actual typed state and complete source with a real judged input as JSON and PNG', async ({
   page,
 }, testInfo) => {
   await page.goto('/#/practice/exercise.c6.s2.1');
   await page.getByLabel('完整 C 源码 · main.c').fill(exercise.referenceSource);
-  await page.getByRole('button', { name: '判定全部四组' }).click();
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '提交' }).click();
+  await expectCurrentSaved(page);
+  // The submitted exercise keeps its native receipt. Export controls belong
+  // to the program workbench, where the same answer runs on a real test input.
+  await page.goto('/#/c6/program/teach.c6.ch01.welcome?node=c6.ch01');
+  await page.getByLabel('完整 C 源码 · main.c').fill(exercise.referenceSource);
+  await page.locator('#c6-stdin').fill(exercise.tests[0].stdin);
+  await page.getByRole('button', { name: '运行当前代码', exact: true }).click();
   for (let i = 0; i < 3; ++i)
     await page.getByRole('button', { name: '下一步', exact: true }).click();
   const jsonDownload = page.waitForEvent('download');
@@ -482,7 +526,7 @@ test('current C6 snapshots download actual typed state, complete source and the 
   expect(snapshot.formatVersion).toBe('2.0.0');
   expect(snapshot.runtime.domain).toBe('c6');
   expect(snapshot.position.cursor).toBe(3);
-  expect(snapshot.input).toMatchObject({ kind: 'stdin-ascii', text: '-9', caseKey: 'case-1' });
+  expect(snapshot.input).toMatchObject({ kind: 'stdin-ascii', text: '-9', caseKey: null });
   expect(snapshot.source.text).toBe(exercise.referenceSource);
   expect(snapshot.currentState.frames.length).toBeGreaterThan(0);
   const pngDownload = page.waitForEvent('download');
@@ -507,7 +551,10 @@ test('current C6 snapshots download actual typed state, complete source and the 
   expect(embedded?.currentState).toEqual(snapshot.currentState);
   await page.getByRole('button', { name: '加入本次笔记' }).click();
   await expect(page.getByText('当前快照已加入本次笔记。', { exact: true })).toBeVisible();
-  await page.getByRole('link', { name: '查看学习笔记', exact: true }).click();
+  await Promise.all([
+    page.waitForEvent('dialog').then((dialog) => dialog.accept()),
+    page.getByRole('link', { name: '查看学习笔记', exact: true }).click(),
+  ]);
   await page.getByRole('checkbox', { name: '快照', exact: true }).check();
   await page.locator('[data-note-kind="snapshot"] input[type="checkbox"]').check();
   await page.getByRole('button', { name: '生成所选内容预览' }).click();

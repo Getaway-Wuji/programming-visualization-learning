@@ -6,6 +6,8 @@ export default defineConfig({
   test: {
     include: ['tests/unit/**/*.test.ts'],
     environment: 'node',
+    // Full course parsing should not compete with one process per test file.
+    maxWorkers: 4,
     reporters: ['default', 'json'],
     outputFile: { json: '.artifacts/unit-results.json' },
   },

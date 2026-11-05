@@ -18,7 +18,7 @@ export default function IndependentPracticePage({ review = false }: { review?: b
             {question.title}
             {review ? ' · 本次复盘' : ''}
           </h1>
-          <PracticeExecution id={question.exerciseRef.id} />
+          <PracticeExecution id={question.exerciseRef.id} review={review} />
         </div>
       ) : (
         <MissingPage />

@@ -7,7 +7,7 @@ import { c6LearningRelease } from '../../web/src/c6-learning/release.generated';
 import { decodeResult, type ExecuteRequest, type TraceObject } from '../../web/src/engine/protocol';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
-const folder = `.artifacts/21.6/runtime/${process.env.TASK_EVIDENCE_LABEL ?? 'current'}`;
+const evidenceRoot = `.artifacts/21.6/runtime/${process.env.TASK_EVIDENCE_LABEL ?? 'current'}`;
 const sourceLock = JSON.parse(readFileSync('content/build/source-lock.json', 'utf8')) as {
   releaseVersion: string;
 };
@@ -23,11 +23,21 @@ async function ready(page: Page) {
   await expect(page.getByTestId('learning-temporary-status')).toHaveCount(0);
 }
 
-test('registered Chrome course saves settings and displays both real sorting traces', async ({
+test('registered course saves settings and displays both real sorting traces', async ({
   page,
+  browser,
 }, info) => {
   test.setTimeout(60_000);
-  expect(info.project.name).toBe('chrome');
+  const projects = {
+    chrome: { engine: 'chromium', channel: 'chrome' },
+    edge: { engine: 'chromium', channel: 'msedge' },
+    'firefox-automation': { engine: 'firefox', channel: undefined },
+  } as const;
+  expect(Object.keys(projects)).toContain(info.project.name);
+  const expectedBrowser = projects[info.project.name as keyof typeof projects];
+  expect(browser.browserType().name()).toBe(expectedBrowser.engine);
+  expect(info.project.use.channel).toBe(expectedBrowser.channel);
+  const folder = `${evidenceRoot}/${info.project.name}`;
   expect(info.retry).toBe(0);
   const registration = JSON.parse(readFileSync(registrationPath, 'utf8')) as {
     releaseVersion: string;
@@ -143,7 +153,7 @@ test('registered Chrome course saves settings and displays both real sorting tra
     await expect(controls).toHaveAttribute('data-cursor', String(cursor));
     await expect(trace).toHaveAttribute('data-cursor', String(cursor));
     expect(await trace.innerHTML()).toBe(before);
-    const path = `${folder}/${process.env.TASK_EVIDENCE_LABEL ?? 'chrome-runtime'}-${name}.png`;
+    const path = `${folder}/${process.env.TASK_EVIDENCE_LABEL ?? 'runtime'}-${name}.png`;
     const bytes = await panel.getByTestId('animation-panel').screenshot();
     await writeFile(path, bytes, { flag: 'wx' });
     screenshots.push({ path, sha256: sha(bytes) });
@@ -155,12 +165,16 @@ test('registered Chrome course saves settings and displays both real sorting tra
   expect(proof(registrationPath)).toEqual(registeredProof);
   expect(proof(buildIndexPath)).toEqual(buildProof);
   await writeFile(
-    `${folder}/chrome-runtime-final.json`,
+    `${folder}/runtime-final.json`,
     JSON.stringify(
       {
         task: 'P0.5-09',
         status: 'passed',
-        browser: 'chrome',
+        browser: info.project.name,
+        browserType: browser.browserType().name(),
+        browserVersion: browser.version(),
+        channel: info.project.use.channel ?? null,
+        userAgent: await page.evaluate(() => navigator.userAgent),
         registration: registeredProof,
         buildIndex: buildProof,
         pageErrors,

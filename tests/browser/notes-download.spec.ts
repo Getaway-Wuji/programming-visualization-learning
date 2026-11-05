@@ -298,7 +298,7 @@ test('20.2 a real C++ pointer mistake exports its original result and missing-an
   await observeCaseSetExecution(page);
   await page.goto('/#/bugs/memory/exercise.cpp.bug-uninitialized-pointer');
   await ready(page);
-  await page.getByRole('button', { name: '提交全部4组', exact: true }).click();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(page.getByTestId('memory-bug-session')).toHaveAttribute('data-state', 'unmet');
   await expect(page.getByTestId('memory-bug-session')).toHaveAttribute('data-save-state', 'saved');
   await notes(page);

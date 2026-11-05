@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { openIndependentRepair } from './current-course-helpers';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -47,15 +48,18 @@ async function connect(page: Page, child: string, parent: string, slot: string) 
   await blockWorkspace(page)
     .getByRole('combobox', { name: '连接位置', exact: true })
     .selectOption(slot);
-  await expect(
+  await expectEditorValue(
     blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true }),
-  ).toHaveValue(child);
-  await expect(
+    child,
+  );
+  await expectEditorValue(
     blockWorkspace(page).getByRole('combobox', { name: '连接到积木', exact: true }),
-  ).toHaveValue(parent);
-  await expect(
+    parent,
+  );
+  await expectEditorValue(
     blockWorkspace(page).getByRole('combobox', { name: '连接位置', exact: true }),
-  ).toHaveValue(slot);
+    slot,
+  );
   await blockWorkspace(page).getByRole('button', { name: '连接选中积木', exact: true }).click();
 }
 async function remove(page: Page, id: string) {
@@ -69,11 +73,13 @@ async function executeCount(page: Page) {
   );
 }
 async function prepare(page: Page) {
-  await panel(page).getByRole('button', { name: '准备代码', exact: true }).click();
+  await expect(page.getByTestId('code-panel')).toBeVisible();
   await expect(submit(page)).toBeEnabled();
-  await expect(
+  await expectEditorValue(
     page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
-  ).not.toHaveValue('');
+    '',
+    { not: true },
+  );
 }
 function protocolId(nativeId: string): string {
   return /^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$/.test(nativeId)
@@ -97,7 +103,8 @@ async function capture(page: Page, info: TestInfo, label: string, nativeIds: str
   ).toBe(true);
   for (const id of nativeIds)
     expect(request.source.blockMap.some((entry) => entry.blockId === protocolId(id))).toBe(true);
-  await expect(page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true })).toHaveValue(
+  await expectEditorValue(
+    page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
     request.source.text,
   );
   const directory = join(
@@ -214,9 +221,9 @@ test('native flyout drag creates a new block, keyboard controls nest native-id b
   const selected = blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true });
   await connect(page, scope, existingIf, '$next');
   await expect(blockWorkspace(page).locator('.block-notice')).toHaveText('积木已连接。');
-  await expect(selected).toHaveValue(scope);
+  await expectEditorValue(selected, scope);
   await selected.selectOption('');
-  await expect(selected).toHaveValue('');
+  await expectEditorValue(selected, '');
   await expect(
     blockWorkspace(page).getByRole('button', { name: '连接选中积木', exact: true }),
   ).toBeDisabled();
@@ -226,11 +233,11 @@ test('native flyout drag creates a new block, keyboard controls nest native-id b
   const returned = await add(page, 'return');
   await connect(page, returned, scope, 'THEN');
   await expect(blockWorkspace(page).locator('.block-notice')).toHaveText('积木已连接。');
-  await expect(selected).toHaveValue(returned);
+  await expectEditorValue(selected, returned);
   const number = await add(page, 'integer');
   await connect(page, number, returned, 'VALUE');
   await expect(blockWorkspace(page).locator('.block-notice')).toHaveText('积木已连接。');
-  await expect(selected).toHaveValue(number);
+  await expectEditorValue(selected, number);
   const condition = await add(page, 'integer');
   await blockWorkspace(page).getByRole('textbox', { name: '整数值', exact: true }).fill('1');
   await connect(page, condition, scope, 'CONDITION');
@@ -312,7 +319,7 @@ test('a new arithmetic block produces a real located Rust diagnostic and an edit
   await observeCaseSetExecution(page);
   await openIndependentRepair(page, 'exercise.c.bug-parenthesis');
   const editor = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
-  await editor.fill((await editor.inputValue()).replace(/printf\([^;]+;/, 'printf("%d\\n", x);'));
+  await editor.fill((await editorValue(editor)).replace(/printf\([^;]+;/, 'printf("%d\\n", x);'));
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await showPracticeBlocks(page);
   await openBlockKeyboardEditor(page);
@@ -337,9 +344,15 @@ test('a new arithmetic block produces a real located Rust diagnostic and an edit
   const controls = page.getByTestId('player-controls');
   const total = Number(await controls.getAttribute('data-length'));
   expect(total).toBeGreaterThan(0);
-  for (let index = 0; index < total; index++)
+  for (
+    let index = 0;
+    index < total && Number(await controls.getAttribute('data-cursor')) < total;
+    index++
+  )
     await page.getByRole('button', { name: '前进', exact: true }).click();
   await expect(controls).toHaveAttribute('data-cursor', String(total));
+  const executedSource = page.getByTestId('executed-source-details');
+  if (await executedSource.count()) await executedSource.locator('summary').click();
   await expect(page.getByTestId('source-terminal-location')).toBeVisible();
   await expect(page.getByTestId('practice-block-location')).toContainText(protocolId(division));
   const run = await capture(page, info, 'native-division-diagnostic', [division, read, zero]);

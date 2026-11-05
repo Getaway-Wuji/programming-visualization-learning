@@ -103,17 +103,15 @@ test('a failed native current confirmation stays incomplete until the same pendi
     await submitCurrent(page);
   }
   await page.goto('/#/lessons/lesson.c6.s6.11.1');
-  const confirmation = page.getByRole('button', { name: '我已读完本节', exact: true });
-  await expect(confirmation).toBeEnabled();
+  const confirmation = page.getByTestId('reading-end');
+  await expect(confirmation).toHaveAttribute('data-read', 'false');
   await page.evaluate(() => {
     (
       window as unknown as { currentFoundationQuota: { armed: boolean } }
     ).currentFoundationQuota.armed = true;
   });
-  await confirmation.click();
-  await expect(page.locator('.c6-reading-confirmation').getByRole('alert')).toContainText(
-    '阅读确认未保存',
-  );
+  await page.keyboard.press('End');
+  await expect(confirmation.getByRole('alert')).toContainText('阅读进度未保存');
   await expect(page.getByTestId('learning-save-status').getByRole('alert')).toContainText(
     '这次更改未保存',
   );
@@ -123,7 +121,7 @@ test('a failed native current confirmation stays incomplete until the same pendi
     .getByTestId('learning-save-status')
     .getByRole('button', { name: '重试未保存操作', exact: true })
     .click();
-  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
   const ids = await page.evaluate(
     () =>
       (window as unknown as { currentFoundationQuota: { ids: string[] } }).currentFoundationQuota
@@ -154,9 +152,12 @@ test('current knowledge marks preserve their new book identity in the existing r
   await expect(mark).toBeEnabled();
   await mark.click();
   await expect(mark).toHaveAttribute('aria-pressed', 'true');
-  await page.getByRole('link', { name: '今日复习', exact: true }).last().click();
+  await page
+    .getByRole('navigation', { name: '主导航' })
+    .getByRole('link', { name: '错题与陌生点', exact: true })
+    .click();
   await expect(
-    page.getByRole('heading', { name: '今日复习', exact: true, level: 1 }),
+    page.getByRole('heading', { name: '错题与陌生点', exact: true, level: 1 }),
   ).toBeVisible();
   await expect.poll(async () => (await archive(page)).knowledgeMarks?.length).toBe(1);
   const snapshot = await archive(page);

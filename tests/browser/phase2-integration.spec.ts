@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
@@ -10,6 +11,7 @@ import { native } from './achievement-helpers';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 import { waitForPhase2Archive } from './phase2-ready';
 import type { SnapshotDocument } from '../../web/src/snapshot-export/types';
+import { reviews } from './scheduler-helpers';
 
 const directory = `.artifacts/16.10/combined/${process.env.TASK_EVIDENCE_LABEL}`;
 const questions = JSON.parse(readFileSync('content/challenges/cases-1.0.0.json', 'utf8'))
@@ -23,13 +25,13 @@ test('one native archive connects real failure, review, completion, challenge, b
   await p.addInitScript(installC6Packets);
   await openIndependentEchoRepair(p);
   await waitForPhase2Archive(p);
-  const solution = await code(p).inputValue(),
+  const solution = await editorValue(code(p)),
     wrong = solution.replace(/\bx\);/, '0);');
   expect(wrong).not.toBe(solution);
   await code(p).clear();
-  await expect(code(p)).toHaveValue('');
+  await expectEditorValue(code(p), '');
   await code(p).fill(wrong);
-  await expect(code(p)).toHaveValue(wrong);
+  await expectEditorValue(code(p), wrong);
   await expect(p.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await panel(p).getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(panel(p)).toHaveAttribute('data-state', 'unmet');
@@ -45,7 +47,7 @@ test('one native archive connects real failure, review, completion, challenge, b
       .locator('.c6-mistake-list > li')
       .filter({ has: p.locator('a[href="#/practice/exercise.c.bug-semicolon"]') }),
   ).toHaveCount(1);
-  await p.goto('/#/reviews');
+  await reviews(p);
   await expect(p.getByTestId('review-detail')).toBeVisible();
   const rating = p.locator('[data-review-rating="good"]');
   await expect(rating).toBeEnabled();

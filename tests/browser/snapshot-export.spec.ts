@@ -451,6 +451,7 @@ test('literal Unicode seed remains inert in files and absent from URLs, console 
     urls: string[] = [];
   p.on('console', (m) => logs.push(m.text()));
   p.on('request', (r) => urls.push(r.url()));
+  await p.getByText('复现随机数据', { exact: true }).click();
   await p.getByTestId('input-seed').fill(marker);
   await p.getByRole('button', { name: '按种子复现', exact: true }).click();
   await p.getByRole('button', { name: '应用输入并准备', exact: true }).click();

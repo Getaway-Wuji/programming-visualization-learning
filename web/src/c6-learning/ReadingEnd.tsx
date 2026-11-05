@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLearning } from '../learning/react';
-import { KnowledgeMarkButton } from '../review-notebook/marks';
+import { KnowledgeMarkButton, KnowledgeMarksStatus } from '../review-notebook/marks';
 import { useLocalLearningDate } from '../learning/use-local-date';
 
 export function ReadingEnd({ lessonId, knowledgeId }: { lessonId: string; knowledgeId: string }) {
@@ -109,7 +109,8 @@ export function ReadingEnd({ lessonId, knowledgeId }: { lessonId: string; knowle
         </p>
       )}
       <KnowledgeMarkButton lessonId={lessonId} knowledgeId={knowledgeId} />
-      {failed && (
+      <KnowledgeMarksStatus />
+      {failed && !readToday && (
         <p role="alert">
           阅读进度未保存。
           <button className="text-link" onClick={() => setFailed(false)}>

@@ -222,7 +222,13 @@ test('missing composite content does not authorize supplementary levels', async 
   await page.goto('/#/courses');
   await page.getByRole('button', { name: '重试读取', exact: true }).click();
   await expect(page.locator('.c6-node-list > li')).toHaveCount(19);
-  await page.getByRole('link', { name: 'Bug 修复闯关', exact: true }).click();
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
+  const catalog = page.getByRole('link', { name: 'Bug 修复闯关', exact: true });
+  // Settle Firefox's offscreen scroll before sending the pointer action.
+  await catalog.scrollIntoViewIfNeeded();
+  await expect(catalog).toBeInViewport({ ratio: 1 });
+  await catalog.click();
+  await expect(page).toHaveURL(/#\/bugs$/);
   await expect(page.getByRole('link', { name: /^修复：/ })).toHaveCount(8);
 });
 

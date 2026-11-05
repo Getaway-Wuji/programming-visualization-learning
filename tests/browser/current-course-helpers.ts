@@ -1,3 +1,6 @@
+import { editorValue } from './editor-value';
+import { showPracticeBlocks } from './block-ui';
+import { expectCurrentSaved } from './current-c6-ui';
 import { readFileSync } from 'node:fs';
 import { expect, type Page } from '@playwright/test';
 import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
@@ -21,6 +24,8 @@ export async function openCurrentAnswer(page: Page, id: string) {
 export async function submitCurrent(page: Page) {
   await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(page.getByTestId('oj-verdict')).toHaveText('通过');
+  await expect(page.getByRole('button', { name: '提交', exact: true })).toBeEnabled();
+  await expectCurrentSaved(page);
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 
@@ -42,12 +47,12 @@ export async function confirmCurrentLesson(page: Page, id: string) {
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 
-export async function openIndependentEchoRepair(page: Page) {
-  await openIndependentRepair(page, 'exercise.c.bug-semicolon');
+export async function openIndependentEchoRepair(page: Page, options?: { blocks?: boolean }) {
+  await openIndependentRepair(page, 'exercise.c.bug-semicolon', options);
 }
 
 /** Explicit retained repair identity; ordinary retired course IDs are rejected. */
-export async function openIndependentRepair(page: Page, id: string) {
+export async function openIndependentRepair(page: Page, id: string, { blocks = true } = {}) {
   const registry = JSON.parse(readFileSync('content/c/bugs/questions-1.0.0.json', 'utf8')) as {
     questions: { exerciseRef: { id: string }; brokenBody: string; solutionBody: string }[];
   };
@@ -64,23 +69,8 @@ export async function openIndependentRepair(page: Page, id: string) {
   await expect(editor).toBeEditable();
   const saved = repairSources.get(page) ?? new Map<string, string>();
   if (!saved.has(id)) {
-    await expect
-      .poll(() =>
-        page
-          .locator('.code-editor .cm-line')
-          .allTextContents()
-          .then((lines) => lines.join('\n')),
-      )
-      .toContain(question.brokenBody);
-    saved.set(
-      id,
-      (
-        await page
-          .locator('.code-editor .cm-line')
-          .allTextContents()
-          .then((lines) => lines.join('\n'))
-      ).replace(question.brokenBody, question.solutionBody),
-    );
+    await expect.poll(() => editorValue(editor)).toContain(question.brokenBody);
+    saved.set(id, (await editorValue(editor)).replace(question.brokenBody, question.solutionBody));
     repairSources.set(page, saved);
   }
   // Re-entering the same route restores its real last draft. Reuse only the
@@ -90,14 +80,10 @@ export async function openIndependentRepair(page: Page, id: string) {
     /^(synced|invalid|unmapped)$/,
   );
   await editor.clear();
-  await expect
-    .poll(() =>
-      page
-        .locator('.code-editor .cm-line')
-        .allTextContents()
-        .then((lines) => lines.join('\n')),
-    )
-    .toBe('');
+  await expect.poll(() => editorValue(editor)).toBe('');
   await editor.fill(saved.get(id)!);
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
+  // Retained editor regressions exercise the optional full workbench through
+  // its real setting. Direct OJ/default-presentation tests use their own entry.
+  if (blocks) await showPracticeBlocks(page, { readOnly: false });
 }

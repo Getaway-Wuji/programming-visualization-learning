@@ -166,9 +166,11 @@ function savingMessage(state: LearningServiceState, dirty: boolean) {
 
 export function LearningSaveStatus({
   onRefresh,
+  onRetry,
   dirty = false,
 }: {
   onRefresh?: () => void;
+  onRetry?: () => Promise<void>;
   dirty?: boolean;
 }) {
   const { state, service } = useLearning();
@@ -215,7 +217,7 @@ export function LearningSaveStatus({
             disabled={
               state.status === 'loading' || state.status === 'saving' || state.status === 'readonly'
             }
-            onClick={() => void service.retryPending()}
+            onClick={() => void (onRetry ?? service.retryPending)()}
           >
             重试未保存操作
           </button>

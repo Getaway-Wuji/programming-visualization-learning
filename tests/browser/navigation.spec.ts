@@ -1,7 +1,9 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { openBlockKeyboardEditor, showPracticeBlocks } from './block-ui';
 import { openIndependentEchoRepair } from './current-course-helpers';
+import { currentSource, submitCurrentVerdict } from './current-c6-ui';
 
 const practicePath = '/#/practice/exercise.c.bug-semicolon';
 const currentPracticePath = '/#/practice/exercise.c6.s2.1';
@@ -53,7 +55,8 @@ test('public routes preserve content relationships, refresh and browser history'
   await ready(page, 'PAGE-03');
   await expect(page.locator('main h1')).toHaveText('2.1 简单的C程序示例');
   await expect(page.locator('main h1')).toBeFocused();
-  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeEnabled();
+  await expect(page.getByTestId('reading-end')).toBeAttached();
+  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toHaveCount(0);
   await expect(
     page.getByRole('navigation', { name: '当前位置' }).getByRole('link', {
       name: '第2章 C语言概述',
@@ -61,14 +64,18 @@ test('public routes preserve content relationships, refresh and browser history'
     }),
   ).toHaveAttribute('href', '#/courses/c6.ch02');
   expect(wasmRequests).toEqual([]);
-  await page.getByRole('link', { name: '完成配套执行练习', exact: true }).click();
+  await page.getByRole('link', { name: '去练习', exact: true }).click();
   await ready(page, 'PAGE-04');
-  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).toBeEditable();
-  expect(wasmRequests).toEqual([]);
-  await page.getByRole('button', { name: '运行当前代码', exact: true }).click();
-  await expect(page.locator('.c6-trace')).toBeVisible();
+  await expect(currentSource(page)).toBeEditable();
+  await expect(page.getByTestId('oj-verdict')).toHaveCount(0);
+  await currentSource(page).fill(
+    '#include <stdio.h>\nint main(void){int n;scanf("%d",&n);printf("n=%d\\n",n);return 0;}',
+  );
+  await submitCurrentVerdict(page);
   expect(wasmRequests.length).toBeGreaterThan(0);
   await expect(page).toHaveURL(/#\/practice\/exercise\.c6\.s2\.1$/);
+  await page.getByRole('button', { name: '保存草稿', exact: true }).click();
+  await expect(page.getByTestId('c6-draft-save-status')).toHaveText('草稿已保存');
   await page.reload();
   await ready(page, 'PAGE-04');
   await expect(
@@ -82,12 +89,13 @@ test('public routes preserve content relationships, refresh and browser history'
     .click();
   await ready(page, 'PAGE-05');
   await expect(page.locator('main a[href^="#/visualize/"]')).toHaveCount(7);
+  await page.locator('summary').filter({ hasText: '基础语法与更多案例' }).click();
   await page.locator('main a[href="#/visualize/case.c.bubble-sort"]').click();
   await ready(page, 'PAGE-06');
   await expect(
     page.getByRole('navigation', { name: '主导航' }).getByRole('link', { name: '算法与演示' }),
   ).toHaveAttribute('aria-current', 'page');
-  await expect(page.locator('main a[href="#/lessons/lesson.c.array-sum"]').first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: '案例讲解', exact: true })).toBeVisible();
   await page
     .getByRole('navigation', { name: '主导航' })
     .getByRole('link', { name: '本地设置' })
@@ -121,15 +129,17 @@ test('workspaces keep real blocks beside read-only code, review playback and emp
   expect(practiceBox).not.toBeNull();
   expect(optionsBox!.x + optionsBox!.width).toBeLessThanOrEqual(practiceBox!.x + 1);
   expect(Math.abs(optionsBox!.y - practiceBox!.y)).toBeLessThanOrEqual(1);
+  await page.getByRole('button', { name: '运行本组', exact: true }).click();
+  await expect(page.getByTestId('animation-panel')).toBeVisible();
   const practiceAnimationBox = await page.getByTestId('animation-panel').boundingBox();
   expect(practiceBox!.y + practiceBox!.height).toBeLessThanOrEqual(practiceAnimationBox!.y + 1);
   const source = practiceCode.locator('textarea');
   await expect(source).toHaveAttribute('readonly', '');
   await source.focus();
-  const originalSource = await source.inputValue();
+  const originalSource = await editorValue(source);
   await page.keyboard.type('int changed = 1;');
-  await expect(source).toHaveValue(originalSource);
-  await expect(source).not.toHaveValue('');
+  await expectEditorValue(source, originalSource);
+  await expectEditorValue(source, '', { not: true });
   await expect(page.getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
   await expect(page.getByTestId('practice-feedback')).not.toContainText('本次提交通过');
   await expect(page.getByRole('link', { name: '查看本次复盘', exact: true })).toHaveAttribute(
@@ -195,7 +205,10 @@ test('keyboard navigation, native dialogs and settings tabs remain usable', asyn
     ['设置每日目标', '每日目标'],
     ['查看打卡历史', '打卡历史'],
   ] as const) {
-    const opener = page.getByRole('link', { name: linkName, exact: true });
+    const opener =
+      dialogName === '积分明细'
+        ? page.getByRole('button', { name: /^积分 \d+，查看明细$/ })
+        : page.getByRole('link', { name: linkName, exact: true });
     await opener.click();
     const dialog = page.getByRole('dialog', { name: dialogName });
     await expect(dialog).toBeVisible();
@@ -206,7 +219,7 @@ test('keyboard navigation, native dialogs and settings tabs remain usable', asyn
         ['每日小节数', '1'],
         ['每日案例数', '0'],
       ] as const)
-        await expect(dialog.getByRole('spinbutton', { name, exact: true })).toHaveValue(value);
+        await expectEditorValue(dialog.getByRole('spinbutton', { name, exact: true }), value);
       await expect(
         dialog.getByRole('button', { name: '保存自定义目标', exact: true }),
       ).toBeEnabled();
@@ -216,10 +229,10 @@ test('keyboard navigation, native dialogs and settings tabs remain usable', asyn
     await expect(opener).toBeFocused();
   }
   await page.screenshot({ path: testInfo.outputPath('learning-home.png'), fullPage: true });
-  await page.goto('/#/settings?panel=avatar');
+  await page.goto('/#/settings?panel=appearance');
   await ready(page, 'PAGE-07');
   for (const [name, panel] of [
-    ['基础形象', 'avatar'],
+    ['外观与主题', 'appearance'],
     ['显示设置', 'display'],
     ['本地数据', 'data'],
   ] as const) {
@@ -232,7 +245,7 @@ test('keyboard navigation, native dialogs and settings tabs remain usable', asyn
   await expect(page.locator('main')).toContainText('不跨设备同步');
   // 04.3 enables the confirmed clear flow once this archive is safely readable.
   await expect(page.getByRole('button', { name: '清除本地数据', exact: true })).toBeEnabled();
-  await page.getByRole('tab', { name: '基础形象', exact: true }).focus();
+  await page.getByRole('tab', { name: '外观与主题', exact: true }).focus();
   await page.keyboard.press('ArrowRight');
   await expect(page.getByRole('tab', { name: '显示设置', exact: true })).toBeFocused();
   await expect(page.getByRole('tab', { name: '显示设置', exact: true })).toHaveAttribute(
@@ -322,13 +335,13 @@ test('desktop and narrower layouts avoid horizontal page overflow', async ({ pag
       await expect(page.getByRole('navigation', { name: '主导航' }).getByRole('link')).toHaveText([
         '学习首页',
         'C 语言课程',
+        '练习',
         '进阶课程',
         '算法与演示',
         'C 代码工作台',
         '编译流程',
         '错题与陌生点',
         '学习笔记',
-        '今日复习',
         '学习成就',
         '本地设置',
       ]);

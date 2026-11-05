@@ -1,3 +1,5 @@
+import { expectEditorValue } from './editor-value';
+import { showPracticeBlocks } from './block-ui';
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import type { APIResponse, Page, Response } from '@playwright/test';
@@ -138,6 +140,12 @@ async function observeIntegration(page: Page) {
           const value = message as Record<string, unknown>;
           this.probe.requestKeys = Object.keys(value).sort();
           if (typeof value.kind === 'string') this.probe.requestKind = value.kind;
+          if (value.buffer instanceof ArrayBuffer) {
+            const request = JSON.parse(new TextDecoder().decode(value.buffer)) as {
+              editVersion?: string;
+            };
+            if (request.editVersion === '2.0.0') this.probe.requestKind = 'c6-edit';
+          }
           if (typeof value.checkId === 'string') this.probe.checkId = value.checkId;
           if (typeof value.nonce === 'number') this.probe.nonce = value.nonce;
           if (value.module instanceof WebAssembly.Module) {
@@ -163,8 +171,7 @@ async function readySample(page: Page, scope: 'fixture' | 'case-view' = 'case-vi
   await expect(sample).toHaveAttribute('data-state', 'ready');
   if (scope === 'case-view') {
     await expect(sample).toHaveAttribute('data-content-scope', 'case-view');
-    await expect(sample).toContainText('已审核案例 · 独立观看');
-    await expect(sample).toContainText(`内容版本 ${reviewedCases.catalogs[0].packageRef.version}`);
+    await expect(sample.getByRole('heading', { name: '案例讲解', exact: true })).toBeVisible();
   } else {
     await expect(sample).toContainText('标准内容样例 · 尚未正式发布');
     await expect(sample).toContainText('内容版本 1.0.0');
@@ -352,20 +359,26 @@ test('continuous public learning navigation integrates reviewed reading, validat
   expect(fences.length).toBeGreaterThan(0);
   for (const fence of fences)
     expect(rendered.some((text) => text.trim() === fence[1].trim())).toBe(true);
-  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeEnabled();
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'false');
   await page.screenshot({
     path: testInfo.outputPath('integrated-lesson-reference.png'),
     fullPage: true,
   });
-  await page.getByRole('link', { name: '完成配套执行练习', exact: true }).click();
+  const exerciseHref = await page
+    .getByRole('link', { name: '去练习', exact: true })
+    .getAttribute('href');
+  await page.goto(`/${exerciseHref}`);
   await routeReady('C6-PRACTICE', '/practice/exercise.c6.s2.1');
   await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).toBeEditable();
-  await expect(page.getByRole('button', { name: '判定全部四组', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: '提交', exact: true })).toBeEnabled();
   await expect(page.getByTestId('engine-connection')).toHaveCount(0);
   const passivePractice = await page.evaluate(() => window.__integrationObservation);
-  expect(passivePractice.compileCalls).toBe(0);
-  expect(passivePractice.workers).toEqual([]);
-  expect(requests.filter((entry) => wasmPattern.test(new URL(entry.url).pathname))).toHaveLength(0);
+  expect(passivePractice.compileCalls).toBeLessThanOrEqual(1);
+  for (const worker of passivePractice.workers) {
+    expect(worker.requestKind).toBe('c6-edit');
+    expect(worker.resultKeys).not.toContain('trace');
+    expect(worker.resultKeys).not.toContain('judgeResult');
+  }
   // Native editing intentionally creates editor history. Keep that explicit
   // branch isolated from the main passive browsing/build-probe archive.
   const repairContext = await browser.newContext({ baseURL: new URL(page.url()).origin });
@@ -383,17 +396,19 @@ test('continuous public learning navigation integrates reviewed reading, validat
   const practiceSample = repairPage.getByTestId('practice-execution');
   await expect(practiceSample).toHaveAttribute('data-state', 'ready');
   const blocks = practiceSample.getByRole('region', { name: '积木工作区', exact: true });
-  await repairPage.getByRole('combobox', { name: '积木显示', exact: true }).selectOption('show');
+  await showPracticeBlocks(repairPage, { readOnly: false });
   await openBlockKeyboardEditor(repairPage);
   await expect(
     blocks.getByRole('combobox', { name: '添加积木类型', exact: true }).locator('option'),
   ).toHaveCount(20);
   await expect(blocks.getByRole('combobox', { name: '积木列表', exact: true })).toBeVisible();
   await expect(blocks.locator('.blocklySvg')).toBeVisible();
-  await expect(
+  await expectEditorValue(
     repairPage.getByRole('textbox', { name: '编辑 C 代码', exact: true }),
-  ).not.toHaveValue('');
-  await expect(repairPage.getByRole('button', { name: '准备代码', exact: true })).toBeEnabled();
+    '',
+    { not: true },
+  );
+  await expect(repairPage.getByTestId('draft-code-editor')).toBeVisible();
   await expect(repairPage.getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
   const editObservation = await repairPage.evaluate(() => window.__integrationObservation);
   expect(editObservation.workers.length).toBeGreaterThan(0);
@@ -438,7 +453,7 @@ test('continuous public learning navigation integrates reviewed reading, validat
     .getByRole('link', { name: '算法与演示' })
     .click();
   await routeReady('PAGE-05', '/cases');
-  await readySample(page, 'fixture');
+  await page.getByText('基础语法与更多案例', { exact: true }).click();
   await page.locator('main a[href="#/visualize/case.c.bubble-sort"]').click();
   await routeReady('PAGE-06', '/visualize/case.c.bubble-sort');
   const caseSample = await readySample(page);
@@ -450,23 +465,47 @@ test('continuous public learning navigation integrates reviewed reading, validat
   );
   await expect(page.getByTestId('code-panel').locator('textarea')).toHaveAttribute('readonly', '');
   await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'ready');
-  await expect(page.getByTestId('code-panel').locator('textarea')).not.toHaveValue('');
+  await expectEditorValue(page.getByTestId('code-panel').locator('textarea'), '', { not: true });
   await expect(page.getByRole('button', { name: '运行示例', exact: true })).toBeEnabled();
   await expect(page.getByTestId('input-panel')).toBeVisible();
   for (const label of ['播放', '前进', '后退', '重播']) {
     await expect(page.getByRole('button', { name: label, exact: true })).toBeDisabled();
   }
-  await checkModule(page);
-  const cold = await page.evaluate(() => window.__integrationObservation);
+  // Retained module diagnostics are exercised in the internal QA build.
+  // The public case remains a passive, empty player in the original page.
+  const probePage = await page.context().newPage();
+  await observeIntegration(probePage);
+  const probeRequests: typeof requests = [];
+  probePage.on('request', (request) => {
+    const entry = {
+      url: request.url(),
+      method: request.method(),
+      hasBody: request.postData() !== null,
+    };
+    requests.push(entry);
+    probeRequests.push(entry);
+  });
+  probePage.on('pageerror', (error) => pageErrors.push(error.message));
+  await probePage.goto('/checks/adapters.html#/visualize/case.c.bubble-sort');
+  const retainedSample = probePage.locator('#adapter-checks [data-testid="content-sample"]');
+  await expect(retainedSample).toHaveAttribute('data-state', 'ready');
+  await expect(retainedSample).toContainText('标准内容样例 · 尚未正式发布');
+  await expect(retainedSample).toContainText('内容版本 1.0.0');
+  await checkModule(probePage);
+  const cold = await probePage.evaluate(() => window.__integrationObservation);
   verifyProbes(cold, 1);
-  expect(requests.filter((entry) => wasmPattern.test(new URL(entry.url).pathname))).toHaveLength(1);
-  await checkModule(page);
-  await expect(page.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
-  await expect(page.getByTestId('trace-view')).toHaveAttribute('data-cursor', '');
-  const warm = await page.evaluate(() => window.__integrationObservation);
+  expect(
+    probeRequests.filter((entry) => wasmPattern.test(new URL(entry.url).pathname)),
+  ).toHaveLength(1);
+  await checkModule(probePage);
+  await expect(probePage.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
+  await expect(probePage.getByTestId('trace-view')).toHaveAttribute('data-cursor', '');
+  const warm = await probePage.evaluate(() => window.__integrationObservation);
   verifyProbes(warm, 2);
-  expect(requests.filter((entry) => wasmPattern.test(new URL(entry.url).pathname))).toHaveLength(1);
-  const wasmUrl = requests.find((entry) => wasmPattern.test(new URL(entry.url).pathname))!.url;
+  expect(
+    probeRequests.filter((entry) => wasmPattern.test(new URL(entry.url).pathname)),
+  ).toHaveLength(1);
+  const wasmUrl = probeRequests.find((entry) => wasmPattern.test(new URL(entry.url).pathname))!.url;
   expect(wasmUrl).toMatch(/\/assets\/[^/]+-[A-Za-z0-9_-]{8,}\.wasm$/);
   headerChecks.push(
     await inspectHeaders(
@@ -475,7 +514,7 @@ test('continuous public learning navigation integrates reviewed reading, validat
       'public, max-age=31536000, immutable',
     ),
   );
-  const mainScripts = await page
+  const mainScripts = await probePage
     .locator('script[src]')
     .evaluateAll((scripts) => scripts.map((script) => (script as HTMLScriptElement).src));
   expect(mainScripts.length).toBeGreaterThan(0);
@@ -490,18 +529,19 @@ test('continuous public learning navigation integrates reviewed reading, validat
     );
   }
 
-  await page.reload();
-  await routeReady('PAGE-06', '/visualize/case.c.bubble-sort');
-  await readySample(page);
-  await expect(page.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
-  await expect(page.getByTestId('trace-view')).toHaveAttribute('data-cursor', '');
-  expect(await page.evaluate(() => window.__integrationObservation.workers.length)).toBe(0);
-  await checkModule(page);
-  const refreshed = await page.evaluate(() => window.__integrationObservation);
+  await probePage.reload();
+  await expect(probePage.getByTestId('case-execution')).toHaveAttribute('data-state', 'ready');
+  await expect(probePage.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
+  await expect(probePage.getByTestId('trace-view')).toHaveAttribute('data-cursor', '');
+  expect(await probePage.evaluate(() => window.__integrationObservation.workers.length)).toBe(0);
+  await checkModule(probePage);
+  const refreshed = await probePage.evaluate(() => window.__integrationObservation);
   verifyProbes(refreshed, 1);
   expect(refreshed.workers[0].workerInstanceId).not.toBe(warm.workers[1].workerInstanceId);
-  expect(requests.filter((entry) => wasmPattern.test(new URL(entry.url).pathname))).toHaveLength(2);
-  await page.screenshot({
+  expect(
+    probeRequests.filter((entry) => wasmPattern.test(new URL(entry.url).pathname)),
+  ).toHaveLength(2);
+  await probePage.screenshot({
     path: testInfo.outputPath('integrated-case-reference-and-probe.png'),
     fullPage: true,
   });
@@ -522,7 +562,12 @@ test('continuous public learning navigation integrates reviewed reading, validat
   for (const name of C6_RESET_CLEAR_STORES)
     expect((archive as unknown as Record<string, unknown>)[name]).toEqual([]);
   await expect(page.getByTestId('engine-connection')).toHaveCount(0);
-  verifyProbes(await page.evaluate(() => window.__integrationObservation), 1);
+  for (const worker of (await page.evaluate(() => window.__integrationObservation)).workers) {
+    expect(worker.requestKind).toBe('c6-edit');
+    expect(worker.resultKeys).not.toContain('trace');
+  }
+  verifyProbes(await probePage.evaluate(() => window.__integrationObservation), 1);
+  await probePage.close();
   expect(pageErrors).toEqual([]);
   const origin = new URL(page.url()).origin;
   for (const request of [...requests, ...repairRequests]) {

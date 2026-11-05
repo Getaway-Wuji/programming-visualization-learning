@@ -1,3 +1,4 @@
+import { expectEditorValue, editorValue } from './editor-value';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { ExecuteResult } from '../../web/src/engine/protocol';
 import { observedExecute, observeVerticalExecution } from './vertical-observation';
@@ -22,7 +23,7 @@ async function open(page: Page, caseId = 'case.c.assignment') {
 
 async function emptyPreparedPlayer(page: Page, expectedExecutions: number) {
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(source(page)).not.toHaveValue('');
+  await expectEditorValue(source(page), '', { not: true });
   await expect(source(page)).toHaveAttribute('readonly', '');
   await expect(controls(page)).toHaveAttribute('data-length', '0');
   await expect(controls(page)).toHaveAttribute('data-cursor', '');
@@ -274,16 +275,16 @@ test('source, input, select and button focus retain their native keyboard semant
   await prepare(page);
   await accepted(page);
   await controlledPlaybackClock(page);
-  const originalSource = await source(page).inputValue();
+  const originalSource = await editorValue(source(page));
   await source(page).focus();
   for (const key of ['ArrowRight', 'ArrowLeft', 'Space']) await page.keyboard.press(key);
-  await expect(source(page)).toHaveValue(originalSource);
+  await expectEditorValue(source(page), originalSource);
   await cursor(page, 0);
   await expect(controls(page)).toHaveAttribute('data-player-status', 'ready');
   await rate(page).focus();
   await page.keyboard.press('Home');
   await page.keyboard.press('ArrowDown');
-  await expect(rate(page)).toHaveValue('0.5');
+  await expectEditorValue(rate(page), '0.5');
   await page.keyboard.press('Escape');
   await cursor(page, 0);
   await button(page, '前进').focus();
@@ -297,7 +298,7 @@ test('source, input, select and button focus retain their native keyboard semant
   await cursor(page, 1);
   await page.keyboard.press('End');
   await page.keyboard.press('Space');
-  await expect(page.getByTestId('input-field-x')).toHaveValue('-7 ');
+  await expectEditorValue(page.getByTestId('input-field-x'), '-7 ');
   await expect(controls(page)).toHaveCount(0);
   await expect(page.getByTestId('execution-output')).toHaveCount(0);
 });

@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
@@ -5,7 +6,13 @@ import type { C6TeachingNode } from '../../web/src/content/c6-teaching-types';
 import type { EditorSnapshot } from '../../web/src/storage/editor-history';
 import type { Receipt } from '../../web/src/storage/model';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
-import { blockOptions, blockWorkspace, selectBlock, showPracticeBlocks } from './block-ui';
+import {
+  blockOptions,
+  blockWorkspace,
+  selectBlock,
+  showPracticeBlocks,
+  setBlockPreference,
+} from './block-ui';
 import { openIndependentRepair } from './current-course-helpers';
 import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 import {
@@ -53,11 +60,11 @@ async function connect(page: Page, child: string, parent: string, slot: string) 
   await expect(blockWorkspace(page).locator('.block-notice')).toHaveText('积木已连接。');
 }
 async function buildEcho(page: Page) {
-  const original = await code(page).inputValue(),
+  const original = await editorValue(code(page)),
     empty = original.replace(/\s*printf\("%d\\n", x\);/, '');
   expect(empty).not.toBe(original);
   await code(page).clear();
-  await expect(code(page)).toHaveValue('');
+  await expectEditorValue(code(page), '');
   await code(page).fill(empty);
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await showPracticeBlocks(page, { readOnly: false });
@@ -71,7 +78,9 @@ async function buildEcho(page: Page) {
   await selectBlock(page, returned[0]);
   await blockWorkspace(page).getByRole('button', { name: '断开选中积木', exact: true }).click();
   const print = await add(page, 'print');
-  await blockWorkspace(page).getByRole('textbox', { name: '输出格式', exact: true }).fill('%d');
+  await blockWorkspace(page)
+    .getByRole('textbox', { name: '输出格式', exact: true })
+    .fill('wrong=%d');
   await connect(page, print, input[0], '$next');
   const read = await add(page, 'variable');
   await blockWorkspace(page).getByRole('textbox', { name: '变量名称', exact: true }).fill('x');
@@ -84,7 +93,7 @@ async function restore(page: Page, row: EditorSnapshot) {
     await history(page).locator('summary').click();
   await page.getByRole('combobox', { name: '历史版本', exact: true }).selectOption(row.entryId);
   await history(page).getByRole('button', { name: '恢复所选版本', exact: true }).click();
-  await expect(code(page)).toHaveValue(row.codeText);
+  await expectEditorValue(code(page), row.codeText);
   await expect
     .poll(async () =>
       (await rows(page)).some(
@@ -184,14 +193,17 @@ test('13.5 native reconstruction: wrong answer, real pass, quota retry and share
   expect(result.judgeResult?.status).toBe('met');
   expect(request.remainingMs).toBeGreaterThan(0);
   expect(request.remainingMs).toBeLessThanOrEqual(1000);
-  for (const id of [built.print, built.read])
-    expect(request.source.blockMap.map((m) => m.blockId)).toContain(
-      `block.native.${Buffer.from(id, 'utf8').toString('hex')}`,
-    );
-  const full = await code(page).inputValue();
-  await page.getByRole('combobox', { name: '积木显示', exact: true }).selectOption('hide');
+  for (const id of [built.print, built.read]) {
+    // Blockly can generate IDs that already satisfy the wire grammar.
+    const expected = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$/.test(id)
+      ? id
+      : `block.native.${Buffer.from(id, 'utf8').toString('hex')}`;
+    expect(request.source.blockMap.map((m) => m.blockId)).toContain(expected);
+  }
+  const full = await editorValue(code(page));
+  await setBlockPreference(page, 'hide');
   await code(page).clear();
-  await expect(code(page)).toHaveValue('');
+  await expectEditorValue(code(page), '');
   await code(page).fill(full);
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await action(page, '提交练习').click();
@@ -209,12 +221,9 @@ test('13.5 isolated drafts and native history survive refresh while display pref
   test.setTimeout(60000);
   await observeCaseSetExecution(page);
   await openIndependentRepair(page, 'exercise.c.bug-semicolon');
-  await page.getByRole('combobox', { name: '积木显示', exact: true }).selectOption('hide');
-  await expect(page.getByTestId('block-preference-save-status')).toHaveAttribute(
-    'data-save-state',
-    'saved',
-  );
-  const full = await code(page).inputValue();
+  await setBlockPreference(page, 'hide');
+  expect((await snapshot(page)).appearance.blockWorkspace).toBe('hide');
+  const full = await editorValue(code(page));
   const valid = (await rows(page))
     .filter((r) => r.codeText === full && r.state === 'synced')
     .sort((a, b) => b.sequence - a.sequence)[0];
@@ -226,10 +235,18 @@ test('13.5 isolated drafts and native history survive refresh while display pref
     (r) => r.codeText === invalid && r.state === 'invalid',
   )!;
   expect(invalidRow).toBeDefined();
-  await openIndependentRepair(page, 'exercise.c.bug-parenthesis');
+  await openIndependentRepair(page, 'exercise.c.bug-parenthesis', { blocks: false });
+  await expect
+    .poll(
+      async () =>
+        (await rows(page)).filter((r) => r.scope.exerciseRef.id === 'exercise.c.bug-parenthesis')
+          .length,
+    )
+    .toBeGreaterThan(0);
   const otherRows = await rows(page);
   expect(otherRows.some((r) => r.scope.exerciseRef.id === 'exercise.c.bug-semicolon')).toBe(true);
   await history(page).locator('summary').click();
+  await expect(page.getByRole('combobox', { name: '历史版本', exact: true })).toBeVisible();
   const options = await page
     .getByRole('combobox', { name: '历史版本', exact: true })
     .locator('option')
@@ -244,18 +261,22 @@ test('13.5 isolated drafts and native history survive refresh while display pref
   ).toBe(true);
   await page.goto('/#/practice/exercise.c.bug-semicolon');
   await expect(code(page)).toBeEditable();
+  expect((await snapshot(page)).appearance.blockWorkspace).toBe('hide');
+  await showPracticeBlocks(page, { readOnly: false });
   await restore(page, valid);
   await action(page, '运行本组').click();
   await expect(panel(page)).toHaveAttribute('data-state', 'ran');
   await restore(page, invalidRow);
   await expect(page.getByTestId('player-controls')).toHaveCount(0);
   await expect(action(page, '运行本组')).toBeDisabled();
+  await setBlockPreference(page, 'hide');
   await page.reload();
-  await expect(code(page)).not.toHaveValue(full);
-  await expect(page.getByRole('combobox', { name: '积木显示', exact: true })).toHaveValue('hide');
+  await expectEditorValue(code(page), full, { not: true });
+  expect((await snapshot(page)).appearance.blockWorkspace).toBe('hide');
   await restore(page, invalidRow);
-  await expect(code(page)).toHaveValue(invalid);
+  await expectEditorValue(code(page), invalid);
   await restore(page, valid);
+  await showPracticeBlocks(page, { readOnly: false });
   await action(page, '提交练习').click();
   await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state', 'saved');
   expect((await snapshot(page)).ledger.reduce((n, r) => n + (r.points ?? 0), 0)).toBe(10);

@@ -1,3 +1,5 @@
+import { editorValue, expectEditorValue } from './editor-value';
+import { expectedSourceLine } from './source-highlight';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type {
   ByteRange,
@@ -45,18 +47,30 @@ async function expectReadableMark(page: Page, testId: string) {
     .getByTestId(testId)
     .first()
     .evaluate((element) => {
-      const style = getComputedStyle(element);
-      return [style.color, style.backgroundColor];
+      // CSS color-mix can return color(srgb ... / alpha). Flatten the actual
+      // painted ancestor colors in the browser before computing contrast.
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 1;
+      const context = canvas.getContext('2d')!;
+      context.fillStyle = '#fff';
+      context.fillRect(0, 0, 1, 1);
+      const ancestors: Element[] = [];
+      for (let current: Element | null = element; current; current = current.parentElement)
+        ancestors.unshift(current);
+      for (const ancestor of ancestors) {
+        context.fillStyle = getComputedStyle(ancestor).backgroundColor;
+        context.fillRect(0, 0, 1, 1);
+      }
+      const background = [...context.getImageData(0, 0, 1, 1).data].slice(0, 3);
+      context.fillStyle = getComputedStyle(element).color;
+      context.fillRect(0, 0, 1, 1);
+      return [[...context.getImageData(0, 0, 1, 1).data].slice(0, 3), background];
     });
-  const luminance = (color: string) => {
-    const channels = color
-      .match(/[\d.]+/gu)!
-      .slice(0, 3)
-      .map(Number)
-      .map((channel) => {
-        const value = channel / 255;
-        return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-      });
+  const luminance = (color: number[]) => {
+    const channels = color.map((channel) => {
+      const value = channel / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    });
     return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
   };
   const [foreground, background] = colors.map(luminance).sort((left, right) => right - left);
@@ -158,7 +172,7 @@ async function acceptedRun(
   expect(result.identity).toEqual(request.identity);
   // Textareas normalize CRLF on their DOM value; the submitted original is
   // retained unchanged and the independent byte-coordinate oracle uses it.
-  expect(await source(page).inputValue()).toBe(request.source.text.replace(/\r\n?/gu, '\n'));
+  expect(await editorValue(source(page))).toBe(request.source.text.replace(/\r\n?/gu, '\n'));
   expect(result.trace!.steps.length).toBeGreaterThan(1);
   expect(result.trace!.steps.length).toBeLessThan(150);
   return { request, result, states: projectedStates(result) };
@@ -294,7 +308,10 @@ async function assertView(page: Page, run: Run, cursor: number) {
   expect(ui.counters).toEqual([
     Object.fromEntries(Object.entries(state.counters).map(([key, value]) => [key, String(value)])),
   ]);
-  const expectedRange = step ? rangeFor(run, step.location) : null;
+  const expectedRange = expectedSourceLine(
+    run.request.source.text,
+    step ? rangeFor(run, step.location) : null,
+  );
   const marks = await page.getByTestId('source-step-highlight').evaluateAll((elements) =>
     elements.map((element) => ({
       start: Number(element.getAttribute('data-byte-start')),
@@ -618,7 +635,7 @@ test('implicit return has an explicit explanation and editing removes every old 
     'source-location',
   ])
     await expect(page.getByTestId(id)).toHaveCount(0);
-  await expect(source(page)).toHaveValue('');
+  await expectEditorValue(source(page), '');
   await expect(controls(page)).toHaveCount(0);
   await page.waitForTimeout(650);
   await expect(page.getByTestId('trace-variable')).toHaveCount(0);
@@ -645,6 +662,12 @@ test('the visible highlight follows long-source scroll without stealing selectio
   const geometry = await source(page).evaluate((area: HTMLTextAreaElement) => {
     const overlay = document.querySelector<HTMLElement>('.source-highlight')!;
     const mark = document.querySelector<HTMLElement>('[data-testid="source-step-highlight"]')!;
+    const text = mark.firstChild!;
+    const token = document.createRange();
+    const start = mark.textContent!.search(/\S/);
+    token.setStart(text, start);
+    token.setEnd(text, mark.textContent!.trimEnd().length);
+    const visibleCode = token.getBoundingClientRect();
     const native = getComputedStyle(area),
       painted = getComputedStyle(overlay);
     return {
@@ -652,8 +675,8 @@ test('the visible highlight follows long-source scroll without stealing selectio
       top: area.scrollTop,
       areaLeft: area.getBoundingClientRect().left,
       right: area.getBoundingClientRect().right,
-      markLeft: mark.getBoundingClientRect().left,
-      markRight: mark.getBoundingClientRect().right,
+      markLeft: visibleCode.left,
+      markRight: visibleCode.right,
       areaTop: area.getBoundingClientRect().top,
       markTop: mark.getBoundingClientRect().top,
       bottom: area.getBoundingClientRect().bottom,

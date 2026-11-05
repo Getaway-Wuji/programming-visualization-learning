@@ -76,7 +76,7 @@ test('case screen hides technical notices and random seeds', async ({ page }) =>
   await expect(page.getByTestId('input-panel')).toBeVisible();
   await expect(page.getByText('已审核案例 · 独立观看', { exact: true })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: '执行模块连接', exact: true })).toHaveCount(0);
-  await expect(page.getByLabel('随机种子', { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel('随机种子', { exact: true })).toBeHidden();
   await page.getByRole('button', { name: '生成随机数据', exact: true }).click();
   await expect(page.getByTestId('case-execution')).not.toContainText('种子：');
 });

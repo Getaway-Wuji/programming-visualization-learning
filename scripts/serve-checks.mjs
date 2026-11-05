@@ -61,7 +61,10 @@ createServer((request, response) => {
     return;
   }
   const isCheck = url.pathname.startsWith('/checks/');
-  const root = isCheck ? resolve(workspaceDir, '.artifacts/browser-dist') : productRoot;
+  // QA entries have their own asset base but consume the same published content.
+  const isCheckContent = url.pathname.startsWith('/checks/content/');
+  const root =
+    isCheck && !isCheckContent ? resolve(workspaceDir, '.artifacts/browser-dist') : productRoot;
   let pathname;
   try {
     pathname = decodeURIComponent(isCheck ? url.pathname.slice('/checks'.length) : url.pathname);

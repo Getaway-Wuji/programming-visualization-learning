@@ -1,3 +1,4 @@
+import { editorValue } from './editor-value';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import { expect, test, type Page } from '@playwright/test';
@@ -126,7 +127,7 @@ async function open(p: Page) {
 }
 async function fail(p: Page) {
   await openAnswer(p, 'exercise.c.bug-parenthesis');
-  const text = await code(p).inputValue();
+  const text = await editorValue(code(p));
   await code(p).fill(text.replace(/printf\([^;]+;/, 'printf("%d\\n", x + 1);'));
   await expect(p.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await panel(p).getByRole('button', { name: '提交练习', exact: true }).click();

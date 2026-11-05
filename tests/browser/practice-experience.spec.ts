@@ -1,3 +1,6 @@
+import { currentProgramPath, discardCurrentDraft } from './current-c6-ui';
+import { editorValue, expectEditorValue } from './editor-value';
+import { expectCurrentSaved } from './current-c6-ui';
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
@@ -30,7 +33,7 @@ const e = exercises[0];
 const editor = (p: Page) => p.getByLabel('完整 C 源码 · main.c', { exact: true });
 const input = (p: Page) => p.getByLabel('本次试运行输入（ASCII，最多 256 字节）', { exact: true });
 const saveStatus = (p: Page) => p.getByTestId('learning-save-status');
-const judge = (p: Page) => p.getByRole('button', { name: '判定全部四组', exact: true });
+const judge = (p: Page) => p.getByRole('button', { name: '提交', exact: true });
 const run = (p: Page) => p.getByRole('button', { name: '运行当前代码', exact: true });
 test.beforeEach(async ({ context }) => {
   await context.addInitScript(installC6Packets);
@@ -58,9 +61,13 @@ async function connect(page: Page, child: string, parent: string, slot: string) 
   await expect(blockWorkspace(page).locator('.block-notice')).toHaveText('积木已连接。');
 }
 async function buildNativeOutput(page: Page) {
+  await page.goto(currentProgramPath);
+  await expect(editor(page)).toBeEditable();
+  await input(page).fill('');
   const empty = '#include <stdio.h>\nint main(void){int probe=7;return 0;}';
   await editor(page).fill(empty);
   await page.getByRole('button', { name: '同步到积木', exact: true }).click();
+  await expect(page.locator('.c6-block-pane')).toHaveAttribute('aria-busy', 'false');
   await expect(blockWorkspace(page)).toBeVisible();
   expect(await blockOptions(page, /^\d+\. 输出 ·/)).toEqual([]);
   const declared = await blockOptions(page, /^\d+\. 声明整数 · probe$/),
@@ -76,15 +83,15 @@ async function buildNativeOutput(page: Page) {
   await blockWorkspace(page).getByRole('textbox', { name: '变量名称', exact: true }).fill('probe');
   await connect(page, read, print, 'ARG0');
   await connect(page, returned[0], print, '$next');
-  await expect(editor(page)).toHaveValue(empty);
+  await expectEditorValue(editor(page), empty);
   await page.getByRole('button', { name: '应用生成代码', exact: true }).click();
-  const text = await editor(page).inputValue();
+  const text = await editorValue(editor(page));
   expect(text).toMatch(/printf\("%d\\n", probe\)/);
   return { text, empty, read, print };
 }
 async function saveDraft(page: Page) {
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
-  await expect(page.getByText('完整草稿已保存在此浏览器。', { exact: true })).toBeVisible();
+  await expect(page.getByTestId('c6-draft-save-status')).toHaveText('草稿已保存');
   await localReady(page);
 }
 
@@ -97,8 +104,8 @@ test('all six independent exercises start with only course inputs and reveal hin
     samples = [];
   for (const subject of exercises) {
     await page.goto(`/#/practice/${subject.ref.id}`);
-    await expect(editor(page)).toHaveValue(subject.starterSource);
-    const empty = await editor(page).inputValue();
+    await expectEditorValue(editor(page), subject.starterSource);
+    const empty = await editorValue(editor(page));
     const hints = page.locator('.c6-exercise-description details');
     await expect(hints).not.toHaveAttribute('open', '');
     await expect(hints.locator('ul')).not.toBeVisible();
@@ -106,7 +113,7 @@ test('all six independent exercises start with only course inputs and reveal hin
     await expect(hints.locator('ul li')).toHaveCount(subject.hints.length);
     await expect(hints.locator('ul')).toBeVisible();
     for (const hint of subject.hints) await expect(hints).toContainText(hint);
-    await expect(editor(page)).toHaveValue(empty);
+    await expectEditorValue(editor(page), empty);
     await expect(page.locator('.c6-trace')).toHaveCount(0);
     expect(await currentJudgeCount(page)).toBe(0);
     assertLearningEqual(before, await snapshot(page));
@@ -124,12 +131,12 @@ test('an answer built from empty native blocks runs one group without saving and
   await confirmCurrentLesson(page, 'lesson.c6.s2.1');
   await confirmCurrentLesson(page, 'lesson.c6.s2.2.1');
   await page.goto(`/#/practice/${e.ref.id}`);
-  await expect(editor(page)).toHaveValue(e.starterSource);
+  await expectEditorValue(editor(page), e.starterSource);
   const draft = await buildNativeOutput(page),
     before = await snapshot(page);
   await run(page).click();
   await expect(page.locator('.c6-trace')).toBeVisible();
-  await assertCurrentRun(page, draft.text, e.tests[0].stdin);
+  await assertCurrentRun(page, draft.text, '');
   await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
   await expect(page.getByLabel('当前游标标准输出')).toHaveText('7\n');
   assertLearningEqual(before, await snapshot(page));
@@ -138,23 +145,27 @@ test('an answer built from empty native blocks runs one group without saving and
     before.progress.filter(
       (r) => r.subjectRef.id === e.lessonRef.id && r.eventType === 'lesson.completed',
     ),
-  ).toEqual([]);
+  ).toHaveLength(1);
+  await discardCurrentDraft(page, `/#/practice/${e.ref.id}`);
   await editor(page).fill(e.referenceSource);
   await expect(page.locator('.c6-trace')).toHaveCount(0);
   await judge(page).click();
-  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toBeVisible();
+  await expectCurrentSaved(page);
   await assertCurrentJudge(page, e, 'passed');
   const finished = await snapshot(page);
   expect(finished.progress.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(1);
   expect(finished.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(2);
   expect(finished.ledger.reduce((s, r) => s + (r.points ?? 0), 0)).toBe(35);
-  await page.locator('.c6-workbench > a.text-link').click();
-  await expect(page.locator('.c6-reading-confirmation')).toContainText('本节已完成');
-  await expect(page.getByRole('link', { name: /下一小节：/ })).toBeVisible();
+  await Promise.all([
+    page.waitForEvent('dialog').then((dialog) => dialog.accept()),
+    page.locator('.c6-workbench > a.text-link').click(),
+  ]);
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
+  await expect(page.getByRole('link', { name: /^下一小节：/ })).toBeVisible();
   await page.goto(`/#/practice/${e.ref.id}`);
   await page.reload();
-  await expect(editor(page)).toHaveValue(e.starterSource);
+  await expectEditorValue(editor(page), e.starterSource);
   await expect(page.locator('.c6-trace')).toHaveCount(0);
   expect(await snapshot(page)).toEqual(finished);
   await info.attach('native-draft-run-and-real-four-case-completion', {
@@ -173,7 +184,7 @@ test('a real pass remains visibly unsaved after a native receipt fault; explicit
   const before = await snapshot(page);
   await armCurrentReceiptFault(page);
   await judge(page).click();
-  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+  await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toBeVisible();
   await expect(saveStatus(page)).toHaveAttribute('data-save-status', 'unsaved');
   await assertCurrentJudge(page, e, 'passed');
   assertLearningEqual(before, await snapshot(page));
@@ -191,7 +202,7 @@ test('a real pass remains visibly unsaved after a native receipt fault; explicit
   expect(b).toEqual(a);
   expect(retried.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(2);
   await judge(page).click();
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await expectCurrentSaved(page);
   await assertCurrentJudge(page, e, 'passed');
   const repeated = await snapshot(page);
   expect(repeated.ledger).toEqual(retried.ledger);
@@ -215,26 +226,27 @@ test('independent and correction answers keep separate native drafts while inval
     draft = await buildNativeOutput(page);
   await run(page).click();
   await expect(page.locator('.c6-trace')).toBeVisible();
-  await assertCurrentRun(page, draft.text, e.tests[0].stdin);
+  await assertCurrentRun(page, draft.text, '');
   await page.getByRole('button', { name: '撤销上次积木代码替换', exact: true }).click();
-  await expect(editor(page)).toHaveValue(draft.empty);
+  await expectEditorValue(editor(page), draft.empty);
   await expect(page.locator('.c6-trace')).toHaveCount(0);
+  await discardCurrentDraft(page, `/#/practice/${e.ref.id}`);
   const invalidA = 'int main( { current first raw draft\n';
   await editor(page).fill(invalidA);
   await saveDraft(page);
   const second = exercises[1],
     invalidB = 'int main( { current second raw draft\n';
   await page.goto(`/#/practice/${second.ref.id}`);
-  await expect(editor(page)).toHaveValue(second.starterSource);
+  await expectEditorValue(editor(page), second.starterSource);
   await editor(page).fill(invalidB);
   await saveDraft(page);
   await page.goto(`/#/practice/${e.ref.id}`);
-  await expect(editor(page)).toHaveValue(invalidA);
+  await expectEditorValue(editor(page), invalidA);
   await page.reload();
-  await expect(editor(page)).toHaveValue(invalidA);
+  await expectEditorValue(editor(page), invalidA);
   await expect(page.locator('.c6-trace')).toHaveCount(0);
   await page.goto(`/#/practice/${second.ref.id}`);
-  await expect(editor(page)).toHaveValue(invalidB);
+  await expectEditorValue(editor(page), invalidB);
   await expect(page.locator('.c6-trace')).toHaveCount(0);
   const after = await snapshot(page);
   for (const store of ['progress', 'receipts', 'ledger', 'dailyFacts'] as const)
@@ -259,7 +271,10 @@ test('cancelling one held genuine run rejects its late result and a fresh one-gr
   page,
 }, info) => {
   await installCurrentRunGate(page, 'run');
-  await openCurrentAnswer(page, e.ref.id);
+  await page.goto(currentProgramPath);
+  await expect(editor(page)).toBeEditable();
+  await editor(page).fill(e.referenceSource);
+  await input(page).fill(e.tests[0].stdin);
   const before = await snapshot(page);
   await page.evaluate(() => {
     window.currentRunGate.armed = true;
@@ -277,7 +292,7 @@ test('cancelling one held genuine run rejects its late result and a fresh one-gr
   assertLearningEqual(before, await snapshot(page));
   await run(page).click();
   await expect(page.locator('.c6-trace')).toBeVisible();
-  const recovered = await assertCurrentRun(page, e.referenceSource, await input(page).inputValue());
+  const recovered = await assertCurrentRun(page, e.referenceSource, await editorValue(input(page)));
   expect(recovered.request.runId).not.toBe(held.request.runId);
   assertLearningEqual(before, await snapshot(page));
   expect((await snapshot(page)).progress.filter((r) => r.eventType === 'lesson.completed')).toEqual(

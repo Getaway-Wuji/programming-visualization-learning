@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { mkdir } from 'node:fs/promises';
@@ -63,7 +64,7 @@ test('real C key playback credits rendered key stops, preserves backtracking and
   await page.getByRole('button', { name: '运行示例', exact: true }).click();
   await expect(page.getByTestId('case-execution')).toHaveAttribute('data-state', 'completed');
   const detail = page.getByRole('combobox', { name: '步骤显示', exact: true });
-  await expect(detail).toHaveValue('key');
+  await expectEditorValue(detail, 'key');
   const controls = page.getByTestId('player-controls');
   await page.getByTestId('trace-view').scrollIntoViewIfNeeded();
   const total = Number(await page.getByTestId('case-view-coverage').getAttribute('data-total'));
@@ -87,7 +88,7 @@ test('real C key playback credits rendered key stops, preserves backtracking and
   await detail.selectOption('all');
   await page.getByRole('button', { name: '预测挑战', exact: true }).click();
   await expect(detail).toBeDisabled();
-  await expect(detail).toHaveValue('all');
+  await expectEditorValue(detail, 'all');
   await expect(
     page.getByRole('group', { name: '本次挑战题目', exact: true }).getByRole('button'),
   ).toHaveCount(3);
@@ -202,7 +203,7 @@ for (const [file, route, prefix, runName, sliderName] of groups) {
       const workspace = page.getByTestId(`${prefix}-workspace`);
       await expect(workspace).toHaveAttribute('data-state', 'idle');
       const detail = page.getByRole('combobox', { name: '步骤显示', exact: true });
-      await expect(detail).toHaveValue('key');
+      await expectEditorValue(detail, 'key');
       await page.getByRole('button', { name: runName, exact: true }).click();
       await expect(workspace).toHaveAttribute('data-state', 'ready');
       const forward = page.getByRole('button', { name: '前进', exact: true });

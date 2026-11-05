@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import { expect, test, type Page } from '@playwright/test';
 import type { ExecuteResult } from '../../web/src/engine/protocol';
 import type {} from './harness/execution';
@@ -497,7 +498,8 @@ test('the visible case runs the exact read-only source and exposes real terminal
   await observe(page);
   await page.goto('/#/visualize/case.c.assignment');
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(panel(page).getByRole('textbox', { name: '当前执行的 C 代码' })).toHaveValue(
+  await expectEditorValue(
+    panel(page).getByRole('textbox', { name: '当前执行的 C 代码' }),
     /int x = 3;/,
   );
   await run(page).click();
@@ -591,11 +593,15 @@ test('clearing local data in a peer tab invalidates an already accepted real tra
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
-  await expect(settings.getByTestId('learning-save-status')).toContainText('本地数据已清除');
+  await expect(settings.getByRole('dialog')).toHaveCount(0);
+  await expect(settings.locator('.app-shell')).toHaveAttribute(
+    'data-learning-storage-status',
+    'ready',
+  );
   // The existing page boundary remounts on the new local-data generation.
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await expect(page.getByTestId('execution-output')).toHaveCount(0);
-  await expect(page.getByTestId('code-panel').locator('textarea')).toHaveValue(/int x = 3;/);
+  await expectEditorValue(page.getByTestId('code-panel').locator('textarea'), /int x = 3;/);
   await expect(page.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
   await expect(page.getByTestId('player-controls')).toHaveAttribute('data-cursor', '');
   await page.waitForTimeout(650);

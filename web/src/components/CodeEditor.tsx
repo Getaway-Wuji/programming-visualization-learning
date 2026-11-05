@@ -1,5 +1,5 @@
 import { useImperativeHandle, useLayoutEffect, useRef, type Ref } from 'react';
-import { EditorState, Prec } from '@codemirror/state';
+import { ChangeSet, EditorState, Prec } from '@codemirror/state';
 import {
   EditorView,
   keymap,
@@ -72,9 +72,9 @@ export function CodeEditor({
 }) {
   const host = useRef<HTMLDivElement>(null);
   const editor = useRef<EditorView | null>(null);
-  const callbacks = useRef({ onChange, onSelect });
+  const callbacks = useRef({ onChange, onSelect, value });
   useLayoutEffect(() => {
-    callbacks.current = { onChange, onSelect };
+    callbacks.current = { onChange, onSelect, value };
   });
   const initial = useRef(value);
   useImperativeHandle(
@@ -101,6 +101,27 @@ export function CodeEditor({
   useLayoutEffect(() => {
     if (!host.current) return;
     let external = false;
+    let alive = true;
+    let composition: {
+      before: string;
+      changes: ChangeSet;
+      active: boolean;
+      cancelled: boolean;
+    } | null = null;
+    const compositionMeasureKey = {};
+    const changed = (before: string, text: string, changes: ChangeSet) => {
+      if (before === text) return;
+      let start = before.length,
+        end = 0;
+      changes.iterChangedRanges((a, b) => {
+        start = Math.min(start, a);
+        end = Math.max(end, b);
+      });
+      callbacks.current.onChange(text, {
+        start: new TextEncoder().encode(before.slice(0, start)).length,
+        end: new TextEncoder().encode(before.slice(0, end)).length,
+      });
+    };
     // Constructed stylesheets in an open shadow root keep CodeMirror's own
     // layout under the existing strict CSP, without permitting inline styles.
     const root = host.current.shadowRoot ?? host.current.attachShadow({ mode: 'open' });
@@ -189,19 +210,17 @@ export function CodeEditor({
           EditorView.updateListener.of((update) => {
             if (external) return;
             if (update.docChanged) {
-              let start = update.startState.doc.length,
-                end = 0;
-              update.changes.iterChangedRanges((a, b) => {
-                start = Math.min(start, a);
-                end = Math.max(end, b);
-              });
-              const before = update.startState.doc.toString();
-              callbacks.current.onChange(update.state.doc.toString(), {
-                start: new TextEncoder().encode(before.slice(0, start)).length,
-                end: new TextEncoder().encode(before.slice(0, end)).length,
-              });
+              if (composition) {
+                if (!composition.cancelled)
+                  composition.changes = composition.changes.compose(update.changes);
+              } else
+                changed(
+                  update.startState.doc.toString(),
+                  update.state.doc.toString(),
+                  update.changes,
+                );
             }
-            if (update.selectionSet && callbacks.current.onSelect) {
+            if (!composition && update.selectionSet && callbacks.current.onSelect) {
               const { from, to } = update.state.selection.main,
                 text = update.state.doc.toString();
               callbacks.current.onSelect({
@@ -214,17 +233,67 @@ export function CodeEditor({
       }),
     });
     editor.current = view;
+    // Firefox removes a multiline selection when composition starts, before
+    // inserting its text. Publish the completed edit once, so a rejected input
+    // cannot replace the accepted draft with that temporary empty document.
+    const beginComposition = () => {
+      composition ??= {
+        before: view.state.doc.toString(),
+        changes: ChangeSet.empty(view.state.doc.length),
+        active: true,
+        cancelled: false,
+      };
+      composition.active = true;
+    };
+    const endComposition = () => {
+      if (!composition) return;
+      composition.active = false;
+      // Measurement flushes pending native DOM changes first. Publish outside
+      // the measurement phase, after CodeMirror has read the final IME text.
+      view.requestMeasure({
+        key: compositionMeasureKey,
+        read: () => null,
+        write: () => {
+          queueMicrotask(() => {
+            if (!alive || !composition || composition.active) return;
+            const completed = composition;
+            composition = null;
+            if (completed.cancelled) {
+              synchronizeText(callbacks.current.value);
+              return;
+            }
+            const text = view.state.doc.toString();
+            changed(completed.before, text, completed.changes);
+            const { from, to } = view.state.selection.main;
+            callbacks.current.onSelect?.({
+              start: new TextEncoder().encode(text.slice(0, from)).length,
+              end: new TextEncoder().encode(text.slice(0, to)).length,
+            });
+          });
+        },
+      });
+    };
+    view.contentDOM.addEventListener('compositionstart', beginComposition, true);
+    view.contentDOM.addEventListener('compositionend', endComposition);
     // Programmatic replacements use one editor transaction and remain undoable.
-    const synchronize = (event: Event) => {
-      const text = (event as CustomEvent<string>).detail;
+    const synchronizeText = (text: string) => {
+      if (composition) {
+        if (!composition.cancelled && text === composition.before) return;
+        composition.cancelled = true;
+      }
       if (view.state.doc.toString() === text) return;
       external = true;
       view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text } });
       external = false;
     };
+    const synchronize = (event: Event) => synchronizeText((event as CustomEvent<string>).detail);
     const element = host.current;
     element.addEventListener('code-replace', synchronize);
     return () => {
+      alive = false;
+      composition = null;
+      view.contentDOM.removeEventListener('compositionstart', beginComposition, true);
+      view.contentDOM.removeEventListener('compositionend', endComposition);
       element.removeEventListener('code-replace', synchronize);
       view.destroy();
       styles.remove();
@@ -233,6 +302,6 @@ export function CodeEditor({
   }, [label, dialect]);
   useLayoutEffect(() => {
     host.current?.dispatchEvent(new CustomEvent('code-replace', { detail: value }));
-  }, [value]);
+  });
   return <div className="code-editor" ref={host} data-testid="code-editor" />;
 }

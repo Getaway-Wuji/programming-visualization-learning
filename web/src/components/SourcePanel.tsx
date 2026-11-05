@@ -92,6 +92,7 @@ export function SourcePanel({
   const overlay = useRef<HTMLElement>(null);
   const revealKind = terminal?.range ? 'terminal' : 'step';
   const revealStart = (terminal?.range ?? current.range)?.utf16Range.start ?? null;
+  const revealEnd = (terminal?.range ?? current.range)?.utf16Range.end ?? null;
   useEffect(() => {
     if (!focused || !copyarea.current) return;
     copyarea.current.focus({ preventScroll: true });
@@ -109,7 +110,28 @@ export function SourcePanel({
       if (revealStart === null) return;
       const highlighted = code.querySelector(`[data-testid="source-${revealKind}-highlight"]`);
       if (!highlighted) return;
-      const target = highlighted.getBoundingClientRect();
+      // Follow the executed token horizontally. The painted line can include
+      // indentation wider than the viewport, so its left edge is insufficient.
+      let target = highlighted.getBoundingClientRect();
+      const text = document.createTreeWalker(code, NodeFilter.SHOW_TEXT);
+      let offset = revealStart;
+      for (let node = text.nextNode(); node; node = text.nextNode()) {
+        const length = node.textContent?.length ?? 0;
+        if (offset < length) {
+          const token = document.createRange();
+          token.setStart(node, offset);
+          token.setEnd(
+            node,
+            Math.min(
+              length,
+              offset + Math.max(1, Math.min((revealEnd ?? revealStart) - revealStart, 80)),
+            ),
+          );
+          target = token.getBoundingClientRect();
+          break;
+        }
+        offset -= length;
+      }
       const style = getComputedStyle(area);
       const top = bounds.top + parseFloat(style.paddingTop);
       const bottom = bounds.bottom - parseFloat(style.paddingBottom);
@@ -133,6 +155,7 @@ export function SourcePanel({
     view.identity?.runId,
     revealKind,
     revealStart,
+    revealEnd,
     diagnosticFocus?.request,
   ]);
   const highlights: Highlight[] = [];

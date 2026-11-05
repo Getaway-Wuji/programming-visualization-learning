@@ -5,6 +5,7 @@ import type {} from './harness/execution';
 import { observeExceptionMetadata } from './performance-exception-observer';
 import { waitForPhase2Archive } from './phase2-ready';
 import { openIndependentEchoRepair } from './current-course-helpers';
+import { setBlockPreference } from './block-ui';
 
 const wasmPattern = /\/assets\/c_viz_wasm_bg-[^/]+\.wasm$/;
 
@@ -403,12 +404,9 @@ test('a failed inner Blockly lazy module reaches the page boundary and an explic
     failedRequests.push(route.request().url());
     await route.fulfill({ status: 404, contentType: 'text/javascript', body: 'missing' });
   });
-  await openIndependentEchoRepair(page);
+  await openIndependentEchoRepair(page, { blocks: false });
   await waitForPhase2Archive(page);
-  await page
-    .getByTestId('block-workspace-preference')
-    .getByRole('combobox', { name: '积木显示', exact: true })
-    .selectOption('show');
+  await setBlockPreference(page, 'show');
   await expect(page.getByRole('alert')).toContainText('页面加载失败');
   // Browsers may retry a failed module fetch. Every attempt is faulted and
   // they must all address the same inner lazy module.

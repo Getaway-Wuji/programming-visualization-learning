@@ -1,10 +1,11 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { readFileSync } from 'node:fs';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 import type { StorageSnapshot } from '../../web/src/storage/model';
 import { initSync } from '../../web/src/generated/c_viz_wasm';
-import { showPracticeBlocks, openBlockKeyboardEditor } from './block-ui';
+import { setBlockPreference, showPracticeBlocks, openBlockKeyboardEditor } from './block-ui';
 import { observeCaseSetExecution } from './case-set-observation';
 import { routeHistoricalApp } from './legacy-app';
 import {
@@ -68,10 +69,11 @@ async function archive(page: Page): Promise<StorageSnapshot> {
 }
 async function open(page: Page) {
   await openIndependentRepair(page, 'exercise.c.bug-semicolon');
+  await showPracticeBlocks(page, { readOnly: false });
   await localReady(page);
   await expect(code(page)).toBeEditable();
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
-  sources.set(page, await code(page).inputValue());
+  sources.set(page, await editorValue(code(page)));
 }
 async function fill(page: Page) {
   if (!sources.has(page)) throw new Error('Original public repair source required');
@@ -139,6 +141,8 @@ async function captureCurrent(page: Page) {
     .attach('current-permissions-result', { body: resultBytes, contentType: 'application/json' });
 }
 async function noPermanent(page: Page) {
+  if (!page.url().includes('/practice/exercise.c.bug-')) await open(page);
+  else await showPracticeBlocks(page, { readOnly: false });
   await expect(page.getByTestId('block-permissions').locator('summary')).toContainText(
     '已永久解锁 0 / 20',
   );
@@ -174,9 +178,8 @@ test('13.3 fresh learner: locked toolbox and keyboard, code/hidden-block guard, 
   await expect(page.getByTestId('block-permission-blocked')).toContainText('while 循环');
   await expect(panel(page).getByRole('button', { name: '运行本组', exact: true })).toBeDisabled();
   await expect(panel(page).getByRole('button', { name: '提交练习', exact: true })).toBeDisabled();
-  const pref = page.getByRole('combobox', { name: '积木显示', exact: true });
-  await pref.selectOption('hide');
-  await expect(code(page)).toHaveValue(bad);
+  await setBlockPreference(page, 'hide');
+  await expectEditorValue(code(page), bad);
   await expect(panel(page).getByRole('button', { name: '提交练习', exact: true })).toBeDisabled();
   expect(
     await page.evaluate(
@@ -188,6 +191,7 @@ test('13.3 fresh learner: locked toolbox and keyboard, code/hidden-block guard, 
   const saved = await archive(page);
   expect(saved.progress.filter((r) => r.eventType === 'exercise.passed')).toHaveLength(1);
   expect(saved.progress.filter((r) => r.eventType === 'lesson.completed')).toHaveLength(0);
+  await showPracticeBlocks(page, { readOnly: false });
   await expect(page.getByTestId('block-permissions').locator('summary')).toContainText(
     '已永久解锁 0 / 20',
   );
@@ -249,6 +253,12 @@ test('13.3 saved completion: permanent access, cross-tab refresh, review, repeat
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
+  await localReady(page);
+  // The peer must consume the clear generation before a new display choice;
+  // its old visible canvas can otherwise disappear after the helper returns.
+  await expect(other.getByRole('region', { name: '积木工作区', exact: true })).toHaveCount(0);
+  await localReady(other);
+  await showPracticeBlocks(other, { readOnly: false });
   await expect(permission(other, 'scope')).toHaveAttribute('data-access', '未解锁');
   expect((await archive(other)).progress).toEqual([]);
   await other.close();
@@ -284,8 +294,8 @@ test('13.3 failed save grants no permanent access; original real pass retry gran
   await page.evaluate(() => {
     (window as unknown as { __permissionQuota: { armed: boolean } }).__permissionQuota.armed = true;
   });
-  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
+  await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toBeVisible();
   await expect(page.getByText('本次判题记录已保存。', { exact: true })).toHaveCount(0);
   await captureCurrent(page);
   const failed = await archive(page);

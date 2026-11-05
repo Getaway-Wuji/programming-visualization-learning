@@ -568,6 +568,7 @@ const checks = {
         generation: restored.snapshot.meta.generation,
         ledger: restored.snapshot.ledger,
         receiptCount: restored.snapshot.receipts.length,
+        receiptIds: restored.snapshot.receipts.map((receipt) => receipt.eventId),
         proof,
         first,
         replay,

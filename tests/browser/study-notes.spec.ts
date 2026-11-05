@@ -1,3 +1,4 @@
+import { expectCurrentSaved } from './current-c6-ui';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
@@ -143,10 +144,10 @@ test('20.1 real C attempt and learning receipts are filtered and never substitut
   const editor = page.getByLabel('完整 C 源码 · main.c', { exact: true });
   await editor.fill(question.referenceSource.replace('n=%d\\n', 'wrong=%d\\n'));
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
-  await expect(page.getByText('完整草稿已保存在此浏览器。', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '本次尚未通过', exact: true })).toBeVisible();
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await expect(page.getByTestId('c6-draft-save-status')).toHaveText('草稿已保存');
+  await page.getByRole('button', { name: '提交', exact: true }).click();
+  await expect(page.getByTestId('oj-verdict')).toHaveText('未通过');
+  await expectCurrentSaved(page);
   await learningReady(page);
   await notes(page);
   const before = await raw(page);
@@ -289,7 +290,7 @@ test('20.1 real C++ pointer failure retains C++ explanation and original version
   await observeCaseSetExecution(page);
   await page.goto('/#/bugs/memory/exercise.cpp.bug-uninitialized-pointer');
   await learningReady(page);
-  await page.getByRole('button', { name: '提交全部4组', exact: true }).click();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(page.getByTestId('memory-bug-session')).toHaveAttribute('data-state', 'unmet');
   await expect(page.getByTestId('memory-bug-session')).toHaveAttribute('data-save-state', 'saved');
   await notes(page);

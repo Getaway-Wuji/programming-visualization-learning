@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import type {} from './harness/editor-history';
 import { mkdir } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
@@ -87,10 +88,10 @@ test('invalid original draft saves, refresh restores only source, later valid so
   await run(page);
   await expect(page.getByTestId('custom-diagnostic')).toBeVisible();
   await page.getByRole('button', { name: '定位错误源码' }).click();
-  await expect(page.getByRole('textbox', { name: 'C 代码', exact: true })).toHaveValue(text);
+  await expectEditorValue(page.getByRole('textbox', { name: 'C 代码', exact: true }), text);
   await page.reload();
-  await expect(page.getByRole('textbox', { name: 'C 代码', exact: true })).toHaveValue(text);
-  await expect(page.getByRole('textbox', { name: '整数输入', exact: true })).toHaveValue('7');
+  await expectEditorValue(page.getByRole('textbox', { name: 'C 代码', exact: true }), text);
+  await expectEditorValue(page.getByRole('textbox', { name: '整数输入', exact: true }), '7');
   await source(page, '#include <stdio.h>\nint main(){printf("ok");return 0;}');
   await run(page);
   await end(page);
@@ -158,7 +159,7 @@ test('save quota failure preserves text, retry works and two tabs cannot overwri
   });
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByTestId('custom-save-status')).toContainText('未保存');
-  await expect(page.getByRole('textbox', { name: 'C 代码' })).toHaveValue('int main(){return 1;}');
+  await expectEditorValue(page.getByRole('textbox', { name: 'C 代码' }), 'int main(){return 1;}');
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByTestId('custom-save-status')).toContainText('草稿已保存');
   const peer = await context.newPage();
@@ -169,9 +170,9 @@ test('save quota failure preserves text, retry works and two tabs cannot overwri
   await expect(page.getByTestId('custom-save-status')).toContainText('草稿已保存');
   await peer.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(peer.getByRole('alert')).toContainText('另一页面');
-  await expect(peer.getByRole('textbox', { name: 'C 代码' })).toHaveValue('int main(){return 3;}');
+  await expectEditorValue(peer.getByRole('textbox', { name: 'C 代码' }), 'int main(){return 3;}');
   await peer.getByRole('button', { name: '载入已保存版本（替换当前文本）' }).click();
-  await expect(peer.getByRole('textbox', { name: 'C 代码' })).toHaveValue('int main(){return 2;}');
+  await expectEditorValue(peer.getByRole('textbox', { name: 'C 代码' }), 'int main(){return 2;}');
 });
 test('clearing in settings removes saved draft and invalidates old execution across tabs', async ({
   page,
@@ -193,8 +194,10 @@ test('clearing in settings removes saved draft and invalidates old execution acr
   await expect(page.getByTestId('custom-code-page')).toHaveAttribute('data-status', 'idle');
   expect((await rows(page)).customDrafts).toEqual([]);
   await page.reload();
-  await expect(page.getByRole('textbox', { name: 'C 代码' })).not.toHaveValue(
+  await expectEditorValue(
+    page.getByRole('textbox', { name: 'C 代码' }),
     'int main(){return 123;}',
+    { not: true },
   );
 });
 test('saving and running do not mint learning facts, and narrow layout keeps input accessible', async ({
@@ -378,7 +381,7 @@ test('oversized edits remain exact and unknown draft version is isolated without
   await expect(page.getByTestId('custom-save-status')).toContainText('已保存');
   const large = 'x'.repeat(32769);
   await source(page, large);
-  await expect(page.getByRole('textbox', { name: 'C 代码', exact: true })).toHaveValue(large);
+  await expectEditorValue(page.getByRole('textbox', { name: 'C 代码', exact: true }), large);
   await expect(page.getByRole('button', { name: '运行代码', exact: true })).toBeDisabled();
   await expect(page.getByRole('button', { name: '保存草稿', exact: true })).toBeDisabled();
   await page.evaluate(async () => {

@@ -1,6 +1,8 @@
+import { expectEditorValue, editorValue } from './editor-value';
 import { expect, test, type Page } from '@playwright/test';
 import type { InputValues } from '../../web/src/content/types';
 import type {} from './harness/input-data';
+import { observeCaseSetExecution, observedCaseSetExecute } from './case-set-observation';
 
 type HoldKind = 'prepare-case' | 'execute';
 interface InputAudit {
@@ -87,9 +89,14 @@ const run = (page: Page) => panel(page).getByRole('button', { name: '运行示�
 async function visible(page: Page, caseId = 'case.c.assignment') {
   await page.goto(`/#/visualize/${caseId}`);
   await expect(page.getByTestId('input-panel')).toBeVisible();
+  const seedOptions = page.getByText('复现随机数据', { exact: true });
+  if (await seedOptions.count()) {
+    const details = seedOptions.locator('..');
+    if ((await details.getAttribute('open')) === null) await seedOptions.click();
+  }
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
   await expect(run(page)).toBeEnabled();
-  await expect(source(page)).not.toHaveValue('');
+  await expectEditorValue(source(page), '', { not: true });
 }
 async function prepared(page: Page) {
   await apply(page).click();
@@ -100,14 +107,20 @@ async function completed(page: Page, output: string) {
   await expect(panel(page)).toHaveAttribute('data-state', 'completed');
   await expect(page.getByTestId('execution-output')).toHaveText(output);
 }
+async function expectRandomMetadata(page: Page, seed: string) {
+  const packet = await observedCaseSetExecute(page);
+  const request = JSON.parse(Buffer.from(packet.requestBytes!).toString('utf8'));
+  expect(request.input.random.seed).toBe(seed);
+  expect(request.input.random.generatorRef.version).toBe('1.0.0');
+}
 async function noOldRun(page: Page) {
   await expect(page.getByTestId('execution-output')).toHaveCount(0);
-  await expect(source(page)).toHaveValue('');
+  await expectEditorValue(source(page), '');
   await expect(page.getByTestId('execution-input')).toHaveCount(0);
 }
 async function noPriorTrajectory(page: Page) {
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(source(page)).not.toHaveValue('');
+  await expectEditorValue(source(page), '', { not: true });
   await expect(page.getByTestId('execution-output')).toHaveCount(0);
   await expect(page.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
   await expect(page.getByTestId('player-controls')).toHaveAttribute('data-cursor', '');
@@ -242,7 +255,7 @@ test('the visible thirty-item reverse bubble run receives its complete checked t
   const values = Array.from({ length: 30 }, (_, index) => 30 - index);
   await field(page, 'values').fill(values.join(', '));
   await prepared(page);
-  await expect(source(page)).toHaveValue(/int n = 30;/);
+  await expectEditorValue(source(page), /int n = 30;/);
   const start = Date.now();
   await completed(page, `${Array.from({ length: 30 }, (_, index) => index + 1).join(' ')}\n`);
   await expect(page.getByTestId('execution-steps')).toContainText('5330');
@@ -279,12 +292,12 @@ test('manual sequence input rejects blank, malformed, fractional, out-of-domain 
     await expect(page.getByTestId('input-errors')).toContainText(/.+/);
     await expect(apply(page)).toBeDisabled();
     await noOldRun(page);
-    await expect(field(page, 'values')).toHaveValue(value);
+    await expectEditorValue(field(page, 'values'), value);
   }
   await panel(page).getByRole('button', { name: '使用空数组', exact: true }).click();
-  await expect(field(page, 'values')).toHaveValue('[]');
+  await expectEditorValue(field(page, 'values'), '[]');
   await prepared(page);
-  await expect(source(page)).toHaveValue(/int n = 0;[\s\S]*int values\[1\] = \{0\};/);
+  await expectEditorValue(source(page), /int n = 0;[\s\S]*int values\[1\] = \{0\};/);
   await run(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'completed');
   await expect(page.getByTestId('execution-output')).toHaveText('\n');
@@ -306,7 +319,7 @@ test('manual scalar validation is explicit and accepts both integer endpoints af
   ]) {
     await field(page, 'x').fill(value!);
     await prepared(page);
-    await expect(source(page)).toHaveValue(new RegExp(`int x = ${value};`));
+    await expectEditorValue(source(page), new RegExp(`int x = ${value};`));
     await completed(page, output!);
   }
 });
@@ -319,7 +332,7 @@ test('binary search explains nondecreasing input, rejects disorder and returns t
   await field(page, 'values').fill('1, 5, 3');
   await expect(page.getByTestId('input-errors')).toContainText(/非递减|顺序|有序/);
   await expect(apply(page)).toBeDisabled();
-  await expect(field(page, 'values')).toHaveValue('1, 5, 3');
+  await expectEditorValue(field(page, 'values'), '1, 5, 3');
   await field(page, 'values').fill('-2, 4, 4, 9');
   await field(page, 'target').fill('4');
   await prepared(page);
@@ -329,24 +342,25 @@ test('binary search explains nondecreasing input, rejects disorder and returns t
 test('the same seed and length reproduce random values, prepared source and real output with versioned temporary metadata', async ({
   page,
 }) => {
+  await observeCaseSetExecution(page);
   await visible(page, 'case.c.array-traversal');
   await page.getByTestId('input-seed').fill('CVIZ-07.2-PUBLIC-REPRO');
   await page.getByTestId('input-length-values').fill('6');
   await panel(page).getByRole('button', { name: '按种子复现', exact: true }).click();
-  const values = await field(page, 'values').inputValue();
+  const values = await editorValue(field(page, 'values'));
   await prepared(page);
-  const firstSource = await source(page).inputValue();
+  const firstSource = await editorValue(source(page));
   const firstMetadata = await page.getByTestId('execution-input').innerText();
-  expect(firstMetadata).toContain('CVIZ-07.2-PUBLIC-REPRO');
-  expect(firstMetadata).toContain('1.0.0');
+  await expect(page.getByTestId('input-seed')).toHaveValue('CVIZ-07.2-PUBLIC-REPRO');
   await run(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'completed');
+  await expectRandomMetadata(page, 'CVIZ-07.2-PUBLIC-REPRO');
   const firstOutput = await page.getByTestId('execution-output').innerText();
   await panel(page).getByRole('button', { name: '按种子复现', exact: true }).click();
   await noOldRun(page);
-  await expect(field(page, 'values')).toHaveValue(values);
+  await expectEditorValue(field(page, 'values'), values);
   await prepared(page);
-  await expect(source(page)).toHaveValue(firstSource);
+  await expectEditorValue(source(page), firstSource);
   await expect(page.getByTestId('execution-input')).toHaveText(firstMetadata, {
     useInnerText: true,
   });
@@ -367,7 +381,7 @@ test('random generation supports lengths zero, one and thirty and enforces its l
   for (const length of ['0', '1', '30']) {
     await page.getByTestId('input-length-values').fill(length);
     await panel(page).getByRole('button', { name: '生成随机数据', exact: true }).click();
-    const text = await field(page, 'values').inputValue();
+    const text = await editorValue(field(page, 'values'));
     const generated = text === '[]' ? [] : text.split(',').map((item) => Number(item.trim()));
     expect(generated).toHaveLength(Number(length));
     expect(
@@ -382,7 +396,7 @@ test('random generation supports lengths zero, one and thirty and enforces its l
   }
   for (const invalid of ['', '-1', '31', '1.5', '0'.repeat(32) + '1']) {
     await page.getByTestId('input-length-values').fill(invalid);
-    await expect(page.getByTestId('input-length-values')).toHaveValue(invalid);
+    await expectEditorValue(page.getByTestId('input-length-values'), invalid);
     await panel(page).getByRole('button', { name: '生成随机数据', exact: true }).click();
     await expect(page.getByTestId('input-errors')).toContainText(/.+/);
     await expect(apply(page)).toBeDisabled();
@@ -417,7 +431,7 @@ test('editing values, seed or length immediately removes a previous result and r
   await panel(page).getByRole('button', { name: '恢复示例输入', exact: true }).click();
   await noOldRun(page);
   await prepared(page);
-  await expect(source(page)).toHaveValue(/\{3, -1, 2\}/);
+  await expectEditorValue(source(page), /\{3, -1, 2\}/);
   await completed(page, '4\n');
 });
 
@@ -464,6 +478,7 @@ test('a replacement input invalidates a queued real fixture preparation and its 
 test('retrying a real first-run module failure preserves the random draft, seed and matching prepared source', async ({
   page,
 }) => {
+  await observeCaseSetExecution(page);
   const wasm = /\/assets\/c_viz_wasm_bg-[^/]+\.wasm$/;
   await page.route(wasm, (route) =>
     route.fulfill({
@@ -477,10 +492,10 @@ test('retrying a real first-run module failure preserves the random draft, seed 
   await page.getByTestId('input-seed').fill(seed);
   await page.getByTestId('input-length-values').fill('4');
   await panel(page).getByRole('button', { name: '按种子复现', exact: true }).click();
-  const draft = await field(page, 'values').inputValue();
+  const draft = await editorValue(field(page, 'values'));
   await apply(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  const firstSource = await source(page).inputValue();
+  const firstSource = await editorValue(source(page));
   expect(firstSource).toContain(`int values[4] = {${draft}};`);
   await run(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'infrastructure-failure');
@@ -489,18 +504,19 @@ test('retrying a real first-run module failure preserves the random draft, seed 
   await expect(page.getByTestId('player-controls')).toHaveAttribute('data-length', '0');
   await expect(page.getByTestId('execution-output')).toHaveText('（无输出）');
   await page.unroute(wasm);
-  await expect(field(page, 'values')).toHaveValue(draft);
+  await expectEditorValue(field(page, 'values'), draft);
+  await expectEditorValue(page.getByTestId('input-seed'), seed);
+  await expectEditorValue(page.getByTestId('input-length-values'), '4');
+  await expectEditorValue(source(page), firstSource);
   await expect(page.getByTestId('input-seed')).toHaveValue(seed);
-  await expect(page.getByTestId('input-length-values')).toHaveValue('4');
-  await expect(source(page)).toHaveValue(firstSource);
-  await expect(page.getByTestId('execution-input')).toContainText(seed);
   await run(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'completed');
+  await expectRandomMetadata(page, seed);
   const output = await page.getByTestId('execution-output').innerText();
   await panel(page).getByRole('button', { name: '按种子复现', exact: true }).click();
-  await expect(field(page, 'values')).toHaveValue(draft);
+  await expectEditorValue(field(page, 'values'), draft);
   await prepared(page);
-  await expect(source(page)).toHaveValue(firstSource);
+  await expectEditorValue(source(page), firstSource);
   await run(page).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'completed');
   await expect(page.getByTestId('execution-output')).toHaveText(output);
@@ -543,15 +559,15 @@ test('case switching, refresh and a peer data clear discard custom input, seed, 
     location.hash = '#/visualize/case.c.array-traversal';
   });
   await expect(field(page, 'values')).toBeVisible();
-  await expect(field(page, 'values')).not.toHaveValue('8, 9');
-  await expect(page.getByTestId('input-seed')).not.toHaveValue('CVIZ-07.2-EXIT');
+  await expectEditorValue(field(page, 'values'), '8, 9', { not: true });
+  await expectEditorValue(page.getByTestId('input-seed'), 'CVIZ-07.2-EXIT', { not: true });
   await field(page, 'values').fill('8, 9');
   await prepared(page);
   await completed(page, '17\n');
   await page.reload();
   await expect(field(page, 'values')).toBeVisible();
   await noPriorTrajectory(page);
-  await expect(field(page, 'values')).not.toHaveValue('8, 9');
+  await expectEditorValue(field(page, 'values'), '8, 9', { not: true });
   await field(page, 'values').fill('8, 9');
   await prepared(page);
   await completed(page, '17\n');
@@ -562,9 +578,13 @@ test('case switching, refresh and a peer data clear discard custom input, seed, 
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
-  await expect(settings.getByTestId('learning-save-status')).toContainText('本地数据已清除');
+  await expect(settings.getByRole('dialog')).toHaveCount(0);
+  await expect(settings.locator('.app-shell')).toHaveAttribute(
+    'data-learning-storage-status',
+    'ready',
+  );
   await noPriorTrajectory(page);
-  await expect(field(page, 'values')).not.toHaveValue('8, 9');
+  await expectEditorValue(field(page, 'values'), '8, 9', { not: true });
 });
 
 test('public random seed and actual input stay out of network, URL, logs, web storage, IndexedDB and Cache API', async ({
@@ -591,9 +611,9 @@ test('public random seed and actual input stay out of network, URL, logs, web st
   const marker = 'CVIZ-07.2-PUBLIC-PRIVATE-SEED';
   await page.getByTestId('input-seed').fill(marker);
   await panel(page).getByRole('button', { name: '按种子复现', exact: true }).click();
-  const values = { x: Number(await field(page, 'x').inputValue()) };
+  const values = { x: Number(await editorValue(field(page, 'x'))) };
   await prepared(page);
-  await expect(page.getByTestId('execution-input')).toContainText(marker);
+  await expect(page.getByTestId('input-seed')).toHaveValue(marker);
   await completed(page, `${values.x + 2}\n`);
   const stored = await page.evaluate(async () => ({
     local: Object.entries(localStorage),

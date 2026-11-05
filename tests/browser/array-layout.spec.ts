@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test';
 import {
   decodeResult,
@@ -20,7 +21,7 @@ const source = (page: Page) =>
 const bench = (page: Page) => page.locator('[data-testid="workbench"][data-kind="visualize"]');
 const action = (page: Page, name: string) => panel(page).getByRole('button', { name, exact: true });
 const readValues = async (page: Page) =>
-  (await valuesField(page).inputValue())
+  (await editorValue(valuesField(page)))
     .split(/[\s,]+/u)
     .filter(Boolean)
     .map(Number);
@@ -34,14 +35,19 @@ async function open(page: Page, id: string) {
   await page.goto(`/#/visualize/case.c.${id}`);
   await ready(page);
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(source(page)).not.toHaveValue('');
+  const seedOptions = page.getByText('复现随机数据', { exact: true });
+  if (await seedOptions.count()) {
+    const details = seedOptions.locator('..');
+    if ((await details.getAttribute('open')) === null) await seedOptions.click();
+  }
+  await expectEditorValue(source(page), '', { not: true });
 }
 
 async function prepare(page: Page, values?: readonly number[]) {
   if (values) await valuesField(page).fill(values.length === 0 ? '[]' : values.join(', '));
   await action(page, '应用输入并准备').click();
   await expect(panel(page)).toHaveAttribute('data-state', 'ready');
-  await expect(source(page)).not.toHaveValue('');
+  await expectEditorValue(source(page), '', { not: true });
 }
 
 interface Run {
@@ -66,7 +72,7 @@ async function execute(page: Page, values: readonly number[]): Promise<Run> {
   expect(request.input.values.values).toEqual(values);
   expect(request.remainingMs).toBeGreaterThan(0);
   expect(request.remainingMs).toBeLessThanOrEqual(1000);
-  expect(await source(page).inputValue()).toBe(request.source.text.replace(/\r\n?/gu, '\n'));
+  expect(await editorValue(source(page))).toBe(request.source.text.replace(/\r\n?/gu, '\n'));
   expect(request.source.text).toContain(`int n = ${values.length};`);
   expect(request.source.text).toContain(
     values.length === 0 ? 'int values[1] = {0};' : `{${values.join(', ')}}`,
@@ -340,7 +346,7 @@ test('both sorting cases start, randomize reproducibly and reset to seven genuin
     const before = await snapshot(page);
     const defaults = await readValues(page);
     expect(defaults).toHaveLength(7);
-    await expect(page.getByTestId('input-length-values')).toHaveValue('7');
+    await expectEditorValue(page.getByTestId('input-length-values'), '7');
     const initial = await execute(page, defaults);
     await seek(page, arrayInit(initial));
     await assertState(page, initial, arrayInit(initial));
@@ -359,10 +365,10 @@ test('both sorting cases start, randomize reproducibly and reset to seven genuin
     await valuesField(page).fill('3, 2, 1');
     await action(page, '恢复示例输入').click();
     expect(await readValues(page)).toEqual(defaults);
-    await expect(page.getByTestId('input-length-values')).toHaveValue('7');
+    await expectEditorValue(page.getByTestId('input-length-values'), '7');
     await expect(controls(page)).toHaveCount(0);
     await prepare(page);
-    await expect(source(page)).toHaveValue(initial.request.source.text.replace(/\r\n?/gu, '\n'));
+    await expectEditorValue(source(page), initial.request.source.text.replace(/\r\n?/gu, '\n'));
     expect(await executions(page)).toBe(executionCount + 2);
     noLearningChange(before, await snapshot(page));
     records.push({
@@ -466,7 +472,7 @@ test('zero and one remain legal and thirty-one is rejected without preparing or 
     await expect(action(page, '应用输入并准备')).toBeDisabled();
     await expect(action(page, '运行示例')).toHaveCount(0);
     await expect(action(page, '准备运行样例')).toBeDisabled();
-    await expect(source(page)).toHaveValue('');
+    await expectEditorValue(source(page), '');
     await expect(controls(page)).toHaveCount(0);
     expect(await page.evaluate(() => window.__verticalObservation.workers.length)).toBe(before);
     await page.getByTestId('input-length-values').fill('31');

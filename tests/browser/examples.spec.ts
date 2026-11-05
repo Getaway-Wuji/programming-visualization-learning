@@ -1,3 +1,5 @@
+import { expectEditorValue } from './editor-value';
+import { expectedSourceLine } from './source-highlight';
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { ExampleSpec } from '../../web/src/examples/content';
@@ -98,11 +100,12 @@ for (const spec of specs)
       expect(
         await page.getByTestId('example-array').locator('li strong').allTextContents(),
       ).toEqual(expected);
-      if (view.byteRange)
+      if (view.byteRange && expectedSourceLine(request.source, view.byteRange))
         await expect(page.getByTestId('memory-source-highlight')).toHaveAttribute(
           'data-byte-start',
           String(view.byteRange.start),
         );
+      else await expect(page.getByTestId('memory-source-highlight')).toHaveCount(0);
       await page
         .getByRole('combobox', { name: '例题观察视图', exact: true })
         .selectOption('memory');
@@ -141,7 +144,7 @@ test('invalid shapes, sortedness and edits invalidate the old run without silent
     await values.fill(draft);
     await expect(workspace(page)).toHaveAttribute('data-state', 'idle');
     await expect(page.getByRole('button', { name: '运行C++例题', exact: true })).toBeDisabled();
-    await expect(values).toHaveValue(draft);
+    await expectEditorValue(values, draft);
     await expect(page.getByTestId('custom-output')).toHaveCount(0);
   }
   await page.getByRole('button', { name: '恢复示例输入', exact: true }).click();

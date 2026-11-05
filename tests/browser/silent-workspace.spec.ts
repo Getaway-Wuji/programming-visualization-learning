@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import { openIndependentRepair } from './current-course-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import {
@@ -91,7 +92,8 @@ test('silent native Blockly mounts and remounts without constructing AudioContex
     .locator(`[data-id=${JSON.stringify(outputs[0])}] > .blocklyPath`)
     .first()
     .click({ position: { x: 20, y: 12 } });
-  await expect(workspace.getByRole('combobox', { name: '积木列表', exact: true })).toHaveValue(
+  await expectEditorValue(
+    workspace.getByRole('combobox', { name: '积木列表', exact: true }),
     outputs[0],
   );
   await workspace
@@ -111,9 +113,10 @@ test('silent native Blockly mounts and remounts without constructing AudioContex
   await page.goBack();
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   await selectBlock(page, outputs[0]);
-  await expect(
+  await expectEditorValue(
     blockWorkspace(page).getByRole('textbox', { name: '输出格式', exact: true }),
-  ).toHaveValue('%d silent-audit\\n');
+    '%d silent-audit\\n',
+  );
   const afterTheme = await audioState(page);
   expect(afterTheme).toEqual(initial);
 

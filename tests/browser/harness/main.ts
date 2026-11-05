@@ -153,3 +153,4 @@ import './recovery';
 import './execution';
 import './input-data';
 import './editor-history';
+import './generated-practice';

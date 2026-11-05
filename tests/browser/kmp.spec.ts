@@ -1,3 +1,5 @@
+import { expectedSourceLine } from './source-highlight';
+import { expectEditorValue } from './editor-value';
 import { readFileSync } from 'node:fs';
 import { test, expect, type Page, type TestInfo } from '@playwright/test';
 import { observeCaseSetExecution } from './case-set-observation';
@@ -16,6 +18,8 @@ async function open(p: Page) {
   await p.goto('/#/advanced/algorithms/case.cpp.kmp');
   await waitForPhase2Archive(p);
   await expect(root(p)).toHaveAttribute('data-state', 'idle');
+  await expectEditorValue(p.getByRole('combobox', { name: '步骤显示', exact: true }), 'key');
+  await p.getByRole('combobox', { name: '步骤显示', exact: true }).selectOption('all');
 }
 async function run(p: Page) {
   await p.getByRole('button', { name: '运行C++ KMP', exact: true }).click();
@@ -128,10 +132,12 @@ for (const sample of spec.samples)
       );
     for (const [name, value] of Object.entries(state.counters))
       await expect(page.locator(`[data-counter="${name}"]`)).toHaveText(String(value));
-    await expect(page.getByTestId('memory-source-highlight')).toHaveAttribute(
-      'data-byte-start',
-      String(view.byteRange!.start),
-    );
+    if (expectedSourceLine(request.source, view.byteRange))
+      await expect(page.getByTestId('memory-source-highlight')).toHaveAttribute(
+        'data-byte-start',
+        String(view.byteRange!.start),
+      );
+    else await expect(page.getByTestId('memory-source-highlight')).toHaveCount(0);
     await page.getByRole('combobox', { name: '算法观察视图', exact: true }).selectOption('memory');
     await expect(page.getByLabel('内存视图', { exact: true })).toContainText(
       state.allocator.liveBytes + ' B',
@@ -197,6 +203,7 @@ test('course and case directory open the precise KMP workspace, reading uses ori
   for (const url of ['/#/advanced', '/#/cases']) {
     await page.goto(url);
     await waitForPhase2Archive(page);
+    if (url.endsWith('/cases')) await page.getByText('基础语法与更多案例', { exact: true }).click();
     const link = page
       .getByTestId('kmp-catalog')
       .getByRole('link', { name: 'KMP字符串匹配', exact: true });
@@ -204,7 +211,7 @@ test('course and case directory open the precise KMP workspace, reading uses ori
     await link.press('Enter');
     await expect(root(page)).toHaveAttribute('data-case', 'case.cpp.kmp');
     await root(page).getByText('算法讲解、复杂度与基础复习', { exact: true }).click();
-    await expect(root(page).getByRole('link', { name: '今日复习', exact: true })).toBeVisible();
+    await expect(root(page).getByRole('link', { name: '错题与陌生点', exact: true })).toBeVisible();
   }
   await page.goto('/#/advanced/algorithms/case.cpp.not-kmp');
   await expect(
@@ -250,8 +257,8 @@ test('KMP reads and playback do not mint facts, rewards or persist private text,
   expect(JSON.stringify(after)).not.toContain('PRIVATE_TEXT_NEVER_SAVE');
   await page.reload();
   await waitForPhase2Archive(page);
-  await expect(page.getByTestId('kmp-text-input')).toHaveValue(spec.defaults.text);
-  await expect(page.getByTestId('kmp-pattern-input')).toHaveValue(spec.defaults.pattern);
+  await expectEditorValue(page.getByTestId('kmp-text-input'), spec.defaults.text);
+  await expectEditorValue(page.getByTestId('kmp-pattern-input'), spec.defaults.pattern);
   await info.attach('no-persistent-learning-or-input', {
     body: JSON.stringify({ before, after }),
     contentType: 'application/json',

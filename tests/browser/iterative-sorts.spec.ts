@@ -1,3 +1,4 @@
+import { editorValue } from './editor-value';
 import { waitForPhase2Archive } from './phase2-ready';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
@@ -137,7 +138,7 @@ for (const spec of sortCases) {
       expect(result.terminal.status).toBe('completed');
       expect(result.trace!.completeness).toBe('complete');
       await expect(p.getByTestId('sort-source')).toHaveText(request.source);
-      expect(await p.getByLabel('可复制的完整C++源码', { exact: true }).inputValue()).toBe(
+      expect(await editorValue(p.getByLabel('可复制的完整C++源码', { exact: true }))).toBe(
         request.source,
       );
       const length = result.trace!.steps.length,
@@ -409,6 +410,7 @@ test('catalog exposes exactly three new C++ cases and retains all seven original
 }) => {
   await ready(p);
   await p.goto('/#/cases');
+  await p.getByText('基础语法与更多案例', { exact: true }).click();
   await expect(p.getByTestId('cpp-sort-catalog').getByRole('link')).toHaveCount(3);
   await expect(p.locator('main a[href^="#/visualize/"]')).toHaveCount(7);
   await p.getByRole('link', { name: '查看计数排序工作区 →', exact: true }).click();

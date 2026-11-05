@@ -1,3 +1,4 @@
+import { finishCurrentReading } from './current-c6-ui';
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import type { StorageSnapshot } from '../../web/src/storage/model';
@@ -59,8 +60,8 @@ async function open(page: Page, id = first) {
   await localReady(page);
 }
 async function confirm(page: Page) {
-  await page.getByRole('button', { name: '我已读完本节', exact: true }).click();
-  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  await finishCurrentReading(page);
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
   await localReady(page);
 }
 function partialRead(s: StorageSnapshot, id: string) {
@@ -69,15 +70,13 @@ function partialRead(s: StorageSnapshot, id: string) {
       .filter((p) => p.subjectRef.id === id)
       .map((p) => p.eventType)
       .sort(),
-  ).toEqual(['lesson.study-confirmed']);
-  expect(
-    s.progress.some((p) => p.eventType === 'exercise.passed' || p.eventType === 'lesson.completed'),
-  ).toBe(false);
+  ).toEqual(['lesson.completed', 'lesson.study-confirmed']);
+  expect(s.progress.some((p) => p.eventType === 'exercise.passed')).toBe(false);
   expect(s.ledger).toEqual([]);
-  expect(s.dailyFacts).toEqual([]);
+  expect(s.dailyFacts.filter((fact) => fact.subjectRef.id === id)).toHaveLength(1);
 }
 
-test('the production reading release exposes three chapters and six complete reviewed lessons without recording passive browsing', async ({
+test('the current book exposes 17 chapters and two reference sections without recording passive browsing', async ({
   page,
 }, info) => {
   const requests: string[] = [];
@@ -113,7 +112,7 @@ test('the production reading release exposes three chapters and six complete rev
   });
 });
 
-test('explicit start and study confirmation persist once through refresh and reopening, with no exercise pass or reward', async ({
+test('page-end reading completes a lesson once through refresh and reopening without passing its exercise', async ({
   page,
   context,
 }, info) => {
@@ -125,24 +124,25 @@ test('explicit start and study confirmation persist once through refresh and reo
   partialRead(saved, first);
   expect(saved.receipts.filter((r) => r.eventType === 'lesson.study-confirmed')).toHaveLength(1);
   await page.reload();
-  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
   await localReady(page);
   expect(await snapshot(page)).toEqual(saved);
   await page.close();
   const reopened = await context.newPage();
   await open(reopened);
-  await expect(reopened.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  await expect(reopened.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
   expect(await snapshot(reopened)).toEqual(saved);
-  await expect(
-    reopened.getByRole('link', { name: '完成配套执行练习', exact: true }),
-  ).toHaveAttribute('href', '#/practice/exercise.c6.s2.1');
+  await expect(reopened.getByRole('link', { name: '去练习', exact: true })).toHaveAttribute(
+    'href',
+    '#/practice/exercise.c6.s2.1',
+  );
   await info.attach('actual-current-reading', {
     body: JSON.stringify({ before, saved }),
     contentType: 'application/json',
   });
 });
 
-test('confirming an untouched lesson creates only its start and study-confirmed facts', async ({
+test('reading an untouched lesson to the end creates its confirmation and completion facts', async ({
   page,
 }) => {
   await open(page, 'lesson.c6.s1.1');
@@ -159,22 +159,20 @@ test('confirming an untouched lesson creates only its start and study-confirmed 
   ).toBe(true);
   expect(saved.progress.some((p) => p.eventType === 'exercise.passed')).toBe(false);
   expect(saved.ledger).toEqual([]);
-  await expect(page.getByRole('heading', { name: '本节已完成', exact: true })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: '今日阅读已记录' })).toBeVisible();
 });
 
-test('continue learning follows the most recent explicit lesson activity and keeps each lesson independent', async ({
-  page,
-}) => {
+test('home advances past completed reading and keeps each lesson independent', async ({ page }) => {
   await open(page);
   await confirm(page);
   const before = await snapshot(page);
   await open(page, second);
   expect(await snapshot(page)).toEqual(before);
   await page.goto('/#/');
-  await expect(page.getByRole('link', { name: '继续阅读', exact: true })).toHaveAttribute(
-    'href',
-    '#/lessons/' + first,
-  );
+  const next = page.getByRole('link', { name: '开始阅读', exact: true });
+  await expect(next).toBeVisible();
+  const nextPath = await next.getAttribute('href');
+  expect(nextPath).not.toBe('#/lessons/' + first);
   await open(page, second);
   await confirm(page);
   const after = await snapshot(page);
@@ -184,14 +182,12 @@ test('continue learning follows the most recent explicit lesson activity and kee
       .filter((p) => p.subjectRef.id === second)
       .map((p) => p.eventType)
       .sort(),
-  ).toEqual(['lesson.study-confirmed']);
+  ).toEqual(['lesson.completed', 'lesson.study-confirmed']);
   await page.goto('/#/');
-  await expect(page.getByRole('link', { name: '继续阅读', exact: true })).toHaveAttribute(
-    'href',
-    '#/lessons/' + second,
-  );
-  await page.getByRole('link', { name: '继续阅读', exact: true }).click();
-  await expect(page).toHaveURL(new RegExp('#/lessons/' + second + '$'));
+  await expect(next).toHaveAttribute('href', nextPath!);
+  expect(nextPath).not.toBe('#/lessons/' + second);
+  await next.click();
+  await expect(page).toHaveURL(new RegExp(nextPath!.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$'));
   expect((await snapshot(page)).ledger).toEqual([]);
 });
 
@@ -236,7 +232,7 @@ test('clearing in another production page invalidates the open lesson without re
   await expect
     .poll(async () => (await snapshot(page)).meta.generation)
     .not.toBe(old.meta.generation);
-  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeEnabled();
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'false');
   const cleared = await snapshot(page);
   expect(cleared.progress).toEqual([]);
   expect(cleared.receipts).toEqual([]);
@@ -276,7 +272,7 @@ test('a native reading write failure is visibly unsaved and retry saves the same
     (window as unknown as { currentReadingQuota: { armed: boolean } }).currentReadingQuota.armed =
       true;
   });
-  await page.getByRole('button', { name: '我已读完本节', exact: true }).click();
+  await page.keyboard.press('End');
   await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
     'data-save-status',
     'unsaved',
@@ -289,9 +285,9 @@ test('a native reading write failure is visibly unsaved and retry saves the same
     .getByTestId('learning-save-status')
     .getByRole('button', { name: '重试未保存操作', exact: true })
     .click();
-  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
   await localReady(page);
-  await expect(page.locator('.c6-reading-confirmation').getByRole('alert')).toHaveCount(0);
+  await expect(page.getByTestId('reading-end').getByRole('alert')).toHaveCount(0);
   const saved = await snapshot(page);
   partialRead(saved, first);
   const ids = await page.evaluate(
@@ -301,7 +297,7 @@ test('a native reading write failure is visibly unsaved and retry saves the same
   expect(new Set(ids).size).toBe(1);
   expect(saved.receipts.filter((r) => r.eventId === ids[0])).toHaveLength(1);
   await page.reload();
-  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
   expect((await snapshot(page)).progress).toEqual(saved.progress);
   await info.attach('native-current-reading-quota', {
     body: JSON.stringify({ before, failed, saved, ids }),
@@ -351,7 +347,10 @@ test('explicitly seeded compatible historical passes are displayed as completed,
   });
   const corrupted = await snapshot(page);
   await page.reload();
-  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeDisabled();
+  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
+    'data-save-status',
+    'readonly',
+  );
   await expect(page.getByRole('heading', { name: '本节已完成', exact: true })).toHaveCount(0);
   expect((await snapshot(page)).progress).toEqual(corrupted.progress);
   expect((await snapshot(page)).ledger).toEqual(before.ledger);
@@ -362,7 +361,7 @@ test('explicitly seeded compatible historical passes are displayed as completed,
     .poll(async () => (await snapshot(page)).meta.generation)
     .not.toBe(before.meta.generation);
   await open(page);
-  await expect(page.getByRole('button', { name: '我已读完本节', exact: true })).toBeEnabled();
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'false');
   const recovered = await snapshot(page);
   expect(recovered.progress).toEqual([]);
   expect(recovered.ledger).toEqual([]);

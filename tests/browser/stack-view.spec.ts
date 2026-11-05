@@ -1,3 +1,5 @@
+import { expectEditorValue } from './editor-value';
+import { expectedSourceLine } from './source-highlight';
 import { expect, test, type Page } from '@playwright/test';
 import type { MemoryRequest, MemoryResult } from '../../web/src/engine/memory-protocol';
 import { MemoryPlayer } from '../../web/src/engine/memory-player';
@@ -163,13 +165,9 @@ test('Hanoi varied inputs change genuine moves while frame selection preserves c
     const mark = page.getByTestId('memory-source-highlight');
     const sourceBefore = await mark.innerText();
     const node = result.nodeMap.find((node) => node.nodeId === step.nodeId)!;
-    expect(sourceBefore).toBe(
-      new TextDecoder().decode(
-        new TextEncoder()
-          .encode((await page.evaluate(() => window.memoryQa.requests.at(-1)!)).source)
-          .slice(node.byteRange.start, node.byteRange.end),
-      ),
-    );
+    const source = (await page.evaluate(() => window.memoryQa.requests.at(-1)!)).source;
+    const line = expectedSourceLine(source, node.byteRange)!;
+    expect(sourceBefore).toBe(Buffer.from(source).subarray(line.start, line.end).toString('utf8'));
     const caller = player.snapshot().state!.frames[0];
     await page.locator(`[data-testid="stack-frame"][data-frame-id="${caller.id}"]`).click();
     await expect(page.getByTestId('stack-current-function')).toHaveText('hanoi');
@@ -290,8 +288,9 @@ test('catalog entry, three widths and six themes show the real recursive call ch
 }) => {
   test.setTimeout(90000);
   await page.goto('/#/cases');
+  await page.getByText('基础语法与更多案例', { exact: true }).click();
   await page.getByRole('link', { name: '打开递归与调用栈 →', exact: true }).click();
-  await expect(page.getByLabel('观察样例', { exact: true })).toHaveValue('hanoi');
+  await expectEditorValue(page.getByLabel('观察样例', { exact: true }), 'hanoi');
   await expect(page.getByRole('button', { name: '调用栈视图', exact: true })).toHaveAttribute(
     'aria-pressed',
     'true',

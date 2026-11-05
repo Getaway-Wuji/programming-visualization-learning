@@ -1,3 +1,4 @@
+import { editorValue } from './editor-value';
 import { waitForPhase2Archive } from './phase2-ready';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
@@ -155,7 +156,7 @@ for (const spec of specs) {
       expect(result.terminal.returnValue).toBe(0);
       expect(result.trace!.completeness).toBe('complete');
       await expect(p.getByTestId('structure-source')).toHaveText(source);
-      expect(await p.getByLabel('可复制的完整结构C++源码').inputValue()).toBe(source);
+      expect(await editorValue(p.getByLabel('可复制的完整结构C++源码'))).toBe(source);
       const player = new AlgorithmPlayer();
       player.accept(result);
       let processed = 0,
@@ -564,21 +565,22 @@ test('presets and case switching discard the old identity; catalog and unknown r
   for (const s of specs[0].boundaryDrafts) {
     await p.getByRole('combobox', { name: '结构边界样例' }).selectOption(s.id);
     await expect(workspace(p)).toHaveAttribute('data-run-id', '');
-    expect(await p.getByTestId('structure-input').inputValue()).toBe(s.draft);
+    expect(await editorValue(p.getByTestId('structure-input'))).toBe(s.draft);
   }
   await p.getByRole('button', { name: '恢复示例', exact: true }).click();
-  expect(await p.getByTestId('structure-input').inputValue()).toBe(specs[0].defaultDraft);
+  expect(await editorValue(p.getByTestId('structure-input'))).toBe(specs[0].defaultDraft);
   await p.getByRole('button', { name: '使用空序列', exact: true }).click();
-  expect(await p.getByTestId('structure-input').inputValue()).toBe('[]');
+  expect(await editorValue(p.getByTestId('structure-input'))).toBe('[]');
   await p.getByRole('link', { name: '环形队列', exact: true }).click();
   await expect(workspace(p)).toHaveAttribute('data-state', 'idle');
   await run(p, specs[1].defaultDraft);
   const next = await captured(p, 'second-identity');
   expect(next.result.identity.runId).not.toBe(first.result.identity.runId);
   await p.goto('/#/cases');
+  await p.getByText('基础语法与更多案例', { exact: true }).click();
   await expect(p.getByTestId('cpp-structure-catalog').getByRole('link')).toHaveCount(2);
   await expect(p.locator('main a[href^="#/visualize/"]')).toHaveCount(7);
-  await expect(p.locator('main a[href^="#/algorithms/"]')).toHaveCount(6);
+  await expect(p.locator('main details a[href^="#/algorithms/"]')).toHaveCount(6);
   await p.goto('/#/structures/missing');
   await expect(p.getByRole('heading', { name: '找不到这个结构案例' })).toBeVisible();
 });

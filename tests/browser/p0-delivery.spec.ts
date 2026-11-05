@@ -1,3 +1,7 @@
+import { currentProgramPath, discardCurrentDraft, assertEveryC6State } from './current-c6-ui';
+import { finishCurrentReading } from './current-c6-ui';
+import { editorValue, expectEditorValue } from './editor-value';
+import { expectCurrentSaved } from './current-c6-ui';
 import type { C6CourseExercise } from '../../web/src/content/c6-course-types';
 import { installC6Packets } from './c6-observation';
 import {
@@ -27,51 +31,40 @@ async function visitLeaf(page: Page, id: string) {
     .getByRole('searchbox', { name: '查找章节或主题', exact: true })
     .fill(node.titleDisplay);
   await follow(page, `#/lessons/${id}`);
-  await expect(page.locator('.c6-reading-confirmation')).toBeVisible();
+  await expect(page.getByTestId('reading-end')).toBeAttached();
 }
 async function confirmLeaf(page: Page, id: string) {
   await visitLeaf(page, id);
-  await page.getByRole('button', { name: '我已读完本节', exact: true }).click();
-  await expect(page.getByRole('button', { name: '已确认阅读', exact: true })).toBeDisabled();
+  await finishCurrentReading(page);
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
   await localReady(page);
 }
-async function currentRoundTrip(page: Page, length: number) {
-  const trace = page.locator('.c6-trace');
-  await expect(trace).toHaveAttribute('data-cursor', '0');
-  const states = [await trace.innerHTML()];
-  for (let c = 1; c <= length; c++) {
-    await trace.getByRole('button', { name: '下一步', exact: true }).click();
-    await expect(trace).toHaveAttribute('data-cursor', String(c));
-    states.push(await trace.innerHTML());
-  }
-  for (let c = length - 1; c >= 0; c--) {
-    await trace.getByRole('button', { name: '上一步', exact: true }).click();
-    await expect(trace).toHaveAttribute('data-cursor', String(c));
-    expect(await trace.innerHTML()).toBe(states[c]);
-  }
-  await expect(trace.getByRole('button', { name: '上一步', exact: true })).toBeDisabled();
-  return states;
-}
 async function nativeDraft(page: Page) {
+  const exerciseUrl = page.url();
+  await page.goto(currentProgramPath);
+  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).toBeEditable();
+  await page.getByLabel('本次试运行输入（ASCII，最多 256 字节）', { exact: true }).fill('');
   const before = await currentSnapshot(page);
   await c6Editor(page).fill(
     '#include <stdio.h>\nint main(void){int probe=1;printf("%d\\n",probe);return 0;}',
   );
   await page.getByRole('button', { name: '同步到积木', exact: true }).click();
+  await expect(page.locator('.c6-block-pane')).toHaveAttribute('aria-busy', 'false');
   const ids = await blockOptions(page, /^\d+\. 整数 · 1$/);
   expect(ids).toHaveLength(1);
   await selectBlock(page, ids[0]);
   await blockWorkspace(page).getByRole('textbox', { name: '整数值', exact: true }).fill('2');
   await expect(page.getByText('积木生成的完整程序预览', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: '应用生成代码', exact: true }).click();
-  const source = await c6Editor(page).inputValue();
+  const source = await editorValue(c6Editor(page));
   expect(source).toMatch(/probe\s*=\s*2/);
   await page.getByRole('button', { name: '运行当前代码', exact: true }).click();
   await expect(page.locator('.c6-trace')).toBeVisible();
-  await assertCurrentRun(page, source, exercises[0].tests[0].stdin);
+  await assertCurrentRun(page, source, '');
   await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
   await expect(page.getByLabel('当前游标标准输出')).toHaveText('2\n');
   assertLearningEqual(before, await currentSnapshot(page));
+  await discardCurrentDraft(page, exerciseUrl);
   return source;
 }
 import { createHash } from 'node:crypto';
@@ -92,23 +85,29 @@ const reviewed = JSON.parse(
 ) as { lessons: LessonEntity[]; exercises: ExerciseEntity[] };
 const caseId = 'case.c.assignment';
 const targets = { exercise: 6, lesson: 6, case: 1 };
-const avatar = { presetId: 'avatar.basic.04', accentColor: '#4466CC' };
 const controls = (page: Page) => page.getByTestId('player-controls');
 const source = (page: Page) =>
   page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true });
 const digest = (value: string | Buffer) => createHash('sha256').update(value).digest('hex');
 
 async function localReady(page: Page) {
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 
 /** Navigation is a real click on an existing application link, including lesson entry. */
 async function follow(page: Page, href: string) {
-  await page.locator(`a[href="${href}"]`).first().click();
-  await expect(page).toHaveURL((url) => url.hash === href);
+  const discard = async (dialog: import('@playwright/test').Dialog) => {
+    expect(dialog.type()).toBe('confirm');
+    expect(dialog.message()).toContain('代码有未保存的修改');
+    await dialog.accept();
+  };
+  page.on('dialog', discard);
+  try {
+    await page.locator(`a[href="${href}"]`).first().click();
+    await expect(page).toHaveURL((url) => url.hash === href);
+  } finally {
+    page.off('dialog', discard);
+  }
 }
 
 function postedTotal(data: StorageSnapshot) {
@@ -279,6 +278,7 @@ async function captureRuns(page: Page, directory: string, label: string, offset:
 
 async function runAssignment(page: Page) {
   await follow(page, '#/cases');
+  await page.getByText('基础语法与更多案例', { exact: true }).click();
   await follow(page, `#/visualize/${caseId}`);
   const panel = page.getByTestId('case-execution');
   await expect(panel).toHaveAttribute('data-state', 'ready');
@@ -290,7 +290,7 @@ async function runAssignment(page: Page) {
   await expect(panel).toHaveAttribute('data-state', 'completed');
 }
 
-test('P0 delivery: a fresh browser archive completes six lessons, 24 real groups, full viewing, rewards, goals, avatar and durable deduplicated refresh', async ({
+test('P0 delivery: a fresh browser archive completes six lessons, 24 real groups, full viewing, rewards, goals, appearance and durable deduplicated refresh', async ({
   browser,
 }, testInfo) => {
   test.setTimeout(180_000);
@@ -301,7 +301,9 @@ test('P0 delivery: a fresh browser archive completes six lessons, 24 real groups
       'Scope49: current6 exercises/24 groups and7 reading leaves, manual full C6 round trips; native probe does not grant course pass.',
   });
   const task = process.env.TASK_EVIDENCE_TASK ?? '11.5';
-  expect(['11.5', 'P0.5-08', '21.6']).toContain(task);
+  expect(['11.5', 'P0.5-08', '21.6'].includes(task) || /^cross-[A-Za-z0-9_.-]+$/.test(task)).toBe(
+    true,
+  );
   const label = process.env.TASK_EVIDENCE_LABEL ?? `delivery-${Date.now()}`;
   expect(label).toMatch(/^[A-Za-z0-9_.-]+$/);
   const directory = join('.artifacts', task, label, testInfo.project.name);
@@ -361,27 +363,25 @@ test('P0 delivery: a fresh browser archive completes six lessons, 24 real groups
     for (const [i, e] of exercises.entries()) {
       await confirmLeaf(page, e.lessonRef.id);
       await follow(page, `#/practice/${e.ref.id}`);
-      await expect(c6Editor(page)).toHaveValue(e.starterSource);
+      await expectEditorValue(c6Editor(page), e.starterSource);
       if (i === 0) blockEdit = await nativeDraft(page);
       await c6Editor(page).fill(e.referenceSource);
-      await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-      await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
-      await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+      await page.getByRole('button', { name: '提交', exact: true }).click();
+      await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toBeVisible();
+      await expectCurrentSaved(page);
       const run = await assertCurrentJudge(page, e, 'passed');
       runs.push(run);
       const before = await currentSnapshot(page),
         count = await currentJudgeCount(page);
       for (let n = 0; n < 4; n++) {
-        await page.getByRole('button', { name: `第 ${n + 1} 组 · 通过`, exact: true }).click();
-        const states = await currentRoundTrip(page, run.result.cases[n].packet.trace!.steps.length);
+        const states = assertEveryC6State(run.result.cases[n].packet, e.tests[n].expectedStdout);
         if (i === 0) await saveJson(directory, `current-complete-round-trip-${n + 1}`, states);
-        await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
-        await expect(page.getByLabel('当前游标标准输出')).toHaveText(e.tests[n].expectedStdout);
       }
+      await expect(page.locator('.c6-trace')).toHaveCount(0);
       expect(await currentJudgeCount(page)).toBe(count);
       assertLearningEqual(before, await currentSnapshot(page));
-      await page.locator('.c6-workbench > a.text-link').click();
-      await expect(page.locator('.c6-reading-confirmation')).toContainText('本节已完成');
+      await follow(page, `#/lessons/${e.lessonRef.id}`);
+      await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
       const state = await currentSnapshot(page);
       noPrivateExecutionData(state);
       steps.push({ lesson: e.lessonRef, state });
@@ -398,7 +398,7 @@ test('P0 delivery: a fresh browser archive completes six lessons, 24 real groups
     await runAssignment(page);
     const caseRuns = await captureRuns(page, directory, 'case-first', 0);
     expect(caseRuns).toHaveLength(1);
-    expect(caseRuns[0].request.source.text).toBe(await source(page).inputValue());
+    expect(caseRuns[0].request.source.text).toBe(await editorValue(source(page)));
     await controls(page)
       .getByRole('combobox', { name: '步骤显示', exact: true })
       .selectOption('all');
@@ -424,8 +424,9 @@ test('P0 delivery: a fresh browser archive completes six lessons, 24 real groups
     noPrivateExecutionData(finished);
     await follow(page, '#/');
     await localReady(page);
-    await expect(page.getByRole('heading', { name: '已入账 70 分', exact: true })).toBeVisible();
-    await expect(page.getByTestId('learning-level')).toHaveAttribute('data-level', '2');
+    await expect(
+      page.getByRole('button', { name: '积分 70，查看明细', exact: true }),
+    ).toBeVisible();
     const goal = page.getByTestId('daily-goal-summary');
     await expect(goal).toHaveAttribute('data-goal-state', 'achieved');
     for (const [kind, count, target] of [
@@ -434,7 +435,7 @@ test('P0 delivery: a fresh browser archive completes six lessons, 24 real groups
       ['case', 1, 1],
     ] as const)
       await expect(goal.getByTestId(`goal-progress-${kind}`)).toContainText(`${count} / ${target}`);
-    await page.getByRole('link', { name: '查看积分明细', exact: true }).click();
+    await page.getByRole('button', { name: '积分 70，查看明细', exact: true }).click();
     const points = page.getByRole('dialog', { name: '积分明细', exact: true });
     await expect(points.locator('.reward-ledger > li')).toHaveCount(7);
     await expect(points).toContainText('每日目标达成');
@@ -445,46 +446,30 @@ test('P0 delivery: a fresh browser archive completes six lessons, 24 real groups
       .getByRole('dialog', { name: '打卡历史', exact: true })
       .getByRole('button', { name: '关闭面板', exact: true })
       .click();
-    await page.getByRole('link', { name: '调整基础形象', exact: true }).click();
+    await follow(page, '#/settings');
     await localReady(page);
-    await page.getByRole('radio', { name: '星光', exact: true }).check();
-    await page
-      .getByRole('textbox', { name: '强调色十六进制', exact: true })
-      .fill(avatar.accentColor);
-    await page.getByRole('button', { name: '保存基础形象', exact: true }).click();
-    await localReady(page);
-    await expect(page.getByRole('button', { name: '保存基础形象', exact: true })).toBeDisabled();
+    await page.getByTestId('theme-cute').click();
+    await page.getByTestId('save-appearance').click();
+    await expect(page.locator('html')).toHaveAttribute('data-appearance-draft', 'false');
     const saved = await currentSnapshot(page);
-    expect(saved.avatar).toEqual(avatar);
+    expect(saved.appearance.preset).toBe('cute');
+    expect(saved.avatar).toEqual(finished.avatar);
     sameAwards(finished, saved);
     await page.reload();
     await localReady(page);
     expect(await currentSnapshot(page)).toEqual(saved);
-    await expect(page.getByTestId('avatar-preview')).toHaveAttribute(
-      'data-avatar-preset',
-      avatar.presetId,
-    );
-    await expect(page.getByTestId('avatar-preview')).toHaveAttribute(
-      'data-avatar-color',
-      avatar.accentColor,
-    );
     await follow(page, '#/');
     await localReady(page);
-    await expect(page.getByTestId('learning-avatar')).toHaveAttribute(
-      'data-avatar-preset',
-      avatar.presetId,
-    );
-    await expect(page.getByTestId('learning-avatar')).toHaveAttribute(
-      'data-avatar-color',
-      avatar.accentColor,
-    );
+    await expect(
+      page.getByRole('button', { name: '积分 70，查看明细', exact: true }),
+    ).toBeVisible();
     await visitLeaf(page, exercises[0].lessonRef.id);
     await follow(page, `#/practice/${exercises[0].ref.id}`);
-    await expect(c6Editor(page)).toHaveValue(exercises[0].starterSource);
+    await expectEditorValue(c6Editor(page), exercises[0].starterSource);
     await expect(page.locator('.c6-trace')).toHaveCount(0);
     await c6Editor(page).fill(exercises[0].referenceSource);
-    await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-    await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: '提交', exact: true }).click();
+    await expectCurrentSaved(page);
     const repeat = await assertCurrentJudge(page, exercises[0], 'passed');
     sameAwards(saved, await currentSnapshot(page));
     await runAssignment(page);

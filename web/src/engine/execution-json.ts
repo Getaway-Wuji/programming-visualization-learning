@@ -18,12 +18,36 @@ const simpleString = /[^"\\\u0000-\u001f\ud800-\udfff]{0,32768}"/y;
 // fixed and sorted; the integer alternatives are shortest safe <=15 digits.
 // Other objects (including legal16-digit integers) retain the scalar scanner.
 const smallScalarRecord =
-  /\{(?:"end":(?:0|[1-9][0-9]{0,14}),"start":(?:0|[1-9][0-9]{0,14})|"arrayWrites":(?:0|[1-9][0-9]{0,14}),"comparisons":(?:0|[1-9][0-9]{0,14}),"scalarWrites":(?:0|[1-9][0-9]{0,14}),"swaps":(?:0|[1-9][0-9]{0,14})|"liveBytes":(?:0|[1-9][0-9]{0,14}),"nextAddress":(?:0|[1-9][0-9]{0,14}),"nextFrame":(?:0|[1-9][0-9]{0,14}),"nextObject":(?:0|[1-9][0-9]{0,14}),"nextScope":(?:0|[1-9][0-9]{0,14})|"index":(?:0|[1-9][0-9]{0,14}),"value":(?:null|0|-?[1-9][0-9]{0,14})|"iteration":(?:0|[1-9][0-9]{0,14}),"nodeId":"n[1-9][0-9]{0,14}","stage":"(?:block|init|condition|body|update)"|(?:"edge":"(?:start|whole|end)",)?"kind":"source","nodeId":"n[1-9][0-9]{0,14}")\}/y;
+  /\{(?:"end":(?:0|[1-9][0-9]{0,14}),"start":(?:0|[1-9][0-9]{0,14})|"arrayWrites":(?:0|[1-9][0-9]{0,14}),"comparisons":(?:0|[1-9][0-9]{0,14}),"scalarWrites":(?:0|[1-9][0-9]{0,14}),"swaps":(?:0|[1-9][0-9]{0,14})|"index":(?:0|[1-9][0-9]{0,14}),(?:"value":(?:null|0|-?[1-9][0-9]{0,14})|"kind":"read","nodeId":"n[1-9][0-9]{0,14}","objectId":"o[1-9][0-9]{0,14}","value":(?:0|-?[1-9][0-9]{0,14}))|"branch":"(?:true|false)","kind":"decision","nodeId":"n[1-9][0-9]{0,14}","value":(?:0|-?[1-9][0-9]{0,14})|"after":(?:null|0|-?[1-9][0-9]{0,14}),"before":(?:null|0|-?[1-9][0-9]{0,14}),"index":(?:0|[1-9][0-9]{0,14}),"objectId":"o[1-9][0-9]{0,14}","op":"cell"|"iteration":(?:0|[1-9][0-9]{0,14}),"nodeId":"n[1-9][0-9]{0,14}","stage":"(?:block|init|condition|body|update)"|(?:"edge":"(?:start|whole|end)",)?"kind":"source","nodeId":"n[1-9][0-9]{0,14}")\}/y;
+// Common arithmetic observations have at most four short scalar operands.
+// This checks spelling only; the trace validator still checks operator semantics.
+const evaluateRecord =
+  /\{"kind":"evaluate","nodeId":"n[1-9][0-9]{0,14}","operands":\[(?:(?:0|-?[1-9][0-9]{0,14})(?:,(?:0|-?[1-9][0-9]{0,14})){0,3})?\],"operator":"[-+*/%<>=!&|^~]{1,3}","value":(?:0|-?[1-9][0-9]{0,14})\}/y;
 // A complete canonical control record with at most eight short flow entries.
 // The match is <1KiB. Other values/shapes retain the full scalar scanner.
 // Its nested containers are counted and depth-checked explicitly below.
 const controlRecord =
   /\{"activeFrameId":(?:null|"f[1-9][0-9]{0,14}"),"flowStack":\[(?:\{"iteration":(?:0|[1-9][0-9]{0,14}),"nodeId":"n[1-9][0-9]{0,14}","stage":"(?:block|init|condition|body|update)"\}(?:,\{"iteration":(?:0|[1-9][0-9]{0,14}),"nodeId":"n[1-9][0-9]{0,14}","stage":"(?:block|init|condition|body|update)"\}){0,7})?\],"nextNodeId":(?:null|"n[1-9][0-9]{0,14}"),"phase":"(?:ready|running|returned)","returnValue":(?:null|0|-?[1-9][0-9]{0,14})\}/y;
+// Flat algorithm control records have the same canonical lexical guarantees.
+// Larger integers and other shapes retain the complete scalar scanner.
+const algorithmControlRecord =
+  /\{"activeFrameId":(?:null|"f[1-9][0-9]{0,14}"),"inputCursor":(?:0|[1-9][0-9]{0,14}),"nextNodeId":(?:null|"n[1-9][0-9]{0,14}"),"returnValue":(?:null|0|-?[1-9][0-9]{0,14})\}/y;
+const allocatorRecord =
+  /\{"liveBytes":(?:0|[1-9][0-9]{0,14}),"nextAddress":(?:0|[1-9][0-9]{0,14}),"nextFrame":(?:0|[1-9][0-9]{0,14}),"nextObject":(?:0|[1-9][0-9]{0,14}),"nextScope":(?:0|[1-9][0-9]{0,14})\}/y;
+// Each delta embeds two complete flat records, so there are two extra
+// containers at the same depth. Both halves use the same canonical grammar.
+const scalarPair = (record: RegExp, op: 'allocator' | 'control') =>
+  new RegExp(`\\{"after":${record.source},"before":${record.source},"op":"${op}"\\}`, 'y');
+const allocatorPair = scalarPair(allocatorRecord, 'allocator');
+const algorithmControlPair = scalarPair(algorithmControlRecord, 'control');
+// Bounded algorithm records with scalar fields and shallow, short ID arrays.
+// Nonempty cells/aliases and longer or escaped values use the scalar scanner.
+const algorithmScopeRecord =
+  /\{"aliases":\[\],"frameId":"f[1-9][0-9]{0,14}","id":"s[1-9][0-9]{0,14}","nodeId":"n[1-9][0-9]{0,14}","objectIds":\[(?:"o[1-9][0-9]{0,14}"(?:,"o[1-9][0-9]{0,14}"){0,7})?\]\}/y;
+const algorithmFrameRecord =
+  /\{"callNodeId":(?:null|"n[1-9][0-9]{0,14}"),"functionName":"[A-Za-z_][A-Za-z0-9_]{0,63}","functionNodeId":"n[1-9][0-9]{0,14}","id":"f[1-9][0-9]{0,14}","parentFrameId":(?:null|"f[1-9][0-9]{0,14}"),"scopeIds":\[(?:"s[1-9][0-9]{0,14}"(?:,"s[1-9][0-9]{0,14}"){0,7})?\]\}/y;
+const algorithmObjectRecord =
+  /\{"baseAddress":(?:0|[1-9][0-9]{0,14}),"cells":\[\],"declarationNodeId":"n[1-9][0-9]{0,14}","defaultValue":(?:null|0|-?[1-9][0-9]{0,14}),"frameId":"f[1-9][0-9]{0,14}","id":"o[1-9][0-9]{0,14}","kind":"(?:int|int-array)","length":(?:0|[1-9][0-9]{0,14}),"name":"[A-Za-z_][A-Za-z0-9_]{0,63}","scopeId":"s[1-9][0-9]{0,14}"\}/y;
 
 export interface JsonShape {
   containers: number;
@@ -99,7 +123,53 @@ export function* precheckJson(text: string): Generator<void, JsonShape, unknown>
       ensure(stack.length < 32, 'E_PROTOCOL_INVALID');
       containers++;
       if (character === 123) {
+        const pair = text.startsWith('{"after":{"activeFrameId":', at)
+          ? algorithmControlPair
+          : text.startsWith('{"after":{"liveBytes":', at)
+            ? allocatorPair
+            : null;
+        if (pair) {
+          pair.lastIndex = at;
+          if (pair.test(text)) {
+            ensure(stack.length + 2 <= 32, 'E_PROTOCOL_INVALID');
+            containers += 2;
+            at = pair.lastIndex;
+            if (!stack.length) finished = true;
+            continue;
+          }
+        }
+        if (text.startsWith('{"liveBytes":', at)) {
+          allocatorRecord.lastIndex = at;
+          if (allocatorRecord.test(text)) {
+            at = allocatorRecord.lastIndex;
+            if (!stack.length) finished = true;
+            continue;
+          }
+        }
+        const algorithmRecord = text.startsWith('{"aliases":[],', at)
+          ? algorithmScopeRecord
+          : text.startsWith('{"callNodeId":', at)
+            ? algorithmFrameRecord
+            : text.startsWith('{"baseAddress":', at)
+              ? algorithmObjectRecord
+              : null;
+        if (algorithmRecord) {
+          algorithmRecord.lastIndex = at;
+          if (algorithmRecord.test(text)) {
+            ensure(stack.length + 2 <= 32, 'E_PROTOCOL_INVALID');
+            containers += algorithmRecord === algorithmScopeRecord ? 2 : 1;
+            at = algorithmRecord.lastIndex;
+            if (!stack.length) finished = true;
+            continue;
+          }
+        }
         if (text.startsWith('{"activeFrameId":', at)) {
+          algorithmControlRecord.lastIndex = at;
+          if (algorithmControlRecord.test(text)) {
+            at = algorithmControlRecord.lastIndex;
+            if (!stack.length) finished = true;
+            continue;
+          }
           controlRecord.lastIndex = at;
           if (controlRecord.test(text)) {
             const end = controlRecord.lastIndex;
@@ -124,6 +194,16 @@ export function* precheckJson(text: string): Generator<void, JsonShape, unknown>
           at = smallScalarRecord.lastIndex;
           if (!stack.length) finished = true;
           continue;
+        }
+        if (text.startsWith('{"kind":"evaluate",', at)) {
+          evaluateRecord.lastIndex = at;
+          if (evaluateRecord.test(text)) {
+            ensure(stack.length + 2 <= 32, 'E_PROTOCOL_INVALID');
+            containers++; // The operands array; dispatch already counted the object.
+            at = evaluateRecord.lastIndex;
+            if (!stack.length) finished = true;
+            continue;
+          }
         }
       }
       const next =

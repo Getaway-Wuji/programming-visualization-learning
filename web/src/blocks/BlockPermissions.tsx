@@ -12,9 +12,7 @@ export function BlockPermissions({ access, packageRef }: { access: BlockAccess; 
         积木权限：已永久解锁 {access.permanent.length} / {BLOCK_TYPES.length}
         {access.available ? ` · 本节临时开放 ${access.temporary.length} 类` : ' · 当前版本待核对'}
       </summary>
-      <p>
-        本节所需积木可直接练习。确认学习并通过全部必修题，保存成功后永久解锁；离开本节会收回临时权限。
-      </p>
+      <p>本节所需积木可直接练习。永久权限来自已保存的对应课程完成记录；离开本节会收回临时权限。</p>
       <ul aria-label="积木学习权限">
         {BLOCK_TYPES.map((kind) => {
           const status = access.permanent.includes(kind)

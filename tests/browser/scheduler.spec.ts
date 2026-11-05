@@ -26,7 +26,7 @@ test.beforeAll(() => mkdir(folder, { recursive: true }));
 test('15.3 common empty or unreviewed queue states are honest and never create a learning fact', async ({
   page,
 }) => {
-  await page.goto('/#/reviews');
+  await reviews(page);
   await expect(
     page.getByRole('heading', { level: 1, name: '今日复习', exact: true }),
   ).toBeVisible();
@@ -43,19 +43,18 @@ test('15.3 common empty or unreviewed queue states are honest and never create a
   expect(await native(page)).toEqual(before);
   await page.goto('/#/');
   await reviewReady(page);
-  await expect(page.getByRole('link', { name: '今日复习', exact: true })).toHaveAttribute(
-    'href',
-    '#/reviews',
-  );
+  await page.goto('/#/reviews');
+  await expect(page).toHaveURL(/#\/notebook$/);
+  await expect(page.getByRole('heading', { name: '错题与陌生点', exact: true })).toBeVisible();
   expect((await native(page)).reviewCards).toEqual([]);
-  await page.getByRole('link', { name: '今日复习', exact: true }).click();
+  await reviews(page);
   await expect(page.getByTestId('review-empty')).toBeVisible();
   sameLearning(before, await native(page));
 });
 test('15.3 common queue entry and three widths stay usable without fabricated cards', async ({
   page,
 }) => {
-  await page.goto('/#/reviews');
+  await reviews(page);
   await expect(
     page.getByRole('heading', { level: 1, name: '今日复习', exact: true }),
   ).toBeVisible();

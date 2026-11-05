@@ -1,6 +1,7 @@
+import { editorValue } from './editor-value';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
-import { expect, type Page } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import {
   archive,
   ready,
@@ -29,7 +30,15 @@ export async function reviewReady(p: Page) {
   await expect.poll(async () => (await native(p)).settings.goalTemplate).not.toBeNull();
 }
 export async function reviews(p: Page) {
-  await p.goto('/#/reviews');
+  if (!test.info().annotations.some((entry) => entry.type === 'retained-scheduler-qa'))
+    test.info().annotations.push({
+      type: 'retained-scheduler-qa',
+      description:
+        'The public /reviews route redirects to the notebook. Scheduling checks mount the real retained ReviewsPage/providers at /checks/reviews.html and use the same native archive.',
+    });
+  await p.goto('/#/');
+  await reviewReady(p);
+  await p.goto('/checks/reviews.html#/reviews');
   await expect(p.getByRole('heading', { level: 1, name: '今日复习', exact: true })).toBeVisible();
   await reviewReady(p);
 }
@@ -47,6 +56,8 @@ export async function mark(p: Page) {
   await expect.poll(async () => (await native(p)).reviewCards.length).toBe(1);
 }
 export async function markCurrent(p: Page) {
+  await p.goto('/#/');
+  await reviewReady(p);
   await p.goto('/#/lessons/lesson.c6.s2.1');
   await ready(p);
   await expect(p.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
@@ -58,7 +69,7 @@ export async function markCurrent(p: Page) {
   await expect.poll(async () => (await native(p)).reviewCards.length).toBe(1);
 }
 export async function changePrint(p: Page, expression: string) {
-  const source = await code(p).inputValue();
+  const source = await editorValue(code(p));
   await code(p).fill(source.replace(/printf\([^;]+;/, `printf("%d\\n", ${expression});`));
   await expect(p.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
 }

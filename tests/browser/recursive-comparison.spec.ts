@@ -1,3 +1,5 @@
+import { editorValue } from './editor-value';
+import { expectedSourceLine } from './source-highlight';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
@@ -171,7 +173,7 @@ for (const [label, values] of Object.entries({
       await details.locator('summary').first().click();
       await expect(details.getByTestId('pair-source')).toHaveText(request.source);
       expect(
-        await details.getByLabel('本侧可复制的完整C++源码', { exact: true }).inputValue(),
+        await editorValue(details.getByLabel('本侧可复制的完整C++源码', { exact: true })),
       ).toBe(request.source);
     }
     const probe = await p.evaluate(() => {
@@ -211,17 +213,17 @@ for (const [label, values] of Object.entries({
           'data-active-frame',
           view.state!.control.activeFrameId ?? '',
         );
-        if (view.byteRange) {
+        const line = expectedSourceLine(request.source, view.byteRange);
+        if (line && view.byteRange) {
           const mark = lane.getByTestId('pair-source-highlight');
           await expect(mark).toHaveAttribute('data-byte-start', String(view.byteRange.start));
           expect(await mark.textContent()).toBe(
             new TextDecoder().decode(
-              new TextEncoder()
-                .encode(request.source)
-                .slice(view.byteRange.start, view.byteRange.end),
+              new TextEncoder().encode(request.source).slice(line.start, line.end),
             ),
           );
         }
+        if (!line) await expect(lane.getByTestId('pair-source-highlight')).toHaveCount(0);
         if (cursor === length)
           await expect(lane.getByTestId('sort-output')).toHaveText(
             [...values]

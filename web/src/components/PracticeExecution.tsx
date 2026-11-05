@@ -14,6 +14,7 @@ import { LessonCompletion } from './LessonCompletion';
 import { reviewedDurableSnapshot } from '../learning/reviewed-release';
 import { resolveBlockAccess, lockedProgramKinds } from '../blocks/permissions';
 import { BLOCK_LABELS } from '../blocks/block-kinds';
+import { BlockPermissions } from '../blocks/BlockPermissions';
 import { EditorHistory } from '../practice/EditorHistory';
 import { reconstructionQuestion } from '../practice/reconstruction';
 import { ReconstructionReference } from '../practice/ReconstructionPanel';
@@ -127,10 +128,9 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
     catalog?.subject.lessonRef,
   );
   const blocksVisible =
-    !bug &&
-    (reconstructing ||
-      preference.value === 'show' ||
-      (preference.value === 'auto' && recommendation === 'blocks'));
+    reconstructing ||
+    preference.value === 'show' ||
+    (!bug && preference.value === 'auto' && recommendation === 'blocks');
   // Once mounted, retain the native canvas and undo history while hidden.
   const [canvasOwner, setCanvasOwner] = useState('');
   const canvasKey = `${id}:${state.modeRevision}`;
@@ -211,7 +211,7 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
         step.changes.flatMap((change) => (change.op === 'output' ? [change.append] : [])),
       )
       .join('') ?? '';
-  if (bug && catalog)
+  if (bug && catalog && !review && preference.value !== 'show' && !mountCanvas)
     return (
       <section
         className="card section-card"
@@ -267,6 +267,19 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
             </button>
           )}
         </div>
+        {permissionBlocked && (
+          <p role="alert" data-testid="block-permission-blocked">
+            {access?.available
+              ? `当前代码包含未解锁的积木：${lockedKinds.map((kind) => BLOCK_LABELS[kind] ?? kind).join('、')}。`
+              : '正在准备本题编辑权限。'}{' '}
+            <Link to="/courses">查看课程</Link>
+          </p>
+        )}
+        {result && (
+          <Link className="text-link" to={paths.review(id)}>
+            查看本次复盘
+          </Link>
+        )}
         {['met', 'unmet', 'failed'].includes(phase) && (
           <p
             role="status"
@@ -320,6 +333,9 @@ export function PracticeExecution({ id, review = false }: { id: string; review?:
       )}
       {!review && catalog && (
         <>
+          {blocksVisible && access && (
+            <BlockPermissions access={access} packageRef={catalog.packageRef} />
+          )}
           {!bug && (
             <PracticeGuidance
               key={id}

@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 import type { StorageSnapshot, ThemeId } from '../../web/src/storage/model';
 import { blockOptions, blockWorkspace, showPracticeBlocks, selectBlock } from './block-ui';
@@ -253,8 +254,8 @@ test('an actual Blockly draft survives settings theme changes and browser back w
   await selectBlock(page, outputs[0]);
   const draft = '%d 外观切换草稿\\n';
   await workspace.getByRole('textbox', { name: '输出格式', exact: true }).fill(draft);
-  await page.getByRole('button', { name: '准备代码', exact: true }).click();
-  const source = await page.getByTestId('code-panel').locator('textarea').inputValue();
+  await expect(page.getByTestId('code-panel')).toBeVisible();
+  const source = await editorValue(page.getByTestId('code-panel').locator('textarea'));
   expect(source).toContain('外观切换草稿');
   const before = await snapshot(page);
   await page
@@ -271,8 +272,8 @@ test('an actual Blockly draft survives settings theme changes and browser back w
   if ((await restored.locator('details').getAttribute('open')) === null)
     await restored.locator('summary').click();
   await selectBlock(page, outputs[0]);
-  await expect(restored.getByRole('textbox', { name: '输出格式', exact: true })).toHaveValue(draft);
-  await expect(page.getByTestId('code-panel').locator('textarea')).toHaveValue(source);
+  await expectEditorValue(restored.getByRole('textbox', { name: '输出格式', exact: true }), draft);
+  await expectEditorValue(page.getByTestId('code-panel').locator('textarea'), source);
   const executions = await page.evaluate(
     () => window.__verticalObservation.workers.filter((worker) => worker.kind === 'execute').length,
   );
@@ -297,7 +298,7 @@ test('a real accepted Rust submission and player cursor survive appearance chang
   await expect(practice).toHaveAttribute('data-state', 'ready');
   await ready(page);
   await showPracticeBlocks(page);
-  await practice.getByRole('button', { name: '准备代码', exact: true }).click();
+  await expect(page.getByTestId('code-panel')).toBeVisible();
   await practice.getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(practice).toHaveAttribute('data-state', 'passed');
   await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state', 'saved');
@@ -306,9 +307,9 @@ test('a real accepted Rust submission and player cursor survive appearance chang
   await controls.getByRole('button', { name: '前进', exact: true }).click();
   const cursor = await controls.getAttribute('data-cursor');
   expect(Number(cursor)).toBeGreaterThan(0);
-  const source = await page
-    .getByRole('textbox', { name: '当前执行的 C 代码', exact: true })
-    .inputValue();
+  const source = await editorValue(
+    page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
+  );
   const accepted = await observedCaseSetExecute(page);
   const request = JSON.parse(
     Buffer.from(accepted.requestBytes!).toString('utf8'),
@@ -333,7 +334,8 @@ test('a real accepted Rust submission and player cursor survive appearance chang
   await page.goBack();
   await expect(practice).toHaveAttribute('data-state', 'passed');
   await expect(controls).toHaveAttribute('data-cursor', cursor!);
-  await expect(page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true })).toHaveValue(
+  await expectEditorValue(
+    page.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }),
     source,
   );
   expect(

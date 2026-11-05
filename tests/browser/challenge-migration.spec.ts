@@ -5,7 +5,8 @@ import {
 import { mkdir, writeFile } from 'node:fs/promises';
 import { test, expect, type Page } from '@playwright/test';
 import { native, openAnswer, submit, achievementReady } from './achievement-helpers';
-import { mark } from './scheduler-helpers';
+import { ready } from './notebook-helpers';
+import { archivedPredecessor } from './archived-predecessor';
 const label = process.env.TASK_EVIDENCE_LABEL ?? 'local';
 async function physical(p: Page) {
   return p.evaluate(async () => {
@@ -43,13 +44,24 @@ test('16.1 actual34 SAVE6 upgrades to7 without rewriting any of the15 old partit
   page,
 }) => {
   await page.clock.setFixedTime(new Date('2026-10-31T04:00:00.000Z'));
-  await mark(page);
-  await page.locator('[data-review-rating="good"]').click();
-  await openAnswer(page, 'exercise.c.bubble-sort');
-  await submit(page);
-  await page.goto('/#/achievements');
-  await achievementReady(page);
-  await expect(page.getByTestId('achievement-total')).toHaveText('1 / 3');
+  await archivedPredecessor(page, async (page) => {
+    // This immutable predecessor still exposes its original public review route.
+    await page.goto('/#/lessons/lesson.c.variables-output');
+    await ready(page);
+    const mark = page.locator('[data-knowledge-mark="knowledge.c.variables"]');
+    await expect(page.getByTestId('knowledge-marks-status')).toHaveAttribute('data-state', 'ready');
+    await mark.click();
+    await expect(mark).toHaveAttribute('aria-pressed', 'true');
+    await page.goto('/#/reviews');
+    await expect(page.locator('.app-shell')).toHaveAttribute('data-review-storage-status', 'ready');
+    await expect(page.getByTestId('review-counts')).toHaveText('到期 1 · 未到期 0 · 暂停 0');
+    await page.locator('[data-review-rating="good"]').click();
+    await openAnswer(page, 'exercise.c.bubble-sort');
+    await submit(page);
+    await page.goto('/#/achievements');
+    await achievementReady(page);
+    await expect(page.getByTestId('achievement-total')).toHaveText('1 / 3');
+  });
   const before = await native(page),
     physicalBefore = await physical(page);
   expect(physicalBefore.version).toBe(6);

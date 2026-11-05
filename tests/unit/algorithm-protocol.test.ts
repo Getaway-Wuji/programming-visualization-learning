@@ -6,6 +6,7 @@ import {
   encodeAlgorithmRequest,
   projectAlgorithmStep,
   type AlgorithmResult,
+  type AlgorithmStep,
 } from '../../web/src/engine/algorithm-protocol';
 import { fixture, request } from './algorithm-fixture';
 
@@ -44,6 +45,109 @@ test('public projection isolates changed allocator and control values from both 
   expect(result).toEqual(expected);
   expect(trace.initialState.allocator.nextAddress).toBe(4096);
 });
+
+test('public projection keeps untouched table arrays separate from the original state', async () => {
+  const result = await decode(fixture());
+  const expected = structuredClone(result);
+  const trace = result.trace!;
+  const next = projectAlgorithmStep(trace.initialState, trace.steps[0]);
+  expect(next.objects).not.toBe(trace.initialState.objects);
+  next.objects.length = 1;
+  expect(result).toEqual(expected);
+});
+
+test.each(['nextAddress', 'nextFrame', 'nextScope', 'nextObject', 'liveBytes'] as const)(
+  'cached immutable tables still validate a changed allocator %s',
+  async (key) => {
+    const value = fixture();
+    const trace = value.trace!;
+    const state = trace.steps
+      .slice(0, 2)
+      .reduce((state, step) => projectAlgorithmStep(state, step), trace.initialState);
+    trace.steps.splice(2, 0, {
+      seq: 3,
+      kind: 'nop',
+      nodeId: 'n3',
+      changes: [
+        {
+          op: 'allocator',
+          before: state.allocator,
+          after: {
+            ...state.allocator,
+            [key]: key === 'nextAddress' ? 4096 : key === 'liveBytes' ? 0 : 1,
+          },
+        },
+      ],
+    });
+    trace.steps.forEach((step, index) => {
+      step.seq = index + 1;
+    });
+    value.terminal.cursor++;
+    await expect(decode(value)).rejects.toThrow('E_PROTOCOL_INVALID');
+  },
+);
+
+test.each(['record', 'control'] as const)(
+  'projection rejects extra keys in a %s before value despite cached prior validation',
+  async (op) => {
+    const value = fixture();
+    const change = value
+      .trace!.steps.flatMap((step) => step.changes)
+      .find(
+        (change) =>
+          (change.op === 'record' || change.op === 'control') &&
+          change.op === op &&
+          change.before !== null,
+      )!;
+    if ((change.op !== 'record' && change.op !== 'control') || !change.before)
+      throw new Error('fixture');
+    const malformedBefore = { ...change.before };
+    Object.assign(malformedBefore, { unexpected: true });
+    change.before = malformedBefore;
+    await expect(decode(value)).rejects.toThrow('E_PROTOCOL_INVALID');
+  },
+);
+test.each(['scope-parent', 'object-scope', 'active-frame'] as const)(
+  'cached table facts still reject a changed %s relationship',
+  async (kind) => {
+    const value = fixture();
+    const trace = value.trace!;
+    const state = trace.steps
+      .slice(0, 2)
+      .reduce((state, step) => projectAlgorithmStep(state, step), trace.initialState);
+    const invalid: AlgorithmStep = { seq: 3, kind: 'nop', nodeId: 'n3', changes: [] };
+    if (kind === 'scope-parent')
+      invalid.changes.push({
+        op: 'record',
+        table: 'scopes',
+        id: 's1',
+        index: 0,
+        before: state.scopes[0],
+        after: { ...state.scopes[0], frameId: 'f999' },
+      });
+    else if (kind === 'object-scope')
+      invalid.changes.push({
+        op: 'record',
+        table: 'objects',
+        id: 'o1',
+        index: 0,
+        before: state.objects[0],
+        after: { ...state.objects[0], scopeId: 's999' },
+      });
+    else
+      invalid.changes.push({
+        op: 'control',
+        before: state.control,
+        after: { ...state.control, activeFrameId: 'f999' },
+      });
+    trace.steps.splice(2, 0, invalid);
+    trace.steps.forEach((step, index) => {
+      step.seq = index + 1;
+    });
+    value.terminal.cursor++;
+    await expect(decode(value)).rejects.toThrow('E_PROTOCOL_INVALID');
+  },
+);
 test('closed branch accepts canonical synthetic deltas and restores returned objects', async () => {
   const value = await decode(fixture());
   const player = new AlgorithmPlayer();

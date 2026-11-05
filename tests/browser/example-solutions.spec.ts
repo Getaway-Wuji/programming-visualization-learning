@@ -1,3 +1,4 @@
+import { expectedSourceLine } from './source-highlight';
 import { readFileSync } from 'node:fs';
 import { test, expect, type Page, type TestInfo } from '@playwright/test';
 import { observeCaseSetExecution } from './case-set-observation';
@@ -172,7 +173,7 @@ for (const [i, spec] of specs.entries())
       const length = Number(await root(page).getAttribute('data-length')),
         k = Math.floor(Math.min(...captures.map((c) => c.result.trace!.steps.length)) / 2);
       await seek(page, k);
-      for (const [j, { result }] of captures.entries()) {
+      for (const [j, { request, result }] of captures.entries()) {
         const player = new AdvancedPlayer();
         player.accept(result);
         player.seek(k);
@@ -195,11 +196,18 @@ for (const [i, spec] of specs.entries())
         }
         for (const [key, count] of Object.entries(state.counters))
           await expect(lane(page, j).locator(`[data-counter="${key}"]`)).toHaveText(String(count));
-        const range = player.snapshot().byteRange!;
-        await expect(lane(page, j).getByTestId('pair-source-highlight')).toHaveAttribute(
-          'data-byte-start',
-          String(range.start),
-        );
+        const range = expectedSourceLine(request.source, player.snapshot().byteRange);
+        const highlight = lane(page, j).getByTestId('pair-source-highlight');
+        if (range) {
+          await expect(highlight).toHaveAttribute(
+            'data-byte-start',
+            String(player.snapshot().byteRange!.start),
+          );
+          await expect(highlight).toHaveAttribute(
+            'data-byte-end',
+            String(player.snapshot().byteRange!.end),
+          );
+        } else await expect(highlight).toHaveCount(0);
         await lane(page, j)
           .getByRole('combobox', { name: '本侧观察视图', exact: true })
           .selectOption('memory');

@@ -3,13 +3,50 @@ import { expect, type Page } from '@playwright/test';
 export const blockWorkspace = (page: Page) =>
   page.getByRole('region', { name: '积木工作区', exact: true });
 
+/** Persist an actual display choice in the normal settings screen. */
+export async function setBlockPreference(page: Page, value: 'show' | 'hide' | 'auto') {
+  const settings = await page.context().newPage();
+  try {
+    await settings.goto('/#/settings?panel=display');
+    const choice = settings.getByRole('combobox', { name: '积木显示', exact: true });
+    await expect(choice).toBeEnabled();
+    await choice.selectOption(value);
+    await expect(choice).toHaveValue(value);
+    await expect(settings.locator('.app-shell')).toHaveAttribute(
+      'data-learning-storage-status',
+      'ready',
+    );
+  } finally {
+    await settings.close();
+  }
+}
+
 /** Opt older canvas regressions into visible blocks without changing their answer mode. */
 export async function showPracticeBlocks(page: Page, { readOnly = true } = {}) {
   const preference = page.getByRole('combobox', { name: '积木显示', exact: true });
-  await expect(preference).toBeEnabled();
-  if ((await preference.inputValue()) !== 'show') await preference.selectOption('show');
-  await expect(preference).toHaveValue('show');
-  await expect(preference).toBeEnabled();
+  if (await preference.count()) {
+    await expect(preference).toBeEnabled();
+    if ((await preference.inputValue()) !== 'show') await preference.selectOption('show');
+    await expect(preference).toHaveValue('show');
+    await expect(preference).toBeEnabled();
+  } else if (!(await blockWorkspace(page).locator('.blocklySvg').isVisible())) {
+    // Display preferences now live in settings. Use the real shared-browser
+    // preference flow without leaving or replacing the current unsaved draft.
+    const settings = await page.context().newPage();
+    try {
+      await settings.goto('/#/settings?panel=display');
+      const choice = settings.getByRole('combobox', { name: '积木显示', exact: true });
+      await expect(choice).toBeEnabled();
+      if ((await choice.inputValue()) !== 'show') await choice.selectOption('show');
+      await expect(choice).toHaveValue('show');
+      await expect(settings.locator('.app-shell')).toHaveAttribute(
+        'data-learning-storage-status',
+        'ready',
+      );
+    } finally {
+      await settings.close();
+    }
+  }
   await expect(blockWorkspace(page).locator('.blocklySvg')).toBeVisible();
   if (readOnly) {
     const collapseCode = page.getByRole('button', { name: '收起代码编辑', exact: true });

@@ -1,3 +1,6 @@
+import { assertEveryC6State } from './current-c6-ui';
+import { currentSnapshot } from './current-practice-observation';
+import { expectEditorValue } from './editor-value';
 /* eslint-disable @typescript-eslint/no-explicit-any -- Raw browser/CDP observation records have version-dependent metadata. */
 import { mkdirSync, writeFileSync, readFileSync, appendFileSync } from 'node:fs';
 import { isDeepStrictEqual } from 'node:util';
@@ -45,10 +48,10 @@ const definitions = [
     id: 'visible-practice-bubble6',
     route: '/practice/exercise.c6.s10.1.1',
     currentC6: true,
-    root: '.c6-result-pane',
+    root: '.oj-answer',
     stateAttribute: 'data-state',
     terminalStates: ['passed'],
-    runLabel: '判定全部四组',
+    runLabel: '提交',
     slider: 'input[aria-label="执行步骤"]',
   },
   {
@@ -91,11 +94,11 @@ const definitions = [
 const navigation = [
   ['home', '/', '.c6-next-section a[href*="/lessons/"]'],
   ['courses', '/courses', '.c6-node-list'],
-  ['lesson', '/lessons/lesson.c6.s2.1', '.c6-reading-confirmation'],
-  ['practice', '/practice/exercise.c6.s2.1', '.c6-source-editor'],
-  ['cases', '/cases', '[data-page-id="PAGE-05"] a[href*="visualize"]'],
+  ['lesson', '/lessons/lesson.c6.s2.1', '[data-testid="reading-end"]'],
+  ['practice', '/practice/exercise.c6.s2.1', '.oj-answer .code-editor'],
+  ['cases', '/cases', '.lab-catalog a[href*="/algorithms/lab/"]'],
   ['case', '/visualize/case.c.assignment', '[data-testid="input-panel"]'],
-  ['settings', '/settings', '[data-testid="learning-save-status"][data-save-status="ready"]'],
+  ['settings', '/settings', '[data-testid="appearance-settings"]'],
   ['c-pair', '/compare', '[data-testid="input-field-values"]'],
   ['cpp-pair', '/compare?pair=cpp-recursive', '[data-testid="pair-input"]'],
   ['memory', '/memory?example=hanoi&view=stack', '[data-testid="memory-workspace"]'],
@@ -121,7 +124,8 @@ async function prepare(p: Page, d: (typeof definitions)[number]) {
   if (d.id === 'visible-practice-bubble6') {
     await openCurrentAnswer(p, currentExercise.ref.id);
     await ready(p);
-    await expect(p.getByLabel('完整 C 源码 · main.c', { exact: true })).toHaveValue(
+    await expectEditorValue(
+      p.getByLabel('完整 C 源码 · main.c', { exact: true }),
       currentExercise.referenceSource,
     );
   } else {
@@ -184,8 +188,8 @@ async function captureSample(p: Page, d: (typeof definitions)[number]) {
   const expectedRuns = d.id === 'visible-practice-bubble6' ? 1 : d.id.includes('pair30') ? 2 : 1;
   const currentC6 = d.id === 'visible-practice-bubble6';
   const terminalUi = currentC6
-    ? (await p.getByRole('heading', { name: '四组全部通过', exact: true }).count()) &&
-      (await p.getByText('本次判题记录已保存。', { exact: true }).count())
+    ? (await p.getByTestId('oj-verdict').textContent()) === '通过' &&
+      (await p.locator('.app-shell').getAttribute('data-learning-storage-status')) === 'ready'
       ? 'passed'
       : null
     : await p.locator(d.root).getAttribute(d.stateAttribute);
@@ -227,7 +231,19 @@ async function captureSample(p: Page, d: (typeof definitions)[number]) {
           )
           .join('');
       expect(stdout).toBe(currentExercise.tests[i].expectedStdout);
+      assertEveryC6State(c.packet, stdout);
     }
+    const stored = await currentSnapshot(p);
+    const activity = stored.courseActivities.find(
+      (row) => row.kind === 'exercise' && row.subjectRef.id === currentExercise.ref.id,
+    );
+    expect(activity?.kind === 'exercise' ? activity.latestAttempt : null).toMatchObject({
+      status: 'passed',
+      sourceSha256: request.sourceSha256,
+      sourceRevision: request.sourceRevision,
+      requestSha256: createHash('sha256').update(requestBytes).digest('hex'),
+      resultSha256: createHash('sha256').update(responseBytes).digest('hex'),
+    });
     c6Validated = {
       passed: true,
       caseCount: 4,
@@ -718,9 +734,8 @@ test('P1 two30-item panels and real recursion stack remain responsive for three 
         await p.evaluate(() => {
           (window as any).phase2Perf.recording = false;
         });
-        await control
-          .getByRole('button', { name: id === 'memory-hanoi5' ? '暂停' : '暂停对比', exact: true })
-          .click();
+        // Closing the context stops playback even if the page already paused.
+        // Do not wait for a button whose accessible name can change mid-run.
         const tracePath = `${output}/${id}-trace.json`;
         await traceEnd(session, tracePath);
         await session.detach();
@@ -746,6 +761,16 @@ test('P1 two30-item panels and real recursion stack remain responsive for three 
         work = stats(commits.map((r: any) => r.duration)),
         rafStats = stats(gaps),
         ratio = gaps.filter((v: number) => v > 33.3).length / gaps.length;
+      // A responsive prefix is not a full playback. Allow two native ticks
+      // and one display frame at the sampling window edges.
+      const edgeTolerance = 2 * 125 + 16.67,
+        firstCommitOffsetMs = commits[0] ? commits[0].at - stableStart : null,
+        lastCommitOffsetMs = commits.length ? commits.at(-1).at - stableStart : null,
+        coversStableWindow =
+          firstCommitOffsetMs !== null &&
+          lastCommitOffsetMs !== null &&
+          firstCommitOffsetMs <= edgeTolerance &&
+          lastCommitOffsetMs >= stableEnd - stableStart - edgeTolerance;
       const mark = trace.traceEvents.find((r: any) => r.name === 'phase2-' + id),
         offset = mark.ts - start * 1000,
         events = trace.traceEvents.filter(
@@ -761,6 +786,9 @@ test('P1 two30-item panels and real recursion stack remain responsive for three 
       report.cases.push({
         id,
         stableDurationMs: 30000,
+        firstCommitOffsetMs,
+        lastCommitOffsetMs,
+        coversStableWindow,
         rate: 4,
         cursorStart: commits[0]?.cursor,
         cursorEnd: commits.at(-1)?.cursor,
@@ -774,8 +802,14 @@ test('P1 two30-item panels and real recursion stack remain responsive for three 
         allSequential: commits
           .slice(1)
           .every((r: any, i: number) => r.cursor === commits[i].cursor + 1),
-        allForeground: commits.every((r: any) => r.visibility === 'visible' && r.focus),
+        allForeground:
+          commits.every((r: any) => r.visibility === 'visible' && r.focus) &&
+          !audit.foregroundChanges.some(
+            (r: any) =>
+              r.at >= stableStart && r.at <= stableEnd && (r.visibility !== 'visible' || !r.focus),
+          ),
         passed:
+          coversStableWindow &&
           work.n > 100 &&
           work.p95 !== null &&
           work.p95 <= 16.67 &&

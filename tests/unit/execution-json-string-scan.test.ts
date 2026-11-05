@@ -70,6 +70,136 @@ test('interleaved cancellable scans do not share a string cursor', () => {
   }
 });
 
+test('flat algorithm controls retain the frozen grammar, integer and depth boundaries', () => {
+  const texts: string[] = [];
+  for (const inputCursor of [0, 1, 999999999999999, 1000000000000000, 9007199254740991])
+    for (const returnValue of [null, 0, -1, 2147483647, 9007199254740991])
+      texts.push(
+        JSON.stringify({ activeFrameId: 'f1', inputCursor, nextNodeId: 'n2', returnValue }),
+      );
+  const canonical = texts[0];
+  texts.push(
+    '{"activeFrameId":null,"inputCursor":0,"nextNodeId":null,"returnValue":null}',
+    canonical.replace('"inputCursor":0', '"inputCursor":-0'),
+    canonical.replace('"inputCursor":0', '"inputCursor":01'),
+    canonical.replace('"inputCursor":0', '"inputCursor":1e0'),
+    canonical.replace('"inputCursor":0', '"inputCursor":9007199254740992'),
+    canonical.replace('"inputCursor":0', '"inputCursor":0,"inputCursor":0'),
+    canonical.replace('"returnValue":null', '"returnValue":-0'),
+    canonical.replace('"f1"', '"f01"'),
+    canonical.replace('"f1"', '"f1\\n"'),
+    canonical.replace('"n2"', '"n2\\n"'),
+    canonical.replace('}', ',"z":0}'),
+    canonical + ' ',
+  );
+  for (const text of [...texts]) {
+    texts.push('['.repeat(31) + text + ']'.repeat(31));
+    texts.push('['.repeat(32) + text + ']'.repeat(32));
+    for (const punctuation of ['{', '}', ':', ',', '"']) {
+      const at = text.indexOf(punctuation);
+      texts.push(text.slice(0, at) + text.slice(at + 1));
+    }
+  }
+  for (const text of texts)
+    expect(outcome(precheckJson, text), text).toEqual(outcome(before, text));
+});
+
+test('shallow algorithm records agree with frozen grammar, nested counts and bounded fallbacks', () => {
+  const records = [];
+  for (const count of [0, 1, 8, 9]) {
+    records.push({
+      aliases: [],
+      frameId: 'f1',
+      id: 's2',
+      nodeId: 'n3',
+      objectIds: Array.from({ length: count }, (_, i) => `o${i + 1}`),
+    });
+    records.push({
+      callNodeId: null,
+      functionName: 'main',
+      functionNodeId: 'n3',
+      id: 'f1',
+      parentFrameId: null,
+      scopeIds: Array.from({ length: count }, (_, i) => `s${i + 1}`),
+    });
+  }
+  records.push({
+    baseAddress: 5242884096,
+    cells: [],
+    declarationNodeId: 'n3',
+    defaultValue: null,
+    frameId: 'f1',
+    id: 'o1',
+    kind: 'int-array',
+    length: 262144,
+    name: 'array',
+    scopeId: 's2',
+  });
+  const texts: string[] = [];
+  for (const value of records) {
+    const canonical = JSON.stringify(value);
+    const variants = [
+      canonical,
+      canonical + ' ',
+      canonical.replace('}', ',"z":0}'),
+      canonical.replace('"f1"', '"f01"'),
+      canonical.replace('"f1"', '"f1\\n"'),
+      canonical.replace('null', '-0'),
+      canonical.replace('5242884096', '9007199254740992'),
+    ];
+    for (let i = 0; i < canonical.length; i++)
+      if ('{}[]:,"'.includes(canonical[i]))
+        variants.push(canonical.slice(0, i) + canonical.slice(i + 1));
+    for (const text of variants) {
+      texts.push(text);
+      texts.push('['.repeat(30) + text + ']'.repeat(30));
+      texts.push('['.repeat(31) + text + ']'.repeat(31));
+    }
+  }
+  for (const text of texts)
+    expect(outcome(precheckJson, text), text).toEqual(outcome(before, text));
+});
+
+test('paired allocator and control deltas retain the complete grammar and both nested containers', () => {
+  const control = { activeFrameId: 'f1', inputCursor: 0, nextNodeId: 'n2', returnValue: null };
+  const allocator = {
+    liveBytes: 0,
+    nextAddress: 4096,
+    nextFrame: 1,
+    nextObject: 1,
+    nextScope: 1,
+  };
+  const pairs = [
+    JSON.stringify({ after: { ...control, returnValue: -3 }, before: control, op: 'control' }),
+    JSON.stringify({
+      after: { ...allocator, nextAddress: 5242884096 },
+      before: allocator,
+      op: 'allocator',
+    }),
+  ];
+  for (const pair of pairs) {
+    expect(outcome(precheckJson, pair)).toEqual({ accepted: true, containers: 3 });
+    const variants = [
+      pair,
+      pair.replace('"before":{', '"before":{"a":0,'),
+      pair.replace('"before":{', '"before":{"z":0,'),
+      pair.replace('":0,', '":-0,'),
+      pair.replace('":0,', '":9007199254740991,'),
+      pair.replace('":0,', '":9007199254740992,'),
+      pair.replace(',"op":', ',"before":null,"op":'),
+      pair.replace(',"op":', ', "op":'),
+      pair + ' ',
+    ];
+    for (let i = 0; i < pair.length; i++)
+      if ('{}:,"'.includes(pair[i])) variants.push(pair.slice(0, i) + pair.slice(i + 1));
+    for (const form of variants)
+      for (const depth of [0, 30, 31]) {
+        const text = '['.repeat(depth) + form + ']'.repeat(depth);
+        expect(outcome(precheckJson, text), text).toEqual(outcome(before, text));
+      }
+  }
+});
+
 test('bounded scalar-record fast paths agree with frozen lexical grammar and container/depth limits', () => {
   const texts: string[] = [];
   for (const n of [0, 1, 999, 2147483647, 999999999999999, 1000000000000000, 9007199254740991]) {
@@ -128,6 +258,41 @@ test('mixed object and array separators retain the frozen grammar after dispatch
       expect(outcome(precheckJson, variant), variant).toEqual(outcome(before, variant));
   }
 });
+
+test.each([
+  ['read', '{"index":0,"kind":"read","nodeId":"n1","objectId":"o2","value":-7}', 1],
+  ['decision', '{"branch":"false","kind":"decision","nodeId":"n1","value":0}', 1],
+  ['cell', '{"after":-7,"before":null,"index":0,"objectId":"o2","op":"cell"}', 1],
+  ['evaluate', '{"kind":"evaluate","nodeId":"n1","operands":[0,-7],"operator":"<","value":1}', 2],
+] as const)(
+  '%s records retain the frozen grammar and exact container limits',
+  (_, canonical, count) => {
+    expect(outcome(precheckJson, canonical)).toEqual({ accepted: true, containers: count });
+    const variants = [
+      canonical,
+      canonical + ' ',
+      canonical.replace(/}$/, ',"z":0}'),
+      canonical.replace('"n1"', '"n1\\n"'),
+      canonical.replace('"o2"', '"o02"'),
+      canonical.replace(/"value":(-?\d+)/, '"value":$1,"value":0'),
+      canonical.replace('"operator":"<"', '"operator":"< "'),
+      ...['0', '-0', '01', '1e0', '999999999999999', '9007199254740991', '9007199254740992'].map(
+        (value) => canonical.replace(/:(-?\d+)(?=[,}])/, ':' + value),
+      ),
+      ...[[], [0], [1, -7, 0, 3], [1, 2, 3, 4, 5]].map((operands) =>
+        canonical.replace('[0,-7]', JSON.stringify(operands)),
+      ),
+    ];
+    for (let i = 0; i < canonical.length; i++)
+      if ('{}[]:,"'.includes(canonical[i]))
+        variants.push(canonical.slice(0, i) + canonical.slice(i + 1));
+    for (const form of variants)
+      for (const depth of [0, 30, 31, 32]) {
+        const input = '['.repeat(depth) + form + ']'.repeat(depth);
+        expect(outcome(precheckJson, input), input).toEqual(outcome(before, input));
+      }
+  },
+);
 
 test('flow and source-location records preserve canonical grammar in bounded and interleaved scans', () => {
   const forms: string[] = [];

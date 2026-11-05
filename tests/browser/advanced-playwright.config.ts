@@ -1,3 +1,4 @@
+import { browserProjects } from '../../scripts/browser-projects.mjs';
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
@@ -9,5 +10,5 @@ export default defineConfig({
   timeout: 30000,
   reporter: [['list'], ['json']],
   use: { baseURL: 'http://127.0.0.1:4183', trace: 'off', screenshot: 'off' },
-  projects: [{ name: 'chrome', use: { channel: 'chrome' } }],
+  projects: browserProjects,
 });

@@ -1,3 +1,5 @@
+import { expectedSourceLine } from './source-highlight';
+import { expectEditorValue } from './editor-value';
 import { readFileSync } from 'node:fs';
 import { test, expect, type Page, type TestInfo } from '@playwright/test';
 import type { AdvancedAlgorithmSpec } from '../../web/src/advanced-algorithms/content';
@@ -12,9 +14,14 @@ const specs = JSON.parse(readFileSync('content/algorithms/cpp/sieve-sequences-1.
   .cases as AdvancedAlgorithmSpec[];
 const root = (p: Page) => p.getByTestId('advanced-algorithm-workspace');
 async function open(p: Page, spec = specs[0]) {
-  await p.goto('/#/advanced/algorithms/' + spec.id);
+  const route = '/#/advanced/algorithms/' + spec.id;
+  const detail = p.getByRole('combobox', { name: '步骤显示', exact: true });
+  const expectedDetail = p.url().endsWith(route) ? await detail.inputValue() : 'key';
+  await p.goto(route);
   await waitForPhase2Archive(p);
   await expect(root(p)).toHaveAttribute('data-state', 'idle');
+  await expectEditorValue(detail, expectedDetail);
+  await detail.selectOption('all');
 }
 async function run(p: Page) {
   await p.getByRole('button', { name: '运行C++算法', exact: true }).click();
@@ -109,10 +116,12 @@ for (const spec of specs)
       }
       for (const [key, value] of Object.entries(state.counters))
         await expect(page.locator(`[data-counter="${key}"]`)).toHaveText(String(value));
-      await expect(page.getByTestId('memory-source-highlight')).toHaveAttribute(
-        'data-byte-start',
-        String(view.byteRange!.start),
-      );
+      if (expectedSourceLine(request.source, view.byteRange))
+        await expect(page.getByTestId('memory-source-highlight')).toHaveAttribute(
+          'data-byte-start',
+          String(view.byteRange!.start),
+        );
+      else await expect(page.getByTestId('memory-source-highlight')).toHaveCount(0);
       await page
         .getByRole('combobox', { name: '算法观察视图', exact: true })
         .selectOption('memory');
@@ -161,7 +170,7 @@ test('illegal, missing and excessive drafts are preserved, cannot run and cannot
   await run(page);
   for (const draft of ['31', '-1', '[]', '', '1e1', '1.5', '1 2']) {
     await page.getByTestId('algorithm-input').fill(draft);
-    await expect(page.getByTestId('algorithm-input')).toHaveValue(draft);
+    await expectEditorValue(page.getByTestId('algorithm-input'), draft);
     await expect(page.getByRole('button', { name: '运行C++算法', exact: true })).toBeDisabled();
     await expect(root(page)).toHaveAttribute('data-length', '0');
   }
@@ -184,11 +193,12 @@ test('course and algorithm catalog entries link four precise cases and unknown i
   await page.getByRole('link', { name: '查看四个算法 →', exact: true }).click();
   await expect(page.getByRole('heading', { name: '筛法与序列', exact: true })).toBeVisible();
   await page.goto('/#/cases');
+  await page.getByText('基础语法与更多案例', { exact: true }).click();
   await expect(page.getByTestId('advanced-algorithm-catalog').locator('li')).toHaveCount(4);
   await page.getByRole('link', { name: '欧拉筛', exact: true }).click();
   await expect(root(page)).toHaveAttribute('data-case', specs[1].id);
   await page.getByText('算法讲解、复杂度与基础复习', { exact: true }).click();
-  await expect(root(page).getByRole('link', { name: '今日复习', exact: true })).toBeVisible();
+  await expect(root(page).getByRole('link', { name: '错题与陌生点', exact: true })).toBeVisible();
   await page.goto('/#/advanced/algorithms/case.cpp.fake');
   await expect(
     page.getByRole('heading', { name: '找不到这个进阶算法', exact: true }),

@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import { randomUUID } from 'node:crypto';
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 import type { HarnessResult } from './harness/storage';
@@ -576,18 +577,15 @@ test('real production BroadcastChannel updates a peer without focus refresh and 
   ).toBeGreaterThan(0);
   await page.getByRole('combobox', { name: '主题', exact: true }).selectOption('dark');
   await page.getByRole('button', { name: '保存显示设置', exact: true }).click();
-  await expect(page.getByTestId('learning-save-status')).toContainText('已保存');
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await expect(peer.locator('html')).toHaveAttribute('data-theme-preference', 'dark');
-  await expect(peer.getByRole('combobox', { name: '主题', exact: true })).toHaveValue('dark');
+  await expectEditorValue(peer.getByRole('combobox', { name: '主题', exact: true }), 'dark');
   await expect
     .poll(() => peer.evaluate(() => window.__recoveryProductionPeer.broadcasts.length))
     .toBeGreaterThanOrEqual(1);
   await peer.getByRole('combobox', { name: '主题', exact: true }).selectOption('light');
   await expect(peer.getByRole('button', { name: '保存显示设置', exact: true })).toBeEnabled();
-  await expect(peer.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'unsaved',
-  );
+  await expect(peer.getByText('这次显示设置更改尚未保存。', { exact: true })).toBeVisible();
   const old = await productionSnapshot(page);
   await page.getByRole('tab', { name: '本地数据', exact: true }).click();
   await page.getByRole('button', { name: '清除本地数据', exact: true }).click();
@@ -597,12 +595,9 @@ test('real production BroadcastChannel updates a peer without focus refresh and 
     .click();
   // Current providers re-read the fresh archive after clear; the following native
   // generation/default assertions prove the clear independently of that transient notice.
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await expect(peer.locator('html')).toHaveAttribute('data-theme-preference', 'light');
-  await expect(peer.getByRole('combobox', { name: '主题', exact: true })).toHaveValue('light');
+  await expectEditorValue(peer.getByRole('combobox', { name: '主题', exact: true }), 'light');
   await expect(peer.getByRole('button', { name: '保存显示设置', exact: true })).toBeDisabled();
   await expect(peer.getByText('这次显示设置更改尚未保存。', { exact: true })).toHaveCount(0);
   const cleared = await productionSnapshot(peer);
@@ -658,7 +653,7 @@ test('a production peer clear invalidates a pending real WASM download and its l
       finished();
     }
   });
-  await peer.goto('/#/visualize/case.c.bubble-sort');
+  await peer.goto('/checks/adapters.html#/visualize/case.c.bubble-sort');
   const engine = peer.getByTestId('engine-connection');
   await expect(engine).toHaveAttribute('data-state', 'idle');
   await Promise.all([page.waitForLoadState('networkidle'), peer.waitForLoadState('networkidle')]);
@@ -672,8 +667,8 @@ test('a production peer clear invalidates a pending real WASM download and its l
   await expect(engine).toHaveAttribute('data-state', 'loading');
   try {
     await confirmation.getByRole('button', { name: '确认清除', exact: true }).click();
-    await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-      'data-save-status',
+    await expect(page.locator('.app-shell')).toHaveAttribute(
+      'data-learning-storage-status',
       'ready',
     );
     await expect(engine).toHaveAttribute('data-state', 'idle');
@@ -724,13 +719,10 @@ test('production clear confirmation cancels without writes, then confirmed clear
   await expect
     .poll(async () => (await productionSnapshot(page)).settings.goalTemplate)
     .not.toBeNull();
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await page.getByRole('combobox', { name: '主题', exact: true }).selectOption('dark');
   await page.getByRole('button', { name: '保存显示设置', exact: true }).click();
-  await expect(page.getByTestId('learning-save-status')).toContainText('已保存');
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await page.getByRole('tab', { name: '本地数据', exact: true }).click();
   const before = await productionSnapshot(page);
   await page.getByRole('button', { name: '清除本地数据', exact: true }).click();
@@ -743,10 +735,7 @@ test('production clear confirmation cancels without writes, then confirmed clear
   await page.getByRole('button', { name: '清除本地数据', exact: true }).click();
   await dialog.getByRole('button', { name: '确认清除', exact: true }).click();
   await expect(dialog).not.toBeVisible();
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await expect
     .poll(async () => (await productionSnapshot(page)).meta.activePackageRef)
     .toEqual(c6LearningRelease.packageRef);
@@ -754,21 +743,21 @@ test('production clear confirmation cancels without writes, then confirmed clear
   expect(after.meta.generation).not.toBe(before.meta.generation);
   initial(after, true);
   await page.reload();
-  await expect(page.getByTestId('learning-save-status')).not.toHaveAttribute(
-    'data-save-status',
+  await expect(page.locator('.app-shell')).not.toHaveAttribute(
+    'data-learning-storage-status',
     'loading',
   );
   expect(await productionSnapshot(page)).toEqual(after);
   await page.getByRole('tab', { name: '显示设置', exact: true }).click();
-  await expect(page.getByRole('combobox', { name: '主题', exact: true })).toHaveValue('light');
+  await expectEditorValue(page.getByRole('combobox', { name: '主题', exact: true }), 'light');
 });
 
 test('production home visibly marks a corrupt ledger total as unconfirmed instead of displaying zero points', async ({
   page,
 }) => {
   await page.goto('/#/settings?panel=data');
-  await expect(page.getByTestId('learning-save-status')).not.toHaveAttribute(
-    'data-save-status',
+  await expect(page.locator('.app-shell')).not.toHaveAttribute(
+    'data-learning-storage-status',
     'loading',
   );
   await page.evaluate(async () => {
@@ -799,8 +788,10 @@ test('production home visibly marks a corrupt ledger total as unconfirmed instea
   });
   await page.goto('/#/');
   await page.reload();
-  await expect(page.getByRole('heading', { name: '已入账 暂不可确认', exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: '已入账 0 分', exact: true })).toHaveCount(0);
+  await expect(
+    page.getByRole('button', { name: '积分暂不可确认，查看明细', exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole('button', { name: '积分 0，查看明细', exact: true })).toHaveCount(0);
 });
 
 test('production singleton reset requires its own confirmation and leaves all unrelated stored settings and learning rows unchanged', async ({
@@ -811,17 +802,10 @@ test('production singleton reset requires its own confirmation and leaves all un
   await expect
     .poll(async () => (await productionSnapshot(page)).settings.goalTemplate)
     .not.toBeNull();
-  await expect(page.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
-    'ready',
-  );
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await page.getByRole('combobox', { name: '主题', exact: true }).selectOption('dark');
   await page.getByRole('button', { name: '保存显示设置', exact: true }).click();
-  await expect(page.getByTestId('learning-save-status')).toContainText('已保存');
-  await page.getByRole('tab', { name: '基础形象', exact: true }).click();
-  await page.getByLabel('形象强调色', { exact: true }).fill('#a246c8');
-  await page.getByRole('button', { name: '保存基础形象', exact: true }).click();
-  await expect(page.getByTestId('learning-save-status')).toContainText('已保存');
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   for (const store of ['settings', 'avatar'] as const) {
     await page.evaluate(async (store) => {
       const db = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -851,7 +835,7 @@ test('production singleton reset requires its own confirmation and leaves all un
     }, store);
     await page.goto('/#/settings?panel=data');
     await page.reload();
-    const label = store === 'settings' ? '显示设置' : '基础形象';
+    const label = store === 'settings' ? '显示设置' : '旧偏好';
     const entry = page.getByRole('button', { name: `重置${label}`, exact: true });
     await expect(entry).toBeEnabled();
     const before = await productionSnapshot(page);
@@ -862,7 +846,10 @@ test('production singleton reset requires its own confirmation and leaves all un
     expect(await productionSnapshot(page)).toEqual(before);
     await entry.click();
     await dialog.getByRole('button', { name: `确认重置${label}`, exact: true }).click();
-    await expect(page.getByTestId('learning-save-status')).toContainText('已保存');
+    await expect(page.locator('.app-shell')).toHaveAttribute(
+      'data-learning-storage-status',
+      'ready',
+    );
     const after = await productionSnapshot(page);
     expect(after.meta.generation).toBe(before.meta.generation);
     for (const name of [

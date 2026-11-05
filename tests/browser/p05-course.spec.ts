@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { routeHistoricalApp } from './legacy-app';
 import { installC6Packets } from './c6-observation';
 import {
@@ -50,7 +51,8 @@ async function clearCurrent(page: Page) {
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
-  await expect(save(page)).toContainText('本地数据已清除');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 // Historical titles identify the original six gates. Scope48 records the
 // approved RESET/current-404 replacement; no legacy UI is used for normal C6.
@@ -175,7 +177,6 @@ function stableLearning(before: StorageSnapshot, after: StorageSnapshot) {
   expect(after.meta.timeZone).toBe(before.meta.timeZone);
 }
 async function ready(page: Page) {
-  await expect(save(page)).toHaveAttribute('data-save-status', 'ready');
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 async function directory(info: TestInfo, name: string) {
@@ -382,7 +383,7 @@ async function openAnswer(page: Page, id: string, assertEmpty = true) {
     .getByTestId('block-workspace-preference')
     .getByRole('combobox', { name: '积木显示', exact: true });
   await expect(preference).toBeVisible();
-  if ((await preference.inputValue()) !== 'hide') await preference.selectOption('hide');
+  if ((await editorValue(preference)) !== 'hide') await preference.selectOption('hide');
   await expect(page.getByTestId('practice-editor-layout')).toHaveAttribute(
     'data-blocks-visible',
     'no',
@@ -390,8 +391,8 @@ async function openAnswer(page: Page, id: string, assertEmpty = true) {
   await expect(code(page)).toBeEditable();
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
   if (assertEmpty) {
-    expect(await code(page).inputValue()).not.toContain('printf(');
-    expect(await code(page).inputValue()).not.toBe(answers.get(id));
+    expect(await editorValue(code(page))).not.toContain('printf(');
+    expect(await editorValue(code(page))).not.toBe(answers.get(id));
   }
 }
 /** Only public input declarations are prepared by real Rust; no algorithm is executed here.
@@ -426,9 +427,9 @@ function answerSource(content: ContentPackage, exercise: ExerciseEntity) {
 async function fillAnswer(page: Page, content: ContentPackage, exercise: ExerciseEntity) {
   const text = answerSource(content, exercise);
   await code(page).fill(text);
-  await expect(code(page)).toHaveValue(text);
+  await expectEditorValue(code(page), text);
   await expect(editor(page)).toHaveAttribute('data-sync', 'synced');
-  await panel(page).getByRole('button', { name: '准备代码', exact: true }).click();
+  await expect(code(page)).toBeEditable();
   await expect(panel(page)).toHaveAttribute('data-state', /^(ready|passed)$/);
   await expect(panel(page).getByRole('button', { name: '提交练习', exact: true })).toBeEnabled();
 }
@@ -588,7 +589,7 @@ async function viewAndConfirmCase(page: Page, folder: string, label: string) {
   expect(result.terminal).toMatchObject({ status: 'completed', exitCode: 0, diagnostics: [] });
   expect(result.trace?.completeness).toBe('complete');
   expect(request.source.text).toBe(
-    await casePanel.getByRole('textbox', { name: '当前执行的 C 代码', exact: true }).inputValue(),
+    await editorValue(casePanel.getByRole('textbox', { name: '当前执行的 C 代码', exact: true })),
   );
   const stdout = result
     .trace!.steps.flatMap((step) =>
@@ -754,7 +755,7 @@ async function damageExistingProgress(page: Page, mode: 'foreign-package' | 'mal
   }, mode);
 }
 
-test('P05 fresh archive: 32 real code answers and 140 groups produce 32 confirmed completions and durable deduplicated rewards', async ({
+test('fresh archive: 404 page-end completions and 44 real code answers across 176 groups retain durable deduplicated rewards', async ({
   page,
 }, info) => {
   test.setTimeout(900_000);
@@ -776,6 +777,7 @@ test('P05 fresh archive: 32 real code answers and 140 groups produce 32 confirme
   expect(currentExercises).toHaveLength(44);
   for (const lesson of currentIndex.lessons) await confirmCurrentLesson(page, lesson[0]);
   const read = await currentSnapshot(page);
+  expect(read.progress.filter((p) => p.eventType === 'lesson.completed')).toHaveLength(404);
   expect(read.progress.filter((p) => p.eventType === 'lesson.study-confirmed')).toHaveLength(404);
   expect(read.receipts).toHaveLength(404);
   const runs = [];
@@ -816,6 +818,7 @@ test('P05 fresh archive: 32 real code answers and 140 groups produce 32 confirme
   expect(repeated.dailyFacts).toEqual(completed.dailyFacts);
   expect(repeated.receipts).toHaveLength(449);
   await page.goto('/#/cases');
+  await page.getByText('基础语法与更多案例', { exact: true }).click();
   await currentLocalReady(page);
   const caseLinks = page.locator('.case-grid .case-card .card-link[href^="#/visualize/"]');
   await expect(caseLinks).toHaveCount(7);
@@ -928,8 +931,8 @@ test('P05 native quota and goal bounds: a real new pass saves atomically on retr
   await openCurrentAnswer(page, currentExercises[0].ref.id);
   const before = await currentSnapshot(page);
   await armCurrentReceiptFault(page);
-  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '四组全部通过', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
+  await expect(page.getByTestId('oj-verdict').filter({ hasText: /^通过$/ })).toBeVisible();
   await expect(save(page)).toHaveAttribute('data-save-status', 'unsaved');
   await assertCurrentJudge(page, currentExercises[0], 'passed');
   const failed = await currentSnapshot(page);
@@ -1122,8 +1125,8 @@ test('P05 native corruption: foreign-package and damaged versions of genuinely e
   const foreign = await currentSnapshot(page);
   await page.goto('/#/lessons/lesson.c6.s2.1');
   await page.reload();
-  await expect(page.locator('.c6-reading-confirmation')).toBeVisible();
-  await expect(page.getByRole('heading', { name: '本节已完成', exact: true })).toHaveCount(0);
+  await expect(page.getByTestId('reading-end')).toBeAttached();
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'false');
   const ignored = await currentSnapshot(page);
   expect(ignored.progress).toEqual(foreign.progress);
   expect(ignored.ledger).toEqual(earned.ledger);
@@ -1132,9 +1135,9 @@ test('P05 native corruption: foreign-package and damaged versions of genuinely e
   expect(corrupted).toHaveLength(1);
   const malformed = await currentSnapshot(page);
   await page.reload();
-  await expect(page.locator('.c6-reading-confirmation')).toBeVisible();
+  await expect(page.getByTestId('reading-end')).toBeAttached();
   await expect(save(page)).toContainText('损坏记录');
-  await expect(page.getByRole('heading', { name: '本节已完成', exact: true })).toHaveCount(0);
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'false');
   const retained = await currentSnapshot(page);
   expect(retained.progress).toEqual(malformed.progress);
   expect(retained.ledger).toEqual(earned.ledger);

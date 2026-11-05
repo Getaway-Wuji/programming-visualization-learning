@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { flushSync } from 'react-dom';
 import { caseExecutionCatalog } from '../content/case-learning';
-import { useLearning } from '../learning/react';
+import { LearningSaveStatus, useLearning } from '../learning/react';
 import {
   caseRequest,
   executionClient,
@@ -744,6 +744,24 @@ export function CaseExecution({ id, children }: { id: string; children?: ReactNo
           <p role="status">本次运行未满足观看确认条件，不会获得通过奖励。</p>
         )}
       </section>
+      <LearningSaveStatus
+        onRetry={async () => {
+          const fact = watchFact.current;
+          const epoch = learningState.sessionEpoch;
+          const token = session.current.token;
+          await service.retryPending();
+          const saved = service.getState();
+          if (
+            fact &&
+            watchFact.current === fact &&
+            saved.sessionEpoch === epoch &&
+            session.current.token === token &&
+            saved.lastSaved &&
+            !saved.pendingCount
+          )
+            setViewSave('saved');
+        }}
+      />
     </section>
   );
 }

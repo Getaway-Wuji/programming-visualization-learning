@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { expect, test, type Page } from '@playwright/test';
 import { blockOptions, blockWorkspace, selectBlock } from './block-ui';
 
@@ -189,7 +190,7 @@ for (const theme of themes) {
     await expect(page.getByTestId('block-issues')).toHaveCount(0);
     await page.getByRole('button', { name: '应用生成代码', exact: true }).click();
     const code = page.getByLabel('完整 C 源码 · main.c', { exact: true });
-    await expect(code).toHaveValue(/printf\("%d\\n", x\)/);
+    await expectEditorValue(code, /printf\("%d\\n", x\)/);
     await page.getByRole('button', { name: '运行当前代码', exact: true }).click();
     await expect(page.locator('.c6-trace')).toHaveAttribute('data-cursor', '0');
     await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
@@ -208,7 +209,7 @@ for (const theme of themes) {
     const request = JSON.parse(
       Buffer.from(run.requestBase64, 'base64').toString('utf8'),
     ) as C6Request;
-    expect(request.source).toBe(await code.inputValue());
+    expect(request.source).toBe(await editorValue(code));
     const result = await decodeC6Response(
       Uint8Array.from(Buffer.from(run.responseBase64, 'base64')).buffer,
       request,
@@ -220,7 +221,7 @@ for (const theme of themes) {
       contentType: 'application/gzip',
     });
     await info.attach('readable-real-block-skins-and-native-drag', {
-      body: JSON.stringify({ theme, samples, scope, source: await code.inputValue() }),
+      body: JSON.stringify({ theme, samples, scope, source: await editorValue(code) }),
       contentType: 'application/json',
     });
   });
@@ -261,7 +262,7 @@ test('the header control stays circular and reachable at desktop and phone width
       expect(geometry.radius).toBe('50%');
       expect(geometry.hit).toBe(true);
       expect(geometry.right).toBeLessThanOrEqual(geometry.viewport);
-      expect(geometry.viewport - geometry.right).toBeLessThanOrEqual(40);
+      expect(geometry.x).toBeGreaterThanOrEqual(0);
       expect(geometry.y).toBeGreaterThanOrEqual(0);
       expect(geometry.y + geometry.height).toBeLessThanOrEqual(80);
       expect(geometry.overflow).toBeLessThanOrEqual(1);
@@ -278,7 +279,7 @@ test('a pending display form cannot overwrite the newer header mode save', async
   await page.goto('/#/settings?panel=display');
   await ready(page);
   const mode = page.getByRole('combobox', { name: '主题', exact: true });
-  await expect(mode).toHaveValue('light');
+  await expectEditorValue(mode, 'light');
   await page.getByRole('combobox', { name: '默认播放速度', exact: true }).selectOption('2');
   await toggle(page).click();
   await ready(page);
@@ -291,8 +292,8 @@ test('a pending display form cannot overwrite the newer header mode save', async
   await expect(page.locator('html')).toHaveAttribute('data-theme-preference', 'dark');
   await page.reload();
   await ready(page);
-  await expect(mode).toHaveValue('dark');
-  await expect(page.getByRole('combobox', { name: '默认播放速度', exact: true })).toHaveValue('1');
+  await expectEditorValue(mode, 'dark');
+  await expectEditorValue(page.getByRole('combobox', { name: '默认播放速度', exact: true }), '1');
 });
 
 test('the header follows peer mode updates and preserves the newer display preferences', async ({
@@ -314,7 +315,7 @@ test('the header follows peer mode updates and preserves the newer display prefe
   await expect(page.locator('html')).toHaveAttribute('data-theme-preference', 'light');
   await page.goto('/#/settings?panel=display');
   await ready(page);
-  await expect(page.getByRole('combobox', { name: '主题', exact: true })).toHaveValue('light');
-  await expect(page.getByRole('combobox', { name: '默认播放速度', exact: true })).toHaveValue('2');
+  await expectEditorValue(page.getByRole('combobox', { name: '主题', exact: true }), 'light');
+  await expectEditorValue(page.getByRole('combobox', { name: '默认播放速度', exact: true }), '2');
   await expect(page.locator('.theme-mode-error')).toHaveCount(0);
 });

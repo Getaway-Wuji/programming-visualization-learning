@@ -1,3 +1,4 @@
+import { browserProjects } from '../scripts/browser-projects.mjs';
 import { defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: './browser',
@@ -6,9 +7,9 @@ export default defineConfig({
   retries: 0,
   timeout: 60000,
   reporter: 'list',
+  projects: browserProjects,
   use: {
     baseURL: 'http://127.0.0.1:4188',
-    channel: 'chrome',
     viewport: { width: 1440, height: 900 },
   },
   webServer: {

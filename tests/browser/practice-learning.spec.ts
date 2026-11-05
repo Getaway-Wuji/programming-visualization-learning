@@ -1,3 +1,6 @@
+import { currentProgramPath, discardCurrentDraft, assertEveryC6State } from './current-c6-ui';
+import { editorValue, expectEditorValue } from './editor-value';
+import { expectCurrentSaved } from './current-c6-ui';
 import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -43,17 +46,12 @@ async function submit(
   source = exercise.referenceSource,
   subject = exercise,
 ) {
-  await page.getByRole('button', { name: '判定全部四组', exact: true }).click();
-  await expect(
-    page.getByRole('heading', {
-      name: status === 'passed' ? '四组全部通过' : '本次尚未通过',
-      exact: true,
-    }),
-  ).toBeVisible();
+  await page.getByRole('button', { name: '提交', exact: true }).click();
+  await expect(page.getByTestId('oj-verdict')).toHaveText(status === 'passed' ? '通过' : '未通过');
   return assertCurrentJudge(page, subject, status, source);
 }
 async function savedPass(page: Page) {
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await expectCurrentSaved(page);
   await localReady(page);
 }
 async function confirmGroup(page: Page) {
@@ -68,7 +66,8 @@ async function clear(page: Page) {
     .getByRole('dialog', { name: '确认清除本地数据', exact: true })
     .getByRole('button', { name: '确认清除', exact: true })
     .click();
-  await expect(saveStatus(page)).toContainText('本地数据已清除');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
 }
 async function evidence(info: TestInfo, label: string, value: unknown) {
   const dir = join(
@@ -88,11 +87,16 @@ async function evidence(info: TestInfo, label: string, value: unknown) {
 /** Current full-source mapping is exercised with a supported integer draft.
  * Book stdin programs remain complete code-only documents; no scanf is erased. */
 async function nativeDraft(page: Page) {
+  const exerciseUrl = page.url();
+  await page.goto(currentProgramPath);
+  await expect(page.getByLabel('完整 C 源码 · main.c', { exact: true })).toBeEditable();
+  await page.getByLabel('本次试运行输入（ASCII，最多 256 字节）', { exact: true }).fill('');
   const before = await snapshot(page);
   await editor(page).fill(
     '#include <stdio.h>\nint main(void){int probe=1;printf("%d\\n",probe);return 0;}',
   );
   await page.getByRole('button', { name: '同步到积木', exact: true }).click();
+  await expect(page.locator('.c6-block-pane')).toHaveAttribute('aria-busy', 'false');
   await expect(blockWorkspace(page)).toBeVisible();
   const ids = await blockOptions(page, /^\d+\. 整数 · 1$/);
   expect(ids).toHaveLength(1);
@@ -100,7 +104,7 @@ async function nativeDraft(page: Page) {
   await blockWorkspace(page).getByRole('textbox', { name: '整数值', exact: true }).fill('2');
   await expect(page.getByText('积木生成的完整程序预览', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: '应用生成代码', exact: true }).click();
-  const source = await editor(page).inputValue();
+  const source = await editorValue(editor(page));
   expect(source).toMatch(/probe\s*=\s*2/);
   await page.getByRole('button', { name: '运行当前代码', exact: true }).click();
   await expect(page.locator('.c6-trace')).toBeVisible();
@@ -118,6 +122,7 @@ async function nativeDraft(page: Page) {
   await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
   await expect(page.getByLabel('当前游标标准输出')).toHaveText('2\n');
   assertLearningEqual(before, await snapshot(page));
+  await discardCurrentDraft(page, exerciseUrl);
 }
 
 test('a new local archive completes six lessons through native block edits, 24 real groups, review, course return and readonly refresh', async ({
@@ -134,10 +139,10 @@ test('a new local archive completes six lessons through native block edits, 24 r
     runs = [];
   for (const [i, e] of exercises.entries()) {
     await confirmCurrentLesson(page, e.lessonRef.id);
-    const link = page.getByRole('link', { name: '完成配套执行练习', exact: true });
+    const link = page.getByRole('link', { name: '去练习', exact: true });
     await expect(link).toHaveAttribute('href', `#/practice/${e.ref.id}`);
     await link.click();
-    await expect(editor(page)).toHaveValue(e.starterSource);
+    await expectEditorValue(editor(page), e.starterSource);
     if (i === 0) await nativeDraft(page);
     await editor(page).fill(e.referenceSource);
     const run = await submit(page, 'passed', e.referenceSource, e);
@@ -145,21 +150,16 @@ test('a new local archive completes six lessons through native block edits, 24 r
     runs.push(run);
     const count = await currentJudgeCount(page),
       before = await snapshot(page);
-    for (let n = 0; n < 4; n++) {
-      await page.getByRole('button', { name: `第 ${n + 1} 组 · 通过`, exact: true }).click();
-      const trace = page.getByRole('region', { name: '真实执行轨迹', exact: true });
-      await expect(trace).toHaveAttribute('data-cursor', '0');
-      await page.getByRole('button', { name: '下一步', exact: true }).click();
-      await expect(trace).toHaveAttribute('data-cursor', '1');
-      await page.getByRole('button', { name: '上一步', exact: true }).click();
-      await expect(trace).toHaveAttribute('data-cursor', '0');
-      await page.getByRole('button', { name: '到本次末尾', exact: true }).click();
-      await expect(page.getByLabel('当前游标标准输出')).toHaveText(e.tests[n].expectedStdout);
-    }
+    for (let n = 0; n < 4; n++)
+      assertEveryC6State(run.result.cases[n].packet, e.tests[n].expectedStdout);
+    await expect(page.locator('.c6-trace')).toHaveCount(0);
     expect(await currentJudgeCount(page)).toBe(count);
     expect(await snapshot(page)).toEqual(before);
-    await page.locator('.c6-workbench > a.text-link').click();
-    await expect(page.locator('.c6-reading-confirmation')).toContainText('本节已完成');
+    await Promise.all([
+      page.waitForEvent('dialog').then((dialog) => dialog.accept()),
+      page.locator('.c6-workbench > a.text-link').click(),
+    ]);
+    await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
     const state = await snapshot(page);
     assertNoExecutionPersistence(
       state,
@@ -182,10 +182,12 @@ test('a new local archive completes six lessons through native block edits, 24 r
   await localReady(page);
   expect(await snapshot(page)).toEqual(finished);
   await page.goto(`/#/practice/${exercise.ref.id}`);
-  await expect(editor(page)).toHaveValue(exercise.starterSource);
-  await expect(
-    page.getByText('已保存首次通过记录。当前代码的运行和判题结果显示在下方。', { exact: true }),
-  ).toBeVisible();
+  await expectEditorValue(editor(page), exercise.starterSource);
+  expect(
+    (await snapshot(page)).progress.some(
+      (r) => r.eventType === 'exercise.passed' && r.subjectRef.id === exercise.ref.id,
+    ),
+  ).toBe(true);
   await expect(page.locator('.c6-trace')).toHaveCount(0);
   expect(await snapshot(page)).toEqual(finished);
   await evidence(testInfo, 'six-current-lessons-24-groups', { initial, states, finished, runs });
@@ -200,13 +202,13 @@ test('passing before study confirmation stays incomplete; later failures preserv
   const passed = await snapshot(page);
   expect(passed.progress.map((r) => r.eventType)).toEqual(['exercise.passed']);
   await confirmCurrentLesson(page, exercise.lessonRef.id);
-  await expect(page.locator('.c6-reading-confirmation')).toContainText('本节已完成');
+  await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read', 'true');
   await confirmCurrentLesson(page, 'lesson.c6.s2.2.1');
   const complete = await snapshot(page);
   await openCurrentAnswer(page, exercise.ref.id);
   await editor(page).fill(wrongSource);
   await submit(page, 'failed', wrongSource);
-  await expect(page.getByText('本次判题记录已保存。', { exact: true })).toBeVisible();
+  await expectCurrentSaved(page);
   const failed = await snapshot(page);
   expect(failed.ledger).toEqual(complete.ledger);
   expect(failed.dailyFacts).toEqual(complete.dailyFacts);
@@ -312,7 +314,7 @@ test('cross-page clear removes real saved history and a pending accepted retry w
   ] as const)
     expect(cleared[store]).toEqual([]);
   await page.reload();
-  await expect(editor(page)).toHaveValue(exercise.starterSource);
+  await expectEditorValue(editor(page), exercise.starterSource);
   await localReady(page);
   expect(await snapshot(page)).toEqual(cleared);
   await evidence(testInfo, 'native-clear-real-history-and-pending', { saved, cleared });
@@ -329,7 +331,7 @@ test('missing practice learning authorization keeps successful judgement tempora
   await page.goto(`/#/practice/${exercise.ref.id}`);
   await expect(page.getByRole('button', { name: '重试读取', exact: true })).toBeVisible();
   await expect(editor(page)).toHaveCount(0);
-  await expect(page.getByRole('button', { name: '判定全部四组', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '提交', exact: true })).toHaveCount(0);
   expect(await currentJudgeCount(page)).toBe(0);
   // Activation fails before opening the learning archive. Inspect the database
   // inventory instead of creating an empty database with indexedDB.open.
@@ -337,7 +339,7 @@ test('missing practice learning authorization keeps successful judgement tempora
   expect(before.some((db) => db.name === 'c-viz-learning')).toBe(false);
   await page.unroute(authorization);
   await page.getByRole('button', { name: '重试读取', exact: true }).click();
-  await expect(editor(page)).toHaveValue(exercise.starterSource);
+  await expectEditorValue(editor(page), exercise.starterSource);
   expect(await currentJudgeCount(page)).toBe(0);
   const ready = await snapshot(page);
   expect(ready.progress).toEqual([]);
@@ -360,7 +362,7 @@ test('two production pages passing the same exercise merge their receipts and sh
   await openCurrentAnswer(page, exercise.ref.id);
   await openCurrentAnswer(other, exercise.ref.id);
   await Promise.all(
-    [page, other].map((p) => p.getByRole('button', { name: '判定全部四组', exact: true }).click()),
+    [page, other].map((p) => p.getByRole('button', { name: '提交', exact: true }).click()),
   );
   await savedPass(page);
   await savedPass(other);

@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { randomUUID } from 'node:crypto';
 import type {} from './harness/editor-history';
 import { expect, test, type Page } from '@playwright/test';
@@ -184,7 +185,7 @@ test('13.4 real editor: code history survives refresh, invalid drafts stay exact
 }, info) => {
   await observeCaseSetExecution(page);
   await open(page);
-  const original = await editor(page).inputValue();
+  const original = await editorValue(editor(page));
   const valid = original.replace('return 0;', 'printf("History");\n    return 0;');
   expect(valid).not.toBe(original);
   await editor(page).fill(valid);
@@ -199,7 +200,7 @@ test('13.4 real editor: code history survives refresh, invalid drafts stay exact
   await expect(page.getByTestId('block-permission-blocked')).toBeVisible();
   const lockedId = (await savedRows(page)).find((r) => r.codeText === locked)!.entryId;
   await restore(page, validId);
-  await expect(editor(page)).toHaveValue(valid);
+  await expectEditorValue(editor(page), valid);
   await panel(page).getByRole('button', { name: '运行本组', exact: true }).click();
   await expect(panel(page)).toHaveAttribute('data-state', 'ran');
   const worker = await observedCaseSetExecute(page);
@@ -208,20 +209,21 @@ test('13.4 real editor: code history survives refresh, invalid drafts stay exact
   expect(result.producer).toBe('rust');
   expect(result.terminal.status).toBe('completed');
   await restore(page, invalidId);
-  await expect(editor(page)).toHaveValue(invalid);
+  await expectEditorValue(editor(page), invalid);
   await expect(page.getByTestId('player-controls')).toHaveCount(0);
   await expect(panel(page).getByRole('button', { name: '运行本组', exact: true })).toBeDisabled();
   await restore(page, lockedId);
   await expect(page.getByTestId('block-permission-blocked')).toBeVisible();
   await expect(panel(page).getByRole('button', { name: '提交练习', exact: true })).toBeDisabled();
   await page.reload();
-  await expect(editor(page)).toHaveValue(
+  await expectEditorValue(
+    editor(page),
     original.replace('printf("%d\\n", x);', 'printf("%d\\n", x)'),
   );
   await readyHistory(page);
   await history(page).locator('summary').click();
   await restore(page, invalidId);
-  await expect(editor(page)).toHaveValue(invalid);
+  await expectEditorValue(editor(page), invalid);
   await info.attach('real-history-rust', {
     body: JSON.stringify({
       request,
@@ -236,7 +238,7 @@ test('13.4 native block value/add/delete and drag endpoints restore exact canvas
   page,
 }, info) => {
   await open(page);
-  const source = (await editor(page).inputValue()).replace(
+  const source = (await editorValue(editor(page))).replace(
     'return 0;',
     'printf("history start");\n    return 0;',
   );
@@ -287,7 +289,7 @@ test('13.4 native block value/add/delete and drag endpoints restore exact canvas
   const deleted = (await savedRows(page)).filter((r) => r.reason === 'blocks').at(-1)!;
   expect(deleted.workspaceJson).not.toBe(moved.workspaceJson);
   await restore(page, valueRow.entryId);
-  await expect(editor(page)).toHaveValue(valueRow.codeText);
+  await expectEditorValue(editor(page), valueRow.codeText);
   await restore(page, moved.entryId);
   const restored = (await savedRows(page)).filter((r) => r.reason === 'restore').at(-1)!;
   expect(restored.workspaceJson).toBe(moved.workspaceJson);
@@ -380,15 +382,15 @@ test('13.4 production save failure stays visible, explicit retry preserves IDs a
     };
   });
   await open(page);
-  const text = `${await editor(page).inputValue()}\nint`;
+  const text = `${await editorValue(editor(page))}\nint`;
   await page.evaluate(() => {
     (window as unknown as { failHistory: boolean }).failHistory = true;
   });
   await editor(page).fill(text);
   await expect(history(page)).toHaveAttribute('data-save-state', 'unsaved');
   await expect(history(page)).toContainText('浏览器空间不足');
-  await expect(editor(page)).toHaveValue(text);
-  const selected = await page.getByRole('combobox', { name: '历史版本', exact: true }).inputValue();
+  await expectEditorValue(editor(page), text);
+  const selected = await editorValue(page.getByRole('combobox', { name: '历史版本', exact: true }));
   await history(page).getByRole('button', { name: '重试保存历史', exact: true }).click();
   await readyHistory(page);
   expect((await savedRows(page)).some((r) => r.entryId === selected && r.codeText === text)).toBe(
@@ -396,17 +398,21 @@ test('13.4 production save failure stays visible, explicit retry preserves IDs a
   );
   const settings = await context.newPage();
   await settings.goto('/#/settings?panel=data');
-  await expect(settings.getByTestId('learning-save-status')).toHaveAttribute(
-    'data-save-status',
+  await expect(settings.locator('.app-shell')).toHaveAttribute(
+    'data-learning-storage-status',
     p05CourseRelease.registered ? 'ready' : /^(ready|unsaved)$/,
   );
   await settings.getByRole('button', { name: '清除本地数据', exact: true }).click();
   await expect(settings.getByRole('dialog')).toContainText('编辑历史');
   await settings.getByRole('dialog').getByRole('button', { name: '确认清除', exact: true }).click();
-  await expect(settings.getByTestId('learning-save-status')).toContainText('本地数据已清除');
+  await expect(settings.getByRole('dialog')).toHaveCount(0);
+  await expect(settings.locator('.app-shell')).toHaveAttribute(
+    'data-learning-storage-status',
+    'ready',
+  );
   if ((await history(page).getAttribute('open')) === null)
     await history(page).locator('summary').click();
-  await expect(editor(page)).not.toHaveValue(text);
+  await expectEditorValue(editor(page), text, { not: true });
   await expect
     .poll(
       async () =>

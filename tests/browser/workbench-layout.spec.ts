@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test';
 import type { StorageSnapshot, ThemeId } from '../../web/src/storage/model';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
@@ -202,13 +203,13 @@ test('selected themes use the available workbench width and keep the collapsible
       await expect(links).toHaveText([
         '学习首页',
         'C 语言课程',
+        '练习',
         '进阶课程',
         '算法与演示',
         'C 代码工作台',
         '编译流程',
         '错题与陌生点',
         '学习笔记',
-        '今日复习',
         '学习成就',
         '本地设置',
       ]);
@@ -327,7 +328,7 @@ test('real Rust submission, Blockly draft and review cursor survive expansion, f
   await openPractice(page);
   await openDisclosure(page);
   const practice = page.getByTestId('practice-execution');
-  await practice.getByRole('button', { name: '准备代码', exact: true }).click();
+  await expect(page.getByTestId('code-panel')).toBeVisible();
   await practice.getByRole('button', { name: '提交练习', exact: true }).click();
   await expect(practice).toHaveAttribute('data-state', 'passed');
   await expect(page.getByTestId('practice-pass-save')).toHaveAttribute('data-save-state', 'saved');
@@ -346,10 +347,10 @@ test('real Rust submission, Blockly draft and review cursor survive expansion, f
   await controls.getByRole('button', { name: '前进', exact: true }).click();
   const cursor = await controls.getAttribute('data-cursor');
   expect(Number(cursor)).toBeGreaterThan(0);
-  const source = await page.getByTestId('code-panel').locator('textarea').inputValue();
-  const blocks = await blockWorkspace(page)
-    .getByRole('combobox', { name: '积木列表', exact: true })
-    .inputValue();
+  const source = await editorValue(page.getByTestId('code-panel').locator('textarea'));
+  const blocks = await editorValue(
+    blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true }),
+  );
   const before = await snapshot(page);
   const scope = workbench(page, 'practice');
   await scope.getByRole('button', { name: '展开积木', exact: true }).click();
@@ -376,15 +377,16 @@ test('real Rust submission, Blockly draft and review cursor survive expansion, f
       await expect(scope.getByTestId('workbench-first')).toBeVisible();
     }
     await expect(controls).toHaveAttribute('data-cursor', cursor!);
-    await expect(page.getByTestId('code-panel').locator('textarea')).toHaveValue(source);
+    await expectEditorValue(page.getByTestId('code-panel').locator('textarea'), source);
   }
   await page.getByRole('button', { name: '退出专注模式', exact: true }).click();
   await expect(shell(page)).toHaveAttribute('data-workbench-mode', 'standard');
   await ready(page);
   await openDisclosure(page);
-  await expect(
+  await expectEditorValue(
     blockWorkspace(page).getByRole('combobox', { name: '积木列表', exact: true }),
-  ).toHaveValue(blocks);
+    blocks,
+  );
   await expect(practice).toHaveAttribute('data-state', 'passed');
   await page.getByRole('link', { name: '查看本次复盘', exact: true }).click();
   const review = workbench(page, 'review');
@@ -436,7 +438,7 @@ test('narrow code and trace regions retain one genuine case run and only count t
   await expect(tabs).toBeVisible();
   await execution.getByRole('button', { name: '运行示例', exact: true }).click();
   await expect(execution).toHaveAttribute('data-state', 'completed');
-  const source = await scope.getByTestId('code-panel').locator('textarea').inputValue();
+  const source = await editorValue(scope.getByTestId('code-panel').locator('textarea'));
   const accepted = await observedCaseSetExecute(page);
   const request = JSON.parse(
     Buffer.from(accepted.requestBytes!).toString('utf8'),
@@ -454,7 +456,7 @@ test('narrow code and trace regions retain one genuine case run and only count t
   for (let index = 0; index < 3; index++) {
     await tabs.getByRole('tab', { name: '代码', exact: true }).click();
     await expect(scope.getByTestId('workbench-second')).toBeHidden();
-    await expect(scope.getByTestId('code-panel').locator('textarea')).toHaveValue(source);
+    await expectEditorValue(scope.getByTestId('code-panel').locator('textarea'), source);
     await expect(controls).toHaveAttribute('data-cursor', '0');
     await tabs.getByRole('tab', { name: '运行画面', exact: true }).click();
     await presentVariableFrame(page);
@@ -678,9 +680,8 @@ test('native appearance write faults roll back atomically, retry visibly and can
     exact: true,
     includeHidden: true,
   });
-  await expect(clearedDivider).toHaveAttribute('aria-valuenow', '50');
-  await expect(clearedDivider).toBeHidden();
-  await expect(workbench(page, 'practice')).toHaveAttribute('data-single-pane', 'true');
+  await expect(clearedDivider).toHaveCount(0);
+  await expect(page.getByRole('textbox', { name: '编辑 C 代码', exact: true })).toBeEditable();
   await expect(page.getByRole('button', { name: '重试保存布局', exact: true })).toHaveCount(0);
   const cleared = await snapshot(page);
   expect(cleared.appearance.layout).toEqual({
@@ -741,7 +742,7 @@ test('a long real bubble trace reveals its current code line after a hidden pane
   await expect(controls).toHaveAttribute('data-player-status', 'paused');
   await expect(controls).toHaveAttribute('data-cursor', cursor);
   const source = scope.getByTestId('code-panel').locator('textarea');
-  await expect(source).toHaveValue(request.source.text);
+  await expectEditorValue(source, request.source.text);
   const mark = scope.getByTestId('source-step-highlight').last();
   await expect(mark).toBeAttached();
   await expect

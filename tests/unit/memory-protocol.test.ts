@@ -26,6 +26,72 @@ test('private full validation preserves every supplied pointer record and checkp
   expect(result).toEqual(original);
 });
 
+test.each(['nextAddress', 'nextObject', 'liveBytes'] as const)(
+  'an unchanged object table still checks a changed allocator %s',
+  async (key) => {
+    const value = pointerFixture();
+    const trace = value.trace!;
+    const state = trace.steps
+      .slice(0, 3)
+      .reduce((state, step) => projectMemoryStep(state, step, value.types), trace.initialState);
+    trace.steps.splice(3, 0, {
+      seq: 4,
+      kind: 'nop',
+      nodeId: 'n3',
+      changes: [
+        {
+          op: 'allocator',
+          before: state.allocator,
+          after: { ...state.allocator, [key]: key === 'nextAddress' ? 4096 : 1 },
+        },
+      ],
+    });
+    trace.steps.forEach((step, index) => {
+      step.seq = index + 1;
+    });
+    value.terminal.cursor++;
+    await expect(decodeMemoryResult(bytes(value), pointerRequest, 'f'.repeat(64))).rejects.toThrow(
+      'E_PROTOCOL_INVALID',
+    );
+  },
+);
+
+test('an unchanged object table still rejects an orphaned control pointer', async () => {
+  const value = pointerFixture();
+  const trace = value.trace!;
+  const state = trace.steps
+    .slice(0, 3)
+    .reduce((state, step) => projectMemoryStep(state, step, value.types), trace.initialState);
+  trace.steps.splice(3, 0, {
+    seq: 4,
+    kind: 'nop',
+    nodeId: 'n3',
+    changes: [
+      {
+        op: 'control',
+        before: state.control,
+        after: {
+          ...state.control,
+          returnValue: {
+            objectId: 'o99',
+            byteOffset: 0,
+            lowerBound: 0,
+            upperBound: 4,
+            pointeeType: 'int',
+          },
+        },
+      },
+    ],
+  });
+  trace.steps.forEach((step, index) => {
+    step.seq = index + 1;
+  });
+  value.terminal.cursor++;
+  await expect(decodeMemoryResult(bytes(value), pointerRequest, 'f'.repeat(64))).rejects.toThrow(
+    'E_PROTOCOL_INVALID',
+  );
+});
+
 test('public inverse record projection keeps nested pointers isolated from the trace and earlier state', () => {
   const value = pointerFixture();
   const trace = value.trace!;
@@ -459,3 +525,16 @@ test('field pointers stay within their originating subobject rather than a forge
     decodeMemoryResult(bytes(wrongLayout), structRequest, 'f'.repeat(64)),
   ).rejects.toThrow('E_PROTOCOL_INVALID');
 });
+
+for (const target of ['o999', 'o1'])
+  test(`cell-only writes cannot reuse layout validation for forged target ${target}`, async () => {
+    const value = zeroStructFixture();
+    const change = value.trace!.steps[2].changes.at(-1)!;
+    if (change.op !== 'cell') throw new Error('fixture');
+    const pointer = change.after as MemoryPointer;
+    pointer.objectId = target;
+    if (target === 'o1') pointer.upperBound += 12;
+    await expect(decodeMemoryResult(bytes(value), structRequest, 'f'.repeat(64))).rejects.toThrow(
+      'E_PROTOCOL_INVALID',
+    );
+  });

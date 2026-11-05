@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { expect, test, type Page } from '@playwright/test';
 import type { StorageSnapshot } from '../../web/src/storage/model';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
@@ -185,11 +186,11 @@ test('a fresh registered course saves a complete lesson built from empty native 
   await openIndependentRepair(page, 'exercise.c.bug-semicolon');
   await ready(page);
   const code = page.getByRole('textbox', { name: '编辑 C 代码', exact: true });
-  const full = await code.inputValue(),
+  const full = await editorValue(code),
     empty = full.replace(/\s*printf\("%d\\n", x\);/, '').replace(/\s*return 0;/, '');
   expect(empty).not.toBe(full);
   await code.clear();
-  await expect(code).toHaveValue('');
+  await expectEditorValue(code, '');
   await code.fill(empty);
   await expect(page.getByTestId('draft-code-editor')).toHaveAttribute('data-sync', 'synced');
   await showPracticeBlocks(page);
@@ -203,7 +204,7 @@ test('a fresh registered course saves a complete lesson built from empty native 
   await blockWorkspace(page).getByRole('textbox', { name: '变量名称', exact: true }).fill('x');
   await connect(page, read, print, 'ARG0');
   await expect(page.getByTestId('block-issues')).toHaveCount(0);
-  await expect(source(page)).toHaveValue(/printf\("%d\\n", x\)/);
+  await expectEditorValue(source(page), /printf\("%d\\n", x\)/);
   const before = await snapshot(page);
   await action(page, '运行本组').click();
   await expect(panel(page)).toHaveAttribute('data-state', 'ran');

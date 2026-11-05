@@ -107,6 +107,29 @@ export function InputPanel(props: Props) {
           </div>
         )}
       </div>
+      <details>
+        <summary>复现随机数据</summary>
+        <div className="input-field">
+          <label htmlFor="input-seed">随机种子</label>
+          <input
+            id="input-seed"
+            data-testid="input-seed"
+            type="text"
+            value={props.seed}
+            maxLength={257}
+            spellCheck={false}
+            onChange={(event) => props.onSeed(event.target.value)}
+            aria-describedby="seed-help"
+          />
+          <p className="muted" id="seed-help">
+            输入 1～128
+            个字符。同一版本、输入约束、种子与长度可以生成同一组数据；种子仅在本页临时保留。
+          </p>
+          <button className="button button-secondary" onClick={() => props.onGenerate(false)}>
+            按种子复现
+          </button>
+        </div>
+      </details>
       {props.issues.length > 0 && (
         <ul role="alert" id="input-errors" data-testid="input-errors">
           {props.issues.map((issue, index) => (
