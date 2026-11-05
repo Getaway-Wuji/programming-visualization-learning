@@ -349,6 +349,7 @@ test('slow typing keeps the canvas mounted and the page still without save banne
   await expect(page.getByTestId('learning-save-status')).toHaveCount(0);
   await expect(page.getByText('本题已有学习记录', { exact: true })).toHaveCount(0);
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
+  await expect(page.getByTestId('c6-draft-save-status')).toHaveText('草稿已保存');
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   await expect(page.getByTestId('learning-save-status')).toHaveCount(0);
   await expect(page.getByText('完整草稿已保存在此浏览器。', { exact: true })).toHaveCount(0);

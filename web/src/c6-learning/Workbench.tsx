@@ -368,6 +368,7 @@ function Workbench({ document }: { document: Document }) {
   );
   const [savedDocumentRevision, setSavedDocumentRevision] = useState(initialDraft?.revision ?? 0);
   const [dirty, setDirty] = useState(false);
+  const [savingDraft, setSavingDraft] = useState(false);
   const [engine] = useState(() => new C6ExecutionClient());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -505,6 +506,8 @@ function Workbench({ document }: { document: Document }) {
     blockMapping.retry();
   };
   const save = async () => {
+    if (savingDraft) return;
+    setSavingDraft(true);
     setError('');
     const capturedSource = source,
       capturedInput = input;
@@ -532,6 +535,8 @@ function Workbench({ document }: { document: Document }) {
           ? String(failure.code)
           : '草稿未保存',
       );
+    } finally {
+      setSavingDraft(false);
     }
   };
   const blocksChanged = (program: BlockProgram | null) => {
@@ -638,11 +643,24 @@ function Workbench({ document }: { document: Document }) {
                 </button>
                 <button
                   className="button button-secondary"
-                  disabled={busy || tooLarge || !state.snapshot || state.status === 'readonly'}
+                  disabled={
+                    busy ||
+                    savingDraft ||
+                    tooLarge ||
+                    !state.snapshot ||
+                    state.status === 'readonly'
+                  }
                   onClick={() => void save()}
                 >
                   保存草稿
                 </button>
+                <span className="muted" role="status" data-testid="c6-draft-save-status">
+                  {savingDraft
+                    ? '正在保存…'
+                    : savedDocumentRevision > 0 && !dirty
+                      ? '草稿已保存'
+                      : ''}
+                </span>
                 {blockPreference.value !== 'hide' && (
                   <button
                     className="button button-secondary"
@@ -723,6 +741,7 @@ function Workbench({ document }: { document: Document }) {
                       className="button button-secondary"
                       disabled={
                         busy ||
+                        savingDraft ||
                         tooLarge ||
                         !validInput ||
                         !state.snapshot ||
@@ -732,6 +751,13 @@ function Workbench({ document }: { document: Document }) {
                     >
                       保存草稿
                     </button>
+                    <span className="muted" role="status" data-testid="c6-draft-save-status">
+                      {savingDraft
+                        ? '正在保存…'
+                        : savedDocumentRevision > 0 && !dirty
+                          ? '草稿已保存'
+                          : ''}
+                    </span>
                     {blockPreference.value !== 'hide' && (
                       <button
                         className="button button-secondary"

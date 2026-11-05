@@ -81,15 +81,21 @@ test('unsaved edits are protected on sidebar navigation and browser back', async
 });
 
 test('saved edits can leave without a warning and restore on return', async ({ page }) => {
+  let dialogs = 0;
+  page.on('dialog', (dialog) => {
+    dialogs++;
+    void dialog.dismiss();
+  });
   await page.goto(exercise);
   await editor(page).fill(answer);
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
-  await expect(page.getByTestId('learning-save-status')).toHaveCount(0);
+  await expect(page.getByTestId('c6-draft-save-status')).toHaveText('草稿已保存');
   await page
     .getByRole('navigation', { name: '主导航' })
     .getByRole('link', { name: '学习首页', exact: true })
     .click();
   await expect(page.getByRole('heading', { name: '继续学 C', exact: true })).toBeVisible();
+  expect(dialogs).toBe(0);
   await page
     .getByRole('navigation', { name: '主导航' })
     .getByRole('link', { name: '练习', exact: true })
@@ -181,6 +187,8 @@ test('mobile practice keeps code and actions accessible while preserving pane ed
   await expect(editor(page)).toContainText('scanf("%d", &n)');
   await page.getByRole('button', { name: '提交', exact: true }).click();
   await expect(page.getByTestId('oj-verdict')).toHaveText('通过');
+  await page.getByRole('button', { name: '保存草稿', exact: true }).click();
+  await expect(page.getByTestId('c6-draft-save-status')).toHaveText('草稿已保存');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
 });
 
