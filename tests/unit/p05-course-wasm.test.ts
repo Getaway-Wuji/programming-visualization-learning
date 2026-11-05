@@ -12,6 +12,7 @@ import { decodeResult, encodeRequest } from '../../web/src/engine/protocol';
 import type { PreparedSource } from '../../web/src/engine/execution-client';
 import { engineBuild } from '../../web/src/generated/engine-build';
 import * as wasm from '../../web/src/generated/c_viz_wasm';
+import { withSemanticWasmClock } from '../fixtures/semantic-wasm-clock';
 
 const content = inspectContentDraft(readFileSync('content/c/p05/course-1.0.0.json'));
 const course: CoursePractice = {
@@ -63,14 +64,16 @@ async function run(id: string, sourceText: string, stop = false): Promise<CaseSu
       submissionId,
       test,
     );
-    const bytes = wasm
-      .execute_request(
-        encodeRequest(request),
-        JSON.stringify(catalog),
-        engineBuild.wasmSha256,
-        1000,
-      )
-      .slice();
+    const bytes = withSemanticWasmClock(() =>
+      wasm
+        .execute_request(
+          encodeRequest(request),
+          JSON.stringify(catalog),
+          engineBuild.wasmSha256,
+          1000,
+        )
+        .slice(),
+    );
     const result = await decodeResult(bytes.buffer, request);
     const summary = caseSummary(request, result);
     summaries.push(summary);
@@ -122,7 +125,17 @@ describe('P0.5 real WASM producer and closed browser protocol consumer', () => {
       : `${directory}/course-wasm-execution.json`;
     writeFileSync(
       receipt,
-      JSON.stringify({ producer: 'actual-rust-wasm', userData: false, records }, null, 2) + '\n',
+      JSON.stringify(
+        {
+          producer: 'actual-rust-wasm',
+          producerClock: 'controlled synchronous fixture generation',
+          performanceAcceptance: false,
+          userData: false,
+          records,
+        },
+        null,
+        2,
+      ) + '\n',
     );
     expect(records.length).toBeGreaterThanOrEqual(172);
   });

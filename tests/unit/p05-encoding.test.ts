@@ -1,5 +1,7 @@
 // Public authored C fixtures go through the actual current Rust/WASM producer.
 // These checks exercise the canonical wire boundary, never synthetic success.
+// Fixture generation uses a controlled producer clock; receive scheduling and
+// cancellation retain their own clocks, with real deadlines covered in browsers.
 import { readFileSync } from 'node:fs';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { ContentPackage } from '../../web/src/content/types';
@@ -18,6 +20,7 @@ import {
 import { engineBuild } from '../../web/src/generated/engine-build';
 import { exerciseRequest } from '../../web/src/practice/submission';
 import * as wasm from '../../web/src/generated/c_viz_wasm';
+import { withSemanticWasmClock } from '../fixtures/semantic-wasm-clock';
 
 const content = JSON.parse(
   readFileSync('content/c/p05/course-1.0.0.json', 'utf8'),
@@ -86,9 +89,16 @@ function produce(id: string, testIndex = 0, sourceText?: string, revision = 1): 
     'p05.encoding.submission',
     test,
   );
-  const bytes = wasm
-    .execute_request(encodeRequest(request), JSON.stringify(catalog), engineBuild.wasmSha256, 1000)
-    .slice();
+  const bytes = withSemanticWasmClock(() =>
+    wasm
+      .execute_request(
+        encodeRequest(request),
+        JSON.stringify(catalog),
+        engineBuild.wasmSha256,
+        1000,
+      )
+      .slice(),
+  );
   const text = decoder.decode(bytes);
   const result = JSON.parse(text) as ExecuteResult;
   expect(request.protocolVersion).toBe('1.1.0');
