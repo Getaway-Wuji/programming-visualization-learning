@@ -1,0 +1,272 @@
+.python-screen {
+  min-width: 0;
+  display: grid;
+  gap: 1rem;
+  max-width: 79rem;
+  margin-inline: auto;
+  overflow-wrap: anywhere;
+}
+.python-screen h1 {
+  font-size: clamp(1.4rem, 2.4vw, 1.875rem);
+  margin: 0;
+}
+.python-screen h2 {
+  font-size: 1.12rem;
+}
+.python-screen h3 {
+  font-size: 1rem;
+}
+.python-screen a {
+  text-underline-offset: 0.2em;
+}
+.python-nav,
+.python-actions,
+.python-title,
+.python-editor-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+}
+.python-nav {
+  border-bottom: 1px solid var(--border-tone, var(--line));
+  padding-bottom: 0.7rem;
+}
+.python-title {
+  justify-content: space-between;
+}
+.python-title p {
+  margin-block: 0.3rem 0;
+}
+.python-actions > button:not(.button),
+.python-sheet > button:not(.button),
+.python-task p > button,
+.python-snapshot button:not(.button) {
+  min-height: 2.15rem;
+  padding: 0.28rem 0.65rem;
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.45rem;
+  background: var(--surface-tone, var(--panel));
+  color: inherit;
+  font: inherit;
+}
+.python-actions > button:disabled,
+.python-sheet > button:disabled,
+.python-snapshot button:disabled {
+  opacity: 0.55;
+}
+.python-catalog,
+.python-reading,
+.python-work {
+  min-width: 0;
+}
+.python-catalog input[type='search'] {
+  margin-inline-start: 0.5rem;
+  max-width: 100%;
+}
+.python-course-progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+.python-list {
+  margin-block: 0;
+}
+.python-list li {
+  padding-block: 0.28rem;
+}
+.python-article-grid,
+.python-work-grid {
+  display: grid;
+  grid-template-columns: minmax(12rem, 17rem) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+.python-directory {
+  min-width: 0;
+  max-height: min(70vh, 42rem);
+  overflow: auto;
+  padding: 0.75rem;
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.7rem;
+}
+.python-directory summary,
+.python-screen details summary {
+  cursor: pointer;
+}
+.python-tree,
+.python-tree ul {
+  padding-inline-start: 1rem;
+}
+.python-tree li {
+  margin-block: 0.35rem;
+}
+.python-tree [aria-current='page'] {
+  font-weight: 650;
+}
+.python-reading {
+  max-width: 50rem;
+}
+.python-goal {
+  color: var(--muted);
+}
+.python-sheet {
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.7rem;
+  background: var(--surface-tone, var(--panel));
+  min-width: 0;
+  padding: 0.9rem;
+}
+.python-sheet h2,
+.python-sheet h3 {
+  margin: 0 0 0.6rem;
+}
+.python-work-grid {
+  grid-template-columns: minmax(12rem, 1fr) minmax(0, 2.45fr);
+}
+.python-work-grid.python-solo {
+  grid-template-columns: minmax(0, 1fr);
+}
+.python-work {
+  display: grid;
+  gap: 1rem;
+}
+.python-editor-tabs {
+  margin-block: 0.7rem 0.45rem;
+  border-bottom: 1px solid var(--border-tone, var(--line));
+}
+.python-editor-tabs button {
+  border: 0;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: inherit;
+  min-height: 2.3rem;
+}
+.python-editor-tabs [aria-pressed='true'] {
+  border-bottom-color: var(--p05-accent, var(--green));
+  font-weight: 650;
+}
+.python-editor,
+.python-stdin textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  tab-size: 4;
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.45rem;
+  padding: 0.65rem;
+  background: var(--surface-tone, var(--panel));
+  color: inherit;
+}
+.python-editor {
+  min-height: 11.5rem;
+}
+.python-stdin {
+  display: block;
+  margin-top: 0.8rem;
+}
+.python-stdin textarea {
+  min-height: 3.2rem;
+}
+.python-sheet pre {
+  margin: 0.35rem 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono, monospace);
+}
+.python-trace header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.python-trace header p {
+  margin: 0 0 0.5rem;
+}
+.python-step {
+  display: grid;
+  gap: 0.4rem;
+  margin-block: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+.python-source-mark {
+  border-inline-start: 0.2rem solid var(--p05-accent, var(--green));
+  padding-inline-start: 0.5rem;
+  white-space: pre-wrap;
+}
+.python-trace-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.python-state-values {
+  margin: 0;
+}
+.python-state-values > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding-block: 0.2rem;
+  border-bottom: 1px solid var(--border-tone, var(--line));
+}
+.python-state-values dd {
+  margin: 0;
+  font-family: var(--font-mono, monospace);
+}
+.python-block-canvas {
+  width: 100%;
+  height: 22rem;
+  position: relative;
+  overflow: hidden;
+}
+.python-snapshot {
+  max-width: min(40rem, calc(100% - 2rem));
+  max-height: 85vh;
+  padding: 1rem;
+  color: inherit;
+  background: var(--surface-tone, var(--panel));
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.7rem;
+}
+.python-snapshot::backdrop {
+  background: rgb(0 0 0 / 0.4);
+}
+.python-review-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.python-review-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.9rem;
+  border-bottom: 1px solid var(--border-tone, var(--line));
+}
+.python-review-list h2,
+.python-review-list p {
+  margin: 0 0 0.3rem;
+}
+@media (max-width: 740px) {
+  .python-article-grid,
+  .python-work-grid,
+  .python-trace-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .python-directory {
+    max-height: 12rem;
+  }
+  .python-block-canvas {
+    height: 19rem;
+  }
+  .python-actions button {
+    min-height: 2.5rem;
+  }
+}

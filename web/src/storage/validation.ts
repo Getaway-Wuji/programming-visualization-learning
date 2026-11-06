@@ -7,6 +7,8 @@ import {
   recordKey,
 } from './model';
 import { assertC6Meta } from './c6-reset';
+import { assertPythonMeta } from './python3-meta';
+import { isPythonPackage, isPythonProgress, isPythonSubject } from '../python3/identities';
 import { hasC6RewardEvidence, isC6TopicRewardSubject } from '../c6-learning/rewards';
 import {
   challengePackage,
@@ -252,7 +254,13 @@ function eventRow(value: unknown, fields: readonly string[], receipt: boolean): 
   if (type !== 'daily-goal.achieved') {
     assertPublicRef(valueRow.subjectRef);
     assertPublicRef(valueRow.packageRef);
-    requireRule(valueRow.subjectRef.id.startsWith(`${type.split('.')[0]}.`));
+    requireRule(
+      isPythonPackage(valueRow.packageRef)
+        ? valueRow.learningRevision === 1 &&
+            valueRow.subjectRef.version === '1.0.0' &&
+            isPythonSubject(type, valueRow.subjectRef.id)
+        : valueRow.subjectRef.id.startsWith(`${type.split('.')[0]}.`),
+    );
     requireRule(isPositiveInt(valueRow.learningRevision));
   }
   return valueRow;
@@ -342,6 +350,10 @@ export function assertRecord<S extends StoreName>(
         assertC6Meta(value);
         return;
       }
+      if (descriptor && 'value' in descriptor && descriptor.value === '11.0.0') {
+        assertPythonMeta(value);
+        return;
+      }
       const valueRow = row(value, [
         'schemaVersion',
         'dbVersion',
@@ -404,7 +416,11 @@ export function assertRecord<S extends StoreName>(
       requireRule(isEntityId(valueRow.canonicalSubjectId));
       const prefix = `${valueRow.eventType.split('.')[0]}.`;
       requireRule(
-        valueRow.subjectRef.id.startsWith(prefix) && valueRow.canonicalSubjectId.startsWith(prefix),
+        (valueRow.subjectRef.id.startsWith(prefix) &&
+          valueRow.canonicalSubjectId.startsWith(prefix)) ||
+          (valueRow.subjectRef.version === '1.0.0' &&
+            isPythonSubject(valueRow.eventType, valueRow.subjectRef.id) &&
+            valueRow.canonicalSubjectId === valueRow.subjectRef.id),
       );
       dated(valueRow);
       return;
@@ -439,7 +455,8 @@ export function assertRecord<S extends StoreName>(
         const event = sourceEvents[valueRow.sourceId as keyof typeof sourceEvents];
         requireRule(
           valueRow.subjectId.startsWith(`${event.split('.')[0]}.`) ||
-            isC6TopicRewardSubject(valueRow.sourceId, valueRow.subjectId),
+            isC6TopicRewardSubject(valueRow.sourceId, valueRow.subjectId) ||
+            isPythonSubject(event, valueRow.subjectId as string),
         );
       }
       if (valueRow.sourceId === challengeSource) {
@@ -533,6 +550,9 @@ function sameRef(first: PublicRef, second: PublicRef) {
 function checkRelations(snapshot: StorageSnapshot) {
   const { meta, progress, dailyFacts, goals, ledger, receipts, aliases } = snapshot;
   requireRule(new Set(aliases.map((alias) => alias.toRef.id)).size === aliases.length);
+  for (const event of [...progress, ...receipts])
+    if (event.packageRef && isPythonPackage(event.packageRef))
+      requireRule(meta.dbVersion === 11 && isPythonProgress(event));
   for (const alias of aliases) {
     canonicalSubjectId(aliases, alias.toRef.id);
     const next = aliases.find((next) => next.fromRef.id === alias.toRef.id);
@@ -578,8 +598,7 @@ function checkRelations(snapshot: StorageSnapshot) {
     }
   for (const entry of ledger) {
     assertDate(entry.occurredAt, entry.localDate);
-    if (isC6TopicRewardSubject(entry.sourceId, entry.subjectId))
-      requireRule(meta.schemaVersion === '10.0.0');
+    if (isC6TopicRewardSubject(entry.sourceId, entry.subjectId)) requireRule(meta.dbVersion >= 10);
     // The declared synthetic predecessor preserves old awards, without inventing
     // current daily goals, facts or completion. This is never reward authorization.
     const legacy =
@@ -606,10 +625,18 @@ function checkRelations(snapshot: StorageSnapshot) {
     } else {
       requireRule(canonicalSubjectId(aliases, entry.subjectId) === entry.subjectId);
       requireRule(
-        meta.schemaVersion === '10.0.0' &&
+        meta.dbVersion >= 10 &&
           (entry.sourceId === 'reward.lesson.first-completion' ||
             entry.sourceId === 'reward.exercise.first-pass')
-          ? hasC6RewardEvidence(snapshot, entry)
+          ? hasC6RewardEvidence(snapshot, entry) ||
+              (meta.dbVersion === 11 &&
+                progress.some(
+                  (item) =>
+                    isPythonProgress(item) &&
+                    item.eventType === sourceEvents[entry.sourceId] &&
+                    item.subjectRef.id === entry.subjectId &&
+                    item.firstAt <= entry.occurredAt,
+                ))
           : legacy ||
               progress.some(
                 (item) =>

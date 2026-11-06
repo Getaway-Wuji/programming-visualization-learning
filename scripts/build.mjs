@@ -11,6 +11,7 @@ runNode('scripts/build-advanced-wasm.mjs');
 runNode('scripts/build-practice-generator-wasm.mjs');
 runNode('scripts/c6-course/restore-legacy-runtime.mjs');
 runNode('scripts/c6-course/build-teaching-wasm.mjs');
+runNode('scripts/build-python3-wasm.mjs');
 runNode('scripts/c6-generate-schema.mjs');
 runNode('scripts/c6-course/generate-schema.mjs', ['--check']);
 runNode('scripts/c6-course/generate-teaching-schema.mjs', ['--check']);
@@ -22,6 +23,7 @@ runNode('scripts/build-case-view.mjs');
 runNode('scripts/build-prepared-sources.mjs');
 runNode('scripts/c6-course/build-content.mjs');
 runNode('scripts/c6-course/build-teaching-content.mjs');
+runNode('scripts/build-python3-content.mjs');
 if (p05) {
   runNode('scripts/generate-execution-schema.mjs', ['--p05', '--check']);
   runNode('scripts/build-p05-course.mjs');

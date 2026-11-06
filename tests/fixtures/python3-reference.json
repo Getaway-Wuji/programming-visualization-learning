@@ -1,0 +1,14 @@
+{
+  "greeting": "name = input()\nprint('你好，' + name)",
+  "floor-pair": "a = int(input())\nb = int(input())\nprint(a // b, a % b, sep='\\n')",
+  "short-circuit": "a = int(input())\nb = int(input())\nprint(b and a // b)",
+  "true-division": "a = int(input())\nb = int(input())\nprint((a + b) / 2)",
+  "code-point": "line = input()\ni = int(input())\nprint(line[i])",
+  "list-alias": "a = int(input())\nb = int(input())\nx = [a]\ny = x\ny[0] = b\nprint(x[0])",
+  "slice-copy": "a = int(input())\nb = int(input())\nx = [a, b]\ny = x[:]\nx[0] = b\nprint(x[0], y[0], sep='\\n')",
+  "nested-if": "n = int(input())\nr = int(input())\nif n == 0:\n    print('empty')\nelse:\n    if r:\n        print('reserved')\n    else:\n        print('available')",
+  "while-odd-sum": "n = int(input())\ns = 0\ni = 1\nwhile i <= n:\n    s += i\n    i += 2\nprint(s)",
+  "range-sum": "a = int(input())\nb = int(input())\nc = int(input())\ns = 0\nfor i in range(a, b, c):\n    s += i\nprint(s)",
+  "function-return": "def gap(x, y):\n    return abs(x - y)\na = int(input())\nb = int(input())\nprint(gap(a, b), gap(a + 1, b), sep='\\n')",
+  "stdin-lines": "a = int(input())\nb = int(input())\nprint(a - b)"
+}

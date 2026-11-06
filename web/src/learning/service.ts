@@ -12,6 +12,9 @@ import { createC6TeachingRepository } from '../content/c6-teaching-repository';
 import type { C6TeachingManifest } from '../content/c6-teaching-types';
 import type { C6CourseRows } from '../c6-learning/model';
 import { projectC6Learning } from './domain';
+import { PythonLearningSession } from '../python3/session';
+import { isPythonMark } from '../python3/identities';
+import { pythonReviewSources, pythonWeaknessRows } from '../python3/review';
 import type { CustomDraftWrite } from '../storage/custom-draft';
 import { loadCoursePractice } from '../content/practice';
 import { deriveWeaknesses } from '../weaknesses/model';
@@ -144,6 +147,7 @@ interface ServiceOptions {
   loadPractice?: (reading: CourseReading) => Promise<LearningCatalog>;
   catalog?: LearningCatalog;
   openStorage?: () => Promise<StorageClient>;
+  enablePython?: boolean;
   clock?: () => string;
   id?: () => string;
 }
@@ -212,6 +216,29 @@ export class LearningService {
   private state: LearningServiceState = initial;
   private readonly c6Repository = createC6TeachingRepository();
   private c6Session: C6LearningSession | undefined;
+  private readonly pythonSession = new PythonLearningSession({
+    current: () => ({
+      epoch: this.state.sessionEpoch,
+      snapshot: this.state.snapshot,
+      writable: this.state.recovery?.writable !== false,
+      rollback: this.state.clockStatus === 'rollback',
+    }),
+    storage: () => this.storage(),
+    clock: () => (this.options.clock ?? (() => new Date().toISOString()))(),
+    run: (action) => this.enqueue(action),
+    openDay: (generation, at) => this.openDay(generation, at),
+    rewards: (operations) =>
+      postNewDailyGoalRewards(postNewRewards(operations, this.rewardPolicy), this.dailyGoalPolicy),
+    saved: (result, generation, epoch) => this.savedRead(result, generation, epoch),
+  });
+  readPythonCourse = (...args: Parameters<PythonLearningSession['read']>) =>
+    this.pythonSession.read(...args);
+  recordPythonLesson = (...args: Parameters<PythonLearningSession['recordLesson']>) =>
+    this.pythonSession.recordLesson(...args);
+  recordPythonJudge = (...args: Parameters<PythonLearningSession['recordJudge']>) =>
+    this.pythonSession.recordJudge(...args);
+  savePythonDraft = (...args: Parameters<PythonLearningSession['saveDraft']>) =>
+    this.pythonSession.saveDraft(...args);
   courseRepository = () => this.c6Repository;
   private courseSession() {
     if (!this.c6Session) throw new StorageError('S_CONTENT_INCOMPATIBLE');
@@ -501,7 +528,7 @@ export class LearningService {
       context,
       (snapshot, marks) =>
         c6Index
-          ? c6ReviewSources(snapshot, marks, c6Index)
+          ? [...c6ReviewSources(snapshot, marks, c6Index), ...pythonReviewSources(snapshot, marks)]
           : reviewSources(snapshot, marks, catalog!, reading!),
       at,
       command,
@@ -530,7 +557,15 @@ export class LearningService {
       context,
       (snapshot, marks) =>
         c6Index
-          ? deriveC6Weaknesses(snapshot, marks, c6Index, at)
+          ? (() => {
+              const original = deriveC6Weaknesses(snapshot, marks, c6Index, at);
+              return {
+                ...original,
+                rows: [...original.rows, ...pythonWeaknessRows(snapshot, marks, at)].sort((a, b) =>
+                  a.knowledgeRef.id.localeCompare(b.knowledgeRef.id),
+                ),
+              };
+            })()
           : deriveWeaknesses(snapshot, marks, catalog!, reading!, practice!, at),
       at,
     );
@@ -557,7 +592,7 @@ export class LearningService {
     if (
       !this.state.capabilities.learning ||
       (c6
-        ? !validC6
+        ? !validC6 && !(this.state.snapshot?.meta.dbVersion === 11 && isPythonMark(command))
         : !reading ||
           !lesson ||
           command.packageRef.id !== reading.packageRef.id ||
@@ -679,7 +714,7 @@ export class LearningService {
   private assertCurrentPackage(snapshot: StorageSnapshot, expected?: Ref): void {
     if (
       this.options.c6Course &&
-      (snapshot.meta.schemaVersion !== '10.0.0' ||
+      (snapshot.meta.dbVersion < 10 ||
         !this.state.c6?.index ||
         !sameRef(snapshot.meta.activePackageRef, this.state.c6.index.packageRef))
     )
@@ -898,6 +933,7 @@ export class LearningService {
           ...(this.options.c6Course
             ? { c6Activation: createC6StorageActivation(this.state.c6!.index!) }
             : {}),
+          enablePython: this.options.enablePython,
           recovery: true,
         }));
       if (this.disposed) {
@@ -2231,9 +2267,13 @@ export class LearningService {
 }
 
 export function createLearningService() {
-  const service = new LearningService({ c6Course: true });
+  const service = new LearningService({ c6Course: true, enablePython: true });
   // Deliberately no raw command, trusted authority, DB name or fixture options.
   return {
+    readPythonCourse: service.readPythonCourse,
+    recordPythonLesson: service.recordPythonLesson,
+    recordPythonJudge: service.recordPythonJudge,
+    savePythonDraft: service.savePythonDraft,
     courseRepository: service.courseRepository,
     beginC6Practice: service.beginC6Practice,
     invalidateC6Practice: service.invalidateC6Practice,

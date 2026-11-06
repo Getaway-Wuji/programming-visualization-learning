@@ -17,6 +17,7 @@ export default defineConfig({
         index: fileURLToPath(new URL('./browser/harness/index.html', import.meta.url)),
         adapters: fileURLToPath(new URL('./browser/harness/adapters.html', import.meta.url)),
         reviews: fileURLToPath(new URL('./browser/harness/reviews.html', import.meta.url)),
+        python3: fileURLToPath(new URL('./browser/harness/python3.html', import.meta.url)),
       },
     },
   },

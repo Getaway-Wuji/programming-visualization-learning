@@ -24,7 +24,15 @@ import type {
 } from './model';
 import { assertRecord, assertSnapshot, isSafeUint, isTimeZone, isUuid } from './validation';
 import { StorageError, storageError } from './errors';
-import { C6_RESET_STORES, createC6ResetMeta, queueC6ResetUpgrade } from './c6-reset';
+import { assertC6Meta, C6_RESET_STORES, createC6ResetMeta, queueC6ResetUpgrade } from './c6-reset';
+import {
+  PYTHON_DB_VERSION,
+  PYTHON_STORES,
+  physicalSchemaVersion,
+  queuePythonStores,
+  toPythonMeta,
+} from './python3-meta';
+import { pythonCourseTransaction, type PreparePythonCourse } from './python3-course';
 import { c6ActivationIndex } from './c6-activation';
 import type { C6StorageActivation } from './c6-activation';
 import { c6CourseTransaction, readC6Rows, type PrepareC6Course } from './c6-course';
@@ -119,6 +127,7 @@ export interface OpenStorageOptions {
   activePackageRef: Ref;
   /** Internal capability from the successfully loaded pinned C6 learning index. */
   c6Activation?: C6StorageActivation;
+  enablePython?: boolean;
   signal?: AbortSignal;
   onBlocked?: () => void;
   // Dependency injection is internal; the public entry point fixes the production DB.
@@ -129,6 +138,7 @@ export interface OpenStorageOptions {
 }
 
 function physicalStores(db: IDBDatabase): readonly string[] {
+  if (db.version === PYTHON_DB_VERSION) return [...C6_RESET_STORES, ...PYTHON_STORES];
   if (db.version === 10) return C6_RESET_STORES;
   if (db.version === DB_VERSION) return ALL_STORE_NAMES;
   throw new StorageError('S_VERSION_UNKNOWN');
@@ -152,7 +162,7 @@ function checkLayout(db: IDBDatabase): void {
 
 function transaction(db: IDBDatabase, mode: IDBTransactionMode): IDBTransaction {
   return db.transaction(
-    db.version === 10 ? [...STORE_NAMES, 'courseActivities', 'courseDrafts'] : STORE_NAMES,
+    db.version >= 10 ? [...STORE_NAMES, 'courseActivities', 'courseDrafts'] : STORE_NAMES,
     mode,
     mode === 'readwrite' ? { durability: 'strict' } : undefined,
   );
@@ -164,7 +174,8 @@ function checkedMeta(value: unknown): asserts value is Meta {
     typeof value === 'object' &&
     'schemaVersion' in value &&
     value.schemaVersion !== SCHEMA_VERSION &&
-    value.schemaVersion !== '10.0.0'
+    value.schemaVersion !== '10.0.0' &&
+    value.schemaVersion !== '11.0.0'
   ) {
     throw new StorageError(
       value.schemaVersion === '0.9.0' ? 'S_MIGRATION_UNSUPPORTED' : 'S_VERSION_UNKNOWN',
@@ -183,7 +194,7 @@ export function readTransaction(
   expectedDbVersion: number = DB_VERSION,
   c6Index?: C6LearningIndex,
 ): void {
-  if (![DB_VERSION, 10].includes(expectedDbVersion)) {
+  if (![DB_VERSION, 10, PYTHON_DB_VERSION].includes(expectedDbVersion)) {
     fail(new StorageError('S_VERSION_UNKNOWN'));
     return;
   }
@@ -194,13 +205,13 @@ export function readTransaction(
         const recovery = inspectRecoveryRows(
           raw,
           (a, b) => factory.cmp(a, b),
-          expectedDbVersion === 10 ? '10.0.0' : SCHEMA_VERSION,
+          physicalSchemaVersion(expectedDbVersion),
         );
         if (!recovery.writable || !recovery.snapshot)
           throw new StorageError(recovery.errorCode ?? 'S_RECORD_INVALID');
         if (recovery.snapshot.meta.dbVersion !== expectedDbVersion)
           throw new StorageError('S_VERSION_UNKNOWN');
-        if (c6Index && expectedDbVersion === 10) {
+        if (c6Index && expectedDbVersion >= 10) {
           const snapshot = recovery.snapshot;
           readC6Rows(
             tx,
@@ -239,7 +250,7 @@ export class StorageClient {
       c6Activation?: C6StorageActivation;
     },
   ) {
-    if (db.version === 10) {
+    if (db.version >= 10) {
       if (!initialization?.c6Activation) throw new StorageError('S_CONTENT_INCOMPATIBLE');
       const index = c6ActivationIndex(initialization.c6Activation);
       if (
@@ -432,6 +443,18 @@ export class StorageClient {
     if (!result.saved.replayed) this.broadcast(current.snapshot.meta);
     return result.saved;
   }
+  async readPythonCourse() {
+    return (await pythonCourseTransaction(this.connection(), this.factory)).state;
+  }
+  async commitPythonCourse(generation: string, revision: number, prepare: PreparePythonCourse) {
+    const result = await pythonCourseTransaction(this.connection(), this.factory, {
+      generation,
+      revision,
+      prepare,
+    });
+    if (!result.saved.replayed) this.broadcast(result.state.snapshot.meta);
+    return result.saved;
+  }
   async probe(): Promise<{ available: true }> {
     const initial = await this.read();
     await this.execute(initial.meta.generation, () => [], undefined, undefined, true);
@@ -476,7 +499,7 @@ export class StorageClient {
       ...inspectRecoveryRows(
         raw,
         (a, b) => this.factory.cmp(a, b),
-        this.connection().version === 10 ? '10.0.0' : SCHEMA_VERSION,
+        physicalSchemaVersion(this.connection().version),
       ),
       guard: crypto.randomUUID(),
     };
@@ -498,11 +521,16 @@ export class StorageClient {
         recovery.snapshot.appearanceAssets = [];
       }
     }
-    if (this.connection().version === 10 && recovery.writable && recovery.snapshot) {
+    if (this.connection().version >= 10 && recovery.writable && recovery.snapshot) {
       try {
         const state = await this.readC6Course();
         if (!sameRecoveryValue(state.snapshot.meta, recovery.snapshot.meta))
           return this.readRecovery();
+        if (this.connection().version === PYTHON_DB_VERSION) {
+          const python = await this.readPythonCourse();
+          if (!sameRecoveryValue(python.snapshot.meta, recovery.snapshot.meta))
+            return this.readRecovery();
+        }
       } catch (error) {
         const code = storageError(error).code;
         if (code !== 'S_RECORD_INVALID' && code !== 'S_VERSION_UNKNOWN') throw error;
@@ -536,8 +564,8 @@ export class StorageClient {
       this.initialization?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
     const fallback = !isTimeZone(timeZone);
     if (fallback) timeZone = 'UTC';
-    const meta =
-      this.connection().version === 10
+    const baseMeta =
+      this.connection().version >= 10
         ? createC6ResetMeta(crypto.randomUUID(), timeZone, new Date().toISOString())
         : createMeta({
             generation: crypto.randomUUID(),
@@ -545,6 +573,10 @@ export class StorageClient {
             createdAt: new Date().toISOString(),
             activePackageRef,
           });
+    const meta =
+      baseMeta.dbVersion === 10 && this.connection().version === PYTHON_DB_VERSION
+        ? toPythonMeta(baseMeta)
+        : baseMeta;
     assertRecord('meta', meta);
     if (meta.generation === rawGeneration(confirmation.raw.meta))
       throw new StorageError('S_RECORD_INVALID');
@@ -655,7 +687,7 @@ export class StorageClient {
         tx,
         (raw) => {
           try {
-            if (hasUnknownRecoveryVersion(raw, db.version === 10 ? '10.0.0' : SCHEMA_VERSION))
+            if (hasUnknownRecoveryVersion(raw, physicalSchemaVersion(db.version)))
               throw new StorageError('S_VERSION_UNKNOWN');
             const oldMeta = confirmation.recovery.snapshot?.meta;
             const currentMeta =
@@ -689,7 +721,7 @@ export class StorageClient {
               !inspectRecoveryRows(
                 raw,
                 (a, b) => this.factory.cmp(a, b),
-                db.version === 10 ? '10.0.0' : SCHEMA_VERSION,
+                physicalSchemaVersion(db.version),
               ).canClear
             )
               throw new StorageError('S_RECORD_INVALID');
@@ -1061,6 +1093,8 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
   try {
     if (options.signal?.aborted) throw new StorageError('S_ABORTED');
     const index = options.c6Activation ? c6ActivationIndex(options.c6Activation) : null;
+    if (options.enablePython && !index) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    const targetVersion = index ? (options.enablePython ? PYTHON_DB_VERSION : 10) : DB_VERSION;
     const activePackageRef = { ...options.activePackageRef };
     if (activePackageRef.id === 'content.c.primer6' && !index)
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
@@ -1094,7 +1128,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
       });
     assertRecord('meta', meta);
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const request = factory.open(options.name ?? DB_NAME, index ? 10 : DB_VERSION);
+      const request = factory.open(options.name ?? DB_NAME, targetVersion);
       let stopped = false;
       let failure: unknown;
       const cancel = () => {
@@ -1122,14 +1156,48 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
           }
           if (resetMeta) {
             createdNew = event.oldVersion === 0;
+            const db = request.result;
+            const tx = request.transaction!;
+            if (options.enablePython && event.oldVersion === 10) {
+              if (
+                db.objectStoreNames.length !== C6_RESET_STORES.length ||
+                C6_RESET_STORES.some((name) => {
+                  if (!db.objectStoreNames.contains(name)) return true;
+                  const store = tx.objectStore(name);
+                  return store.keyPath !== null || store.autoIncrement || store.indexNames.length;
+                })
+              )
+                throw new StorageError('S_MIGRATION_UNSUPPORTED');
+              const fail = (error: unknown) => {
+                failure = error;
+                tx.abort();
+              };
+              readTransaction(
+                tx,
+                (snapshot) => {
+                  try {
+                    assertC6Meta(snapshot.meta);
+                    queuePythonStores(db, tx, snapshot.meta);
+                  } catch (error) {
+                    fail(error);
+                  }
+                },
+                fail,
+                factory,
+                10,
+                index!,
+              );
+              return;
+            }
             queueC6ResetUpgrade(
-              request.result,
-              request.transaction!,
+              db,
+              tx,
               event.oldVersion,
               resetMeta,
               (error) => {
                 failure = error;
               },
+              options.enablePython ? (value) => queuePythonStores(db, tx, value) : undefined,
             );
             return;
           }

@@ -1,3 +1,4 @@
+import { physicalSchemaVersion } from './python3-meta';
 import { STORE_NAMES, type Meta, type StorageSnapshot } from './model';
 import type { EditorHistoryContext } from './editor-history';
 import { assertRecord } from './validation';
@@ -20,7 +21,7 @@ export async function achievementsTransaction(
   derive: AchievementSourceReader,
   observation?: AchievementEvidence,
 ) {
-  const catalog = db.version === 10 ? c6AchievementCatalog : achievementCatalog;
+  const catalog = db.version >= 10 ? c6AchievementCatalog : achievementCatalog;
   try {
     const checkMeta = (v: unknown): Meta => {
       assertRecord('meta', v);
@@ -91,7 +92,7 @@ export async function achievementsTransaction(
               const r = inspectRecoveryRows(
                 raw,
                 (a, b) => factory.cmp(a, b),
-                db.version === 10 ? '10.0.0' : '9.0.0',
+                physicalSchemaVersion(db.version),
               );
               if (!r.writable || !r.snapshot)
                 throw new StorageError(r.errorCode ?? 'S_RECORD_INVALID');

@@ -9,6 +9,7 @@ import {
 import { useLearning } from '../learning/react';
 import type { createLearningService } from '../learning/service';
 import type { KnowledgeMark, KnowledgeMarkCommand } from '../storage/knowledge-marks';
+import { isPythonMark, pythonPackageRef } from '../python3/identities';
 import type { EditorHistoryContext } from '../storage/editor-history';
 import { storageError } from '../storage/errors';
 
@@ -70,7 +71,13 @@ export class KnowledgeMarksController {
     const c6Lesson = state.c6?.index?.lessons.find(
       (l) => l[0] === lessonId && l[3] === knowledgeId,
     );
-    if (!context || (!c6Lesson && (!reading || !lesson || !knowledge))) return;
+    const python = {
+      packageRef: pythonPackageRef,
+      lessonRef: { id: lessonId, version: '1.0.0' },
+      knowledgeRef: { id: knowledgeId, version: '1.0.0' },
+    };
+    const validPython = state.snapshot?.meta.dbVersion === 11 && isPythonMark(python);
+    if (!context || (!validPython && !c6Lesson && (!reading || !lesson || !knowledge))) return;
     const old = this.state.rows.find((r) => r.knowledgeRef.id === knowledgeId);
     if (old?.marked === marked) return;
     this.pending = {
@@ -78,11 +85,15 @@ export class KnowledgeMarksController {
       command: {
         commandId: crypto.randomUUID(),
         expectedVersion: old?.revision ?? 0,
-        packageRef: { ...(state.c6?.index?.packageRef ?? reading!.packageRef) },
-        knowledgeRef: c6Lesson ? { id: knowledgeId, version: '2.0.0' } : { ...knowledge! },
-        lessonRef: c6Lesson
-          ? { id: lessonId, version: '2.0.0' }
-          : { id: lesson!.id, version: lesson!.version },
+        ...(validPython
+          ? python
+          : {
+              packageRef: { ...(state.c6?.index?.packageRef ?? reading!.packageRef) },
+              knowledgeRef: c6Lesson ? { id: knowledgeId, version: '2.0.0' } : { ...knowledge! },
+              lessonRef: c6Lesson
+                ? { id: lessonId, version: '2.0.0' }
+                : { id: lesson!.id, version: lesson!.version },
+            }),
         marked,
         at: new Date().toISOString(),
       },

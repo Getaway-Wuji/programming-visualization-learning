@@ -63,8 +63,7 @@ function updateOptional(
   } else if (!enabled && block.getInput(name)) block.removeInput(name);
 }
 
-/** Only these twenty finite teaching blocks are registered; no JavaScript generator is installed. */
-export function registerTeachingBlocks() {
+export function setTeachingBlocklyLocale() {
   Blockly.setLocale(
     Object.fromEntries(
       Object.entries(Chinese).filter(
@@ -72,6 +71,10 @@ export function registerTeachingBlocks() {
       ),
     ),
   );
+}
+/** Only these twenty finite teaching blocks are registered; no JavaScript generator is installed. */
+export function registerTeachingBlocks() {
+  setTeachingBlocklyLocale();
   if (Blockly.Blocks.cv_main) return;
   Blockly.Blocks.cv_main = {
     init(this: Blockly.Block) {

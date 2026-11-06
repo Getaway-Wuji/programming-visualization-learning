@@ -68,6 +68,9 @@ const CompilationPage = lazy(() => import('./compilation/CompilationPage'));
 const BugPage = lazy(() => import('./bugs/BugPanel'));
 const MemoryBugPage = lazy(() => import('./memory-bugs/MemoryBugPage'));
 const IndependentPracticePage = lazy(() => import('./c6-learning/IndependentPracticePage'));
+const PythonCoursePage = lazy(() => import('./python3/CoursePage'));
+const PythonWorkbench = lazy(() => import('./python3/Workbench'));
+const PythonReviewPage = lazy(() => import('./python3/ReviewPage'));
 import { bugQuestions } from './bugs/content';
 import { useParams } from 'react-router';
 function PracticeRoute({ review = false }: { review?: boolean }) {
@@ -130,6 +133,12 @@ function AppRoutes() {
             <Route path="/" element={<HomePage />} />
             <Route path="/courses" element={<CoursePage />} />
             <Route path="/courses/:chapterId" element={<CoursePage />} />
+            <Route path="/python" element={<PythonCoursePage />} />
+            <Route path="/python/article/:order/:section?" element={<PythonCoursePage />} />
+            <Route path="/python/workbench" element={<PythonWorkbench />} />
+            <Route path="/python/example/:order/:section" element={<PythonWorkbench />} />
+            <Route path="/python/practice/:exerciseId" element={<PythonWorkbench />} />
+            <Route path="/python/review" element={<PythonReviewPage />} />
             <Route path="/advanced" element={<AdvancedCoursePage />} />
             <Route path="/advanced/migration" element={<LanguageMigrationPage />} />
             <Route path="/advanced/examples" element={<ExamplePage />} />

@@ -8,6 +8,7 @@ import { storageError } from '../storage/errors';
 import { challengeQuestions } from '../challenges/content';
 import { weaknessReasons, type WeaknessSummary, type WeaknessEvidence } from './model';
 import { mistakeLabels } from '../review-notebook/model';
+import { pythonExercise, pythonTopic } from '../python3/identities';
 import './weaknesses.css';
 
 export class WeaknessController {
@@ -83,7 +84,8 @@ function Evidence({ item }: { item: WeaknessEvidence }) {
       ? '手动陌生标记'
       : item.kind === 'challenge'
         ? (q?.title ?? item.sourceRef.id)
-        : (c6DisplayReference(state, item.sourceRef)?.title ??
+        : (pythonExercise(item.sourceRef.id)?.title ??
+          c6DisplayReference(state, item.sourceRef)?.title ??
           state.reading?.exercises.find((e) => e.id === item.sourceRef.id)?.title ??
           item.sourceRef.id);
   const label =
@@ -224,7 +226,8 @@ export default function WeaknessPage() {
                   data-recommended={weaknessReasons(row).length ? 'yes' : 'no'}
                 >
                   <h3>
-                    {c6DisplayReference(learning, row.knowledgeRef)?.title ??
+                    {pythonTopic(row.knowledgeRef.id)?.title ??
+                      c6DisplayReference(learning, row.knowledgeRef)?.title ??
                       learning.reading?.knowledgePoints.find(
                         (k) =>
                           k.id === row.knowledgeRef.id && k.version === row.knowledgeRef.version,
@@ -244,7 +247,17 @@ export default function WeaknessPage() {
                     历史真实失败 {row.exerciseFailures} 次 · 近30天未修复失败 {row.recentFailures}{' '}
                     次 · 挑战误答 {row.challengeMistakes} 道
                   </p>
-                  <Link className="text-link" to={`/lessons/${row.lessonRef.id}`}>
+                  <Link
+                    className="text-link"
+                    to={
+                      pythonTopic(row.knowledgeRef.id)
+                        ? '/python/article/' +
+                          pythonTopic(row.knowledgeRef.id)!.articleOrder +
+                          '/' +
+                          row.lessonRef.id
+                        : `/lessons/${row.lessonRef.id}`
+                    }
+                  >
                     复习关联基础课程 →
                   </Link>
                   <details className="weakness-evidence">

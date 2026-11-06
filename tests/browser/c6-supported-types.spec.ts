@@ -116,8 +116,8 @@ for (const program of programs) {
         db.close();
       }
     });
-    expect(archive.dbVersion).toBe(10);
-    expect(archive.stores).toHaveLength(19);
+    expect(archive.dbVersion).toBe(11);
+    expect(archive.stores).toHaveLength(21);
     if (!program.judge) for (const rows of Object.values(archive.rows)) expect(rows).toEqual([]);
     else {
       expect(archive.rows.progress).toHaveLength(1);

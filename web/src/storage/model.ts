@@ -1,5 +1,6 @@
 /** SAVE-01 9.0.0. Local weakness summaries; original learning facts remain authoritative. */
 import type { C6ResetMeta } from './c6-reset';
+import type { PythonMeta } from './python3-meta';
 export const DB_NAME = 'c-viz-learning';
 export const DB_VERSION = 9;
 export const SCHEMA_VERSION = '9.0.0';
@@ -54,7 +55,7 @@ export interface LegacyMeta {
   activePackageRef: PublicRef;
 }
 /** Separate exact metadata versions; the legacy constructor still produces SAVE9. */
-export type Meta = LegacyMeta | C6ResetMeta;
+export type Meta = LegacyMeta | C6ResetMeta | PythonMeta;
 export interface GoalTargets {
   exercise: number;
   lesson: number;

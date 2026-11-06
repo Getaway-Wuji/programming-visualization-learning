@@ -5,7 +5,8 @@ import {
   type C6CourseActivity,
   type C6CourseDraft,
 } from '../c6-learning/model';
-import { assertC6Meta } from './c6-reset';
+import { assertActiveCourseMeta } from './python3-meta';
+import { isPythonProgress } from '../python3/identities';
 import { readTransaction } from './client';
 import type { SaveResult, StorageMutation, ReceiptSummary } from './client';
 import { recordKey, STORE_NAMES } from './model';
@@ -14,17 +15,28 @@ import { assertRecord, assertSnapshot } from './validation';
 import { StorageError, storageError } from './errors';
 import { isC6IndependentProgress } from '../c6-learning/independent';
 
-export interface C6CourseState {
-  snapshot: StorageSnapshot;
-  rows: C6CourseRows;
+interface CourseActivity {
+  subjectRef: { id: string };
+  revision: number;
 }
-export interface C6CourseRecipe {
+interface CourseDraft {
+  documentId: string;
+  revision: number;
+  source: string;
+}
+export interface CourseState<A extends CourseActivity, D extends CourseDraft> {
+  snapshot: StorageSnapshot;
+  rows: { activities: A[]; drafts: D[] };
+}
+export interface CourseRecipe<A extends CourseActivity, D extends CourseDraft> {
   operations: StorageMutation[];
   receipt?: ReceiptSummary;
-  activities?: C6CourseActivity[];
-  draft?: C6CourseDraft;
+  activities?: A[];
+  draft?: D;
   deleteDraftId?: string;
 }
+export type C6CourseState = CourseState<C6CourseActivity, C6CourseDraft>;
+export type C6CourseRecipe = CourseRecipe<C6CourseActivity, C6CourseDraft>;
 export type PrepareC6Course = (state: C6CourseState) => C6CourseRecipe;
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 function invalid(): never {
@@ -78,7 +90,7 @@ export function readC6Rows(
 
 export function assertC6CourseState(state: C6CourseState, index: C6LearningIndex): void {
   const { snapshot, rows } = state;
-  assertC6Meta(snapshot.meta);
+  assertActiveCourseMeta(snapshot.meta);
   assertSnapshot(snapshot);
   assertC6CourseRows(rows, index, snapshot.meta.generation, snapshot.meta.revision);
   if (snapshot.aliases.length) invalid();
@@ -119,6 +131,7 @@ export function assertC6CourseState(state: C6CourseState, index: C6LearningIndex
   }
   for (const p of snapshot.progress) {
     if (p.eventType.startsWith('case.') || isC6IndependentProgress(p)) continue;
+    if (snapshot.meta.dbVersion === 11 && isPythonProgress(p)) continue;
     if (
       p.packageRef.id !== index.packageRef.id ||
       p.packageRef.version !== '2.0.0' ||
@@ -137,16 +150,36 @@ export async function c6CourseTransaction(
   index: C6LearningIndex,
   options: { generation?: string; revision?: number; prepare?: PrepareC6Course } = {},
 ): Promise<{ state: C6CourseState; saved: SaveResult }> {
-  if (db.version !== 10) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  if (db.version < 10) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  return courseTransaction(
+    db,
+    factory,
+    ['courseActivities', 'courseDrafts'],
+    (state: C6CourseState) => assertC6CourseState(state, index),
+    options,
+  );
+}
+
+export async function courseTransaction<A extends CourseActivity, D extends CourseDraft>(
+  db: IDBDatabase,
+  factory: IDBFactory,
+  [activityStore, draftStore]: readonly [string, string],
+  assertState: (state: CourseState<A, D>) => void,
+  options: {
+    generation?: string;
+    revision?: number;
+    prepare?: (state: CourseState<A, D>) => CourseRecipe<A, D>;
+  } = {},
+): Promise<{ state: CourseState<A, D>; saved: SaveResult }> {
   const tx = db.transaction(
-    [...STORE_NAMES, 'courseActivities', 'courseDrafts'],
+    [...STORE_NAMES, activityStore, draftStore],
     options.prepare ? 'readwrite' : 'readonly',
     options.prepare ? { durability: 'strict' } : undefined,
   );
   try {
     return await new Promise((resolve, reject) => {
       let failure: unknown;
-      let output: { state: C6CourseState; saved: SaveResult } | undefined;
+      let output: { state: CourseState<A, D>; saved: SaveResult } | undefined;
       const fail = (error: unknown) => {
         failure ??= error;
         try {
@@ -163,33 +196,33 @@ export async function c6CourseTransaction(
       readTransaction(
         tx,
         (snapshot) => {
-          const rows: C6CourseRows = { activities: [], drafts: [] };
+          const rows: CourseState<A, D>['rows'] = { activities: [], drafts: [] };
           let pending = 4;
           const gathered: Record<string, unknown[]> = {};
           const finish = () => {
             if (--pending) return;
             try {
               for (const [store, name] of [
-                ['courseActivities', 'activities'],
-                ['courseDrafts', 'drafts'],
+                [activityStore, 'activities'],
+                [draftStore, 'drafts'],
               ] as const) {
                 const values = gathered[store],
                   keys = gathered[`${store}.keys`];
                 if (values.length !== keys.length) invalid();
                 Object.assign(rows, { [name]: values });
                 values.forEach((value, i) => {
-                  const r = value as C6CourseActivity & C6CourseDraft;
+                  const r = value as A & D;
                   if (
                     !same(keys[i], [
                       snapshot.meta.generation,
-                      store === 'courseActivities' ? r.subjectRef?.id : r.documentId,
+                      store === activityStore ? r.subjectRef?.id : r.documentId,
                     ])
                   )
                     invalid();
                 });
               }
               const state = { snapshot, rows };
-              assertC6CourseState(state, index);
+              assertState(state);
               if (
                 options.generation !== undefined &&
                 snapshot.meta.generation !== options.generation
@@ -289,7 +322,7 @@ export async function c6CourseTransaction(
                 ) > 2097152
               )
                 throw new StorageError('S_QUOTA');
-              assertC6CourseState(next, index);
+              assertState(next);
               for (const op of recipe.operations)
                 tx.objectStore(op.store)[op.mode](
                   op.value,
@@ -301,24 +334,18 @@ export async function c6CourseTransaction(
                   recipe.receipt.eventId,
                 ]);
               for (const activity of recipe.activities ?? [])
-                tx.objectStore('courseActivities').put(activity, [
-                  generation,
-                  activity.subjectRef.id,
-                ]);
+                tx.objectStore(activityStore).put(activity, [generation, activity.subjectRef.id]);
               if (recipe.deleteDraftId)
-                tx.objectStore('courseDrafts').delete([generation, recipe.deleteDraftId]);
+                tx.objectStore(draftStore).delete([generation, recipe.deleteDraftId]);
               if (recipe.draft)
-                tx.objectStore('courseDrafts').put(recipe.draft, [
-                  generation,
-                  recipe.draft.documentId,
-                ]);
+                tx.objectStore(draftStore).put(recipe.draft, [generation, recipe.draft.documentId]);
               tx.objectStore('meta').put(next.snapshot.meta, 'current');
               output = { state: next, saved: { saved: true, revision, replayed: false } };
             } catch (error) {
               fail(error);
             }
           };
-          for (const store of ['courseActivities', 'courseDrafts']) {
+          for (const store of [activityStore, draftStore]) {
             for (const keys of [false, true]) {
               const req = keys
                 ? tx.objectStore(store).getAllKeys()
@@ -332,7 +359,7 @@ export async function c6CourseTransaction(
         },
         fail,
         factory,
-        10,
+        db.version,
       );
     });
   } catch (error) {

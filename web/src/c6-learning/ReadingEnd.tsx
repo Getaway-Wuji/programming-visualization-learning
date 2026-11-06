@@ -3,13 +3,26 @@ import { useLearning } from '../learning/react';
 import { KnowledgeMarkButton, KnowledgeMarksStatus } from '../review-notebook/marks';
 import { useLocalLearningDate } from '../learning/use-local-date';
 
-export function ReadingEnd({ lessonId, knowledgeId }: { lessonId: string; knowledgeId: string }) {
+export function ReadingEnd({
+  lessonId,
+  knowledgeId,
+  language = 'c',
+}: {
+  lessonId: string;
+  knowledgeId?: string;
+  language?: 'c' | 'python';
+}) {
   const { state, service } = useLearning();
   const end = useRef<HTMLDivElement>(null);
   const interacted = useRef<string | null>(null);
   const pending = useRef(false);
   const [failed, setFailed] = useState(false);
-  const read = state.projection?.lessons.find((lesson) => lesson.id === lessonId)?.studyConfirmed;
+  const read =
+    language === 'python'
+      ? state.snapshot?.progress.some(
+          (row) => row.eventType === 'lesson.study-confirmed' && row.subjectRef.id === lessonId,
+        )
+      : state.projection?.lessons.find((lesson) => lesson.id === lessonId)?.studyConfirmed;
   const today = useLocalLearningDate(state.snapshot?.meta.timeZone);
   const readToday = state.snapshot?.dailyFacts.some(
     (fact) =>
@@ -36,8 +49,11 @@ export function ReadingEnd({ lessonId, knowledgeId }: { lessonId: string; knowle
       if (!end.current || end.current.getBoundingClientRect().bottom > window.innerHeight + 8)
         return;
       pending.current = true;
-      void service
-        .recordLesson(lessonId, true, state.sessionEpoch)
+      const record =
+        language === 'python'
+          ? service.recordPythonLesson(lessonId, state.sessionEpoch)
+          : service.recordLesson(lessonId, true, state.sessionEpoch);
+      void record
         .catch(() => {
           if (active) setFailed(true);
         })
@@ -92,6 +108,7 @@ export function ReadingEnd({ lessonId, knowledgeId }: { lessonId: string; knowle
     state.capabilities.learning,
     state.sessionEpoch,
     lessonId,
+    language,
     service,
     failed,
   ]);
@@ -108,8 +125,12 @@ export function ReadingEnd({ lessonId, knowledgeId }: { lessonId: string; knowle
           今日阅读已记录
         </p>
       )}
-      <KnowledgeMarkButton lessonId={lessonId} knowledgeId={knowledgeId} />
-      <KnowledgeMarksStatus />
+      {knowledgeId && (
+        <>
+          <KnowledgeMarkButton lessonId={lessonId} knowledgeId={knowledgeId} />
+          <KnowledgeMarksStatus />
+        </>
+      )}
       {failed && !readToday && (
         <p role="alert">
           阅读进度未保存。

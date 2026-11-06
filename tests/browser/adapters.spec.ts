@@ -255,6 +255,8 @@ async function noLearningWrites(page: Page) {
         'weaknesses',
         'courseActivities',
         'courseDrafts',
+        'pythonActivities',
+        'pythonDrafts',
       ].filter((name) => db.objectStoreNames.contains(name));
       const tx = db.transaction(names, 'readonly');
       const businessCounts = await Promise.all(
@@ -276,7 +278,7 @@ async function noLearningWrites(page: Page) {
       db.close();
     }
   });
-  expect([9, 10]).toContain(counts.version);
+  expect([9, 10, 11]).toContain(counts.version);
   expect(counts.storeNames).toEqual(
     [
       'achievements',
@@ -294,15 +296,19 @@ async function noLearningWrites(page: Page) {
       'ledger',
       'meta',
       'progress',
+      'pythonActivities',
+      'pythonDrafts',
       'receipts',
       'reviewCards',
       'settings',
       'weaknesses',
     ].filter(
-      (name) => counts.version === 10 || !['courseActivities', 'courseDrafts'].includes(name),
+      (name) =>
+        (counts.version >= 10 || !['courseActivities', 'courseDrafts'].includes(name)) &&
+        (counts.version >= 11 || !['pythonActivities', 'pythonDrafts'].includes(name)),
     ),
   );
-  expect(counts.businessCounts).toEqual(Array(counts.version === 10 ? 14 : 12).fill(0));
+  expect(counts.businessCounts).toEqual(Array(12 + 2 * (counts.version - 9)).fill(0));
 }
 
 test('reviewed case reference matches its execution release while the frozen package remains unpublished', async ({

@@ -1,5 +1,6 @@
 import { c6LearningCatalog, type C6LearningCatalog, type C6LearningIndex } from '../c6-learning';
 import type { C6LearningCommand } from '../c6-learning/model';
+import { isPythonProgress, pythonExercise, pythonPackageRef } from '../python3/identities';
 import type { StorageMutation } from '../storage/client';
 import { StorageError } from '../storage/errors';
 import { recordKey } from '../storage/model';
@@ -47,7 +48,10 @@ const sourceIds: Record<DailyEventType, RewardSourceId> = {
 function kindOf(eventType: ContentEventType): AliasKind {
   return eventType.split('.')[0] as AliasKind;
 }
-type LearningGraph = LearningCatalog | C6LearningCatalog;
+type LearningGraph =
+  | LearningCatalog
+  | C6LearningCatalog
+  | (Omit<LearningCatalog, 'purpose'> & { purpose: 'python-course-practice' });
 function entities(catalog: LearningGraph, kind: AliasKind) {
   return kind === 'lesson'
     ? catalog.lessons
@@ -75,6 +79,7 @@ export function isCompatibleLearningHistory(
   kind: AliasKind,
   aliases: readonly Alias[],
 ): boolean {
+  if (current.ref.id.startsWith('py3.') && !isPythonProgress(progress)) return false;
   if (
     /^(lesson|exercise)\.c6\./u.test(current.ref.id) &&
     (progress.packageRef.id !== 'content.c.primer6' || progress.packageRef.version !== '2.0.0')
@@ -125,6 +130,7 @@ function lessonCompleted(
   return (
     hasProgress(snapshot, 'lesson.study-confirmed', lesson) &&
     (catalog.purpose === 'c6-course-practice' ||
+      catalog.purpose === 'python-course-practice' ||
       (lesson.requiredExerciseRefs.length > 0 &&
         lesson.requiredExerciseRefs.every((ref) => {
           const exercise = catalog.exercises.find((value) => sameRef(value.ref, ref));
@@ -162,7 +168,7 @@ export function applyC6LearningEvent(
   row(command, ['learnVersion', 'generation', 'receipt']);
   requireRule(command.learnVersion === '2.0.0');
   if (
-    snapshot.meta.schemaVersion !== '10.0.0' ||
+    snapshot.meta.dbVersion < 10 ||
     !sameRef(snapshot.meta.activePackageRef, index.packageRef) ||
     command.receipt.eventType === 'case.view-confirmed'
   )
@@ -174,6 +180,44 @@ export function applyC6LearningEvent(
     undefined,
     index,
   );
+}
+
+/** LEARN 2.1 keeps reading independent from passing a Python exercise. */
+export function applyPythonLearningEvent(snapshot: StorageSnapshot, command: LearningCommand) {
+  const receipt = command.receipt;
+  if (
+    snapshot.meta.dbVersion !== 11 ||
+    !isPythonProgress({ ...receipt, committedRevision: 0 }) ||
+    !['lesson.study-confirmed', 'exercise.passed', 'exercise.attempt-evaluated'].includes(
+      receipt.eventType,
+    )
+  )
+    throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  const exercise = pythonExercise(receipt.subjectRef.id);
+  const entity = (id: string) => ({
+    ref: { id, version: '1.0.0' },
+    learningRevision: 1,
+    acceptedPriorVersions: [],
+  });
+  const lesson = {
+    ...entity(exercise?.lessonId ?? receipt.subjectRef.id),
+    requiredExerciseRefs: [],
+  };
+  return applyEvent(snapshot, command, {
+    purpose: 'python-course-practice',
+    packageRef: pythonPackageRef,
+    lessons: [lesson],
+    exercises: exercise
+      ? [
+          {
+            ...entity(receipt.subjectRef.id),
+            lessonRef: lesson.ref,
+            caseKeys: ['case-1', 'case-2', 'case-3', 'case-4'],
+          },
+        ]
+      : [],
+    cases: [],
+  });
 }
 function applyEvent(
   snapshot: StorageSnapshot,
@@ -365,7 +409,10 @@ function applyEvent(
   } as Progress);
   if (receipt.eventType === 'exercise.passed' || receipt.eventType === 'case.view-confirmed')
     daily(receipt.eventType, receipt.subjectRef);
-  if (receipt.eventType === 'lesson.study-confirmed' || receipt.eventType === 'exercise.passed') {
+  if (
+    receipt.eventType === 'lesson.study-confirmed' ||
+    (receipt.eventType === 'exercise.passed' && catalog.purpose !== 'python-course-practice')
+  ) {
     const lessonRef =
       receipt.eventType === 'lesson.study-confirmed'
         ? receipt.subjectRef
@@ -417,10 +464,7 @@ export function projectC6Learning(
   index: C6LearningIndex,
   cases: LearningCatalog['cases'] = [],
 ): LearningProjection {
-  if (
-    snapshot.meta.schemaVersion !== '10.0.0' ||
-    !sameRef(snapshot.meta.activePackageRef, index.packageRef)
-  )
+  if (snapshot.meta.dbVersion < 10 || !sameRef(snapshot.meta.activePackageRef, index.packageRef))
     throw new StorageError('S_CONTENT_INCOMPATIBLE');
   return projectGraph(snapshot, { ...c6LearningCatalog(index), cases });
 }

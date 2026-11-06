@@ -27,8 +27,8 @@ function unsaved(answer: HarnessResult<unknown>, code?: string) {
 }
 function initial(snapshot: StorageSnapshot, production = false) {
   expect(snapshot.meta).toMatchObject({
-    schemaVersion: production ? '10.0.0' : '9.0.0',
-    dbVersion: production ? 10 : 9,
+    schemaVersion: production ? '11.0.0' : '9.0.0',
+    dbVersion: production ? 11 : 9,
     revision: production ? 1 : 0,
   });
   if (production) expect(snapshot.meta.activePackageRef).toEqual(c6LearningRelease.packageRef);

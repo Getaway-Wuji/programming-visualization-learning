@@ -42,6 +42,9 @@ function Notebook() {
         <Link className="text-link" to="/study-notes">
           整理学习笔记
         </Link>
+        <Link className="text-link" to="/python/review">
+          查看 Python 复盘
+        </Link>
       </div>
       <section className="c6-section">
         <h2>错题记录{mistakes ? ` · ${mistakes.length} 题` : ''}</h2>

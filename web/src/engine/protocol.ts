@@ -478,7 +478,7 @@ async function runAsync<T>(work: Work<T>, guard: () => void): Promise<T> {
 }
 // A posted task lets cancellation and input run without the nested-timer clamp.
 // Ports close after each yield; no persistent scheduling worker or global queue.
-function yieldTask(): Promise<void> {
+export function yieldTask(): Promise<void> {
   return new Promise((resolve) => {
     const channel = new MessageChannel();
     channel.port1.onmessage = () => {

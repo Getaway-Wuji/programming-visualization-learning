@@ -94,6 +94,8 @@ const expectedStores = [
   'weaknesses',
   'courseActivities',
   'courseDrafts',
+  'pythonActivities',
+  'pythonDrafts',
 ];
 const report = {
   label,
@@ -183,7 +185,7 @@ async function snapshot(name) {
     Buffer.from(await wd(route + '/screenshot'), 'base64'),
   );
 }
-async function archive() {
+async function archive(version = 11) {
   const data = await wd(route + '/execute/async', 'POST', {
     args: [],
     script: `
@@ -191,12 +193,24 @@ async function archive() {
     (async()=>{const db=await new Promise((yes,no)=>{const r=indexedDB.open('c-viz-learning');r.onsuccess=()=>yes(r.result);r.onerror=()=>no(r.error)});
     try{const names=[...db.objectStoreNames];const tx=db.transaction(names,'readonly');
     const complete=new Promise((yes,no)=>{tx.oncomplete=yes;tx.onabort=()=>no(tx.error)});
-    const rows=Object.fromEntries(await Promise.all(names.map(name=>new Promise((yes,no)=>{const r=tx.objectStore(name).getAll();r.onsuccess=()=>yes([name,r.result]);r.onerror=()=>no(r.error)}))));
-    await complete;return {version:db.version,names,rows};}finally{db.close()}})().then(done,e=>done({error:String(e)}));`,
+    const result=(r)=>new Promise((yes,no)=>{r.onsuccess=()=>yes(r.result);r.onerror=()=>no(r.error)});
+    const entries=await Promise.all(names.map(async name=>{const store=tx.objectStore(name);return [name,await Promise.all([result(store.getAllKeys()),result(store.getAll())])]}));
+    await complete;
+    for(const [name,[,values]] of entries)if(name==='appearanceAssets'){
+      for(const value of values)value.blob={type:value.blob.type,bytes:Array.from(new Uint8Array(await value.blob.arrayBuffer()))};
+    }
+    return {version:db.version,names,keys:Object.fromEntries(entries.map(([n,[keys]])=>[n,keys])),
+      rows:Object.fromEntries(entries.map(([n,[,rows]])=>[n,rows]))};}finally{db.close()}})().then(done,e=>done({error:String(e)}));`,
   });
   assert(!data.error, data.error);
-  assert.equal(data.version, 10);
-  assert.deepEqual(data.names.toSorted(), expectedStores.toSorted());
+  assert.equal(data.version, version);
+  assert.deepEqual(
+    data.names.toSorted(),
+    (version === 10
+      ? expectedStores.filter((name) => !name.startsWith('python'))
+      : expectedStores
+    ).toSorted(),
+  );
   return data;
 }
 async function packetsSince(start) {
@@ -564,6 +578,182 @@ async function retainedC() {
   save();
   console.log('PASS actual Firefox independent C case');
 }
+async function runPython(legacy) {
+  const home = 'http://127.0.0.1:4212';
+  // The static server's plain 404 stays on this isolated origin without opening the app database.
+  await wd(route + '/url', 'POST', { url: home + '/native-python-migration-fixture' });
+  const seed = await wd(route + '/execute/async', 'POST', {
+    args: [legacy],
+    script: `
+    const [legacy,done]=arguments;
+    const result=r=>new Promise((yes,no)=>{r.onsuccess=()=>yes(r.result);r.onerror=()=>no(r.error);r.onblocked=()=>no(Error('fixture blocked'))});
+    (async()=>{
+      await result(indexedDB.deleteDatabase('c-viz-learning'));
+      const canvas=document.createElement('canvas');canvas.width=2;canvas.height=2;
+      canvas.getContext('2d').fillRect(0,0,2,2);
+      const blob=await new Promise(yes=>canvas.toBlob(yes,'image/png'));
+      const {rows,keys,names}=legacy;
+      const meta=rows.meta[0];
+      Object.assign(meta,{dbVersion:10,schemaVersion:'10.0.0',activeCatalogSetRef:{id:'catalog-set.c.primer6',version:'2.0.0'}});
+      Object.assign(rows.appearance[0].background,{assetId:'background',visible:true});
+      rows.appearanceAssets=[{assetId:'background',mimeType:blob.type,byteLength:blob.size,width:2,height:2,blob}];
+      keys.appearanceAssets=[[meta.generation,'background']];
+      const request=indexedDB.open('c-viz-learning',10);
+      request.onupgradeneeded=()=>{
+        for(const name of names.filter(n=>!n.startsWith('python'))){
+          const store=request.result.createObjectStore(name);
+          rows[name].forEach((value,i)=>store.add(value,keys[name][i]));
+        }
+      };
+      (await result(request)).close();return {ok:true};
+    })().then(done,e=>done({error:String(e)}));`,
+  });
+  assert.equal(seed.ok, true, seed.error);
+  const prior = await archive(10);
+  assert(prior.rows.courseActivities.length > 0);
+  assert(prior.rows.ledger.length > 0);
+  assert(prior.rows.appearanceAssets[0].blob.bytes.length > 0);
+  await wd(route + '/url', 'POST', { url: home + '/#/python/workbench' });
+  await wait(
+    () =>
+      js('return document.querySelector(".app-shell")?.dataset.learningStorageStatus==="ready"'),
+    'Native DB11 did not open',
+  );
+  const migrated = await archive();
+  for (const name of prior.names) {
+    assert.deepEqual(migrated.keys[name], prior.keys[name], name);
+    if (name !== 'meta') assert.deepEqual(migrated.rows[name], prior.rows[name], name);
+  }
+  assert.deepEqual(migrated.rows.meta, [
+    {
+      ...prior.rows.meta[0],
+      dbVersion: 11,
+      schemaVersion: '11.0.0',
+      activeCatalogSetRef: { id: 'catalog-set.c-python', version: '1.0.0' },
+    },
+  ]);
+  for (const name of ['pythonActivities', 'pythonDrafts'])
+    assert.deepEqual(migrated.rows[name], []);
+
+  const editor = 'textarea[aria-label="Python 代码"]';
+  const trace = '[data-testid="python-trace"]';
+  const outputText = (text) =>
+    wait(
+      () =>
+        js(
+          'return document.querySelector("[data-testid=python-output]")?.textContent===arguments[0]',
+          [text],
+        ),
+      'Python trace output mismatch',
+    );
+  const textVisible = (text) =>
+    wait(
+      () => js('return document.querySelector("main")?.textContent.includes(arguments[0])', [text]),
+      'Missing Python result: ' + text,
+    );
+  await fill(editor, 'print(-7 // 3)');
+  await button('运行代码');
+  await outputText('-3\n');
+  await button('积木');
+  await nativeElement('.python-block-canvas .blocklySvg');
+  await button('应用积木到代码');
+  await button('运行代码');
+  await outputText('-3\n');
+  await button('回到开头', trace);
+  await outputText('（当前无输出）');
+  await button('到最后一步', trace);
+  await outputText('-3\n');
+
+  // Delay only the genuine IPC during the cancellation case, with no substituted
+  // response. Check the real Worker is terminated before the request can arrive.
+  await js(`
+    window.pythonCancelProof={posted:false,terminated:false,received:false};
+    const Original=window.Worker;
+    window.Worker=class extends Original {
+      postMessage(...args){
+        window.pythonCancelProof.posted=true;
+        this.addEventListener('message',()=>{window.pythonCancelProof.received=true});
+        setTimeout(()=>{if(!window.pythonCancelProof.terminated)super.postMessage(...args)},650);
+      }
+      terminate(){
+        window.pythonCancelProof.terminated=true;
+        window.Worker=Original;
+        super.terminate();
+      }
+    };
+  `);
+  await button('运行代码');
+  await wait(() => js('return window.pythonCancelProof.posted'), 'Missing actual Python Worker');
+  await button('取消', '.python-work');
+  await textVisible('已取消当前操作。');
+  const cancelled = await js('return window.pythonCancelProof');
+  assert.deepEqual(cancelled, { posted: true, terminated: true, received: false });
+  await button('运行代码');
+  await outputText('-3\n');
+  await button('上一步', trace);
+  const current = await js(
+    `return {cursor:Number(document.querySelector('${trace}').dataset.cursor),output:document.querySelector('[data-testid=python-output]').textContent}`,
+  );
+  await button('预览当前快照');
+  await nativeElement('dialog[open][aria-label="Python 快照预览"]');
+  const files = [];
+  for (const [format, extension] of [
+    ['JSON', '.json'],
+    ['PNG', '.png'],
+    ['MD', '.md'],
+    ['ZIP', '.zip'],
+  ])
+    files.push(await download(() => button('下载 ' + format, 'dialog[open]'), extension));
+  const exported = read(files[0]);
+  assert.equal(exported.formatVersion, '3.0.0');
+  assert.equal(exported.runtime.language, 'python');
+  assert.equal(exported.position.cursor, current.cursor);
+  assert.equal(exported.currentState.output || '（当前无输出）', current.output);
+  assert.equal(readFileSync(files[1]).subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  assert(readFileSync(files[2], 'utf8').includes('当前步骤 ' + current.cursor + '/'));
+  assert.equal(readFileSync(files[3]).subarray(0, 4).toString('hex'), '504b0304');
+  await snapshot('python-snapshot');
+  await button('关闭预览', 'dialog[open]');
+  await navigate('#/python/practice/py3.practice.greeting');
+  const source = read('tests/fixtures/python3-reference.json').greeting;
+  await fill(editor, source);
+  await button('保存草稿');
+  await textVisible('草稿已保存到本机。');
+  await button('提交判题');
+  await textVisible('判题结果已保存到本机。');
+  await textVisible('四组全部通过');
+  assert.equal(
+    await js(
+      `return Array.from(document.querySelectorAll('section[aria-label="判题结果"] button')).filter(b=>b.textContent.trim().endsWith('· 通过')).length`,
+    ),
+    4,
+  );
+  await snapshot('python-four-groups');
+  await click('main a', '查看本地复盘记录');
+  await wd(route + '/refresh', 'POST', {});
+  await textVisible('四组全部通过');
+  const saved = await archive();
+  assert.equal(saved.rows.pythonActivities.length, 1);
+  assert.equal(saved.rows.pythonDrafts.length, 1);
+  assert.deepEqual(saved.rows.appearanceAssets, migrated.rows.appearanceAssets);
+  writeFileSync(
+    join(output, 'python-native-migration.json'),
+    JSON.stringify({ prior, migrated, saved }, null, 2),
+  );
+  report.results.push({
+    id: 'native-python-db10-to-11-edit-cancel-judge-and-exports',
+    passed: true,
+    cancelled,
+    files: files.map((path) => ({
+      path,
+      sha256: sha(readFileSync(path)),
+      bytes: statSync(path).size,
+    })),
+  });
+  save();
+  console.log('PASS actual Firefox Python migration, edit, cancellation, judge and exports');
+}
+
 try {
   for (const port of [4212, 4456])
     await new Promise((yes, no) => {
@@ -612,7 +802,8 @@ try {
             'browser.download.dir': downloads,
             'browser.download.useDownloadDir': true,
             'browser.download.alwaysOpenPanel': false,
-            'browser.helperApps.neverAsk.saveToDisk': 'application/json,image/png,application/zip',
+            'browser.helperApps.neverAsk.saveToDisk':
+              'application/json,image/png,application/zip,text/markdown',
           },
         },
       },
@@ -683,19 +874,20 @@ try {
     return JSON.stringify(a.rows.meta) !== JSON.stringify(durable.rows.meta);
   }, 'Generation did not change');
   const cleared = await archive();
-  // The product defines 19 stores: five protected/nonlearning plus fourteen RESET domains.
+  // DB11 adds both Python stores to the existing RESET domains.
   const actualLearning = cleared.names.filter(
     (n) => !['meta', 'settings', 'avatar', 'appearance', 'appearanceAssets'].includes(n),
   );
-  assert.equal(actualLearning.length, 14);
+  assert.equal(actualLearning.length, 16);
   report.actualResetStores = actualLearning;
   for (const name of actualLearning) assert.deepEqual(cleared.rows[name], [], name);
   writeFileSync(
     join(output, 'native-save-reload-clear.json'),
     JSON.stringify({ initial, durable, reloaded, cleared }, null, 2),
   );
-  report.results.push({ id: 'native-db10-save-refresh-cancel-and-clear', passed: true });
-  assert.equal(report.results.length, programs.length + cppQuestions.length + 3);
+  report.results.push({ id: 'native-db11-save-refresh-cancel-and-clear', passed: true });
+  await runPython(durable);
+  assert.equal(report.results.length, programs.length + cppQuestions.length + 4);
   assert.equal(sha(readFileSync('content/build/source-lock.json')), sourceLockBefore);
   verifyBuildInputs();
   report.passed = true;

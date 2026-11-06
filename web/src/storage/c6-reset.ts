@@ -115,6 +115,7 @@ export function queueC6ResetUpgrade(
   oldVersion: number,
   meta: C6ResetMeta,
   onFailure: (error: unknown) => void,
+  afterReset?: (meta: C6ResetMeta) => void,
 ): void {
   const fail = (error: unknown) => {
     onFailure(error);
@@ -129,7 +130,7 @@ export function queueC6ResetUpgrade(
     if (meta.revision !== 0) throw new StorageError('S_RECORD_INVALID');
     if (
       tx.mode !== 'versionchange' ||
-      db.version !== 10 ||
+      db.version !== (afterReset ? 11 : 10) ||
       !Number.isInteger(oldVersion) ||
       oldVersion < 0 ||
       oldVersion > 9
@@ -209,6 +210,7 @@ export function queueC6ResetUpgrade(
         tx.objectStore('appearance').add(appearance, 'current');
         for (const asset of assets)
           tx.objectStore('appearanceAssets').add(asset, [meta.generation, asset.assetId]);
+        afterReset?.(meta);
       } catch (error) {
         fail(error);
       }

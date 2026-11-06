@@ -1,3 +1,4 @@
+import { physicalSchemaVersion } from './python3-meta';
 import { STORE_NAMES, type StorageSnapshot, type Meta } from './model';
 import type { EditorHistoryContext } from './editor-history';
 import { assertRecord, isUtcTime, localDateAt } from './validation';
@@ -114,7 +115,7 @@ export async function reviewCardsTransaction(
               const r = inspectRecoveryRows(
                 raw,
                 (a, b) => factory.cmp(a, b),
-                db.version === 10 ? '10.0.0' : '9.0.0',
+                physicalSchemaVersion(db.version),
               );
               if (!r.writable || !r.snapshot)
                 throw new StorageError(r.errorCode ?? 'S_RECORD_INVALID');

@@ -9,6 +9,7 @@ import {
   validationInternals,
 } from './validation';
 import { StorageError, storageError } from './errors';
+import { isPythonMark, isPythonPackage } from '../python3/identities';
 export interface KnowledgeMark {
   markVersion: '1.0.0';
   generation: string;
@@ -54,6 +55,8 @@ export function assertKnowledgeMark(value: unknown): asserts value is KnowledgeM
       isPositiveInt(r.revision),
   );
   for (const key of ['packageRef', 'knowledgeRef', 'lessonRef']) assertPublicRef(r[key]);
+  if (isPythonPackage(r.packageRef as Ref))
+    requireRule(isPythonMark(r as unknown as KnowledgeMark));
   requireRule(
     typeof r.marked === 'boolean' &&
       isUtcTime(r.firstAt) &&
@@ -141,7 +144,10 @@ export async function knowledgeMarksTransaction(
               );
               for (const ref of [command.packageRef, command.knowledgeRef, command.lessonRef])
                 assertPublicRef(ref);
-              requireRule(same(command.packageRef, meta.activePackageRef));
+              requireRule(
+                same(command.packageRef, meta.activePackageRef) ||
+                  (meta.dbVersion === 11 && isPythonMark(command)),
+              );
               const old = rows.find((r) => r.knowledgeRef.id === command.knowledgeRef.id);
               if (old?.commandId === command.commandId) {
                 if (

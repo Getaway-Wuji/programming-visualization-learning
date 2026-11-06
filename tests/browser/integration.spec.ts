@@ -558,7 +558,7 @@ test('continuous public learning navigation integrates reviewed reading, validat
   await currentLocalReady(page);
   const archive = await currentSnapshot(page);
   expect(Object.keys(archive).sort()).toEqual([...C6_RESET_STORES].sort());
-  expect(archive.meta.dbVersion).toBe(10);
+  expect(archive.meta.dbVersion).toBe(11);
   for (const name of C6_RESET_CLEAR_STORES)
     expect((archive as unknown as Record<string, unknown>)[name]).toEqual([]);
   await expect(page.getByTestId('engine-connection')).toHaveCount(0);
