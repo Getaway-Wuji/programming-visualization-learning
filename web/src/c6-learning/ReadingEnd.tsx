@@ -10,7 +10,7 @@ export function ReadingEnd({
 }: {
   lessonId: string;
   knowledgeId?: string;
-  language?: 'c' | 'python';
+  language?: 'c' | 'python' | 'java';
 }) {
   const { state, service } = useLearning();
   const end = useRef<HTMLDivElement>(null);
@@ -18,7 +18,7 @@ export function ReadingEnd({
   const pending = useRef(false);
   const [failed, setFailed] = useState(false);
   const read =
-    language === 'python'
+    language !== 'c'
       ? state.snapshot?.progress.some(
           (row) => row.eventType === 'lesson.study-confirmed' && row.subjectRef.id === lessonId,
         )
@@ -50,9 +50,11 @@ export function ReadingEnd({
         return;
       pending.current = true;
       const record =
-        language === 'python'
-          ? service.recordPythonLesson(lessonId, state.sessionEpoch)
-          : service.recordLesson(lessonId, true, state.sessionEpoch);
+        language === 'java'
+          ? service.recordJavaLesson(lessonId, state.sessionEpoch)
+          : language === 'python'
+            ? service.recordPythonLesson(lessonId, state.sessionEpoch)
+            : service.recordLesson(lessonId, true, state.sessionEpoch);
       void record
         .catch(() => {
           if (active) setFailed(true);

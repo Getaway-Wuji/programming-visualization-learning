@@ -60,7 +60,7 @@ async function raw(p: Page) {
 }
 async function unchanged(p: Page, name: string, before: Awaited<ReturnType<typeof raw>>) {
   const after = await raw(p);
-  expect(Object.keys(after.stores)).toHaveLength(21);
+  expect(Object.keys(after.stores)).toHaveLength(23);
   expect(after).toEqual(before);
   await writeFile(`${folder}/${name}-native.json.gz`, gzipSync(JSON.stringify({ before, after })), {
     flag: 'wx',

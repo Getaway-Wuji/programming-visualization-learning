@@ -1,0 +1,62 @@
+.java-screen {
+  --java-panel-gap: 0.75rem;
+}
+
+.java-screen .python-nav {
+  background: var(--surface-raised, var(--panel));
+  border: 0;
+  border-radius: 0.5rem 0.5rem 0 0;
+  padding: 0.55rem 0.75rem;
+}
+
+.java-screen .python-sheet {
+  border-radius: 1rem;
+  box-shadow: none;
+}
+
+.java-work-grid {
+  display: grid;
+  grid-template-columns: minmax(13.5rem, 1fr) minmax(0, 2.65fr);
+  align-items: start;
+  gap: var(--java-panel-gap);
+}
+
+.java-work-grid.java-solo {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.java-screen .python-work {
+  gap: var(--java-panel-gap);
+}
+
+.java-screen .python-editor-tabs [aria-pressed='true'] {
+  border-bottom-color: currentColor;
+}
+
+.java-trace summary {
+  overflow-wrap: anywhere;
+}
+
+.java-screen .java-mobile-tabs {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .java-work-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .java-screen .java-mobile-tabs {
+    display: flex;
+  }
+
+  .java-work-grid[data-mobile-pane='work'] > .java-task,
+  .java-work-grid[data-mobile-pane='task'] > .python-work {
+    display: none;
+  }
+
+  .java-screen .python-actions button,
+  .java-screen .python-editor-tabs button {
+    min-height: 44px;
+  }
+}

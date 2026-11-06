@@ -130,7 +130,7 @@ export function queueC6ResetUpgrade(
     if (meta.revision !== 0) throw new StorageError('S_RECORD_INVALID');
     if (
       tx.mode !== 'versionchange' ||
-      db.version !== (afterReset ? 11 : 10) ||
+      !(afterReset ? db.version === 11 || db.version === 12 : db.version === 10) ||
       !Number.isInteger(oldVersion) ||
       oldVersion < 0 ||
       oldVersion > 9

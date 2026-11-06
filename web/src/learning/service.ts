@@ -12,6 +12,9 @@ import { createC6TeachingRepository } from '../content/c6-teaching-repository';
 import type { C6TeachingManifest } from '../content/c6-teaching-types';
 import type { C6CourseRows } from '../c6-learning/model';
 import { projectC6Learning } from './domain';
+import { JavaLearningSession } from '../java/session';
+import { isJavaMark } from '../java/identities';
+import { javaReviewSources, javaWeaknessRows } from '../java/review';
 import { PythonLearningSession } from '../python3/session';
 import { isPythonMark } from '../python3/identities';
 import { pythonReviewSources, pythonWeaknessRows } from '../python3/review';
@@ -26,7 +29,7 @@ import { loadCourseReading, type CourseReading } from '../content/reading';
 import { loadCourseLearning } from '../content/course-learning';
 import { caseLearningCatalog } from '../content/case-learning';
 import { openStorage as openDatabase } from '../storage/client';
-import type { StorageClient, SaveResult } from '../storage/client';
+import type { StorageClient, SaveResult, StorageMutation } from '../storage/client';
 import type { EditorHistoryContext, EditorSnapshotDraft } from '../storage/editor-history';
 import type {
   Appearance,
@@ -148,6 +151,7 @@ interface ServiceOptions {
   catalog?: LearningCatalog;
   openStorage?: () => Promise<StorageClient>;
   enablePython?: boolean;
+  enableJava?: boolean;
   clock?: () => string;
   id?: () => string;
 }
@@ -216,21 +220,29 @@ export class LearningService {
   private state: LearningServiceState = initial;
   private readonly c6Repository = createC6TeachingRepository();
   private c6Session: C6LearningSession | undefined;
-  private readonly pythonSession = new PythonLearningSession({
-    current: () => ({
-      epoch: this.state.sessionEpoch,
-      snapshot: this.state.snapshot,
-      writable: this.state.recovery?.writable !== false,
-      rollback: this.state.clockStatus === 'rollback',
-    }),
-    storage: () => this.storage(),
-    clock: () => (this.options.clock ?? (() => new Date().toISOString()))(),
-    run: (action) => this.enqueue(action),
-    openDay: (generation, at) => this.openDay(generation, at),
-    rewards: (operations) =>
-      postNewDailyGoalRewards(postNewRewards(operations, this.rewardPolicy), this.dailyGoalPolicy),
-    saved: (result, generation, epoch) => this.savedRead(result, generation, epoch),
-  });
+  private courseHooks() {
+    return {
+      current: () => ({
+        epoch: this.state.sessionEpoch,
+        snapshot: this.state.snapshot,
+        writable: this.state.recovery?.writable !== false,
+        rollback: this.state.clockStatus === 'rollback',
+      }),
+      storage: () => this.storage(),
+      clock: () => (this.options.clock ?? (() => new Date().toISOString()))(),
+      run: <T>(action: () => Promise<T>) => this.enqueue(action),
+      openDay: (generation: string, at: string) => this.openDay(generation, at),
+      rewards: (operations: StorageMutation[]) =>
+        postNewDailyGoalRewards(
+          postNewRewards(operations, this.rewardPolicy),
+          this.dailyGoalPolicy,
+        ),
+      saved: (result: SaveResult, generation: string, epoch: number) =>
+        this.savedRead(result, generation, epoch),
+    };
+  }
+  private readonly pythonSession = new PythonLearningSession(this.courseHooks());
+  private readonly javaSession = new JavaLearningSession(this.courseHooks());
   readPythonCourse = (...args: Parameters<PythonLearningSession['read']>) =>
     this.pythonSession.read(...args);
   recordPythonLesson = (...args: Parameters<PythonLearningSession['recordLesson']>) =>
@@ -239,6 +251,14 @@ export class LearningService {
     this.pythonSession.recordJudge(...args);
   savePythonDraft = (...args: Parameters<PythonLearningSession['saveDraft']>) =>
     this.pythonSession.saveDraft(...args);
+  readJavaCourse = (...args: Parameters<JavaLearningSession['read']>) =>
+    this.javaSession.read(...args);
+  recordJavaLesson = (...args: Parameters<JavaLearningSession['recordLesson']>) =>
+    this.javaSession.recordLesson(...args);
+  recordJavaJudge = (...args: Parameters<JavaLearningSession['recordJudge']>) =>
+    this.javaSession.recordJudge(...args);
+  saveJavaDraft = (...args: Parameters<JavaLearningSession['saveDraft']>) =>
+    this.javaSession.saveDraft(...args);
   courseRepository = () => this.c6Repository;
   private courseSession() {
     if (!this.c6Session) throw new StorageError('S_CONTENT_INCOMPATIBLE');
@@ -528,7 +548,11 @@ export class LearningService {
       context,
       (snapshot, marks) =>
         c6Index
-          ? [...c6ReviewSources(snapshot, marks, c6Index), ...pythonReviewSources(snapshot, marks)]
+          ? [
+              ...c6ReviewSources(snapshot, marks, c6Index),
+              ...pythonReviewSources(snapshot, marks),
+              ...javaReviewSources(snapshot, marks),
+            ]
           : reviewSources(snapshot, marks, catalog!, reading!),
       at,
       command,
@@ -561,9 +585,11 @@ export class LearningService {
               const original = deriveC6Weaknesses(snapshot, marks, c6Index, at);
               return {
                 ...original,
-                rows: [...original.rows, ...pythonWeaknessRows(snapshot, marks, at)].sort((a, b) =>
-                  a.knowledgeRef.id.localeCompare(b.knowledgeRef.id),
-                ),
+                rows: [
+                  ...original.rows,
+                  ...pythonWeaknessRows(snapshot, marks, at),
+                  ...javaWeaknessRows(snapshot, marks, at),
+                ].sort((a, b) => a.knowledgeRef.id.localeCompare(b.knowledgeRef.id)),
               };
             })()
           : deriveWeaknesses(snapshot, marks, catalog!, reading!, practice!, at),
@@ -592,7 +618,9 @@ export class LearningService {
     if (
       !this.state.capabilities.learning ||
       (c6
-        ? !validC6 && !(this.state.snapshot?.meta.dbVersion === 11 && isPythonMark(command))
+        ? !validC6 &&
+          !((this.state.snapshot?.meta.dbVersion ?? 0) >= 11 && isPythonMark(command)) &&
+          !(this.state.snapshot?.meta.dbVersion === 12 && isJavaMark(command))
         : !reading ||
           !lesson ||
           command.packageRef.id !== reading.packageRef.id ||
@@ -934,6 +962,7 @@ export class LearningService {
             ? { c6Activation: createC6StorageActivation(this.state.c6!.index!) }
             : {}),
           enablePython: this.options.enablePython,
+          enableJava: this.options.enableJava,
           recovery: true,
         }));
       if (this.disposed) {
@@ -2267,13 +2296,17 @@ export class LearningService {
 }
 
 export function createLearningService() {
-  const service = new LearningService({ c6Course: true, enablePython: true });
+  const service = new LearningService({ c6Course: true, enablePython: true, enableJava: true });
   // Deliberately no raw command, trusted authority, DB name or fixture options.
   return {
     readPythonCourse: service.readPythonCourse,
     recordPythonLesson: service.recordPythonLesson,
     recordPythonJudge: service.recordPythonJudge,
     savePythonDraft: service.savePythonDraft,
+    readJavaCourse: service.readJavaCourse,
+    recordJavaLesson: service.recordJavaLesson,
+    recordJavaJudge: service.recordJavaJudge,
+    saveJavaDraft: service.saveJavaDraft,
     courseRepository: service.courseRepository,
     beginC6Practice: service.beginC6Practice,
     invalidateC6Practice: service.invalidateC6Practice,

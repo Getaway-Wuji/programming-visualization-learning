@@ -23,7 +23,7 @@ export default function PythonReviewPage() {
     () => service.readPythonCourse(state.sessionEpoch),
     [service, state.sessionEpoch],
   );
-  const ready = state.snapshot?.meta.dbVersion === 11 && state.recovery?.writable !== false;
+  const ready = (state.snapshot?.meta.dbVersion ?? 0) >= 11 && state.recovery?.writable !== false;
   const { value, failed, retry } = usePythonResource(
     ready ? state.snapshot!.meta.revision : -1,
     read,

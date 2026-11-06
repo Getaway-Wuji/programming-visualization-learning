@@ -72,15 +72,18 @@ export async function verifyCurrentResetAfterMigration(page: Page, before: Stora
   await currentLocalReady(page);
   await expect.poll(async () => (await currentSnapshot(page)).settings.goalTemplate).not.toBeNull();
   const reset = await currentSnapshot(page);
-  expect(Object.keys(reset).sort()).toEqual([...C6_RESET_STORES].sort());
+  const addedStores = ['pythonActivities', 'pythonDrafts', 'javaActivities', 'javaDrafts'];
+  expect(Object.keys(reset).sort()).toEqual([...C6_RESET_STORES, ...addedStores].sort());
   expect(reset.meta).toMatchObject({
-    dbVersion: 10,
-    schemaVersion: '10.0.0',
+    dbVersion: 12,
+    schemaVersion: '12.0.0',
     activePackageRef: { id: 'content.c.primer6', version: '2.0.0' },
+    activeCatalogSetRef: { id: 'catalog-set.c-python-java', version: '1.0.0' },
   });
   expect(reset.meta.generation).not.toBe(before.meta.generation);
   const nativeRows = reset as unknown as Record<string, unknown>;
-  for (const key of C6_RESET_CLEAR_STORES) expect(nativeRows[key], key).toEqual([]);
+  for (const key of [...C6_RESET_CLEAR_STORES, ...addedStores])
+    expect(nativeRows[key], key).toEqual([]);
   const { goalTemplate: oldGoal, ...oldPreferences } = before.settings;
   const { goalTemplate: newGoal, ...newPreferences } = reset.settings;
   void oldGoal;

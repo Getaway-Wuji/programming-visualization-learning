@@ -1,0 +1,274 @@
+[
+  {
+    "id": "int-overflow",
+    "source": "public class Main { public static void main(String[] args) { System.out.println(2147483647 + 1); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "-2147483648\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "long-overflow",
+    "source": "public class Main { public static void main(String[] args) { System.out.println(9223372036854775807L + 1); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "-9223372036854775808\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "long-min-literal",
+    "source": "public class Main { public static void main(String[] args) { System.out.println(-9223372036854775808L); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "-9223372036854775808\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "int-min-quotient",
+    "source": "public class Main { public static void main(String[] args) { int n = -2147483648; System.out.println(n / -1); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "-2147483648\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "widen-after-int",
+    "source": "public class Main { public static void main(String[] args) { long n = 2147483647 + 1; System.out.println(n); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "-2147483648\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "widen-before-int",
+    "source": "public class Main { public static void main(String[] args) { long n = (long) 2147483647 + 1; System.out.println(n); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "2147483648\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "narrow-sign",
+    "source": "public class Main { public static void main(String[] args) { System.out.println((int) 2147483648L); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "-2147483648\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "integer-division",
+    "source": "public class Main { public static void main(String[] args) { System.out.println(-5 / 2); System.out.println(-5 % 2); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "-2\n-1\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "boolean-short-circuit",
+    "source": "public class Main { public static void main(String[] args) { int n = 0; System.out.println(n != 0 && 7/n > 1); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "false\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "static-check-dead-branch",
+    "source": "public class Main { public static void main(String[] args) { if (false) { boolean b = 1; } } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_TYPE"
+  },
+  {
+    "id": "static-check-no-int-truth",
+    "source": "public class Main { public static void main(String[] args) { if (1) { System.out.println(1); } } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_TYPE"
+  },
+  {
+    "id": "static-check-local-initializer",
+    "source": "public class Main { public static void main(String[] args) { int x; System.out.println(x); } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_UNSUPPORTED"
+  },
+  {
+    "id": "undefined-variable",
+    "source": "public class Main { public static void main(String[] args) { System.out.println(y); } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_NAME"
+  },
+  {
+    "id": "default-int-array",
+    "source": "public class Main { public static void main(String[] args) { int[] a = new int[2]; System.out.println(a[0]); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "0\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "array-bounds",
+    "source": "public class Main { public static void main(String[] args) { int[] a = new int[1]; System.out.println(a[-1]); } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_INDEX"
+  },
+  {
+    "id": "array-negative",
+    "source": "public class Main { public static void main(String[] args) { int[] a = new int[-1]; } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_NEGATIVE_ARRAY"
+  },
+  {
+    "id": "array-null",
+    "source": "public class Main { public static void main(String[] args) { int[] a = null; System.out.println(a.length); } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_NULL"
+  },
+  {
+    "id": "reference-alias",
+    "source": "public class Main { public static void main(String[] args) { Cell a = new Cell(); Cell b = a; b.value = 7; System.out.println(a.value); System.out.println(a == b); } } class Cell { int value; }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "7\ntrue\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "reference-cycle",
+    "source": "public class Main { public static void main(String[] args) { Cell a = new Cell(); a.next = a; System.out.println(a.next == a); } } class Cell { Cell next; }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "true\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "object-field-null",
+    "source": "public class Main { public static void main(String[] args) { Cell a = new Cell(); System.out.println(a.next == null); } } class Cell { Cell next; }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "true\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "utf16-scalar",
+    "source": "public class Main { public static void main(String[] args) { String s = \"云🙂\"; System.out.println(s.length()); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "3\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "string-equals",
+    "source": "public class Main { public static void main(String[] args) { String s = \"蓝\"; System.out.println(s.equals(\"蓝\")); System.out.println(s.equals(null)); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "true\nfalse\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "virtual-stdin",
+    "source": "import java.util.Scanner;\npublic class Main { public static void main(String[] args) { Scanner r = new Scanner(System.in); int a = r.nextInt(); System.out.println(a); System.out.println(r.nextLine()); } }",
+    "input": "-12 尾\r\n",
+    "expectedStatus": "completed",
+    "expectedStdout": "-12\n 尾\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "input-eof",
+    "source": "import java.util.Scanner;\npublic class Main { public static void main(String[] args) { Scanner r = new Scanner(System.in); System.out.println(r.nextInt()); } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_EOF"
+  },
+  {
+    "id": "input-mismatch",
+    "source": "import java.util.Scanner;\npublic class Main { public static void main(String[] args) { Scanner r = new Scanner(System.in); System.out.println(r.nextInt()); } }",
+    "input": "2147483648",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_INPUT"
+  },
+  {
+    "id": "divide-zero-keeps-output",
+    "source": "public class Main { public static void main(String[] args) { int zero = 0; System.out.print(9); System.out.println(1 / zero); } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "9",
+    "expectedDiagnostic": "E_JAVA_ZERO_DIVISION"
+  },
+  {
+    "id": "unknown-host-class",
+    "source": "public class Main { public static void main(String[] args) { System.exit(1); } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_UNSUPPORTED"
+  },
+  {
+    "id": "reject-reflection",
+    "source": "public class Main { public static void main(String[] args) { Object x = Class.forName(\"Main\"); } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_UNSUPPORTED"
+  },
+  {
+    "id": "reject-java-thread",
+    "source": "public class Main { public static void main(String[] args) { Thread t = new Thread(); } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_UNSUPPORTED"
+  },
+  {
+    "id": "reject-file-import",
+    "source": "import java.io.File;\npublic class Main { public static void main(String[] args) {  } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_UNSUPPORTED"
+  },
+  {
+    "id": "static-return",
+    "source": "public class Main { static int sum(int a, int b) { return a + b; } public static void main(String[] args) { System.out.println(sum(4, 11)); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "15\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "frame-scoping",
+    "source": "public class Main { public static void main(String[] args) { int x = 8; { int z = 4; System.out.println(z); } System.out.println(x); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "4\n8\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "for-break-continue",
+    "source": "public class Main { public static void main(String[] args) { int s = 0; for (int i = 0; i < 10; i++) { if (i == 6) { break; } if (i < 3) { continue; } s = s + i; } System.out.println(s); } }",
+    "input": "",
+    "expectedStatus": "completed",
+    "expectedStdout": "12\n",
+    "expectedDiagnostic": null
+  },
+  {
+    "id": "syntax-invalid",
+    "source": "public class Main { public static void main(String[] args) { int x = ; } }",
+    "input": "",
+    "expectedStatus": "error",
+    "expectedStdout": "",
+    "expectedDiagnostic": "E_JAVA_SYNTAX"
+  }
+]

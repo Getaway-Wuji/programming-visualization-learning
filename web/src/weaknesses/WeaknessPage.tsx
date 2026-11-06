@@ -8,8 +8,17 @@ import { storageError } from '../storage/errors';
 import { challengeQuestions } from '../challenges/content';
 import { weaknessReasons, type WeaknessSummary, type WeaknessEvidence } from './model';
 import { mistakeLabels } from '../review-notebook/model';
+import { javaExercise, javaTopic } from '../java/identities';
 import { pythonExercise, pythonTopic } from '../python3/identities';
 import './weaknesses.css';
+
+function topicLessonPath(knowledgeId: string, lessonId: string) {
+  const java = javaTopic(knowledgeId);
+  if (java) return '/java/article/' + java.articleOrder + '/' + lessonId;
+  const python = pythonTopic(knowledgeId);
+  if (python) return '/python/article/' + python.articleOrder + '/' + lessonId;
+  return '/lessons/' + lessonId;
+}
 
 export class WeaknessController {
   private state = {
@@ -84,7 +93,8 @@ function Evidence({ item }: { item: WeaknessEvidence }) {
       ? '手动陌生标记'
       : item.kind === 'challenge'
         ? (q?.title ?? item.sourceRef.id)
-        : (pythonExercise(item.sourceRef.id)?.title ??
+        : (javaExercise(item.sourceRef.id)?.title ??
+          pythonExercise(item.sourceRef.id)?.title ??
           c6DisplayReference(state, item.sourceRef)?.title ??
           state.reading?.exercises.find((e) => e.id === item.sourceRef.id)?.title ??
           item.sourceRef.id);
@@ -226,7 +236,8 @@ export default function WeaknessPage() {
                   data-recommended={weaknessReasons(row).length ? 'yes' : 'no'}
                 >
                   <h3>
-                    {pythonTopic(row.knowledgeRef.id)?.title ??
+                    {javaTopic(row.knowledgeRef.id)?.title ??
+                      pythonTopic(row.knowledgeRef.id)?.title ??
                       c6DisplayReference(learning, row.knowledgeRef)?.title ??
                       learning.reading?.knowledgePoints.find(
                         (k) =>
@@ -249,14 +260,7 @@ export default function WeaknessPage() {
                   </p>
                   <Link
                     className="text-link"
-                    to={
-                      pythonTopic(row.knowledgeRef.id)
-                        ? '/python/article/' +
-                          pythonTopic(row.knowledgeRef.id)!.articleOrder +
-                          '/' +
-                          row.lessonRef.id
-                        : `/lessons/${row.lessonRef.id}`
-                    }
+                    to={topicLessonPath(row.knowledgeRef.id, row.lessonRef.id)}
                   >
                     复习关联基础课程 →
                   </Link>

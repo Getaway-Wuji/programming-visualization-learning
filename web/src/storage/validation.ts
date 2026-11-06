@@ -8,6 +8,8 @@ import {
 } from './model';
 import { assertC6Meta } from './c6-reset';
 import { assertPythonMeta } from './python3-meta';
+import { assertJavaMeta } from './java-meta';
+import { isJavaPackage, isJavaProgress, isJavaSubject } from '../java/identities';
 import { isPythonPackage, isPythonProgress, isPythonSubject } from '../python3/identities';
 import { hasC6RewardEvidence, isC6TopicRewardSubject } from '../c6-learning/rewards';
 import {
@@ -255,10 +257,12 @@ function eventRow(value: unknown, fields: readonly string[], receipt: boolean): 
     assertPublicRef(valueRow.subjectRef);
     assertPublicRef(valueRow.packageRef);
     requireRule(
-      isPythonPackage(valueRow.packageRef)
+      isPythonPackage(valueRow.packageRef) || isJavaPackage(valueRow.packageRef)
         ? valueRow.learningRevision === 1 &&
             valueRow.subjectRef.version === '1.0.0' &&
-            isPythonSubject(type, valueRow.subjectRef.id)
+            (isPythonPackage(valueRow.packageRef)
+              ? isPythonSubject(type, valueRow.subjectRef.id)
+              : isJavaSubject(type, valueRow.subjectRef.id))
         : valueRow.subjectRef.id.startsWith(`${type.split('.')[0]}.`),
     );
     requireRule(isPositiveInt(valueRow.learningRevision));
@@ -354,6 +358,10 @@ export function assertRecord<S extends StoreName>(
         assertPythonMeta(value);
         return;
       }
+      if (descriptor && 'value' in descriptor && descriptor.value === '12.0.0') {
+        assertJavaMeta(value);
+        return;
+      }
       const valueRow = row(value, [
         'schemaVersion',
         'dbVersion',
@@ -419,7 +427,8 @@ export function assertRecord<S extends StoreName>(
         (valueRow.subjectRef.id.startsWith(prefix) &&
           valueRow.canonicalSubjectId.startsWith(prefix)) ||
           (valueRow.subjectRef.version === '1.0.0' &&
-            isPythonSubject(valueRow.eventType, valueRow.subjectRef.id) &&
+            (isPythonSubject(valueRow.eventType, valueRow.subjectRef.id) ||
+              isJavaSubject(valueRow.eventType, valueRow.subjectRef.id)) &&
             valueRow.canonicalSubjectId === valueRow.subjectRef.id),
       );
       dated(valueRow);
@@ -456,7 +465,8 @@ export function assertRecord<S extends StoreName>(
         requireRule(
           valueRow.subjectId.startsWith(`${event.split('.')[0]}.`) ||
             isC6TopicRewardSubject(valueRow.sourceId, valueRow.subjectId) ||
-            isPythonSubject(event, valueRow.subjectId as string),
+            isPythonSubject(event, valueRow.subjectId as string) ||
+            isJavaSubject(event, valueRow.subjectId as string),
         );
       }
       if (valueRow.sourceId === challengeSource) {
@@ -550,9 +560,12 @@ function sameRef(first: PublicRef, second: PublicRef) {
 function checkRelations(snapshot: StorageSnapshot) {
   const { meta, progress, dailyFacts, goals, ledger, receipts, aliases } = snapshot;
   requireRule(new Set(aliases.map((alias) => alias.toRef.id)).size === aliases.length);
-  for (const event of [...progress, ...receipts])
+  for (const event of [...progress, ...receipts]) {
     if (event.packageRef && isPythonPackage(event.packageRef))
-      requireRule(meta.dbVersion === 11 && isPythonProgress(event));
+      requireRule(meta.dbVersion >= 11 && isPythonProgress(event));
+    if (event.packageRef && isJavaPackage(event.packageRef))
+      requireRule(meta.dbVersion === 12 && isJavaProgress(event));
+  }
   for (const alias of aliases) {
     canonicalSubjectId(aliases, alias.toRef.id);
     const next = aliases.find((next) => next.fromRef.id === alias.toRef.id);
@@ -629,10 +642,10 @@ function checkRelations(snapshot: StorageSnapshot) {
           (entry.sourceId === 'reward.lesson.first-completion' ||
             entry.sourceId === 'reward.exercise.first-pass')
           ? hasC6RewardEvidence(snapshot, entry) ||
-              (meta.dbVersion === 11 &&
+              (meta.dbVersion >= 11 &&
                 progress.some(
                   (item) =>
-                    isPythonProgress(item) &&
+                    (isPythonProgress(item) || (meta.dbVersion === 12 && isJavaProgress(item))) &&
                     item.eventType === sourceEvents[entry.sourceId] &&
                     item.subjectRef.id === entry.subjectId &&
                     item.firstAt <= entry.occurredAt,

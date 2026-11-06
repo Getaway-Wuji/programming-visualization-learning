@@ -34,7 +34,7 @@ export class PythonLearningSession {
     const state = this.hooks.current();
     if (state.epoch !== epoch || (generation && generation !== state.snapshot?.meta.generation))
       throw new StorageError('S_GENERATION_STALE');
-    if (!state.writable || state.snapshot?.meta.dbVersion !== 11)
+    if (!state.writable || !state.snapshot || state.snapshot.meta.dbVersion < 11)
       throw new StorageError('S_STORAGE_UNAVAILABLE');
     return state.snapshot.meta;
   }

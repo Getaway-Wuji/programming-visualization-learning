@@ -20,6 +20,7 @@ export function PythonNavigation() {
       <Link to="/python/workbench">Python 工作台</Link>
       <Link to="/python/review">Python 复盘</Link>
       <Link to="/courses">C 语言课程</Link>
+      <Link to="/java/workbench">Java 工作台</Link>
     </nav>
   );
 }

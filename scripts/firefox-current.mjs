@@ -96,6 +96,8 @@ const expectedStores = [
   'courseDrafts',
   'pythonActivities',
   'pythonDrafts',
+  'javaActivities',
+  'javaDrafts',
 ];
 const report = {
   label,
@@ -185,7 +187,7 @@ async function snapshot(name) {
     Buffer.from(await wd(route + '/screenshot'), 'base64'),
   );
 }
-async function archive(version = 11) {
+async function archive(version = 12) {
   const data = await wd(route + '/execute/async', 'POST', {
     args: [],
     script: `
@@ -206,10 +208,10 @@ async function archive(version = 11) {
   assert.equal(data.version, version);
   assert.deepEqual(
     data.names.toSorted(),
-    (version === 10
-      ? expectedStores.filter((name) => !name.startsWith('python'))
-      : expectedStores
-    ).toSorted(),
+    expectedStores
+      .filter((name) => version >= 11 || !name.startsWith('python'))
+      .filter((name) => version >= 12 || !name.startsWith('java'))
+      .toSorted(),
   );
   return data;
 }
@@ -600,7 +602,7 @@ async function runPython(legacy) {
       keys.appearanceAssets=[[meta.generation,'background']];
       const request=indexedDB.open('c-viz-learning',10);
       request.onupgradeneeded=()=>{
-        for(const name of names.filter(n=>!n.startsWith('python'))){
+        for(const name of names.filter(n=>!n.startsWith('python')&&!n.startsWith('java'))){
           const store=request.result.createObjectStore(name);
           rows[name].forEach((value,i)=>store.add(value,keys[name][i]));
         }
@@ -617,7 +619,7 @@ async function runPython(legacy) {
   await wait(
     () =>
       js('return document.querySelector(".app-shell")?.dataset.learningStorageStatus==="ready"'),
-    'Native DB11 did not open',
+    'Native DB12 did not open',
   );
   const migrated = await archive();
   for (const name of prior.names) {
@@ -627,12 +629,12 @@ async function runPython(legacy) {
   assert.deepEqual(migrated.rows.meta, [
     {
       ...prior.rows.meta[0],
-      dbVersion: 11,
-      schemaVersion: '11.0.0',
-      activeCatalogSetRef: { id: 'catalog-set.c-python', version: '1.0.0' },
+      dbVersion: 12,
+      schemaVersion: '12.0.0',
+      activeCatalogSetRef: { id: 'catalog-set.c-python-java', version: '1.0.0' },
     },
   ]);
-  for (const name of ['pythonActivities', 'pythonDrafts'])
+  for (const name of ['pythonActivities', 'pythonDrafts', 'javaActivities', 'javaDrafts'])
     assert.deepEqual(migrated.rows[name], []);
 
   const editor = 'textarea[aria-label="Python 代码"]';
@@ -741,7 +743,7 @@ async function runPython(legacy) {
     JSON.stringify({ prior, migrated, saved }, null, 2),
   );
   report.results.push({
-    id: 'native-python-db10-to-11-edit-cancel-judge-and-exports',
+    id: 'native-python-db10-to-12-edit-cancel-judge-and-exports',
     passed: true,
     cancelled,
     files: files.map((path) => ({
@@ -752,6 +754,168 @@ async function runPython(legacy) {
   });
   save();
   console.log('PASS actual Firefox Python migration, edit, cancellation, judge and exports');
+  return saved;
+}
+
+async function runJava(legacy) {
+  const home = 'http://127.0.0.1:4212';
+  await wd(route + '/url', 'POST', { url: home + '/native-java-migration-fixture' });
+  const seed = await wd(route + '/execute/async', 'POST', {
+    args: [legacy],
+    script: `
+    const [legacy,done]=arguments;
+    const result=r=>new Promise((yes,no)=>{r.onsuccess=()=>yes(r.result);r.onerror=()=>no(r.error);r.onblocked=()=>no(Error('fixture blocked'))});
+    (async()=>{
+      await result(indexedDB.deleteDatabase('c-viz-learning'));
+      const {rows,keys,names}=legacy;
+      Object.assign(rows.meta[0],{dbVersion:11,schemaVersion:'11.0.0',activeCatalogSetRef:{id:'catalog-set.c-python',version:'1.0.0'}});
+      for(const row of rows.appearanceAssets)row.blob=new Blob([Uint8Array.from(row.blob.bytes)],{type:row.blob.type});
+      const request=indexedDB.open('c-viz-learning',11);
+      request.onupgradeneeded=()=>{
+        for(const name of names.filter(n=>!n.startsWith('java'))){
+          const store=request.result.createObjectStore(name);
+          rows[name].forEach((value,i)=>store.add(value,keys[name][i]));
+        }
+      };
+      (await result(request)).close();
+      return {ok:true};
+    })().then(done,e=>done({error:String(e)}));`,
+  });
+  assert.equal(seed.ok, true, seed.error);
+  const prior = await archive(11);
+  assert.equal(prior.rows.pythonActivities.length, 1);
+  assert.equal(prior.rows.pythonDrafts.length, 1);
+  await wd(route + '/url', 'POST', { url: home + '/#/java/workbench' });
+  const editor = 'textarea[aria-label="Java 代码"]';
+  const trace = '[data-testid="java-trace"]';
+  await nativeElement(editor);
+  const migrated = await archive();
+  for (const name of prior.names) {
+    assert.deepEqual(migrated.keys[name], prior.keys[name], name);
+    assert.deepEqual(
+      migrated.rows[name],
+      name === 'meta' ? legacy.rows.meta : prior.rows[name],
+      name,
+    );
+  }
+  assert.deepEqual(migrated.rows.javaActivities, []);
+  assert.deepEqual(migrated.rows.javaDrafts, []);
+  const textVisible = (text) =>
+    wait(
+      () => js('return document.querySelector("main")?.textContent.includes(arguments[0])', [text]),
+      'Missing Java result: ' + text,
+    );
+  const outputText = (text) =>
+    wait(
+      () =>
+        js(
+          'return document.querySelector("[data-testid=java-output]")?.textContent===arguments[0]',
+          [text],
+        ),
+      'Java trace output mismatch',
+    );
+  await fill(
+    editor,
+    'public class Main { public static void main(String[] args) { int n = 9; if (n > 0) { System.out.println(n); } } }',
+  );
+  await button('运行代码');
+  await outputText('9\n');
+  await button('积木');
+  await nativeElement('.python-block-canvas .blocklySvg');
+  await button('应用积木到代码');
+  await button('运行代码');
+  await outputText('9\n');
+  await button('回到开头', trace);
+  await outputText('（当前无输出）');
+  await button('到最后一步', trace);
+  await outputText('9\n');
+
+  await js(`
+    window.javaCancelProof={posted:false,terminated:false,received:false};
+    const Original=window.Worker;
+    window.Worker=class extends Original {
+      postMessage(...args){
+        window.javaCancelProof.posted=true;
+        this.addEventListener('message',()=>{window.javaCancelProof.received=true});
+        setTimeout(()=>{if(!window.javaCancelProof.terminated)super.postMessage(...args)},650);
+      }
+      terminate(){
+        window.javaCancelProof.terminated=true;
+        window.Worker=Original;
+        super.terminate();
+      }
+    };
+  `);
+  await button('运行代码');
+  await wait(() => js('return window.javaCancelProof.posted'), 'Missing actual Java Worker');
+  await button('取消', '.java-work-grid');
+  await textVisible('已取消当前操作。');
+  const cancelled = await js('return window.javaCancelProof');
+  assert.deepEqual(cancelled, { posted: true, terminated: true, received: false });
+  await button('运行代码');
+  await outputText('9\n');
+  await button('回到开头', trace);
+  await button('预览当前快照');
+  await nativeElement('dialog[open][aria-label="Java 快照预览"]');
+  const files = [];
+  for (const [format, extension] of [
+    ['JSON', '.json'],
+    ['PNG', '.png'],
+    ['MD', '.md'],
+    ['ZIP', '.zip'],
+  ])
+    files.push(await download(() => button('下载 ' + format, 'dialog[open]'), extension));
+  const exported = read(files[0]);
+  assert.equal(exported.formatVersion, '3.1.0');
+  assert.equal(exported.runtime.language, 'java');
+  assert.equal(exported.position.cursor, 0);
+  assert.equal(exported.currentState.output, '');
+  assert.equal(readFileSync(files[1]).subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  assert(readFileSync(files[2], 'utf8').includes('当前步骤 0/'));
+  assert.equal(readFileSync(files[3]).subarray(0, 4).toString('hex'), '504b0304');
+  await snapshot('java-snapshot');
+  await button('关闭预览', 'dialog[open]');
+  await button('保存草稿');
+  await textVisible('草稿已保存到本机。');
+  await navigate('#/java/practice/java.practice.utf16-length');
+  await fill(editor, read('tests/fixtures/java-reference.json')['utf16-length']);
+  await button('保存草稿');
+  await textVisible('草稿已保存到本机。');
+  await button('提交判题');
+  await textVisible('判题结果已保存到本机。');
+  await textVisible('四组全部通过');
+  assert.equal(
+    await js(
+      `return Array.from(document.querySelectorAll('section[aria-label="判题结果"] button')).filter(b=>b.textContent.trim().endsWith('· 通过')).length`,
+    ),
+    4,
+  );
+  await snapshot('java-four-groups');
+  await click('main a', '查看本地复盘记录');
+  await wd(route + '/refresh', 'POST', {});
+  await textVisible('四组全部通过');
+  const saved = await archive();
+  assert.equal(saved.rows.javaActivities.length, 1);
+  assert.equal(saved.rows.javaDrafts.length, 2);
+  assert.deepEqual(saved.rows.pythonActivities, migrated.rows.pythonActivities);
+  assert.deepEqual(saved.rows.pythonDrafts, migrated.rows.pythonDrafts);
+  assert.deepEqual(saved.rows.appearanceAssets, migrated.rows.appearanceAssets);
+  writeFileSync(
+    join(output, 'java-native-migration.json'),
+    JSON.stringify({ prior, migrated, saved }, null, 2),
+  );
+  report.results.push({
+    id: 'native-java-db11-to-12-edit-cancel-judge-and-exports',
+    passed: true,
+    cancelled,
+    files: files.map((path) => ({
+      path,
+      sha256: sha(readFileSync(path)),
+      bytes: statSync(path).size,
+    })),
+  });
+  save();
+  console.log('PASS actual Firefox Java migration, edit, cancellation, judge and exports');
 }
 
 try {
@@ -874,20 +1038,20 @@ try {
     return JSON.stringify(a.rows.meta) !== JSON.stringify(durable.rows.meta);
   }, 'Generation did not change');
   const cleared = await archive();
-  // DB11 adds both Python stores to the existing RESET domains.
   const actualLearning = cleared.names.filter(
     (n) => !['meta', 'settings', 'avatar', 'appearance', 'appearanceAssets'].includes(n),
   );
-  assert.equal(actualLearning.length, 16);
+  assert.equal(actualLearning.length, 18);
   report.actualResetStores = actualLearning;
   for (const name of actualLearning) assert.deepEqual(cleared.rows[name], [], name);
   writeFileSync(
     join(output, 'native-save-reload-clear.json'),
     JSON.stringify({ initial, durable, reloaded, cleared }, null, 2),
   );
-  report.results.push({ id: 'native-db11-save-refresh-cancel-and-clear', passed: true });
-  await runPython(durable);
-  assert.equal(report.results.length, programs.length + cppQuestions.length + 4);
+  report.results.push({ id: 'native-db12-save-refresh-cancel-and-clear', passed: true });
+  const pythonSaved = await runPython(durable);
+  await runJava(pythonSaved);
+  assert.equal(report.results.length, programs.length + cppQuestions.length + 5);
   assert.equal(sha(readFileSync('content/build/source-lock.json')), sourceLockBefore);
   verifyBuildInputs();
   report.passed = true;

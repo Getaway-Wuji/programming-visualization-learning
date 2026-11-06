@@ -249,7 +249,8 @@ export default function LanguageMigrationPage() {
             </li>
           </ul>
           <p>
-            C++通用语言课程、Python与Java的完整执行学习闭环尚未开放，按后续任务逐项开放。静态对照不能代替真实执行验收。
+            Python 和 Java 各有课程与受限执行工作台。C++
+            现有执行范围见案例与算法入口。此页的语言对照用于阅读。
           </p>
         </section>
       </div>

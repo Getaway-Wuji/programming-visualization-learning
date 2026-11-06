@@ -32,7 +32,14 @@ import {
   queuePythonStores,
   toPythonMeta,
 } from './python3-meta';
-import { pythonCourseTransaction, type PreparePythonCourse } from './python3-course';
+import {
+  pythonCourseTransaction,
+  readPythonUpgradeRows,
+  type PreparePythonCourse,
+} from './python3-course';
+import { assertPythonMeta } from './python3-meta';
+import { JAVA_DB_VERSION, JAVA_STORES, queueJavaStores, toJavaMeta } from './java-meta';
+import { javaCourseTransaction, type PrepareJavaCourse } from './java-course';
 import { c6ActivationIndex } from './c6-activation';
 import type { C6StorageActivation } from './c6-activation';
 import { c6CourseTransaction, readC6Rows, type PrepareC6Course } from './c6-course';
@@ -128,6 +135,7 @@ export interface OpenStorageOptions {
   /** Internal capability from the successfully loaded pinned C6 learning index. */
   c6Activation?: C6StorageActivation;
   enablePython?: boolean;
+  enableJava?: boolean;
   signal?: AbortSignal;
   onBlocked?: () => void;
   // Dependency injection is internal; the public entry point fixes the production DB.
@@ -138,6 +146,7 @@ export interface OpenStorageOptions {
 }
 
 function physicalStores(db: IDBDatabase): readonly string[] {
+  if (db.version === JAVA_DB_VERSION) return [...C6_RESET_STORES, ...PYTHON_STORES, ...JAVA_STORES];
   if (db.version === PYTHON_DB_VERSION) return [...C6_RESET_STORES, ...PYTHON_STORES];
   if (db.version === 10) return C6_RESET_STORES;
   if (db.version === DB_VERSION) return ALL_STORE_NAMES;
@@ -175,7 +184,8 @@ function checkedMeta(value: unknown): asserts value is Meta {
     'schemaVersion' in value &&
     value.schemaVersion !== SCHEMA_VERSION &&
     value.schemaVersion !== '10.0.0' &&
-    value.schemaVersion !== '11.0.0'
+    value.schemaVersion !== '11.0.0' &&
+    value.schemaVersion !== '12.0.0'
   ) {
     throw new StorageError(
       value.schemaVersion === '0.9.0' ? 'S_MIGRATION_UNSUPPORTED' : 'S_VERSION_UNKNOWN',
@@ -194,7 +204,7 @@ export function readTransaction(
   expectedDbVersion: number = DB_VERSION,
   c6Index?: C6LearningIndex,
 ): void {
-  if (![DB_VERSION, 10, PYTHON_DB_VERSION].includes(expectedDbVersion)) {
+  if (![DB_VERSION, 10, PYTHON_DB_VERSION, JAVA_DB_VERSION].includes(expectedDbVersion)) {
     fail(new StorageError('S_VERSION_UNKNOWN'));
     return;
   }
@@ -455,6 +465,18 @@ export class StorageClient {
     if (!result.saved.replayed) this.broadcast(result.state.snapshot.meta);
     return result.saved;
   }
+  async readJavaCourse() {
+    return (await javaCourseTransaction(this.connection(), this.factory)).state;
+  }
+  async commitJavaCourse(generation: string, revision: number, prepare: PrepareJavaCourse) {
+    const result = await javaCourseTransaction(this.connection(), this.factory, {
+      generation,
+      revision,
+      prepare,
+    });
+    if (!result.saved.replayed) this.broadcast(result.state.snapshot.meta);
+    return result.saved;
+  }
   async probe(): Promise<{ available: true }> {
     const initial = await this.read();
     await this.execute(initial.meta.generation, () => [], undefined, undefined, true);
@@ -526,9 +548,14 @@ export class StorageClient {
         const state = await this.readC6Course();
         if (!sameRecoveryValue(state.snapshot.meta, recovery.snapshot.meta))
           return this.readRecovery();
-        if (this.connection().version === PYTHON_DB_VERSION) {
+        if (this.connection().version >= PYTHON_DB_VERSION) {
           const python = await this.readPythonCourse();
           if (!sameRecoveryValue(python.snapshot.meta, recovery.snapshot.meta))
+            return this.readRecovery();
+        }
+        if (this.connection().version === JAVA_DB_VERSION) {
+          const java = await this.readJavaCourse();
+          if (!sameRecoveryValue(java.snapshot.meta, recovery.snapshot.meta))
             return this.readRecovery();
         }
       } catch (error) {
@@ -574,8 +601,10 @@ export class StorageClient {
             activePackageRef,
           });
     const meta =
-      baseMeta.dbVersion === 10 && this.connection().version === PYTHON_DB_VERSION
-        ? toPythonMeta(baseMeta)
+      baseMeta.dbVersion === 10 && this.connection().version >= PYTHON_DB_VERSION
+        ? this.connection().version === JAVA_DB_VERSION
+          ? toJavaMeta(toPythonMeta(baseMeta))
+          : toPythonMeta(baseMeta)
         : baseMeta;
     assertRecord('meta', meta);
     if (meta.generation === rawGeneration(confirmation.raw.meta))
@@ -1093,8 +1122,15 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
   try {
     if (options.signal?.aborted) throw new StorageError('S_ABORTED');
     const index = options.c6Activation ? c6ActivationIndex(options.c6Activation) : null;
-    if (options.enablePython && !index) throw new StorageError('S_CONTENT_INCOMPATIBLE');
-    const targetVersion = index ? (options.enablePython ? PYTHON_DB_VERSION : 10) : DB_VERSION;
+    if ((options.enablePython && !index) || (options.enableJava && !options.enablePython))
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    const targetVersion = options.enableJava
+      ? JAVA_DB_VERSION
+      : index
+        ? options.enablePython
+          ? PYTHON_DB_VERSION
+          : 10
+        : DB_VERSION;
     const activePackageRef = { ...options.activePackageRef };
     if (activePackageRef.id === 'content.c.primer6' && !index)
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
@@ -1158,10 +1194,20 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
             createdNew = event.oldVersion === 0;
             const db = request.result;
             const tx = request.transaction!;
-            if (options.enablePython && event.oldVersion === 10) {
+            const afterC6 = (value: ReturnType<typeof createC6ResetMeta>) => {
+              const python = queuePythonStores(db, tx, value);
+              if (options.enableJava) queueJavaStores(db, tx, python);
+            };
+            if (
+              (options.enablePython && event.oldVersion === 10) ||
+              (options.enableJava && event.oldVersion === PYTHON_DB_VERSION)
+            ) {
+              const oldVersion = event.oldVersion;
+              const names =
+                oldVersion === 10 ? C6_RESET_STORES : [...C6_RESET_STORES, ...PYTHON_STORES];
               if (
-                db.objectStoreNames.length !== C6_RESET_STORES.length ||
-                C6_RESET_STORES.some((name) => {
+                db.objectStoreNames.length !== names.length ||
+                names.some((name) => {
                   if (!db.objectStoreNames.contains(name)) return true;
                   const store = tx.objectStore(name);
                   return store.keyPath !== null || store.autoIncrement || store.indexNames.length;
@@ -1176,15 +1222,27 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                 tx,
                 (snapshot) => {
                   try {
-                    assertC6Meta(snapshot.meta);
-                    queuePythonStores(db, tx, snapshot.meta);
+                    if (oldVersion === 10) {
+                      assertC6Meta(snapshot.meta);
+                      afterC6(snapshot.meta);
+                    } else {
+                      const meta = snapshot.meta;
+                      assertPythonMeta(meta);
+                      readPythonUpgradeRows(
+                        tx,
+                        factory,
+                        snapshot,
+                        () => queueJavaStores(db, tx, meta),
+                        fail,
+                      );
+                    }
                   } catch (error) {
                     fail(error);
                   }
                 },
                 fail,
                 factory,
-                10,
+                oldVersion,
                 index!,
               );
               return;
@@ -1197,7 +1255,7 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
               (error) => {
                 failure = error;
               },
-              options.enablePython ? (value) => queuePythonStores(db, tx, value) : undefined,
+              options.enablePython ? afterC6 : undefined,
             );
             return;
           }

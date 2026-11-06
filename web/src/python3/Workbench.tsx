@@ -531,7 +531,7 @@ function Editor({
 function Session({ target }: { target: Target }) {
   const { service, state } = useLearning();
   const readDrafts = useCallback((epoch: number) => service.readPythonCourse(epoch), [service]);
-  const ready = state.snapshot?.meta.dbVersion === 11 && state.recovery?.writable !== false;
+  const ready = (state.snapshot?.meta.dbVersion ?? 0) >= 11 && state.recovery?.writable !== false;
   const epoch = state.sessionEpoch;
   const { value, failed, retry } = usePythonResource(
     ready && !target.example ? epoch : -1,

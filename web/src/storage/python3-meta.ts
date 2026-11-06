@@ -68,13 +68,20 @@ export function assertActiveCourseMeta(value: unknown): asserts value is C6Reset
 }
 
 export function physicalSchemaVersion(version: number) {
-  return version === 11 ? '11.0.0' : version === 10 ? '10.0.0' : SCHEMA_VERSION;
+  return version === 12
+    ? '12.0.0'
+    : version === 11
+      ? '11.0.0'
+      : version === 10
+        ? '10.0.0'
+        : SCHEMA_VERSION;
 }
 
 export function queuePythonStores(db: IDBDatabase, tx: IDBTransaction, meta: C6ResetMeta) {
-  if (db.version !== 11 || tx.mode !== 'versionchange')
+  if ((db.version !== 11 && db.version !== 12) || tx.mode !== 'versionchange')
     throw new StorageError('S_MIGRATION_UNSUPPORTED');
   const next = toPythonMeta(meta);
   for (const name of PYTHON_STORES) db.createObjectStore(name);
   tx.objectStore('meta').put(next, 'current');
+  return next;
 }

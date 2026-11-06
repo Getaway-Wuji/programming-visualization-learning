@@ -78,8 +78,8 @@ test('published Python course loads one article, saves reading independently and
   await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read-today', 'true');
   await page.keyboard.press('End');
   const read = await archive(page);
-  expect(read.version).toBe(11);
-  expect(Object.keys(read.rows)).toHaveLength(21);
+  expect(read.version).toBe(12);
+  expect(Object.keys(read.rows)).toHaveLength(23);
   expect(read.rows.pythonActivities.values).toHaveLength(1);
   expect(
     read.rows.ledger.values.filter((row) => row.subjectId === greeting.platformRef.id),
@@ -231,7 +231,9 @@ test('native DB10 upgrade preserves real C exercise and C++ algorithm observatio
   ).toBe(true);
   expect(JSON.stringify(original.rows.achievements.values)).toContain('observation.stack.hanoi');
   const prior = Object.fromEntries(
-    Object.entries(original.rows).filter(([name]) => !name.startsWith('python')),
+    Object.entries(original.rows).filter(
+      ([name]) => !name.startsWith('python') && !name.startsWith('java'),
+    ),
   );
   prior.meta.values[0] = {
     ...prior.meta.values[0],
@@ -270,7 +272,7 @@ test('native DB10 upgrade preserves real C exercise and C++ algorithm observatio
       'ready',
     );
     const upgraded = await archive(migrated);
-    expect(upgraded.version).toBe(11);
+    expect(upgraded.version).toBe(12);
     expect(upgraded.rows.pythonActivities.values).toEqual([]);
     expect(upgraded.rows.pythonDrafts.values).toEqual([]);
     for (const [name, rows] of Object.entries(prior)) {
@@ -279,9 +281,9 @@ test('native DB10 upgrade preserves real C exercise and C++ algorithm observatio
     }
     expect(upgraded.rows.meta.values[0]).toMatchObject({
       ...prior.meta.values[0],
-      dbVersion: 11,
-      schemaVersion: '11.0.0',
-      activeCatalogSetRef: { id: 'catalog-set.c-python', version: '1.0.0' },
+      dbVersion: 12,
+      schemaVersion: '12.0.0',
+      activeCatalogSetRef: { id: 'catalog-set.c-python-java', version: '1.0.0' },
     });
     await migrated.keyboard.press('End');
     await expect(migrated.getByTestId('reading-end')).toHaveAttribute('data-read-today', 'true');

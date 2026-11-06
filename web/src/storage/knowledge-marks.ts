@@ -1,3 +1,4 @@
+import { isJavaMark, isJavaPackage } from '../java/identities';
 import type { Ref, Meta } from './model';
 import type { EditorHistoryContext } from './editor-history';
 import {
@@ -55,6 +56,7 @@ export function assertKnowledgeMark(value: unknown): asserts value is KnowledgeM
       isPositiveInt(r.revision),
   );
   for (const key of ['packageRef', 'knowledgeRef', 'lessonRef']) assertPublicRef(r[key]);
+  if (isJavaPackage(r.packageRef as Ref)) requireRule(isJavaMark(r as unknown as KnowledgeMark));
   if (isPythonPackage(r.packageRef as Ref))
     requireRule(isPythonMark(r as unknown as KnowledgeMark));
   requireRule(
@@ -146,7 +148,8 @@ export async function knowledgeMarksTransaction(
                 assertPublicRef(ref);
               requireRule(
                 same(command.packageRef, meta.activePackageRef) ||
-                  (meta.dbVersion === 11 && isPythonMark(command)),
+                  (meta.dbVersion >= 11 && isPythonMark(command)) ||
+                  (meta.dbVersion === 12 && isJavaMark(command)),
               );
               const old = rows.find((r) => r.knowledgeRef.id === command.knowledgeRef.id);
               if (old?.commandId === command.commandId) {

@@ -1,3 +1,4 @@
+import { isJavaProgress, javaExercise, javaPackageRef } from '../java/identities';
 import { c6LearningCatalog, type C6LearningCatalog, type C6LearningIndex } from '../c6-learning';
 import type { C6LearningCommand } from '../c6-learning/model';
 import { isPythonProgress, pythonExercise, pythonPackageRef } from '../python3/identities';
@@ -51,7 +52,7 @@ function kindOf(eventType: ContentEventType): AliasKind {
 type LearningGraph =
   | LearningCatalog
   | C6LearningCatalog
-  | (Omit<LearningCatalog, 'purpose'> & { purpose: 'python-course-practice' });
+  | (Omit<LearningCatalog, 'purpose'> & { purpose: 'text-course-practice' });
 function entities(catalog: LearningGraph, kind: AliasKind) {
   return kind === 'lesson'
     ? catalog.lessons
@@ -80,6 +81,7 @@ export function isCompatibleLearningHistory(
   aliases: readonly Alias[],
 ): boolean {
   if (current.ref.id.startsWith('py3.') && !isPythonProgress(progress)) return false;
+  if (current.ref.id.startsWith('java.') && !isJavaProgress(progress)) return false;
   if (
     /^(lesson|exercise)\.c6\./u.test(current.ref.id) &&
     (progress.packageRef.id !== 'content.c.primer6' || progress.packageRef.version !== '2.0.0')
@@ -130,7 +132,7 @@ function lessonCompleted(
   return (
     hasProgress(snapshot, 'lesson.study-confirmed', lesson) &&
     (catalog.purpose === 'c6-course-practice' ||
-      catalog.purpose === 'python-course-practice' ||
+      catalog.purpose === 'text-course-practice' ||
       (lesson.requiredExerciseRefs.length > 0 &&
         lesson.requiredExerciseRefs.every((ref) => {
           const exercise = catalog.exercises.find((value) => sameRef(value.ref, ref));
@@ -182,18 +184,33 @@ export function applyC6LearningEvent(
   );
 }
 
-/** LEARN 2.1 keeps reading independent from passing a Python exercise. */
 export function applyPythonLearningEvent(snapshot: StorageSnapshot, command: LearningCommand) {
+  return applyTextCourseLearningEvent(snapshot, command, false);
+}
+
+export function applyJavaLearningEvent(snapshot: StorageSnapshot, command: LearningCommand) {
+  return applyTextCourseLearningEvent(snapshot, command, true);
+}
+
+function applyTextCourseLearningEvent(
+  snapshot: StorageSnapshot,
+  command: LearningCommand,
+  java: boolean,
+) {
   const receipt = command.receipt;
+  const facts = { ...receipt, committedRevision: 0 };
   if (
-    snapshot.meta.dbVersion !== 11 ||
-    !isPythonProgress({ ...receipt, committedRevision: 0 }) ||
+    (java
+      ? snapshot.meta.dbVersion !== 12 || !isJavaProgress(facts)
+      : snapshot.meta.dbVersion < 11 || !isPythonProgress(facts)) ||
     !['lesson.study-confirmed', 'exercise.passed', 'exercise.attempt-evaluated'].includes(
       receipt.eventType,
     )
   )
     throw new StorageError('S_CONTENT_INCOMPATIBLE');
-  const exercise = pythonExercise(receipt.subjectRef.id);
+  const exercise = java
+    ? javaExercise(receipt.subjectRef.id)
+    : pythonExercise(receipt.subjectRef.id);
   const entity = (id: string) => ({
     ref: { id, version: '1.0.0' },
     learningRevision: 1,
@@ -204,8 +221,8 @@ export function applyPythonLearningEvent(snapshot: StorageSnapshot, command: Lea
     requiredExerciseRefs: [],
   };
   return applyEvent(snapshot, command, {
-    purpose: 'python-course-practice',
-    packageRef: pythonPackageRef,
+    purpose: 'text-course-practice',
+    packageRef: java ? javaPackageRef : pythonPackageRef,
     lessons: [lesson],
     exercises: exercise
       ? [
@@ -411,7 +428,7 @@ function applyEvent(
     daily(receipt.eventType, receipt.subjectRef);
   if (
     receipt.eventType === 'lesson.study-confirmed' ||
-    (receipt.eventType === 'exercise.passed' && catalog.purpose !== 'python-course-practice')
+    (receipt.eventType === 'exercise.passed' && catalog.purpose !== 'text-course-practice')
   ) {
     const lessonRef =
       receipt.eventType === 'lesson.study-confirmed'

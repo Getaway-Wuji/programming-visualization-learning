@@ -769,8 +769,8 @@ test('fresh archive: 404 page-end completions and 44 real code answers across 17
   await expect(page.locator('.c6-node-list > li')).toHaveCount(19);
   await expect.poll(async () => (await currentSnapshot(page)).settings.goalTemplate).not.toBeNull();
   const initial = await archive(page);
-  expect(initial.databaseVersion).toBe(10);
-  expect(initial.stores).toHaveLength(21);
+  expect(initial.databaseVersion).toBe(12);
+  expect(initial.stores).toHaveLength(23);
   expect(initial.data.meta.activePackageRef).toEqual(currentPackage);
   emptyLearning(initial.data);
   expect(currentIndex.lessons).toHaveLength(404);

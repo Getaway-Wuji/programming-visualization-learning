@@ -5,7 +5,8 @@ import {
   type C6CourseActivity,
   type C6CourseDraft,
 } from '../c6-learning/model';
-import { assertActiveCourseMeta } from './python3-meta';
+import { assertActiveCourseMeta } from './java-meta';
+import { isJavaProgress } from '../java/identities';
 import { isPythonProgress } from '../python3/identities';
 import { readTransaction } from './client';
 import type { SaveResult, StorageMutation, ReceiptSummary } from './client';
@@ -131,7 +132,11 @@ export function assertC6CourseState(state: C6CourseState, index: C6LearningIndex
   }
   for (const p of snapshot.progress) {
     if (p.eventType.startsWith('case.') || isC6IndependentProgress(p)) continue;
-    if (snapshot.meta.dbVersion === 11 && isPythonProgress(p)) continue;
+    if (
+      (snapshot.meta.dbVersion >= 11 && isPythonProgress(p)) ||
+      (snapshot.meta.dbVersion === 12 && isJavaProgress(p))
+    )
+      continue;
     if (
       p.packageRef.id !== index.packageRef.id ||
       p.packageRef.version !== '2.0.0' ||

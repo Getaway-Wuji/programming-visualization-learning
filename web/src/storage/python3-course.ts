@@ -1,5 +1,6 @@
 import { courseTransaction, type CourseState, type CourseRecipe } from './c6-course';
-import { assertPythonMeta, PYTHON_DB_VERSION, PYTHON_STORES } from './python3-meta';
+import { PYTHON_DB_VERSION, PYTHON_STORES } from './python3-meta';
+import { assertActiveCourseMeta, JAVA_DB_VERSION } from './java-meta';
 import {
   isPythonDocument,
   isPythonLesson,
@@ -8,7 +9,7 @@ import {
 } from '../python3/identities';
 import { assertPublicRef, isSafeUint, isUtcTime, isUuid, validationInternals } from './validation';
 import { StorageError } from './errors';
-import type { PublicRef } from './model';
+import type { PublicRef, StorageSnapshot } from './model';
 
 interface ActivityBase {
   activityVersion: '2.1.0';
@@ -50,7 +51,8 @@ const scalarText = (value: unknown): value is string =>
   encoder.encode(value).length <= 32768;
 
 function assertPythonCourseState({ snapshot, rows }: PythonCourseState) {
-  assertPythonMeta(snapshot.meta);
+  assertActiveCourseMeta(snapshot.meta);
+  requireRule(snapshot.meta.dbVersion >= PYTHON_DB_VERSION);
   requireRule(rows.activities.length <= 778 && rows.drafts.length <= 64);
   const revisions = (r: { generation: string; revision: number }) =>
     r.generation === snapshot.meta.generation &&
@@ -151,6 +153,54 @@ export function pythonCourseTransaction(
   factory: IDBFactory,
   options?: { generation?: string; revision?: number; prepare?: PreparePythonCourse },
 ) {
-  if (db.version !== PYTHON_DB_VERSION) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  if (db.version !== PYTHON_DB_VERSION && db.version !== JAVA_DB_VERSION)
+    throw new StorageError('S_CONTENT_INCOMPATIBLE');
   return courseTransaction(db, factory, PYTHON_STORES, assertPythonCourseState, options);
+}
+
+/** Validate the DB11 course and its original keys inside the DB12 versionchange. */
+export function readPythonUpgradeRows(
+  tx: IDBTransaction,
+  factory: IDBFactory,
+  snapshot: StorageSnapshot,
+  ready: () => void,
+  fail: (error: unknown) => void,
+) {
+  const [activities, drafts] = PYTHON_STORES.map((name) => tx.objectStore(name));
+  const requests = [
+    activities.getAll(),
+    activities.getAllKeys(),
+    drafts.getAll(),
+    drafts.getAllKeys(),
+  ];
+  let pending = requests.length;
+  for (const request of requests) {
+    request.onerror = () => fail(request.error);
+    request.onsuccess = () => {
+      if (--pending) return;
+      try {
+        const [activityRows, activityKeys, draftRows, draftKeys] = requests.map(
+          (request) => request.result,
+        );
+        const rows = {
+          activities: activityRows as PythonCourseActivity[],
+          drafts: draftRows as PythonDraft[],
+        };
+        assertPythonCourseState({ snapshot, rows });
+        requireRule(
+          activityRows.length === activityKeys.length && draftRows.length === draftKeys.length,
+        );
+        const generation = snapshot.meta.generation;
+        rows.activities.forEach((row, index) =>
+          requireRule(factory.cmp(activityKeys[index], [generation, row.subjectRef.id]) === 0),
+        );
+        rows.drafts.forEach((row, index) =>
+          requireRule(factory.cmp(draftKeys[index], [generation, row.documentId]) === 0),
+        );
+        ready();
+      } catch (error) {
+        fail(error);
+      }
+    };
+  }
 }
