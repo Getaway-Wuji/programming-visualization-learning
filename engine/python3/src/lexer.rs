@@ -1,4 +1,4 @@
-use c_viz_core::source::ByteRange;
+use crate::source::ByteRange;
 
 use crate::{Fault, MAX_STRING, Meter, PyResult, charge, span};
 

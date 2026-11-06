@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { resolve } from 'node:path';
 import Ajv from 'ajv';
 import standalone from 'ajv/dist/standalone/index.js';
 import { checkEnvironment } from './environment.mjs';
-import { run } from './process.mjs';
+import { run, workspaceDir } from './process.mjs';
 import { inspectWasm } from './wasm-inspect.mjs';
 import {
   python3RequestSchema,
@@ -15,8 +16,20 @@ import {
 checkEnvironment({ bindgen: true });
 const output = 'web/src/generated/python3';
 mkdirSync(output, { recursive: true });
+// Rust includes source locations in the WASM data section, including locations
+// from the shared path dependency and the Cargo registry. Use stable prefixes.
+const remap = [
+  [resolve(workspaceDir), '/project'],
+  [resolve(process.env.CARGO_HOME || resolve(homedir(), '.cargo')), '/cargo'],
+].flatMap(([from, to]) =>
+  [...new Set([from, from.replaceAll('\\', '/')])].map(
+    (path) => `--remap-path-prefix=${path}=${to}`,
+  ),
+);
 run('cargo', [
   '+1.99.0',
+  '--config',
+  'target.wasm32-unknown-unknown.rustflags=' + JSON.stringify(remap),
   'build',
   '--locked',
   '--manifest-path',

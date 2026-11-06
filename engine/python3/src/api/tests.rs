@@ -1,7 +1,7 @@
 use std::cell::Cell;
 use std::rc::Rc;
 
-use c_viz_core::budget::Limits;
+use crate::budget::Limits;
 use serde_json::{Value as Json, json};
 
 use super::*;

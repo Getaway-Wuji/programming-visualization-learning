@@ -1,9 +1,24 @@
 //! The Python 3.13 teaching subset. All user programs are interpreted here.
 
-pub use c_viz_core::budget;
-use c_viz_core::budget::{BudgetError, Meter};
-use c_viz_core::source::ByteRange;
+use budget::{BudgetError, Meter};
 use serde::Serialize;
+use source::ByteRange;
+
+// These shared modules remain single-source. Compile them within the Python
+// workspace so the external path crate's Cargo identity cannot vary by checkout.
+#[path = "../../core/src/budget.rs"]
+pub mod budget;
+#[allow(dead_code, reason = "Shared C encoding helpers are also compiled here")]
+#[path = "../../core/src/codec.rs"]
+mod codec;
+#[allow(
+    dead_code,
+    reason = "Shared C diagnostic constructors are also compiled here"
+)]
+#[path = "../../core/src/diagnostic.rs"]
+mod diagnostic;
+#[path = "../../core/src/source.rs"]
+pub mod source;
 
 mod api;
 mod edit;

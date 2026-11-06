@@ -1,9 +1,9 @@
-use c_viz_core::budget::TERMINAL_BYTES;
-use c_viz_core::codec::{self, CodecError};
 use serde::ser::SerializeMap;
 use serde::{Deserialize, Serialize, Serializer};
 use sha2::{Digest, Sha256};
 
+use crate::budget::TERMINAL_BYTES;
+use crate::codec::{self, CodecError};
 use crate::parser::{self, Node, Program};
 use crate::runtime::{
     self, ALIAS, AND_RIGHT, AND_SHORT, BRANCH, CONCAT, CONVERT, DIVIDE, FLOOR, MUTATED, NESTED,

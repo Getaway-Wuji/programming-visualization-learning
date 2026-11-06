@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 
-use c_viz_core::source::ByteRange;
+use crate::source::ByteRange;
 use serde::Serialize;
 
 use crate::lexer::{self, Token, TokenKind};
