@@ -18,7 +18,10 @@ fn run_op(input: &str) -> Value {
 
 fn execute_json(value: &Value) -> Value {
     let encoded = serde_json::to_vec(value).unwrap();
-    let response = execute(&encoded, &"a".repeat(64), &mut Meter::new()).unwrap();
+    // These cases assert semantics and accounting independent of the native runner's speed.
+    let mut meter = Meter::new();
+    meter.set_clock(1000, Box::new(|| 0));
+    let response = execute(&encoded, &"a".repeat(64), &mut meter).unwrap();
     let document: Value = serde_json::from_slice(&response).unwrap();
     assert_eq!(document["usage"]["resultBytes"], response.len());
     assert_eq!(

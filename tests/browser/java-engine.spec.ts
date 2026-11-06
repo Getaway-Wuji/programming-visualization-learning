@@ -94,10 +94,21 @@ test('budget termination returns a reversible prefix and next run works', async 
   expect(run.terminal.diagnostic?.code).toBe('E_STEP_LIMIT');
   expect(run.terminal.cursor).toBe(20000);
   expect(run.initial?.state.frames).toEqual([]);
-  const next = await page.evaluate(
-    (code) => window.javaHarness.run(code, ''),
-    main('System.out.println(7);'),
+  await page.route(
+    '**/java-worker-*.js',
+    async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      await route.continue().catch(() => {});
+    },
+    { times: 1 },
   );
+  const short = main('System.out.println(7);');
+  const delayed = await page.evaluate(
+    (code) => window.javaHarness.run(code, '').catch((error: Error) => error.message),
+    short,
+  );
+  expect(delayed).toBe('E_DEADLINE');
+  const next = await page.evaluate((code) => window.javaHarness.run(code, ''), short);
   expect(next.end?.state.output).toBe('7\n');
 });
 
