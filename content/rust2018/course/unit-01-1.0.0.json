@@ -1,0 +1,560 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 1,
+  "nodes": [
+    {
+      "id": "rust.book.root01",
+      "sourceNodeId": "rust.source.root01",
+      "title": "第1章 入门指南",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 28,
+      "printedPage": null,
+      "leaf": false,
+      "order": 1,
+      "group": 1,
+      "body": [
+        "把一段源代码变成可以运行的程序，需要先分清工具链、源文件与构建产物。本章先认识安装与诊断，再从单文件程序过渡到 Cargo 工程，建立保存、检查、构建、运行的基本顺序。",
+        "平台中的 Rust 运行使用受限解释器；终端安装与 Cargo 操作属于本地开发知识。阅读这些步骤时，应能指出每条命令作用于哪个目录、产生什么文件，而不把网页输出当作本机安装成功的证据。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root01.01",
+      "sourceNodeId": "rust.source.root01.01",
+      "title": "安装",
+      "parent": "rust.book.root01",
+      "depth": 2,
+      "physicalPage": 29,
+      "printedPage": null,
+      "leaf": false,
+      "order": 2,
+      "group": 1,
+      "body": [
+        "安装要解决两个问题：终端能找到 Rust 工具，以及工具链能调用当前平台的链接器。先按操作系统辨认环境，再用版本查询验证命令是否可达，最后了解更新、卸载和离线文档的入口。",
+        "以下命令是开发环境阅读材料，不在课程页面执行。版本号和安装器提示会随环境变化，判断应依据实际返回结果，不能只看是否出现过下载窗口。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root01.01.01",
+      "sourceNodeId": "rust.source.root01.01.01",
+      "title": "在Linux或macOS环境中安装Rust",
+      "parent": "rust.book.root01.01",
+      "depth": 3,
+      "physicalPage": 30,
+      "printedPage": null,
+      "leaf": true,
+      "order": 3,
+      "group": 1,
+      "body": [
+        "Linux 与 macOS 的本地开发通常由 rustup 管理工具链。它管理编译器和相关工具的版本；终端通过 PATH 查找这些命令。因此，下载完成与当前终端能够找到 rustc 是两件事，新开终端或加载环境配置后才可能看到变化。",
+        "构建本机可执行程序还需要链接器。若版本查询成功而构建报链接错误，应检查系统构建工具，而不是反复改 Rust 代码。不同 shell 加载配置的方式可能不同；下例只展示已安装工具后的检查顺序，不会替你下载或安装软件。同一台计算机上的多个终端也可能加载不同配置，应在实际准备构建的那个窗口核验命令。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "rustup --version\nrustc --version\ncargo --version\n",
+        "description": "逐项检查版本管理器、编译器与构建工具是否能从当前终端找到。",
+        "result": "已正确配置时，三条命令各显示自己的版本信息；具体号码取决于安装环境。",
+        "reason": "工具链安装与宿主链接器不在浏览器解释器权限内，本例仅供终端操作阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "rustc 能显示版本，构建却提示找不到链接器，优先检查什么？",
+        "answer": "检查当前系统的链接器及构建工具配置。版本查询只证明 rustc 可以启动，尚未证明本机链接环节可用。",
+        "hints": [
+          "将编译器启动和生成最终可执行文件分开考虑。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.01.02",
+      "sourceNodeId": "rust.source.root01.01.02",
+      "title": "在Windows环境中安装Rust",
+      "parent": "rust.book.root01.01",
+      "depth": 3,
+      "physicalPage": 31,
+      "printedPage": null,
+      "leaf": true,
+      "order": 4,
+      "group": 1,
+      "body": [
+        "Windows 环境的工具链需要与目标平台的本机构建工具配合。rustup、rustc 与 Cargo 各司其职；使用需要微软链接器的工具链时，还要准备相应的 C++ 构建组件。缺少链接工具不表示 Rust 语法存在错误。",
+        "在 PowerShell 中检查版本，能够确认当前窗口的 PATH 是否生效。安装后旧窗口可能仍保留旧环境，新开窗口再检查更容易区分配置问题。源文件与可执行文件也要区分：main.rs 保存源码，常见的 main.exe 是构建产物，修改前者不会自动更新后者。终端中显示的错误阶段比安装目录是否存在更有诊断价值，应记录完整提示再选择处理步骤。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "rustc --version\ncargo --version\n# 在已准备的项目目录中检查源码\ncargo check\n",
+        "description": "从命令可达性过渡到项目检查，区分安装问题和源码问题。",
+        "result": "前两项显示版本；cargo check 在含 Cargo.toml 的目录中检查项目，并可能报告工具或源码错误。",
+        "reason": "Windows 安装器、PATH 与本机链接工具不能由课程解释器操作。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能在文件管理器看到 rustc.exe，却在终端调用失败，说明源码有错吗？",
+        "answer": "不能据此判断源码。应先检查 PATH 与当前终端环境，保证命令可以找到；找到后再检查工具链和项目。",
+        "hints": [
+          "文件存在不等于命令搜索路径包含它。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.01.03",
+      "sourceNodeId": "rust.source.root01.01.03",
+      "title": "更新与卸载",
+      "parent": "rust.book.root01.01",
+      "depth": 3,
+      "physicalPage": 31,
+      "printedPage": null,
+      "leaf": true,
+      "order": 5,
+      "group": 1,
+      "body": [
+        "rustup 管理的是开发工具链，而不是你的 Rust 项目。更新工具链会改变以后调用的编译器及配套工具，通常不需要重写项目源码；但复现旧结果时，仍应记录所用版本和构建配置，避免把环境变化误认成程序变化。",
+        "卸载属于另一类操作，会移除 rustup 所管理的工具及配置。学习时先辨认命令的作用，再在自己确有需要的环境中决定是否执行。不要把卸载当作日常清理项目产物的方法；项目的 target 目录与整个工具链不是同一个对象。更新前后的版本记录有助于重现问题，工具链维护与课程学习进度没有自动关联。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "rustup update\n# 以下命令用于卸载，阅读时不要随意执行\nrustup self uninstall\n",
+        "description": "比较维护现有工具链与移除工具链的两个命令。",
+        "result": "update 请求更新受管理的工具链；self uninstall 进入卸载流程。实际变化取决于当前安装和操作确认。",
+        "reason": "工具链更新与卸载属于宿主环境操作，本节只讲解命令含义。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想删掉某项目的旧构建产物，是否应该执行 rustup self uninstall？",
+        "answer": "不应该。该命令作用于工具链，不是单个项目的构建目录；清理项目应针对项目产物处理。",
+        "hints": [
+          "先确定命令管理的是项目还是工具链。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.01.04",
+      "sourceNodeId": "rust.source.root01.01.04",
+      "title": "常见问题",
+      "parent": "rust.book.root01.01",
+      "depth": 3,
+      "physicalPage": 31,
+      "printedPage": null,
+      "leaf": true,
+      "order": 6,
+      "group": 1,
+      "body": [
+        "排查安装问题时，应从最短的证据链开始：终端是否能找到命令，命令是否能启动，项目是否能检查或构建。rustc --version 成功说明编译器程序可用，但不能证明依赖下载、链接器和某个项目都已经准备就绪。",
+        "报告问题时，保留操作系统、工具版本、工作目录和完整错误文本，比只说“不能运行”更有帮助。命令未找到时先看 PATH；编译诊断指向源码时再检查对应行。把不同阶段的问题混在一起，会导致重复安装或无关改码，反而丢失真正线索。向他人求助前，应准备最小复现步骤，使对方能够知道失败发生在调用工具还是分析源码时。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "rustc --version\ncargo --version\n# 记录输出后，再在项目根目录执行\ncargo check\n",
+        "description": "按照命令查找、工具启动、项目检查的顺序收集诊断信息。",
+        "result": "版本查询和项目检查各提供一个阶段的结果；没有预先规定的固定版本号。",
+        "reason": "环境诊断依赖真实终端状态，网页解释器无法读取宿主 PATH 或安装清单。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "版本查询成功能否证明所有 Rust 程序都可构建？",
+        "answer": "不能。它未验证具体项目的源码、依赖、目标平台或链接器；还要查看项目实际检查和构建结果。",
+        "hints": [
+          "一个检查只能支持它实际覆盖的结论。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.01.05",
+      "sourceNodeId": "rust.source.root01.01.05",
+      "title": "本地文档",
+      "parent": "rust.book.root01.01",
+      "depth": 3,
+      "physicalPage": 32,
+      "printedPage": null,
+      "leaf": true,
+      "order": 7,
+      "group": 1,
+      "body": [
+        "标准库文档提供类型、方法、参数、返回值与示例，是确认接口行为的依据。安装了本地文档组件后，可以从工具链入口打开对应文档；离线查看有助于在网络不便时查明某个方法接受借用还是取得所有权。",
+        "查询时先定位类型，再阅读方法签名及错误约定，不要只复制示例中的一行调用。文档对应的是某个工具链版本，项目所用工具链与文档版本不一致时，需要重新确认接口。本课程以 Rust 2018 为教材参照，平台可执行部分则另外受支持子集约束。阅读接口时也应留意示例的前置条件，不能只按方法名推测副作用。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "rustup doc\n# 在打开的标准库文档中查找 String 与 push_str\n",
+        "description": "认识离线文档入口，并将类型签名用于判断接口用途。",
+        "result": "安装了文档组件的本机环境会尝试打开文档；可查到 String 的方法及示例，浏览器状态取决于本机配置。",
+        "reason": "打开宿主离线文档和任意标准库接口均不属于课程执行入口。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "文档存在某个 String 方法，是否表示本课程解释器也支持它？",
+        "answer": "不表示。文档描述标准 Rust 接口；平台仅实现冻结白名单，需要另查本课程的执行范围。",
+        "hints": [
+          "标准语言能力与教学执行子集是两个范围。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.02",
+      "sourceNodeId": "rust.source.root01.02",
+      "title": "Hello, World!",
+      "parent": "rust.book.root01",
+      "depth": 2,
+      "physicalPage": 33,
+      "printedPage": null,
+      "leaf": false,
+      "order": 8,
+      "group": 1,
+      "body": [
+        "第一个程序的价值在于看清完整路径：为源码选定目录，保存 main.rs，通过工具检查并生成产物，再启动生成的程序。接下来会拆解入口函数、花括号与输出宏，区分源码结构和终端操作。",
+        "阅读时尤其留意“修改源码”发生在哪一步。编译后的文件不会自动跟随编辑器变化，这一点能解释许多输出仍停留在旧版本的问题。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root01.02.01",
+      "sourceNodeId": "rust.source.root01.02.01",
+      "title": "创建一个文件夹",
+      "parent": "rust.book.root01.02",
+      "depth": 3,
+      "physicalPage": 33,
+      "printedPage": null,
+      "leaf": true,
+      "order": 9,
+      "group": 1,
+      "body": [
+        "把相关源文件放入明确的项目目录，可以让终端命令、编辑器和构建产物指向同一份程序。目录名本身没有特殊语义；重要的是知道当前工作目录，并把 main.rs 保存到预期位置，而不是只在编辑器里新建一个尚未落盘的标签页。",
+        "下面从当前目录创建 rust_notes 子目录，再进入其中。相对路径按当前目录解释；若在另一个终端执行相同命令，位置可能不同。遇到“找不到源文件”时，先核对终端位置和文件名，再检查代码内容。文件扩展名应为 .rs，注意隐藏扩展名造成的重复后缀。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "mkdir rust_notes\ncd rust_notes\n# 将源文件保存为当前目录下的 main.rs\n",
+        "description": "用独立目录将终端位置与源文件保存位置对齐。",
+        "result": "若创建成功，终端随后位于 rust_notes 中；保存源码仍需在编辑器中完成。",
+        "reason": "课程页面不创建宿主文件夹，也不读取编辑器文件。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "编辑器中有 main.rs，终端却找不到它，首先核对哪两处位置？",
+        "answer": "核对文件实际保存路径和终端当前工作目录。相对路径查找发生在终端目录，不会自动使用编辑器所在位置。",
+        "hints": [
+          "“打开着”与“保存在当前目录”不同。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.02.02",
+      "sourceNodeId": "rust.source.root01.02.02",
+      "title": "编写并运行一个Rust程序",
+      "parent": "rust.book.root01.02",
+      "depth": 3,
+      "physicalPage": 34,
+      "printedPage": null,
+      "leaf": true,
+      "order": 10,
+      "group": 1,
+      "body": [
+        "可执行 Rust 程序从 main 进入，函数体内的语句按控制流执行。println! 负责格式化输出，字符串里的 {} 按顺序接收后面的值。把输出写在函数体中，才能区分程序运行后的文本与编辑器中看到的源代码。",
+        "本节运行例先读入一行整数，再输出 Rust 与这个数。read_line 保存文本，trim 去掉两端空白，parse 将文本转成 i32；因此输入 4 与输出 Rust 4 是不同阶段的数据。缺少有效整数会导致解析失败，不会自动用零代替。先用有效输入观察输出，再辨认读取、转换和展示各自的位置。格式字符串中的固定文字始终保持不变，变化的是传给占位符的本次解析结果。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    println!(\"Rust {}\", n);\n}\n",
+        "description": "读入一个i32整数，按 Rust n 的格式输出一行，末尾保留换行。",
+        "result": "四组输入分别产生：\n输入 '0'：'Rust 0\\n'\n输入 '1'：'Rust 1\\n'\n输入 '4'：'Rust 4\\n'\n输入 '9'：'Rust 9\\n'",
+        "cases": [
+          {
+            "input": "0\n",
+            "expected": "Rust 0\n",
+            "requiredFeatures": [
+              "output"
+            ]
+          },
+          {
+            "input": "1\n",
+            "expected": "Rust 1\n",
+            "requiredFeatures": [
+              "output"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "Rust 4\n",
+            "requiredFeatures": [
+              "output"
+            ]
+          },
+          {
+            "input": "9\n",
+            "expected": "Rust 9\n",
+            "requiredFeatures": [
+              "output"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root01.02.02.exercise",
+        "prompt": "读入一个i32整数，按 Rust n 的格式输出一行，末尾保留换行。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "虚拟输入是单独一行整数。",
+          "用{}格式项显示变量n。",
+          "标签与整数之间保留一个空格。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.02.03",
+      "sourceNodeId": "rust.source.root01.02.03",
+      "title": "对这个程序的剖析",
+      "parent": "rust.book.root01.02",
+      "depth": 3,
+      "physicalPage": 35,
+      "printedPage": null,
+      "leaf": true,
+      "order": 11,
+      "group": 1,
+      "body": [
+        "fn 用来声明函数，main 是可执行程序的入口名称。圆括号在这里表示没有参数，花括号限定函数体；缩进使人更容易辨认结构，但决定边界的是符号。语句通常以分号结束，遗漏括号或引号会在运行前造成语法问题。",
+        "println! 末尾的感叹号表示它是宏调用，不能将它与普通函数完全等同。这里的宏负责把格式字符串和参数组合成输出，并在末尾添加换行。下面保留两次输出，便于按源码顺序预测两行结果。注释只帮助阅读，不会成为程序输出的一部分。花括号和圆括号各有配对关系，修改程序结构后应先确认它们仍然对应。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    println!(\"起点\");\n    // 每个占位符对应一个后续参数\n    println!(\"第 {} 步\", 2);\n}\n",
+        "description": "拆分入口函数内的两条输出语句，辨认宏调用和参数对应。",
+        "result": "按顺序产生“起点”和“第 2 步”两行文本。",
+        "reason": "这是入口语法阅读例，本叶未绑定单独的执行和判题配置。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删去注释会少输出一行吗？println 后的 ! 又表示什么？",
+        "answer": "不会少输出；注释不执行。! 标记宏调用，它与后面的括号、格式字符串共同组成这里的输出语法。",
+        "hints": [
+          "只统计真正的输出语句。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.02.04",
+      "sourceNodeId": "rust.source.root01.02.04",
+      "title": "编译与运行是两个不同的步骤",
+      "parent": "rust.book.root01.02",
+      "depth": 3,
+      "physicalPage": 36,
+      "printedPage": null,
+      "leaf": true,
+      "order": 12,
+      "group": 1,
+      "body": [
+        "编译把保存好的 Rust 源码转换成目标平台的程序，运行则启动已经生成的产物。这两个阶段有先后关系：语法或类型检查失败时，不能把旧可执行文件的输出算作新代码运行成功。源文件仍然存在，编译不会把它替换为程序。",
+        "修改 main.rs 后，需要重新构建才会得到对应的新产物。Windows 与类 Unix 系统的启动写法和产物后缀可能不同，但这个因果关系相同。使用 Cargo 的运行命令会代为检查构建是否需要更新；手动执行旧文件则没有这层保证，排查输出不变时应先核对构建是否成功。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "rustc main.rs\n# Linux/macOS：编译成功后运行 ./main\n# Windows PowerShell：编译成功后运行 .\\main.exe\n",
+        "description": "区分生成程序与启动程序，并标明两种平台的启动形式。",
+        "result": "rustc 成功时生成对应目标产物；只有随后启动产物，才会出现源码定义的运行输出。",
+        "reason": "本机 rustc 编译和可执行文件启动不由浏览器课程执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "改了输出文字，但编译失败后继续打开旧程序，旧输出能证明新代码有效吗？",
+        "answer": "不能。那是先前产物的行为；新源码必须先成功构建，再运行相应产物。",
+        "hints": [
+          "先确认实际启动的是哪一次构建生成的文件。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.03",
+      "sourceNodeId": "rust.source.root01.03",
+      "title": "Hello, Cargo!",
+      "parent": "rust.book.root01",
+      "depth": 2,
+      "physicalPage": 39,
+      "printedPage": null,
+      "leaf": false,
+      "order": 13,
+      "group": 1,
+      "body": [
+        "Cargo 将源码约定、包清单、依赖解析和构建命令连成一个工作流。先创建工程并辨认 Cargo.toml 与 src/main.rs，再比较 check、build、run 的职责，最后了解发布构建的取舍。",
+        "学习重点是根据目的选择命令，而不是记住一次输出的耗时或版本号。课程平台只运行受支持的单文件程序，Cargo 工程知识保留为本地开发阅读。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root01.03.01",
+      "sourceNodeId": "rust.source.root01.03.01",
+      "title": "使用Cargo创建一个项目",
+      "parent": "rust.book.root01.03",
+      "depth": 3,
+      "physicalPage": 39,
+      "printedPage": null,
+      "leaf": true,
+      "order": 14,
+      "group": 1,
+      "body": [
+        "Cargo 工程用目录约定组织文件：Cargo.toml 描述包名、版本、版次与依赖，src/main.rs 通常是二进制目标的入口。TOML 清单不是 Rust 源码，不能把函数放进清单，也不能把依赖表写进 main 函数。",
+        "创建项目后，应先查看生成的结构，再修改入口源码。Cargo 可能依据参数或现有仓库环境处理版本管理配置，因此不能只凭是否出现 .git 判断工程是否正确。下面显式选择不初始化版本库，便于把注意力放在包清单和入口上；创建操作仍只在自己的终端中发生。本章显式采用二零一八版次作为阅读基线，实际生成清单的版次字段应单独核对。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo new lesson_box --edition 2018 --vcs none\ncd lesson_box\n# 阅读 Cargo.toml 与 src/main.rs\n",
+        "description": "创建一个二进制工程并定位清单和入口源码。",
+        "result": "成功时出现 lesson_box 目录，其中包含 Cargo.toml 和 src/main.rs；具体生成细节取决于工具链版本。",
+        "reason": "平台不创建 Cargo 工程，也不执行宿主文件写入。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "新增一个依赖的声明和 main 函数，分别应放在哪里？",
+        "answer": "依赖写入 Cargo.toml 的相应表，main 函数写入 src/main.rs。清单用于配置构建，源码用于描述程序行为。",
+        "hints": [
+          "先区分构建配置语言与 Rust 代码。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.03.02",
+      "sourceNodeId": "rust.source.root01.03.02",
+      "title": "使用Cargo构建和运行项目",
+      "parent": "rust.book.root01.03",
+      "depth": 3,
+      "physicalPage": 42,
+      "printedPage": null,
+      "leaf": true,
+      "order": 15,
+      "group": 1,
+      "body": [
+        "cargo check 主要检查项目能否通过分析，cargo build 生成构建产物，cargo run 在需要时先构建再启动目标。三者面对同一工程，但提供的结果不同；check 成功不是已经获得新可执行文件的证明，也不说明运行输出符合需求。",
+        "默认开发构建通常位于 target/debug，Cargo.lock 记录解析出的依赖版本。源码和清单应由开发者维护，锁文件一般由 Cargo 管理。执行命令前应位于包目录或明确指定清单位置。遇到没有找到 Cargo.toml 的提示，先检查工作目录，不必立刻修改源代码。构建产物应与源码版本一同辨认，不能凭目标目录中已有文件就认为本次构建成功。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo check\ncargo build\ncargo run\n",
+        "description": "在已有工程根目录比较检查、生成产物和启动目标三个阶段。",
+        "result": "check 给出检查结果，build 生成开发构建，run 启动选定目标并展示它的输出。",
+        "reason": "Cargo 构建、锁文件和本机目标程序均属于课程解释器以外的工程流程。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只想快速发现类型错误，应优先使用哪个命令？它会替代运行验证吗？",
+        "answer": "可先用 cargo check；它不替代运行验证，因为通过检查不保证输入输出和算法结果正确。",
+        "hints": [
+          "静态检查与运行行为分别提供证据。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.03.03",
+      "sourceNodeId": "rust.source.root01.03.03",
+      "title": "以Release模式进行构建",
+      "parent": "rust.book.root01.03",
+      "depth": 3,
+      "physicalPage": 44,
+      "printedPage": null,
+      "leaf": true,
+      "order": 16,
+      "group": 1,
+      "body": [
+        "发布构建通过 release 配置对代码进行优化，通常把产物放在 target/release。优化会增加构建成本，目的是改善最终程序的运行表现；不能把“编译花得更久”直接理解为程序运行更慢，两个时间测量的是不同工作。",
+        "比较性能时，应使用同样的输入和构建配置，并记录实际产物。开发配置和发布配置还可能在调试信息及检查选项上不同，不能假定所有错误表现完全一致。本平台的 i32 运算按冻结教学配置检查溢出，不能用本地 release 的某次现象覆盖课程执行语义。同样的程序名称也可能对应不同目录下的产物，记录实际启动路径能避免误用旧构建。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo build --release\ncargo run --release\n",
+        "description": "用发布配置生成并运行目标，辨认配置与产物目录的关系。",
+        "result": "成功时发布产物位于 target/release；具体耗时、体积和性能要由实际构建测量。",
+        "reason": "本节涉及 Cargo 优化配置和宿主产物，平台解释器没有 release 构建模式。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "默认 cargo run 与 cargo run --release 的耗时可以直接当作同一种性能数据吗？",
+        "answer": "不可以。它们可能包含不同配置的编译成本及不同产物的运行成本，应分别记录构建和运行条件。",
+        "hints": [
+          "明确你计时的是构建、启动还是程序主体。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.03.04",
+      "sourceNodeId": "rust.source.root01.03.04",
+      "title": "学会习惯Cargo",
+      "parent": "rust.book.root01.03",
+      "depth": 3,
+      "physicalPage": 44,
+      "printedPage": null,
+      "leaf": true,
+      "order": 17,
+      "group": 1,
+      "body": [
+        "采用统一的 Cargo 目录和命令，可以减少“这个项目该怎样构建”的重复沟通。拿到工程时先查看清单、说明和目标类型，再决定是检查、构建还是运行；不是每个包都有可直接启动的二进制入口，库包也可以有测试和示例。",
+        "依赖、锁文件和版次共同影响工程解释方式。阅读别人项目时，应将源码问题与依赖获取问题分开，避免通过随意删锁文件掩盖环境差异。下面的命令只展示已有本地工程的检查顺序，不要求获取任何远端代码，也不表示课程平台会下载依赖。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo metadata --no-deps --format-version 1\ncargo check\n# 结合项目说明选择 build、run 或 test\n",
+        "description": "从工程元数据开始确认包和目标，再选择适当命令。",
+        "result": "metadata 给出包与目标的结构信息；check 报告检查结果，后续操作由工程实际目标决定。",
+        "reason": "Cargo 元数据及多目标工程不在平台单文件解释器范围内。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "面对只有 src/lib.rs 的包，是否能认定 cargo run 一定有默认程序可启动？",
+        "answer": "不能。src/lib.rs 通常是库目标；应先查看是否还定义了二进制目标或示例，再选择运行入口。",
+        "hints": [
+          "包、库目标与可执行目标不是同一概念。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root01.04",
+      "sourceNodeId": "rust.source.root01.04",
+      "title": "总结",
+      "parent": "rust.book.root01",
+      "depth": 2,
+      "physicalPage": 46,
+      "printedPage": null,
+      "leaf": true,
+      "order": 18,
+      "group": 1,
+      "body": [
+        "本章形成了从源码到结果的最短工作流：准备工具，选择目录，保存入口文件，检查或构建，然后启动对应产物。rustup 管理工具链，rustc 负责编译，Cargo 协调工程；把这三者的职责分开，遇到问题才知道该查看哪一层的证据。",
+        "现在可以用一个没有依赖的输出程序回顾入口、宏和分号。先手工预测结果，再说明本地运行需要经过哪些步骤。随后猜数游戏会加入输入、解析和控制流；它包含的标准库及第三方库能力比平台执行子集更广，学习范围与可运行范围要分别辨认。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let chapter: i32 = 1;\n    println!(\"完成第 {} 章的入口阅读\", chapter);\n}\n",
+        "description": "用带参数的输出复习第一章源码结构。",
+        "result": "预期产生一行“完成第 1 章的入口阅读”。",
+        "reason": "本叶是工具流程总结阅读例，未配置独立运行活动。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "请按顺序列出：已修改源码后，手动使用 rustc 获得新输出需要做什么？",
+        "answer": "先保存 main.rs，再成功编译它，最后启动本次生成的可执行文件；编译失败时旧产物不能代表新代码。",
+        "hints": [
+          "不要跳过保存和重新构建。"
+        ]
+      }
+    }
+  ]
+}

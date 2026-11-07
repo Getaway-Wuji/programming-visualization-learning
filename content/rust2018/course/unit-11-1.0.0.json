@@ -1,0 +1,505 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 11,
+  "nodes": [
+    {
+      "id": "rust.book.root11",
+      "sourceNodeId": "rust.source.root11",
+      "title": "第11章 编写自动化测试",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 313,
+      "printedPage": null,
+      "leaf": false,
+      "order": 174,
+      "group": 11,
+      "body": [
+        "编译器能排除很多类型和借用错误，却不会替你判断折扣公式、搜索条件或边界比较是否符合需求。自动化测试把这些期望写成可重复运行的检查，在修改实现后及时暴露行为变化。",
+        "本章从测试函数与断言开始，进一步控制筛选、并行和输出，再区分贴近实现的单元测试与面向公开接口的集成测试。阅读例展示标准 Cargo 测试机制，课程平台不会启动宿主测试进程。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root11.01",
+      "sourceNodeId": "rust.source.root11.01",
+      "title": "如何编写测试",
+      "parent": "rust.book.root11",
+      "depth": 2,
+      "physicalPage": 315,
+      "printedPage": null,
+      "leaf": false,
+      "order": 175,
+      "group": 11,
+      "body": [
+        "一个清楚的测试先准备输入，再调用被测逻辑，最后检查可观察结果。测试名称和失败消息应说明约定，避免只验证某一行代码恰好执行过，却没有验证其结果。",
+        "下面比较布尔断言、相等断言、预期 panic 与返回 Result 的测试。选择哪一种取决于要描述的行为；故意失败的样例只为理解诊断，不能当作产品代码已经通过验证的证据。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root11.01.01",
+      "sourceNodeId": "rust.source.root11.01.01",
+      "title": "测试函数的构成",
+      "parent": "rust.book.root11.01",
+      "depth": 3,
+      "physicalPage": 315,
+      "printedPage": null,
+      "leaf": true,
+      "order": 176,
+      "group": 11,
+      "body": [
+        "带 #[test] 属性的无参数函数会被测试工具发现，cargo test 构建测试目标并调用它。普通 main 中调用的函数不会仅因名字含有 test 就成为自动化测试；属性和构建方式共同决定是否参与测试。",
+        "测试要包含明确判断，否则“没有 panic”可能只说明代码走了一遍。应让函数名称描述行为，准备尽量小的输入，并避免依赖别的测试先运行。下面把翻倍函数与一个测试放在同一文件，main 仅用于保证阅读样例是完整程序；使用测试模式时才会由测试工具发现 doubles_positive。",
+        "一个测试即使能够通过，也应检查它是否会在实现出现预期缺陷时失败，否则可能只是没有有效判断。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn double(value: i32) -> i32 { value * 2 }\n#[cfg(test)]\nmod tests {\n    use super::double;\n    #[test]\n    fn doubles_positive() { assert_eq!(double(6), 12); }\n}\nfn main() { println!(\"{}\", double(6)); }",
+        "description": "区分普通入口与测试入口。",
+        "result": "普通入口输出 12；标准测试模式下 doubles_positive 应通过。此处只给出预期。",
+        "reason": "平台没有 #[test] 发现、条件编译或 Cargo 测试目标执行能力。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把函数命名为 test_double，却不写 #[test]，是否就会自动运行？",
+        "answer": "不会。普通函数名不注册测试，需要测试属性及相应测试构建；调用函数和测试发现是不同机制。",
+        "hints": [
+          "检查测试的注册信息。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.01.02",
+      "sourceNodeId": "rust.source.root11.01.02",
+      "title": "使用assert!宏检查结果",
+      "parent": "rust.book.root11.01",
+      "depth": 3,
+      "physicalPage": 319,
+      "printedPage": null,
+      "leaf": true,
+      "order": 177,
+      "group": 11,
+      "body": [
+        "assert! 用布尔条件表达程序约定，条件为 true 时继续，为 false 时触发 panic。测试工具把意外 panic 记录为失败，因此布尔返回的业务规则适合直接用断言描述，负向规则则应明确使用取反。",
+        "只测一个成功样例可能漏掉边界反转，例如把“大于等于”误写成“大于”。测试应围绕约定选择临界值，并保持每个条件能单独解释。下面检查正数资格，同时覆盖零和负数；这些用例不是穷举所有整数，而是针对分类边界提供清楚的保护。",
+        "正向和反向样例应分别说明含义，尤其是边界两侧，避免多个相似成功输入提供大量重复而薄弱的证据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn eligible(value: i32) -> bool { value > 0 }\n#[cfg(test)]\nmod tests {\n    use super::eligible;\n    #[test]\n    fn excludes_zero_and_negative() {\n        assert!(eligible(1));\n        assert!(!eligible(0));\n        assert!(!eligible(-1));\n    }\n}\nfn main() { println!(\"{}\", eligible(0)); }",
+        "description": "用边界输入检查一个布尔规则。",
+        "result": "普通入口输出 false；三项断言按定义均成立。",
+        "reason": "assert! 与测试属性属于标准 Rust 阅读机制，平台不执行此测试模块。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若把 value > 0 改为 value >= 0，哪个检查会先揭示变化？",
+        "answer": "对 eligible(0) 取反的断言会失败，因为零被错误纳入有效范围；正数样例仍会通过。",
+        "hints": [
+          "找与比较符号边界直接相邻的值。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.01.03",
+      "sourceNodeId": "rust.source.root11.01.03",
+      "title": "使用assert_eq!宏和assert_ne!宏判断相等性",
+      "parent": "rust.book.root11.01",
+      "depth": 3,
+      "physicalPage": 322,
+      "printedPage": null,
+      "leaf": true,
+      "order": 178,
+      "group": 11,
+      "body": [
+        "assert_eq! 检查两个表达式相等，assert_ne! 检查它们不等，失败时会显示参与比较的值，比只得到一个 false 更利于诊断。为让这些消息可打印，自定义类型通常还需实现 Debug，比较本身则依赖 PartialEq。",
+        "不相等断言只能排除指定错误结果，不能证明得到唯一正确答案。验证总价时最好直接断言正确值，另用不等断言描述确有意义的区别。下面对一段明确的计数变化检查前后状态；derive 生成结构体的比较与调试能力，不会自动保证业务逻辑正确。",
+        "失败时展示的值来自表达式实际结果，若结构体有重要字段，应保证调试表示足以揭示差异而非隐藏问题。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "#[derive(Debug, PartialEq)]\nstruct Count(i32);\nfn main() {\n    let before = Count(3);\n    let after = Count(4);\n    assert_eq!(after, Count(4));\n    assert_ne!(before, after);\n    println!(\"{:?}\", after);\n}",
+        "description": "比较自定义值，并保留失败时所需的调试表示。",
+        "result": "两项断言成立，输出 Count(4)。",
+        "reason": "derive、结构体比较与 assert_eq!/assert_ne! 宏不在平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只检查结果不等于 0，能否证明它等于预期的 12？",
+        "answer": "不能，许多错误值也不等于零；应直接使用相等断言表达预期答案，再补充其他有价值的性质。",
+        "hints": [
+          "排除一个值不等于确定正确值。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.01.04",
+      "sourceNodeId": "rust.source.root11.01.04",
+      "title": "添加自定义的错误提示信息",
+      "parent": "rust.book.root11.01",
+      "depth": 3,
+      "physicalPage": 325,
+      "printedPage": null,
+      "leaf": true,
+      "order": 179,
+      "group": 11,
+      "body": [
+        "断言失败消息应补充定位问题所需的输入与语境，例如哪组数据、原本期待的关系以及实际输出。只写“失败了”没有增加信息，复制大量与失败无关的状态也会让诊断更难阅读。",
+        "格式化参数可以放在断言必要参数之后，在失败时给出定制说明。消息应描述业务约定，避免把某个实现步骤写成永恒要求。下面故意让条件失败，展示如何报告请求编号与实际值；这份样例明确用于阅读失败路径，不表示已经在平台执行，也不把故意失败视为测试通过。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let request_id = 17;\n    let actual = 9;\n    // 故意失败，用于阅读诊断。\n    assert!(actual >= 10, \"request {} expected at least 10, got {}\", request_id, actual);\n}",
+        "description": "用简洁上下文帮助定位一次故意触发的断言失败。",
+        "result": "标准 Rust 运行会 panic，消息包含 request 17 expected at least 10, got 9；具体前缀和行号依工具链而异。",
+        "reason": "平台不实现自定义 assert! 格式化诊断与宿主 panic 报告。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么 request 17 的信息比只写 assertion failed 更有帮助？",
+        "answer": "它把失败与具体输入关联起来，并同时报告阈值和实际值，便于重现与判断条件是否写对。",
+        "hints": [
+          "错误消息应让另一个人能够定位输入。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.01.05",
+      "sourceNodeId": "rust.source.root11.01.05",
+      "title": "使用should_panic检查panic",
+      "parent": "rust.book.root11.01",
+      "depth": 3,
+      "physicalPage": 327,
+      "printedPage": null,
+      "leaf": true,
+      "order": 180,
+      "group": 11,
+      "body": [
+        "当接口约定非法输入必须 panic，测试可以标注 #[should_panic]，让未发生 panic 反而成为失败。只要求任意 panic 容易误通过：准备代码或其他缺陷引发的停止，也可能满足宽泛条件。",
+        "expected 参数用来检查 panic 消息包含指定片段，能把测试更紧地绑定到目标错误，但仍不能代替清晰的测试步骤。下面只调用一次目标函数，让非法等级触发带领域含义的消息；合法输入应另写普通测试。预期 panic 测试不能与返回 Result 的测试方式混用。",
+        "消息片段不要过宽，也不宜绑定无关的系统行号；它应能识别领域约定，同时允许实现作合理整理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn level(value: i32) -> i32 {\n    if value < 1 { panic!(\"level must be positive\"); }\n    value\n}\n#[cfg(test)]\nmod tests {\n    use super::level;\n    #[test]\n    #[should_panic(expected = \"level must be positive\")]\n    fn rejects_zero() { level(0); }\n}\nfn main() { println!(\"{}\", level(2)); }",
+        "description": "让测试只接受目标错误约定的 panic。",
+        "result": "普通入口输出 2；测试模式下 rejects_zero 因目标 panic 符合预期而应通过。",
+        "reason": "平台未实现 should_panic、测试工具及 Rust panic 消息匹配。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "用越界访问意外引发 panic，会自动证明 level 的校验正确吗？",
+        "answer": "不会。任意 panic 可能掩盖目标校验缺失；应缩小测试步骤并检查有区分度的 expected 消息。",
+        "hints": [
+          "判断停止究竟发生在哪一步。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.01.06",
+      "sourceNodeId": "rust.source.root11.01.06",
+      "title": "使用Result<T, E>编写测试",
+      "parent": "rust.book.root11.01",
+      "depth": 3,
+      "physicalPage": 331,
+      "printedPage": null,
+      "leaf": true,
+      "order": 181,
+      "group": 11,
+      "body": [
+        "测试函数也可以返回 Result<(), E>，以 Ok(()) 表示成功，以 Err 表示失败。这样准备步骤中可能失败的操作能用问号传播错误，减少仅为取值而写的 unwrap，但错误类型仍要与返回接口兼容并满足测试工具要求。",
+        "这种测试仍可使用断言，不能与 should_panic 混搭来表达同一测试的期望。若要验证某操作确实返回 Err，应主动匹配或检查该结果，而不是用问号把预期失败传播成测试失败。下面解析固定数据，再用清晰的 Err 说明业务判断不成立时的原因。",
+        "返回错误时说明测试目标与实际差异，能比只传播底层格式错误更快定位，但不能丢失关键失败原因。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "#[cfg(test)]\nmod tests {\n    #[test]\n    fn parses_expected_count() -> Result<(), String> {\n        let value = \"12\".parse::<i32>().map_err(|e| e.to_string())?;\n        if value == 12 { Ok(()) } else { Err(String::from(\"wrong count\")) }\n    }\n}\nfn main() {}",
+        "description": "让测试准备步骤自然传播解析错误。",
+        "result": "标准测试模式中解析得到 12，返回 Ok(())，该测试应通过。普通 main 没有输出。",
+        "reason": "平台不执行 Result 返回测试函数、map_err 闭包和 Cargo 测试框架。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想验证输入 bad 会解析失败，直接对 parse 结果写 ? 合适吗？",
+        "answer": "不合适。问号会把这次预期失败作为测试错误返回；应检查结果是 Err，才正确表达目标行为。",
+        "hints": [
+          "预期的失败也可以是测试的成功条件。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.02",
+      "sourceNodeId": "rust.source.root11.02",
+      "title": "控制测试的运行方式",
+      "parent": "rust.book.root11",
+      "depth": 2,
+      "physicalPage": 332,
+      "printedPage": null,
+      "leaf": false,
+      "order": 182,
+      "group": 11,
+      "body": [
+        "运行测试时有两类参数：Cargo 自己用于选择目标和构建，测试程序用于筛选、线程与输出。双连字符把后者传给测试程序，理解分界能避免把选项交给错误的一层。",
+        "以下命令只用于说明标准测试工具的调用方式，均有明确前提。测试名称、通过数量与耗时依项目而定，不能把阅读中的预期当作本机已经产生的验证结果。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root11.02.01",
+      "sourceNodeId": "rust.source.root11.02.01",
+      "title": "并行或串行地进行测试",
+      "parent": "rust.book.root11.02",
+      "depth": 3,
+      "physicalPage": 332,
+      "printedPage": null,
+      "leaf": true,
+      "order": 183,
+      "group": 11,
+      "body": [
+        "测试通常可以并行执行，因此不同测试不能依赖隐含的先后次序。共同写同一个临时文件、改进程环境变量或操作共享全局状态，都可能造成偶发失败：各测试单独通过，并不保证同时运行也通过。",
+        "将测试线程数设为一可以帮助诊断共享资源冲突，但不会自动修复脆弱的设计，也不保证按你希望的业务顺序运行。更可靠的做法是让每个测试拥有独立输入与临时目录，必要时显式同步。下面的选项传给测试程序，适用于已经有标准 Cargo 测试目标的项目。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo test -- --test-threads=1",
+        "description": "限制同一个测试程序的测试执行线程数。",
+        "result": "在有测试的 Cargo 项目中，测试程序按单线程执行；实际测试数和结果取决于项目。本课程未运行该命令。",
+        "reason": "平台没有宿主线程调度和 Cargo 测试程序，命令只可阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "使用单线程选项后，测试 A 能否依赖测试 B 必须先建立文件？",
+        "answer": "不能。测试仍应彼此独立，线程数设置不构成测试间的顺序契约；准备文件应在各测试自己的准备步骤中完成。",
+        "hints": [
+          "串行执行与规定业务顺序是不同承诺。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.02.02",
+      "sourceNodeId": "rust.source.root11.02.02",
+      "title": "显示函数输出",
+      "parent": "rust.book.root11.02",
+      "depth": 3,
+      "physicalPage": 333,
+      "printedPage": null,
+      "leaf": true,
+      "order": 184,
+      "group": 11,
+      "body": [
+        "测试工具通常捕获输出，避免成功用例的调试文字淹没摘要。失败时查看捕获内容可以辅助理解上下文；想在调试时直接看到输出，可将 --nocapture 传给测试程序。",
+        "输出是否出现不应作为测试成功的唯一判断，最终仍要由断言或返回值表达约定。多个测试并行打印时，行之间可能交错，不能据显示顺序推导调用顺序。需要更清楚的临时诊断时，可以同时限制线程数，但完成调试后仍应消除共享状态依赖，而不是永久依赖控制台观察。",
+        "调试结束后可以移除临时打印，保留能直接判断约定的断言，使之后的自动检查无需人工逐行阅读日志。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo test -- --nocapture --test-threads=1",
+        "description": "显示测试打印内容，并减轻并行输出交错。",
+        "result": "测试运行时可见其打印内容；只改变输出和线程选项，不会让原本失败的断言变成功。具体文本依测试而定。",
+        "reason": "平台不运行 libtest，也没有宿主测试输出捕获通道。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "开启 --nocapture 后看到正确文字，是否说明所有测试已通过？",
+        "answer": "不能。应查看测试结果并确认目标断言成立；打印可能发生在后续失败之前，也可能只来自部分测试。",
+        "hints": [
+          "诊断输出是线索，断言结果才是判断依据。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.02.03",
+      "sourceNodeId": "rust.source.root11.02.03",
+      "title": "只运行部分特定名称的测试",
+      "parent": "rust.book.root11.02",
+      "depth": 3,
+      "physicalPage": 335,
+      "printedPage": null,
+      "leaf": true,
+      "order": 185,
+      "group": 11,
+      "body": [
+        "开发某个功能时，可以用名称过滤只运行相关测试，缩短反馈时间。普通过滤采用名字匹配，完整名称包含模块路径，所以一个短片段可能同时选中多个测试；检查摘要中的过滤数量有助于确认范围。",
+        "局部筛选适合迭代开发，但不能代替修改完成后的相关回归。函数名称重命名后，旧过滤词可能一个测试都没选中，命令成功结束也就没有提供预期保护。下面分别给出片段筛选与完整名称精确筛选，第二条中假设模块和函数名称确实存在。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo test parse\ncargo test tests::parses_expected_count -- --exact",
+        "description": "比较名称片段筛选与指定完整名称的精确筛选。",
+        "result": "第一条选择名字含 parse 的测试；第二条只选择完整名 tests::parses_expected_count。若不存在匹配，可能没有任何测试执行，应检查摘要。",
+        "reason": "平台不支持 Cargo 测试发现与名称过滤。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "命令退出成功但显示运行 0 个测试，能否宣称目标逻辑已被验证？",
+        "answer": "不能。筛选可能未命中，应核对完整名称、模块路径和过滤选项，确保实际执行了目标测试。",
+        "hints": [
+          "先确认命中数量，再解读通过结果。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.02.04",
+      "sourceNodeId": "rust.source.root11.02.04",
+      "title": "通过显式指定来忽略某些测试",
+      "parent": "rust.book.root11.02",
+      "depth": 3,
+      "physicalPage": 337,
+      "printedPage": null,
+      "leaf": true,
+      "order": 186,
+      "group": 11,
+      "body": [
+        "耗时或需要额外环境的测试可以用 #[ignore] 标注，正常测试时仍会编译但不执行。这样快速反馈与较慢检查可以分开安排，前提是被忽略的测试有明确运行方式和维护责任，不能让 ignore 成为永久隐藏失败的手段。",
+        "运行 cargo test -- --ignored 可选择这些被标注的测试。要区分“忽略”“过滤掉”“通过”三种状态，它们提供的证据不同。下面用一个简单断言演示属性，并没有用真的长时间任务占用环境；阅读时重点核对何时被发现、何时被执行。",
+        "若忽略原因已经消失，应及时恢复默认执行；否则测试仍存在于仓库，却可能长期没有提供行为验证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "#[cfg(test)]\nmod tests {\n    #[test]\n    #[ignore]\n    fn extended_fixture_check() { assert_eq!(20 + 22, 42); }\n}\nfn main() {}",
+        "description": "标注一个默认跳过但仍受编译检查的测试。",
+        "result": "普通 cargo test 将此测试标为 ignored；加 -- --ignored 后才执行，断言按代码应成立。",
+        "reason": "平台没有测试属性与忽略测试的选择机制。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "#[ignore] 是否让测试代码完全不参与编译？",
+        "answer": "不是。它主要控制测试是否执行，代码仍需通过对应测试目标的编译，因此类型错误不会因 ignore 自动消失。",
+        "hints": [
+          "把编译与执行分成两个阶段。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.03",
+      "sourceNodeId": "rust.source.root11.03",
+      "title": "测试的组织结构",
+      "parent": "rust.book.root11",
+      "depth": 2,
+      "physicalPage": 339,
+      "printedPage": null,
+      "leaf": false,
+      "order": 187,
+      "group": 11,
+      "body": [
+        "单元测试靠近模块，可以细查内部边界；集成测试站在库的外部，用公开 API 验证组件协作。这两种视角服务于不同问题，不能只用私有函数测试替代使用者真正经过的路径。",
+        "组织测试时应明确每份文件生成什么测试目标、共享准备代码如何放置。小而独立的单元用例帮助定位，少量有代表性的集成场景保护公开行为。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root11.03.01",
+      "sourceNodeId": "rust.source.root11.03.01",
+      "title": "单元测试",
+      "parent": "rust.book.root11.03",
+      "depth": 3,
+      "physicalPage": 339,
+      "printedPage": null,
+      "leaf": true,
+      "order": 188,
+      "group": 11,
+      "body": [
+        "单元测试通常与被测模块放在同一源文件的 tests 子模块中，并用 #[cfg(test)] 限制到测试构建。子模块可以访问父模块的私有条目，因此能直接检查局部边界，而无需为了测试把内部函数公开。",
+        "这种便利也容易让测试过度依赖实现细节。应优先验证稳定的业务约定，只有私有辅助逻辑具有独立复杂性时才直接测试它；重构内部结构不应让所有测试无谓重写。下面检查私有税额函数的一个精确样例，避免把浮点舍入或外部状态混进这个小目标。",
+        "对私有细节的检查应保持小而集中，使一次局部失败能直接指向目标约定，减少复杂准备掩盖真实原因。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn fee(amount: i32) -> i32 { amount / 10 }\n#[cfg(test)]\nmod tests {\n    use super::fee;\n    #[test]\n    fn fee_for_whole_tens() { assert_eq!(fee(80), 8); }\n}\nfn main() { println!(\"{}\", fee(80)); }",
+        "description": "子模块直接测试私有业务函数。",
+        "result": "普通入口输出 8；测试模式下 fee_for_whole_tens 应通过。",
+        "reason": "平台未实现 cfg(test)、测试子模块或宿主测试编译。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为了同文件单元测试访问 fee，必须把它声明成 pub 吗？",
+        "answer": "不必。tests 是父模块的子模块，可以按模块隐私规则访问父模块私有条目，公开接口不应仅为测试而扩大。",
+        "hints": [
+          "看测试模块与函数的父子关系。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.03.02",
+      "sourceNodeId": "rust.source.root11.03.02",
+      "title": "集成测试",
+      "parent": "rust.book.root11.03",
+      "depth": 3,
+      "physicalPage": 341,
+      "printedPage": null,
+      "leaf": true,
+      "order": 189,
+      "group": 11,
+      "body": [
+        "集成测试放在包根目录的 tests 中，从外部 crate 的视角导入库，因此只能使用公开接口。每个直接的测试文件通常作为独立测试目标构建，有助于发现模块各自正确但公开组合方式不正确的问题。",
+        "公共准备逻辑可放进 tests/common/mod.rs，避免把辅助文件误当作独立集成测试目标。只有二进制入口而没有库目标时，不能像导入库那样直接 use 其内部函数，宜把核心逻辑提取到 src/lib.rs。下面给出一个两文件布局，假设 Cargo 包名为 reading_math，刻意不依赖私有函数。",
+        "共享准备模块应只协助建立输入，不把关键断言藏得过深，否则测试文件看似简洁，却难以看出检查目标。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "// Cargo.toml 的 package.name = \"reading_math\"\n// src/lib.rs\npub fn total(a: i32, b: i32) -> i32 { a + b }\n\n// tests/public_total.rs\nuse reading_math::total;\n#[test]\nfn combines_public_inputs() { assert_eq!(total(9, 4), 13); }",
+        "description": "按文件边界展示库与外部集成测试。",
+        "result": "这是需要按注释拆成两个文件的库项目示意；在相应 Cargo 项目中测试应通过，不能直接粘为单一 main.rs。",
+        "reason": "平台只执行冻结的单文件子集，不构建多 crate 集成测试目标。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "集成测试为什么不应直接调用库中的私有辅助函数？",
+        "answer": "它模拟外部使用者，私有条目不属于外部可见契约；应通过公开 API 验证组合行为，内部边界交给单元测试。",
+        "hints": [
+          "把集成测试当成依赖这个库的另一个 crate。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root11.04",
+      "sourceNodeId": "rust.source.root11.04",
+      "title": "总结",
+      "parent": "rust.book.root11",
+      "depth": 2,
+      "physicalPage": 346,
+      "printedPage": null,
+      "leaf": true,
+      "order": 190,
+      "group": 11,
+      "body": [
+        "测试提供的是针对已选择输入的行为证据，而不是程序对所有情况都正确的证明。编译检查、单元测试、集成测试各自覆盖不同风险：类型合法不代表计算符合需求，一个私有函数正确也不代表公开流程接线正确。",
+        "复习时应确认每个测试真正会被发现、筛选命中、执行并检查结果。忽略状态与零测试执行都不能算作目标行为通过。下面同时验证正常值与边界值，断言直接来自业务约定；若改变实现，测试可以在接口保持不变时继续保护原有行为。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn cap(value: i32) -> i32 { if value > 10 { 10 } else { value } }\n#[cfg(test)]\nmod tests {\n    use super::cap;\n    #[test]\n    fn keeps_boundary_and_caps_above() {\n        assert_eq!(cap(10), 10);\n        assert_eq!(cap(11), 10);\n        assert_eq!(cap(3), 3);\n    }\n}\nfn main() { println!(\"{}\", cap(11)); }",
+        "description": "用一组边界断言保护截顶行为。",
+        "result": "普通入口输出 10；测试中的三个预期都按函数约定成立。",
+        "reason": "平台不执行自动化测试属性和相等断言宏，阅读预期不是测试运行记录。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只测 cap(11) 能否发现错误地把所有输入都返回 10 的实现？",
+        "answer": "不能，该错误实现仍满足这一样例；保留 cap(3) 等应原样返回的输入才能区分这类错误。",
+        "hints": [
+          "选择能让正确与错误实现产生不同结果的输入。"
+        ]
+      }
+    }
+  ]
+}

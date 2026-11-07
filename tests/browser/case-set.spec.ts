@@ -622,12 +622,14 @@ async function saveCapture(
     'pythonDrafts',
     'receipts',
     'reviewCards',
+    'rustActivities',
+    'rustDrafts',
     'settings',
     'weaknesses',
   ]);
   expect(before.database).toEqual({
     name: 'c-viz-learning',
-    version: 13,
+    version: 14,
     storeNames: Object.keys(before.stores).sort(),
   });
   expect(Object.keys(before.storeKeys).sort()).toEqual(before.database.storeNames);

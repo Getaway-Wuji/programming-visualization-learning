@@ -1,0 +1,154 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 24,
+  "nodes": [
+    {
+      "id": "rust.book.root24",
+      "sourceNodeId": "rust.source.root24",
+      "title": "附录D 有用的开发工具",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 721,
+      "printedPage": null,
+      "leaf": false,
+      "order": 383,
+      "group": 24,
+      "body": [
+        "开发工具分别负责格式、可自动修复的诊断、额外代码分析和编辑器集成。把它们分开理解，才能知道某条反馈来自解析、类型检查、lint还是IDE呈现。",
+        "本附录按教材记录讲解rustfmt、rustfix、Clippy和语言服务器，命令均供阅读，课程不会替学习者安装组件或修改本机工程。工具让反馈更及时，但不能证明业务正确，也不能替代对执行结果的验证。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root24.01",
+      "sourceNodeId": "rust.source.root24.01",
+      "title": "使用rustfmt自动格式化代码",
+      "parent": "rust.book.root24",
+      "depth": 2,
+      "physicalPage": 722,
+      "printedPage": null,
+      "leaf": true,
+      "order": 384,
+      "group": 24,
+      "body": [
+        "rustfmt按统一规则排列缩进、换行和空白，减少团队在格式上的重复讨论。cargo fmt将它用于Cargo项目；检查模式报告是否需要格式化而不直接改文件，适合在提交前或持续集成中发现风格差异。格式统一有助于把审查注意力留给真正的行为变化。",
+        "自动格式化并不负责验证业务正确。它不会替错误算法补上边界，也不代表代码已经通过类型检查。不同工具链和配置会影响格式结果，团队应记录共同配置并在格式调整后查看差异；大范围格式变更与功能修改混在一起，会增加核对实际行为改动的负担。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "# 在已安装Rust工具链的独立Cargo项目中阅读这些命令：\nrustup component add rustfmt\ncargo fmt -- --check\ncargo fmt\n\n格式前：fn main(){let count=3;println!(\"{}\",count);}\n格式后：\nfn main() {\n    let count = 3;\n    println!(\"{}\", count);\n}",
+        "description": "区分安装组件、只检查格式和实际格式化。",
+        "result": "--check发现差异时报告失败且不主动修正；cargo fmt会重新排版源文件。",
+        "reason": "平台执行器不管理Rust工具链或修改Cargo工程，这些命令未在学习环境执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "cargo fmt通过，能否据此断言程序的除法没有除零风险？",
+        "answer": "不能。格式化只处理代码排版，除零属于程序语义与输入边界，需要类型、执行或测试等另外的验证。",
+        "hints": [
+          "先确认工具负责哪类问题。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root24.02",
+      "sourceNodeId": "rust.source.root24.02",
+      "title": "使用rustfix修复代码",
+      "parent": "rust.book.root24",
+      "depth": 2,
+      "physicalPage": 723,
+      "printedPage": null,
+      "leaf": true,
+      "order": 385,
+      "group": 24,
+      "body": [
+        "rustfix利用编译器诊断附带的机器可应用建议修改源码，常由cargo fix驱动。它适合处理明确的局部更正，例如某些多余修饰或迁移建议；它不是从自然语言需求自动重写整个程序，也不会保证每条诊断都有可安全应用的修复。",
+        "修复后仍应查看差异，再执行项目已有检查。自动建议可能只解决语法或警告，业务意图仍需要作者判断。示例把不需要修改的绑定去掉mut，值和输出不变。编译器如何输出建议取决于诊断条件，不应把示例当成所有工具链都会逐字产生同一条文本的承诺。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "# 供阅读：在工程中检查并应用可机器处理的建议。\ncargo check\ncargo fix\ncargo check\n\n待修复源码：\nfn main() {\n    let mut total = 3;\n    println!(\"{}\", total);\n}\n\n一种合理修复：let total = 3;\n说明：该绑定从未重新赋值，不需要mut；修复后仍应审查差异。",
+        "description": "从未使用的可变性说明自动修复解决的范围。",
+        "result": "若诊断提供适用建议，cargo fix可去掉mut；最终程序仍打印3。",
+        "reason": "执行器不运行cargo fix或改写宿主源码，这里只展示工具工作流。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "cargo fix成功是否意味着所有编译警告和业务缺陷都已消失？",
+        "answer": "不是。它只能应用可机器处理的建议，其他诊断或业务错误仍可能存在。应重新检查并按项目要求验证实际行为。",
+        "hints": [
+          "有建议可自动应用，不等于问题全集可自动修复。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root24.03",
+      "sourceNodeId": "rust.source.root24.03",
+      "title": "使用Clippy完成更多的代码分析",
+      "parent": "rust.book.root24",
+      "depth": 2,
+      "physicalPage": 725,
+      "printedPage": null,
+      "leaf": true,
+      "order": 386,
+      "group": 24,
+      "body": [
+        "Clippy补充编译器之外的代码分析规则，帮助发现常见错误和不够清晰的写法。cargo clippy在项目上下文中分析类型和代码结构，所以它比只匹配文本的检查更了解语义，但仍无法知道全部业务目的。建议应结合上下文理解，而不是机械追求零条反馈。",
+        "示例用len() == 0表达空集合，通常可改成is_empty()，意图更直接。某些提示影响性能、正确性或风格，处理优先级不应只按出现顺序。确有理由保留写法时，可以在合适范围说明原因并限制特定lint，而不是把所有分析整体关闭以隐藏其他问题。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "rustup component add clippy\ncargo clippy\n\n阅读源码：\nfn main() {\n    let values: Vec<i32> = Vec::new();\n    if values.len() == 0 { println!(\"空集合\"); }\n}\n\n更直接的条件：values.is_empty()\n复核：空集合仍进入分支；含元素时不进入。",
+        "description": "从空集合判断理解lint建议与行为核对。",
+        "result": "替换后的条件表达相同意图，空集合输出空集合；具体诊断文本可能随工具链变化。",
+        "reason": "执行器不安装Clippy或运行Cargo分析，也未支持Vec。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "遇到一条不适用的lint建议，是否应全局禁用Clippy？",
+        "answer": "通常不应。先说明具体不适用原因，必要时只限制对应规则和范围，继续保留其他有价值的诊断。",
+        "hints": [
+          "反馈的范围应与例外理由匹配。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root24.04",
+      "sourceNodeId": "rust.source.root24.04",
+      "title": "使用Rust语言服务器来集成IDE",
+      "parent": "rust.book.root24",
+      "depth": 2,
+      "physicalPage": 727,
+      "printedPage": null,
+      "leaf": true,
+      "order": 387,
+      "group": 24,
+      "body": [
+        "语言服务器通过语言服务器协议把语言分析能力交给编辑器，例如跳转定义、补全、重命名与诊断。编辑器负责界面和请求，服务器理解项目与源码；两者不必针对每种组合各写一整套集成。教材用RLS作为当时的实例，阅读时应把名称放回该历史工具语境。",
+        "语言服务器给出红线或补全，并不等于程序已经真实运行。它需要正确的项目根、依赖和工具链信息，才能还原编译上下文；打开孤立文件和打开整个工程可能得到不同反馈。本课程介绍交互关系，不声称已经安装RLS，也不把书中的历史插件地址作为现行安装推荐。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "工程：Cargo.toml + src/main.rs\n源码：\nfn twice(n: i32) -> i32 { n * 2 }\nfn main() { println!(\"{}\", twice(6)); }\n\n交互示意：\n1. 编辑器打开工程并通知语言服务器文档内容。\n2. 光标位于twice调用处，编辑器发送“跳转定义”请求。\n3. 服务器返回twice声明在源码中的位置。\n4. 编辑器移动光标；这一步没有执行twice，也没有产生12的运行输出。\n\n把twice参数改成bool后，类型诊断可在保存或编辑时出现。",
+        "description": "用跳转与诊断区分编辑时分析和运行时行为。",
+        "result": "跳转定位函数声明；真实运行完整程序才会输出12。",
+        "reason": "执行器不启动IDE语言服务器或安装教材记录的RLS插件。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "跳转到twice定义是否证明twice(6)的实际结果为12？",
+        "answer": "不能。跳转只证明分析器找到了符号关系。表达式结果仍需依据源码语义推导或在合适环境真实执行，不能把IDE操作当作运行证据。",
+        "hints": [
+          "符号分析与程序执行是不同事件。"
+        ]
+      }
+    }
+  ]
+}

@@ -16,6 +16,7 @@ const navigation = [
   { to: '/python', label: 'Python 课程', icon: 'book' },
   { to: '/java', label: 'Java 课程', icon: 'book' },
   { to: '/cpp', label: 'C++ 课程', icon: 'book' },
+  { to: '/rust', label: 'Rust 课程', icon: 'book' },
   { to: '/practice', label: '练习', icon: 'code' },
   { to: '/advanced', label: '进阶课程', icon: 'book' },
   { to: '/cases', label: '算法与演示', icon: 'chart' },
@@ -233,21 +234,23 @@ export function Layout({ children }: { children: ReactNode }) {
             <Icon name="menu" />
           </button>
           <span className="topbar-title">
-            {location.pathname.startsWith('/cpp')
-              ? 'C++ · 课程与工作台'
-              : location.pathname.startsWith('/java')
-                ? 'Java · 课程与工作台'
-                : location.pathname.startsWith('/python')
-                  ? 'Python 3 · 课程与工作台'
-                  : location.pathname.startsWith('/bugs/memory/')
-                    ? '受限 C++ · Bug 闯关'
-                    : /^\/(algorithms|nodes|structures|classics)\//.test(location.pathname)
-                      ? '算法演示 · C++'
-                      : location.pathname.startsWith('/advanced')
-                        ? '进阶课程 · C / C++'
-                        : ['/memory', '/compare'].includes(location.pathname)
-                          ? '程序执行观察'
-                          : 'C 语言 · 从零开始'}
+            {location.pathname.startsWith('/rust')
+              ? 'Rust · 课程与工作台'
+              : location.pathname.startsWith('/cpp')
+                ? 'C++ · 课程与工作台'
+                : location.pathname.startsWith('/java')
+                  ? 'Java · 课程与工作台'
+                  : location.pathname.startsWith('/python')
+                    ? 'Python 3 · 课程与工作台'
+                    : location.pathname.startsWith('/bugs/memory/')
+                      ? '受限 C++ · Bug 闯关'
+                      : /^\/(algorithms|nodes|structures|classics)\//.test(location.pathname)
+                        ? '算法演示 · C++'
+                        : location.pathname.startsWith('/advanced')
+                          ? '进阶课程 · C / C++'
+                          : ['/memory', '/compare'].includes(location.pathname)
+                            ? '程序执行观察'
+                            : 'C 语言 · 从零开始'}
           </span>
           <div className="local-note">
             {toolRoute && (

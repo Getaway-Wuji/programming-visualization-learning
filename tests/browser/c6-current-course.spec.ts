@@ -96,10 +96,10 @@ for (const exercise of exercises) {
         db.close();
       }
     });
-    expect(archive.dbVersion).toBe(13);
-    expect(archive.stores).toHaveLength(25);
+    expect(archive.dbVersion).toBe(14);
+    expect(archive.stores).toHaveLength(27);
     expect(archive.meta).toMatchObject({
-      schemaVersion: '13.0.0',
+      schemaVersion: '14.0.0',
       activePackageRef: { id: 'content.c.primer6', version: '2.0.0' },
     });
     expect(

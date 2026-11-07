@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 25,
+  "nodes": [
+    {
+      "id": "rust.book.root25",
+      "sourceNodeId": "rust.source.root25",
+      "title": "附录E 版本",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 728,
+      "printedPage": null,
+      "leaf": true,
+      "order": 388,
+      "group": 25,
+      "body": [
+        "edition是包选择的语言兼容规则集合，不等同于编译器版本或包自身的version。编译器可支持多个edition，依赖包也可以各自选择；升级编译器不要求每个包立刻迁移edition。教材以Rust2018为参照，本课程保留这个语义背景，不把后来edition的变化混进原目录。",
+        "Cargo.toml中的edition控制相应包的源码解释规则，version则描述这个包自己的发布版本。迁移应先确保现有工程通过检查，再按目标edition处理兼容建议，审查差异并回归行为。edition不会自动引入第三方依赖，也不会让平台支持更多语法；平台仍执行冻结的教学子集。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "# Cargo.toml：一个以Rust2018规则解释的包\n[package]\nname = \"edition_note\"\nversion = \"0.2.0\"\nedition = \"2018\"\n\n# src/main.rs\nfn main() {\n    println!(\"包版本0.2.0，源码edition为2018\");\n}\n\n# 迁移阅读顺序：先cargo check，再评估目标edition建议，审查修改后重新检查和回归。\n# 此处不改edition，也没有运行迁移命令。",
+        "description": "把包发布版本与源码兼容规则放在同一份配置中对照。",
+        "result": "version=0.2.0与edition=2018互不替代；程序输出只是在说明该例配置。",
+        "reason": "执行器不读取Cargo元数据或执行edition迁移，课程edition固定为2018。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把version从0.2.0改成0.3.0，会自动采用另一edition吗？",
+        "answer": "不会。version属于包的发布标识，edition是独立配置；需要显式选择并处理相应兼容性，不能通过提高包版本推导源码规则改变。",
+        "hints": [
+          "在配置中分别找两个字段。"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,576 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 12,
+  "nodes": [
+    {
+      "id": "rust.book.root12",
+      "sourceNodeId": "rust.source.root12",
+      "title": "第12章 I/O项目：编写一个命令行程序",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 347,
+      "printedPage": null,
+      "leaf": false,
+      "order": 191,
+      "group": 12,
+      "body": [
+        "本章把所有权、错误接口、模块与测试连成一个文本搜索工具：从命令行取得查询词和文件路径，读取文本，按行筛选，再把正常结果和诊断送到不同输出通道。",
+        "开发顺序先让最小流程可理解，再分离配置、核心搜索与入口。文件、环境变量和完整命令行都是本平台的阅读范围，不能用界面输入冒充宿主文件系统；搜索例使用原创短文本说明预期。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root12.01",
+      "sourceNodeId": "rust.source.root12.01",
+      "title": "接收命令行参数",
+      "parent": "rust.book.root12",
+      "depth": 2,
+      "physicalPage": 349,
+      "printedPage": null,
+      "leaf": false,
+      "order": 192,
+      "group": 12,
+      "body": [
+        "命令行参数来自调用进程时的参数序列，与标准输入不是同一个通道。程序需要约定查询词和路径各占哪个位置，并考虑参数缺少、空字符串与包含空格的路径。",
+        "先观察参数的实际组织，再赋予它们领域含义。下面会暂时使用 Vec 收集参数以便阅读，后续再把位置检查集中到配置构造器，避免到处依赖下标。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root12.01.01",
+      "sourceNodeId": "rust.source.root12.01.01",
+      "title": "读取参数值",
+      "parent": "rust.book.root12.01",
+      "depth": 3,
+      "physicalPage": 349,
+      "printedPage": null,
+      "leaf": true,
+      "order": 193,
+      "group": 12,
+      "body": [
+        "std::env::args 提供命令行参数迭代器，首项通常是调用该程序时使用的程序名或路径，其余才是业务参数。用 collect 收集成 Vec<String> 后可以直观看到序列，但这会为各参数保留拥有所有权的文本。",
+        "Cargo 运行程序时，双连字符后面的参数交给目标程序；引号如何组合带空格的参数则由所用终端处理。args 面向 Unicode 字符串，遇到不能表示的参数有其限制，涉及原始操作系统字符串时应考虑 args_os。这里仅阅读两个普通文本参数，不声称浏览器输入就是进程参数。",
+        "程序不能根据窗口中看到的整条命令自行重新分词，实际参数边界已经由启动它的环境确定并交付。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::env;\nfn main() {\n    let args: Vec<String> = env::args().collect();\n    for (index, value) in args.iter().enumerate() {\n        println!(\"{}: {}\", index, value);\n    }\n}",
+        "description": "按位置观察程序真正接收的参数。",
+        "result": "假设使用 cargo run -- bird notes.txt，索引 1 为 bird，索引 2 为 notes.txt，索引 0 的程序路径依环境而异。",
+        "reason": "平台未提供宿主 argv、env::args、Vec 或迭代器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么参数向量的第零项不应直接当作查询词？",
+        "answer": "它通常是程序自身名称或调用路径；业务约定中的第一个参数一般位于下一项，仍需检查实际是否存在。",
+        "hints": [
+          "把程序标识与用户业务输入区分开。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.01.02",
+      "sourceNodeId": "rust.source.root12.01.02",
+      "title": "将参数值存入变量",
+      "parent": "rust.book.root12.01",
+      "depth": 3,
+      "physicalPage": 351,
+      "printedPage": null,
+      "leaf": true,
+      "order": 194,
+      "group": 12,
+      "body": [
+        "得到参数后，最好尽早给它们命名为 query 和 path，而不让后面的逻辑继续传播数字下标。可读的变量名表达含义，也让顺序错误更容易被审查发现；但命名不会自动证明参数数量足够。",
+        "直接取 args[1]、args[2] 可能在输入不足时 panic。可以先检查长度或使用 get 获得 Option，再对缺少参数给出用法提示。下面用内置向量模拟一次参数序列，仅演示借用取值的关系，没有读取真实进程参数；query 与 path 借用向量元素，向量必须保持有效。",
+        "若允许查询词为空，也应单独规定其含义，参数存在与文本内容符合业务要求属于两个不同检查层次。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let args = vec![\n        String::from(\"finder\"), String::from(\"bird\"), String::from(\"notes.txt\")\n    ];\n    match (args.get(1), args.get(2)) {\n        (Some(query), Some(path)) => println!(\"{} in {}\", query, path),\n        _ => eprintln!(\"usage: finder QUERY PATH\"),\n    }\n}",
+        "description": "先检查参数位置存在，再使用有含义的名称。",
+        "result": "输出 bird in notes.txt；删除路径项后将走用法提示分支。",
+        "reason": "Vec、Option、元组匹配和 stderr 不在平台当前执行子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把 args[2] 改名为 path，是否已经解决参数缺失问题？",
+        "answer": "没有。命名只改善表达，下标访问仍可能越界；应在读取前验证数量或用返回 Option 的访问方式。",
+        "hints": [
+          "可读性和输入有效性需要分别保证。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.02",
+      "sourceNodeId": "rust.source.root12.02",
+      "title": "读取文件",
+      "parent": "rust.book.root12",
+      "depth": 2,
+      "physicalPage": 353,
+      "printedPage": null,
+      "leaf": true,
+      "order": 195,
+      "group": 12,
+      "body": [
+        "fs::read_to_string 同时完成打开、读取和 UTF-8 文本转换，返回 Result<String, io::Error>。不存在、权限不足、读取故障及非合法 UTF-8 都可能造成失败，所以路径存在不代表读取必定成功。",
+        "相对路径通常相对于进程当前工作目录解析，而非固定相对于源码文件。一次把整个文件读入内存适合教学小文本，大文件应考虑逐步读取和资源预算。下面读取由使用者事先准备的 notes.txt，成功时只打印字节长度，失败则报告错误；不编造本机文件内容，也不在浏览器中访问用户磁盘。",
+        "读取成功只保证得到合法文本，不保证内容符合业务格式；若还有结构要求，应在后续解析层独立验证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::fs;\nfn main() {\n    match fs::read_to_string(\"notes.txt\") {\n        Ok(text) => println!(\"{} bytes\", text.len()),\n        Err(error) => eprintln!(\"cannot read notes.txt: {}\", error),\n    }\n}",
+        "description": "把文件成功读取与失败诊断分开。",
+        "result": "若工作目录的 notes.txt 恰有 UTF-8 字节 bird 加换行，输出 5 bytes；其他内容长度不同，读取失败走错误分支。",
+        "reason": "平台不读取宿主文件系统，也未实现 fs、io::Error 与任意 Result 匹配。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "notes.txt 在源码旁边却找不到，应该首先核对什么？",
+        "answer": "应核对进程当前工作目录和相对路径解析方式；源码所在目录不是相对文件路径的自动基准。",
+        "hints": [
+          "问清路径是相对于谁。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.03",
+      "sourceNodeId": "rust.source.root12.03",
+      "title": "重构代码以增强模块化程度和错误处理能力",
+      "parent": "rust.book.root12",
+      "depth": 2,
+      "physicalPage": 356,
+      "printedPage": null,
+      "leaf": false,
+      "order": 196,
+      "group": 12,
+      "body": [
+        "当入口同时负责取参数、读文件、搜索和处理错误，任何改动都难以独立验证。重构先保持可观察行为，再按责任拆分：配置负责把外部文本变成有效输入，核心逻辑负责计算，入口负责调度与退出。",
+        "本节逐步缩小 main，并让错误沿接口传回恰当层次。移动代码不是最终目的，能够独立测试、理解和替换边界才是模块化带来的收益。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root12.03.01",
+      "sourceNodeId": "rust.source.root12.03.01",
+      "title": "二进制项目的关注点分离",
+      "parent": "rust.book.root12.03",
+      "depth": 3,
+      "physicalPage": 357,
+      "printedPage": null,
+      "leaf": true,
+      "order": 197,
+      "group": 12,
+      "body": [
+        "二进制入口是外部环境与业务逻辑之间的接线处，不宜塞入全部计算。把参数解释成一个配置值，再交给核心函数，可以避免函数内部反复读取进程状态，也便于测试直接提供输入。",
+        "配置类型应集中放置彼此相关的字段，例如 query 与 path。下面先只读展示一个最小配置和 run，环境读取被省略为明确的固定输入；run 接收配置而非自行读取 args，因此调用者能清楚看见依赖。正式工具还需把读取失败作为 Result 返回，而不是把所有错误都隐藏在打印中。",
+        "拆分后每个函数的输入和输出应可独立解释，若仍依赖大量隐藏全局状态，仅移动文件不会改善可测试性。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Config { query: String, path: String }\nfn run(config: &Config) {\n    println!(\"search {} in {}\", config.query, config.path);\n}\nfn main() {\n    let config = Config { query: String::from(\"bird\"), path: String::from(\"notes.txt\") };\n    run(&config);\n}",
+        "description": "用配置参数暴露核心逻辑的输入依赖。",
+        "result": "输出 search bird in notes.txt；本例尚未读取文件或实施搜索。",
+        "reason": "结构体配置及其字段访问属于阅读范围，不能视作平台已执行完整 I/O 项目。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "让 run 内部再次调用 env::args，会怎样影响测试？",
+        "answer": "测试必须依赖进程环境而非直接传入配置，输入不再明确，重复验证和错误场景控制都会更困难。",
+        "hints": [
+          "让依赖从参数进入，而不是在深处读取。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.03.02",
+      "sourceNodeId": "rust.source.root12.03.02",
+      "title": "修复错误处理逻辑",
+      "parent": "rust.book.root12.03",
+      "depth": 3,
+      "physicalPage": 362,
+      "printedPage": null,
+      "leaf": true,
+      "order": 198,
+      "group": 12,
+      "body": [
+        "参数缺少属于用户可纠正的用法错误，应在建立配置时返回清楚的 Err，而非让随后越界访问产生与业务无关的 panic。检查数量之后再索引，把合法性前提集中在一个入口。",
+        "构造配置时可以克隆参数字符串，使配置拥有自己的数据；代价是复制，这个取舍将在迭代器章节改进。下面只接受恰好两个业务参数，错误时返回用法信息。条件要与命令行约定一致，若支持更多选项就要重新设计解析器，不能靠任意忽略多余参数来伪装完整支持。",
+        "错误消息应指出缺少的是哪类输入，而不是暴露内部数组越界，这样用户才能依据提示调整命令。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Config { query: String, path: String }\nimpl Config {\n    fn new(args: &[String]) -> Result<Self, &'static str> {\n        if args.len() != 3 { return Err(\"expected QUERY and PATH\"); }\n        Ok(Self { query: args[1].clone(), path: args[2].clone() })\n    }\n}\nfn main() {\n    let args = vec![String::from(\"finder\")];\n    match Config::new(&args) {\n        Ok(c) => println!(\"{} {}\", c.query, c.path),\n        Err(message) => eprintln!(\"{}\", message),\n    }\n}",
+        "description": "构造配置前验证参数数量。",
+        "result": "本例向标准错误写 expected QUERY and PATH，不会访问不存在的下标。",
+        "reason": "平台未实现结构体构造、切片、Vec 和 Result 错误返回。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么应在 new 中检查数量，而不是等读取文件时再检查？",
+        "answer": "配置是对有效输入的承诺；在边界集中检查能让后续逻辑免于重复防御，也能在更接近原因的位置给出提示。",
+        "hints": [
+          "不合法配置应尽早阻止进入核心流程。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.03.03",
+      "sourceNodeId": "rust.source.root12.03.03",
+      "title": "从main中分离逻辑",
+      "parent": "rust.book.root12.03",
+      "depth": 3,
+      "physicalPage": 366,
+      "printedPage": null,
+      "leaf": true,
+      "order": 199,
+      "group": 12,
+      "body": [
+        "把主要流程提取为 run 后，main 只负责构造输入、调用它并决定如何呈现失败。run 可返回 Result<(), E>，成功表示操作完成，无须伪造一个无意义的数值；读取错误则可用问号向上交付。",
+        "不要在每一层都打印同一错误，否则一次失败可能产生多段重复提示，也让调用者无法控制显示方式。下面用 io::Result 保留文件错误，main 统一报告；示例只计算行数以突出责任划分，完整搜索会在独立函数中实现。文件内容与是否存在都属于运行环境前提。",
+        "成功路径的输出也应有统一约定，避免核心函数和入口同时打印同一结果，造成重定向数据重复。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::{fs, io};\nfn run(path: &str) -> io::Result<()> {\n    let text = fs::read_to_string(path)?;\n    println!(\"{} lines\", text.lines().count());\n    Ok(())\n}\nfn main() {\n    if let Err(error) = run(\"notes.txt\") {\n        eprintln!(\"finder failed: {}\", error);\n    }\n}",
+        "description": "核心函数传播读取错误，入口统一显示。",
+        "result": "有效文件成功时打印行数；读取失败时只由 main 报告 finder failed。未指定真实文件内容，因此不承诺固定行数。",
+        "reason": "平台没有文件系统、io::Result、问号和 lines 迭代器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "run 已经返回 Err 后，main 为什么仍有处理责任？",
+        "answer": "传播只是转交失败信息；入口仍要决定提示、退出状态或恢复动作，返回错误本身没有完成这些应用决策。",
+        "hints": [
+          "检查谁最终面对使用者。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.03.04",
+      "sourceNodeId": "rust.source.root12.03.04",
+      "title": "将代码分离为独立的代码包",
+      "parent": "rust.book.root12.03",
+      "depth": 3,
+      "physicalPage": 369,
+      "printedPage": null,
+      "leaf": true,
+      "order": 200,
+      "group": 12,
+      "body": [
+        "Cargo 包可以同时含 src/lib.rs 库目标与 src/main.rs 二进制目标。把可复用搜索功能放入库，入口再像外部调用者那样导入公开函数，可以让测试绕过真实命令行和文件，直接验证纯计算。",
+        "pub 决定跨 crate 可见性，文件移动本身不会自动公开函数。还应区分 package 与 crate：同一个包中的库与二进制仍是不同编译目标。下面展示明确的两文件布局，包名假设为 line_finder；代码必须按标记拆分，不能把两个文件拼成一个脚本执行。",
+        "分离后可为库增加集成测试，让外部视角检查公开函数是否可用，同时让入口保持少量可审查的连接逻辑。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "// Cargo.toml: package.name = \"line_finder\"\n// src/lib.rs\npub fn has_match(query: &str, text: &str) -> bool {\n    text.contains(query)\n}\n\n// src/main.rs\nfn main() {\n    println!(\"{}\", line_finder::has_match(\"bird\", \"a bird sings\"));\n}",
+        "description": "让二进制通过公开库接口调用搜索规则。",
+        "result": "按两文件 Cargo 布局构建后入口预期输出 true；库函数可单独接受测试输入。",
+        "reason": "平台只支持单文件冻结子集，不构建库与二进制的多 crate 依赖。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "函数从 main.rs 移到 lib.rs 后，为什么还可能不能被二进制调用？",
+        "answer": "库与二进制是不同 crate；函数若没有作为公开 API 导出，就不能从另一个 crate 访问。",
+        "hints": [
+          "核对 pub 与实际导入路径。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.04",
+      "sourceNodeId": "rust.source.root12.04",
+      "title": "使用测试驱动开发来编写库功能",
+      "parent": "rust.book.root12",
+      "depth": 2,
+      "physicalPage": 372,
+      "printedPage": null,
+      "leaf": false,
+      "order": 201,
+      "group": 12,
+      "body": [
+        "搜索逻辑不应依赖文件恰好存在，先用短文本规定查询行为，再实现逐行筛选。测试驱动的关键是先让测试确实捕捉到功能缺失，再用最小实现使其通过，最后整理代码而保持行为。",
+        "本节把结果表示为原文本中的行引用，避免复制每个匹配行。由此也需要说明返回引用借用的是全文，而不是查询词或函数内临时字符串。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root12.04.01",
+      "sourceNodeId": "rust.source.root12.04.01",
+      "title": "编写一个会失败的测试",
+      "parent": "rust.book.root12.04",
+      "depth": 3,
+      "physicalPage": 372,
+      "printedPage": null,
+      "leaf": true,
+      "order": 202,
+      "group": 12,
+      "body": [
+        "先写测试可以把含糊的“搜索成功”变成精确约定：查询词按子串匹配，保留原行内容，结果按原文顺序返回。一个固定的小文本应同时有命中和不命中行，避免空实现或返回全部行也能通过。",
+        "下面故意让 search 返回空向量，测试预期恰有一行，因此应失败。这个失败要来自断言结果与期望不一致，而不是类型错误或测试根本没有被发现。只有确认失败原因正确，后续“变绿”才说明实现真正补上了缺少的行为。",
+        "一组测试还应覆盖无命中和多个命中，避免实现只为单一样例硬编码首行，或无意丢失后续匹配。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn search<'a>(_query: &str, _text: &'a str) -> Vec<&'a str> { Vec::new() }\n#[cfg(test)]\nmod tests {\n    use super::search;\n    #[test]\n    fn finds_only_matching_line() {\n        let text = \"quiet lake\nbird on branch\nstone path\";\n        assert_eq!(search(\"bird\", text), vec![\"bird on branch\"]);\n    }\n}\nfn main() {}",
+        "description": "以故意未实现的搜索确认测试能识别缺失功能。",
+        "result": "测试模式下该断言预期失败：实际为空，期望有 bird on branch。普通入口无输出。",
+        "reason": "平台没有 Vec、生命周期返回和自动测试框架；这是明确的失败阅读例。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果测试因语法错误无法编译，这是否是测试驱动所需的行为失败？",
+        "answer": "不是。应先使测试能构建并运行，再确认断言因为缺少目标行为而失败，才能有针对性地实现。",
+        "hints": [
+          "区分编译失败与断言失败。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.04.02",
+      "sourceNodeId": "rust.source.root12.04.02",
+      "title": "编写可以通过测试的代码",
+      "parent": "rust.book.root12.04",
+      "depth": 3,
+      "physicalPage": 375,
+      "printedPage": null,
+      "leaf": true,
+      "order": 203,
+      "group": 12,
+      "body": [
+        "实现先遍历 text.lines()，对每一行检查 contains(query)，命中则把原行的切片放进结果向量。这样返回值借用全文，不分配每行的新字符串，但调用者必须保持全文的存储有效。",
+        "查询词不被放入结果，故不需要与返回引用共用生命周期。空查询词会按 contains 的定义匹配每行，若业务不允许，应在配置层明确拒绝。lines 会处理行结束符而不把它们包含进结果；搜索保留匹配行的原始大小写与先后顺序，不自动截取成查询词本身。",
+        "若原文来自一个局部字符串，调用者必须在它销毁前处理所有返回行，或者主动复制成独立拥有的结果。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn search<'a>(query: &str, text: &'a str) -> Vec<&'a str> {\n    let mut found = Vec::new();\n    for line in text.lines() {\n        if line.contains(query) { found.push(line); }\n    }\n    found\n}\nfn main() {\n    for line in search(\"bird\", \"quiet lake\nbird on branch\nstone path\") {\n        println!(\"{}\", line);\n    }\n}",
+        "description": "逐行筛选并返回原文本的借用。",
+        "result": "只输出 bird on branch。",
+        "reason": "平台未实现 lines、Vec、字符串搜索和显式生命周期返回。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么返回值生命周期只关联 text，不必关联 query？",
+        "answer": "结果保存的是 text 中的行切片；query 只用于比较，没有被保存进结果，所以不是返回借用的数据来源。",
+        "hints": [
+          "沿着被 push 的值追踪实际存储。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.05",
+      "sourceNodeId": "rust.source.root12.05",
+      "title": "处理环境变量",
+      "parent": "rust.book.root12",
+      "depth": 2,
+      "physicalPage": 380,
+      "printedPage": null,
+      "leaf": false,
+      "order": 204,
+      "group": 12,
+      "body": [
+        "环境变量属于进程配置。教材用 env::var(\"CASE_INSENSITIVE\").is_ok() 选择忽略大小写，检查的是能否读取，而非解析布尔文本；值即使写成 \"false\"，只要可读取仍会启用。入口应解释此约定，再把策略传给核心搜索。",
+        "先为大小写不一致的输入写测试，再实现比较时转换文本、返回时保留原行的算法。测试直接提供策略，不修改机器环境，避免并行用例互相影响。简单大小写转换也不等于完整语言学搜索。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root12.05.01",
+      "sourceNodeId": "rust.source.root12.05.01",
+      "title": "为不区分大小写的search函数编写一个会失败的测试",
+      "parent": "rust.book.root12.05",
+      "depth": 3,
+      "physicalPage": 380,
+      "printedPage": null,
+      "leaf": true,
+      "order": 205,
+      "group": 12,
+      "body": [
+        "忽略大小写属于新的行为，需要独立测试区分它与原有 search。一个仅含小写输入的样例不能揭示差异，应让查询和正文大小写不同，并同时保留一条不匹配行，防止返回全部文本的错误实现混过检查。",
+        "新增测试初期可以明确使用占位实现确认它失败，再完成实际算法。配置读取与纯搜索规则应分离：测试直接调用函数，不通过修改环境变量制造条件，避免并行测试相互干扰。下面的占位函数刻意返回空结果，预期失败说明测试正在检查这项新增行为。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn insensitive<'a>(_query: &str, _text: &'a str) -> Vec<&'a str> { Vec::new() }\n#[cfg(test)]\nmod tests {\n    use super::insensitive;\n    #[test]\n    fn ignores_ascii_case() {\n        assert_eq!(insensitive(\"BIRD\", \"a Bird rests\nstones\"), vec![\"a Bird rests\"]);\n    }\n}\nfn main() {}",
+        "description": "用大小写不一致的输入规定新增搜索行为。",
+        "result": "测试模式下断言应失败，实际空向量与预期匹配行不同；这是实现前的阅读状态。",
+        "reason": "平台没有 Vec、测试属性和返回借用向量，不能在此执行该测试。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么只用 bird 查询全小写 bird 的测试不足以验证忽略大小写？",
+        "answer": "原有大小写敏感实现也能通过，无法区分新旧行为；必须选择大小写不同但应当匹配的输入。",
+        "hints": [
+          "让新增规则成为通过测试的必要条件。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.05.02",
+      "sourceNodeId": "rust.source.root12.05.02",
+      "title": "实现search_case_insensitive函数",
+      "parent": "rust.book.root12.05",
+      "depth": 3,
+      "physicalPage": 381,
+      "printedPage": null,
+      "leaf": true,
+      "order": 206,
+      "group": 12,
+      "body": [
+        "忽略大小写的一种教学实现是先把查询转换为小写，再把每行转换为小写进行 contains。查询转换可放在循环外，避免每行重复；结果仍保存原行切片，不把临时小写 String 的引用返回给调用者。",
+        "这种写法会为比较分配临时文本，而且 Unicode 大小写映射并不等于所有语言所需的完整大小写折叠或本地化排序，应明确搜索契约的边界。环境变量只负责选择调用哪种策略，不应藏在算法内部。下面使用 ASCII 内容，展示保留原始大小写的结果。",
+        "大小写转换可能改变字节长度，因此不要用转换文本的偏移直接切原文；本例返回整行，避开偏移映射问题。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn insensitive<'a>(query: &str, text: &'a str) -> Vec<&'a str> {\n    let query = query.to_lowercase();\n    let mut found = Vec::new();\n    for line in text.lines() {\n        if line.to_lowercase().contains(&query) { found.push(line); }\n    }\n    found\n}\nfn main() {\n    for line in insensitive(\"BIRD\", \"a Bird rests\nstones\") { println!(\"{}\", line); }\n}",
+        "description": "比较归一化文本，返回原始行。",
+        "result": "输出 a Bird rests，结果保留正文中 Bird 的原始大小写。",
+        "reason": "to_lowercase、字符串搜索、Vec 与迭代器属于平台阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能把 line.to_lowercase() 的临时字符串切片存入返回结果？",
+        "answer": "临时 String 会在局部处理结束后销毁，引用无法继续有效；应返回原文借用，或让结果拥有转换后的 String。",
+        "hints": [
+          "同时检查比较使用什么、结果拥有或借用什么。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.06",
+      "sourceNodeId": "rust.source.root12.06",
+      "title": "将错误提示信息打印到标准错误而不是标准输出",
+      "parent": "rust.book.root12",
+      "depth": 2,
+      "physicalPage": 386,
+      "printedPage": null,
+      "leaf": false,
+      "order": 207,
+      "group": 12,
+      "body": [
+        "搜索结果通常要交给其他命令或保存到文件，而错误消息是给使用者诊断的，两者混在一个通道会污染后续数据处理。标准输出承载正常结果，标准错误承载用法和故障提示。",
+        "下面先用重定向辨认输出去向，再改用 eprintln!。输出通道和退出状态是两项独立决定，改成标准错误并不会自动把成功退出改为失败。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root12.06.01",
+      "sourceNodeId": "rust.source.root12.06.01",
+      "title": "确认错误被写到了哪里",
+      "parent": "rust.book.root12.06",
+      "depth": 3,
+      "physicalPage": 386,
+      "printedPage": null,
+      "leaf": true,
+      "order": 208,
+      "group": 12,
+      "body": [
+        "在终端中把标准输出重定向到文件，可以检验诊断是否错误地混入结果。如果失败消息也使用 println!，它会与搜索命中一起进入同一条数据流，后续脚本难以区分业务行和故障信息。",
+        "观察时应分别核对终端、目标文件以及进程退出状态。空文件并不一定表示程序成功却没有匹配，也可能表示失败消息走了另一个通道。下面以命令阅读方式说明检查流程，假设 finder 是已编译的示例工具，missing.txt 不存在；真实诊断和退出码由具体实现决定。",
+        "正常工具链还依赖非零状态判断失败，若只移动了提示通道却仍报告成功，下游脚本仍可能继续使用空结果。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "finder bird missing.txt > matches.txt",
+        "description": "用标准输出重定向检查错误消息是否污染结果文件。",
+        "result": "若错误仍由 println! 输出，消息会进入 matches.txt；若改用 eprintln!，错误一般留在标准错误通道。该命令未在平台运行。",
+        "reason": "平台没有宿主 shell、文件重定向或进程输出描述符。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "matches.txt 为空，能否仅凭这一点断定没有命中且程序成功？",
+        "answer": "不能。还需查看标准错误和退出状态，读取文件失败也可能不产生标准输出。",
+        "hints": [
+          "正常数据、诊断、退出状态要分别观察。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.06.02",
+      "sourceNodeId": "rust.source.root12.06.02",
+      "title": "将错误提示信息打印到标准错误",
+      "parent": "rust.book.root12.06",
+      "depth": 3,
+      "physicalPage": 387,
+      "printedPage": null,
+      "leaf": true,
+      "order": 209,
+      "group": 12,
+      "body": [
+        "eprintln! 与 println! 的格式化用法相近，但把文本送往标准错误。正常命中留在标准输出，诊断移到标准错误后，重定向正常结果就不会把普通错误文字混入匹配行。",
+        "应用还应主动设置失败退出状态，供脚本判断是否继续。下面把一次示例参数错误写到 stderr，再以状态 1 退出；退出调用不是可恢复返回，也不会按普通离开作用域那样运行全部析构流程。需要清理的资源应在退出前妥善处理，或采用能自然返回到入口的结构。",
+        "批处理调用者通常不会读人类提示来决定成功与否，因此失败状态应与错误消息表达同一个最终结果。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    eprintln!(\"usage: finder QUERY PATH\");\n    std::process::exit(1);\n}",
+        "description": "同时明确诊断通道与失败退出状态。",
+        "result": "标准错误得到 usage: finder QUERY PATH，进程以非零状态 1 退出；标准输出没有业务数据。",
+        "reason": "平台不调用宿主 process::exit，也不提供独立 stderr 进程通道。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只把 println! 改成 eprintln!，会自动令退出状态变为 1 吗？",
+        "answer": "不会。写入通道与返回状态互相独立，需要在入口明确决定失败状态。",
+        "hints": [
+          "打印在哪里与进程怎样结束是两件事。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root12.07",
+      "sourceNodeId": "rust.source.root12.07",
+      "title": "总结",
+      "parent": "rust.book.root12",
+      "depth": 2,
+      "physicalPage": 389,
+      "printedPage": null,
+      "leaf": true,
+      "order": 210,
+      "group": 12,
+      "body": [
+        "文本搜索项目展示了一条清楚的数据流：外部参数形成配置，文件读取获得拥有所有权的文本，搜索函数只借用它并返回匹配行，入口统一处理错误和输出。每条引用的有效期都可以沿全文所有者追踪。",
+        "复盘时还应覆盖参数不足、文件失败、无匹配、大小写策略和空查询等边界。不要为了展示最终效果把文件或进程输入替换成伪执行轨迹。下面仅用内置文本复核纯搜索部分，使其结果不依赖本机环境；完整命令行集成仍需在标准 Rust 项目中验证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn search<'a>(query: &str, text: &'a str) -> Vec<&'a str> {\n    text.lines().filter(|line| line.contains(query)).collect()\n}\nfn main() {\n    let text = String::from(\"red kite\nblue boat\nred leaf\");\n    for line in search(\"red\", &text) { println!(\"{}\", line); }\n}",
+        "description": "在不接触文件的情况下复核搜索核心。",
+        "result": "依次输出 red kite、red leaf，保持原文顺序。",
+        "reason": "返回 Vec、filter 闭包、lines 和 collect 属于阅读范围，平台未执行完整 grep 项目。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何搜索结果使用期间必须保留 text？",
+        "answer": "结果向量只拥有各个行引用，不拥有其所指字节；这些字节仍属于 text，销毁全文会使借用失效。",
+        "hints": [
+          "向量拥有引用不等于拥有被引用文本。"
+        ]
+      }
+    }
+  ]
+}

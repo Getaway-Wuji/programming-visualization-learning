@@ -74,6 +74,9 @@ const PythonReviewPage = lazy(() => import('./python3/ReviewPage'));
 const JavaCoursePage = lazy(() => import('./java/CoursePage'));
 const JavaWorkbench = lazy(() => import('./java/Workbench'));
 const JavaReviewPage = lazy(() => import('./java/ReviewPage'));
+const RustCoursePage = lazy(() => import('./rust2018-course/CoursePage'));
+const RustWorkbench = lazy(() => import('./rust2018-course/Workbench'));
+const RustReviewPage = lazy(() => import('./rust2018-course/ReviewPage'));
 const CppCoursePage = lazy(() => import('./cpp-course/CoursePage'));
 const CppWorkbench = lazy(() => import('./cpp-course/Workbench'));
 const CppReviewPage = lazy(() => import('./cpp-course/ReviewPage'));
@@ -151,6 +154,12 @@ function AppRoutes() {
             <Route path="/java/example/:order/:section" element={<JavaWorkbench />} />
             <Route path="/java/practice/:exerciseId" element={<JavaWorkbench />} />
             <Route path="/java/review" element={<JavaReviewPage />} />
+            <Route path="/rust" element={<RustCoursePage />} />
+            <Route path="/rust/lesson/:lessonId" element={<RustCoursePage />} />
+            <Route path="/rust/workbench" element={<RustWorkbench />} />
+            <Route path="/rust/example/:lessonId" element={<RustWorkbench />} />
+            <Route path="/rust/practice/:profileId" element={<RustWorkbench />} />
+            <Route path="/rust/review" element={<RustReviewPage />} />
             <Route path="/cpp" element={<CppCoursePage />} />
             <Route path="/cpp/lesson/:lessonId" element={<CppCoursePage />} />
             <Route path="/cpp/workbench" element={<CppWorkbench />} />

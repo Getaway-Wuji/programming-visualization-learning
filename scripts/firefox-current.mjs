@@ -14,7 +14,11 @@ import { verifyBuildInputs } from './build-inputs.mjs';
 
 const label = process.env.TASK_EVIDENCE_LABEL ?? `stock-firefox-${Date.now()}`;
 assert.match(label, /^[a-zA-Z0-9_.-]+$/);
-const output = resolve('.artifacts/cross-browser', label, 'stock-firefox');
+const output = resolve(
+  process.env.STOCK_FIREFOX_EVIDENCE_ROOT ?? '.artifacts/cross-browser',
+  label,
+  'stock-firefox',
+);
 assert(!existsSync(output), 'Keep previous runs and failures immutable');
 mkdirSync(output, { recursive: true });
 const downloads = join(output, 'downloads');
@@ -100,6 +104,8 @@ const expectedStores = [
   'javaDrafts',
   'cppActivities',
   'cppDrafts',
+  'rustActivities',
+  'rustDrafts',
 ];
 const report = {
   label,
@@ -189,7 +195,7 @@ async function snapshot(name) {
     Buffer.from(await wd(route + '/screenshot'), 'base64'),
   );
 }
-async function archive(version = 13) {
+async function archive(version = 14) {
   const data = await wd(route + '/execute/async', 'POST', {
     args: [],
     script: `
@@ -214,6 +220,7 @@ async function archive(version = 13) {
       .filter((name) => version >= 11 || !name.startsWith('python'))
       .filter((name) => version >= 12 || !name.startsWith('java'))
       .filter((name) => version >= 13 || !name.startsWith('cpp'))
+      .filter((name) => version >= 14 || !name.startsWith('rust'))
       .toSorted(),
   );
   return data;
@@ -605,7 +612,7 @@ async function runPython(legacy) {
       keys.appearanceAssets=[[meta.generation,'background']];
       const request=indexedDB.open('c-viz-learning',10);
       request.onupgradeneeded=()=>{
-        for(const name of names.filter(n=>!n.startsWith('python')&&!n.startsWith('java')&&!n.startsWith('cpp'))){
+        for(const name of names.filter(n=>!n.startsWith('python')&&!n.startsWith('java')&&!n.startsWith('cpp')&&!n.startsWith('rust'))){
           const store=request.result.createObjectStore(name);
           rows[name].forEach((value,i)=>store.add(value,keys[name][i]));
         }
@@ -622,7 +629,7 @@ async function runPython(legacy) {
   await wait(
     () =>
       js('return document.querySelector(".app-shell")?.dataset.learningStorageStatus==="ready"'),
-    'Native DB13 did not open',
+    'Native DB14 did not open',
   );
   const migrated = await archive();
   for (const name of prior.names) {
@@ -632,9 +639,9 @@ async function runPython(legacy) {
   assert.deepEqual(migrated.rows.meta, [
     {
       ...prior.rows.meta[0],
-      dbVersion: 13,
-      schemaVersion: '13.0.0',
-      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp', version: '1.0.0' },
+      dbVersion: 14,
+      schemaVersion: '14.0.0',
+      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp-rust', version: '1.0.0' },
     },
   ]);
   for (const name of ['pythonActivities', 'pythonDrafts', 'javaActivities', 'javaDrafts'])
@@ -746,7 +753,7 @@ async function runPython(legacy) {
     JSON.stringify({ prior, migrated, saved }, null, 2),
   );
   report.results.push({
-    id: 'native-python-db10-to-13-edit-cancel-judge-and-exports',
+    id: 'native-python-db10-to-14-edit-cancel-judge-and-exports',
     passed: true,
     cancelled,
     files: files.map((path) => ({
@@ -790,7 +797,7 @@ async function migrateNativeArchive(legacy, language, version, catalogId, exclud
   await wait(
     () =>
       js('return document.querySelector(".app-shell")?.dataset.learningStorageStatus==="ready"'),
-    'Native DB13 did not open',
+    'Native DB14 did not open',
   );
   const migrated = await archive();
   for (const name of prior.names) {
@@ -810,7 +817,7 @@ async function runJava(legacy) {
     'java',
     11,
     'catalog-set.c-python',
-    ['java', 'cpp'],
+    ['java', 'cpp', 'rust'],
   );
   assert.equal(prior.rows.pythonActivities.length, 1);
   assert.equal(prior.rows.pythonDrafts.length, 1);
@@ -924,7 +931,7 @@ async function runJava(legacy) {
     JSON.stringify({ prior, migrated, saved }, null, 2),
   );
   report.results.push({
-    id: 'native-java-db11-to-13-edit-cancel-judge-and-exports',
+    id: 'native-java-db11-to-14-edit-cancel-judge-and-exports',
     passed: true,
     cancelled,
     files: files.map((path) => ({
@@ -944,7 +951,7 @@ async function runCppCourse(legacy) {
     'cpp',
     12,
     'catalog-set.c-python-java',
-    ['cpp'],
+    ['cpp', 'rust'],
   );
   assert(prior.rows.courseActivities.length > 0);
   assert(prior.rows.pythonActivities.length > 0);
@@ -1062,7 +1069,7 @@ async function runCppCourse(legacy) {
     JSON.stringify({ prior, migrated, saved }, null, 2),
   );
   report.results.push({
-    id: 'native-cpp-db12-to-13-edit-cancel-judge-and-exports',
+    id: 'native-cpp-db12-to-14-edit-cancel-judge-and-exports',
     passed: true,
     cancelled,
     files: files.map((path) => ({
@@ -1073,6 +1080,303 @@ async function runCppCourse(legacy) {
   });
   save();
   console.log('PASS actual Firefox C++ migration, edit, cancellation, judge and exports');
+  return saved;
+}
+
+async function runRustCourse(legacy) {
+  const { prior, migrated } = await migrateNativeArchive(
+    legacy,
+    'rust',
+    13,
+    'catalog-set.c-python-java-cpp',
+    ['rust'],
+  );
+  for (const name of ['courseActivities', 'pythonActivities', 'javaActivities', 'cppActivities'])
+    assert(prior.rows[name].length > 0, name);
+  assert(prior.rows.appearanceAssets[0].blob.bytes.length > 0);
+  assert.deepEqual(migrated.rows.rustActivities, []);
+  assert.deepEqual(migrated.rows.rustDrafts, []);
+  const editor = 'textarea[aria-label="Rust 源码"]';
+  const input = 'textarea[aria-label="Rust 输入"]';
+  const trace = '[data-testid="rust-trace"]';
+  const profiles = read('shared/contracts/rust2018-profiles-1.0.0.json');
+  const formatted = profiles[0];
+  const shadow = profiles.find((p) => p.lesson === 'rust.book.root03.01.02');
+  const borrowed = profiles.find((p) => p.lesson === 'rust.book.root04.02.01');
+  const textVisible = (value) =>
+    wait(
+      () =>
+        js('return document.querySelector("main")?.textContent.includes(arguments[0])', [value]),
+      'Missing Rust text: ' + value,
+    );
+  const traceExists = () => js('return !!document.querySelector(arguments[0])', [trace]);
+  const traceText = () =>
+    js('return document.querySelector(arguments[0])?.textContent??""', [trace]);
+  const outputText = (value) =>
+    wait(
+      () =>
+        js(
+          'return document.querySelector("[data-testid=rust-output]")?.textContent===arguments[0]',
+          [value],
+        ),
+      'Rust output mismatch: ' + value,
+    );
+  const finish = async (value) => {
+    await nativeElement(trace);
+    await button('到最后一步', trace);
+    await outputText(value);
+  };
+  const checkpoint = (id, extra = {}) => {
+    report.results.push({ id, passed: true, ...extra });
+    save();
+    console.log('PASS actual Firefox', id);
+  };
+
+  await navigate('#/rust');
+  const manifest = read('content/rust2018/course/manifest-1.0.0.json');
+  await wait(
+    () =>
+      js(
+        `return document.querySelectorAll('section[aria-label="教材目录"] a[href^="#/rust/lesson/"]').length===388`,
+      ),
+    'Rust catalog incomplete',
+  );
+  assert.deepEqual(
+    await js(
+      `return [...document.querySelectorAll('section[aria-label="教材目录"] a[href^="#/rust/lesson/"]')].map(e=>e.getAttribute("href"))`,
+    ),
+    manifest.catalog.map((n) => '#/rust/lesson/' + n.id),
+  );
+  await navigate('#/rust/lesson/rust.book.root01.01.01');
+  await textVisible('理解自检');
+  await click('main summary', '核对答案');
+  await textVisible('检查当前系统的链接器及构建工具配置');
+  await js('document.querySelector("[data-testid=reading-end]").scrollIntoView({block:"end"})');
+  await wait(
+    () =>
+      js('return document.querySelector("[data-testid=reading-end]")?.dataset.readToday==="true"'),
+    'Rust native reading not saved',
+  );
+  const reading = await archive();
+  assert.equal(reading.rows.rustActivities.length, 1);
+  await wd(route + '/refresh', 'POST', {});
+  await textVisible('理解自检');
+  await js('document.querySelector("[data-testid=reading-end]").scrollIntoView({block:"end"})');
+  await wait(
+    () =>
+      js('return document.querySelector("[data-testid=reading-end]")?.dataset.readToday==="true"'),
+    'Rust native reading reload missing',
+  );
+  assert.deepEqual((await archive()).rows.rustActivities, reading.rows.rustActivities);
+  assert.deepEqual((await archive()).rows.ledger, reading.rows.ledger);
+  checkpoint('native-rust-catalog-388-reading-self-check-dedup');
+
+  await navigate('#/rust/example/' + shadow.lesson);
+  await fill(input, shadow.cases[2].input);
+  await button('运行');
+  await finish(shadow.cases[2].expected);
+  await button('回到开头', trace);
+  await outputText('暂无输出');
+  await fill(input, shadow.cases[3].input);
+  assert.equal(await traceExists(), false);
+  await button('运行');
+  await finish(shadow.cases[3].expected);
+  await fill(editor, shadow.source.replace('n + 2', 'n + 5'));
+  assert.equal(await traceExists(), false);
+  await button('运行');
+  await finish('42\n14\n');
+  checkpoint('native-rust-current-source-input-invalidates-stale-result');
+
+  await navigate('#/rust/workbench');
+  await fill(
+    editor,
+    'fn main(){let original=String::from("Rust🙂");let copied=original.clone();let moved=original;println!("{} {}",copied,moved);}',
+  );
+  await fill(input, '');
+  await button('运行');
+  await nativeElement(trace);
+  for (let step = 0; step < 45 && !(await traceText()).includes('已移动，不能再读取'); step++)
+    await button('下一步', trace);
+  assert((await traceText()).includes('已移动，不能再读取'));
+  const movedState = await traceText();
+  const movedCursor = await js('return document.querySelector(arguments[0]).dataset.cursor', [
+    trace,
+  ]);
+  await button('上一步', trace);
+  assert(!(await traceText()).includes('已移动，不能再读取'));
+  await button('下一步', trace);
+  assert.equal(
+    await js('return document.querySelector(arguments[0]).dataset.cursor', [trace]),
+    movedCursor,
+  );
+  assert.equal(await traceText(), movedState);
+  await finish('Rust🙂 Rust🙂\n');
+  await snapshot('rust-ownership');
+  checkpoint('native-rust-move-clone-identities-reverse');
+
+  await navigate('#/rust/example/' + borrowed.lesson);
+  await fill(input, borrowed.cases[3].input);
+  await button('运行');
+  await nativeElement(trace);
+  for (
+    let step = 0;
+    step < 70 && !(await traceText()).includes('可变借用，目标暂不能直接读写');
+    step++
+  )
+    await button('下一步', trace);
+  assert((await traceText()).includes('可变借用，目标暂不能直接读写'));
+  assert((await traceText()).includes('bump · 帧 #'));
+  const borrowedState = await traceText();
+  await button('上一步', trace);
+  assert(!(await traceText()).includes('可变借用，目标暂不能直接读写'));
+  await button('下一步', trace);
+  assert.equal(await traceText(), borrowedState);
+  await snapshot('rust-borrow');
+  await finish(borrowed.cases[3].expected);
+  await button('回到开头', trace);
+  assert((await traceText()).includes('当前没有活动变量。'));
+  assert((await traceText()).includes('当前没有活动调用帧。'));
+  await outputText('暂无输出');
+  checkpoint('native-rust-mutable-borrow-stack-atomic-reverse');
+
+  const actualSource = '// 字🙂，原始源码保持逐字一致\n' + borrowed.source;
+  await fill(editor, actualSource);
+  await button('运行');
+  await finish(borrowed.cases[3].expected);
+  const files = [];
+  for (const [format, extension] of [
+    ['JSON', '.json'],
+    ['PNG', '.png'],
+    ['Markdown', '.md'],
+    ['ZIP', '.zip'],
+  ])
+    files.push(await download(() => button('导出 ' + format), extension));
+  const exported = read(files[0]);
+  assert.equal(exported.language, 'rust');
+  assert.equal(exported.edition, '2018');
+  assert.equal(exported.source.text, actualSource);
+  assert.equal(exported.source.sha256, sha(actualSource));
+  assert.equal(exported.input, borrowed.cases[3].input);
+  assert.equal(exported.state.output, borrowed.cases[3].expected);
+  assert.deepEqual(exported.state.loans, []);
+  assert.equal(readFileSync(files[1]).subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  assert(readFileSync(files[2], 'utf8').includes(actualSource));
+  assert.equal(readFileSync(files[3]).subarray(0, 4).toString('hex'), '504b0304');
+  checkpoint('native-rust-four-exports-exact-source-input-state', {
+    files: files.map((path) => ({
+      path,
+      sha256: sha(readFileSync(path)),
+      bytes: statSync(path).size,
+    })),
+  });
+
+  await navigate('#/rust/workbench');
+  await fill(editor, 'fn main(){let n=3;println!("{}",n);}');
+  await button('切换到积木');
+  await nativeElement('.python-block-canvas .blocklySvg');
+  await button('应用积木到代码');
+  await button('运行');
+  await finish('3\n');
+  await fill(
+    editor,
+    'fn main(){let text=String::from("字🙂");let moved=text;println!("{}",text);}',
+  );
+  assert.equal(await traceExists(), false);
+  await button('运行');
+  await textVisible('E_MOVED');
+  assert.equal(await traceExists(), false);
+  const diagnosticButton = await js(
+    'return [...document.querySelectorAll("main button")].find(e=>e.textContent.startsWith("定位第 "))?.textContent',
+  );
+  assert(diagnosticButton);
+  await button(diagnosticButton);
+  assert.equal(
+    await js(
+      'const e=document.querySelector(arguments[0]);return e.value.slice(e.selectionStart,e.selectionEnd)',
+      [editor],
+    ),
+    'text',
+  );
+  await fill(editor, formatted.source);
+  await fill(input, '4\n');
+  await button('运行');
+  await finish('Rust 4\n');
+  await js(`
+    window.rustCancelProof={posted:false,terminated:false,received:false};
+    const Original=window.Worker;
+    window.Worker=class extends Original {
+      postMessage(...args){
+        window.rustCancelProof.posted=true;
+        this.addEventListener('message',()=>{window.rustCancelProof.received=true});
+        setTimeout(()=>{if(!window.rustCancelProof.terminated)super.postMessage(...args)},650);
+      }
+      terminate(){window.rustCancelProof.terminated=true;window.Worker=Original;super.terminate()}
+    };
+  `);
+  await button('运行');
+  await wait(() => js('return window.rustCancelProof.posted'), 'Missing actual Rust Worker');
+  await button('取消', '.rust-editor-grid');
+  await textVisible('已取消当前操作。');
+  const cancelled = await js('return window.rustCancelProof');
+  assert.deepEqual(cancelled, { posted: true, terminated: true, received: false });
+  await button('运行');
+  await finish('Rust 4\n');
+  checkpoint('native-rust-blockly-diagnostic-location-cancel-rerun', { cancelled });
+
+  await navigate('#/rust/practice/' + formatted.id);
+  await fill(editor, formatted.source);
+  await button('保存草稿');
+  await textVisible('草稿已保存到此浏览器。');
+  await button('提交判题');
+  await textVisible('判题结果已记入本地复盘。');
+  await textVisible('四组均通过');
+  const accepted = await archive();
+  assert.equal(accepted.rows.rustActivities.length, 2);
+  assert.equal(accepted.rows.ledger.filter((row) => row.subjectId === formatted.id).length, 1);
+  for (const group of [1, 3]) {
+    await button(`复盘第 ${group + 1} 组 · 通过`, 'section[aria-label="运行结果"]');
+    await finish(formatted.cases[group].expected);
+    await button('回到开头', trace);
+    await outputText('暂无输出');
+  }
+  await button('提交判题');
+  await textVisible('判题结果已记入本地复盘。');
+  assert.deepEqual((await archive()).rows.ledger, accepted.rows.ledger);
+  await snapshot('rust-four-groups');
+  await click('main a', '查看本地复盘');
+  await wd(route + '/refresh', 'POST', {});
+  await textVisible('四组均通过');
+  await textVisible('已有首次通过记录');
+  await navigate('#/rust/practice/' + formatted.id);
+  await wait(
+    () =>
+      js('return document.querySelector(arguments[0])?.value===arguments[1]', [
+        editor,
+        formatted.source,
+      ]),
+    'Rust native saved draft missing after refresh',
+  );
+  const saved = await archive();
+  for (const name of [
+    'courseActivities',
+    'courseDrafts',
+    'pythonActivities',
+    'pythonDrafts',
+    'javaActivities',
+    'javaDrafts',
+    'cppActivities',
+    'cppDrafts',
+    'appearance',
+    'appearanceAssets',
+  ]) {
+    assert.deepEqual(saved.keys[name], prior.keys[name], name + ' original keys');
+    assert.deepEqual(saved.rows[name], prior.rows[name], name + ' original records');
+  }
+  writeFileSync(
+    join(output, 'rust-native-db13-to-14.json'),
+    JSON.stringify({ prior, migrated, reading, accepted, saved }, null, 2),
+  );
+  checkpoint('native-rust-db13-to-14-four-language-Blob-draft-judge-review-dedup');
 }
 
 try {
@@ -1198,18 +1502,19 @@ try {
   const actualLearning = cleared.names.filter(
     (n) => !['meta', 'settings', 'avatar', 'appearance', 'appearanceAssets'].includes(n),
   );
-  assert.equal(actualLearning.length, 20);
+  assert.equal(actualLearning.length, 22);
   report.actualResetStores = actualLearning;
   for (const name of actualLearning) assert.deepEqual(cleared.rows[name], [], name);
   writeFileSync(
     join(output, 'native-save-reload-clear.json'),
     JSON.stringify({ initial, durable, reloaded, cleared }, null, 2),
   );
-  report.results.push({ id: 'native-db13-save-refresh-cancel-and-clear', passed: true });
+  report.results.push({ id: 'native-db14-save-refresh-cancel-and-clear', passed: true });
   const pythonSaved = await runPython(durable);
   const javaSaved = await runJava(pythonSaved);
-  await runCppCourse(javaSaved);
-  assert.equal(report.results.length, programs.length + cppQuestions.length + 6);
+  const cppSaved = await runCppCourse(javaSaved);
+  await runRustCourse(cppSaved);
+  assert.equal(report.results.length, programs.length + cppQuestions.length + 13);
   assert.equal(sha(readFileSync('content/build/source-lock.json')), sourceLockBefore);
   verifyBuildInputs();
   report.passed = true;

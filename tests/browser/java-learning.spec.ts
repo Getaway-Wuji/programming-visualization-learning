@@ -89,8 +89,8 @@ test('course assets load lazily and reading, judge, review and draft persist ind
   await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read-today', 'true');
   await page.keyboard.press('End');
   const read = await archive(page);
-  expect(read.version).toBe(13);
-  expect(Object.keys(read.rows)).toHaveLength(25);
+  expect(read.version).toBe(14);
+  expect(Object.keys(read.rows)).toHaveLength(27);
   expect(read.rows.javaActivities.values).toHaveLength(1);
   expect(
     read.rows.dailyFacts.values.filter((item) => item.subjectRef?.id === section.platformRef.id),
@@ -216,7 +216,7 @@ test('native DB11 upgrade preserves real C, Python and C++ rows, then saves Java
   expect(JSON.stringify(original.rows.achievements.values)).toContain('observation.stack.hanoi');
   const prior = Object.fromEntries(
     Object.entries(original.rows).filter(
-      ([name]) => !name.startsWith('java') && !name.startsWith('cpp'),
+      ([name]) => !name.startsWith('java') && !name.startsWith('cpp') && !name.startsWith('rust'),
     ),
   );
   prior.meta.values[0] = {
@@ -256,16 +256,16 @@ test('native DB11 upgrade preserves real C, Python and C++ rows, then saves Java
       'ready',
     );
     const upgraded = await archive(migrated);
-    expect(upgraded.version).toBe(13);
+    expect(upgraded.version).toBe(14);
     expect(upgraded.rows.javaActivities.values).toEqual([]);
     expect(upgraded.rows.javaDrafts.values).toEqual([]);
     for (const [name, stored] of Object.entries(prior))
       if (name !== 'meta') expect(upgraded.rows[name], name).toEqual(stored);
     expect(upgraded.rows.meta.values[0]).toEqual({
       ...prior.meta.values[0],
-      dbVersion: 13,
-      schemaVersion: '13.0.0',
-      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp', version: '1.0.0' },
+      dbVersion: 14,
+      schemaVersion: '14.0.0',
+      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp-rust', version: '1.0.0' },
     });
     await migrated.bringToFront();
     const readingEnd = migrated.getByTestId('reading-end');
@@ -293,7 +293,7 @@ test('native DB11 upgrade preserves real C, Python and C++ rows, then saves Java
       'achievements',
     ])
       expect(final.rows[name]).toEqual(prior[name]);
-    await info.attach('native-DB11-DB13', {
+    await info.attach('native-DB11-DB14', {
       body: JSON.stringify({ prior, upgraded, final }),
       contentType: 'application/json',
     });

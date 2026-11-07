@@ -1,0 +1,466 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 5,
+  "nodes": [
+    {
+      "id": "rust.book.root05",
+      "sourceNodeId": "rust.source.root05",
+      "title": "第5章 使用结构体来组织相关联的数据",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 149,
+      "printedPage": null,
+      "leaf": false,
+      "order": 66,
+      "group": 5,
+      "body": [
+        "结构体把彼此相关的数据放在同一个有名字的类型里，使字段的含义不再依赖位置记忆。本章先定义和创建实例，再用矩形计算比较独立参数、元组与命名字段，最后将相关行为放入 impl。",
+        "这里讨论的是标准 Rust 的自定义类型。当前平台解释器不执行 struct、impl 或派生 trait，所有例子用于阅读与自检；它们仍需遵守前章的所有权与借用规则。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root05.01",
+      "sourceNodeId": "rust.source.root05.01",
+      "title": "定义并实例化结构体",
+      "parent": "rust.book.root05",
+      "depth": 2,
+      "physicalPage": 150,
+      "printedPage": null,
+      "leaf": false,
+      "order": 67,
+      "group": 5,
+      "body": [
+        "定义结构体时要同时确定类型名、字段名和各字段类型；实例化时为所有必要字段提供值。访问命名字段比按位置取值更容易表达领域含义，但不会自动改变字段类型或绕过所有权。",
+        "下面依次看同名初始化简写、从旧实例更新、元组结构体和单元结构体。四种写法解决不同的表达问题，应根据数据的意义选择，而非只比较字数。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root05.01.01",
+      "sourceNodeId": "rust.source.root05.01.01",
+      "title": "在变量名与字段名相同时使用简化版的字段初始化方法",
+      "parent": "rust.book.root05.01",
+      "depth": 3,
+      "physicalPage": 152,
+      "printedPage": null,
+      "leaf": true,
+      "order": 68,
+      "group": 5,
+      "body": [
+        "当局部变量名与结构体字段名一致时，可以把 field: field 简写成 field。它是初始化写法的缩短，不是自动读取任意同名全局值，也不会省略仍未提供的字段。字段类型和变量类型仍须匹配，读者可以把简写在脑中展开来核对。",
+        "简写也不会改变移动语义。用 String 变量初始化拥有的 String 字段，会把该值移入实例；之后不能仅因变量名仍在函数中就继续使用旧绑定。下面函数接收 title 和 pages，简写使“同名参数进入同名字段”的关系更清楚，但未把 String 变成共享引用。简写中的变量必须在当前位置可见，结构体字段名本身不会自动提供一个初始化值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Book { title: String, pages: i32 }\nfn make_book(title: String, pages: i32) -> Book {\n    Book { title, pages } // 等于 title: title, pages: pages\n}\nfn main() {\n    let book = make_book(String::from(\"手册\"), 96);\n    println!(\"{} {}\", book.title, book.pages);\n}\n",
+        "description": "展开同名字段简写，并检查 String 从形参进入字段的方向。",
+        "result": "标准 Rust 中预期输出“手册 96”。",
+        "reason": "自定义结构体、结构体字段和字段初始化简写不在平台解释器范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "将 Book { title, pages } 改成完整写法会改变所有权吗？",
+        "answer": "不会。两种写法等价，title 的 String 都被移入结构体字段，pages 的 i32 按复制规则使用。",
+        "hints": [
+          "简写改变拼写，不改变字段初始化的语义。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.01.02",
+      "sourceNodeId": "rust.source.root05.01.02",
+      "title": "使用结构体更新语法根据其他实例创建新实例",
+      "parent": "rust.book.root05.01",
+      "depth": 3,
+      "physicalPage": 152,
+      "printedPage": null,
+      "leaf": true,
+      "order": 69,
+      "group": 5,
+      "body": [
+        "结构体更新语法用于创建新实例：显式列出想改变的字段，再用 ..old 填入同类型旧实例中剩余字段。它并不是就地修改 old，也不是无条件深复制整个结构体；末尾的更新部分要按各个被采用字段的类型判断复制或移动。",
+        "若采用旧实例的 String 字段，就可能移走该字段，使旧实例不能再作为完整值使用；仍未移动的 Copy 字段可继续单独使用。若显式为新实例提供了 String 字段，而只从旧实例采用整数等 Copy 字段，则原字符串可保留。下面选择前一种情况，以区别“创建新值”和“复制全部资源”。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Card { label: String, count: i32 }\nfn main() {\n    let old = Card { label: String::from(\"资料\"), count: 2 };\n    let newer = Card { count: 3, ..old };\n    println!(\"{} {}\", newer.label, newer.count);\n    println!(\"旧计数 {}\", old.count);\n}\n",
+        "description": "只重设计数，将旧标签移动到新实例中。",
+        "result": "预期输出“资料 3”和“旧计数 2”；不能再读取 old.label 或整体使用 old。",
+        "reason": "平台不支持 struct 更新和部分移动，本例为标准 Rust 阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "..old 为什么不保证 old 的全部字段还可使用？",
+        "answer": "更新按字段取值，非 Copy 的 String 字段会移动到新实例；只有未移动或可复制的字段仍可相应访问。",
+        "hints": [
+          "逐字段标记新值来源和 Copy 性质。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.01.03",
+      "sourceNodeId": "rust.source.root05.01.03",
+      "title": "使用不需要对字段命名的元组结构体来创建不同的类型",
+      "parent": "rust.book.root05.01",
+      "depth": 3,
+      "physicalPage": 153,
+      "printedPage": null,
+      "leaf": true,
+      "order": 70,
+      "group": 5,
+      "body": [
+        "元组结构体保留一个独立类型名，但字段只按位置访问，不为每项提供名字。它适合“整体身份很重要、各位置含义足够清楚”的小组合，例如坐标或颜色。若字段含义容易混淆，普通命名字段结构体往往更易读。",
+        "两个元组结构体即使字段类型和数量完全相同，仍是不同类型，不会因底层都装整数就可以任意互传。这能防止把尺寸误作坐标。与普通元组相比，它增加了领域身份；与命名结构体相比，则牺牲了字段标签。下面通过 Point 的 .0 和 .1 取值，不引入任意自动转换。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Point(i32, i32);\nstruct Size(i32, i32);\nfn main() {\n    let point = Point(3, 8);\n    let size = Size(10, 20);\n    println!(\"位置 {} {}\", point.0, point.1);\n    println!(\"尺寸 {} {}\", size.0, size.1);\n}\n",
+        "description": "比较同样两个整数在不同元组结构体中表达的不同身份。",
+        "result": "预期显示“位置 3 8”和“尺寸 10 20”。",
+        "reason": "元组、元组结构体与位置字段访问均在当前平台子集外。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Point 和 Size 的字段完全相同，接收 Point 的函数能直接接收 Size 吗？",
+        "answer": "不能。结构相似不等于类型相同；必须显式构造正确类型或设计转换。",
+        "hints": [
+          "注意类型名本身参与静态类型检查。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.01.04",
+      "sourceNodeId": "rust.source.root05.01.04",
+      "title": "没有任何字段的空结构体",
+      "parent": "rust.book.root05.01",
+      "depth": 3,
+      "physicalPage": 154,
+      "printedPage": null,
+      "leaf": true,
+      "order": 71,
+      "group": 5,
+      "body": [
+        "单元结构体没有字段，却仍然定义了一个独立的类型。它适合不需要携带数据、但需要类型身份的场景，例如用某个类型代表一种策略或标记。没有字段不意味着“没有类型”，也不等同于所有函数默认返回的 unit 值 ()。",
+        "创建单元结构体不需要给空字段表填内容，可以直接使用它的类型名构造值。之后可为该类型实现方法或 trait，使没有实例数据的行为得到统一组织。下面让 Marker 作为函数参数来表达一种明确的调用约定；它不存储文本或数字，但调用者仍必须提供正确类型。",
+        "普通结构体字段若使用 String，实例拥有这份文本；若使用 &str，则存放借用，必须明确引用数据的有效期。仅把字段改成 &str 而不给出必要的生命周期关系，可能无法通过编译。单元结构体没有字段，也就没有这些字段数据，但不能据此推断所有结构体都不需要资源管理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Marker;\nfn acknowledge(_marker: Marker) { println!(\"标记已确认\"); }\nfn main() {\n    let marker = Marker;\n    acknowledge(marker);\n}\n",
+        "description": "通过无字段值传参说明单元结构体仍有独立类型。",
+        "result": "预期输出“标记已确认”；Marker 不携带额外字段。",
+        "reason": "自定义单元结构体不属于平台执行子集，不能与平台支持的 unit 混同。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "参数要求 Marker 时，能用 () 代替吗？为什么？",
+        "answer": "不能直接代替。Marker 是自定义单元结构体类型，() 是 unit，虽然都没有字段信息，但类型身份不同。",
+        "hints": [
+          "数据形状相近不等于类型一致。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.02",
+      "sourceNodeId": "rust.source.root05.02",
+      "title": "一个使用结构体的示例程序",
+      "parent": "rust.book.root05",
+      "depth": 2,
+      "physicalPage": 156,
+      "printedPage": null,
+      "leaf": false,
+      "order": 72,
+      "group": 5,
+      "body": [
+        "计算矩形面积时，宽与高应作为同一对象的数据一起传递。先把两个独立参数组合为元组，再用命名结构体提高可读性，最后加入调试格式，便能看出每次重构具体改善了什么。",
+        "重构应保持面积计算的含义。重点不是包装越多越好，而是数据关系是否更明确、调用者是否更难传错、查看实例时是否有可靠的诊断信息。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root05.02.01",
+      "sourceNodeId": "rust.source.root05.02.01",
+      "title": "使用元组来重构代码",
+      "parent": "rust.book.root05.02",
+      "depth": 3,
+      "physicalPage": 157,
+      "printedPage": null,
+      "leaf": true,
+      "order": 73,
+      "group": 5,
+      "body": [
+        "元组可以把矩形的两个尺寸组合为一个参数，使函数签名不再散列多个相关值。函数接收 (i32, i32)，并用 .0、.1 取得成员；组合是明确的，但两个位置的领域含义仍要靠约定记住。",
+        "面积乘法交换两项恰好不影响结果，容易掩盖位置混淆。若换成绘图、宽度限制或长宽比例，互换值就可能改变行为，因此不能仅凭面积结果一样认定接口已经清晰。下面用元组完成第一步重构，随后将用命名字段表达宽高。元组是否 Copy 取决于成员，不能把整数元组的性质推广到包含 String 的所有元组。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn area(dimensions: (i32, i32)) -> i32 {\n    dimensions.0 * dimensions.1\n}\nfn main() {\n    let rectangle = (8, 5);\n    println!(\"面积 {}\", area(rectangle));\n}\n",
+        "description": "用一个元组参数聚合矩形尺寸，同时指出位置缺少名字的局限。",
+        "result": "预期输出“面积 40”。",
+        "reason": "元组类型、元组参数和位置字段不受平台解释器支持。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只用面积乘法测试，能否发现宽与高顺序颠倒？",
+        "answer": "通常不能，乘法交换律使结果相同；应检查接口语义，或使用宽高有区别的行为验证顺序。",
+        "hints": [
+          "相同输出可能掩盖不同的数据含义。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.02.02",
+      "sourceNodeId": "rust.source.root05.02.02",
+      "title": "使用结构体来重构代码：增加有意义的描述信息",
+      "parent": "rust.book.root05.02",
+      "depth": 3,
+      "physicalPage": 158,
+      "printedPage": null,
+      "leaf": true,
+      "order": 74,
+      "group": 5,
+      "body": [
+        "命名结构体把矩形宽和高的意义写入类型，使函数访问 rectangle.width 而不是记忆 .0。实例构造按字段名称对应，书写字段的先后次序不应成为判断含义的依据；错误的字段名或类型会由编译器指出。",
+        "计算面积只需要查看尺寸，因此函数参数可以借用 Rectangle，不必取得整个实例。调用后仍能继续读取原对象，这也将前章借用规则与自定义类型联系起来。下例保留普通函数形式，让“数据表达”和“方法语法”先分开；结构体并不会自动禁止负数尺寸，领域约束还需要由程序设计保证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Rectangle { width: i32, height: i32 }\nfn area(rectangle: &Rectangle) -> i32 {\n    rectangle.width * rectangle.height\n}\nfn main() {\n    let rect = Rectangle { height: 5, width: 8 };\n    println!(\"面积 {}，宽 {}\", area(&rect), rect.width);\n}\n",
+        "description": "用字段标签和共享借用使尺寸含义与访问目的同时清楚。",
+        "result": "预期输出“面积 40，宽 8”；area 调用后 rect 仍可访问。",
+        "reason": "结构体与对自定义类型的引用参数超出平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "结构体字段写成 height 在前、width 在后，会把面积函数里的宽高交换吗？",
+        "answer": "不会。字段由名字对应而非初始化排列位置；函数读取各自明确命名的字段。",
+        "hints": [
+          "比较命名字段与元组位置的识别方式。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.02.03",
+      "sourceNodeId": "rust.source.root05.02.03",
+      "title": "通过派生trait增加实用功能",
+      "parent": "rust.book.root05.02",
+      "depth": 3,
+      "physicalPage": 159,
+      "printedPage": null,
+      "leaf": true,
+      "order": 75,
+      "group": 5,
+      "body": [
+        "自定义结构体不会自动拥有所有格式化能力。{} 通常要求 Display，而 {:?} 使用 Debug，二者面向不同用途。派生 Debug 可以为满足条件的字段生成调试表示，方便观察实例；这不等于生成面向最终用户的排版，也不等于实现了 Display。",
+        "#[derive(Debug)] 是类型上的属性，若字段类型没有必要的 Debug 能力，派生也会受限制。调试输出的细节不适合作为长期稳定的数据格式。下面只要求读者能辨认类型名与宽高字段，不能把换行、空格或字段排版当作平台已执行的结果；平台输出白名单也没有调试格式说明。",
+        "调试格式还可用 {:#?} 选择便于阅读的多行样式。这是查看结构的便利功能，并未改变类型的数据或所有权；正式展示给用户的文本仍应按实际需求设计。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "#[derive(Debug)]\nstruct Panel { width: i32, height: i32 }\nfn main() {\n    let panel = Panel { width: 12, height: 7 };\n    println!(\"{:?}\", panel);\n}\n",
+        "description": "通过派生 Debug 获取自定义结构体的调试表示。",
+        "result": "标准 Rust 中会显示包含 Panel、width: 12、height: 7 的调试文本；不承诺其排版可用于稳定存储。",
+        "reason": "属性派生、trait 和 {:?} 格式均不在平台执行白名单。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "派生 Debug 后，把 {:?} 改成 {} 一定能编译吗？",
+        "answer": "不一定。{} 需要 Display，派生 Debug 只提供调试格式能力，并不自动实现 Display。",
+        "hints": [
+          "格式占位符对应的是不同 trait。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.03",
+      "sourceNodeId": "rust.source.root05.03",
+      "title": "方法",
+      "parent": "rust.book.root05",
+      "depth": 2,
+      "physicalPage": 162,
+      "printedPage": null,
+      "leaf": false,
+      "order": 76,
+      "group": 5,
+      "body": [
+        "方法把行为放在类型的上下文中，用 self 或它的引用表示当前实例。接下来从共享读取面积开始，加入第二个矩形参数，再比较不接收 self 的关联函数，最后看多个 impl 块如何组织实现。",
+        "self、&self 与 &mut self 分别表达取得所有权、共享查看和允许修改的不同意图。方法调用更紧凑，但仍然受类型和借用约束，不能省略这些判断。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root05.03.01",
+      "sourceNodeId": "rust.source.root05.03.01",
+      "title": "定义方法",
+      "parent": "rust.book.root05.03",
+      "depth": 3,
+      "physicalPage": 162,
+      "printedPage": null,
+      "leaf": true,
+      "order": 77,
+      "group": 5,
+      "body": [
+        "impl 类型名的块用来定义这个类型的相关行为。方法具有 self 接收者，&self 适合只读取当前实例的计算；因此 rect.area() 的点号语法与函数接收 &rect 的意图对应，调用不会消耗矩形。",
+        "若方法需要修改实例，可选择 &mut self，并要求调用处允许可变访问；若使用 self 按值接收，则可能消耗非 Copy 的对象。不能仅凭“这是方法”判断是否移动。下面 area 只乘宽高，故采用共享借用；把行为放到类型附近能让调用者更容易发现可用操作，却不会自动补足尺寸的合法性检查。编译器可为合适的方法调用处理引用形式，但这不表示接口中的接收者选择不再重要。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Rect { width: i32, height: i32 }\nimpl Rect {\n    fn area(&self) -> i32 { self.width * self.height }\n}\nfn main() {\n    let rect = Rect { width: 9, height: 4 };\n    println!(\"{} {}\", rect.area(), rect.width);\n}\n",
+        "description": "用 &self 方法重写面积计算，并在调用后继续读取实例。",
+        "result": "预期输出“36 9”。",
+        "reason": "impl、自定义方法和 self 接收者均属于平台外的阅读语法。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "area 改成接收 self 时，是否仍能不加分析地在调用后使用 rect？",
+        "answer": "不能。self 表示按值取得接收者，对这个未实现 Copy 的 Rect 会移动它；&self 则只是共享借用。",
+        "hints": [
+          "看接收者的类型，不只看方法名。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.03.02",
+      "sourceNodeId": "rust.source.root05.03.02",
+      "title": "带有更多参数的方法",
+      "parent": "rust.book.root05.03",
+      "depth": 3,
+      "physicalPage": 164,
+      "printedPage": null,
+      "leaf": true,
+      "order": 78,
+      "group": 5,
+      "body": [
+        "方法除了接收者还可以有普通参数。判断一个矩形能否严格容纳另一个时，当前对象由 &self 表示，另一个对象可用 &Rect 共享借用；调用语法只显式传后者，接收者已写在点号前面。",
+        "“能容纳”的定义必须明确。下面要求宽和高都严格大于，因此尺寸相等返回 false，也没有尝试旋转第二个矩形。仅靠方法名称不能推断是否包含边界或支持旋转，调用者应阅读条件。两个实例都只被查看，不需要移动所有权，也不需要为了调用而声明 mut。如果需要支持旋转，应明确增加两种方向的判断，而不是依靠调用者自行交换字段。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Rect { width: i32, height: i32 }\nimpl Rect {\n    fn contains(&self, other: &Rect) -> bool {\n        self.width > other.width && self.height > other.height\n    }\n}\nfn main() {\n    let outer = Rect { width: 10, height: 8 };\n    let inner = Rect { width: 6, height: 8 };\n    println!(\"{}\", outer.contains(&inner));\n}\n",
+        "description": "检查额外引用参数与严格比较边界。",
+        "result": "高度同为 8，不满足严格大于，预期输出 false。",
+        "reason": "结构体方法、多对象引用和领域接口均不在当前平台子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若业务允许两矩形边界贴合，哪两处条件需要调整？",
+        "answer": "把宽和高的 > 都改为 >=，并重新确认这符合期望；仅改一处会造成两维度规则不一致。",
+        "hints": [
+          "逐个核对每一个 && 条件的边界。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.03.03",
+      "sourceNodeId": "rust.source.root05.03.03",
+      "title": "关联函数",
+      "parent": "rust.book.root05.03",
+      "depth": 3,
+      "physicalPage": 165,
+      "printedPage": null,
+      "leaf": true,
+      "order": 79,
+      "group": 5,
+      "body": [
+        "关联函数定义在 impl 中，但没有 self 接收者，因此通过类型名与 :: 调用。它不需要先有一个实例，常被用来构造新值；相比之下，方法的接收者来自点号前的对象。String::from 就体现了这一调用形式。",
+        "构造函数的名字可以表达领域含义，例如 square 用一个边长同时初始化宽高。它不因为位于 impl 内就自动具有特殊权限或合法性保障，是否拒绝负数仍由函数体决定。下面先用 Rect::square 创建实例，再读取字段；不要写成对不存在的旧矩形调用 square 来“修改自身”，它在此处始终返回一个新值。关联函数也可能只是辅助计算，不一定都是构造器，应以返回类型和函数体为准。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Rect { width: i32, height: i32 }\nimpl Rect {\n    fn square(side: i32) -> Rect {\n        Rect { width: side, height: side }\n    }\n}\nfn main() {\n    let tile = Rect::square(6);\n    println!(\"{} {}\", tile.width, tile.height);\n}\n",
+        "description": "通过没有接收者的关联函数构造正方形。",
+        "result": "预期输出“6 6”。",
+        "reason": "自定义 impl 关联函数不受平台支持；平台仅单独白名单 String::new/from。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "square 为什么用 Rect::square(6)，而不是先创建 rect 再调用 rect.square(6)？",
+        "answer": "它没有 self 参数，不作用于已有实例；以类型为入口调用，并返回一个新 Rect。",
+        "hints": [
+          "查看签名里有没有 self 接收者。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.03.04",
+      "sourceNodeId": "rust.source.root05.03.04",
+      "title": "多个impl块",
+      "parent": "rust.book.root05.03",
+      "depth": 3,
+      "physicalPage": 166,
+      "printedPage": null,
+      "leaf": true,
+      "order": 80,
+      "group": 5,
+      "body": [
+        "同一个类型可以拥有多个 impl 块，分别组织构造、查询或其他相关方法。对于这里没有泛型条件的普通实现，拆分块不改变方法调用方式，也不会生成多个不同的结构体类型；所有方法仍属于原类型。",
+        "拆分是一种组织选择，不是权限隔离。不能在不同 impl 块中随意定义签名冲突的同名固有方法，期待运行时再选择其中一个。下面把构造与面积查询分开，读者仍可沿 Rect::new 与 rect.area 找到对应实现。后续泛型和 trait 会出现更有意义的多实现情形，此处先建立基本规则。为了便于维护，应把相关方法放在容易找到的位置，避免仅按代码长度任意拆散。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Rect { width: i32, height: i32 }\nimpl Rect {\n    fn new(width: i32, height: i32) -> Rect { Rect { width, height } }\n}\nimpl Rect {\n    fn area(&self) -> i32 { self.width * self.height }\n}\nfn main() {\n    let rect = Rect::new(7, 3);\n    println!(\"{}\", rect.area());\n}\n",
+        "description": "把构造与查询放入不同 impl 块，检查调用含义是否变化。",
+        "result": "预期输出 21，两个 impl 为同一个 Rect 提供行为。",
+        "reason": "多个 impl、自定义类型及方法组织属于标准 Rust 阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把两个 impl 合并成一个后，必须修改 Rect::new 或 rect.area 的调用吗？",
+        "answer": "不需要。在此例中只是源码组织方式改变，类型与方法签名不变。",
+        "hints": [
+          "区分实现位置与公开调用形式。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root05.04",
+      "sourceNodeId": "rust.source.root05.04",
+      "title": "总结",
+      "parent": "rust.book.root05",
+      "depth": 2,
+      "physicalPage": 168,
+      "printedPage": null,
+      "leaf": true,
+      "order": 81,
+      "group": 5,
+      "body": [
+        "结构体通过类型名和命名字段表达相关数据，方法通过接收者表明怎样使用实例，关联函数则组织不依赖既有实例的行为。重构时应检查接口是否更能表达意图，而不是只把所有函数搬进 impl；借用和移动规则仍决定调用后的对象能否使用。",
+        "本章还区分了字段简写、更新语法、元组结构体、单元结构体与调试派生。它们各有具体目的，不能当作自动深复制或自动格式化所有类型的捷径。下面让一个拥有 String 的结构体提供共享查询，观察方法调用后仍可再读标签；下一章将用枚举表示不同状态中的选择。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Page { label: String, lines: i32 }\nimpl Page {\n    fn is_long(&self) -> bool { self.lines > 40 }\n}\nfn main() {\n    let page = Page { label: String::from(\"导读\"), lines: 42 };\n    println!(\"{} {}\", page.is_long(), page.label);\n}\n",
+        "description": "综合命名字段、拥有 String 与共享接收者。",
+        "result": "预期输出“true 导读”；is_long 不消费整个 Page。",
+        "reason": "结构体、impl 和自定义字段访问在平台执行范围外，本章综合例仅供阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若希望判断后继续使用 page，为什么 &self 比按值 self 更直接？",
+        "answer": "&self 只共享借用，调用后所有权仍留在 page；按值 self 对此非 Copy 结构体会移动，必须另行设计返回或复制。",
+        "hints": [
+          "把第五章方法签名与第四章资源规则连起来。"
+        ]
+      }
+    }
+  ]
+}

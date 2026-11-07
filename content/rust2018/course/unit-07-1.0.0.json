@@ -1,0 +1,478 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 7,
+  "nodes": [
+    {
+      "id": "rust.book.root07",
+      "sourceNodeId": "rust.source.root07",
+      "title": "第7章 使用包、单元包及模块来管理日渐复杂的项目",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 188,
+      "printedPage": null,
+      "leaf": false,
+      "order": 93,
+      "group": 7,
+      "body": [
+        "项目变大后，读者需要知道功能在哪里、哪些条目允许外部使用，以及内部调整是否会影响调用者。本章依次区分 package 与 crate、模块与路径，再介绍 pub、use、别名和重导出，最后把模块拆到文件中。",
+        "这些属于标准 Rust 工程组织知识。平台当前只解释受限单文件程序，不装载模块文件或外部依赖；以下例子明确用于阅读接口和作用域，而不是扩大网页执行权限。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root07.01",
+      "sourceNodeId": "rust.source.root07.01",
+      "title": "包与单元包",
+      "parent": "rust.book.root07",
+      "depth": 2,
+      "physicalPage": 190,
+      "printedPage": null,
+      "leaf": true,
+      "order": 94,
+      "group": 7,
+      "body": [
+        "Cargo 的 package 由清单协调一个或多个 crate。crate 是一次编译处理的单元，可以是库或可执行目标；模块则在 crate 内部组织名字。三者分工不同，不能把每个 .rs 文件都当成一个独立 crate，也不能把目录名直接等同于模块路径。",
+        "按常规布局，src/main.rs 是默认二进制根，src/lib.rs 是库根，src/bin 下可有其他二进制入口。一个 package 最多一个库 crate，可以有多个二进制 crate，并至少有一个目标。下面展示目录清单而不是可拼成一个源码文件的代码；每个入口都由 Cargo 目标规则解释。每个二进制目标有自己的入口，库则提供可被其他代码使用的条目，不以启动主函数为目的。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "study_tools/\n  Cargo.toml\n  src/\n    lib.rs           # 一个库根\n    main.rs          # 默认二进制根\n    bin/\n      inspect.rs     # 另一个二进制根\n",
+        "description": "按常见目录约定数清包与编译目标，避免按文件总数推断。",
+        "result": "此布局表达一个 package、一个库目标与两个二进制目标；具体目标还应结合 Cargo.toml 检查。",
+        "reason": "Cargo 包、多 crate 与多文件装载均在平台单文件解释器范围外。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "src/lib.rs 内声明的一个子模块，会自动成为第二个库 crate 吗？",
+        "answer": "不会。子模块属于原 crate 内的名字组织；独立编译目标需要相应的目标配置或约定入口。",
+        "hints": [
+          "区分编译边界与模块边界。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.02",
+      "sourceNodeId": "rust.source.root07.02",
+      "title": "通过定义模块来控制作用域及私有性",
+      "parent": "rust.book.root07",
+      "depth": 2,
+      "physicalPage": 192,
+      "printedPage": null,
+      "leaf": true,
+      "order": 95,
+      "group": 7,
+      "body": [
+        "mod 建立模块边界，把相关条目放入同一命名空间，也控制可见性。默认私有的条目能供其定义模块及后代使用，但父模块不能因此任意访问子模块中的私有函数。把功能放入模块不是单纯缩进，而是在定义接口边界。",
+        "需要外部调用时，应按实际访问路径逐层考虑可见性，公开必要部分，把实现细节留在内部。下面 inventory 公开 report，report 再调用自己的私有 count。main 可以请求报告，却不能直接调用 count。这样的封装允许以后替换计数实现，而不强迫所有调用者跟着改内部名字。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod inventory {\n    fn count() -> i32 { 6 }\n    pub fn report() { println!(\"库存 {}\", count()); }\n}\nfn main() { inventory::report(); }\n",
+        "description": "用一个公开入口包住私有辅助函数，阅读模块接口。",
+        "result": "预期输出“库存 6”；从 main 直接访问 inventory::count 应被私有性检查拒绝。",
+        "reason": "mod、pub 与模块私有性不在当前平台执行子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "report 能调用 count，main 为什么不能直接调用同一个函数？",
+        "answer": "count 在 inventory 中为私有，模块内部可访问；main 是其父模块中的代码，没有通过 pub 得到该私有入口。",
+        "hints": [
+          "判断调用发生在哪个模块，而非只看同一文件。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.03",
+      "sourceNodeId": "rust.source.root07.03",
+      "title": "用于在模块树中指明条目的路径",
+      "parent": "rust.book.root07",
+      "depth": 2,
+      "physicalPage": 195,
+      "printedPage": null,
+      "leaf": false,
+      "order": 96,
+      "group": 7,
+      "body": [
+        "路径通过 :: 指定模块树中的条目，crate 从当前编译单元根出发，self 与 super 则相对于当前模块定位。路径能找到名字，并不等于调用方具有访问权限。",
+        "下面分别检查公开路径、父模块相对定位，以及结构体和枚举的公开差别。读取较长路径时，应逐段确认“从哪里开始、经过哪些模块、每段是否对调用方可见”。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root07.03.01",
+      "sourceNodeId": "rust.source.root07.03.01",
+      "title": "使用pub关键字来暴露路径",
+      "parent": "rust.book.root07.03",
+      "depth": 3,
+      "physicalPage": 197,
+      "printedPage": null,
+      "leaf": true,
+      "order": 97,
+      "group": 7,
+      "body": [
+        "pub 将条目公开到其所在路径允许的范围，但只公开末端函数并不能自动打通隐藏的中间模块。外部调用要沿可达路径逐段访问；设计接口时，也不必为了一个功能而把所有内部细节全部设成公开。",
+        "下面在 catalog 中公开 printing 模块，再公开其中的 show，使根模块的 main 可以到达它。catalog 本身在 crate 根声明，根模块及其后代可以使用这个模块；若要从其他 crate 访问，还需考虑根路径对外公开或重导出。绝对路径写 crate 只改变起点，不会绕过任何私有性规则。为了让接口更稳定，也可使用后面的重导出策略，而不必把内部层级全变成外部路径。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod catalog {\n    pub mod printing {\n        pub fn show() { println!(\"目录可见\"); }\n    }\n}\nfn main() { crate::catalog::printing::show(); }\n",
+        "description": "沿路径逐段核对中间模块和目标函数的公开性。",
+        "result": "当前 crate 的根模块可以调用，预期输出“目录可见”。",
+        "reason": "公开路径解析与模块可见性是平台外的工程语法。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "保留 show 的 pub，却删去 printing 的 pub，main 还能沿相同路径访问吗？",
+        "answer": "不能。printing 对父模块外的这次访问不可见，公开末端函数不会自动公开经过的私有模块。",
+        "hints": [
+          "把路径看作需要逐段通过的入口。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.03.02",
+      "sourceNodeId": "rust.source.root07.03.02",
+      "title": "使用super关键字开始构造相对路径",
+      "parent": "rust.book.root07.03",
+      "depth": 3,
+      "physicalPage": 200,
+      "printedPage": null,
+      "leaf": true,
+      "order": 98,
+      "group": 7,
+      "body": [
+        "super 代表当前模块的父模块，可作为相对路径起点。它适合表达子功能与父层辅助功能之间稳定的关系；如果整组模块整体搬迁，父子关系未变时，这条相对路径可能仍保持有效，而从根写起的路径可能需要调整。",
+        "super 不代表文件系统当前目录，也不会自动导入父模块全部名称。下面 worker 的公开 run 先调用父层 announce，再做自己的工作。子模块允许访问祖先模块的私有条目，所以 announce 不必仅为这次内部调用公开给所有外部使用者；路径选择和公开范围应分别考虑。模块相对路径跟随模块树解释，改变源文件保存位置本身不一定改变父子关系。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn announce() { println!(\"准备开始\"); }\nmod worker {\n    pub fn run() {\n        super::announce();\n        println!(\"执行当前任务\");\n    }\n}\nfn main() { worker::run(); }\n",
+        "description": "通过 super 从子模块定位父层函数。",
+        "result": "预期依次显示“准备开始”和“执行当前任务”。",
+        "reason": "super、嵌套模块和相对路径解析不在平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "worker 再嵌套一层后，原来的 super::announce 一定仍指向根函数吗？",
+        "answer": "不一定。super 只上移一层；模块层级改变后应重新核对路径，可能需要 super::super 或从 crate 根定位。",
+        "hints": [
+          "先画模块树，再数相对路径上移的层数。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.03.03",
+      "sourceNodeId": "rust.source.root07.03.03",
+      "title": "将结构体或枚举声明为公共的",
+      "parent": "rust.book.root07.03",
+      "depth": 3,
+      "physicalPage": 201,
+      "printedPage": null,
+      "leaf": true,
+      "order": 99,
+      "group": 7,
+      "body": [
+        "公开结构体类型不等于公开所有字段，字段仍可逐项选择 pub。这样调用者可以持有并使用该类型，却必须通过构造函数和方法维护内部约束。若存在私有字段，模块外通常不能直接用完整字段字面量随意构造实例。",
+        "公开枚举的变体则随枚举一起公开，调用者需要能表达这些合法状态。下面 Item 允许外部读取名称，却把库存数量保留为私有，由 new 构造；Kind 的变体用于公开分类。这种区分让数据可用而实现细节可控，不意味着 pub 会取消类型检查或让所有内存可被任意读取。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod shop {\n    pub struct Item { pub name: String, stock: i32 }\n    impl Item {\n        pub fn new() -> Item { Item { name: String::from(\"铅笔\"), stock: 5 } }\n        pub fn stock(&self) -> i32 { self.stock }\n    }\n    pub enum Kind { Paper, Tool }\n}\nfn main() {\n    let item = shop::Item::new();\n    let _kind = shop::Kind::Tool;\n    println!(\"{} {}\", item.name, item.stock());\n}\n",
+        "description": "比较公开类型、公开字段和公开枚举变体。",
+        "result": "预期输出“铅笔 5”；main 可以调用 stock()，不能直接读取私有字段 item.stock。",
+        "reason": "结构体、枚举、impl 与模块可见性均不在平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "pub struct Item 为什么还允许隐藏 stock？pub enum Kind 的变体又如何？",
+        "answer": "结构体字段各自控制可见性，类型公开不会自动公开字段；公开枚举的变体随枚举公开。",
+        "hints": [
+          "分别检查类型名、字段和变体的规则。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.04",
+      "sourceNodeId": "rust.source.root07.04",
+      "title": "用use关键字将路径导入作用域",
+      "parent": "rust.book.root07",
+      "depth": 2,
+      "physicalPage": 204,
+      "printedPage": null,
+      "leaf": false,
+      "order": 100,
+      "group": 7,
+      "body": [
+        "use 为当前作用域引入较短的路径名，减少重复书写。它不会执行目标函数，也不会下载依赖或绕过私有性；真正的访问权限仍来自被引入条目与路径的公开规则。",
+        "下面比较常见导入方式、as 别名、pub use 重导出、外部 crate、嵌套路径与通配符。选择时兼顾简洁和来源清楚，让读者能看出一个名字究竟来自哪里。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root07.04.01",
+      "sourceNodeId": "rust.source.root07.04.01",
+      "title": "创建use路径时的惯用模式",
+      "parent": "rust.book.root07.04",
+      "depth": 3,
+      "physicalPage": 205,
+      "printedPage": null,
+      "leaf": true,
+      "order": 101,
+      "group": 7,
+      "body": [
+        "导入函数时常保留其父模块名，例如 use crate::tools 后调用 tools::run，既缩短路径，也提示函数来源。导入结构体或枚举时则常直接引入类型名，以免每次构造都带长前缀；这属于提高可读性的惯用方式，不是强制的语法限制。",
+        "遇到两个模块都提供同名类型时，可以保留模块限定或使用别名，避免在同一作用域内发生名字冲突。use 的有效范围也有限，外层导入不会神奇地在所有嵌套作用域按同样方式生效。下面通过模块名调用两次函数，让读者始终知道 run 来自 tools，而不是当前模块定义的普通函数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod work {\n    pub mod tools {\n        pub fn run() { println!(\"工具运行\"); }\n    }\n}\nuse crate::work::tools;\nfn main() {\n    tools::run();\n    tools::run();\n}\n",
+        "description": "保留模块限定，清楚表达被调用函数的来源。",
+        "result": "预期输出两行“工具运行”；导入本身没有产生输出。",
+        "reason": "use 与模块限定名不属于平台可执行语法。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把函数直接导入后只写 run() 在语法上一定错误吗？为何仍可能保留模块前缀？",
+        "answer": "并非错误。保留模块前缀是为了让来源清楚，尤其函数名很通用或存在同名条目时更易阅读。",
+        "hints": [
+          "惯用写法帮助读者，但不是额外语法规则。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.04.02",
+      "sourceNodeId": "rust.source.root07.04.02",
+      "title": "使用as关键字来提供新的名称",
+      "parent": "rust.book.root07.04",
+      "depth": 3,
+      "physicalPage": 207,
+      "printedPage": null,
+      "leaf": true,
+      "order": 102,
+      "group": 7,
+      "body": [
+        "as 可以给导入的条目提供当前作用域中的别名，适合两个来源具有相同名称的情况。别名不创建一个新类型，也不复制模块实现；它只是让相同条目在本地有另一个可区分的名字，原始定义及其行为不受影响。",
+        "命名别名时应表达来源或用途，避免用没有意义的单字母掩盖冲突。下面两个模块都有 Item，导入后分别称作 StoredItem 与 ShownItem，调用处能明确区分。不能因为都改名为 Item 就绕过不同类型的检查；真正的类型身份仍由各自定义决定，而不是当前 use 选择的拼写。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod storage { pub struct Item(pub i32); }\nmod display { pub struct Item(pub i32); }\nuse crate::storage::Item as StoredItem;\nuse crate::display::Item as ShownItem;\nfn main() {\n    let stored = StoredItem(3);\n    let shown = ShownItem(9);\n    println!(\"{} {}\", stored.0, shown.0);\n}\n",
+        "description": "为两个同名来源建立可读的本地别名。",
+        "result": "预期输出“3 9”；两个 Item 仍是不同的结构体类型。",
+        "reason": "导入别名、模块和元组结构体均在平台子集外。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "as 是否能把 storage::Item 转换成 display::Item？",
+        "answer": "不能。as 在 use 中只是重命名导入，不执行值转换，也不改变原类型身份。",
+        "hints": [
+          "不要把导入别名与表达式中的转换混淆。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.04.03",
+      "sourceNodeId": "rust.source.root07.04.03",
+      "title": "使用pub use重导出名称",
+      "parent": "rust.book.root07.04",
+      "depth": 3,
+      "physicalPage": 208,
+      "printedPage": null,
+      "leaf": true,
+      "order": 103,
+      "group": 7,
+      "body": [
+        "普通 use 为当前作用域提供名称，pub use 进一步把这个入口公开给调用者，这叫重导出。它可以隐藏库内部较深的组织路径，使外部通过稳定的短路径访问真正希望公开的功能；内部文件如何分组不必成为所有用户的负担。",
+        "重导出仍要求目标条目具备合适的可见性，不能把原本不允许公开的私有条目强行变成接口。下面把私有 internal 模块中的公开 launch 函数从根重新导出。外部 API 由根入口表达，但函数只有一份实现；它不是在 pub use 处重新执行或复制了一遍。重导出名称也可以成为文档中推荐的入口，应让调用者不必猜测内部实现位置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod internal {\n    pub fn launch() { println!(\"启动公开功能\"); }\n}\npub use crate::internal::launch;\nfn main() { launch(); }\n",
+        "description": "通过根重导出提供简短稳定的函数入口。",
+        "result": "预期输出“启动公开功能”，实际执行的仍是 internal 中的 launch。",
+        "reason": "重导出及库 API 组织不受平台单文件解释器支持。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "将 pub use 改成普通 use，库的外部调用者还能通过同样的公开入口使用它吗？",
+        "answer": "不能据此获得同样的公开入口。普通 use 仅引入本地名称；pub use 才把该引入路径作为公开 API。",
+        "hints": [
+          "区分当前模块方便调用与外部模块可以访问。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.04.04",
+      "sourceNodeId": "rust.source.root07.04.04",
+      "title": "使用外部包",
+      "parent": "rust.book.root07.04",
+      "depth": 3,
+      "physicalPage": 209,
+      "printedPage": null,
+      "leaf": true,
+      "order": 104,
+      "group": 7,
+      "body": [
+        "使用外部 crate 有两个层次：Cargo 清单声明依赖并解析版本，Rust 源码通过路径引用其中的条目。Rust 2018 下通常可直接以依赖名起始路径，无需把早期版次的所有写法混用；但路径正确也不能代替清单中的依赖准备。",
+        "标准库 std 随工具链提供，通常不需要像第三方随机库一样写进 dependencies。下面采用文档说明形式区分 rand 配置和 use 的职责，不进行下载。书中库接口依赖其对应版本，查阅方法时应保留这层上下文；当前平台不接受任意外部库，即使本机 Cargo 工程能成功构建也不能推出网页可执行。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "Cargo.toml：在 [dependencies] 中声明 rand = \"0.5.5\"\nRust 源码：use rand::Rng;\n用途：让相应 trait 可在当前模块参与方法解析\n对比：use std::collections::HashMap; 通常不需新增 std 依赖\n",
+        "description": "分开标记外部依赖声明、源码导入与标准库导入。",
+        "result": "清单声明工程依赖，use 只处理名字可见性；这份说明没有实际下载、构建或随机运行结果。",
+        "reason": "外部 crate、依赖网络获取和 trait 方法解析不在平台解释器范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "仅在 main.rs 添加 use rand::Rng，能保证一个未声明 rand 的工程可构建吗？",
+        "answer": "不能。源码导入不负责提供依赖；还需清单与实际依赖解析环境，且接口须对应所选版本。",
+        "hints": [
+          "先问依赖从哪里来，再问名字怎样进入作用域。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.04.05",
+      "sourceNodeId": "rust.source.root07.04.05",
+      "title": "使用嵌套的路径来清理众多use语句",
+      "parent": "rust.book.root07.04",
+      "depth": 3,
+      "physicalPage": 210,
+      "printedPage": null,
+      "leaf": true,
+      "order": 105,
+      "group": 7,
+      "body": [
+        "多个导入具有公共前缀时，可以用嵌套花括号合并路径。use std::{cmp::Ordering, collections::HashMap} 与分别写出两条完整路径的作用相同；它减少重复前缀，而不会把整个 std 全部导入。",
+        "若既需要一个模块自身，又需要模块中的条目，可在嵌套列表中使用 self，例如 std::io::{self, Read}。这里的 self 指定公共前缀本身，不是方法接收者，也不是任意父模块。合并后仍应能在脑中展开每一条完整路径，否则过深嵌套反而降低可读性。下面只导入实际使用的两项，让数量与名称对应清楚。若导入列表没有使用某项，应检查能否删除它，以免读者误认为实现依赖那项能力。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::{cmp::Ordering, collections::HashMap};\nfn main() {\n    let mut values: HashMap<&str, i32> = HashMap::new();\n    values.insert(\"长度\", 4);\n    let state = 4.cmp(&7);\n    println!(\"{} {}\", values.len(), state == Ordering::Less);\n}\n",
+        "description": "展开两条嵌套导入，确认只引入 Ordering 与 HashMap。",
+        "result": "预期输出“1 true”。",
+        "reason": "嵌套 use、HashMap 和 Ordering 均在平台可执行范围外。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "use std::io::{self, Read} 中，self 引入的本地名称是什么？",
+        "answer": "它引入公共前缀 std::io 自身，即 io；同时还引入 io 中的 Read，并不是把调用处 self 对象引入。",
+        "hints": [
+          "把嵌套列表的每项补回公共前缀。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.04.06",
+      "sourceNodeId": "rust.source.root07.04.06",
+      "title": "通配符",
+      "parent": "rust.book.root07.04",
+      "depth": 3,
+      "physicalPage": 211,
+      "printedPage": null,
+      "leaf": true,
+      "order": 106,
+      "group": 7,
+      "body": [
+        "use path::* 会引入该路径下可见的名字，适合少量有明确边界的统一导入，但会让读者更难确认某个名称来自哪里。模块以后增加新条目时，通配导入还可能引入冲突，代码原本清楚的名字来源因此发生变化。",
+        "通配符不会突破私有性，也不是运行时遍历模块。测试模块常用它引入父层待测条目，但生产接口仍应考虑显式名字的可读性。下面从小型 marks 模块引入两个公开常量，私有辅助值不会因此向调用者开放；若只用其中一个，显式导入那一项会更容易判断依赖范围。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod marks {\n    pub const LOW: i32 = 2;\n    pub const HIGH: i32 = 8;\n    const INTERNAL: i32 = 99;\n    pub fn internal_value() -> i32 { INTERNAL }\n}\nuse crate::marks::*;\nfn main() { println!(\"{} {}\", LOW, HIGH); }\n",
+        "description": "从一个小模块通配导入，区分可见条目与私有实现。",
+        "result": "预期输出“2 8”；main 不会因通配导入就得到私有 INTERNAL 的访问权限。",
+        "reason": "模块通配导入和 const 条目均不在当前平台执行白名单。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "通配导入是否可以让 main 直接读取 INTERNAL？",
+        "answer": "不可以。* 只引入可访问的名字，不改变原条目的私有性。",
+        "hints": [
+          "导入便利性与访问权限是两条独立规则。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.05",
+      "sourceNodeId": "rust.source.root07.05",
+      "title": "将模块拆分为不同的文件",
+      "parent": "rust.book.root07",
+      "depth": 2,
+      "physicalPage": 212,
+      "printedPage": null,
+      "leaf": true,
+      "order": 107,
+      "group": 7,
+      "body": [
+        "将模块体搬到另一个文件，可缩短根文件并使功能更容易定位。根中写 mod helper; 表示声明并从约定位置装载 helper 模块，常见对应 src/helper.rs；不是把目录里所有 .rs 文件自动扫描成模块，也不是像运行时读取脚本那样执行文件。",
+        "逻辑模块树与文件布局有关，却不是同一回事。移动到文件后，调用路径仍可保持 helper::run，pub 等可见性规则也不变。下面给出明确文件边界，两段不能不加区分地粘贴成一个单文件程序；真实工程应保证模块声明、文件位置和大小写一致，否则会在编译阶段找不到模块。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "文件 src/main.rs：\nmod helper;\nfn main() { helper::run(); }\n\n文件 src/helper.rs：\npub fn run() { println!(\"来自独立模块文件\"); }\n",
+        "description": "把根声明与子模块实现分开列出，保留逻辑调用路径。",
+        "result": "在相应 Cargo 二进制工程中正确放置文件后，预期输出“来自独立模块文件”。",
+        "reason": "平台不读取宿主文件，也不装载多文件模块，此例是工程布局阅读材料。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只创建 src/helper.rs，却不在模块树中声明它，一定会被自动编译进当前 crate 吗？",
+        "answer": "不会仅因文件存在就自动成为模块；需要相应 mod 声明或其他明确的编译入口与配置。",
+        "hints": [
+          "从 crate 根沿声明追踪实际装载的模块。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root07.06",
+      "sourceNodeId": "rust.source.root07.06",
+      "title": "总结",
+      "parent": "rust.book.root07",
+      "depth": 2,
+      "physicalPage": 214,
+      "printedPage": null,
+      "leaf": true,
+      "order": 108,
+      "group": 7,
+      "body": [
+        "管理工程时，可以先画出 crate 内的模块树，再标记希望公开的入口，最后选择调用路径与导入写法。pub 定义可见性，use 提供本地名字，as 处理别名，pub use 设计对外入口；它们彼此配合，却不能互相替代职责。",
+        "文件拆分只改变源码的组织位置，不应被误认为自动改变 API。下面在一个文件中展示内部模块与公开重导出，使读者先核对逻辑边界；真正拆文件时也应维持这些规则。把工程组织与计算逻辑分开，有助于后面使用 Vec、String 与 HashMap 时，明确类型和函数从哪里导入、应当暴露给谁。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod implementation {\n    pub fn total(left: i32, right: i32) -> i32 { left + right }\n}\npub use crate::implementation::total as add_values;\nfn main() { println!(\"{}\", add_values(7, 8)); }\n",
+        "description": "综合内部模块、公开重导出与别名，辨认稳定入口。",
+        "result": "预期输出 15；add_values 指向同一 total 函数实现。",
+        "reason": "模块、重导出和别名的综合工程例不在平台单文件执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果实现移到其他私有模块，怎样尽量保留调用者的 add_values 路径？",
+        "answer": "调整根部 pub use 指向新的公开目标，继续重导出为 add_values；同时检查新路径可见性和签名是否保持。",
+        "hints": [
+          "把内部组织路径与外部使用入口分别记录。"
+        ]
+      }
+    }
+  ]
+}

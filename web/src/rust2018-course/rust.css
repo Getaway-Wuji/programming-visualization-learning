@@ -1,0 +1,246 @@
+.rust-screen {
+  --rust-line: var(--border-tone, var(--line));
+  --rust-sheet: var(--surface-raised, var(--panel));
+  --rust-accent: var(--p05-accent, var(--green));
+  gap: 1rem;
+}
+
+.rust-nav {
+  padding: 0.45rem 0.8rem;
+  background: var(--surface-tone, var(--panel));
+  border: 1px solid var(--rust-line);
+  border-radius: 0.55rem;
+}
+
+.rust-nav a,
+.rust-language-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 2.35rem;
+}
+
+.rust-language-links {
+  margin-inline-start: auto;
+}
+
+.rust-title,
+.rust-page-turn,
+.rust-reading-progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem 1rem;
+}
+
+.rust-title p,
+.rust-muted {
+  color: var(--muted);
+  margin: 0.35rem 0;
+}
+
+.rust-sheet {
+  background: var(--rust-sheet);
+  border: 1px solid var(--rust-line);
+  border-radius: 1rem;
+  padding: 1rem;
+  min-width: 0;
+}
+
+.rust-sheet h2,
+.rust-sheet h3 {
+  margin: 0 0 0.6rem;
+}
+
+.rust-reading {
+  max-width: 54rem;
+  line-height: 1.7;
+}
+
+.rust-catalog-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .rust-catalog-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.rust-reading h1 {
+  line-height: 1.35;
+}
+
+.rust-section,
+.rust-page-turn {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rust-line);
+}
+
+.rust-tree {
+  list-style: none;
+  margin: 0.3rem 0 0;
+  padding-inline-start: 1.1rem;
+}
+
+.rust-sheet > .rust-tree {
+  padding-inline-start: 0;
+}
+
+.rust-tree > li {
+  padding-block: 0.28rem;
+}
+
+.rust-tree summary {
+  padding-block: 0.32rem;
+}
+
+.rust-guide {
+  margin-inline-start: 1.1rem;
+}
+
+.rust-search,
+.rust-trace-position label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rust-search input,
+.rust-input-panel select,
+.rust-trace-position select,
+.rust-trace-position input[type='number'] {
+  color: inherit;
+  background: var(--surface-tone, var(--panel));
+  border: 1px solid var(--rust-line);
+  border-radius: 0.45rem;
+  padding: 0.42rem 0.55rem;
+  min-width: 0;
+}
+
+.rust-editor-grid,
+.rust-trace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.3fr) minmax(12.5rem, 1fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.rust-editor-grid {
+  align-items: stretch;
+}
+
+/* The block editor gets the full row; its toolbox must not consume the code/input split. */
+.rust-editor-grid:has(.python-blocks) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.rust-editor-panel .python-blocks,
+.rust-editor-panel .python-block-canvas {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.rust-editor-grid:has(.python-blocks) .rust-input-panel textarea {
+  flex: none;
+}
+
+.rust-input-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.rust-input-panel textarea {
+  flex: 1;
+}
+
+.rust-editor-panel textarea,
+.rust-input-panel textarea {
+  margin-block: 0.55rem;
+  min-width: 0;
+}
+
+.rust-trace-position {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  margin-block: 0.7rem;
+}
+
+.rust-trace-position input[type='number'] {
+  width: 5rem;
+}
+
+.rust-active-line {
+  border-inline-start: 3px solid var(--rust-accent);
+  background: var(--surface-tone, var(--panel));
+  padding: 0.45rem 0.65rem;
+}
+
+.rust-sheet pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--surface-tone, var(--panel));
+  border-radius: 0.45rem;
+  padding: 0.65rem;
+}
+
+.rust-table-wrap {
+  overflow: auto;
+  margin-top: 0.55rem;
+}
+
+.rust-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rust-table-wrap :is(th, td) {
+  padding: 0.4rem 0.55rem;
+  text-align: start;
+  border-bottom: 1px solid var(--rust-line);
+}
+
+.rust-table-wrap :is(th, td):nth-child(3) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.rust-reviews {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rust-reviews li {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--rust-line);
+}
+
+.rust-reviews li p {
+  margin: 0.2rem 0;
+}
+
+@media (max-width: 720px) {
+  .rust-editor-grid,
+  .rust-trace-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rust-actions button,
+  .rust-nav a {
+    min-height: 44px;
+  }
+
+  .rust-language-links {
+    margin-inline-start: 0;
+  }
+}

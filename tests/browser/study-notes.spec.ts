@@ -69,7 +69,7 @@ async function evidence(name: string, value: unknown) {
 }
 async function sameAfter(p: Page, name: string, before: Awaited<ReturnType<typeof raw>>) {
   const after = await raw(p);
-  expect(Object.keys(after.stores)).toHaveLength(25);
+  expect(Object.keys(after.stores)).toHaveLength(27);
   expect(after).toEqual(before);
   await evidence(name, { before, after });
 }

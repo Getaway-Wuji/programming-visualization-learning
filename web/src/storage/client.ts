@@ -45,9 +45,17 @@ import {
   queueJavaStores,
   toJavaMeta,
 } from './java-meta';
-import { CPP_DB_VERSION, CPP_STORES, queueCppStores, toCppMeta } from './cpp-course-meta';
+import {
+  assertCppMeta,
+  CPP_DB_VERSION,
+  CPP_STORES,
+  queueCppStores,
+  toCppMeta,
+} from './cpp-course-meta';
+import { RUST_DB_VERSION, RUST_STORES, queueRustStores, toRustMeta } from './rust2018-meta';
 import {
   cppCourseTransaction,
+  rustCourseTransaction,
   javaCourseTransaction,
   readJavaUpgradeRows,
   type PrepareJavaCourse,
@@ -149,6 +157,7 @@ export interface OpenStorageOptions {
   enablePython?: boolean;
   enableJava?: boolean;
   enableCpp?: boolean;
+  enableRust?: boolean;
   signal?: AbortSignal;
   onBlocked?: () => void;
   // Dependency injection is internal; the public entry point fixes the production DB.
@@ -159,6 +168,8 @@ export interface OpenStorageOptions {
 }
 
 function physicalStores(db: IDBDatabase): readonly string[] {
+  if (db.version === RUST_DB_VERSION)
+    return [...C6_RESET_STORES, ...PYTHON_STORES, ...JAVA_STORES, ...CPP_STORES, ...RUST_STORES];
   if (db.version === CPP_DB_VERSION)
     return [...C6_RESET_STORES, ...PYTHON_STORES, ...JAVA_STORES, ...CPP_STORES];
   if (db.version === JAVA_DB_VERSION) return [...C6_RESET_STORES, ...PYTHON_STORES, ...JAVA_STORES];
@@ -201,7 +212,8 @@ function checkedMeta(value: unknown): asserts value is Meta {
     value.schemaVersion !== '10.0.0' &&
     value.schemaVersion !== '11.0.0' &&
     value.schemaVersion !== '12.0.0' &&
-    value.schemaVersion !== '13.0.0'
+    value.schemaVersion !== '13.0.0' &&
+    value.schemaVersion !== '14.0.0'
   ) {
     throw new StorageError(
       value.schemaVersion === '0.9.0' ? 'S_MIGRATION_UNSUPPORTED' : 'S_VERSION_UNKNOWN',
@@ -221,7 +233,7 @@ export function readTransaction(
   c6Index?: C6LearningIndex,
 ): void {
   if (
-    ![DB_VERSION, 10, PYTHON_DB_VERSION, JAVA_DB_VERSION, CPP_DB_VERSION].includes(
+    ![DB_VERSION, 10, PYTHON_DB_VERSION, JAVA_DB_VERSION, CPP_DB_VERSION, RUST_DB_VERSION].includes(
       expectedDbVersion,
     )
   ) {
@@ -509,6 +521,18 @@ export class StorageClient {
     if (!result.saved.replayed) this.broadcast(result.state.snapshot.meta);
     return result.saved;
   }
+  async readRustCourse() {
+    return (await rustCourseTransaction(this.connection(), this.factory)).state;
+  }
+  async commitRustCourse(generation: string, revision: number, prepare: PrepareJavaCourse) {
+    const result = await rustCourseTransaction(this.connection(), this.factory, {
+      generation,
+      revision,
+      prepare,
+    });
+    if (!result.saved.replayed) this.broadcast(result.state.snapshot.meta);
+    return result.saved;
+  }
   async probe(): Promise<{ available: true }> {
     const initial = await this.read();
     await this.execute(initial.meta.generation, () => [], undefined, undefined, true);
@@ -590,9 +614,14 @@ export class StorageClient {
           if (!sameRecoveryValue(java.snapshot.meta, recovery.snapshot.meta))
             return this.readRecovery();
         }
-        if (this.connection().version === CPP_DB_VERSION) {
+        if (this.connection().version >= CPP_DB_VERSION) {
           const cpp = await this.readCppCourse();
           if (!sameRecoveryValue(cpp.snapshot.meta, recovery.snapshot.meta))
+            return this.readRecovery();
+        }
+        if (this.connection().version === RUST_DB_VERSION) {
+          const rust = await this.readRustCourse();
+          if (!sameRecoveryValue(rust.snapshot.meta, recovery.snapshot.meta))
             return this.readRecovery();
         }
       } catch (error) {
@@ -641,7 +670,8 @@ export class StorageClient {
     const version = this.connection().version;
     if (meta.dbVersion === 10 && version >= PYTHON_DB_VERSION) meta = toPythonMeta(meta);
     if (meta.dbVersion === PYTHON_DB_VERSION && version >= JAVA_DB_VERSION) meta = toJavaMeta(meta);
-    if (meta.dbVersion === JAVA_DB_VERSION && version === CPP_DB_VERSION) meta = toCppMeta(meta);
+    if (meta.dbVersion === JAVA_DB_VERSION && version >= CPP_DB_VERSION) meta = toCppMeta(meta);
+    if (meta.dbVersion === CPP_DB_VERSION && version === RUST_DB_VERSION) meta = toRustMeta(meta);
     assertRecord('meta', meta);
     if (meta.generation === rawGeneration(confirmation.raw.meta))
       throw new StorageError('S_RECORD_INVALID');
@@ -1161,18 +1191,21 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
     if (
       (options.enablePython && !index) ||
       (options.enableJava && !options.enablePython) ||
-      (options.enableCpp && !options.enableJava)
+      (options.enableCpp && !options.enableJava) ||
+      (options.enableRust && !options.enableCpp)
     )
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
-    const targetVersion = options.enableCpp
-      ? CPP_DB_VERSION
-      : options.enableJava
-        ? JAVA_DB_VERSION
-        : index
-          ? options.enablePython
-            ? PYTHON_DB_VERSION
-            : 10
-          : DB_VERSION;
+    const targetVersion = options.enableRust
+      ? RUST_DB_VERSION
+      : options.enableCpp
+        ? CPP_DB_VERSION
+        : options.enableJava
+          ? JAVA_DB_VERSION
+          : index
+            ? options.enablePython
+              ? PYTHON_DB_VERSION
+              : 10
+            : DB_VERSION;
     const activePackageRef = { ...options.activePackageRef };
     if (activePackageRef.id === 'content.c.primer6' && !index)
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
@@ -1236,10 +1269,15 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
             createdNew = event.oldVersion === 0;
             const db = request.result;
             const tx = request.transaction!;
+            const afterJava = (value: ReturnType<typeof toJavaMeta>) => {
+              if (!options.enableCpp) return;
+              const cpp = queueCppStores(db, tx, value);
+              if (options.enableRust) queueRustStores(db, tx, cpp);
+            };
             const afterPython = (value: ReturnType<typeof toPythonMeta>) => {
               if (!options.enableJava) return;
               const java = queueJavaStores(db, tx, value);
-              if (options.enableCpp) queueCppStores(db, tx, java);
+              afterJava(java);
             };
             const afterC6 = (value: ReturnType<typeof createC6ResetMeta>) => {
               const python = queuePythonStores(db, tx, value);
@@ -1248,13 +1286,15 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
             if (
               (options.enablePython && event.oldVersion === 10) ||
               (options.enableJava && event.oldVersion === PYTHON_DB_VERSION) ||
-              (options.enableCpp && event.oldVersion === JAVA_DB_VERSION)
+              (options.enableCpp && event.oldVersion === JAVA_DB_VERSION) ||
+              (options.enableRust && event.oldVersion === CPP_DB_VERSION)
             ) {
               const oldVersion = event.oldVersion;
               const names = [
                 ...C6_RESET_STORES,
                 ...(oldVersion >= PYTHON_DB_VERSION ? PYTHON_STORES : []),
                 ...(oldVersion >= JAVA_DB_VERSION ? JAVA_STORES : []),
+                ...(oldVersion >= CPP_DB_VERSION ? CPP_STORES : []),
               ];
               if (
                 db.objectStoreNames.length !== names.length ||
@@ -1282,20 +1322,31 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                       readPythonUpgradeRows(tx, factory, snapshot, () => afterPython(meta), fail);
                     } else {
                       const meta = snapshot.meta;
-                      assertJavaMeta(meta);
+                      if (oldVersion === JAVA_DB_VERSION) assertJavaMeta(meta);
+                      else assertCppMeta(meta);
                       readPythonUpgradeRows(
                         tx,
                         factory,
                         snapshot,
-                        () => {
+                        () =>
                           readJavaUpgradeRows(
                             tx,
                             factory,
                             snapshot,
-                            () => queueCppStores(db, tx, meta),
+                            () => {
+                              if (meta.dbVersion === JAVA_DB_VERSION) afterJava(meta);
+                              else
+                                readJavaUpgradeRows(
+                                  tx,
+                                  factory,
+                                  snapshot,
+                                  () => queueRustStores(db, tx, meta),
+                                  fail,
+                                  'cpp',
+                                );
+                            },
                             fail,
-                          );
-                        },
+                          ),
                         fail,
                       );
                     }

@@ -1,0 +1,13 @@
+[package]
+name = "c-viz-rust2018-wasm"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+c-viz-rust2018 = { path = ".." }
+wasm-bindgen.workspace = true

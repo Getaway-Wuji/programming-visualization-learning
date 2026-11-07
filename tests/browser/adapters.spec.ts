@@ -227,6 +227,7 @@ async function completeRoute(route: Route) {
 }
 
 async function noLearningWrites(page: Page) {
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
   const observation = await page.evaluate(() => ({
     storageWrites: window.__adapterAudit.storageWrites,
     databaseNames: window.__adapterAudit.databaseNames,
@@ -261,6 +262,8 @@ async function noLearningWrites(page: Page) {
         'javaDrafts',
         'cppActivities',
         'cppDrafts',
+        'rustActivities',
+        'rustDrafts',
       ].filter((name) => db.objectStoreNames.contains(name));
       const tx = db.transaction(names, 'readonly');
       const businessCounts = await Promise.all(
@@ -282,7 +285,7 @@ async function noLearningWrites(page: Page) {
       db.close();
     }
   });
-  expect([9, 10, 11, 12, 13]).toContain(counts.version);
+  expect([9, 10, 11, 12, 13, 14]).toContain(counts.version);
   expect(counts.storeNames).toEqual(
     [
       'achievements',
@@ -308,6 +311,8 @@ async function noLearningWrites(page: Page) {
       'pythonDrafts',
       'receipts',
       'reviewCards',
+      'rustActivities',
+      'rustDrafts',
       'settings',
       'weaknesses',
     ].filter(
@@ -315,7 +320,8 @@ async function noLearningWrites(page: Page) {
         (counts.version >= 10 || !['courseActivities', 'courseDrafts'].includes(name)) &&
         (counts.version >= 11 || !['pythonActivities', 'pythonDrafts'].includes(name)) &&
         (counts.version >= 12 || !['javaActivities', 'javaDrafts'].includes(name)) &&
-        (counts.version >= 13 || !['cppActivities', 'cppDrafts'].includes(name)),
+        (counts.version >= 13 || !['cppActivities', 'cppDrafts'].includes(name)) &&
+        (counts.version >= 14 || !['rustActivities', 'rustDrafts'].includes(name)),
     ),
   );
   expect(counts.businessCounts).toEqual(Array(12 + 2 * (counts.version - 9)).fill(0));

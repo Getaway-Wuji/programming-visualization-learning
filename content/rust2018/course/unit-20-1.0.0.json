@@ -1,0 +1,465 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 20,
+  "nodes": [
+    {
+      "id": "rust.book.root20",
+      "sourceNodeId": "rust.source.root20",
+      "title": "第20章 最后的项目：构建多线程Web服务器",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 649,
+      "printedPage": null,
+      "leaf": false,
+      "order": 353,
+      "group": 20,
+      "body": [
+        "最后的项目从TCP字节流出发，依次建立HTTP请求与响应、页面选择、线程池和停机协议。目标是把前面学过的所有权、闭包、通道、锁与Drop放进同一条可追踪的生命周期，而不是写一个可直接对外部署的完整服务器。",
+        "先读单连接路径，再引入慢请求解释串行阻塞；线程池限制同时工作的数量，关闭协议负责唤醒等待中的线程并join。网络、文件、线程和进程停止都属于阅读内容，平台不会监听端口或运行这些宿主操作。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root20.01",
+      "sourceNodeId": "rust.source.root20.01",
+      "title": "构建单线程Web服务器",
+      "parent": "rust.book.root20",
+      "depth": 2,
+      "physicalPage": 651,
+      "printedPage": null,
+      "leaf": false,
+      "order": 354,
+      "group": 20,
+      "body": [
+        "单线程服务器把接收、读取、选择页面和写回响应顺序串起来。TCP只提供字节流，HTTP再规定请求行、消息头、空行和消息体的格式，两层协议承担不同职责。",
+        "下面分别观察连接、字节读取和HTTP格式，再将路由选择与共同的响应构造分离。教材中的小服务器只处理受限请求，不能把一次read或前缀检查当成完整HTTP解析。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root20.01.01",
+      "sourceNodeId": "rust.source.root20.01.01",
+      "title": "监听TCP连接",
+      "parent": "rust.book.root20.01",
+      "depth": 3,
+      "physicalPage": 651,
+      "printedPage": null,
+      "leaf": true,
+      "order": 355,
+      "group": 20,
+      "body": [
+        "TcpListener::bind在本机地址上建立监听，incoming迭代器逐次产生连接结果。监听器表示等待新连接的入口，TcpStream才表示与某个客户端的双向字节流。绑定失败和接受失败都是运行时条件，应通过Result处理，不能只因源码正确就假定端口一定可用。",
+        "阅读例把地址限定为回环地址，并只接受一个连接后结束循环。回环并不等于完整的安全服务配置，这里只是缩小项目范围。没有客户端时，接受连接会等待；程序不会凭空产生HTTP请求。平台执行器既不开放端口也不访问宿主网络，因此这里仅追踪标准库调用关系。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::net::TcpListener;\nfn main() -> std::io::Result<()> {\n    let listener = TcpListener::bind(\"127.0.0.1:9000\")?;\n    for connection in listener.incoming().take(1) {\n        let _stream = connection?;\n        println!(\"已接受一个TCP连接\");\n    }\n    Ok(())\n}",
+        "description": "受限标准库监听程序，供阅读连接生命周期。",
+        "result": "若在完整Rust环境启动，会等待连接，接受一个后输出提示并退出；本课程没有启动它。",
+        "reason": "执行器不支持TCP监听、Result或真实网络访问。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "listener与每次得到的stream能否视为同一个对象？",
+        "answer": "不能。listener管理接收新连接的入口，一个stream对应一个已经建立的客户端连接；服务器可先后接受多个不同stream。",
+        "hints": [
+          "区分监听入口和单个会话。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.01.02",
+      "sourceNodeId": "rust.source.root20.01.02",
+      "title": "读取请求",
+      "parent": "rust.book.root20.01",
+      "depth": 3,
+      "physicalPage": 654,
+      "printedPage": null,
+      "leaf": true,
+      "order": 356,
+      "group": 20,
+      "body": [
+        "Read::read把目前可取得的字节写入缓冲区，并返回真正读到的数量。缓冲区长度是容量上限，不代表这次请求长度；只应处理前n个字节。返回0通常表示到达流末尾，错误则通过Result报告。TCP是字节流，一次read可能只拿到部分请求，也可能拿到连续数据中的一部分。",
+        "示例用内存Cursor隔离读取规则，不需要建立网络连接。UTF-8文本还可能跨多次读取切开一个字符，因此from_utf8_lossy只适合观察字节，不是完整协议解码器。真正的HTTP读取需要按消息边界累计、限制大小并处理不完整输入，不能把固定缓冲区一次读取当成通用服务器。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::io::{Cursor, Read};\nfn main() -> std::io::Result<()> {\n    let mut input = Cursor::new(b\"GET / HTTP/1.1\\r\\n\\r\\n\");\n    let mut buffer = [0_u8; 8];\n    let n = input.read(&mut buffer)?;\n    println!(\"读取 {} 字节\", n);\n    println!(\"{}\", String::from_utf8_lossy(&buffer[..n]));\n    Ok(())\n}",
+        "description": "以内存流展示缓冲区容量与实际读取长度。",
+        "result": "读到前8字节“GET / HT”；请求其余字节仍在输入中。",
+        "reason": "执行器不支持Read trait、字节切片、Cursor或Result。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "缓冲区有1024字节，是否能断言一次read得到完整请求？",
+        "answer": "不能。read可能返回较少字节，TCP不保证应用消息边界；也可能存在超过容量的请求，必须设计累计与边界检查。",
+        "hints": [
+          "底层提供字节流，不提供HTTP消息。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.01.03",
+      "sourceNodeId": "rust.source.root20.01.03",
+      "title": "仔细观察HTTP请求",
+      "parent": "rust.book.root20.01",
+      "depth": 3,
+      "physicalPage": 656,
+      "printedPage": null,
+      "leaf": true,
+      "order": 357,
+      "group": 20,
+      "body": [
+        "HTTP/1.1请求行由方法、请求目标和版本组成，随后是以CRLF分隔的消息头，再用空行结束头部。GET /course HTTP/1.1表示读取/course资源，不是访问磁盘上的任意同名路径；资源如何映射由服务器决定。Host等头部提供请求上下文。",
+        "下面把回车换行显式写出，避免普通换行展示隐藏协议字节。空行之后才是消息体区域；不能仅靠“屏幕上看起来有几行”判断长度。这个固定样本只为阅读结构，不处理分块传输、重复头、非法请求等边界。实际解析器需要按协议验证输入，不能把未验证路径直接拿去拼文件名。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "请求字节（每个\\r\\n表示CRLF）：\nGET /course HTTP/1.1\\r\\n\nHost: localhost:9000\\r\\n\nUser-Agent: lesson-client\\r\\n\n\\r\\n\n\n请求行：GET | /course | HTTP/1.1\n消息头：Host与User-Agent\n头部结束：连续两个CRLF\n该样本没有消息体。",
+        "description": "逐项拆解一个固定HTTP请求。",
+        "result": "方法为GET，请求目标为/course，版本为HTTP/1.1；空行结束消息头。",
+        "reason": "执行器不含HTTP解析器，不能把文本阅读样本当成真实网络请求。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Host这一行为什么不属于请求行的一部分？",
+        "answer": "请求行在第一个CRLF处结束。Host是随后独立的消息头，通过冒号分隔字段名与值，不改变请求行的三个位置。",
+        "hints": [
+          "先按CRLF划分，再识别每行角色。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.01.04",
+      "sourceNodeId": "rust.source.root20.01.04",
+      "title": "编写响应",
+      "parent": "rust.book.root20.01",
+      "depth": 3,
+      "physicalPage": 657,
+      "printedPage": null,
+      "leaf": true,
+      "order": 358,
+      "group": 20,
+      "body": [
+        "HTTP响应先写状态行，再写消息头、空行与消息体。状态码告诉客户端请求的处理结果，Content-Length按消息体的字节数计算，并不包含头部。头部和消息体之间缺少空行，会使客户端无法明确区分协议元信息与内容。",
+        "String::len得到UTF-8字节数，适合构造这里的长度；汉字个数与字节数并不相同。把响应交给TcpStream时，write_all比一次write更符合“必须发完这段缓冲区”的意图，因为write可以只写出一部分。此例先在内存中构造完整响应，不建立任何网络连接。协议中的回车换行是实际字节，不能只用界面中的视觉换行替代。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let body = \"完成\";\n    let response = format!(\n        \"HTTP/1.1 200 OK\\r\\nContent-Length: {}\\r\\nContent-Type: text/plain; charset=utf-8\\r\\n\\r\\n{}\",\n        body.len(), body\n    );\n    println!(\"{}\", response);\n}",
+        "description": "在内存中生成含UTF-8正文的HTTP响应。",
+        "result": "长度字段为6；状态行为HTTP/1.1 200 OK，空行后为完成。",
+        "reason": "执行器不支持通用format!、&str长度或HTTP输出协议。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把Content-Length写成2，为什么有问题？",
+        "answer": "完成包含两个汉字，但UTF-8编码共6字节。HTTP长度描述字节数量，写2会让接收方按错误的消息边界处理数据。",
+        "hints": [
+          "计算协议长度时数编码字节。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.01.05",
+      "sourceNodeId": "rust.source.root20.01.05",
+      "title": "返回真正的HTML",
+      "parent": "rust.book.root20.01",
+      "depth": 3,
+      "physicalPage": 658,
+      "printedPage": null,
+      "leaf": true,
+      "order": 359,
+      "group": 20,
+      "body": [
+        "返回HTML不需要新的传输层：消息体换成HTML文本，状态行和头部仍遵循HTTP格式。资源可以在运行时从文件读取，也可以在构建时用include_str!嵌入。后者把固定页面打进程序，运行时无需再访问页面文件，但页面变化需要重新构建。",
+        "示例采用构建时嵌入，使页面路径相对于源码文件确定，避免把运行目录误当成资源根目录。Content-Type明确告诉客户端按UTF-8 HTML解释消息体，Content-Length仍按字节数计算。它只是固定页面响应的组成示例，没有监听器、请求处理或完整Web服务生命周期。HTML文件应与源码一起纳入构建输入，避免遗漏固定资源。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "# page.html\n<!doctype html>\n<html lang=\"zh-CN\"><meta charset=\"utf-8\"><title>课程</title><h1>欢迎学习</h1></html>\n\n# src/main.rs\nfn main() {\n    let body = include_str!(\"../page.html\");\n    let response = format!(\"HTTP/1.1 200 OK\\r\\nContent-Type: text/html; charset=utf-8\\r\\nContent-Length: {}\\r\\n\\r\\n{}\", body.len(), body);\n    println!(\"{}\", response);\n}",
+        "description": "两份实际资源组成一个固定页面响应程序。",
+        "result": "构建时读取项目根页面，程序输出的消息体含欢迎学习；实际长度由body.len()计算。",
+        "reason": "执行器不支持include_str!、外部资源或format!，平台不会读取宿主页面。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "运行时修改page.html，已有可执行程序会立即返回新页面吗？",
+        "answer": "不会。include_str!在构建时嵌入内容，修改资源后要重新构建；运行时read_to_string则具有不同的读取时机和错误处理需求。",
+        "hints": [
+          "定位资源读取发生在构建期还是运行期。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.01.06",
+      "sourceNodeId": "rust.source.root20.01.06",
+      "title": "验证请求有效性并选择性地响应",
+      "parent": "rust.book.root20.01",
+      "depth": 3,
+      "physicalPage": 660,
+      "printedPage": null,
+      "leaf": true,
+      "order": 360,
+      "group": 20,
+      "body": [
+        "服务不同资源时，先从验证后的请求中确定目标，再选择状态码与内容。不存在的目标应返回404等明确状态，而不是总用200包装错误页面。请求行比较必须包含方法和版本等预期结构，不能只查是否含有某个路径片段。",
+        "示例用一个完整固定请求行演示路由，不声称完成了HTTP解析。真实输入仍需处理额外空白、消息边界、方法限制和非法编码等问题。特别不要把请求路径直接拼接到本机文件路径，否则“选择网页”会意外变成开放任意文件读取；限定资源表通常更容易审查。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn route(line: &str) -> (&'static str, &'static str) {\n    if line == \"GET / HTTP/1.1\" {\n        (\"200 OK\", \"欢迎\")\n    } else {\n        (\"404 Not Found\", \"页面不存在\")\n    }\n}\nfn main() {\n    for line in [\"GET / HTTP/1.1\", \"GET /missing HTTP/1.1\"].iter() {\n        let (status, body) = route(line);\n        println!(\"{} | {}\", status, body);\n    }\n}",
+        "description": "为固定的已分离请求行选择两个响应结果。",
+        "result": "依次打印200 OK | 欢迎与404 Not Found | 页面不存在。",
+        "reason": "执行器没有&str参数、元组返回或字符串比较。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "GET /missing返回错误页面但状态200，是否等同于404？",
+        "answer": "不等同。客户端和中间软件会依据状态码理解结果；页面文字不能替代协议层的失败状态。",
+        "hints": [
+          "状态码与展示内容承担不同职责。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.01.07",
+      "sourceNodeId": "rust.source.root20.01.07",
+      "title": "少许重构",
+      "parent": "rust.book.root20.01",
+      "depth": 3,
+      "physicalPage": 662,
+      "printedPage": null,
+      "leaf": true,
+      "order": 361,
+      "group": 20,
+      "body": [
+        "当不同路由的区别只剩状态和页面内容时，可以先用if或match选出一对值，再把共同的响应构造放到后面。这样修正头部、编码或长度计算时只需改一处，避免成功与失败分支逐渐形成不一致格式。",
+        "重构的目标是保持观察到的行为，只改变组织方式。移动公共步骤时，应确认错误处理顺序、文件读取时机和资源生命周期有没有变化。示例让选择结果成为元组，再统一格式化；还未引入真实网络，因此检查的是消息构造逻辑，不是连接吞吐量或浏览器实际呈现。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn response(found: bool) -> String {\n    let (status, body) = if found {\n        (\"200 OK\", \"首页\")\n    } else {\n        (\"404 Not Found\", \"未找到\")\n    };\n    format!(\"HTTP/1.1 {}\\r\\nContent-Length: {}\\r\\n\\r\\n{}\", status, body.len(), body)\n}\nfn main() { println!(\"{}\", response(false)); }",
+        "description": "分开可变的页面选择和固定的响应格式。",
+        "result": "输出404状态，长度9，空行后是未找到。",
+        "reason": "执行器不支持元组分支结果、format!或&str长度。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "重构后应只验证成功页吗？",
+        "answer": "不应。公共格式也用于失败路径，需检查404状态、错误正文和对应长度，才能证明原有分支行为都被保留。",
+        "hints": [
+          "共享代码扩大了同一修改的影响范围。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.02",
+      "sourceNodeId": "rust.source.root20.02",
+      "title": "把单线程服务器修改为多线程服务器",
+      "parent": "rust.book.root20",
+      "depth": 2,
+      "physicalPage": 664,
+      "printedPage": null,
+      "leaf": false,
+      "order": 362,
+      "group": 20,
+      "body": [
+        "单线程处理会让慢请求挡住后续连接，即使后续工作本身很快也要等待。增加线程能重叠独立任务，但为每个请求无限创建线程又会消耗过多资源。",
+        "先用慢请求理解队头等待，再引入固定数量工作线程与任务队列。线程池限制并发工作数，却不自动限制排队数量、保证公平性或提供生产级过载控制，这些边界要分开考虑。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root20.02.01",
+      "sourceNodeId": "rust.source.root20.02.01",
+      "title": "在现有的服务器实现中模拟一个慢请求",
+      "parent": "rust.book.root20.02",
+      "depth": 3,
+      "physicalPage": 664,
+      "printedPage": null,
+      "leaf": true,
+      "order": 363,
+      "group": 20,
+      "body": [
+        "单线程服务器在当前处理函数返回前不会开始下一个请求。即使慢请求只是休眠，工作线程也被它占住，后来的快速请求仍需等待。这是处理结构造成的队头阻塞，不应误判为快速页面的构造代码变慢。",
+        "下面用顺序调用表示慢、快两个请求，不建立网络也不测量性能。sleep仅用来说明阻塞点；实际延迟还包括排队、调度与传输。若每来一个请求就spawn新线程，演示中的等待可能减少，但请求量大时线程数量会失控，因此下一步使用固定工作者而不是无限创建线程。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::{thread, time::Duration};\nfn handle(path: &str) {\n    if path == \"/slow\" { thread::sleep(Duration::from_secs(2)); }\n    println!(\"响应 {}\", path);\n}\nfn main() {\n    handle(\"/slow\");\n    handle(\"/\");\n}",
+        "description": "顺序处理结构中的慢工作阻挡后续调用；仅阅读。",
+        "result": "完整环境中/slow先等待再输出，随后/才输出；课程未实际休眠。",
+        "reason": "执行器没有线程休眠、Duration和&str路由。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把慢分支的正文缩短，能否消除sleep造成的排队？",
+        "answer": "不能。只要同一线程仍在等待sleep结束，后续handle调用就无法开始；要改变的是任务调度结构或慢操作本身。",
+        "hints": [
+          "定位等待点是否仍在唯一处理线程上。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.02.02",
+      "sourceNodeId": "rust.source.root20.02.02",
+      "title": "使用线程池改进吞吐量",
+      "parent": "rust.book.root20.02",
+      "depth": 3,
+      "physicalPage": 665,
+      "printedPage": null,
+      "leaf": true,
+      "order": 364,
+      "group": 20,
+      "body": [
+        "线程池预先创建有限数量的工作线程，execute把任务装成Box<dyn FnOnce() + Send + 'static>发送到队列。FnOnce允许任务消费捕获值，Send允许跨线程移交，'static要求任务不借用会先结束的外部局部数据；它不要求任务真的运行到程序结束。",
+        "标准mpsc接收端不能直接克隆，工作者可通过Arc<Mutex<Receiver<Job>>>共享领取入口。锁只保护取任务，拿到Job后要释放守卫，再运行任务，否则其他线程连领取都被挡住，池会退化成串行。固定线程数也不代表队列有界。",
+        "下面用完整的小池展示创建、提交、关闭发送端与等待；结束信号在下一节改成显式消息。所有任务由同一通道交付，丢弃最后发送端后，接收者排空队列并退出。这里仅阅读结构，不启动线程或声称已测得吞吐提升。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::sync::{mpsc, Arc, Mutex};\nuse std::thread;\ntype Job = Box<dyn FnOnce() + Send + 'static>;\nstruct Pool { tx: mpsc::Sender<Job>, workers: Vec<thread::JoinHandle<()>> }\nimpl Pool {\n    fn new(size: usize) -> Self {\n        assert!(size > 0);\n        let (tx, rx) = mpsc::channel::<Job>();\n        let shared = Arc::new(Mutex::new(rx));\n        let workers = (0..size).map(|_| {\n            let rx = Arc::clone(&shared);\n            thread::spawn(move || loop {\n                let next = { rx.lock().unwrap().recv() };\n                match next { Ok(job) => job(), Err(_) => break }\n            })\n        }).collect();\n        Self { tx, workers }\n    }\n    fn execute<F: FnOnce() + Send + 'static>(&self, task: F) {\n        self.tx.send(Box::new(task)).unwrap();\n    }\n    fn finish(self) {\n        drop(self.tx);\n        for worker in self.workers { worker.join().unwrap(); }\n    }\n}\nfn main() {\n    let pool = Pool::new(2);\n    pool.execute(|| println!(\"任务甲\"));\n    pool.execute(|| println!(\"任务乙\"));\n    pool.finish();\n}",
+        "description": "完整的固定工作者池，通过发送端关闭结束接收循环。",
+        "result": "甲乙各执行一次，顺序不保证；finish等待所有工作者结束。",
+        "reason": "执行器没有通道、共享接收端、闭包任务或宿主线程。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若把job()写在仍持MutexGuard的作用域里，会有什么后果？",
+        "answer": "任务运行时领取锁一直被持有，其他工作者不能接收下一个任务，会把本可并行的工作串行化；还可能扩大阻塞和死锁风险。",
+        "hints": [
+          "把“取出任务”和“执行任务”的锁范围分开。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.03",
+      "sourceNodeId": "rust.source.root20.03",
+      "title": "优雅地停机与清理",
+      "parent": "rust.book.root20",
+      "depth": 2,
+      "physicalPage": 687,
+      "printedPage": null,
+      "leaf": false,
+      "order": 365,
+      "group": 20,
+      "body": [
+        "停机不是简单地让main返回。工作者可能正在执行任务，也可能在空队列上阻塞等待；join只等待结束，不能让等待循环自己退出。必须先提供关闭协议，再回收线程句柄。",
+        "本节先用Option取走字段中的JoinHandle，再给每个工作者发送终止消息。按“停止接单、排完已收任务、通知退出、逐一等待”检查顺序，避免一边等待一边遗漏唤醒条件。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root20.03.01",
+      "sourceNodeId": "rust.source.root20.03.01",
+      "title": "为ThreadPool实现Drop trait",
+      "parent": "rust.book.root20.03",
+      "depth": 3,
+      "physicalPage": 687,
+      "printedPage": null,
+      "leaf": true,
+      "order": 366,
+      "group": 20,
+      "body": [
+        "Drop::drop只获得&mut self，但JoinHandle::join需要取得句柄所有权，不能直接从借来的字段中移走它。把句柄保存为Option<JoinHandle<()>>后，take能留下None并交出原句柄，使清理方法有明确的消费位置。None也记录该句柄已经被取走。",
+        "先前的工作循环若还在recv中等待，仅仅解决句柄移动问题仍不能完成停机。join会一直等，直到线程实际退出。示例先用会自然返回的工作者隔离所有权问题，下一节再给持续等待的池加入终止协议。真实Drop还应慎重处理panic传播，避免在已展开的panic中再次panic。丢弃JoinHandle本身不会自动等待线程，这也是显式join不可省略的原因。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::thread::{self, JoinHandle};\nstruct Worker { handle: Option<JoinHandle<()>> }\nimpl Drop for Worker {\n    fn drop(&mut self) {\n        if let Some(handle) = self.handle.take() {\n            let _result = handle.join();\n        }\n    }\n}\nfn main() {\n    let _worker = Worker {\n        handle: Some(thread::spawn(|| println!(\"本次工作完成\")))\n    };\n}",
+        "description": "自然结束的线程配合Drop，单独说明Option::take。",
+        "result": "离开main时Drop等待工作完成；不丢弃尚未回收的句柄。",
+        "reason": "执行器不支持Drop、Option或线程句柄。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "take已成功取得句柄，为什么仍可能在join处永远等待？",
+        "answer": "所有权问题已解决，但目标线程可能仍在无限循环或阻塞接收。必须另有协议让线程结束，join本身不会发出停止指令。",
+        "hints": [
+          "资源可被消费不等于资源已经停止工作。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.03.02",
+      "sourceNodeId": "rust.source.root20.03.02",
+      "title": "通知线程停止监听任务",
+      "parent": "rust.book.root20.03",
+      "depth": 3,
+      "physicalPage": 690,
+      "printedPage": null,
+      "leaf": true,
+      "order": 367,
+      "group": 20,
+      "body": [
+        "显式终止消息让工作循环能区分执行任务和退出。关闭时先给每个工作者发送一个Stop，再逐个join；如果先等待第一个线程，其他工作者可能还没得到退出机会，主线程也无法继续发送消息。发送数量应与可能等待的工作者相匹配。",
+        "同一通道中，前面提交的Job先于后面提交的Stop排队，所以正常工作者会先领取已接收任务。每个工作者遇到Stop便退出，不再消耗其他Stop。任务若panic会减少存活工作者，健壮池还需要定义错误和回收策略；此教学例只说明正常关闭路径，并非生产级执行服务。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::sync::{mpsc, Arc, Mutex};\nuse std::thread::{self, JoinHandle};\ntype Job = Box<dyn FnOnce() + Send + 'static>;\nenum Message { Run(Job), Stop }\nstruct Pool { tx: mpsc::Sender<Message>, workers: Vec<Option<JoinHandle<()>>> }\nimpl Pool {\n    fn new(size: usize) -> Self {\n        assert!(size > 0);\n        let (tx, rx) = mpsc::channel::<Message>();\n        let rx = Arc::new(Mutex::new(rx));\n        let workers = (0..size).map(|_| {\n            let rx = Arc::clone(&rx);\n            Some(thread::spawn(move || loop {\n                let message = { rx.lock().unwrap().recv() };\n                match message {\n                    Ok(Message::Run(job)) => job(),\n                    Ok(Message::Stop) | Err(_) => break,\n                }\n            }))\n        }).collect();\n        Self { tx, workers }\n    }\n    fn execute<F: FnOnce() + Send + 'static>(&self, job: F) {\n        self.tx.send(Message::Run(Box::new(job))).unwrap();\n    }\n}\nimpl Drop for Pool {\n    fn drop(&mut self) {\n        for _ in &self.workers { let _ = self.tx.send(Message::Stop); }\n        for slot in &mut self.workers {\n            if let Some(handle) = slot.take() { let _ = handle.join(); }\n        }\n    }\n}\nfn main() {\n    let pool = Pool::new(2);\n    pool.execute(|| println!(\"完成后再退出\"));\n}",
+        "description": "以枚举消息明确正常停机协议，Drop先通知再等待。",
+        "result": "任务完成后两个工作者分别退出，Drop回收句柄；课程未启动该线程池。",
+        "reason": "执行器没有闭包任务、通道、Drop或实际线程。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么只发送一个Stop给两个工作者通常不够？",
+        "answer": "拿到Stop的工作者退出，另一个可能仍在recv等待。若发送端仍存活，它不会因队列暂空自动结束，join就可能一直阻塞。",
+        "hints": [
+          "每个等待循环都需要一条可达的退出路径。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root20.04",
+      "sourceNodeId": "rust.source.root20.04",
+      "title": "总结",
+      "parent": "rust.book.root20",
+      "depth": 2,
+      "physicalPage": 696,
+      "printedPage": null,
+      "leaf": true,
+      "order": 368,
+      "group": 20,
+      "body": [
+        "完整服务器要同时满足协议正确、资源受控和生命周期闭合。能返回网页只验证了一条成功路径；还需考虑不完整请求、错误路由、读写失败、慢任务、队列容量与停机。教材的小项目提供组合工具的观察点，不能据此声称已经具备生产服务器的完整协议和防护能力。",
+        "把连接交给任务后，所有权保证处理结束时释放该连接；线程池限制工作者数，通道表达交接与退出，join确认工作结束。审查时沿资源从创建到释放画出完整路径，并为错误情况安排去向。平台保留这些阅读与自检，不会为用户代码开放本机文件、网络或线程。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "接单阶段：接受连接 -> 构造拥有连接的任务 -> 入队\n工作阶段：领取任务 -> 释放领取锁 -> 读取/验证 -> 生成响应 -> 写回\n错误阶段：读取或写回失败 -> 记录本任务结果 -> 释放连接\n停机阶段：停止接收新任务 -> 排完已入队任务 -> 每个工作者取得Stop -> join\n\n例：2个工作者、队列中先有A和B，再有Stop、Stop。\n若A较慢，B可以先结束；工作者拿到Stop后退出。\n主线程等两次join都返回，才确认池内工作全部结束。",
+        "description": "贯穿连接、队列、锁、任务和句柄的资源流程。",
+        "result": "任务完成顺序可能不同；正常关闭必须让每个工作者可退出并被等待。",
+        "reason": "执行器没有HTTP服务、任务调度或网络资源生命周期，本流程仅供推演。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "“池有4个线程”是否已保证内存用量不会随请求增长？",
+        "answer": "没有。线程数有界不等于任务队列有界，若入队速度长期超过处理速度，待执行任务及其持有资源仍可能持续增长。",
+        "hints": [
+          "分别检查工作者数量和排队容量。"
+        ]
+      }
+    }
+  ]
+}

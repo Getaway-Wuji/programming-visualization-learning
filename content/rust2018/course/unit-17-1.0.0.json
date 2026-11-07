@@ -1,0 +1,528 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 17,
+  "nodes": [
+    {
+      "id": "rust.book.root17",
+      "sourceNodeId": "rust.source.root17",
+      "title": "第17章 Rust的面向对象编程特性",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 534,
+      "printedPage": null,
+      "leaf": false,
+      "order": 286,
+      "group": 17,
+      "body": [
+        "本章把面向对象拆成数据与行为、封装、复用和多态几个具体问题。Rust用结构体与impl组织对象，用模块隐私保护不变量，用trait和组合表达复用，不能照搬类继承树。",
+        "先阅读开放类型集合的trait对象，再跟踪文章从草稿到审批、发布的状态转换。最后比较运行时状态对象与把状态编码进类型的方案，判断错误应在运行时处理还是在编译时排除。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root17.01",
+      "sourceNodeId": "rust.source.root17.01",
+      "title": "面向对象语言的特性",
+      "parent": "rust.book.root17",
+      "depth": 2,
+      "physicalPage": 535,
+      "printedPage": null,
+      "leaf": false,
+      "order": 287,
+      "group": 17,
+      "body": [
+        "讨论Rust是否“面向对象”之前，先确定需要解决的问题。数据和方法可以放在同一个类型周围；私有字段配合公开方法可以维护不变量；共享行为可以由trait表达。",
+        "接下来的例子分别展示这三点。不要由缺少结构体继承推出无法复用，也不要由提供方法推出必须使用动态派发；这些是可以分别选择的设计维度。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root17.01.01",
+      "sourceNodeId": "rust.source.root17.01.01",
+      "title": "对象包含数据和行为",
+      "parent": "rust.book.root17.01",
+      "depth": 3,
+      "physicalPage": 535,
+      "printedPage": null,
+      "leaf": true,
+      "order": 288,
+      "group": 17,
+      "body": [
+        "结构体保存某个概念的数据，impl块把操作这些数据的方法集中在类型旁边。方法接收&self时读取现有实例，接收&mut self时可修改它；关联函数没有self参数，常用来创建实例。这种组织让“数据允许怎样变化”比散落的独立变量更容易追踪。",
+        "示例把计步值与增加步数的操作放在一起。调用语法简洁并不意味着方法不受所有权规则约束；已有共享借用时不能同时取得冲突的可变借用。把数据和行为组合起来是对象的一种常见定义，却不要求再加上父类、子类或运行时方法表。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Counter { steps: u32 }\nimpl Counter {\n    fn new() -> Self { Self { steps: 0 } }\n    fn walk(&mut self, n: u32) { self.steps += n; }\n    fn steps(&self) -> u32 { self.steps }\n}\nfn main() {\n    let mut c = Counter::new();\n    c.walk(12);\n    println!(\"{}\", c.steps());\n}",
+        "description": "实例保留状态，方法控制读写。",
+        "result": "打印12；walk需要可变实例，steps只借用读取。",
+        "reason": "执行器没有结构体、impl或u32。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么walk用&mut self，而steps用&self？",
+        "answer": "walk改变实例保存的步数，需独占的可变借用；steps仅返回Copy值，不修改实例，使用共享借用即可。",
+        "hints": [
+          "按方法是否修改实例判断接收者。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.01.02",
+      "sourceNodeId": "rust.source.root17.01.02",
+      "title": "封装实现细节",
+      "parent": "rust.book.root17.01",
+      "depth": 3,
+      "physicalPage": 535,
+      "printedPage": null,
+      "leaf": true,
+      "order": 289,
+      "group": 17,
+      "body": [
+        "封装把可被外部调用的接口与内部表示分开。字段默认私有，模块可以只公开构造和操作方法，使调用者不能绕过检查直接制造非法状态。维护不变量的关键是所有写入路径都经过约束，而不是单纯把字段名称藏起来。",
+        "示例把容量和当前人数留在模块内部，enter在容量已满时返回false。外部只依赖这个契约，内部以后可以改变存储方式。若同时把used字段改成pub，调用者就可能把人数直接设成超过容量的值，公开方法原来承诺的安全边界随之失效。外部接口也应说明失败返回值表示什么。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod room {\n    pub struct Room { used: u32, limit: u32 }\n    impl Room {\n        pub fn new(limit: u32) -> Self { Self { used: 0, limit } }\n        pub fn enter(&mut self) -> bool {\n            if self.used == self.limit { return false; }\n            self.used += 1;\n            true\n        }\n    }\n}\nfn main() {\n    let mut r = room::Room::new(1);\n    println!(\"{} {}\", r.enter(), r.enter());\n}",
+        "description": "公开入场接口，私有字段保护容量约束。",
+        "result": "打印true false；模块外直接访问used会被拒绝。",
+        "reason": "执行器未实现模块隐私与结构体方法。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "字段私有之后是否就能自动保证所有业务规则？",
+        "answer": "不能。公开方法自身仍可能实现错误；隐私只保证外部不能任意绕开这些方法，开发者还需检查每条内部写入路径。",
+        "hints": [
+          "封装减少需要维护不变量的位置。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.01.03",
+      "sourceNodeId": "rust.source.root17.01.03",
+      "title": "作为类型系统和代码共享机制的继承",
+      "parent": "rust.book.root17.01",
+      "depth": 3,
+      "physicalPage": 538,
+      "printedPage": null,
+      "leaf": true,
+      "order": 290,
+      "group": 17,
+      "body": [
+        "继承常被用于复用实现或让不同类型以同一接口使用。Rust没有继承另一结构体全部字段和方法的语法，但trait默认方法可复用行为，组合可复用已有组件，泛型约束或trait对象可表达共同接口。选择替代方案前应先分清这两种目的。",
+        "默认方法可以调用trait要求的基础方法，把可变化的部分留给实现者。它不会给实现者附加隐藏字段，也不会把两个结构体变成父子关系。如果多个对象需要共享一套可维护的数据，显式持有组件通常比模拟继承层级更直接，字段的所有权也更清楚。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Named {\n    fn name(&self) -> &str;\n    fn greeting(&self) -> String { format!(\"欢迎，{}\", self.name()) }\n}\nstruct Guest { name: String }\nimpl Named for Guest { fn name(&self) -> &str { &self.name } }\nfn main() {\n    let g = Guest { name: String::from(\"林\") };\n    println!(\"{}\", g.greeting());\n}",
+        "description": "trait默认方法复用问候逻辑。",
+        "result": "打印“欢迎，林”；Guest只实现提供名字的部分。",
+        "reason": "执行器不支持trait、结构体或返回字符串切片。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "默认trait方法是否相当于继承了trait中的字段？",
+        "answer": "不是。trait没有给Guest注入数据字段；默认方法只能依赖trait声明的行为，具体数据仍由Guest自己定义和管理。",
+        "hints": [
+          "观察name的数据实际存放在哪里。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.02",
+      "sourceNodeId": "rust.source.root17.02",
+      "title": "使用trait对象来存储不同类型的值",
+      "parent": "rust.book.root17",
+      "depth": 2,
+      "physicalPage": 540,
+      "printedPage": null,
+      "leaf": false,
+      "order": 291,
+      "group": 17,
+      "body": [
+        "Vec中的元素类型必须统一，Box<dyn Trait>可以把不同具体类型放在统一的指针类型之后。容器依赖共同方法，调用者仍可添加新的实现类型。",
+        "先定义最小行为接口，再加入不同实现，随后比较动态与静态派发。最后检查对象安全：不是任何trait都能直接放在dyn后面，方法签名必须能在具体类型被擦除后使用。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root17.02.01",
+      "sourceNodeId": "rust.source.root17.02.01",
+      "title": "为共有行为定义一个trait",
+      "parent": "rust.book.root17.02",
+      "depth": 3,
+      "physicalPage": 541,
+      "printedPage": null,
+      "leaf": true,
+      "order": 292,
+      "group": 17,
+      "body": [
+        "trait定义共有行为，trait对象则让代码在不知道具体实现类型时调用这些行为。Box<dyn Render>拥有一个实现Render的值，通过统一的指针外形隐藏具体类型。引用形式&dyn Render只借用对象，不接管它的销毁责任。",
+        "示例的屏幕保存一组可渲染对象，每项大小可以不同，但Box本身可作为统一元素类型。代码只能通过Render声明的接口操作这些对象，不能直接访问某种实现特有的字段。与枚举相比，这种形式允许别的代码增加新实现；代价是需要间接调用，并限制可以使用的接口形状。容器释放时，拥有的各具体对象也会被正确丢弃。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Render { fn render(&self) -> String; }\nstruct Label(String);\nimpl Render for Label { fn render(&self) -> String { self.0.clone() } }\nstruct Screen { items: Vec<Box<dyn Render>> }\nimpl Screen {\n    fn show(&self) { for item in &self.items { println!(\"{}\", item.render()); } }\n}\nfn main() {\n    Screen { items: vec![Box::new(Label(\"标题\".into()))] }.show();\n}",
+        "description": "以共同接口组织屏幕对象。",
+        "result": "打印标题；Screen的遍历不需要知道Label的字段。",
+        "reason": "执行器没有trait对象、Box或Vec。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能直接把dyn Render作为Vec的裸元素类型？",
+        "answer": "dyn Render的具体大小运行时才知道，Vec的每个元素需有确定大小。Box<dyn Render>提供大小确定的指针表示，并拥有其后的具体对象。",
+        "hints": [
+          "容器存的是指针还是具体数据本体？"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.02.02",
+      "sourceNodeId": "rust.source.root17.02.02",
+      "title": "实现trait",
+      "parent": "rust.book.root17.02",
+      "depth": 3,
+      "physicalPage": 543,
+      "printedPage": null,
+      "leaf": true,
+      "order": 293,
+      "group": 17,
+      "body": [
+        "实现trait时，方法签名必须符合接口，包括接收者、参数和返回类型。两个结构体可以保存完全不同的数据，只要都实现Render，就能经由同一个trait对象接口使用。这里的兼容由编译器验证，而不是靠运行时猜测对象是否恰好有同名方法。",
+        "示例中标题保存文本，进度保存两个整数，容器却可以统一调用render。若放入一个没有实现Render的类型，Box到Box<dyn Render>的转换就会失败。实现trait也不会自动公开结构体字段；用户得到什么信息仍由接口和可见性共同决定。默认方法可以复用共有逻辑，具体实现仍可覆盖默认行为。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Render { fn render(&self) -> String; }\nstruct Title(&'static str);\nstruct Progress { done: u32, total: u32 }\nimpl Render for Title { fn render(&self) -> String { self.0.into() } }\nimpl Render for Progress {\n    fn render(&self) -> String { format!(\"{}/{}\", self.done, self.total) }\n}\nfn main() {\n    let items: Vec<Box<dyn Render>> = vec![\n        Box::new(Title(\"课程\")), Box::new(Progress { done: 2, total: 5 })\n    ];\n    for item in items { println!(\"{}\", item.render()); }\n}",
+        "description": "两个不同表示的类型实现同一渲染接口。",
+        "result": "依次打印课程、2/5。",
+        "reason": "执行器不支持trait实现、字符串切片或异构对象容器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "在容器中再放一个Box::new(7)，编译器会检查什么？",
+        "answer": "会要求整数类型实现Render。仅能构造Box并不够；它必须满足容器的trait对象契约。",
+        "hints": [
+          "统一接口来自显式trait实现。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.02.03",
+      "sourceNodeId": "rust.source.root17.02.03",
+      "title": "trait对象会执行动态派发",
+      "parent": "rust.book.root17.02",
+      "depth": 3,
+      "physicalPage": 546,
+      "printedPage": null,
+      "leaf": true,
+      "order": 294,
+      "group": 17,
+      "body": [
+        "泛型函数通常通过单态化为不同具体类型生成对应代码，调用目标可以在编译时确定。trait对象擦除了具体类型，调用时需要通过对象关联的方法信息找到实现，这就是动态派发。两者都能表达共同接口，但代码生成和运行时选择方式不同。",
+        "动态派发适合在同一集合中保存不同实现，或允许调用者扩展实现集合的接口；它也引入间接调用，通常限制内联等优化机会。不要把动态派发误解成动态类型：编译器仍会核对trait方法、参数和返回类型。选择时先考虑是否需要异构对象，而非仅凭术语判断性能。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Value { fn value(&self) -> i32; }\nstruct Fixed(i32);\nimpl Value for Fixed { fn value(&self) -> i32 { self.0 } }\nfn static_read<T: Value>(v: &T) -> i32 { v.value() }\nfn dynamic_read(v: &dyn Value) -> i32 { v.value() }\nfn main() {\n    let x = Fixed(9);\n    println!(\"{} {}\", static_read(&x), dynamic_read(&x));\n}",
+        "description": "同一实现分别经泛型和trait对象调用。",
+        "result": "两次都得到9；第一条路径可静态决定目标，第二条使用trait对象派发。",
+        "reason": "执行器不支持泛型单态化或trait对象方法表。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "动态派发是否意味着方法名可以在运行时随意改变？",
+        "answer": "不是。Value接口在编译时已经固定，调用仍须符合该接口；运行时决定的是哪个具体实现执行这次value调用。",
+        "hints": [
+          "区分接口检查时间与实现选择时间。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.02.04",
+      "sourceNodeId": "rust.source.root17.02.04",
+      "title": "trait对象必须保证对象安全",
+      "parent": "rust.book.root17.02",
+      "depth": 3,
+      "physicalPage": 547,
+      "printedPage": null,
+      "leaf": true,
+      "order": 295,
+      "group": 17,
+      "body": [
+        "trait对象只保留共同接口，调用者不知道背后的具体Self是什么。若方法直接返回Self，调用者无法据此安排返回对象的具体表示；若方法还有自己的泛型参数，则也无法只用有限的普通方法表覆盖所有可能实例。本节按教材术语把相应约束称为对象安全。",
+        "常见修正是把不适合对象调用的方法限定为Self: Sized，让它只在具体类型上使用，而把可经对象调用的接口留在trait中。这里不是说泛型方法本身非法，而是它不能以原样成为任意dyn对象可调用的方法。设计接口时应区分构造能力和对象运行期行为。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Describe {\n    fn describe(&self) -> String;\n    fn fresh() -> Self where Self: Sized;\n}\nstruct Item;\nimpl Describe for Item {\n    fn describe(&self) -> String { \"条目\".into() }\n    fn fresh() -> Self { Item }\n}\nfn main() {\n    let item = Item::fresh();\n    let object: &dyn Describe = &item;\n    println!(\"{}\", object.describe());\n}",
+        "description": "把返回Self的构造方法排除在trait对象调用之外。",
+        "result": "对象可以调用describe并打印条目；fresh由具体类型Item调用。",
+        "reason": "执行器没有Self、trait对象及Sized限制。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "object能否调用fresh来创建同一个具体类型？",
+        "answer": "不能。fresh要求Self: Sized且没有对象接收者，具体类型被dyn擦除后不能通过这个trait对象调用它。",
+        "hints": [
+          "看fresh上的where约束。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.03",
+      "sourceNodeId": "rust.source.root17.03",
+      "title": "实现一种面向对象的设计模式",
+      "parent": "rust.book.root17",
+      "depth": 2,
+      "physicalPage": 549,
+      "printedPage": null,
+      "leaf": false,
+      "order": 296,
+      "group": 17,
+      "body": [
+        "文章发布流程可拆成草稿、待审和已发布三个状态。外部调用文章方法，内部把决定行为和转换目标的工作交给状态对象，避免把所有状态判断散落到调用者中。",
+        "按步骤添加存储、可见内容、请求审批和批准行为时，始终检查内容何时可见、谁拥有当前状态。最后比较动态状态模式和不同状态对应不同类型的方案；二者把非法操作放在不同阶段处理。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root17.03.01",
+      "sourceNodeId": "rust.source.root17.03.01",
+      "title": "定义Post并新建一个处于草稿状态下的新实例",
+      "parent": "rust.book.root17.03",
+      "depth": 3,
+      "physicalPage": 551,
+      "printedPage": null,
+      "leaf": true,
+      "order": 297,
+      "group": 17,
+      "body": [
+        "新建文章不应只准备一段空文本，还要确定初始状态。把构造集中在Post::new中，可以保证每个新实例都从Draft开始，调用者无需记住初始化顺序。state字段私有，外部也不能直接把草稿伪装成已发布文章。",
+        "状态存成Option<Box<dyn State>>，并不是说业务允许文章长期没有状态，而是为后续转换保留一个可暂时取走旧状态的位置。take后字段变成None，方法再把转换结果放回去，这样就能消费旧状态而不从借用的字段中强行移出值。此处先建立表示，转换规则将在后面补充。让构造函数成为唯一入口，也便于日后统一新增字段。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait State { fn label(&self) -> &'static str; }\nstruct Draft;\nimpl State for Draft { fn label(&self) -> &'static str { \"草稿\" } }\nstruct Post { state: Option<Box<dyn State>>, content: String }\nimpl Post {\n    fn new() -> Self {\n        Self { state: Some(Box::new(Draft)), content: String::new() }\n    }\n}\nfn main() {\n    let post = Post::new();\n    println!(\"{} {}\", post.state.as_ref().unwrap().label(), post.content.len());\n}",
+        "description": "构造草稿和空文本，观察初始表示。",
+        "result": "打印草稿 0；真实公共接口应将这些字段留在模块内部。",
+        "reason": "执行器没有trait状态对象、Option或结构体。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Option在这里是否表示用户可以创建无状态文章？",
+        "answer": "不是。它是实现转换时暂时取走Box的技术手段；构造函数和转换方法应维护对外可见时文章总有合法状态的不变量。",
+        "hints": [
+          "区分内部临时表示和业务允许的状态。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.03.02",
+      "sourceNodeId": "rust.source.root17.03.02",
+      "title": "存储文章内容的文本",
+      "parent": "rust.book.root17.03",
+      "depth": 3,
+      "physicalPage": 552,
+      "printedPage": null,
+      "leaf": true,
+      "order": 298,
+      "group": 17,
+      "body": [
+        "文章保存的String拥有正文，add_text接收&str并把文字复制追加进去。方法只在调用期间借用输入，因此调用结束后，原输入是否释放不会影响文章已经保存的内容。这个接口适合把多段文字逐步加入草稿。",
+        "修改正文需要&mut self，读取或展示则可以只借用&self。通过方法而非公开字段修改，后续才能集中增加规则，例如只允许草稿编辑。当前这个最小版本尚未加入状态限制，不能因为方法叫add_text就声称“已发布文章不能改”；应明确哪些业务约束已经实现，哪些还需要状态委托。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Post { content: String }\nimpl Post {\n    fn new() -> Self { Self { content: String::new() } }\n    fn add_text(&mut self, text: &str) { self.content.push_str(text); }\n}\nfn main() {\n    let mut post = Post::new();\n    {\n        let line = String::from(\"先验证，再发布。\");\n        post.add_text(&line);\n    }\n    println!(\"{}\", post.content);\n}",
+        "description": "追加借来的文字，输入作用域结束后仍保留文章内容。",
+        "result": "打印先验证，再发布。；String已经复制了输入的字节。",
+        "reason": "执行器未实现结构体方法和&str形参。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若add_text把输入&str存成字段，而不是追加到String，还会自动拥有内容吗？",
+        "answer": "不会。保存引用需保证输入活得足够久并表达生命周期；当前push_str把字节复制到拥有的String，因而没有这个外部借用依赖。",
+        "hints": [
+          "查清保存的是字节还是指向原字节的引用。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.03.03",
+      "sourceNodeId": "rust.source.root17.03.03",
+      "title": "确保草稿的可读内容为空",
+      "parent": "rust.book.root17.03",
+      "depth": 3,
+      "physicalPage": 552,
+      "printedPage": null,
+      "leaf": true,
+      "order": 299,
+      "group": 17,
+      "body": [
+        "存储内容与允许外部读取是两个不同问题。草稿需要保留作者编辑的正文，但公共content接口暂时返回空切片，以满足未发布不可见的规则。删除正文来达到不可见会丢失数据，也会使后续审批与发布失去意义。",
+        "在逐步开发中，恒返回空串只是适用于“目前只有草稿”这一阶段的实现。引入已发布状态后，必须把读取行为委托给状态对象，不能把临时实现当成最终规则。测试应同时检查内部编辑没有丢失、草稿读取为空，以及发布后读取正确，这些观察对应不同的不变量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Draft { text: String }\nimpl Draft {\n    fn add_text(&mut self, text: &str) { self.text.push_str(text); }\n    fn content(&self) -> &str { \"\" }\n}\nfn main() {\n    let mut draft = Draft { text: String::new() };\n    draft.add_text(\"暂未公开\");\n    assert_eq!(draft.content(), \"\");\n    assert_eq!(draft.text, \"暂未公开\");\n    println!(\"草稿正文已保存，公共读取为空\");\n}",
+        "description": "分别检查保存内容和公开读取结果。",
+        "result": "两项断言成立，打印提示；正文没有被清空。",
+        "reason": "执行器不支持结构体、&str或assert_eq!宏。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能否用self.text.clear()实现草稿不可读？",
+        "answer": "那会删除已保存正文，使发布后也无法恢复。不可见应控制读取接口返回什么，而不是破坏被保存的数据。",
+        "hints": [
+          "保密与删除是不同操作。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.03.04",
+      "sourceNodeId": "rust.source.root17.03.04",
+      "title": "请求审批文章并改变其状态",
+      "parent": "rust.book.root17.03",
+      "depth": 3,
+      "physicalPage": 553,
+      "printedPage": null,
+      "leaf": true,
+      "order": 300,
+      "group": 17,
+      "body": [
+        "请求审批是一次状态转换：草稿进入待审，已经待审的文章再次请求则可保留原状态。让State的方法消费Box<Self>，各状态就能选择返回自己或新状态对象，而Post只负责把返回对象保存回state字段。",
+        "Post的方法借用了&mut self，不能直接从self.state中移出Box。Option::take会留下None并交出旧值，然后再写回Some，符合所有权规则。这种模式的正确性要求转换路径恢复合法状态；若错误地遗漏写回，后续方法就可能看见不存在的状态，违反文章始终可用的承诺。状态转换不是复制一份旧状态；旧对象被消费，新对象接替它继续负责后续行为。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait State {\n    fn review(self: Box<Self>) -> Box<dyn State>;\n    fn name(&self) -> &'static str;\n}\nstruct Draft;\nstruct Review;\nimpl State for Draft {\n    fn review(self: Box<Self>) -> Box<dyn State> { Box::new(Review) }\n    fn name(&self) -> &'static str { \"草稿\" }\n}\nimpl State for Review {\n    fn review(self: Box<Self>) -> Box<dyn State> { self }\n    fn name(&self) -> &'static str { \"待审\" }\n}\nfn main() {\n    let mut state: Option<Box<dyn State>> = Some(Box::new(Draft));\n    let old = state.take().unwrap();\n    state = Some(old.review());\n    println!(\"{}\", state.as_ref().unwrap().name());\n}",
+        "description": "以最小状态集合展示取走旧状态并恢复新状态。",
+        "result": "打印待审；review消费旧Box，返回新状态对象。",
+        "reason": "执行器不支持Box<Self>接收者、Option::take或动态派发。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么take后还需要把结果放回Some？",
+        "answer": "take只完成所有权移出，把原位置留为None。转换结束若不恢复Some，文章会失去状态；take并不会自动保存review的结果。",
+        "hints": [
+          "逐行追踪state字段当前是Some还是None。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.03.05",
+      "sourceNodeId": "rust.source.root17.03.05",
+      "title": "添加approve方法来改变content的行为",
+      "parent": "rust.book.root17.03",
+      "depth": 3,
+      "physicalPage": 555,
+      "printedPage": null,
+      "leaf": true,
+      "order": 301,
+      "group": 17,
+      "body": [
+        "批准不等于无条件发布。草稿上的approve应保留草稿，待审状态上的approve才生成已发布状态。读取content也委托给状态：默认实现返回空串，已发布实现返回文章保存的正文。这样可见性和状态转换规则就集中在各状态实现中。",
+        "状态方法返回的正文切片必须来自仍存活的文章，不能引用临时String。借用生命周期把返回切片和Post联系起来。验证时应沿完整路径观察三次读取，而不只检查最后打印的文字；直接批准草稿、重复批准等边界路径也需要有明确规则。公开正文的同时，还要检查后续编辑是否有独立限制。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait State {\n    fn review(self: Box<Self>) -> Box<dyn State>;\n    fn approve(self: Box<Self>) -> Box<dyn State>;\n    fn content<'a>(&self, _text: &'a str) -> &'a str { \"\" }\n}\nstruct Draft;\nstruct Review;\nstruct Published;\nimpl State for Draft {\n    fn review(self: Box<Self>) -> Box<dyn State> { Box::new(Review) }\n    fn approve(self: Box<Self>) -> Box<dyn State> { self }\n}\nimpl State for Review {\n    fn review(self: Box<Self>) -> Box<dyn State> { self }\n    fn approve(self: Box<Self>) -> Box<dyn State> { Box::new(Published) }\n}\nimpl State for Published {\n    fn review(self: Box<Self>) -> Box<dyn State> { self }\n    fn approve(self: Box<Self>) -> Box<dyn State> { self }\n    fn content<'a>(&self, text: &'a str) -> &'a str { text }\n}\nstruct Post { text: String, state: Option<Box<dyn State>> }\nimpl Post {\n    fn new(text: &str) -> Self {\n        Self { text: text.into(), state: Some(Box::new(Draft)) }\n    }\n    fn request_review(&mut self) {\n        if let Some(old) = self.state.take() { self.state = Some(old.review()); }\n    }\n    fn approve(&mut self) {\n        if let Some(old) = self.state.take() { self.state = Some(old.approve()); }\n    }\n    fn content(&self) -> &str { self.state.as_ref().unwrap().content(&self.text) }\n}\nfn main() {\n    let mut post = Post::new(\"审核通过的正文\");\n    post.approve();\n    assert_eq!(post.content(), \"\");\n    post.request_review();\n    assert_eq!(post.content(), \"\");\n    post.approve();\n    assert_eq!(post.content(), \"审核通过的正文\");\n    println!(\"{}\", post.content());\n}",
+        "description": "完整三态流程：草稿直接批准无效，待审批准后才公开正文。",
+        "result": "三个断言依次验证草稿、待审不可见和批准后可见，最后打印审核通过的正文。",
+        "reason": "执行器没有trait对象、显式生命周期或字符串切片返回。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能只让Post::content永远返回保存的String？",
+        "answer": "那会让草稿和待审文章提前公开。读取接口需服从当前状态规则；状态转换改变公开行为而不丢弃已保存内容。",
+        "hints": [
+          "同一份文字在不同状态下的可见性不同。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.03.06",
+      "sourceNodeId": "rust.source.root17.03.06",
+      "title": "状态模式的权衡取舍",
+      "parent": "rust.book.root17.03",
+      "depth": 3,
+      "physicalPage": 558,
+      "printedPage": null,
+      "leaf": true,
+      "order": 302,
+      "group": 17,
+      "body": [
+        "动态状态模式把相同外形的Post留给调用者，内部更换状态对象。它便于把某状态的行为集中管理，但接口仍可能允许无效调用，并需定义这些调用是忽略还是返回错误。增加一种操作时，多个状态实现也可能都要改动，不能认为扩展总是零成本。",
+        "另一种方案把Draft、Review和Published作为不同类型，转换方法消费旧值并返回新类型。只有Published暴露content，编译器就能拒绝草稿读取。代价是调用者必须处理类型变化，异构集合也更难表达。选型取决于状态集合、扩展方向和希望在哪个阶段发现错误。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Draft(String);\nstruct Review(String);\nstruct Published(String);\nimpl Draft { fn request_review(self) -> Review { Review(self.0) } }\nimpl Review { fn approve(self) -> Published { Published(self.0) } }\nimpl Published { fn content(&self) -> &str { &self.0 } }\nfn main() {\n    let draft = Draft(\"类型保证流程\".into());\n    let published = draft.request_review().approve();\n    println!(\"{}\", published.content());\n}",
+        "description": "用状态类型让转换消费旧状态。",
+        "result": "打印类型保证流程；Draft没有content或approve方法。",
+        "reason": "执行器未实现多个结构体类型、方法及引用返回。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "类型状态方案如何阻止“草稿直接批准”？",
+        "answer": "Draft的接口只提供request_review，不提供approve；调用不存在的方法会编译失败。进入Review后才能获得approve能力。",
+        "hints": [
+          "查看每个impl实际提供了哪些方法。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root17.04",
+      "sourceNodeId": "rust.source.root17.04",
+      "title": "总结",
+      "parent": "rust.book.root17",
+      "depth": 2,
+      "physicalPage": 565,
+      "printedPage": null,
+      "leaf": true,
+      "order": 303,
+      "group": 17,
+      "body": [
+        "对象风格的核心价值是把数据不变量和行为组织清楚，而不是追求类的外形。结构体加方法可封装状态，trait默认方法提供复用，trait对象支持运行时异构集合，类型状态又能把流程要求变成编译期约束。这些工具可以组合，也可以单独使用。",
+        "设计时先列出合法操作和扩展点。如果所有变体都已知，枚举与match往往易于穷尽检查；如果允许外部新增实现，trait对象更有空间。静态派发和动态派发的选择影响代码生成与接口能力，却不改变所有权规则，也不能替代对业务状态转换的检查。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Report { fn report(&self) -> String; }\nstruct Count(u32);\nimpl Report for Count { fn report(&self) -> String { format!(\"计数:{}\", self.0) } }\nfn print_report(item: &dyn Report) { println!(\"{}\", item.report()); }\nfn main() { print_report(&Count(4)); }",
+        "description": "用借来的trait对象消费一个狭窄接口。",
+        "result": "打印计数:4；print_report无需拥有或了解Count的内部表示。",
+        "reason": "执行器不支持trait对象、结构体及格式化String构造。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若调用者只需临时显示，为何&dyn Report可能比Box<dyn Report>合适？",
+        "answer": "共享引用只表达调用期间的借用，不要求移交所有权或额外装箱。Box适用于需要拥有并保存对象的场景。",
+        "hints": [
+          "把接口的生命周期需求与存储需求分开。"
+        ]
+      }
+    }
+  ]
+}

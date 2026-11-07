@@ -1,0 +1,432 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 2,
+  "nodes": [
+    {
+      "id": "rust.book.root02",
+      "sourceNodeId": "rust.source.root02",
+      "title": "第2章 编写一个猜数游戏",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 47,
+      "printedPage": null,
+      "leaf": false,
+      "order": 19,
+      "group": 2,
+      "body": [
+        "猜数游戏把输入、存储、比较和重复串成一次完整交互。先理解一轮猜测的文本如何变成数字，再认识随机目标、大小反馈和循环退出；不要一开始就把每个库接口当作已经学过的语法。",
+        "本章保留第三方库、Result 与 match 的完整教学位置，其中随机数和模式匹配属于阅读范围。后续章节会解释这些机制，本平台运行例仍遵守独立解释器的冻结白名单。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root02.01",
+      "sourceNodeId": "rust.source.root02.01",
+      "title": "创建一个新的项目",
+      "parent": "rust.book.root02",
+      "depth": 2,
+      "physicalPage": 48,
+      "printedPage": null,
+      "leaf": true,
+      "order": 20,
+      "group": 2,
+      "body": [
+        "新建猜数工程时，应先确认入口可以产生一条确定的提示，再逐步加入输入和判断。这样每次新增行为都有清楚的验证目标：提示是否显示、输入是否保存、数值是否转换成功。一次加入全部代码，反而难以区分构建问题和逻辑问题。",
+        "Cargo.toml 管理工程配置，src/main.rs 组织交互。使用外部随机库之前，需要单独声明依赖；仅在源码中写 use 不会自动安装它。下面先给出不依赖外部库的入口，让项目准备与游戏随机性分开，后续再讨论目标数的产生和比较。每完成一小步就保存源码并确认行为，更容易判断新增功能是否破坏了已经理解的部分。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    println!(\"猜一个整数，稍后将读取你的答案。\");\n}\n",
+        "description": "为猜数工程准备一个确定输出的起点。",
+        "result": "预期显示一行猜数提示，尚未进行输入或随机抽取。",
+        "reason": "本叶展示项目起点，工程创建和完整随机游戏不由平台执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "这段代码显示提示后结束，是否已实现完整猜数游戏？还缺什么？",
+        "answer": "尚未实现；还需读取输入、转换数字、准备目标数、比较和按需要循环。提示只是验证入口的一步。",
+        "hints": [
+          "区分用户看到的说明和程序实际做过的操作。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root02.02",
+      "sourceNodeId": "rust.source.root02.02",
+      "title": "处理一次猜测",
+      "parent": "rust.book.root02",
+      "depth": 2,
+      "physicalPage": 50,
+      "printedPage": null,
+      "leaf": false,
+      "order": 21,
+      "group": 2,
+      "body": [
+        "一轮猜测先接收文本，再决定能否将它作为整数使用。下面依次解释可变字符串为什么适合保存输入、读取操作为什么返回 Result，以及格式化输出怎样展示当前值，最后把这些步骤连起来阅读。",
+        "留意输入里的换行和解析失败：读到了数据不等于得到了数字。必须区分输入来源、文本缓冲区与转换后的数值，才不会让后面的比较建立在错误类型上。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root02.02.01",
+      "sourceNodeId": "rust.source.root02.02.01",
+      "title": "使用变量来存储值",
+      "parent": "rust.book.root02.02",
+      "depth": 3,
+      "physicalPage": 51,
+      "printedPage": null,
+      "leaf": true,
+      "order": 22,
+      "group": 2,
+      "body": [
+        "let 建立变量绑定，mut 允许这个绑定关联的值按规则修改。输入到来之前，程序并不知道文本长度，因而可用 String::new() 创建空字符串，再将可变借用交给读取操作。&mut 表示临时允许调用者修改原对象，并没有转移字符串所有权。",
+        "read_line 把数据追加到缓冲区而非自动替换它，并通常保留读入的换行。若多轮复用同一个 String，应按需要先 clear，否则下一轮解析可能遇到拼接的多行文本。这里先展示已知文本的可变存储，重点是分清变量名、对象内容和修改操作之间的关系。缓冲区内容与绑定可变性应分别追踪，空字符串并不意味着绑定可以忽略所有权规则。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut guess = String::new();\n    guess.push_str(\"18\");\n    println!(\"当前文本：{}\", guess);\n    guess.clear();\n    println!(\"清空后：{}\", guess);\n}\n",
+        "description": "通过追加和清空理解输入缓冲区的可变内容。",
+        "result": "先显示“当前文本：18”，再显示“清空后：”及换行。",
+        "reason": "本节的缓冲区阅读例未绑定运行题；真正输入仅在指定运行配置中开放。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "在同一个输入字符串中连续 read_line 两次，它一定只保留第二行吗？",
+        "answer": "不一定；read_line 追加内容。需要替换旧输入时，应在下一次读取前清空缓冲区。",
+        "hints": [
+          "检查方法是追加、覆盖还是重新创建对象。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root02.02.02",
+      "sourceNodeId": "rust.source.root02.02.02",
+      "title": "使用Result类型来处理可能失败的情况",
+      "parent": "rust.book.root02.02",
+      "depth": 3,
+      "physicalPage": 53,
+      "printedPage": null,
+      "leaf": true,
+      "order": 23,
+      "group": 2,
+      "body": [
+        "可能失败的操作不应只返回一个看起来总是有效的结果。Result 用 Ok 保存成功值，用 Err 保存失败信息，使调用方明确选择如何处理。读取一行时，成功通常带回读入字节数；发生输入错误时则进入失败分支，这与“读到了非数字”是不同层次的问题。",
+        "unwrap 取出成功值，在 Err 时终止当前正常流程，因此适合先观察接口，却不能代替面向使用者的错误恢复。下面用确定的 Result 阅读两个分支。解析错误、输入错误和猜错数字要分别处理；否则把所有失败都叫作“猜小了”会误导后续逻辑。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let read: Result<usize, &str> = Ok(3);\n    match read {\n        Ok(bytes) => println!(\"读入 {} 字节\", bytes),\n        Err(message) => println!(\"读取失败：{}\", message),\n    }\n}\n",
+        "description": "将可能失败的读取结果抽象为一个确定的成功值进行分支阅读。",
+        "result": "所给 Ok(3) 进入成功分支，预期输出“读入 3 字节”。",
+        "reason": "Result 值、usize 与 match 不在当前解释器子集内，本例为标准 Rust 阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把 Ok(3) 换成 Err(\"断开\")，调用 unwrap 与当前 match 的处理有何不同？",
+        "answer": "unwrap 会使程序在失败处 panic；当前 match 会执行 Err 分支并显示读取失败信息，仍可由程序决定后续控制流。",
+        "hints": [
+          "观察失败分支是否由调用者明确接管。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root02.02.03",
+      "sourceNodeId": "rust.source.root02.02.03",
+      "title": "通过println! 中的占位符输出对应的值",
+      "parent": "rust.book.root02.02",
+      "depth": 3,
+      "physicalPage": 54,
+      "printedPage": null,
+      "leaf": true,
+      "order": 24,
+      "group": 2,
+      "body": [
+        "格式字符串把固定提示与变化的值放在一起。{} 是一个位置占位符，后续参数按顺序填入；参数的数量应与占位符匹配。这样输入和目标变化时，不需要重新拼写整条提示，也不必把数字先手工转换成文本。",
+        "println! 展示值时不会因为打印就消耗 String 的所有权，因此打印后仍可使用原字符串。想输出字面的大括号时，格式字符串中需要写成 {{ 和 }}。阅读程序时先找占位符，再逐个对应参数，比凭直觉猜整行结果更可靠；多余或缺失参数属于格式调用错误。当提示有多项变化数据时，按参数顺序逐个对应占位符，可以及时发现展示错位。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let guess = String::from(\"23\");\n    let turn = 2;\n    println!(\"第 {} 轮，输入 {}\", turn, guess);\n    println!(\"{{{} }}\", guess);\n}\n",
+        "description": "将两个参数按顺序放入提示，并演示转义的大括号。",
+        "result": "第一行是“第 2 轮，输入 23”；第二行是“{23 }”。",
+        "reason": "本节侧重格式阅读，未绑定独立判题；平台输出仅支持冻结的顺序占位符。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "第一次 println! 之后还能再次打印 guess 吗？为什么？",
+        "answer": "可以。格式化输出借用它来展示，不把 String 的所有权从 guess 转走。",
+        "hints": [
+          "不要将打印与按值传入普通函数混为一谈。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root02.02.04",
+      "sourceNodeId": "rust.source.root02.02.04",
+      "title": "尝试运行代码",
+      "parent": "rust.book.root02.02",
+      "depth": 3,
+      "physicalPage": 55,
+      "printedPage": null,
+      "leaf": true,
+      "order": 25,
+      "group": 2,
+      "body": [
+        "把输入代码连起来读时，可以给每一步标上数据类型：开始是空 String，读入后仍是文本，再经 trim 与 parse 才得到数值。提示输出、输入读取和数值解释是三个动作，不能因为画面显示了一个数字就假定变量已经是整数。",
+        "本地交互程序可能等待终端输入；本平台的读取来自本次运行提交的虚拟文本，不会打开宿主键盘输入。read_line 保留换行，所以直接打印缓冲区还可能多出空行。下面以读取并回显为阅读目标，遇到 EOF 也不应凭空制造用户输入，实际结果要根据给定输入判断。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut guess = String::new();\n    std::io::stdin().read_line(&mut guess).unwrap();\n    print!(\"收到：{}\", guess);\n}\n",
+        "description": "连贯阅读一行输入如何追加到 String 并原样回显。",
+        "result": "给定输入 23 加换行，预期回显“收到：23”及输入自带的换行；未作整数比较。",
+        "reason": "此处是输入流程阅读材料，未配置单独运行活动；平台输入只来自显式虚拟输入。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "输入 23 后，guess 的类型是整数吗？要比较大小还应做什么？",
+        "answer": "仍是 String。应处理空白并尝试解析为约定的整数类型，再根据解析结果进行比较。",
+        "hints": [
+          "变量的类型不会随文本看起来像数字而改变。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root02.03",
+      "sourceNodeId": "rust.source.root02.03",
+      "title": "生成一个保密数字",
+      "parent": "rust.book.root02",
+      "depth": 2,
+      "physicalPage": 56,
+      "printedPage": null,
+      "leaf": false,
+      "order": 26,
+      "group": 2,
+      "body": [
+        "游戏需要一个不直接向玩家暴露的目标数。随机库负责从范围中抽取值，Cargo 负责让工程取得相应依赖；这两个层次分别由清单和源码表达，不能用一个 use 代替依赖声明。",
+        "先看依赖怎样被解析，再讨论随机范围的端点和接口版次。第三方随机库不在本平台解释器范围，阅读重点是接口约定和公平抽取的目的。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root02.03.01",
+      "sourceNodeId": "rust.source.root02.03.01",
+      "title": "借助包来获得更多功能",
+      "parent": "rust.book.root02.03",
+      "depth": 3,
+      "physicalPage": 56,
+      "printedPage": null,
+      "leaf": true,
+      "order": 27,
+      "group": 2,
+      "body": [
+        "标准库之外的功能通常由其他 crate 提供。Cargo.toml 中的依赖声明给出库名和允许的版本范围，Cargo.lock 记录一次解析得到的具体版本。前者表达允许什么，后者帮助重现已经选定的依赖，两者不能互相替代。",
+        "源码中的 use 只是让某个路径更方便书写，不会替工程声明依赖。书中随机库接口对应它使用的版本，不能把不同版本文档里的方法签名随意拼在一起。下面只阅读清单的结构，新增依赖可能需要网络并产生工程变化，不会由平台页面自动执行。依赖配置属于整个工程，不是只对某一行导入语句临时生效的局部声明。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "[package]\nname = \"guess_lab\"\nversion = \"0.1.0\"\nedition = \"2018\"\n\n[dependencies]\nrand = \"0.5\"\n",
+        "description": "阅读与教材时期接口相配套的依赖清单。",
+        "result": "清单声明依赖 rand 的 0.5 系列；具体解析版本由 Cargo 与锁文件决定，本例没有下载行为。",
+        "reason": "第三方 crate 下载、依赖解析和 Cargo 清单不在平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Cargo.toml 中写一个版本范围，与 Cargo.lock 中记录具体版本，目的相同吗？",
+        "answer": "目的相关但不同：范围表达可接受的版本，锁文件记录实际选择，以便后续构建复现。",
+        "hints": [
+          "比较“允许集合”与“已选结果”。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root02.03.02",
+      "sourceNodeId": "rust.source.root02.03.02",
+      "title": "生成一个随机数",
+      "parent": "rust.book.root02.03",
+      "depth": 3,
+      "physicalPage": 59,
+      "printedPage": null,
+      "leaf": true,
+      "order": 28,
+      "group": 2,
+      "body": [
+        "随机目标的关键不是每次必须不同，而是从指定范围抽取一个值。合法范围的上下端点必须看接口约定：教材对应的 rand 0.5 双参数 gen_range 使用左闭右开区间，因此要覆盖 1 到 100，就应把上界写为 101。",
+        "随机数也属于有类型的值，后续比较需要与猜测数字的类型一致。阅读示例时，可以说明合法结果集合，却不能预言这一次一定抽到哪一个数。平台不提供第三方随机库执行；为了让判题可以重复，课程运行题使用明确输入和独立预期，不把随机结果伪装成固定输出。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use rand::Rng;\nfn main() {\n    // 配套依赖 rand 0.5；上界 101 不包含在内\n    let secret: i32 = rand::thread_rng().gen_range(1, 101);\n    println!(\"目标处于 1 到 100：{}\", secret);\n}\n",
+        "description": "阅读教材版本随机范围接口，专注端点是否包含。",
+        "result": "若在配套本地工程运行，secret 属于 1..=100，具体值无法预先指定。",
+        "reason": "rand 依赖、trait 方法及随机源均不受平台解释器支持，本例要求配套本地工程。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "gen_range(1, 100) 在这里能抽到 100 吗？怎样涵盖 100？",
+        "answer": "不能，所用接口的上界不包含。将上界设为 101 才覆盖 1 到 100。",
+        "hints": [
+          "以本例明确标出的库版本和半开区间为依据。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root02.04",
+      "sourceNodeId": "rust.source.root02.04",
+      "title": "比较猜测数字与保密数字",
+      "parent": "rust.book.root02",
+      "depth": 2,
+      "physicalPage": 62,
+      "printedPage": null,
+      "leaf": true,
+      "order": 29,
+      "group": 2,
+      "body": [
+        "猜测文本成功转换后，才能与目标整数比较。cmp 的结果不是布尔值，而是表示小于、等于或大于的 Ordering 枚举；match 将三种可能对应到三类反馈。这种写法要求把每个可能状态处理清楚，避免猜中时仍显示偏大或偏小。",
+        "parse 也可能失败，因此输入格式与数值比较是前后两个判断。下面直接给出整数，以单独观察比较语义。若扩展为读入文本，应先处理转换错误，而不能将失败值任意当作零。目标与猜测的类型一致后，反馈才有清楚含义；字符串的字典序并不是游戏所需的数值大小。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::cmp::Ordering;\nfn main() {\n    let guess: i32 = 28;\n    let secret: i32 = 35;\n    match guess.cmp(&secret) {\n        Ordering::Less => println!(\"偏小\"),\n        Ordering::Equal => println!(\"猜中\"),\n        Ordering::Greater => println!(\"偏大\"),\n    }\n}\n",
+        "description": "用确定的猜测和目标阅读三路比较反馈。",
+        "result": "28 小于 35，预期只输出“偏小”。",
+        "reason": "Ordering 枚举、cmp 借用方法和 match 均在平台子集外，作为完整语言阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不直接拿读入的 String 与目标整数调用同样的比较？",
+        "answer": "文本与整数不是相同类型；应先解析成整数并处理失败，再进行数值比较，文本顺序也不能替代数值顺序。",
+        "hints": [
+          "先画出 String 到 i32 的转换步骤。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root02.05",
+      "sourceNodeId": "rust.source.root02.05",
+      "title": "使用循环来实现多次猜测",
+      "parent": "rust.book.root02",
+      "depth": 2,
+      "physicalPage": 67,
+      "printedPage": null,
+      "leaf": false,
+      "order": 30,
+      "group": 2,
+      "body": [
+        "多轮游戏要在每次开始时准备输入，读取后分类处理，再决定进入下一轮还是结束。循环只负责重复，猜中退出与输入错误恢复仍要由明确的分支控制。",
+        "下面分别检查 break 与 continue 的位置。应能追踪失败解析是否跳过比较、成功猜中是否真正离开循环，也要留意缓冲区是否意外积累上一轮文本。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root02.05.01",
+      "sourceNodeId": "rust.source.root02.05.01",
+      "title": "在猜测成功时优雅地退出",
+      "parent": "rust.book.root02.05",
+      "depth": 3,
+      "physicalPage": 68,
+      "printedPage": null,
+      "leaf": true,
+      "order": 31,
+      "group": 2,
+      "body": [
+        "loop 默认重复执行循环体，只有遇到 break 等改变控制流的语句才离开。把“猜中”提示写出来，并不会自动终止游戏；应该在成功分支中显式退出，否则程序仍可能继续读取输入，玩家会误以为胜利没有生效。",
+        "break 只结束它对应的循环，后面的语句仍可执行。这里用递增的确定猜测代替真实交互，便于观察三次尝试和一次退出。实际游戏应将读取与比较放在每轮内部；平台支持无标签、无值的 break，不涵盖完整 Rust 的带值 loop 表达式，因此阅读边界也需分清。检查退出条件时，也要确认在每一轮循环中确实有机会到达这个成功分支。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut guess = 1;\n    loop {\n        if guess == 3 {\n            println!(\"猜中\");\n            break;\n        }\n        guess = guess + 1;\n    }\n    println!(\"游戏结束\");\n}\n",
+        "description": "将成功分支中的 break 与循环后的收尾输出联系起来。",
+        "result": "guess 到 3 时显示“猜中”，随后离开循环显示“游戏结束”。",
+        "reason": "本叶用确定控制流解释游戏退出，完整交互随机游戏不在平台运行配置中。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若只删除 break，代码在 guess 为 3 后会怎样？",
+        "answer": "它会继续执行后面的递增，再回到循环，不会按成功意图结束；最终可能一直循环并遇到运行限额或整数边界。",
+        "hints": [
+          "提示文本不会改变控制流。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root02.05.02",
+      "sourceNodeId": "rust.source.root02.05.02",
+      "title": "处理非法输入",
+      "parent": "rust.book.root02.05",
+      "depth": 3,
+      "physicalPage": 69,
+      "printedPage": null,
+      "leaf": true,
+      "order": 32,
+      "group": 2,
+      "body": [
+        "输入错误不应被当成一次有效的大小比较。解析文本产生 Result，成功分支取出整数，失败分支可以提示并 continue，让循环从下一轮开始。把两种结果分开，使比较代码只接收有效数字，也避免 unwrap 直接终止整局游戏。",
+        "continue 跳过本轮后续语句；break 则离开循环，二者不能互换。每轮新建字符串或清空旧缓冲区，能防止前一次输入影响下一次转换。下例固定文本为非法数字，以阅读恢复分支，不代表平台已接入任意 Result 操作；标准输入 EOF 也需要设计结束策略，避免盲目空转。无效输入的提示不应占用一个有效猜测结果，也不应继续使用上一轮转换出的数字。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let text = \"abc\";\n    let number: i32 = match text.trim().parse() {\n        Ok(value) => value,\n        Err(_) => {\n            println!(\"请输入整数\");\n            return;\n        }\n    };\n    println!(\"有效数字 {}\", number);\n}\n",
+        "description": "以一次非法文本演示失败路径，游戏循环中可把 return 换成 continue。",
+        "result": "abc 无法解析为 i32，预期显示“请输入整数”，不执行有效数字输出。",
+        "reason": "Result 模式分支和通用解析错误恢复不在平台子集内，本例为阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "在循环内使用 continue 处理解析失败，后面的大小比较还会执行吗？",
+        "answer": "不会。continue 直接进入下一轮；只有成功解析取得整数时，本轮才继续比较。",
+        "hints": [
+          "沿控制流跟踪失败分支出口。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root02.06",
+      "sourceNodeId": "rust.source.root02.06",
+      "title": "总结",
+      "parent": "rust.book.root02",
+      "depth": 2,
+      "physicalPage": 72,
+      "printedPage": null,
+      "leaf": true,
+      "order": 33,
+      "group": 2,
+      "body": [
+        "猜数游戏的完整链路是：建立目标、读入一轮文本、尝试转换、比较数值、给出反馈并选择继续或退出。随机性决定目标，Result 表达可能失败，match 区分状态，loop 管理重复；这些工具协作，但每个只解决其中一部分问题。",
+        "回顾时可以先将随机目标替换为固定值，再手算一轮流程，确认反馈正确后再增加交互。不要把为验证逻辑而固定的目标称为随机抽取，也不要因为显示了胜利文字就认定循环已经结束。下面的确定分支保留核心判断，后续章节会系统解释类型、函数和所有权。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let target = 17;\n    let guess = 17;\n    if guess < target {\n        println!(\"偏小\");\n    } else if guess > target {\n        println!(\"偏大\");\n    } else {\n        println!(\"猜中\");\n    }\n}\n",
+        "description": "用确定整数复核猜数游戏的三种反馈。",
+        "result": "当前 guess 与 target 相等，预期输出“猜中”。",
+        "reason": "本叶是游戏逻辑总结阅读例，没有绑定完整随机交互运行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么把随机目标临时替换为固定整数有利于检查比较逻辑？",
+        "answer": "固定输入使预期明确，可以重复验证大小和相等分支；它只验证比较逻辑，不能证明随机库或交互循环已正确实现。",
+        "hints": [
+          "每个验证结论都应对应实际覆盖的环节。"
+        ]
+      }
+    }
+  ]
+}

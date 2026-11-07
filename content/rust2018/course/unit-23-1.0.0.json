@@ -1,0 +1,218 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 23,
+  "nodes": [
+    {
+      "id": "rust.book.root23",
+      "sourceNodeId": "rust.source.root23",
+      "title": "附录C 可派生trait",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 712,
+      "printedPage": null,
+      "leaf": false,
+      "order": 376,
+      "group": 23,
+      "body": [
+        "derive会按类型的字段或变体生成常见trait实现，减少重复代码。生成能否成立取决于每个组成部分是否满足相应约束；派生属性并不能为内部不支持的能力凭空补上实现。",
+        "下面分别看调试、相等、排序、复制、哈希和默认值。重点不是只记名字，而是检查生成规则是否符合领域含义；字段声明顺序等实现细节有时会影响比较结果，不宜未经审查就当作业务规则。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root23.01",
+      "sourceNodeId": "rust.source.root23.01",
+      "title": "面向程序员格式化输出的Debug",
+      "parent": "rust.book.root23",
+      "depth": 2,
+      "physicalPage": 714,
+      "printedPage": null,
+      "leaf": true,
+      "order": 377,
+      "group": 23,
+      "body": [
+        "Debug提供面向开发者的结构化格式，常用{:?}或{:#?}观察类型字段与枚举变体。派生Debug会要求内部字段也能调试输出，生成的形式适合排查问题，不应被当成稳定的数据交换协议或最终用户界面。",
+        "Debug和Display服务不同目的。Display通常由作者挑选面向用户的文字表示，无法仅凭字段结构自动知道最佳格式，所以它不是本附录这类自动派生的展示能力。断言失败时打印两边的值也会用到Debug；有调试输出并不表示类型可以比较，相等性还需要PartialEq等相应实现。日志中含敏感字段时，还需由作者决定是否应展示该字段。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "#[derive(Debug)]\nstruct Position { row: usize, column: usize }\nfn main() {\n    let p = Position { row: 2, column: 4 };\n    println!(\"{:?}\", p);\n    println!(\"{:#?}\", p);\n}",
+        "description": "同时观察紧凑和便于阅读的多行调试格式。",
+        "result": "紧凑输出含Position及row、column字段；美化格式展开为多行。",
+        "reason": "执行器不支持derive、结构体、usize或调试格式说明符。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "给Position派生Debug后，println!(\"{}\", p)就一定可用吗？",
+        "answer": "不一定。{}需要Display，Debug只满足{:?}等调试格式；二者是不同trait，不能互相替代。",
+        "hints": [
+          "看占位符选择的是哪个trait。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root23.02",
+      "sourceNodeId": "rust.source.root23.02",
+      "title": "用于相等性比较的PartialEq和Eq",
+      "parent": "rust.book.root23",
+      "depth": 2,
+      "physicalPage": 715,
+      "printedPage": null,
+      "leaf": true,
+      "order": 378,
+      "group": 23,
+      "body": [
+        "PartialEq提供==与!=比较，派生时结构体的所有字段都必须相等，枚举还需变体相同。Eq进一步承诺相等关系满足自反等完整等价关系要求，本身不增加新方法。并不是所有可比较数据都适合承诺Eq，例如浮点NaN不等于自身。",
+        "决定派生前，要确认“全部字段相等”确实代表业务中的相等。若含缓存、临时状态等字段，自动比较也会把它们算进去。自定义相等关系又会影响Hash和排序的约束，不能只为让一个断言通过就随意忽略字段。一个类型的不同能力应遵守一致的相等含义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "#[derive(Debug, PartialEq, Eq)]\nstruct Key { section: u32, item: u32 }\nfn main() {\n    let a = Key { section: 1, item: 2 };\n    let b = Key { section: 1, item: 3 };\n    println!(\"{}\", a == b);\n    let n = f64::NAN;\n    println!(\"{}\", n == n);\n}",
+        "description": "对照字段比较与浮点NaN的非自反情况。",
+        "result": "两行都是false；Key第二字段不同，NaN不等于自身。",
+        "reason": "执行器没有派生trait、结构体或浮点类型。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把含f64字段的结构体直接派生Eq为何不成立？",
+        "answer": "f64包含NaN，不能保证每个值等于自身，因此没有Eq。派生要求各字段也满足对应trait，无法越过这个约束。",
+        "hints": [
+          "Eq的承诺比“能写==”更强。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root23.03",
+      "sourceNodeId": "rust.source.root23.03",
+      "title": "使用PartialOrd和Ord进行次序比较",
+      "parent": "rust.book.root23",
+      "depth": 2,
+      "physicalPage": 716,
+      "printedPage": null,
+      "leaf": true,
+      "order": 379,
+      "group": 23,
+      "body": [
+        "PartialOrd用partial_cmp返回Option<Ordering>，允许某些值无法比较；Ord保证完整次序并返回Ordering。派生结构体次序时，按字段声明顺序逐项比较，遇到第一处差异就决定结果；这与显示时喜欢先看哪个字段无关。",
+        "派生枚举时，变体的声明次序也会影响默认比较。若业务排序按优先级、时间或特殊权重，默认派生不一定合适，应明确规则。Ord还需与相等性一致，不能一边==说相同，另一边cmp却说大小不同；排序容器会依赖这些契约保持正确行为。若要保留声明次序而按另一键排序，可以显式选择比较键，避免让字段调整悄悄改变外部行为。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]\nstruct Rank { priority: u8, sequence: u32 }\nfn main() {\n    let mut items = vec![\n        Rank { priority: 2, sequence: 1 },\n        Rank { priority: 1, sequence: 9 },\n        Rank { priority: 1, sequence: 3 },\n    ];\n    items.sort();\n    for x in items { println!(\"{}:{}\", x.priority, x.sequence); }\n}",
+        "description": "字段声明顺序决定派生的字典式比较。",
+        "result": "依次打印1:3、1:9、2:1。",
+        "reason": "执行器没有Ord派生、Vec排序或结构体。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "交换Rank两个字段的声明次序但保持值不变，排序语义会变吗？",
+        "answer": "会。派生比较先看声明在前的字段；sequence在前时先按sequence比较，可能与原来按priority为主的结果不同。",
+        "hints": [
+          "派生规则依赖结构定义。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root23.04",
+      "sourceNodeId": "rust.source.root23.04",
+      "title": "使用Clone和Copy复制值",
+      "parent": "rust.book.root23",
+      "depth": 2,
+      "physicalPage": 717,
+      "printedPage": null,
+      "leaf": true,
+      "order": 380,
+      "group": 23,
+      "body": [
+        "Clone允许显式调用clone产生另一个值，具体代价取决于内部类型的实现；String克隆通常复制堆数据，Rc或Arc克隆则增加共享引用计数，不能把所有Clone都笼统理解成独立深拷贝。派生Clone会逐字段调用各自的克隆。",
+        "Copy表示赋值和传参等位置可以隐式复制值，要求Clone并且全部字段也能Copy。拥有String的结构体不能直接派生Copy，因为隐式复制缓冲区所有权会破坏释放责任。需要独立对象时显式clone，需要共享所有权时选择相应指针，两种需求应在类型设计中分清。Clone也可能有明显分配成本，调用处应按实际类型评估。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "#[derive(Clone, Copy)]\nstruct Point { x: i32, y: i32 }\n#[derive(Clone)]\nstruct Note { text: String }\nfn main() {\n    let p = Point { x: 1, y: 2 };\n    let q = p;\n    let a = Note { text: \"原文\".into() };\n    let mut b = a.clone();\n    b.text.push_str(\"副本\");\n    println!(\"{} {} | {} | {}\", p.x, q.y, a.text, b.text);\n}",
+        "description": "对照小标量结构体的Copy与拥有String结构体的Clone。",
+        "result": "打印1 2 | 原文 | 原文副本；克隆String后两份内容独立。",
+        "reason": "执行器虽支持固定标量和String.clone，但不支持派生结构体能力。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Clone是否总能证明两份值内部完全不共享数据？",
+        "answer": "不能。行为由字段的Clone实现决定，引用计数指针克隆会共享同一目标；需检查具体类型，而不是只看derive(Clone)。",
+        "hints": [
+          "逐字段追踪克隆语义。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root23.05",
+      "sourceNodeId": "rust.source.root23.05",
+      "title": "用于将值映射到另外一个长度固定的值的Hash",
+      "parent": "rust.book.root23",
+      "depth": 2,
+      "physicalPage": 719,
+      "printedPage": null,
+      "leaf": true,
+      "order": 381,
+      "group": 23,
+      "body": [
+        "Hash把值的组成部分喂给哈希器，以便哈希集合或映射定位候选桶。派生Hash按字段与变体组合哈希，要求组成部分也可Hash。哈希值不是唯一身份：不同值可能碰撞，容器仍要用相等比较确认是否是同一个键。",
+        "Hash与Eq必须一致：相等值应产生相同哈希输入行为，反过来同哈希不要求值相等。若自定义相等时忽略某字段，哈希也需匹配这套含义。不要把标准容器内部的哈希结果当成跨进程、跨版本稳定编号；本例只检查成员关系，不依赖容器遍历次序或具体哈希数值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::collections::HashSet;\n#[derive(PartialEq, Eq, Hash)]\nstruct Cell { row: u32, column: u32 }\nfn main() {\n    let mut visited = HashSet::new();\n    visited.insert(Cell { row: 1, column: 2 });\n    visited.insert(Cell { row: 1, column: 2 });\n    println!(\"{} {}\", visited.len(), visited.contains(&Cell { row: 1, column: 2 }));\n}",
+        "description": "用派生相等和哈希实现坐标去重。",
+        "result": "打印1 true；相同坐标只保存一个集合元素。",
+        "reason": "执行器没有HashSet、派生Hash或结构体键。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两个值哈希相同，能否直接认定它们相等？",
+        "answer": "不能。哈希存在碰撞，容器需要再用相等性确认。只有“相等值必须具有一致哈希”这一方向是所需契约。",
+        "hints": [
+          "不要倒置相等与哈希的蕴含关系。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root23.06",
+      "sourceNodeId": "rust.source.root23.06",
+      "title": "用于提供默认值的Default",
+      "parent": "rust.book.root23",
+      "depth": 2,
+      "physicalPage": 720,
+      "printedPage": null,
+      "leaf": true,
+      "order": 382,
+      "group": 23,
+      "body": [
+        "Default提供一个约定的初始值。结构体派生Default时会分别调用各字段的default，因此每个字段都必须支持这项能力。数字通常从零、bool从false、String与Vec从空容器开始，但这些组合未必就是业务上合法或最合理的对象。",
+        "使用结构体更新语法时，可以显式指定少数字段，其余从Default::default()补齐。若端口、容量或模式需要特殊默认，应手工实现Default或提供经过校验的构造函数，而不是把派生结果误当成有效性证明。默认只是接口约定，和字段私有、业务不变量是不同层次的问题。默认值还应在说明中明确，方便调用者理解省略配置的结果。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "#[derive(Debug, Default)]\nstruct Options { enabled: bool, limit: usize, label: String }\nfn main() {\n    let options = Options { limit: 8, ..Default::default() };\n    println!(\"{} {} '{}'\", options.enabled, options.limit, options.label);\n}",
+        "description": "局部覆盖一个字段，其余采用逐字段默认。",
+        "result": "打印false 8 ''；label为空，enabled为false。",
+        "reason": "执行器没有derive(Default)、结构体更新或usize。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若业务要求limit必须大于0，派生Default会自动遵守吗？",
+        "answer": "不会。usize默认值是0，逐字段派生不理解业务要求。应自定义Default给出合法值，或通过构造方法检查输入。",
+        "hints": [
+          "字段默认与业务有效性不是同一承诺。"
+        ]
+      }
+    }
+  ]
+}

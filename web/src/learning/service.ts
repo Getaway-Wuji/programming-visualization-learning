@@ -13,6 +13,7 @@ import type { C6TeachingManifest } from '../content/c6-teaching-types';
 import type { C6CourseRows } from '../c6-learning/model';
 import { projectC6Learning } from './domain';
 import { JavaLearningSession } from '../java/session';
+import { RustLearningSession } from './rust2018-session';
 import { isJavaMark } from '../java/identities';
 import { javaReviewSources, javaWeaknessRows } from '../java/review';
 import { PythonLearningSession } from '../python3/session';
@@ -153,6 +154,7 @@ interface ServiceOptions {
   enablePython?: boolean;
   enableJava?: boolean;
   enableCpp?: boolean;
+  enableRust?: boolean;
   clock?: () => string;
   id?: () => string;
 }
@@ -245,6 +247,15 @@ export class LearningService {
   private readonly pythonSession = new PythonLearningSession(this.courseHooks());
   private readonly javaSession = new JavaLearningSession(this.courseHooks());
   private readonly cppSession = new JavaLearningSession(this.courseHooks(), 'cpp');
+  private readonly rustSession = new RustLearningSession(this.courseHooks());
+  readRustCourse = (...args: Parameters<RustLearningSession['read']>) =>
+    this.rustSession.read(...args);
+  recordRustLesson = (...args: Parameters<RustLearningSession['recordLesson']>) =>
+    this.rustSession.recordLesson(...args);
+  recordRustJudge = (...args: Parameters<RustLearningSession['recordJudge']>) =>
+    this.rustSession.recordJudge(...args);
+  saveRustDraft = (...args: Parameters<RustLearningSession['saveDraft']>) =>
+    this.rustSession.saveDraft(...args);
   readPythonCourse = (...args: Parameters<PythonLearningSession['read']>) =>
     this.pythonSession.read(...args);
   recordPythonLesson = (...args: Parameters<PythonLearningSession['recordLesson']>) =>
@@ -974,6 +985,7 @@ export class LearningService {
           enablePython: this.options.enablePython,
           enableJava: this.options.enableJava,
           enableCpp: this.options.enableCpp,
+          enableRust: this.options.enableRust,
           recovery: true,
         }));
       if (this.disposed) {
@@ -2312,6 +2324,7 @@ export function createLearningService() {
     enablePython: true,
     enableJava: true,
     enableCpp: true,
+    enableRust: true,
   });
   // Deliberately no raw command, trusted authority, DB name or fixture options.
   return {
@@ -2323,6 +2336,10 @@ export function createLearningService() {
     recordJavaLesson: service.recordJavaLesson,
     recordJavaJudge: service.recordJavaJudge,
     saveJavaDraft: service.saveJavaDraft,
+    readRustCourse: service.readRustCourse,
+    recordRustLesson: service.recordRustLesson,
+    recordRustJudge: service.recordRustJudge,
+    saveRustDraft: service.saveRustDraft,
     readCppCourse: service.readCppCourse,
     recordCppLesson: service.recordCppLesson,
     recordCppJudge: service.recordCppJudge,

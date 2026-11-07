@@ -1,0 +1,3518 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "referenceEdition": "2018",
+  "book": {
+    "title": "Rust权威指南",
+    "authors": [
+      "Steve Klabnik",
+      "Carol Nichols"
+    ],
+    "translators": [
+      "毛靖凯",
+      "唐刚",
+      "沙渺"
+    ],
+    "publisher": "电子工业出版社",
+    "edition": "2020年6月第1版",
+    "isbn": "978-7-121-38706-7",
+    "pdfSha256": "2294d3c4370946d55eaf40c56871996b472792f20918af7edd0cc1e5ee5c88c9",
+    "physicalPages": 730,
+    "printedPagesAvailable": false,
+    "rewrite": "按已核对的目录独立编写正文、例子与活动。"
+  },
+  "catalog": [
+    {
+      "sourceNodeId": "rust.source.root01",
+      "titleOriginal": "第1章 入门指南",
+      "parent": null,
+      "level": 1,
+      "order": 1,
+      "physicalPage": 28,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.01",
+      "titleOriginal": "安装",
+      "parent": "rust.source.root01",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 29,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.01.01",
+      "titleOriginal": "在Linux或macOS环境中安装Rust",
+      "parent": "rust.source.root01.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 30,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.01.02",
+      "titleOriginal": "在Windows环境中安装Rust",
+      "parent": "rust.source.root01.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 31,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.01.03",
+      "titleOriginal": "更新与卸载",
+      "parent": "rust.source.root01.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 31,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.01.04",
+      "titleOriginal": "常见问题",
+      "parent": "rust.source.root01.01",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 31,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.01.05",
+      "titleOriginal": "本地文档",
+      "parent": "rust.source.root01.01",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 32,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.02",
+      "titleOriginal": "Hello, World!",
+      "parent": "rust.source.root01",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 33,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.02.01",
+      "titleOriginal": "创建一个文件夹",
+      "parent": "rust.source.root01.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 33,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.02.02",
+      "titleOriginal": "编写并运行一个Rust程序",
+      "parent": "rust.source.root01.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 34,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.02.03",
+      "titleOriginal": "对这个程序的剖析",
+      "parent": "rust.source.root01.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 35,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.02.04",
+      "titleOriginal": "编译与运行是两个不同的步骤",
+      "parent": "rust.source.root01.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 36,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.03",
+      "titleOriginal": "Hello, Cargo!",
+      "parent": "rust.source.root01",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 39,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.03.01",
+      "titleOriginal": "使用Cargo创建一个项目",
+      "parent": "rust.source.root01.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 39,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.03.02",
+      "titleOriginal": "使用Cargo构建和运行项目",
+      "parent": "rust.source.root01.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 42,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.03.03",
+      "titleOriginal": "以Release模式进行构建",
+      "parent": "rust.source.root01.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 44,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.03.04",
+      "titleOriginal": "学会习惯Cargo",
+      "parent": "rust.source.root01.03",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 44,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root01.04",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root01",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 46,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02",
+      "titleOriginal": "第2章 编写一个猜数游戏",
+      "parent": null,
+      "level": 1,
+      "order": 2,
+      "physicalPage": 47,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.01",
+      "titleOriginal": "创建一个新的项目",
+      "parent": "rust.source.root02",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 48,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.02",
+      "titleOriginal": "处理一次猜测",
+      "parent": "rust.source.root02",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 50,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.02.01",
+      "titleOriginal": "使用变量来存储值",
+      "parent": "rust.source.root02.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 51,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.02.02",
+      "titleOriginal": "使用Result类型来处理可能失败的情况",
+      "parent": "rust.source.root02.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 53,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.02.03",
+      "titleOriginal": "通过println! 中的占位符输出对应的值",
+      "parent": "rust.source.root02.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 54,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.02.04",
+      "titleOriginal": "尝试运行代码",
+      "parent": "rust.source.root02.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 55,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.03",
+      "titleOriginal": "生成一个保密数字",
+      "parent": "rust.source.root02",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 56,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.03.01",
+      "titleOriginal": "借助包来获得更多功能",
+      "parent": "rust.source.root02.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 56,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.03.02",
+      "titleOriginal": "生成一个随机数",
+      "parent": "rust.source.root02.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 59,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.04",
+      "titleOriginal": "比较猜测数字与保密数字",
+      "parent": "rust.source.root02",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 62,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.05",
+      "titleOriginal": "使用循环来实现多次猜测",
+      "parent": "rust.source.root02",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 67,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.05.01",
+      "titleOriginal": "在猜测成功时优雅地退出",
+      "parent": "rust.source.root02.05",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 68,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.05.02",
+      "titleOriginal": "处理非法输入",
+      "parent": "rust.source.root02.05",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 69,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root02.06",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root02",
+      "level": 2,
+      "order": 6,
+      "physicalPage": 72,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03",
+      "titleOriginal": "第3章 通用编程概念",
+      "parent": null,
+      "level": 1,
+      "order": 3,
+      "physicalPage": 73,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.01",
+      "titleOriginal": "变量与可变性",
+      "parent": "rust.source.root03",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 75,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.01.01",
+      "titleOriginal": "变量与常量之间的不同",
+      "parent": "rust.source.root03.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 77,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.01.02",
+      "titleOriginal": "隐藏",
+      "parent": "rust.source.root03.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 78,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.02",
+      "titleOriginal": "数据类型",
+      "parent": "rust.source.root03",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 81,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.02.01",
+      "titleOriginal": "标量类型",
+      "parent": "rust.source.root03.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 82,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.02.02",
+      "titleOriginal": "复合类型",
+      "parent": "rust.source.root03.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 86,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.03",
+      "titleOriginal": "函数",
+      "parent": "rust.source.root03",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 91,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.03.01",
+      "titleOriginal": "函数参数",
+      "parent": "rust.source.root03.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 92,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.03.02",
+      "titleOriginal": "函数体中的语句和表达式",
+      "parent": "rust.source.root03.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 94,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.03.03",
+      "titleOriginal": "函数的返回值",
+      "parent": "rust.source.root03.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 96,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.04",
+      "titleOriginal": "注释",
+      "parent": "rust.source.root03",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 99,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.05",
+      "titleOriginal": "控制流",
+      "parent": "rust.source.root03",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 101,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.05.01",
+      "titleOriginal": "if表达式",
+      "parent": "rust.source.root03.05",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 101,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.05.02",
+      "titleOriginal": "使用循环重复执行代码",
+      "parent": "rust.source.root03.05",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 106,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root03.06",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root03",
+      "level": 2,
+      "order": 6,
+      "physicalPage": 112,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04",
+      "titleOriginal": "第4章 认识所有权",
+      "parent": null,
+      "level": 1,
+      "order": 4,
+      "physicalPage": 113,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.01",
+      "titleOriginal": "什么是所有权",
+      "parent": "rust.source.root04",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 114,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.01.01",
+      "titleOriginal": "所有权规则",
+      "parent": "rust.source.root04.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 116,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.01.02",
+      "titleOriginal": "变量作用域",
+      "parent": "rust.source.root04.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 116,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.01.03",
+      "titleOriginal": "String类型",
+      "parent": "rust.source.root04.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 117,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.01.04",
+      "titleOriginal": "内存与分配",
+      "parent": "rust.source.root04.01",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 118,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.01.05",
+      "titleOriginal": "所有权与函数",
+      "parent": "rust.source.root04.01",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 126,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.01.06",
+      "titleOriginal": "返回值与作用域",
+      "parent": "rust.source.root04.01",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 127,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.02",
+      "titleOriginal": "引用与借用",
+      "parent": "rust.source.root04",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 130,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.02.01",
+      "titleOriginal": "可变引用",
+      "parent": "rust.source.root04.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 133,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.02.02",
+      "titleOriginal": "悬垂引用",
+      "parent": "rust.source.root04.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 135,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.02.03",
+      "titleOriginal": "引用的规则",
+      "parent": "rust.source.root04.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 137,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.03",
+      "titleOriginal": "切片",
+      "parent": "rust.source.root04",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 139,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.03.01",
+      "titleOriginal": "字符串切片",
+      "parent": "rust.source.root04.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 141,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.03.02",
+      "titleOriginal": "其他类型的切片",
+      "parent": "rust.source.root04.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 146,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root04.04",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root04",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 148,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05",
+      "titleOriginal": "第5章 使用结构体来组织相关联的数据",
+      "parent": null,
+      "level": 1,
+      "order": 5,
+      "physicalPage": 149,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.01",
+      "titleOriginal": "定义并实例化结构体",
+      "parent": "rust.source.root05",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 150,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.01.01",
+      "titleOriginal": "在变量名与字段名相同时使用简化版的字段初始化方法",
+      "parent": "rust.source.root05.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 152,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.01.02",
+      "titleOriginal": "使用结构体更新语法根据其他实例创建新实例",
+      "parent": "rust.source.root05.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 152,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.01.03",
+      "titleOriginal": "使用不需要对字段命名的元组结构体来创建不同的类型",
+      "parent": "rust.source.root05.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 153,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.01.04",
+      "titleOriginal": "没有任何字段的空结构体",
+      "parent": "rust.source.root05.01",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 154,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.02",
+      "titleOriginal": "一个使用结构体的示例程序",
+      "parent": "rust.source.root05",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 156,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.02.01",
+      "titleOriginal": "使用元组来重构代码",
+      "parent": "rust.source.root05.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 157,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.02.02",
+      "titleOriginal": "使用结构体来重构代码：增加有意义的描述信息",
+      "parent": "rust.source.root05.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 158,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.02.03",
+      "titleOriginal": "通过派生trait增加实用功能",
+      "parent": "rust.source.root05.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 159,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.03",
+      "titleOriginal": "方法",
+      "parent": "rust.source.root05",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 162,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.03.01",
+      "titleOriginal": "定义方法",
+      "parent": "rust.source.root05.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 162,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.03.02",
+      "titleOriginal": "带有更多参数的方法",
+      "parent": "rust.source.root05.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 164,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.03.03",
+      "titleOriginal": "关联函数",
+      "parent": "rust.source.root05.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 165,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.03.04",
+      "titleOriginal": "多个impl块",
+      "parent": "rust.source.root05.03",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 166,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root05.04",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root05",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 168,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06",
+      "titleOriginal": "第6章 枚举与模式匹配",
+      "parent": null,
+      "level": 1,
+      "order": 6,
+      "physicalPage": 169,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06.01",
+      "titleOriginal": "定义枚举",
+      "parent": "rust.source.root06",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 170,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06.01.01",
+      "titleOriginal": "枚举值",
+      "parent": "rust.source.root06.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 170,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06.01.02",
+      "titleOriginal": "Option枚举及其在空值处理方面的优势",
+      "parent": "rust.source.root06.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 175,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06.02",
+      "titleOriginal": "控制流运算符match",
+      "parent": "rust.source.root06",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 179,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06.02.01",
+      "titleOriginal": "绑定值的模式",
+      "parent": "rust.source.root06.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 180,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06.02.02",
+      "titleOriginal": "匹配Option<T>",
+      "parent": "rust.source.root06.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 182,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06.02.03",
+      "titleOriginal": "匹配必须穷举所有的可能",
+      "parent": "rust.source.root06.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 183,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06.02.04",
+      "titleOriginal": "_通配符",
+      "parent": "rust.source.root06.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 184,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06.03",
+      "titleOriginal": "简单控制流if let",
+      "parent": "rust.source.root06",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 185,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root06.04",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root06",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 187,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07",
+      "titleOriginal": "第7章 使用包、单元包及模块来管理日渐复杂的项目",
+      "parent": null,
+      "level": 1,
+      "order": 7,
+      "physicalPage": 188,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.01",
+      "titleOriginal": "包与单元包",
+      "parent": "rust.source.root07",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 190,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.02",
+      "titleOriginal": "通过定义模块来控制作用域及私有性",
+      "parent": "rust.source.root07",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 192,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.03",
+      "titleOriginal": "用于在模块树中指明条目的路径",
+      "parent": "rust.source.root07",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 195,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.03.01",
+      "titleOriginal": "使用pub关键字来暴露路径",
+      "parent": "rust.source.root07.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 197,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.03.02",
+      "titleOriginal": "使用super关键字开始构造相对路径",
+      "parent": "rust.source.root07.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 200,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.03.03",
+      "titleOriginal": "将结构体或枚举声明为公共的",
+      "parent": "rust.source.root07.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 201,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.04",
+      "titleOriginal": "用use关键字将路径导入作用域",
+      "parent": "rust.source.root07",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 204,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.04.01",
+      "titleOriginal": "创建use路径时的惯用模式",
+      "parent": "rust.source.root07.04",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 205,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.04.02",
+      "titleOriginal": "使用as关键字来提供新的名称",
+      "parent": "rust.source.root07.04",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 207,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.04.03",
+      "titleOriginal": "使用pub use重导出名称",
+      "parent": "rust.source.root07.04",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 208,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.04.04",
+      "titleOriginal": "使用外部包",
+      "parent": "rust.source.root07.04",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 209,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.04.05",
+      "titleOriginal": "使用嵌套的路径来清理众多use语句",
+      "parent": "rust.source.root07.04",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 210,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.04.06",
+      "titleOriginal": "通配符",
+      "parent": "rust.source.root07.04",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 211,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.05",
+      "titleOriginal": "将模块拆分为不同的文件",
+      "parent": "rust.source.root07",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 212,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root07.06",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root07",
+      "level": 2,
+      "order": 6,
+      "physicalPage": 214,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08",
+      "titleOriginal": "第8章 通用集合类型",
+      "parent": null,
+      "level": 1,
+      "order": 8,
+      "physicalPage": 215,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.01",
+      "titleOriginal": "使用动态数组存储多个值",
+      "parent": "rust.source.root08",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 217,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.01.01",
+      "titleOriginal": "创建动态数组",
+      "parent": "rust.source.root08.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 217,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.01.02",
+      "titleOriginal": "更新动态数组",
+      "parent": "rust.source.root08.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 218,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.01.03",
+      "titleOriginal": "销毁动态数组时也会销毁其中的元素",
+      "parent": "rust.source.root08.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 218,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.01.04",
+      "titleOriginal": "读取动态数组中的元素",
+      "parent": "rust.source.root08.01",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 219,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.01.05",
+      "titleOriginal": "遍历动态数组中的值",
+      "parent": "rust.source.root08.01",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 221,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.01.06",
+      "titleOriginal": "使用枚举来存储多个类型的值",
+      "parent": "rust.source.root08.01",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 222,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.02",
+      "titleOriginal": "使用字符串存储UTF-8编码的文本",
+      "parent": "rust.source.root08",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 224,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.02.01",
+      "titleOriginal": "字符串是什么",
+      "parent": "rust.source.root08.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 224,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.02.02",
+      "titleOriginal": "创建一个新的字符串",
+      "parent": "rust.source.root08.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 225,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.02.03",
+      "titleOriginal": "更新字符串",
+      "parent": "rust.source.root08.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 226,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.02.04",
+      "titleOriginal": "字符串索引",
+      "parent": "rust.source.root08.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 229,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.02.05",
+      "titleOriginal": "字符串切片",
+      "parent": "rust.source.root08.02",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 232,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.02.06",
+      "titleOriginal": "遍历字符串的方法",
+      "parent": "rust.source.root08.02",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 232,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.02.07",
+      "titleOriginal": "字符串的确没那么简单",
+      "parent": "rust.source.root08.02",
+      "level": 3,
+      "order": 7,
+      "physicalPage": 233,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.03",
+      "titleOriginal": "在哈希映射中存储键值对",
+      "parent": "rust.source.root08",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 235,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.03.01",
+      "titleOriginal": "创建一个新的哈希映射",
+      "parent": "rust.source.root08.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 235,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.03.02",
+      "titleOriginal": "哈希映射与所有权",
+      "parent": "rust.source.root08.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 236,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.03.03",
+      "titleOriginal": "访问哈希映射中的值",
+      "parent": "rust.source.root08.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 237,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.03.04",
+      "titleOriginal": "更新哈希映射",
+      "parent": "rust.source.root08.03",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 238,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.03.05",
+      "titleOriginal": "哈希函数",
+      "parent": "rust.source.root08.03",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 240,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root08.04",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root08",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 241,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09",
+      "titleOriginal": "第9章 错误处理",
+      "parent": null,
+      "level": 1,
+      "order": 9,
+      "physicalPage": 242,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.01",
+      "titleOriginal": "不可恢复错误与panic!",
+      "parent": "rust.source.root09",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 243,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.01.01",
+      "titleOriginal": "使用panic!产生的回溯信息",
+      "parent": "rust.source.root09.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 244,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.02",
+      "titleOriginal": "可恢复错误与Result",
+      "parent": "rust.source.root09",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 248,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.02.01",
+      "titleOriginal": "匹配不同的错误",
+      "parent": "rust.source.root09.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 250,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.02.02",
+      "titleOriginal": "失败时触发panic的快捷方式：unwrap和expect",
+      "parent": "rust.source.root09.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 252,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.02.03",
+      "titleOriginal": "传播错误",
+      "parent": "rust.source.root09.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 253,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.03",
+      "titleOriginal": "要不要使用panic!",
+      "parent": "rust.source.root09",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 259,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.03.01",
+      "titleOriginal": "示例、原型和测试",
+      "parent": "rust.source.root09.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 259,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.03.02",
+      "titleOriginal": "当你比编译器拥有更多信息时",
+      "parent": "rust.source.root09.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 260,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.03.03",
+      "titleOriginal": "错误处理的指导原则",
+      "parent": "rust.source.root09.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 260,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.03.04",
+      "titleOriginal": "创建自定义类型来进行有效性验证",
+      "parent": "rust.source.root09.03",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 262,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root09.04",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root09",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 265,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10",
+      "titleOriginal": "第10章 泛型、trait与生命周期",
+      "parent": null,
+      "level": 1,
+      "order": 10,
+      "physicalPage": 266,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.01",
+      "titleOriginal": "通过将代码提取为函数来减少重复工作",
+      "parent": "rust.source.root10",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 268,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.02",
+      "titleOriginal": "泛型数据类型",
+      "parent": "rust.source.root10",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 272,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.02.01",
+      "titleOriginal": "在函数定义中",
+      "parent": "rust.source.root10.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 272,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.02.02",
+      "titleOriginal": "在结构体定义中",
+      "parent": "rust.source.root10.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 275,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.02.03",
+      "titleOriginal": "在枚举定义中",
+      "parent": "rust.source.root10.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 277,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.02.04",
+      "titleOriginal": "在方法定义中",
+      "parent": "rust.source.root10.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 277,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.02.05",
+      "titleOriginal": "泛型代码的性能问题",
+      "parent": "rust.source.root10.02",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 280,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.03",
+      "titleOriginal": "trait：定义共享行为",
+      "parent": "rust.source.root10",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 282,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.03.01",
+      "titleOriginal": "定义trait",
+      "parent": "rust.source.root10.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 282,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.03.02",
+      "titleOriginal": "为类型实现trait",
+      "parent": "rust.source.root10.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 283,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.03.03",
+      "titleOriginal": "默认实现",
+      "parent": "rust.source.root10.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 285,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.03.04",
+      "titleOriginal": "使用trait作为参数",
+      "parent": "rust.source.root10.03",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 287,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.03.05",
+      "titleOriginal": "返回实现了trait的类型",
+      "parent": "rust.source.root10.03",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 289,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.03.06",
+      "titleOriginal": "使用trait约束来修复largest函数",
+      "parent": "rust.source.root10.03",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 291,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.03.07",
+      "titleOriginal": "使用trait约束来有条件地实现方法",
+      "parent": "rust.source.root10.03",
+      "level": 3,
+      "order": 7,
+      "physicalPage": 293,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04",
+      "titleOriginal": "使用生命周期保证引用的有效性",
+      "parent": "rust.source.root10",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 295,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04.01",
+      "titleOriginal": "使用生命周期来避免悬垂引用",
+      "parent": "rust.source.root10.04",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 295,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04.02",
+      "titleOriginal": "借用检查器",
+      "parent": "rust.source.root10.04",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 296,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04.03",
+      "titleOriginal": "函数中的泛型生命周期",
+      "parent": "rust.source.root10.04",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 298,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04.04",
+      "titleOriginal": "生命周期标注语法",
+      "parent": "rust.source.root10.04",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 299,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04.05",
+      "titleOriginal": "函数签名中的生命周期标注",
+      "parent": "rust.source.root10.04",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 300,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04.06",
+      "titleOriginal": "深入理解生命周期",
+      "parent": "rust.source.root10.04",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 303,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04.07",
+      "titleOriginal": "结构体定义中的生命周期标注",
+      "parent": "rust.source.root10.04",
+      "level": 3,
+      "order": 7,
+      "physicalPage": 304,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04.08",
+      "titleOriginal": "生命周期省略",
+      "parent": "rust.source.root10.04",
+      "level": 3,
+      "order": 8,
+      "physicalPage": 305,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04.09",
+      "titleOriginal": "方法定义中的生命周期标注",
+      "parent": "rust.source.root10.04",
+      "level": 3,
+      "order": 9,
+      "physicalPage": 308,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.04.10",
+      "titleOriginal": "静态生命周期",
+      "parent": "rust.source.root10.04",
+      "level": 3,
+      "order": 10,
+      "physicalPage": 309,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.05",
+      "titleOriginal": "同时使用泛型参数、trait约束与生命周期",
+      "parent": "rust.source.root10",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 311,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root10.06",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root10",
+      "level": 2,
+      "order": 6,
+      "physicalPage": 312,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11",
+      "titleOriginal": "第11章 编写自动化测试",
+      "parent": null,
+      "level": 1,
+      "order": 11,
+      "physicalPage": 313,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.01",
+      "titleOriginal": "如何编写测试",
+      "parent": "rust.source.root11",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 315,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.01.01",
+      "titleOriginal": "测试函数的构成",
+      "parent": "rust.source.root11.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 315,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.01.02",
+      "titleOriginal": "使用assert!宏检查结果",
+      "parent": "rust.source.root11.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 319,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.01.03",
+      "titleOriginal": "使用assert_eq!宏和assert_ne!宏判断相等性",
+      "parent": "rust.source.root11.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 322,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.01.04",
+      "titleOriginal": "添加自定义的错误提示信息",
+      "parent": "rust.source.root11.01",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 325,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.01.05",
+      "titleOriginal": "使用should_panic检查panic",
+      "parent": "rust.source.root11.01",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 327,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.01.06",
+      "titleOriginal": "使用Result<T, E>编写测试",
+      "parent": "rust.source.root11.01",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 331,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.02",
+      "titleOriginal": "控制测试的运行方式",
+      "parent": "rust.source.root11",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 332,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.02.01",
+      "titleOriginal": "并行或串行地进行测试",
+      "parent": "rust.source.root11.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 332,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.02.02",
+      "titleOriginal": "显示函数输出",
+      "parent": "rust.source.root11.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 333,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.02.03",
+      "titleOriginal": "只运行部分特定名称的测试",
+      "parent": "rust.source.root11.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 335,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.02.04",
+      "titleOriginal": "通过显式指定来忽略某些测试",
+      "parent": "rust.source.root11.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 337,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.03",
+      "titleOriginal": "测试的组织结构",
+      "parent": "rust.source.root11",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 339,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.03.01",
+      "titleOriginal": "单元测试",
+      "parent": "rust.source.root11.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 339,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.03.02",
+      "titleOriginal": "集成测试",
+      "parent": "rust.source.root11.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 341,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root11.04",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root11",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 346,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12",
+      "titleOriginal": "第12章 I/O项目：编写一个命令行程序",
+      "parent": null,
+      "level": 1,
+      "order": 12,
+      "physicalPage": 347,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.01",
+      "titleOriginal": "接收命令行参数",
+      "parent": "rust.source.root12",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 349,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.01.01",
+      "titleOriginal": "读取参数值",
+      "parent": "rust.source.root12.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 349,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.01.02",
+      "titleOriginal": "将参数值存入变量",
+      "parent": "rust.source.root12.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 351,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.02",
+      "titleOriginal": "读取文件",
+      "parent": "rust.source.root12",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 353,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.03",
+      "titleOriginal": "重构代码以增强模块化程度和错误处理能力",
+      "parent": "rust.source.root12",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 356,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.03.01",
+      "titleOriginal": "二进制项目的关注点分离",
+      "parent": "rust.source.root12.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 357,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.03.02",
+      "titleOriginal": "修复错误处理逻辑",
+      "parent": "rust.source.root12.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 362,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.03.03",
+      "titleOriginal": "从main中分离逻辑",
+      "parent": "rust.source.root12.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 366,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.03.04",
+      "titleOriginal": "将代码分离为独立的代码包",
+      "parent": "rust.source.root12.03",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 369,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.04",
+      "titleOriginal": "使用测试驱动开发来编写库功能",
+      "parent": "rust.source.root12",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 372,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.04.01",
+      "titleOriginal": "编写一个会失败的测试",
+      "parent": "rust.source.root12.04",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 372,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.04.02",
+      "titleOriginal": "编写可以通过测试的代码",
+      "parent": "rust.source.root12.04",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 375,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.05",
+      "titleOriginal": "处理环境变量",
+      "parent": "rust.source.root12",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 380,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.05.01",
+      "titleOriginal": "为不区分大小写的search函数编写一个会失败的测试",
+      "parent": "rust.source.root12.05",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 380,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.05.02",
+      "titleOriginal": "实现search_case_insensitive函数",
+      "parent": "rust.source.root12.05",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 381,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.06",
+      "titleOriginal": "将错误提示信息打印到标准错误而不是标准输出",
+      "parent": "rust.source.root12",
+      "level": 2,
+      "order": 6,
+      "physicalPage": 386,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.06.01",
+      "titleOriginal": "确认错误被写到了哪里",
+      "parent": "rust.source.root12.06",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 386,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.06.02",
+      "titleOriginal": "将错误提示信息打印到标准错误",
+      "parent": "rust.source.root12.06",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 387,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root12.07",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root12",
+      "level": 2,
+      "order": 7,
+      "physicalPage": 389,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13",
+      "titleOriginal": "第13章 函数式语言特性：迭代器与闭包",
+      "parent": null,
+      "level": 1,
+      "order": 13,
+      "physicalPage": 390,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.01",
+      "titleOriginal": "闭包：能够捕获环境的匿名函数",
+      "parent": "rust.source.root13",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 392,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.01.01",
+      "titleOriginal": "使用闭包来创建抽象化的程序行为",
+      "parent": "rust.source.root13.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 392,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.01.02",
+      "titleOriginal": "闭包的类型推断和类型标注",
+      "parent": "rust.source.root13.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 398,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.01.03",
+      "titleOriginal": "使用泛型参数和Fn trait来存储闭包",
+      "parent": "rust.source.root13.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 400,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.01.04",
+      "titleOriginal": "Cacher实现的局限性",
+      "parent": "rust.source.root13.01",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 403,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.01.05",
+      "titleOriginal": "使用闭包捕获上下文环境",
+      "parent": "rust.source.root13.01",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 405,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.02",
+      "titleOriginal": "使用迭代器处理元素序列",
+      "parent": "rust.source.root13",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 408,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.02.01",
+      "titleOriginal": "Iterator trait和next方法",
+      "parent": "rust.source.root13.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 409,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.02.02",
+      "titleOriginal": "消耗迭代器的方法",
+      "parent": "rust.source.root13.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 410,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.02.03",
+      "titleOriginal": "生成其他迭代器的方法",
+      "parent": "rust.source.root13.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 411,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.02.04",
+      "titleOriginal": "使用闭包捕获环境",
+      "parent": "rust.source.root13.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 412,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.02.05",
+      "titleOriginal": "使用Iterator trait来创建自定义迭代器",
+      "parent": "rust.source.root13.02",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 414,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.03",
+      "titleOriginal": "改进I/O项目",
+      "parent": "rust.source.root13",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 418,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.03.01",
+      "titleOriginal": "使用迭代器代替clone",
+      "parent": "rust.source.root13.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 418,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.03.02",
+      "titleOriginal": "使用迭代器适配器让代码更加清晰",
+      "parent": "rust.source.root13.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 421,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.04",
+      "titleOriginal": "比较循环和迭代器的性能",
+      "parent": "rust.source.root13",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 423,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root13.05",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root13",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 426,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14",
+      "titleOriginal": "第14章 进一步认识Cargo及crates.io",
+      "parent": null,
+      "level": 1,
+      "order": 14,
+      "physicalPage": 427,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.01",
+      "titleOriginal": "使用发布配置来定制构建",
+      "parent": "rust.source.root14",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 428,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.02",
+      "titleOriginal": "将包发布到crates.io上",
+      "parent": "rust.source.root14",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 430,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.02.01",
+      "titleOriginal": "编写有用的文档注释",
+      "parent": "rust.source.root14.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 430,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.02.02",
+      "titleOriginal": "使用pub use来导出合适的公共API",
+      "parent": "rust.source.root14.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 434,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.02.03",
+      "titleOriginal": "创建crates.io账户",
+      "parent": "rust.source.root14.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 438,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.02.04",
+      "titleOriginal": "为包添加元数据",
+      "parent": "rust.source.root14.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 439,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.02.05",
+      "titleOriginal": "发布到crates.io",
+      "parent": "rust.source.root14.02",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 441,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.02.06",
+      "titleOriginal": "发布已有包的新版本",
+      "parent": "rust.source.root14.02",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 441,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.02.07",
+      "titleOriginal": "使用cargo yank命令从cargo.io上移除版本",
+      "parent": "rust.source.root14.02",
+      "level": 3,
+      "order": 7,
+      "physicalPage": 442,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.03",
+      "titleOriginal": "Cargo工作空间",
+      "parent": "rust.source.root14",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 443,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.03.01",
+      "titleOriginal": "创建工作空间",
+      "parent": "rust.source.root14.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 443,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.03.02",
+      "titleOriginal": "在工作空间中创建第二个包",
+      "parent": "rust.source.root14.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 444,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.04",
+      "titleOriginal": "使用cargo install从crates.io上安装可执行程序",
+      "parent": "rust.source.root14",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 451,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.05",
+      "titleOriginal": "使用自定义命令扩展Cargo的功能",
+      "parent": "rust.source.root14",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 453,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root14.06",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root14",
+      "level": 2,
+      "order": 6,
+      "physicalPage": 454,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15",
+      "titleOriginal": "第15章 智能指针",
+      "parent": null,
+      "level": 1,
+      "order": 15,
+      "physicalPage": 455,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.01",
+      "titleOriginal": "使用Box<T>在堆上分配数据",
+      "parent": "rust.source.root15",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 457,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.01.01",
+      "titleOriginal": "使用Box<T>在堆上存储数据",
+      "parent": "rust.source.root15.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 457,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.01.02",
+      "titleOriginal": "使用装箱定义递归类型",
+      "parent": "rust.source.root15.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 458,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.02",
+      "titleOriginal": "通过Deref trait将智能指针视作常规引用",
+      "parent": "rust.source.root15",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 464,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.02.01",
+      "titleOriginal": "使用解引用运算符跳转到指针指向的值",
+      "parent": "rust.source.root15.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 464,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.02.02",
+      "titleOriginal": "把Box<T>当成引用来操作",
+      "parent": "rust.source.root15.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 465,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.02.03",
+      "titleOriginal": "定义我们自己的智能指针",
+      "parent": "rust.source.root15.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 466,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.02.04",
+      "titleOriginal": "通过实现Deref trait来将类型视作引用",
+      "parent": "rust.source.root15.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 467,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.02.05",
+      "titleOriginal": "函数和方法的隐式解引用转换",
+      "parent": "rust.source.root15.02",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 468,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.02.06",
+      "titleOriginal": "解引用转换与可变性",
+      "parent": "rust.source.root15.02",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 470,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.03",
+      "titleOriginal": "借助Drop trait在清理时运行代码",
+      "parent": "rust.source.root15",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 472,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.03.01",
+      "titleOriginal": "使用std::mem::drop提前丢弃值",
+      "parent": "rust.source.root15.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 473,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.04",
+      "titleOriginal": "基于引用计数的智能指针Rc<T>",
+      "parent": "rust.source.root15",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 476,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.04.01",
+      "titleOriginal": "使用Rc<T>共享数据",
+      "parent": "rust.source.root15.04",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 476,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.04.02",
+      "titleOriginal": "克隆Rc<T>会增加引用计数",
+      "parent": "rust.source.root15.04",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 479,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.05",
+      "titleOriginal": "RefCell<T>和内部可变性模式",
+      "parent": "rust.source.root15",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 481,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.05.01",
+      "titleOriginal": "使用RefCell<T>在运行时检查借用规则",
+      "parent": "rust.source.root15.05",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 481,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.05.02",
+      "titleOriginal": "内部可变性：可变地借用一个不可变的值",
+      "parent": "rust.source.root15.05",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 483,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.05.03",
+      "titleOriginal": "将Rc<T>和RefCell<T>结合使用来实现一个拥有多重所有权的可变数据",
+      "parent": "rust.source.root15.05",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 489,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.06",
+      "titleOriginal": "循环引用会造成内存泄漏",
+      "parent": "rust.source.root15",
+      "level": 2,
+      "order": 6,
+      "physicalPage": 492,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.06.01",
+      "titleOriginal": "创建循环引用",
+      "parent": "rust.source.root15.06",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 492,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.06.02",
+      "titleOriginal": "使用Weak<T>代替Rc<T>来避免循环引用",
+      "parent": "rust.source.root15.06",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 495,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root15.07",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root15",
+      "level": 2,
+      "order": 7,
+      "physicalPage": 502,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16",
+      "titleOriginal": "第16章 无畏并发",
+      "parent": null,
+      "level": 1,
+      "order": 16,
+      "physicalPage": 503,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.01",
+      "titleOriginal": "使用线程同时运行代码",
+      "parent": "rust.source.root16",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 505,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.01.01",
+      "titleOriginal": "使用spawn创建新线程",
+      "parent": "rust.source.root16.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 506,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.01.02",
+      "titleOriginal": "使用join句柄等待所有线程结束",
+      "parent": "rust.source.root16.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 507,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.01.03",
+      "titleOriginal": "在线程中使用move闭包",
+      "parent": "rust.source.root16.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 510,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.02",
+      "titleOriginal": "使用消息传递在线程间转移数据",
+      "parent": "rust.source.root16",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 514,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.02.01",
+      "titleOriginal": "通道和所有权转移",
+      "parent": "rust.source.root16.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 517,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.02.02",
+      "titleOriginal": "发送多个值并观察接收者的等待过程",
+      "parent": "rust.source.root16.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 518,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.02.03",
+      "titleOriginal": "通过克隆发送者创建多个生产者",
+      "parent": "rust.source.root16.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 519,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.03",
+      "titleOriginal": "共享状态的并发",
+      "parent": "rust.source.root16",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 522,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.03.01",
+      "titleOriginal": "互斥体一次只允许一个线程访问数据",
+      "parent": "rust.source.root16.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 522,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.03.02",
+      "titleOriginal": "RefCell<T>/Rc<T>和Mutex<T>/Arc<T>之间的相似性",
+      "parent": "rust.source.root16.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 530,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.04",
+      "titleOriginal": "使用Sync trait和Send trait对并发进行扩展",
+      "parent": "rust.source.root16",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 531,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.04.01",
+      "titleOriginal": "允许线程间转移所有权的Send trait",
+      "parent": "rust.source.root16.04",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 531,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.04.02",
+      "titleOriginal": "允许多线程同时访问的Sync trait",
+      "parent": "rust.source.root16.04",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 532,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.04.03",
+      "titleOriginal": "手动实现Send和Sync是不安全的",
+      "parent": "rust.source.root16.04",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 532,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root16.05",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root16",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 533,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17",
+      "titleOriginal": "第17章 Rust的面向对象编程特性",
+      "parent": null,
+      "level": 1,
+      "order": 17,
+      "physicalPage": 534,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.01",
+      "titleOriginal": "面向对象语言的特性",
+      "parent": "rust.source.root17",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 535,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.01.01",
+      "titleOriginal": "对象包含数据和行为",
+      "parent": "rust.source.root17.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 535,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.01.02",
+      "titleOriginal": "封装实现细节",
+      "parent": "rust.source.root17.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 535,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.01.03",
+      "titleOriginal": "作为类型系统和代码共享机制的继承",
+      "parent": "rust.source.root17.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 538,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.02",
+      "titleOriginal": "使用trait对象来存储不同类型的值",
+      "parent": "rust.source.root17",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 540,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.02.01",
+      "titleOriginal": "为共有行为定义一个trait",
+      "parent": "rust.source.root17.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 541,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.02.02",
+      "titleOriginal": "实现trait",
+      "parent": "rust.source.root17.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 543,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.02.03",
+      "titleOriginal": "trait对象会执行动态派发",
+      "parent": "rust.source.root17.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 546,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.02.04",
+      "titleOriginal": "trait对象必须保证对象安全",
+      "parent": "rust.source.root17.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 547,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.03",
+      "titleOriginal": "实现一种面向对象的设计模式",
+      "parent": "rust.source.root17",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 549,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.03.01",
+      "titleOriginal": "定义Post并新建一个处于草稿状态下的新实例",
+      "parent": "rust.source.root17.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 551,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.03.02",
+      "titleOriginal": "存储文章内容的文本",
+      "parent": "rust.source.root17.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 552,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.03.03",
+      "titleOriginal": "确保草稿的可读内容为空",
+      "parent": "rust.source.root17.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 552,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.03.04",
+      "titleOriginal": "请求审批文章并改变其状态",
+      "parent": "rust.source.root17.03",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 553,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.03.05",
+      "titleOriginal": "添加approve方法来改变content的行为",
+      "parent": "rust.source.root17.03",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 555,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.03.06",
+      "titleOriginal": "状态模式的权衡取舍",
+      "parent": "rust.source.root17.03",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 558,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root17.04",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root17",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 565,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18",
+      "titleOriginal": "第18章 模式匹配",
+      "parent": null,
+      "level": 1,
+      "order": 18,
+      "physicalPage": 566,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.01",
+      "titleOriginal": "所有可以使用模式的场合",
+      "parent": "rust.source.root18",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 568,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.01.01",
+      "titleOriginal": "match分支",
+      "parent": "rust.source.root18.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 568,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.01.02",
+      "titleOriginal": "if let条件表达式",
+      "parent": "rust.source.root18.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 569,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.01.03",
+      "titleOriginal": "while let条件循环",
+      "parent": "rust.source.root18.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 570,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.01.04",
+      "titleOriginal": "for循环",
+      "parent": "rust.source.root18.01",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 571,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.01.05",
+      "titleOriginal": "let语句",
+      "parent": "rust.source.root18.01",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 572,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.01.06",
+      "titleOriginal": "函数的参数",
+      "parent": "rust.source.root18.01",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 573,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.02",
+      "titleOriginal": "可失败性：模式是否会匹配失败",
+      "parent": "rust.source.root18",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 575,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.03",
+      "titleOriginal": "模式语法",
+      "parent": "rust.source.root18",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 578,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.03.01",
+      "titleOriginal": "匹配字面量",
+      "parent": "rust.source.root18.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 578,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.03.02",
+      "titleOriginal": "匹配命名变量",
+      "parent": "rust.source.root18.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 578,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.03.03",
+      "titleOriginal": "多重模式",
+      "parent": "rust.source.root18.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 580,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.03.04",
+      "titleOriginal": "使用...来匹配值区间",
+      "parent": "rust.source.root18.03",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 580,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.03.05",
+      "titleOriginal": "使用解构来分解值",
+      "parent": "rust.source.root18.03",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 581,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.03.06",
+      "titleOriginal": "忽略模式中的值",
+      "parent": "rust.source.root18.03",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 586,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.03.07",
+      "titleOriginal": "使用匹配守卫添加额外条件",
+      "parent": "rust.source.root18.03",
+      "level": 3,
+      "order": 7,
+      "physicalPage": 591,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.03.08",
+      "titleOriginal": "@绑定",
+      "parent": "rust.source.root18.03",
+      "level": 3,
+      "order": 8,
+      "physicalPage": 593,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root18.04",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root18",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 595,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19",
+      "titleOriginal": "第19章 高级特性",
+      "parent": null,
+      "level": 1,
+      "order": 19,
+      "physicalPage": 596,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.01",
+      "titleOriginal": "不安全Rust",
+      "parent": "rust.source.root19",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 598,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.01.01",
+      "titleOriginal": "不安全超能力",
+      "parent": "rust.source.root19.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 598,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.01.02",
+      "titleOriginal": "解引用裸指针",
+      "parent": "rust.source.root19.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 599,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.01.03",
+      "titleOriginal": "调用不安全函数或方法",
+      "parent": "rust.source.root19.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 602,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.01.04",
+      "titleOriginal": "访问或修改一个可变静态变量",
+      "parent": "rust.source.root19.01",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 607,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.01.05",
+      "titleOriginal": "实现不安全trait",
+      "parent": "rust.source.root19.01",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 608,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.01.06",
+      "titleOriginal": "使用不安全代码的时机",
+      "parent": "rust.source.root19.01",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 609,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.02",
+      "titleOriginal": "高级trait",
+      "parent": "rust.source.root19",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 610,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.02.01",
+      "titleOriginal": "在trait的定义中使用关联类型指定占位类型",
+      "parent": "rust.source.root19.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 610,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.02.02",
+      "titleOriginal": "默认泛型参数和运算符重载",
+      "parent": "rust.source.root19.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 612,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.02.03",
+      "titleOriginal": "用于消除歧义的完全限定语法：调用相同名称的方法",
+      "parent": "rust.source.root19.02",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 614,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.02.04",
+      "titleOriginal": "用于在trait中附带另外一个trait功能的超trait",
+      "parent": "rust.source.root19.02",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 618,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.02.05",
+      "titleOriginal": "使用newtype模式在外部类型上实现外部trait",
+      "parent": "rust.source.root19.02",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 620,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.03",
+      "titleOriginal": "高级类型",
+      "parent": "rust.source.root19",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 623,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.03.01",
+      "titleOriginal": "使用newtype模式实现类型安全与抽象",
+      "parent": "rust.source.root19.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 623,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.03.02",
+      "titleOriginal": "使用类型别名创建同义类型",
+      "parent": "rust.source.root19.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 624,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.03.03",
+      "titleOriginal": "永不返回的Never类型",
+      "parent": "rust.source.root19.03",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 626,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.03.04",
+      "titleOriginal": "动态大小类型和Sized trait",
+      "parent": "rust.source.root19.03",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 628,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.04",
+      "titleOriginal": "高级函数与闭包",
+      "parent": "rust.source.root19",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 631,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.04.01",
+      "titleOriginal": "函数指针",
+      "parent": "rust.source.root19.04",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 631,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.04.02",
+      "titleOriginal": "返回闭包",
+      "parent": "rust.source.root19.04",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 633,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.05",
+      "titleOriginal": "宏",
+      "parent": "rust.source.root19",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 635,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.05.01",
+      "titleOriginal": "宏与函数之间的差别",
+      "parent": "rust.source.root19.05",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 635,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.05.02",
+      "titleOriginal": "用于通用元编程的macro_rules!声明宏",
+      "parent": "rust.source.root19.05",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 636,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.05.03",
+      "titleOriginal": "基于属性创建代码的过程宏",
+      "parent": "rust.source.root19.05",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 639,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.05.04",
+      "titleOriginal": "如何编写一个自定义derive宏",
+      "parent": "rust.source.root19.05",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 639,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.05.05",
+      "titleOriginal": "属性宏",
+      "parent": "rust.source.root19.05",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 646,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.05.06",
+      "titleOriginal": "函数宏",
+      "parent": "rust.source.root19.05",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 647,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root19.06",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root19",
+      "level": 2,
+      "order": 6,
+      "physicalPage": 648,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20",
+      "titleOriginal": "第20章 最后的项目：构建多线程Web服务器",
+      "parent": null,
+      "level": 1,
+      "order": 20,
+      "physicalPage": 649,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.01",
+      "titleOriginal": "构建单线程Web服务器",
+      "parent": "rust.source.root20",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 651,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.01.01",
+      "titleOriginal": "监听TCP连接",
+      "parent": "rust.source.root20.01",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 651,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.01.02",
+      "titleOriginal": "读取请求",
+      "parent": "rust.source.root20.01",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 654,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.01.03",
+      "titleOriginal": "仔细观察HTTP请求",
+      "parent": "rust.source.root20.01",
+      "level": 3,
+      "order": 3,
+      "physicalPage": 656,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.01.04",
+      "titleOriginal": "编写响应",
+      "parent": "rust.source.root20.01",
+      "level": 3,
+      "order": 4,
+      "physicalPage": 657,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.01.05",
+      "titleOriginal": "返回真正的HTML",
+      "parent": "rust.source.root20.01",
+      "level": 3,
+      "order": 5,
+      "physicalPage": 658,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.01.06",
+      "titleOriginal": "验证请求有效性并选择性地响应",
+      "parent": "rust.source.root20.01",
+      "level": 3,
+      "order": 6,
+      "physicalPage": 660,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.01.07",
+      "titleOriginal": "少许重构",
+      "parent": "rust.source.root20.01",
+      "level": 3,
+      "order": 7,
+      "physicalPage": 662,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.02",
+      "titleOriginal": "把单线程服务器修改为多线程服务器",
+      "parent": "rust.source.root20",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 664,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.02.01",
+      "titleOriginal": "在现有的服务器实现中模拟一个慢请求",
+      "parent": "rust.source.root20.02",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 664,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.02.02",
+      "titleOriginal": "使用线程池改进吞吐量",
+      "parent": "rust.source.root20.02",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 665,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.03",
+      "titleOriginal": "优雅地停机与清理",
+      "parent": "rust.source.root20",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 687,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.03.01",
+      "titleOriginal": "为ThreadPool实现Drop trait",
+      "parent": "rust.source.root20.03",
+      "level": 3,
+      "order": 1,
+      "physicalPage": 687,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.03.02",
+      "titleOriginal": "通知线程停止监听任务",
+      "parent": "rust.source.root20.03",
+      "level": 3,
+      "order": 2,
+      "physicalPage": 690,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root20.04",
+      "titleOriginal": "总结",
+      "parent": "rust.source.root20",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 696,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root21",
+      "titleOriginal": "附录A 关键字",
+      "parent": null,
+      "level": 1,
+      "order": 21,
+      "physicalPage": 697,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root21.01",
+      "titleOriginal": "当前正在使用的关键字",
+      "parent": "rust.source.root21",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 698,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root21.02",
+      "titleOriginal": "将来可能会使用的保留关键字",
+      "parent": "rust.source.root21",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 701,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root21.03",
+      "titleOriginal": "原始标识符",
+      "parent": "rust.source.root21",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 702,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root22",
+      "titleOriginal": "附录B 运算符和符号",
+      "parent": null,
+      "level": 1,
+      "order": 22,
+      "physicalPage": 704,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root22.01",
+      "titleOriginal": "运算符",
+      "parent": "rust.source.root22",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 705,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root22.02",
+      "titleOriginal": "非运算符符号",
+      "parent": "rust.source.root22",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 708,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root23",
+      "titleOriginal": "附录C 可派生trait",
+      "parent": null,
+      "level": 1,
+      "order": 23,
+      "physicalPage": 712,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root23.01",
+      "titleOriginal": "面向程序员格式化输出的Debug",
+      "parent": "rust.source.root23",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 714,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root23.02",
+      "titleOriginal": "用于相等性比较的PartialEq和Eq",
+      "parent": "rust.source.root23",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 715,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root23.03",
+      "titleOriginal": "使用PartialOrd和Ord进行次序比较",
+      "parent": "rust.source.root23",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 716,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root23.04",
+      "titleOriginal": "使用Clone和Copy复制值",
+      "parent": "rust.source.root23",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 717,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root23.05",
+      "titleOriginal": "用于将值映射到另外一个长度固定的值的Hash",
+      "parent": "rust.source.root23",
+      "level": 2,
+      "order": 5,
+      "physicalPage": 719,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root23.06",
+      "titleOriginal": "用于提供默认值的Default",
+      "parent": "rust.source.root23",
+      "level": 2,
+      "order": 6,
+      "physicalPage": 720,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root24",
+      "titleOriginal": "附录D 有用的开发工具",
+      "parent": null,
+      "level": 1,
+      "order": 24,
+      "physicalPage": 721,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root24.01",
+      "titleOriginal": "使用rustfmt自动格式化代码",
+      "parent": "rust.source.root24",
+      "level": 2,
+      "order": 1,
+      "physicalPage": 722,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root24.02",
+      "titleOriginal": "使用rustfix修复代码",
+      "parent": "rust.source.root24",
+      "level": 2,
+      "order": 2,
+      "physicalPage": 723,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root24.03",
+      "titleOriginal": "使用Clippy完成更多的代码分析",
+      "parent": "rust.source.root24",
+      "level": 2,
+      "order": 3,
+      "physicalPage": 725,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root24.04",
+      "titleOriginal": "使用Rust语言服务器来集成IDE",
+      "parent": "rust.source.root24",
+      "level": 2,
+      "order": 4,
+      "physicalPage": 727,
+      "printedPage": null
+    },
+    {
+      "sourceNodeId": "rust.source.root25",
+      "titleOriginal": "附录E 版本",
+      "parent": null,
+      "level": 1,
+      "order": 25,
+      "physicalPage": 728,
+      "printedPage": null
+    }
+  ]
+}

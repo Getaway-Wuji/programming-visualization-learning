@@ -1,5 +1,6 @@
 import { isJavaProgress, javaExercise, javaPackageRef } from '../java/identities';
 import { cppExercise, cppPackageRef, isCppProgress } from '../cpp-course/identities';
+import { rustExercise, rustPackageRef, isRustProgress } from '../rust2018-course/identities';
 import { c6LearningCatalog, type C6LearningCatalog, type C6LearningIndex } from '../c6-learning';
 import type { C6LearningCommand } from '../c6-learning/model';
 import { isPythonProgress, pythonExercise, pythonPackageRef } from '../python3/identities';
@@ -84,6 +85,7 @@ export function isCompatibleLearningHistory(
   if (current.ref.id.startsWith('py3.') && !isPythonProgress(progress)) return false;
   if (current.ref.id.startsWith('java.') && !isJavaProgress(progress)) return false;
   if (current.ref.id.startsWith('cpp.book.') && !isCppProgress(progress)) return false;
+  if (current.ref.id.startsWith('rust.book.') && !isRustProgress(progress)) return false;
   if (
     /^(lesson|exercise)\.c6\./u.test(current.ref.id) &&
     (progress.packageRef.id !== 'content.c.primer6' || progress.packageRef.version !== '2.0.0')
@@ -198,7 +200,17 @@ export function applyCppLearningEvent(snapshot: StorageSnapshot, command: Learni
   return applyTextCourseLearningEvent(snapshot, command, 'cpp');
 }
 
+export function applyRustLearningEvent(snapshot: StorageSnapshot, command: LearningCommand) {
+  return applyTextCourseLearningEvent(snapshot, command, 'rust');
+}
+
 const textCourses = {
+  rust: {
+    db: 14,
+    progress: isRustProgress,
+    packageRef: rustPackageRef,
+    lesson: (id: string) => rustExercise(id)?.lesson,
+  },
   python: {
     db: 11,
     progress: isPythonProgress,

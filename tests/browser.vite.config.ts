@@ -19,6 +19,7 @@ export default defineConfig({
         reviews: fileURLToPath(new URL('./browser/harness/reviews.html', import.meta.url)),
         java: fileURLToPath(new URL('./browser/harness/java.html', import.meta.url)),
         cppCourse: fileURLToPath(new URL('./browser/harness/cpp-course.html', import.meta.url)),
+        rust2018: fileURLToPath(new URL('./browser/harness/rust2018.html', import.meta.url)),
         python3: fileURLToPath(new URL('./browser/harness/python3.html', import.meta.url)),
       },
     },

@@ -263,8 +263,8 @@ test('native DB1 through DB7 upgrades preserve old partitions and add the draft 
 }) => {
   await ready(page);
   const currentBefore = await rows(page);
-  expect(currentBefore.meta[0]).toMatchObject({ schemaVersion: '13.0.0', dbVersion: 13 });
-  expect(Object.keys(currentBefore)).toHaveLength(25);
+  expect(currentBefore.meta[0]).toMatchObject({ schemaVersion: '14.0.0', dbVersion: 14 });
+  expect(Object.keys(currentBefore)).toHaveLength(27);
   await page.goto('/checks/');
   await page.waitForFunction(() => Boolean(window.historyHarness));
   const referenceName = 'c-viz-learning.test.custom-draft-reference';

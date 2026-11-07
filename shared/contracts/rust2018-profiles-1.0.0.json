@@ -1,0 +1,494 @@
+[
+  {
+    "id": "rust.book.root01.02.02.exercise",
+    "lesson": "rust.book.root01.02.02",
+    "sourceNodeId": "rust.source.root01.02.02",
+    "title": "格式化输出",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    println!(\"Rust {}\", n);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "Rust 0\n",
+        "requiredFeatures": [
+          "output"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "Rust 1\n",
+        "requiredFeatures": [
+          "output"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "Rust 4\n",
+        "requiredFeatures": [
+          "output"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "Rust 9\n",
+        "requiredFeatures": [
+          "output"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "output"
+    ]
+  },
+  {
+    "id": "rust.book.root03.01.02.exercise",
+    "lesson": "rust.book.root03.01.02",
+    "sourceNodeId": "rust.source.root03.01.02",
+    "title": "同名隐藏",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let n = n + 2;\n    { let n = n * 3; println!(\"{}\", n); }\n    println!(\"{}\", n);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "6\n2\n",
+        "requiredFeatures": [
+          "shadow"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "9\n3\n",
+        "requiredFeatures": [
+          "shadow"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "18\n6\n",
+        "requiredFeatures": [
+          "shadow"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "33\n11\n",
+        "requiredFeatures": [
+          "shadow"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "shadow"
+    ]
+  },
+  {
+    "id": "rust.book.root03.02.01.exercise",
+    "lesson": "rust.book.root03.02.01",
+    "sourceNodeId": "rust.source.root03.02.01",
+    "title": "整数与布尔值",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let doubled = n * 2;\n    let positive = n > 0;\n    println!(\"{} {}\", doubled, positive);\n}\n",
+    "cases": [
+      {
+        "input": "-3\n",
+        "expected": "-6 false\n",
+        "requiredFeatures": [
+          "arithmetic"
+        ]
+      },
+      {
+        "input": "0\n",
+        "expected": "0 false\n",
+        "requiredFeatures": [
+          "arithmetic"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "8 true\n",
+        "requiredFeatures": [
+          "arithmetic"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "18 true\n",
+        "requiredFeatures": [
+          "arithmetic"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "arithmetic"
+    ]
+  },
+  {
+    "id": "rust.book.root03.02.02.exercise",
+    "lesson": "rust.book.root03.02.02",
+    "sourceNodeId": "rust.source.root03.02.02",
+    "title": "固定数组与复制",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let values = [n, 3, 5];\n    let mut copied = values;\n    copied[0] = copied[0] + 1;\n    println!(\"{} {}\", values[0], copied[0]);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "0 1\n",
+        "requiredFeatures": [
+          "array-copy",
+          "array-write"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "1 2\n",
+        "requiredFeatures": [
+          "array-copy",
+          "array-write"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "4 5\n",
+        "requiredFeatures": [
+          "array-copy",
+          "array-write"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "9 10\n",
+        "requiredFeatures": [
+          "array-copy",
+          "array-write"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "array-copy",
+      "array-write"
+    ]
+  },
+  {
+    "id": "rust.book.root03.03.01.exercise",
+    "lesson": "rust.book.root03.03.01",
+    "sourceNodeId": "rust.source.root03.03.01",
+    "title": "按值形参",
+    "source": "fn twice(value: i32) -> i32 { value * 2 }\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    println!(\"{}\", twice(n));\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "0\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "2\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "8\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "18\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "call"
+    ]
+  },
+  {
+    "id": "rust.book.root03.03.03.exercise",
+    "lesson": "rust.book.root03.03.03",
+    "sourceNodeId": "rust.source.root03.03.03",
+    "title": "返回值与递归",
+    "source": "fn factorial(value: i32) -> i32 {\n    if value <= 1 { 1 } else { value * factorial(value - 1) }\n}\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    println!(\"{}\", factorial(n));\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "1\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "1\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "24\n",
+        "requiredFeatures": [
+          "call",
+          "recursion"
+        ]
+      },
+      {
+        "input": "6\n",
+        "expected": "720\n",
+        "requiredFeatures": [
+          "call",
+          "recursion"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "call"
+    ]
+  },
+  {
+    "id": "rust.book.root03.05.01.exercise",
+    "lesson": "rust.book.root03.05.01",
+    "sourceNodeId": "rust.source.root03.05.01",
+    "title": "if 表达式",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let magnitude = if n < 0 { -n } else { n };\n    println!(\"{}\", magnitude);\n}\n",
+    "cases": [
+      {
+        "input": "-9\n",
+        "expected": "9\n",
+        "requiredFeatures": [
+          "condition"
+        ]
+      },
+      {
+        "input": "-1\n",
+        "expected": "1\n",
+        "requiredFeatures": [
+          "condition"
+        ]
+      },
+      {
+        "input": "0\n",
+        "expected": "0\n",
+        "requiredFeatures": [
+          "condition"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "4\n",
+        "requiredFeatures": [
+          "condition"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "condition"
+    ]
+  },
+  {
+    "id": "rust.book.root03.05.02.exercise",
+    "lesson": "rust.book.root03.05.02",
+    "sourceNodeId": "rust.source.root03.05.02",
+    "title": "循环累加",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let mut total = 0;\n    for value in 0..=n { total = total + value; }\n    println!(\"{}\", total);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "0\n",
+        "requiredFeatures": [
+          "loop"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "1\n",
+        "requiredFeatures": [
+          "loop"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "10\n",
+        "requiredFeatures": [
+          "loop"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "45\n",
+        "requiredFeatures": [
+          "loop"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "loop"
+    ]
+  },
+  {
+    "id": "rust.book.root04.01.03.exercise",
+    "lesson": "rust.book.root04.01.03",
+    "sourceNodeId": "rust.source.root04.01.03",
+    "title": "创建拥有的字符串",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let text = String::from(\"Rust\");\n    println!(\"{} {}\", text, n);\n    println!(\"{}\", text);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "Rust 0\nRust\n",
+        "requiredFeatures": [
+          "string-create"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "Rust 1\nRust\n",
+        "requiredFeatures": [
+          "string-create"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "Rust 4\nRust\n",
+        "requiredFeatures": [
+          "string-create"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "Rust 9\nRust\n",
+        "requiredFeatures": [
+          "string-create"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "string-create"
+    ]
+  },
+  {
+    "id": "rust.book.root04.01.04.exercise",
+    "lesson": "rust.book.root04.01.04",
+    "sourceNodeId": "rust.source.root04.01.04",
+    "title": "移动与显式克隆",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let first = String::from(\"Rust\");\n    let copied = first.clone();\n    let moved = first;\n    println!(\"{} {} {}\", moved, copied, n);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "Rust Rust 0\n",
+        "requiredFeatures": [
+          "clone",
+          "move"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "Rust Rust 1\n",
+        "requiredFeatures": [
+          "clone",
+          "move"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "Rust Rust 4\n",
+        "requiredFeatures": [
+          "clone",
+          "move"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "Rust Rust 9\n",
+        "requiredFeatures": [
+          "clone",
+          "move"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "clone",
+      "move"
+    ]
+  },
+  {
+    "id": "rust.book.root04.01.05.exercise",
+    "lesson": "rust.book.root04.01.05",
+    "sourceNodeId": "rust.source.root04.01.05",
+    "title": "把所有权传入和返回",
+    "source": "fn give_back(text: String) -> String { text }\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let text = String::from(\"Rust\");\n    let returned = give_back(text);\n    println!(\"{} {}\", returned, n);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "Rust 0\n",
+        "requiredFeatures": [
+          "ownership-call"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "Rust 1\n",
+        "requiredFeatures": [
+          "ownership-call"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "Rust 4\n",
+        "requiredFeatures": [
+          "ownership-call"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "Rust 9\n",
+        "requiredFeatures": [
+          "ownership-call"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "ownership-call"
+    ]
+  },
+  {
+    "id": "rust.book.root04.02.01.exercise",
+    "lesson": "rust.book.root04.02.01",
+    "sourceNodeId": "rust.source.root04.02.01",
+    "title": "调用中的可变借用",
+    "source": "fn bump(value: &mut i32) { *value = *value + 2; }\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let mut value = n;\n    bump(&mut value);\n    println!(\"{}\", value);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "2\n",
+        "requiredFeatures": [
+          "user-mutable-borrow"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "3\n",
+        "requiredFeatures": [
+          "user-mutable-borrow"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "6\n",
+        "requiredFeatures": [
+          "user-mutable-borrow"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "11\n",
+        "requiredFeatures": [
+          "user-mutable-borrow"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "user-mutable-borrow"
+    ]
+  }
+]

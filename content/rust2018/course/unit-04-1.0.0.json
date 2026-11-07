@@ -1,0 +1,599 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 4,
+  "nodes": [
+    {
+      "id": "rust.book.root04",
+      "sourceNodeId": "rust.source.root04",
+      "title": "第4章 认识所有权",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 113,
+      "printedPage": null,
+      "leaf": false,
+      "order": 50,
+      "group": 4,
+      "body": [
+        "所有权说明资源由谁负责，借用说明谁能暂时访问它，切片说明如何引用连续的一部分。先用 String 观察作用域结束、移动与显式克隆，再比较按值传参、借用和返回值，逐渐建立资源生命周期的判断方法。",
+        "平台轨迹中的对象和地址是教学表示；这里只依据语言规则解释可见行为。局部引用、切片与显式生命周期等超出当前解释器的主题继续用阅读例讨论。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root04.01",
+      "sourceNodeId": "rust.source.root04.01",
+      "title": "什么是所有权",
+      "parent": "rust.book.root04",
+      "depth": 2,
+      "physicalPage": 114,
+      "printedPage": null,
+      "leaf": false,
+      "order": 51,
+      "group": 4,
+      "body": [
+        "管理动态数据时，程序需要知道何时仍能使用一个值，以及何时可以释放它。所有权把这种责任与绑定、移动和作用域联系起来；对 String 来说，赋值通常转移责任，而不是自动复制整份文本。",
+        "下面先建立规则与作用域，再通过构造、克隆、函数参数和返回值逐个核对。不要把“名字还在源码中”当作“值仍能使用”，移动后的旧绑定正是重要反例。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root04.01.01",
+      "sourceNodeId": "rust.source.root04.01.01",
+      "title": "所有权规则",
+      "parent": "rust.book.root04.01",
+      "depth": 3,
+      "physicalPage": 116,
+      "printedPage": null,
+      "leaf": true,
+      "order": 52,
+      "group": 4,
+      "body": [
+        "所有权不是给所有变量禁止赋值，而是让资源有清楚的管理责任。一个拥有的值由当前所有者负责；把它移动给新绑定后，旧绑定不能继续当作拥有者使用。当仍持有该值的所有者结束作用域时，相关清理随之发生，避免重复释放同一资源。",
+        "对于 i32 这类 Copy 值，赋值可复制，两个绑定都有效；String 则不会默认复制堆内容。下面把文本移交给 next，只通过 next 继续访问。打印本身不转移所有权，因此两次打印均合法。分析程序时应沿赋值和传参追踪拥有者，而不是仅凭变量名猜测资源归属。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let original = String::from(\"书签\");\n    let next = original; // 所有权转到 next\n    println!(\"{}\", next);\n    println!(\"仍由 next 持有：{}\", next);\n}\n",
+        "description": "跟踪一次 String 移动后当前有效的拥有者。",
+        "result": "预期两次通过 next 显示“书签”；若再使用 original 则应产生移动后使用错误。",
+        "reason": "本叶专门阅读所有权规则，未绑定独立运行题；移动语义在指定运行叶验证。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "赋值后再写 println!(\"{}\", original) 为什么不合法？",
+        "answer": "String 的所有权已移动到 next，original 不再持有可用值；这能避免两个绑定分别清理同一份资源。",
+        "hints": [
+          "将 String 移动与 i32 的 Copy 对比。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.01.02",
+      "sourceNodeId": "rust.source.root04.01.02",
+      "title": "变量作用域",
+      "parent": "rust.book.root04.01",
+      "depth": 3,
+      "physicalPage": 116,
+      "printedPage": null,
+      "leaf": true,
+      "order": 53,
+      "group": 4,
+      "body": [
+        "作用域界定名字可以被访问的区域。局部绑定通常从声明位置起可见，到所在块结束为止；内层块能使用外层可见名字，外层却不能在内层结束后继续访问内层局部变量。花括号决定边界，缩进只帮助阅读。",
+        "所有权与作用域相遇时，要看离开块的绑定是否仍持有资源。内层创建且没有移出的 String 会随块结束清理；若值已返回或移交给外部拥有者，则不能简单说“函数结束就把一切都销毁”。下面把临时文本限制在内层，外层整数仍可在块结束后使用，两者结束时间不同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let chapter = 4;\n    {\n        let note = String::from(\"临时说明\");\n        println!(\"{}\", note);\n    }\n    println!(\"第 {} 章继续\", chapter);\n}\n",
+        "description": "通过内层临时 String 和外层整数区分两个作用域。",
+        "result": "先输出“临时说明”，再输出“第 4 章继续”；第二次输出的位置不能再访问 note。",
+        "reason": "本叶为作用域阅读例，未设额外运行与判题配置。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "内层块结束后，chapter 和 note 哪个仍可使用？为什么？",
+        "answer": "chapter 在外层声明，仍处于有效作用域；note 属于已结束的内层作用域，不再可见，其未移出的 String 随之清理。",
+        "hints": [
+          "为每个 let 找到包含它的最近一对花括号。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.01.03",
+      "sourceNodeId": "rust.source.root04.01.03",
+      "title": "String类型",
+      "parent": "rust.book.root04.01",
+      "depth": 3,
+      "physicalPage": 117,
+      "printedPage": null,
+      "leaf": true,
+      "order": 54,
+      "group": 4,
+      "body": [
+        "字符串字面量描述程序中已有的文本，String 则拥有可在运行时管理的 UTF-8 数据。String::from 根据字面量创建拥有的文本，String::new 创建空文本；需要修改同一拥有对象时，绑定要允许可变操作，例如追加字符串。",
+        "运行例创建 text=\"Rust\"，与读入的整数一起输出，再单独打印 text。两次都成功，说明格式化输出不会消耗这个 String，而不是说明 String 已经变成 Copy。将 text 按值赋给另一个绑定仍会移动它。字符数量与字节数量也不同，含中文的 String 不能简单按一个字节一个字符来理解。需要改变字符串内容时，应检查绑定是否可变；可读两次与允许修改又是不同问题。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let text = String::from(\"Rust\");\n    println!(\"{} {}\", text, n);\n    println!(\"{}\", text);\n}\n",
+        "description": "用String::from构造Rust，第一行输出该String及n，第二行再次输出同一String。",
+        "result": "四组输入分别产生：\n输入 '0'：'Rust 0\\nRust\\n'\n输入 '1'：'Rust 1\\nRust\\n'\n输入 '4'：'Rust 4\\nRust\\n'\n输入 '9'：'Rust 9\\nRust\\n'",
+        "cases": [
+          {
+            "input": "0\n",
+            "expected": "Rust 0\nRust\n",
+            "requiredFeatures": [
+              "string-create"
+            ]
+          },
+          {
+            "input": "1\n",
+            "expected": "Rust 1\nRust\n",
+            "requiredFeatures": [
+              "string-create"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "Rust 4\nRust\n",
+            "requiredFeatures": [
+              "string-create"
+            ]
+          },
+          {
+            "input": "9\n",
+            "expected": "Rust 9\nRust\n",
+            "requiredFeatures": [
+              "string-create"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root04.01.03.exercise",
+        "prompt": "用String::from构造Rust，第一行输出该String及n，第二行再次输出同一String。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "格式化借用String，不移动拥有者。",
+          "第一行中间需要空格。",
+          "构造的String本身需要参与两次输出。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.01.04",
+      "sourceNodeId": "rust.source.root04.01.04",
+      "title": "内存与分配",
+      "parent": "rust.book.root04.01",
+      "depth": 3,
+      "physicalPage": 118,
+      "printedPage": null,
+      "leaf": true,
+      "order": 55,
+      "group": 4,
+      "body": [
+        "String 需要为可增长文本管理数据。普通赋值转移所有权，不自动深复制；clone 则显式产生独立拥有的数据，调用者应意识到复制内容有成本。于是“两个名字的文本相同”可能来自不同原因：一个是移交，一个是主动建立副本。",
+        "运行例先 first.clone() 得到 copied，再把 first 移给 moved。此时 moved 与 copied 都有效，first 则不可继续使用。修改副本不会改变另一个拥有对象。与之相对，i32 及固定 i32 数组可以 Copy。分析资源清理时，应按现存拥有者逐个考虑，不能让已经 moved 的旧绑定再次负责同一对象。克隆前后虽然显示文字一致，资源责任却分别属于两个拥有者，结束时各自清理。",
+        "常见概念模型把 String 看作指向堆数据的管理信息，并记录字节长度和容量；移动不必复制整份堆文本，却会让旧拥有者失效。作用域清理调用类型的 drop 逻辑，类似资源获取即初始化的管理方式。标量及全为 Copy 成员的元组可以 Copy，但自定义清理与 Copy 不能任意同时使用。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let first = String::from(\"Rust\");\n    let copied = first.clone();\n    let moved = first;\n    println!(\"{} {} {}\", moved, copied, n);\n}\n",
+        "description": "构造Rust，显式克隆一份，再把原拥有者移动给新绑定。输出移动后的值、克隆值和n。",
+        "result": "四组输入分别产生：\n输入 '0'：'Rust Rust 0\\n'\n输入 '1'：'Rust Rust 1\\n'\n输入 '4'：'Rust Rust 4\\n'\n输入 '9'：'Rust Rust 9\\n'",
+        "cases": [
+          {
+            "input": "0\n",
+            "expected": "Rust Rust 0\n",
+            "requiredFeatures": [
+              "clone",
+              "move"
+            ]
+          },
+          {
+            "input": "1\n",
+            "expected": "Rust Rust 1\n",
+            "requiredFeatures": [
+              "clone",
+              "move"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "Rust Rust 4\n",
+            "requiredFeatures": [
+              "clone",
+              "move"
+            ]
+          },
+          {
+            "input": "9\n",
+            "expected": "Rust Rust 9\n",
+            "requiredFeatures": [
+              "clone",
+              "move"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root04.01.04.exercise",
+        "prompt": "构造Rust，显式克隆一份，再把原拥有者移动给新绑定。输出移动后的值、克隆值和n。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "clone产生独立拥有对象。",
+          "String赋值给新绑定会移动。",
+          "打印新拥有者和克隆值，不再使用旧拥有者。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.01.05",
+      "sourceNodeId": "rust.source.root04.01.05",
+      "title": "所有权与函数",
+      "parent": "rust.book.root04.01",
+      "depth": 3,
+      "physicalPage": 126,
+      "printedPage": null,
+      "leaf": true,
+      "order": 56,
+      "group": 4,
+      "body": [
+        "函数按值接收参数时，同样遵守复制或移动规则：i32 复制进入形参，String 则把所有权交给形参。调用者若还想使用那份文本，就必须选择借用，或者让函数把所有权作为返回值交回来，不能假设函数调用只是临时查看。",
+        "运行例 give_back 的参数和返回类型都是 String，函数将接收的 text 直接返回。调用点用 returned 接住，因此数据没有在函数结束时被清理，而是由新的调用者绑定负责。原来的 text 仍已 moved；接收到同样文本不等于恢复了原绑定，所有权流向应根据每一次赋值单独追踪。函数签名是判断调用影响的起点，不能只凭函数名称推测它会不会保留实参。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn give_back(text: String) -> String { text }\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let text = String::from(\"Rust\");\n    let returned = give_back(text);\n    println!(\"{} {}\", returned, n);\n}\n",
+        "description": "让拥有的String按值传入用户函数并按值返回，随后输出返回的String和n。",
+        "result": "四组输入分别产生：\n输入 '0'：'Rust 0\\n'\n输入 '1'：'Rust 1\\n'\n输入 '4'：'Rust 4\\n'\n输入 '9'：'Rust 9\\n'",
+        "cases": [
+          {
+            "input": "0\n",
+            "expected": "Rust 0\n",
+            "requiredFeatures": [
+              "ownership-call"
+            ]
+          },
+          {
+            "input": "1\n",
+            "expected": "Rust 1\n",
+            "requiredFeatures": [
+              "ownership-call"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "Rust 4\n",
+            "requiredFeatures": [
+              "ownership-call"
+            ]
+          },
+          {
+            "input": "9\n",
+            "expected": "Rust 9\n",
+            "requiredFeatures": [
+              "ownership-call"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root04.01.05.exercise",
+        "prompt": "让拥有的String按值传入用户函数并按值返回，随后输出返回的String和n。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "函数形参和返回类型均为String。",
+          "参数接收会移交所有权。",
+          "返回值绑定到main中的新变量。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.01.06",
+      "sourceNodeId": "rust.source.root04.01.06",
+      "title": "返回值与作用域",
+      "parent": "rust.book.root04.01",
+      "depth": 3,
+      "physicalPage": 127,
+      "printedPage": null,
+      "leaf": true,
+      "order": 57,
+      "group": 4,
+      "body": [
+        "函数返回拥有的值，可以把资源责任从内部转交给调用者，因此局部作用域结束不等于返回值随之无效。若函数创建 String 并返回 String，调用者接收的是拥有值；若试图返回指向局部 String 的引用，则面对另一套有效期问题。",
+        "同样，接收 String 再返回它可保留内容，但调用处必须明确接住新值。多个返回信息在完整 Rust 中可用元组表达，平台当前不支持元组返回，不能把教材的组合写法直接当作可运行子集。下面只返回一个拥有字符串，以便集中判断谁在函数结束后继续负责它。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn make_note() -> String {\n    let note = String::from(\"继续阅读\");\n    note // 将拥有值移出局部作用域\n}\nfn main() {\n    let saved = make_note();\n    println!(\"{}\", saved);\n}\n",
+        "description": "用构造并返回 String 说明资源可以跨函数边界移交。",
+        "result": "函数返回后 saved 仍有效，预期输出“继续阅读”。",
+        "reason": "本叶为返回作用域阅读例；单个 String 返回受支持，元组返回属于平台子集外。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "make_note 的局部 note 已结束，为什么 saved 仍然有效？",
+        "answer": "返回表达式将 String 的所有权移出函数，交给 saved；局部旧绑定不再持有它，所以不会在函数结束时销毁调用者的新拥有值。",
+        "hints": [
+          "找返回的是拥有值还是引用。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.02",
+      "sourceNodeId": "rust.source.root04.02",
+      "title": "引用与借用",
+      "parent": "rust.book.root04",
+      "depth": 2,
+      "physicalPage": 130,
+      "printedPage": null,
+      "leaf": false,
+      "order": 58,
+      "group": 4,
+      "body": [
+        "借用让函数临时使用调用者持有的数据，而不必取得并归还所有权。共享引用用于读取，可变引用用于排他修改；借用期间的访问约束使引用始终指向有效且符合规则的数据。",
+        "接下来先看可变调用，再解释局部数据引用为何不能随意返回，最后归纳共享与排他的关系。完整 Rust 的引用使用范围更广，平台当前仅开放指定函数实参的直接借用。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root04.02.01",
+      "sourceNodeId": "rust.source.root04.02.01",
+      "title": "可变引用",
+      "parent": "rust.book.root04.02",
+      "depth": 3,
+      "physicalPage": 133,
+      "printedPage": null,
+      "leaf": true,
+      "order": 59,
+      "group": 4,
+      "body": [
+        "可变引用允许被调用函数修改原值，而所有权仍由调用者保留。拥有者绑定需要 mut，实参写 &mut value，形参写 &mut i32；函数内通过 *value 读取或写入被引用的整数，这个解引用操作访问的是原对象。",
+        "运行例 bump 将输入对应的 value 增加二，返回后调用者继续打印修改后的值。借用在此次调用结束后释放，不会留下另一个拥有者。同一次调用不能再让同一对象以冲突的共享或可变方式被借用；mut 只表明允许修改，不意味着可以忽略排他访问规则。平台目前不开放把引用存入局部绑定或再次转传。",
+        "完整 Rust 还允许把引用绑定到局部变量。两次可变借用若使用时间不重叠，可能合法；若仍要再次使用旧引用，则不能插入冲突访问。应按引用的实际使用关系判断，而不是机械地把整个花括号范围视作每一个引用都始终在使用；这类局部引用分析在平台中保留阅读。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn bump(value: &mut i32) { *value = *value + 2; }\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let mut value = n;\n    bump(&mut value);\n    println!(\"{}\", value);\n}\n",
+        "description": "定义接收&mut i32的用户函数，通过解引用把目标加2，再输出调用后的值。",
+        "result": "四组输入分别产生：\n输入 '0'：'2\\n'\n输入 '1'：'3\\n'\n输入 '4'：'6\\n'\n输入 '9'：'11\\n'",
+        "cases": [
+          {
+            "input": "0\n",
+            "expected": "2\n",
+            "requiredFeatures": [
+              "user-mutable-borrow"
+            ]
+          },
+          {
+            "input": "1\n",
+            "expected": "3\n",
+            "requiredFeatures": [
+              "user-mutable-borrow"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "6\n",
+            "requiredFeatures": [
+              "user-mutable-borrow"
+            ]
+          },
+          {
+            "input": "9\n",
+            "expected": "11\n",
+            "requiredFeatures": [
+              "user-mutable-borrow"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root04.02.01.exercise",
+        "prompt": "定义接收&mut i32的用户函数，通过解引用把目标加2，再输出调用后的值。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "拥有者变量应为mut。",
+          "调用写&mut value。",
+          "函数体通过*形参读取和赋值。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.02.02",
+      "sourceNodeId": "rust.source.root04.02.02",
+      "title": "悬垂引用",
+      "parent": "rust.book.root04.02",
+      "depth": 3,
+      "physicalPage": 135,
+      "printedPage": null,
+      "leaf": true,
+      "order": 60,
+      "group": 4,
+      "body": [
+        "悬垂引用指向已经失效的数据。局部 String 在函数结束且没有移交所有权时会被清理，返回它的引用不能让对象延长生命。Rust 在编译期检查这种关系，而不是等调用者读取已释放内存时才随机出错。",
+        "修复思路应围绕实际数据归属：如果函数负责创建新数据，就返回 String 这样的拥有值；如果返回输入的一部分，则需要有效的输入借用及合适的生命周期关系。随意添加生命周期标记不会凭空制造存储空间。下面给出正确的拥有值返回版本，特意避免让局部对象的引用逃出函数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn create_label() -> String {\n    String::from(\"安全返回\")\n}\nfn main() {\n    let label = create_label();\n    println!(\"{}\", label);\n}\n",
+        "description": "用返回 String 修复“返回局部 String 引用”的设计问题。",
+        "result": "返回的是拥有值，调用者可继续使用，预期显示“安全返回”。",
+        "reason": "引用返回、局部引用和显式生命周期不在当前解释器子集；本例用于比较正确设计。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若把返回类型改成 &String 并返回局部变量的引用，生命周期注解能自动保住局部对象吗？",
+        "answer": "不能。注解描述有效期关系，不分配或延长局部对象的存储；应返回拥有值，或引用调用者仍有效的数据。",
+        "hints": [
+          "先确认被引用对象由谁持有、何时销毁。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.02.03",
+      "sourceNodeId": "rust.source.root04.02.03",
+      "title": "引用的规则",
+      "parent": "rust.book.root04.02",
+      "depth": 3,
+      "physicalPage": 137,
+      "printedPage": null,
+      "leaf": true,
+      "order": 61,
+      "group": 4,
+      "body": [
+        "引用规则把访问分成共享读取与排他修改。在彼此重叠的使用期间，可以有多个共享引用，或者一个可变引用，不能让可变访问与其他冲突访问并存。判断重点是引用的实际使用关系，而不是简单数一段源码里出现了多少个 &。",
+        "引用还必须始终有效，不能借用已经 moved 的值或失效的局部对象。平台把借用限定在一次直接函数调用内，检查同次实参是否冲突，返回后释放访问状态。下面同时共享读取一个整数两次，二者都不修改原值；若把其中一个改成可变借用，不能认为“只调用一次”就自然合法。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn show_pair(left: &i32, right: &i32) {\n    println!(\"{} {}\", *left, *right);\n}\nfn main() {\n    let value = 12;\n    show_pair(&value, &value);\n    println!(\"{}\", value);\n}\n",
+        "description": "观察两个共享实参同时读取同一拥有值。",
+        "result": "预期先输出“12 12”，再输出 12，原绑定保留且没有被修改。",
+        "reason": "本叶为规则阅读例；平台直接借用可执行，局部引用与更广的非词法生命周期分析不开放。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么同一个 value 作为两个共享实参可行，而同次一个 &mut 和一个 & 不可照搬？",
+        "answer": "共享读取之间不冲突；可变借用要求排他访问，重叠的其他引用会破坏这个保证，需调整调用设计。",
+        "hints": [
+          "关注借用的种类和重叠时间，而非调用次数。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.03",
+      "sourceNodeId": "rust.source.root04.03",
+      "title": "切片",
+      "parent": "rust.book.root04",
+      "depth": 2,
+      "physicalPage": 139,
+      "printedPage": null,
+      "leaf": false,
+      "order": 62,
+      "group": 4,
+      "body": [
+        "切片不拥有集合，它把某一段连续数据连同长度借给使用者。先比较字符串的字节区间与“首个词”的边界，再将同样的思想推广到数组，理解为什么返回切片比返回孤立下标更能保留关联。",
+        "下面的切片、迭代和引用返回属于标准 Rust 阅读范围。重点是范围端点、借用有效期以及 UTF-8 边界，不应把字节索引误认为字符序号。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root04.03.01",
+      "sourceNodeId": "rust.source.root04.03.01",
+      "title": "字符串切片",
+      "parent": "rust.book.root04.03",
+      "depth": 3,
+      "physicalPage": 141,
+      "printedPage": null,
+      "leaf": true,
+      "order": 63,
+      "group": 4,
+      "body": [
+        "字符串切片 &str 引用一段连续的 UTF-8 字节，并不复制或取得原字符串所有权。区间 start..end 包含起点、不含终点；可省略从头开始或直到结尾的端点。原 String 必须在切片使用期间保持有效，不能随意清空它而继续读取旧切片。",
+        "字符串区间按字节计数，端点必须落在 UTF-8 字符边界。ASCII 文本常让字节与字符数量恰好一致，中文则会暴露区别。下面从“学习 Rust”中取出后半段，前两个汉字各占三个 UTF-8 字节，再加空格共七字节；若切到汉字中间会在运行时失败，而不会得到半个汉字。切片的长度描述被借用区间，而不是原字符串的总长度，也不等于其中可见字形数。",
+        "首词函数若只返回空格的数字下标，原文本清空后这个数字仍可存在，却已失去对应含义；返回 &str 切片能把结果与原文本借用关系联系起来。接口采用 &str 可接受字面量和 String 的切片；按字节寻找 ASCII 空格与自然语言分词仍是不同任务。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let text = String::from(\"学习 Rust\");\n    let word = &text[7..]; // 两个汉字 6 字节，加一个空格\n    println!(\"{}\", word);\n}\n",
+        "description": "按有效 UTF-8 字节边界取得 Rust 子串。",
+        "result": "在标准 Rust 中预期输出 Rust；7 是字节偏移，不是第七个字符。",
+        "reason": "字符串切片、局部引用和动态长度类型不在当前平台解释器范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把范围改成 1..，为什么并非简单地去掉第一个汉字？",
+        "answer": "偏移 1 位于第一个汉字的多字节编码内部，不是合法字符边界，切片会失败；去掉一个汉字应使用相应的完整字节边界。",
+        "hints": [
+          "先标出每个字符占据的字节范围。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.03.02",
+      "sourceNodeId": "rust.source.root04.03.02",
+      "title": "其他类型的切片",
+      "parent": "rust.book.root04.03",
+      "depth": 3,
+      "physicalPage": 146,
+      "printedPage": null,
+      "leaf": true,
+      "order": 64,
+      "group": 4,
+      "body": [
+        "切片也适用于数组等连续集合。&[i32] 表示借用的一段整数序列，长度在运行时随该切片记录；[i32; 4] 则是长度属于类型的拥有数组。借用数组的一部分不会创建一个新的独立数组，读取仍指向原集合的数据。",
+        "区间依然左闭右开，&values[1..3] 包含索引 1 与 2，不含 3。切片下标从自身起点重新计数，所以 window[0] 对应原数组的 values[1]。共享切片使用期间不能通过冲突访问修改底层数据；需要独立副本时应明确复制，而不是把 & 误认为复制符号。切片类型不把这次长度写进类型本身，因此同一个接收切片的接口可以处理不同长度的区间。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let values = [10, 20, 30, 40];\n    let window: &[i32] = &values[1..3];\n    println!(\"{} {}\", window[0], window.len());\n}\n",
+        "description": "用数组中段说明切片自己的下标和长度。",
+        "result": "标准 Rust 中预期输出“20 2”，因为切片只含 20 与 30。",
+        "reason": "数组切片、引用局部绑定和通用 len 调用不在平台支持子集内。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "window[0] 为什么不是原数组的第一个元素 10？",
+        "answer": "window 的起点是原数组索引 1，切片内部从零重新计数，因而对应值 20。",
+        "hints": [
+          "将原数组索引与切片相对索引分别标记。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root04.04",
+      "sourceNodeId": "rust.source.root04.04",
+      "title": "总结",
+      "parent": "rust.book.root04",
+      "depth": 2,
+      "physicalPage": 148,
+      "printedPage": null,
+      "leaf": true,
+      "order": 65,
+      "group": 4,
+      "body": [
+        "分析所有权代码时，可以依次询问：值由谁持有，这一步是复制、移动还是借用，当前访问是否与其他借用冲突，最后由哪个作用域清理资源。这个顺序比背诵某种变量名的固定结论更可靠，也能解释函数调用和返回值为何改变使用权限。",
+        "String 的 clone 创建独立内容，按值传参转交责任，借用则保留原拥有者。切片同样是借用，不过引用的是一段连续数据，不能绕过有效期与 UTF-8 约束。下面通过共享参数展示只查看文本的函数，再在调用后继续输出原值；后续结构体和集合也将遵守相同的资源管理规则。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn show(text: &String) { println!(\"查看：{}\", text); }\nfn main() {\n    let note = String::from(\"所有权保留\");\n    show(&note);\n    println!(\"原值：{}\", note);\n}\n",
+        "description": "用共享函数参数串联“临时访问”与“所有权保留”。",
+        "result": "预期先输出“查看：所有权保留”，再输出“原值：所有权保留”。",
+        "reason": "本叶为所有权综合阅读例，未增加运行配置；可执行借用仅限平台规定形式。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若将 show 的参数改为 String 并调用 show(note)，后面的原值输出还能保留吗？",
+        "answer": "不能直接保留。按值 String 参数会取得所有权，note 已 moved；应改回借用、显式克隆或接收返回的拥有值。",
+        "hints": [
+          "用函数签名判断调用前后的拥有关系。"
+        ]
+      }
+    }
+  ]
+}

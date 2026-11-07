@@ -1,0 +1,590 @@
+[
+  {
+    "id": "rust.book.root01.02.02.exercise",
+    "lesson": "rust.book.root01.02.02",
+    "sourceNodeId": "rust.source.root01.02.02",
+    "title": "格式化输出",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    println!(\"Rust {}\", n);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "Rust 0\n",
+        "requiredFeatures": [
+          "output"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "Rust 1\n",
+        "requiredFeatures": [
+          "output"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "Rust 4\n",
+        "requiredFeatures": [
+          "output"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "Rust 9\n",
+        "requiredFeatures": [
+          "output"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "output"
+    ],
+    "goal": "读入一个i32整数，按 Rust n 的格式输出一行，末尾保留换行。",
+    "hints": [
+      "虚拟输入是单独一行整数。",
+      "用{}格式项显示变量n。",
+      "标签与整数之间保留一个空格。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root01.02.02.knowledge"
+  },
+  {
+    "id": "rust.book.root03.01.02.exercise",
+    "lesson": "rust.book.root03.01.02",
+    "sourceNodeId": "rust.source.root03.01.02",
+    "title": "同名隐藏",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let n = n + 2;\n    { let n = n * 3; println!(\"{}\", n); }\n    println!(\"{}\", n);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "6\n2\n",
+        "requiredFeatures": [
+          "shadow"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "9\n3\n",
+        "requiredFeatures": [
+          "shadow"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "18\n6\n",
+        "requiredFeatures": [
+          "shadow"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "33\n11\n",
+        "requiredFeatures": [
+          "shadow"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "shadow"
+    ],
+    "goal": "读入n，通过同名隐藏先加2，在内层块再次隐藏为三倍并输出，离开块后输出外层隐藏值。",
+    "hints": [
+      "每次let创建独立绑定。",
+      "内层只隐藏查找，不改写外层值。",
+      "两个输出各占一行。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root03.01.02.knowledge"
+  },
+  {
+    "id": "rust.book.root03.02.01.exercise",
+    "lesson": "rust.book.root03.02.01",
+    "sourceNodeId": "rust.source.root03.02.01",
+    "title": "整数与布尔值",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let doubled = n * 2;\n    let positive = n > 0;\n    println!(\"{} {}\", doubled, positive);\n}\n",
+    "cases": [
+      {
+        "input": "-3\n",
+        "expected": "-6 false\n",
+        "requiredFeatures": [
+          "arithmetic"
+        ]
+      },
+      {
+        "input": "0\n",
+        "expected": "0 false\n",
+        "requiredFeatures": [
+          "arithmetic"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "8 true\n",
+        "requiredFeatures": [
+          "arithmetic"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "18 true\n",
+        "requiredFeatures": [
+          "arithmetic"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "arithmetic"
+    ],
+    "goal": "读入n，输出它的两倍与n>0的布尔结果，中间一个空格，末尾换行。",
+    "hints": [
+      "整数乘法产生新值。",
+      "比较结果是bool。",
+      "Rust布尔格式化为true或false。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root03.02.01.knowledge"
+  },
+  {
+    "id": "rust.book.root03.02.02.exercise",
+    "lesson": "rust.book.root03.02.02",
+    "sourceNodeId": "rust.source.root03.02.02",
+    "title": "固定数组与复制",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let values = [n, 3, 5];\n    let mut copied = values;\n    copied[0] = copied[0] + 1;\n    println!(\"{} {}\", values[0], copied[0]);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "0 1\n",
+        "requiredFeatures": [
+          "array-copy",
+          "array-write"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "1 2\n",
+        "requiredFeatures": [
+          "array-copy",
+          "array-write"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "4 5\n",
+        "requiredFeatures": [
+          "array-copy",
+          "array-write"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "9 10\n",
+        "requiredFeatures": [
+          "array-copy",
+          "array-write"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "array-copy",
+      "array-write"
+    ],
+    "goal": "把n放入固定数组首项，复制数组并把副本首项加1。输出原数组首项和副本首项。",
+    "hints": [
+      "数组值复制后有独立内容。",
+      "只把副本声明为mut即可修改。",
+      "通过下标0观察两个对象。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root03.02.02.knowledge"
+  },
+  {
+    "id": "rust.book.root03.03.01.exercise",
+    "lesson": "rust.book.root03.03.01",
+    "sourceNodeId": "rust.source.root03.03.01",
+    "title": "按值形参",
+    "source": "fn twice(value: i32) -> i32 { value * 2 }\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    println!(\"{}\", twice(n));\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "0\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "2\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "8\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "18\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "call"
+    ],
+    "goal": "定义接收i32并返回其两倍的用户函数，从main按值传入n，再输出返回值。",
+    "hints": [
+      "形参需要显式类型。",
+      "返回类型写在->后。",
+      "函数末尾表达式可直接返回。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root03.03.01.knowledge"
+  },
+  {
+    "id": "rust.book.root03.03.03.exercise",
+    "lesson": "rust.book.root03.03.03",
+    "sourceNodeId": "rust.source.root03.03.03",
+    "title": "返回值与递归",
+    "source": "fn factorial(value: i32) -> i32 {\n    if value <= 1 { 1 } else { value * factorial(value - 1) }\n}\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    println!(\"{}\", factorial(n));\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "1\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "1\n",
+        "requiredFeatures": [
+          "call"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "24\n",
+        "requiredFeatures": [
+          "call",
+          "recursion"
+        ]
+      },
+      {
+        "input": "6\n",
+        "expected": "720\n",
+        "requiredFeatures": [
+          "call",
+          "recursion"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "call"
+    ],
+    "goal": "实现阶乘函数并输出n!，0!=1；非基本情况必须实际递归调用本函数。",
+    "hints": [
+      "先处理n<=1。",
+      "其余情况返回n乘以n-1的阶乘。",
+      "返回表达式的末尾不加分号。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root03.03.03.knowledge"
+  },
+  {
+    "id": "rust.book.root03.05.01.exercise",
+    "lesson": "rust.book.root03.05.01",
+    "sourceNodeId": "rust.source.root03.05.01",
+    "title": "if 表达式",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let magnitude = if n < 0 { -n } else { n };\n    println!(\"{}\", magnitude);\n}\n",
+    "cases": [
+      {
+        "input": "-9\n",
+        "expected": "9\n",
+        "requiredFeatures": [
+          "condition"
+        ]
+      },
+      {
+        "input": "-1\n",
+        "expected": "1\n",
+        "requiredFeatures": [
+          "condition"
+        ]
+      },
+      {
+        "input": "0\n",
+        "expected": "0\n",
+        "requiredFeatures": [
+          "condition"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "4\n",
+        "requiredFeatures": [
+          "condition"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "condition"
+    ],
+    "goal": "用真实if条件数据或控制贡献计算并输出n的绝对值。",
+    "hints": [
+      "条件是n<0。",
+      "负数分支取相反数。",
+      "if表达式的两个分支应返回同一类型。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root03.05.01.knowledge"
+  },
+  {
+    "id": "rust.book.root03.05.02.exercise",
+    "lesson": "rust.book.root03.05.02",
+    "sourceNodeId": "rust.source.root03.05.02",
+    "title": "循环累加",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let mut total = 0;\n    for value in 0..=n { total = total + value; }\n    println!(\"{}\", total);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "0\n",
+        "requiredFeatures": [
+          "loop"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "1\n",
+        "requiredFeatures": [
+          "loop"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "10\n",
+        "requiredFeatures": [
+          "loop"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "45\n",
+        "requiredFeatures": [
+          "loop"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "loop"
+    ],
+    "goal": "通过实际循环求0到n的整数和并输出，n为非负整数。",
+    "hints": [
+      "累加器声明为mut。",
+      "0..=n包含上界。",
+      "循环每次把当前值加到累加器。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root03.05.02.knowledge"
+  },
+  {
+    "id": "rust.book.root04.01.03.exercise",
+    "lesson": "rust.book.root04.01.03",
+    "sourceNodeId": "rust.source.root04.01.03",
+    "title": "创建拥有的字符串",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let text = String::from(\"Rust\");\n    println!(\"{} {}\", text, n);\n    println!(\"{}\", text);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "Rust 0\nRust\n",
+        "requiredFeatures": [
+          "string-create"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "Rust 1\nRust\n",
+        "requiredFeatures": [
+          "string-create"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "Rust 4\nRust\n",
+        "requiredFeatures": [
+          "string-create"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "Rust 9\nRust\n",
+        "requiredFeatures": [
+          "string-create"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "string-create"
+    ],
+    "goal": "用String::from构造Rust，第一行输出该String及n，第二行再次输出同一String。",
+    "hints": [
+      "格式化借用String，不移动拥有者。",
+      "第一行中间需要空格。",
+      "构造的String本身需要参与两次输出。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root04.01.03.knowledge"
+  },
+  {
+    "id": "rust.book.root04.01.04.exercise",
+    "lesson": "rust.book.root04.01.04",
+    "sourceNodeId": "rust.source.root04.01.04",
+    "title": "移动与显式克隆",
+    "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let first = String::from(\"Rust\");\n    let copied = first.clone();\n    let moved = first;\n    println!(\"{} {} {}\", moved, copied, n);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "Rust Rust 0\n",
+        "requiredFeatures": [
+          "clone",
+          "move"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "Rust Rust 1\n",
+        "requiredFeatures": [
+          "clone",
+          "move"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "Rust Rust 4\n",
+        "requiredFeatures": [
+          "clone",
+          "move"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "Rust Rust 9\n",
+        "requiredFeatures": [
+          "clone",
+          "move"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "clone",
+      "move"
+    ],
+    "goal": "构造Rust，显式克隆一份，再把原拥有者移动给新绑定。输出移动后的值、克隆值和n。",
+    "hints": [
+      "clone产生独立拥有对象。",
+      "String赋值给新绑定会移动。",
+      "打印新拥有者和克隆值，不再使用旧拥有者。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root04.01.04.knowledge"
+  },
+  {
+    "id": "rust.book.root04.01.05.exercise",
+    "lesson": "rust.book.root04.01.05",
+    "sourceNodeId": "rust.source.root04.01.05",
+    "title": "把所有权传入和返回",
+    "source": "fn give_back(text: String) -> String { text }\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let text = String::from(\"Rust\");\n    let returned = give_back(text);\n    println!(\"{} {}\", returned, n);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "Rust 0\n",
+        "requiredFeatures": [
+          "ownership-call"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "Rust 1\n",
+        "requiredFeatures": [
+          "ownership-call"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "Rust 4\n",
+        "requiredFeatures": [
+          "ownership-call"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "Rust 9\n",
+        "requiredFeatures": [
+          "ownership-call"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "ownership-call"
+    ],
+    "goal": "让拥有的String按值传入用户函数并按值返回，随后输出返回的String和n。",
+    "hints": [
+      "函数形参和返回类型均为String。",
+      "参数接收会移交所有权。",
+      "返回值绑定到main中的新变量。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root04.01.05.knowledge"
+  },
+  {
+    "id": "rust.book.root04.02.01.exercise",
+    "lesson": "rust.book.root04.02.01",
+    "sourceNodeId": "rust.source.root04.02.01",
+    "title": "调用中的可变借用",
+    "source": "fn bump(value: &mut i32) { *value = *value + 2; }\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let mut value = n;\n    bump(&mut value);\n    println!(\"{}\", value);\n}\n",
+    "cases": [
+      {
+        "input": "0\n",
+        "expected": "2\n",
+        "requiredFeatures": [
+          "user-mutable-borrow"
+        ]
+      },
+      {
+        "input": "1\n",
+        "expected": "3\n",
+        "requiredFeatures": [
+          "user-mutable-borrow"
+        ]
+      },
+      {
+        "input": "4\n",
+        "expected": "6\n",
+        "requiredFeatures": [
+          "user-mutable-borrow"
+        ]
+      },
+      {
+        "input": "9\n",
+        "expected": "11\n",
+        "requiredFeatures": [
+          "user-mutable-borrow"
+        ]
+      }
+    ],
+    "requiredFeatures": [
+      "user-mutable-borrow"
+    ],
+    "goal": "定义接收&mut i32的用户函数，通过解引用把目标加2，再输出调用后的值。",
+    "hints": [
+      "拥有者变量应为mut。",
+      "调用写&mut value。",
+      "函数体通过*形参读取和赋值。"
+    ],
+    "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+    "topic": "rust.book.root04.02.01.knowledge"
+  }
+]

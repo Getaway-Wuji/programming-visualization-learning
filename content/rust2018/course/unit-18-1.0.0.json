@@ -1,0 +1,574 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 18,
+  "nodes": [
+    {
+      "id": "rust.book.root18",
+      "sourceNodeId": "rust.source.root18",
+      "title": "第18章 模式匹配",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 566,
+      "printedPage": null,
+      "leaf": false,
+      "order": 304,
+      "group": 18,
+      "body": [
+        "模式描述值的结构，并可在匹配成功后给其中的部分命名。它不仅出现在match中，也出现在let绑定、循环和函数参数里。本章先辨认各处模式是否允许失败，再逐步组合字面量、解构、忽略、守卫与绑定。",
+        "阅读模式时先判断形状能否匹配，再检查是否移动或借用了数据，最后考虑新名字的作用域。平台没有实现通用模式匹配，本章用完整Rust阅读程序解释这些规则。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root18.01",
+      "sourceNodeId": "rust.source.root18.01",
+      "title": "所有可以使用模式的场合",
+      "parent": "rust.book.root18",
+      "depth": 2,
+      "physicalPage": 568,
+      "printedPage": null,
+      "leaf": false,
+      "order": 305,
+      "group": 18,
+      "body": [
+        "同一种模式放在不同位置，失败时的处理方式不同。match需要覆盖所有可能值，if let可以忽略不匹配的情形，while let在不匹配时结束循环；普通let和函数参数则不能依赖一次可能失败的拆解。",
+        "下面把这些位置逐个对照。特别注意for循环结束由迭代器决定，循环变量处的模式仍要接住每个实际产生的元素，不是额外添加一次筛选条件。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root18.01.01",
+      "sourceNodeId": "rust.source.root18.01.01",
+      "title": "match分支",
+      "parent": "rust.book.root18.01",
+      "depth": 3,
+      "physicalPage": 568,
+      "printedPage": null,
+      "leaf": true,
+      "order": 306,
+      "group": 18,
+      "body": [
+        "match先计算待匹配的值，再按书写顺序寻找第一个成功的分支。每个分支由模式和对应表达式构成，整体也可以产生一个结果值，因此所有可能返回的分支通常必须类型一致。分支顺序会影响重叠模式最终选择哪条路径。",
+        "Rust要求match覆盖所有可能的输入。即使目前只用某个整数调用，函数仍必须处理这个类型的其他值；末尾的_常用来承接其余情况，却不会创建可供分支使用的名字。使用枚举时，显式列出变体有利于日后新增变体触发编译检查，而过早使用通配分支可能隐藏遗漏。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn level(n: i32) -> &'static str {\n    match n {\n        0 => \"尚未开始\",\n        1..=3 => \"进行中\",\n        _ => \"其他\",\n    }\n}\nfn main() { println!(\"{}\", level(2)); }",
+        "description": "把模式分支的结果作为函数返回值。",
+        "result": "打印进行中；0和其他整数也各有匹配路径。",
+        "reason": "执行器没有match、范围模式或&str返回值。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删除最后一个_分支，为何即使只传2仍不能通过编译？",
+        "answer": "n的类型是i32，函数接口允许其余所有整数。编译器要求match对整个类型穷尽，而不是只对某次调用的实参穷尽。",
+        "hints": [
+          "检查待匹配表达式的类型范围。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.01.02",
+      "sourceNodeId": "rust.source.root18.01.02",
+      "title": "if let条件表达式",
+      "parent": "rust.book.root18.01",
+      "depth": 3,
+      "physicalPage": 569,
+      "printedPage": null,
+      "leaf": true,
+      "order": 307,
+      "group": 18,
+      "body": [
+        "if let适合只关心某一种形状的情况，例如Option中的Some。模式成功后，拆出的名字只在对应分支内可用；失败时执行else或直接继续。这省去了完整match的其他分支，但同时放弃了对所有变体逐一处理的检查。",
+        "多个if let与普通if可以组成条件链，不过后面的判断不能引用前一个失败分支里才建立的名字。模式中的新变量还可能遮蔽外层同名绑定，阅读时要区分它是新名字还是与旧值比较。如果需要判断两个值是否相等，应使用条件或匹配守卫，而不是仅写一个同名模式。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let backup = Some(7);\n    let chosen = if let Some(value) = backup {\n        value * 2\n    } else {\n        0\n    };\n    println!(\"{}\", chosen);\n}",
+        "description": "只提取Some中的值，并为None提供默认结果。",
+        "result": "打印14；value只在成功分支里存在。",
+        "reason": "执行器不支持Option、if let和解构模式。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把backup改为None后，value是否会保留上一次值？",
+        "answer": "不会。模式失败时不建立value绑定，程序走else得到0；这里没有跨分支保留的“上一次匹配值”。",
+        "hints": [
+          "变量由成功匹配创建，不是预先存在的槽位。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.01.03",
+      "sourceNodeId": "rust.source.root18.01.03",
+      "title": "while let条件循环",
+      "parent": "rust.book.root18.01",
+      "depth": 3,
+      "physicalPage": 570,
+      "printedPage": null,
+      "leaf": true,
+      "order": 308,
+      "group": 18,
+      "body": [
+        "while let每次循环都重新求值并匹配一个表达式。成功时进入循环体，失败时退出，所以适合反复从容器取值直到为空。Vec::pop返回Option，Some携带取出的元素，None表示容器已无元素，正好可以驱动这种循环。",
+        "取值的副作用属于循环条件本身，而不是循环体里隐含的步骤。示例从尾部弹出，因此输出顺序与压入顺序相反。若循环体一直把相同元素放回且条件始终返回Some，循环就不会自然结束；判断终止性要同时检查条件和循环体对状态的改变，不能只看用了while let。先画出每轮循环前后容器长度，有助于判断它是否会结束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut pending = vec![2, 4, 6];\n    while let Some(value) = pending.pop() {\n        println!(\"{}\", value);\n    }\n    println!(\"剩余 {}\", pending.len());\n}",
+        "description": "以pop的Option结果驱动清空过程。",
+        "result": "依次打印6、4、2，最后打印剩余 0。",
+        "reason": "执行器没有Vec、Option或while let。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么这个循环不需要单独写pending.is_empty()？",
+        "answer": "pop在有元素时返回Some并移出一个元素，空时返回None。模式匹配已经同时完成“是否还有值”和“取出值”两项工作。",
+        "hints": [
+          "循环条件返回值携带了终止信息。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.01.04",
+      "sourceNodeId": "rust.source.root18.01.04",
+      "title": "for循环",
+      "parent": "rust.book.root18.01",
+      "depth": 3,
+      "physicalPage": 571,
+      "printedPage": null,
+      "leaf": true,
+      "order": 309,
+      "group": 18,
+      "body": [
+        "for从迭代器依次取元素，循环变量位置可以使用模式。enumerate把每项变成索引与元素的二元组，使用(index, item)就能同时命名两部分。这是拆解每次迭代产生的数据，不是对迭代器额外发出两次读取请求。",
+        "循环变量模式应不可失败，保证每个元素都能进入循环体。遍历iter得到借用，遍历into_iter通常取得拥有的元素；模式如何绑定会影响后续能否继续使用容器。示例只借用名字，不移走String，循环之后仍可读取整个集合。索引的类型来自迭代器，不应凭习惯认作i32。元素中的引用也受原容器存活时间限制。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let names = vec![String::from(\"甲\"), String::from(\"乙\")];\n    for (index, name) in names.iter().enumerate() {\n        println!(\"{}:{}\", index, name);\n    }\n    println!(\"仍有 {} 项\", names.len());\n}",
+        "description": "拆开enumerate产生的索引与元素引用。",
+        "result": "打印0:甲、1:乙，最后打印仍有 2 项。",
+        "reason": "执行器只支持有限整数/固定数组for，不支持迭代器和元组模式。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把循环看成每次取得两个互不相关的值正确吗？",
+        "answer": "不正确。enumerate每次产生一个二元组，模式将这个单一元素拆成index和name，二者对应同一次迭代。",
+        "hints": [
+          "观察迭代器的Item形状。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.01.05",
+      "sourceNodeId": "rust.source.root18.01.05",
+      "title": "let语句",
+      "parent": "rust.book.root18.01",
+      "depth": 3,
+      "physicalPage": 572,
+      "printedPage": null,
+      "leaf": true,
+      "order": 310,
+      "group": 18,
+      "body": [
+        "let后面的名字也是模式，最简单的变量模式能接住任意同类型值。元组解构可以把已知结构同时绑定给多个名字；元素数和位置必须与待绑定的值一致。这类拆解在结构确定时简洁，也能让每个部分的意义更清楚。",
+        "普通let要求模式不可失败，因为后续代码应能确定所有绑定已经建立。Some(x)可能遇到None，不能直接作为这种let的模式。元组中某个位置写_可以忽略值并避免产生无用绑定；若只是想重命名部分字段，还应检查是否在不经意间移动了不能Copy的数据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let (width, height) = (8, 5);\n    let (left, _, right) = (10, 20, 30);\n    println!(\"面积 {}，两端 {} {}\", width * height, left, right);\n}",
+        "description": "使用确定形状的元组模式建立多个绑定。",
+        "result": "打印面积 40，两端 10 30；中间值没有绑定名字。",
+        "reason": "执行器不支持元组及let解构。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "let (a, b) = (1, 2, 3)为何失败？",
+        "answer": "模式要求二元组，右边却是三元组，形状和类型不一致。编译器不会自动丢弃多余元素；应显式写相应模式。",
+        "hints": [
+          "计数模式和右侧元组的元素。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.01.06",
+      "sourceNodeId": "rust.source.root18.01.06",
+      "title": "函数的参数",
+      "parent": "rust.book.root18.01",
+      "depth": 3,
+      "physicalPage": 573,
+      "printedPage": null,
+      "leaf": true,
+      "order": 311,
+      "group": 18,
+      "body": [
+        "函数形参也可以采用模式。给形参标注整体类型后，模式在函数入口拆开实参，函数体直接使用各部分的名字。对元组或结构体输入，这常能避免在函数体里反复写字段访问；但接口仍接收一个整体值，不能因此把一次调用写成多个独立参数。",
+        "参数模式必须不可失败，否则函数进入时可能没有建立需要的绑定。示例用&(x, y)匹配元组引用，借用原点坐标并复制其中的整数。若数据包含String，随意解构借用的值不能把String直接移出，需进一步使用引用绑定或其他借用方式。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn distance_squared(&(x, y): &(i32, i32)) -> i32 {\n    x * x + y * y\n}\nfn main() {\n    let point = (3, 4);\n    println!(\"{}\", distance_squared(&point));\n    println!(\"原坐标 {} {}\", point.0, point.1);\n}",
+        "description": "入口模式拆开借来的二元组。",
+        "result": "打印25，再打印原坐标3 4；整数复制不消费point。",
+        "reason": "执行器没有元组、引用解构形参或元组字段访问。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "调用distance_squared(3, 4)为什么不符合接口？",
+        "answer": "函数接收一个&(i32, i32)参数，内部模式只拆开这一个参数。传两个整数既数量不符，也没有提供所需引用。",
+        "hints": [
+          "先读形参冒号右边的整体类型。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.02",
+      "sourceNodeId": "rust.source.root18.02",
+      "title": "可失败性：模式是否会匹配失败",
+      "parent": "rust.book.root18",
+      "depth": 2,
+      "physicalPage": 575,
+      "printedPage": null,
+      "leaf": true,
+      "order": 312,
+      "group": 18,
+      "body": [
+        "不可失败模式能匹配给定类型的所有值，如单个变量名或固定元组的完整拆解。可失败模式只能匹配其中一部分，如Some(x)不能匹配None。可失败性取决于模式与输入类型的关系，不取决于某次运行刚好给了什么值。",
+        "普通let、for变量和函数参数需要不可失败模式；match分支、if let和while let允许匹配失败，并各有处理机制。若某变量当前写成Some(3)，也不能据此把let Some(x)当作普遍有效的绑定语法。选择结构前，先问失败是否可能、失败后应继续、回退还是结束，再选控制流。即使模式内部没有变量，外层变体限制仍可能使它失败。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let pair = (2, 9);\n    let (low, high) = pair;\n    let maybe = Some(high - low);\n    if let Some(gap) = maybe { println!(\"{}\", gap); }\n}",
+        "description": "对照完整元组解构和有条件的Option解构。",
+        "result": "打印7；元组模式对该类型不可失败，Some模式对Option可失败。",
+        "reason": "执行器没有元组、Option或条件模式。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Some(x)内部只有变量名，为何整个模式仍可失败？",
+        "answer": "外层Some要求枚举具有特定变体；Option还可能是None。内部变量能接住载荷，不代表外层形状能匹配所有变体。",
+        "hints": [
+          "从外到内判断每层结构。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.03",
+      "sourceNodeId": "rust.source.root18.03",
+      "title": "模式语法",
+      "parent": "rust.book.root18",
+      "depth": 2,
+      "physicalPage": 578,
+      "printedPage": null,
+      "leaf": false,
+      "order": 313,
+      "group": 18,
+      "body": [
+        "模式既可以限制输入值，也可以把内部数据拆出来命名。下面从字面量和新变量开始，逐步加入候选模式、区间、嵌套解构和忽略，最后用守卫与@绑定把结构判断和额外条件连接起来。",
+        "模式不是普通表达式。相同符号在模式中可能有另一种意义，例如|表示候选而非按位或；看懂语法位置后，再检查覆盖范围、分支顺序以及数据是否被移动。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root18.03.01",
+      "sourceNodeId": "rust.source.root18.03.01",
+      "title": "匹配字面量",
+      "parent": "rust.book.root18.03",
+      "depth": 3,
+      "physicalPage": 578,
+      "printedPage": null,
+      "leaf": true,
+      "order": 314,
+      "group": 18,
+      "body": [
+        "字面量模式要求输入等于指定的值，适合给离散状态、字符或固定编号写清晰的分支。分支按顺序选择第一个匹配项，不会像某些语言的switch那样继续贯穿到后面的分支。match分支中的逗号用于分隔表达式，不表示多项条件。",
+        "匹配的字面量必须符合输入类型。给i32写字符模式，或给bool写整数模式，都不是可用的比较。即使列出几个常见整数，也没有穷尽整个i32空间；应为其他情况提供明确分支。若业务状态本来只有少数固定类别，枚举通常比用若干“约定数字”更能表达类型约束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let signal = 2;\n    let action = match signal {\n        0 => \"等待\",\n        1 => \"开始\",\n        2 => \"暂停\",\n        _ => \"未知信号\",\n    };\n    println!(\"{}\", action);\n}",
+        "description": "把三个约定编号映射成文本。",
+        "result": "打印暂停；只执行编号2对应的分支。",
+        "reason": "执行器没有match和字符串切片分支结果。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "signal等于1时会继续执行2对应的分支吗？",
+        "answer": "不会。match找到第一个成功分支后只求值该分支表达式，结果成为整个match的结果。",
+        "hints": [
+          "Rust的match没有隐式贯穿。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.03.02",
+      "sourceNodeId": "rust.source.root18.03.02",
+      "title": "匹配命名变量",
+      "parent": "rust.book.root18.03",
+      "depth": 3,
+      "physicalPage": 578,
+      "printedPage": null,
+      "leaf": true,
+      "order": 315,
+      "group": 18,
+      "body": [
+        "模式中写一个普通名字通常是在建立新绑定，而不是读取外层同名变量。新名字能匹配任何对应类型的值，并在分支作用域内遮蔽外层绑定。这个规则很方便，但也容易把“与期望值比较”错写成“接受任意值”。",
+        "示例中的Some(target)无条件接住Some内部的整数，因此输入7也会匹配，分支内target是7，外层target仍是5。若要与外层目标比较，应换一个名字并添加守卫，例如Some(value) if value == target。阅读时先标出每个名字的声明位置，作用域结束后再恢复外层身份。分支结束后，新名字退出作用域，并不会改写被遮蔽的外层变量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let target = 5;\n    match Some(7) {\n        Some(target) => println!(\"内部 {}\", target),\n        None => println!(\"无值\"),\n    }\n    println!(\"外部 {}\", target);\n}",
+        "description": "观察模式名字对外层同名变量的遮蔽。",
+        "result": "先打印内部 7，再打印外部 5。",
+        "reason": "执行器支持普通隐藏，但没有枚举模式绑定和match。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Some(target)是否只会在内部值等于5时匹配？",
+        "answer": "不是。这里target是新变量，接住任意Some载荷。用Some(value) if value == target才能比较外层5。",
+        "hints": [
+          "模式中的名字默认执行绑定。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.03.03",
+      "sourceNodeId": "rust.source.root18.03.03",
+      "title": "多重模式",
+      "parent": "rust.book.root18.03",
+      "depth": 3,
+      "physicalPage": 580,
+      "printedPage": null,
+      "leaf": true,
+      "order": 316,
+      "group": 18,
+      "body": [
+        "在同一分支中用|连接多个模式，表示输入匹配其中任意一个即可。这适合几个离散值执行相同行为的场合，可以把共同表达式写一次。它是模式选择语法，并不是先把几个数做按位或后再比较结果。",
+        "候选模式若建立变量，需要保证每个候选提供相同名字并具有一致的类型和绑定方式，否则分支体无法确定可以使用什么。模式之后的守卫作用于整组候选，而不是只作用于最后一个。遇到复杂逻辑时可拆分分支，避免把候选范围和额外条件混在一起难以审查。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    for day in [1, 6, 7] {\n        let kind = match day {\n            6 | 7 => \"休息日\",\n            1..=5 => \"工作日\",\n            _ => \"无效编号\",\n        };\n        println!(\"{} {}\", day, kind);\n    }\n}",
+        "description": "让两个离散编号共享一个分支。",
+        "result": "依次打印1 工作日、6 休息日、7 休息日。",
+        "reason": "执行器没有候选模式和match。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "6 | 7在此处是否等价于先算出整数7？",
+        "answer": "不是。它表示两个候选模式，6或7都可以匹配。只有在普通表达式上下文中，整数之间的|才是按位或。",
+        "hints": [
+          "判断符号位于模式还是表达式中。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.03.04",
+      "sourceNodeId": "rust.source.root18.03.04",
+      "title": "使用...来匹配值区间",
+      "parent": "rust.book.root18.03",
+      "depth": 3,
+      "physicalPage": 580,
+      "printedPage": null,
+      "leaf": true,
+      "order": 317,
+      "group": 18,
+      "body": [
+        "闭区间模式可以覆盖从下界到上界的连续值，两个端点都包含在内。教材保留了历史标题及整数示例中的...写法，本课程新例统一写成..=，避免把旧记法与普通范围表达式混淆；这里讨论的是模式中的包含关系。",
+        "区间端点必须能在编译阶段形成合法的非空区间，不能拿运行时变量临时决定模式边界。常见用途是整数分段和字符类别匹配；用连续区间代替很长的|列表会更清晰。字符区间按字符值范围判断，并不等价于识别所有自然语言字母，不能用ASCII的a到z代表全部文字。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mark = 75;\n    let grade = match mark {\n        0..=59 => \"未达标\",\n        60..=100 => \"达标\",\n        _ => \"范围错误\",\n    };\n    println!(\"{}\", grade);\n}",
+        "description": "用包含端点的模式划分合法成绩。",
+        "result": "打印达标；59未达标，60与100达标，101进入范围错误。",
+        "reason": "执行器的整数for范围不是通用区间模式；match仍不支持。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把第二个下界误写为59，会怎样处理输入59？",
+        "answer": "两个分支范围重叠时先写的分支优先，因此59仍命中未达标。应让边界表达清楚，而不是依赖重叠顺序。",
+        "hints": [
+          "match按源码顺序尝试分支。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.03.05",
+      "sourceNodeId": "rust.source.root18.03.05",
+      "title": "使用解构来分解值",
+      "parent": "rust.book.root18.03",
+      "depth": 3,
+      "physicalPage": 581,
+      "printedPage": null,
+      "leaf": true,
+      "order": 318,
+      "group": 18,
+      "body": [
+        "解构可以沿结构体、枚举和元组的形状取出内部数据。字段模式可重命名，字段名与变量名相同也可简写；枚举模式则先区分变体，再决定该变体载荷的结构。多层数据可以一次嵌套拆开，但过长的模式会让绑定来源难以辨认。",
+        "示例只有一种消息含有坐标，分支同时拆出变体和内部元组。解构是否移动值取决于输入和绑定方式；按值接住String会取得所有权，而匹配借来的数据通常应继续借用其字段。不要因为语法看起来像“取字段”就假定只是复制，尤其要留意不能Copy的堆数据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "enum Event { Move { point: (i32, i32) }, Stop }\nfn main() {\n    let event = Event::Move { point: (3, 8) };\n    match event {\n        Event::Move { point: (x, y) } => println!(\"坐标 {},{}\", x, y),\n        Event::Stop => println!(\"停止\"),\n    }\n}",
+        "description": "先匹配枚举变体，再拆开结构体形状的载荷与元组。",
+        "result": "打印坐标 3,8；Stop变体有独立分支。",
+        "reason": "执行器没有枚举、结构体字段模式或元组。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能给Stop分支也写point字段？",
+        "answer": "不同枚举变体有各自的载荷形状，Stop没有point。模式必须与被选择变体的实际定义一致。",
+        "hints": [
+          "先检查外层变体，再检查内部字段。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.03.06",
+      "sourceNodeId": "rust.source.root18.03.06",
+      "title": "忽略模式中的值",
+      "parent": "rust.book.root18.03",
+      "depth": 3,
+      "physicalPage": 586,
+      "printedPage": null,
+      "leaf": true,
+      "order": 319,
+      "group": 18,
+      "body": [
+        "_表示忽略一个值且不创建绑定；以下划线开头的名字仍是正常绑定，只是通常用于表示刻意未使用。因此Some(_text)可能移动内部String，而Some(_)不靠新名字取得它。需要保留原值时，这个细节会影响后续是否还能读取。",
+        "..可以在元组、结构体或切片模式里忽略一批不关心的部分，避免把每个字段都列出来。省略的位置必须没有歧义，元组中不能用两个..让编译器猜中间变量对应哪个位置。忽略用来表达意图，不应掩盖重要业务字段；新增字段是否需要处理仍要由接口契约判断。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let note = Some(String::from(\"保留原值\"));\n    if let Some(_) = note { println!(\"存在文字\"); }\n    println!(\"{:?}\", note);\n    let (first, .., last) = (1, 2, 3, 4);\n    println!(\"{} {}\", first, last);\n}",
+        "description": "对比不绑定载荷与忽略元组中间部分。",
+        "result": "原note仍可打印，最后输出1 4；把_改成_text会移动String。",
+        "reason": "执行器没有Option模式、..忽略或调试格式。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "_与_unused是否具有完全相同的所有权行为？",
+        "answer": "不相同。_不建立绑定；_unused仍绑定值，可能移动非Copy数据。前缀下划线主要表达未使用意图，并不关闭所有权规则。",
+        "hints": [
+          "有没有建立名字比名字是否使用更关键。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.03.07",
+      "sourceNodeId": "rust.source.root18.03.07",
+      "title": "使用匹配守卫添加额外条件",
+      "parent": "rust.book.root18.03",
+      "depth": 3,
+      "physicalPage": 591,
+      "printedPage": null,
+      "leaf": true,
+      "order": 320,
+      "group": 18,
+      "body": [
+        "匹配守卫是放在模式之后的if条件。只有模式先匹配成功，守卫才获得其中的绑定并执行；守卫为false时继续尝试后面的分支。它适合比较外部变量、检查数值关系等不能只靠数据形状表达的要求。",
+        "守卫不改变模式本身覆盖哪些形状，但会拒绝其中一部分值，因此不能用“写了Some模式”就声称所有Some都已处理。通常还需要无守卫分支或其他兜底路径。候选模式与守卫合用时，守卫约束整组候选；为避免读错，可以拆成更明确的分支。守卫中的普通比较不会再建立同名模式变量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let limit = 10;\n    let message = match Some(12) {\n        Some(n) if n > limit => \"超额\",\n        Some(_) => \"范围内\",\n        None => \"未设置\",\n    };\n    println!(\"{}\", message);\n}",
+        "description": "先提取Option载荷，再与外部阈值比较。",
+        "result": "打印超额；输入Some(10)会落入范围内。",
+        "reason": "执行器未实现匹配守卫和Option。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能删去Some(_)分支？",
+        "answer": "带守卫的Some(n)不能保证接住全部Some，n不大于limit时守卫失败，仍需要另一个分支覆盖这些值。",
+        "hints": [
+          "守卫失败后继续匹配，而非返回默认值。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.03.08",
+      "sourceNodeId": "rust.source.root18.03.08",
+      "title": "@绑定",
+      "parent": "rust.book.root18.03",
+      "depth": 3,
+      "physicalPage": 593,
+      "printedPage": null,
+      "leaf": true,
+      "order": 321,
+      "group": 18,
+      "body": [
+        "@允许在检查子模式的同时把匹配到的整体值绑定给一个名字。它解决了“既要证明属于某范围，又要在分支里使用原值”的问题；单写区间只能检查，单写名字又不能限制区间。绑定的作用域仍限于成功分支。",
+        "示例先确认消息变体，再把合法编号绑定为id。同名的@绑定不会把模式变成运行时赋值，也不会绕开所有权检查。对于包含非Copy数据的复杂模式，整体绑定与内部字段绑定可能争夺同一值，需改用引用或调整模式，不能假定每层都会自动复制。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "enum Message { Item { id: i32 } }\nfn main() {\n    let message = Message::Item { id: 4 };\n    match message {\n        Message::Item { id: id @ 1..=5 } => println!(\"有效编号 {}\", id),\n        Message::Item { id } => println!(\"其他编号 {}\", id),\n    }\n}",
+        "description": "同时限制id范围并在分支内保留编号。",
+        "result": "打印有效编号 4；编号6会进入第二分支。",
+        "reason": "执行器没有@模式绑定和枚举匹配。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只写id: 1..=5后，分支中能直接使用变量id吗？",
+        "answer": "不能。这里id是字段名，1..=5只检查范围，并未创建名为id的局部绑定。@的左侧才建立用于分支体的名字。",
+        "hints": [
+          "区别字段标签和局部变量。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root18.04",
+      "sourceNodeId": "rust.source.root18.04",
+      "title": "总结",
+      "parent": "rust.book.root18",
+      "depth": 2,
+      "physicalPage": 595,
+      "printedPage": null,
+      "leaf": true,
+      "order": 322,
+      "group": 18,
+      "body": [
+        "模式把“是否属于某种结构”与“取出哪些部分”放在同一个位置表达。读懂它需要同时关注覆盖范围、绑定作用域和所有权：_忽略数据，名字接住数据，&等借用形式又会改变访问方式，不能只把模式看成更短的条件语句。",
+        "审查一段match时，可以先列出输入的所有变体，再检查每条分支的模式和守卫，最后确认每个绑定来自哪里、是否移动了值。对可失败模式选择明确的回退路径，对不可失败位置保证结构确定。这样既能避免漏分支，也能避免把遮蔽变量误读成常量比较。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn describe(value: Option<(i32, i32)>) -> String {\n    match value {\n        Some((x, y)) if x == y => format!(\"相等 {}\", x),\n        Some((x, y)) => format!(\"不同 {} {}\", x, y),\n        None => String::from(\"缺失\"),\n    }\n}\nfn main() { println!(\"{}\", describe(Some((3, 3)))); }",
+        "description": "综合嵌套解构、守卫与穷尽分支。",
+        "result": "打印相等 3；另外两个分支处理不相等和缺失。",
+        "reason": "执行器没有Option、元组模式、守卫或format!。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "第二个Some分支为什么仍然必要？",
+        "answer": "第一个分支的守卫只接收两个坐标相等的Some；不相等仍具有Some形状，必须由另一个分支处理，None也需单独覆盖。",
+        "hints": [
+          "将结构覆盖和条件过滤分两步分析。"
+        ]
+      }
+    }
+  ]
+}

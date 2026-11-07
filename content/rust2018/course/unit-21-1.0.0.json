@@ -1,0 +1,122 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 21,
+  "nodes": [
+    {
+      "id": "rust.book.root21",
+      "sourceNodeId": "rust.source.root21",
+      "title": "附录A 关键字",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 697,
+      "printedPage": null,
+      "leaf": false,
+      "order": 369,
+      "group": 21,
+      "body": [
+        "关键字是语法的一部分，不能仅凭名字喜欢就当作普通变量或函数名。附录按教材编排区分已使用的词、为扩展保留的词和原始标识符，并结合Rust 2018说明历史清单的语境。",
+        "查词时还要看所在位置：self与Self意义不同，move影响闭包捕获，ref影响模式绑定。这里是名称与语法参考，列出某关键字不表示平台执行器已经支持其对应语言功能。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root21.01",
+      "sourceNodeId": "rust.source.root21.01",
+      "title": "当前正在使用的关键字",
+      "parent": "rust.book.root21",
+      "depth": 2,
+      "physicalPage": 698,
+      "printedPage": null,
+      "leaf": true,
+      "order": 370,
+      "group": 21,
+      "body": [
+        "关键字给源码规定结构，例如fn声明函数，let建立绑定，mut允许相应绑定修改，if和match选择路径，loop、while与for组织重复。理解关键字应联系它所在的语法位置，而不是只背一个中文译名；同一个as也会出现在类型转换和限定路径等不同上下文中。",
+        "下面按用途分组帮助定位，其作用不是宣布平台支持整张清单。Rust2018参照下，模块、trait、unsafe等内容仍属于本课程阅读范围。Self指当前实现类型，self指接收者或路径起点，大小写不能互换；const与static也不只是两种拼写不同的全局变量。词法识别正确之后，仍要判断整段结构是否合法。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "绑定/声明：let mut const static fn struct enum type trait impl\n控制流：if else match loop while for in break continue return\n路径/可见性：mod use pub crate self super extern\n类型与约束：Self where dyn as\n所有权/匹配：move ref\n安全边界：unsafe\n布尔字面量：true false\n\nfn main() {\n    let mut ready = false;\n    if !ready { ready = true; }\n    println!(\"{}\", ready);\n}\n读法：let建立绑定，mut允许重新赋值，if要求bool条件。",
+        "description": "按语法用途查词，再用一个小程序识别出现位置。",
+        "result": "末尾程序的ready从false变为true；清单中的其他功能需分别查支持范围。",
+        "reason": "本例包含全语言关键词参考，平台只实现其中冻结的子集，不逐项执行清单。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "self与Self能否只按代码风格统一成同一大小写？",
+        "answer": "不能。它们是不同语法身份：self常指接收者或路径，Self表示当前实现的类型。改大小写会改变含义或导致错误。",
+        "hints": [
+          "关键字的大小写属于语法。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root21.02",
+      "sourceNodeId": "rust.source.root21.02",
+      "title": "将来可能会使用的保留关键字",
+      "parent": "rust.book.root21",
+      "depth": 2,
+      "physicalPage": 701,
+      "printedPage": null,
+      "leaf": true,
+      "order": 371,
+      "group": 21,
+      "body": [
+        "保留关键字的作用是预留语法空间，即使某词在教材清单所处时点没有可用结构，也不能拿来当普通标识符。保留并不承诺以后一定采用，也不意味着开发者可以随意实现一种同名语法。读旧书时要把清单的历史分类和所选edition分开理解。",
+        "本书把async列入保留列表，但Rust2018的异步语法使用async与await，本课程不会据这份历史表把它们解释成自由名称。平台执行子集不含异步。下面给出的保留名称用于辨认潜在冲突；应用命名优先选择清楚的普通词，跨版本接口遇到冲突时再考虑原始标识符。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "教材保留词示例分组：\n抽象/继承相关名称：abstract final override virtual\n类型/布局相关名称：typeof unsized box\n控制与扩展名称：become do yield try macro priv\n\n预期错误示例：\nfn main() { let abstract = 3; }\n\n改写：\nfn main() {\n    let summary_count = 3;\n    println!(\"{}\", summary_count);\n}\n\n版次提示：教材表中async的历史分类不能代替Rust2018异步语法规则。",
+        "description": "用非法名称与普通名称对照理解保留的作用。",
+        "result": "abstract作为普通绑定名会被拒绝；改写后的程序打印3。",
+        "reason": "执行器不含完整edition关键词与异步语法，参考清单只作阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "一个保留词目前没有相关可用功能，能否用作普通函数名？",
+        "answer": "不能。保留就是限制普通名称使用，为语言扩展留下空间；不能用“尚未实现”推导名称合法。",
+        "hints": [
+          "词法保留和功能实现是两件事。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root21.03",
+      "sourceNodeId": "rust.source.root21.03",
+      "title": "原始标识符",
+      "parent": "rust.book.root21",
+      "depth": 2,
+      "physicalPage": 702,
+      "printedPage": null,
+      "leaf": true,
+      "order": 372,
+      "group": 21,
+      "body": [
+        "原始标识符在名称前加r#，让原本被关键字占用的拼写用于允许该形式的标识符位置。它适合调用旧版包里与新edition关键字冲突的接口，也适合与外部格式保持名称映射。r#属于源码中的转义形式，不是名称实际内容的一部分。",
+        "示例用r#type作为参数名，仍能正常参与算术。原始标识符不会启用关键字对应功能，也不会让非法的其他语法变合法；它只解决名称解释问题。新代码通常选择自然且无冲突的名称更易读，只有确有兼容需求时再用转义，避免到处出现不必要的r#干扰阅读。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn show(r#type: i32) {\n    println!(\"类别 {}\", r#type);\n}\nfn main() { show(4); }",
+        "description": "把关键字拼写转义为普通参数名称。",
+        "result": "打印类别 4；r#type不是type声明。",
+        "reason": "执行器未实现原始标识符词法，不能直接运行该源码。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "使用r#type会创建新的类型别名吗？",
+        "answer": "不会。它处于参数名称位置，r#让type按标识符处理，参数本身仍是i32。真正的type声明具有完全不同的语法结构。",
+        "hints": [
+          "先看名称所在的位置。"
+        ]
+      }
+    }
+  ]
+}

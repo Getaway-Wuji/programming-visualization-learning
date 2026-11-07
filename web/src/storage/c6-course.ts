@@ -5,7 +5,8 @@ import {
   type C6CourseActivity,
   type C6CourseDraft,
 } from '../c6-learning/model';
-import { assertActiveCourseMeta } from './cpp-course-meta';
+import { assertActiveCourseMeta } from './rust2018-meta';
+import { isRustProgress } from '../rust2018-course/identities';
 import { isCppProgress } from '../cpp-course/identities';
 import { isJavaProgress } from '../java/identities';
 import { isPythonProgress } from '../python3/identities';
@@ -136,7 +137,8 @@ export function assertC6CourseState(state: C6CourseState, index: C6LearningIndex
     if (
       (snapshot.meta.dbVersion >= 11 && isPythonProgress(p)) ||
       (snapshot.meta.dbVersion >= 12 && isJavaProgress(p)) ||
-      (snapshot.meta.dbVersion === 13 && isCppProgress(p))
+      (snapshot.meta.dbVersion >= 13 && isCppProgress(p)) ||
+      (snapshot.meta.dbVersion >= 14 && isRustProgress(p))
     )
       continue;
     if (

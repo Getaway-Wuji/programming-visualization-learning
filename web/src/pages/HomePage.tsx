@@ -70,6 +70,9 @@ export function HomePage() {
               <Link className="text-link" to="/courses">
                 浏览 C 语言课程
               </Link>
+              <Link className="text-link" to="/rust">
+                Rust 课程
+              </Link>
             </div>
             <p className="muted feature-meta">
               阅读课程、搭建积木并提交真实测试；学习确认与通过记录保存在当前浏览器。

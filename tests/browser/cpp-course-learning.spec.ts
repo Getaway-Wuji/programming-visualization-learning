@@ -162,8 +162,8 @@ test('public catalog, automatic reading, four-group judgement, replay and refres
   await page.getByRole('link', { name: /^do.*while循环$/u }).click();
   await expect(editor(page)).toHaveValue(profile.source);
   const data = await archive(page);
-  expect(data.version).toBe(13);
-  expect(Object.keys(data.rows)).toHaveLength(25);
+  expect(data.version).toBe(14);
+  expect(Object.keys(data.rows)).toHaveLength(27);
   expect(data.rows.cppActivities.values).toHaveLength(2);
   expect(data.rows.cppDrafts.values[0].source).toBe(profile.source);
   expect(data.rows.ledger.values.filter((row) => row.subjectId === profile.id)).toHaveLength(1);
@@ -258,7 +258,9 @@ test('native DB12 upgrade preserves keys and authentic C, Python, Java and C++ a
   }
   const original = await archive(page);
   const prior = Object.fromEntries(
-    Object.entries(original.rows).filter(([name]) => !name.startsWith('cpp')),
+    Object.entries(original.rows).filter(
+      ([name]) => !name.startsWith('cpp') && !name.startsWith('rust'),
+    ),
   );
   prior.meta.values[0] = {
     ...prior.meta.values[0],
@@ -298,7 +300,7 @@ test('native DB12 upgrade preserves keys and authentic C, Python, Java and C++ a
     await migrated.goto(lesson);
     await ready(migrated);
     const upgraded = await archive(migrated);
-    expect(upgraded.version).toBe(13);
+    expect(upgraded.version).toBe(14);
     for (const [name, table] of Object.entries(prior))
       if (name !== 'meta') expect(upgraded.rows[name], name).toEqual(table);
     expect(upgraded.rows.cppDrafts.values).toEqual([]);
@@ -314,7 +316,7 @@ test('native DB12 upgrade preserves keys and authentic C, Python, Java and C++ a
     const final = await archive(migrated);
     for (const name of ['courseActivities', 'pythonActivities', 'javaActivities', 'achievements'])
       expect(final.rows[name]).toEqual(prior[name]);
-    await info.attach('db12-to-db13', {
+    await info.attach('db12-to-db14', {
       body: JSON.stringify({ prior, upgraded, final }),
       contentType: 'application/json',
     });

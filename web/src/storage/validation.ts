@@ -10,6 +10,8 @@ import { assertC6Meta } from './c6-reset';
 import { assertPythonMeta } from './python3-meta';
 import { assertJavaMeta } from './java-meta';
 import { assertCppMeta } from './cpp-course-meta';
+import { assertRustMeta } from './rust2018-meta';
+import { isRustPackage, isRustProgress, isRustSubject } from '../rust2018-course/identities';
 import { isCppPackage, isCppProgress, isCppSubject } from '../cpp-course/identities';
 import { isJavaPackage, isJavaProgress, isJavaSubject } from '../java/identities';
 import { isPythonPackage, isPythonProgress, isPythonSubject } from '../python3/identities';
@@ -261,14 +263,17 @@ function eventRow(value: unknown, fields: readonly string[], receipt: boolean): 
     requireRule(
       isPythonPackage(valueRow.packageRef) ||
         isJavaPackage(valueRow.packageRef) ||
-        isCppPackage(valueRow.packageRef)
+        isCppPackage(valueRow.packageRef) ||
+        isRustPackage(valueRow.packageRef)
         ? valueRow.learningRevision === 1 &&
             valueRow.subjectRef.version === '1.0.0' &&
             (isPythonPackage(valueRow.packageRef)
               ? isPythonSubject(type, valueRow.subjectRef.id)
               : isJavaPackage(valueRow.packageRef)
                 ? isJavaSubject(type, valueRow.subjectRef.id)
-                : isCppSubject(type, valueRow.subjectRef.id))
+                : isCppPackage(valueRow.packageRef)
+                  ? isCppSubject(type, valueRow.subjectRef.id)
+                  : isRustSubject(type, valueRow.subjectRef.id))
         : valueRow.subjectRef.id.startsWith(`${type.split('.')[0]}.`),
     );
     requireRule(isPositiveInt(valueRow.learningRevision));
@@ -372,6 +377,10 @@ export function assertRecord<S extends StoreName>(
         assertCppMeta(value);
         return;
       }
+      if (descriptor && 'value' in descriptor && descriptor.value === '14.0.0') {
+        assertRustMeta(value);
+        return;
+      }
       const valueRow = row(value, [
         'schemaVersion',
         'dbVersion',
@@ -439,7 +448,8 @@ export function assertRecord<S extends StoreName>(
           (valueRow.subjectRef.version === '1.0.0' &&
             (isPythonSubject(valueRow.eventType, valueRow.subjectRef.id) ||
               isJavaSubject(valueRow.eventType, valueRow.subjectRef.id) ||
-              isCppSubject(valueRow.eventType, valueRow.subjectRef.id)) &&
+              isCppSubject(valueRow.eventType, valueRow.subjectRef.id) ||
+              isRustSubject(valueRow.eventType, valueRow.subjectRef.id)) &&
             valueRow.canonicalSubjectId === valueRow.subjectRef.id),
       );
       dated(valueRow);
@@ -478,7 +488,8 @@ export function assertRecord<S extends StoreName>(
             isC6TopicRewardSubject(valueRow.sourceId, valueRow.subjectId) ||
             isPythonSubject(event, valueRow.subjectId as string) ||
             isJavaSubject(event, valueRow.subjectId as string) ||
-            isCppSubject(event, valueRow.subjectId as string),
+            isCppSubject(event, valueRow.subjectId as string) ||
+            isRustSubject(event, valueRow.subjectId as string),
         );
       }
       if (valueRow.sourceId === challengeSource) {
@@ -578,7 +589,9 @@ function checkRelations(snapshot: StorageSnapshot) {
     if (event.packageRef && isJavaPackage(event.packageRef))
       requireRule(meta.dbVersion >= 12 && isJavaProgress(event));
     if (event.packageRef && isCppPackage(event.packageRef))
-      requireRule(meta.dbVersion === 13 && isCppProgress(event));
+      requireRule(meta.dbVersion >= 13 && isCppProgress(event));
+    if (event.packageRef && isRustPackage(event.packageRef))
+      requireRule(meta.dbVersion >= 14 && isRustProgress(event));
   }
   for (const alias of aliases) {
     canonicalSubjectId(aliases, alias.toRef.id);
@@ -661,7 +674,8 @@ function checkRelations(snapshot: StorageSnapshot) {
                   (item) =>
                     (isPythonProgress(item) ||
                       (meta.dbVersion >= 12 && isJavaProgress(item)) ||
-                      (meta.dbVersion === 13 && isCppProgress(item))) &&
+                      (meta.dbVersion >= 13 && isCppProgress(item)) ||
+                      (meta.dbVersion >= 14 && isRustProgress(item))) &&
                     item.eventType === sourceEvents[entry.sourceId] &&
                     item.subjectRef.id === entry.subjectId &&
                     item.firstAt <= entry.occurredAt,

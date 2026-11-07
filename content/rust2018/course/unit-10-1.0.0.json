@@ -1,0 +1,900 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 10,
+  "nodes": [
+    {
+      "id": "rust.book.root10",
+      "sourceNodeId": "rust.source.root10",
+      "title": "第10章 泛型、trait与生命周期",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 266,
+      "printedPage": null,
+      "leaf": false,
+      "order": 145,
+      "group": 10,
+      "body": [
+        "本章把“对多种类型做同一件事”拆成三个问题：泛型参数表示类型位置，trait 说明可用行为，生命周期描述引用之间的有效期关系。先从具体重复代码找共同步骤，再给抽象添加恰当约束，避免把未知类型当作什么操作都支持。",
+        "生命周期标注不分配内存，也不延长数据存活时间。阅读泛型示例时，分别核对类型能力和借用来源；这些完整类型系统机制不属于当前平台的可执行子集。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root10.01",
+      "sourceNodeId": "rust.source.root10.01",
+      "title": "通过将代码提取为函数来减少重复工作",
+      "parent": "rust.book.root10",
+      "depth": 2,
+      "physicalPage": 268,
+      "printedPage": null,
+      "leaf": true,
+      "order": 146,
+      "group": 10,
+      "body": [
+        "抽取函数前，先确认重复的是算法而非偶然相似的文字。若两段代码都在一组非空整数中寻找最大值，可以把遍历和比较封装起来，由调用者提供数据；这样修正一个比较条件就能同时修正所有调用。",
+        "提取过程也会暴露隐含前提，例如输入为空时能否直接取首元素。先为具体类型建立可靠接口，再考虑泛型，往往比一开始就加入许多类型参数更清楚。下面用 Option 表示空切片没有最大值，避免为了复用而把潜在越界藏进函数内部。",
+        "提取后的函数名称也应表达稳定任务，避免按当前调用位置命名，使其他调用者不必了解最初的代码背景。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn maximum(items: &[i32]) -> Option<i32> {\n    let mut best = *items.first()?;\n    for &value in items { if value > best { best = value; } }\n    Some(best)\n}\nfn main() {\n    println!(\"{:?}\", maximum(&[4, 12, 3]));\n    println!(\"{:?}\", maximum(&[]));\n}",
+        "description": "提取整数最大值，同时显式处理空输入。",
+        "result": "依次输出 Some(12)、None。",
+        "reason": "切片、Option、问号与模式循环不在平台的固定 i32 数组执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么抽取函数时应明确空输入，而不是照搬调用处的下标零？",
+        "answer": "调用范围扩大后不一定仍非空；接口必须说明或表示空输入，否则只是把越界风险移到了公共函数内部。",
+        "hints": [
+          "复用会扩大哪些隐含前提的影响？"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.02",
+      "sourceNodeId": "rust.source.root10.02",
+      "title": "泛型数据类型",
+      "parent": "rust.book.root10",
+      "depth": 2,
+      "physicalPage": 272,
+      "printedPage": null,
+      "leaf": false,
+      "order": 147,
+      "group": 10,
+      "body": [
+        "泛型把某些具体类型改为参数，调用时由编译器确定各参数对应的类型。一个类型参数在同一实例中必须一致；需要互不相同的字段时，应声明不同参数，而不是期待编译器把同一个名字解释成两种类型。",
+        "下面依次观察函数、结构体、枚举和方法中的声明位置，再理解单态化如何生成具体实现。抽象的复用能力与代码体可以使用的操作，都由约束共同决定。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root10.02.01",
+      "sourceNodeId": "rust.source.root10.02.01",
+      "title": "在函数定义中",
+      "parent": "rust.book.root10.02",
+      "depth": 3,
+      "physicalPage": 272,
+      "printedPage": null,
+      "leaf": true,
+      "order": 148,
+      "group": 10,
+      "body": [
+        "泛型函数在函数名后声明类型参数，再在参数与返回类型中使用它。类型名字 T 没有特殊能力；若函数只把输入原样返回，就不需要比较或复制约束，因为返回可以直接转移输入的所有权。",
+        "同一个函数可分别用于整数和 String，但每次调用仍有确定的具体类型。泛型不是运行时随意改变类型的容器，也不会自动克隆输入。例子把字符串移入 identity，再接住返回值，原变量随后不能继续作为所有者使用；这是普通所有权规则在泛型函数中继续生效。",
+        "调用者选择具体类型后，函数的每一个输入与输出位置都须一致，编译器不会在运行中随意更换这个选择。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn identity<T>(value: T) -> T { value }\nfn main() {\n    let count = identity(14);\n    let name = String::from(\"map\");\n    let returned = identity(name);\n    println!(\"{} {}\", count, returned);\n}",
+        "description": "一个无行为约束的函数分别返回两种类型。",
+        "result": "输出 14 map；name 在调用时移动，returned 接管字符串。",
+        "reason": "平台不解析泛型函数声明及单态化调用。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "identity 要返回 String，是否必须给 T 加 Copy 约束？",
+        "answer": "不需要。函数可以把所有权从参数移动到返回值，Copy 反而会排除不实现 Copy 的 String。",
+        "hints": [
+          "移动值与复制值是两种不同的操作。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.02.02",
+      "sourceNodeId": "rust.source.root10.02.02",
+      "title": "在结构体定义中",
+      "parent": "rust.book.root10.02",
+      "depth": 3,
+      "physicalPage": 275,
+      "printedPage": null,
+      "leaf": true,
+      "order": 149,
+      "group": 10,
+      "body": [
+        "结构体上的类型参数描述字段所占的类型位置。Point<T> 中两个 T 字段必须属于同一种类型；Point<T, U> 则允许横纵字段分别选择类型，实例一旦确定后也不能把字段改为别的类型。",
+        "选一个还是两个参数，应由业务关系决定。若两个字段确实要求统一单位或统一表示，使用同一个参数能表达约束；若只是为了存放不同性质的信息，就应允许不同参数。下面的 Pair 把编号和标签分开，类型推断可确定它们是整数与字符串切片，而不是动态混合数组。",
+        "类型参数数量越多不一定越灵活，若业务要求两项统一，过度拆分参数反而会失去本来应有的静态约束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Pair<T, U> { first: T, second: U }\nfn main() {\n    let entry = Pair { first: 7, second: \"north\" };\n    println!(\"{} {}\", entry.first, entry.second);\n}",
+        "description": "以两个类型参数表示互不要求相同的字段。",
+        "result": "输出 7 north；该实例的两个字段类型分别确定。",
+        "reason": "泛型结构体及字段访问属于平台阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把 Pair 改成两个字段都用 T，示例还能保持整数与文本的组合吗？",
+        "answer": "不能。同一实例中的 T 必须一致，需要两个独立参数才能表达这两个不同类型。",
+        "hints": [
+          "类型参数的同名意味着同一种类型。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.02.03",
+      "sourceNodeId": "rust.source.root10.02.03",
+      "title": "在枚举定义中",
+      "parent": "rust.book.root10.02",
+      "depth": 3,
+      "physicalPage": 277,
+      "printedPage": null,
+      "leaf": true,
+      "order": 150,
+      "group": 10,
+      "body": [
+        "枚举可把成功、缺省、失败等互斥状态放进同一种类型。泛型参数让状态携带的数据仍由使用者选择，例如 Result<T, E> 把成功值与错误值分开参数化，而 Option<T> 只需要描述有值时的类型。",
+        "类型参数属于整个枚举，不是每个变体各自随意选择。创建不携带数据的变体时，编译器可能无法单凭这一行推断参数，需要通过变量类型补足信息。例子使用自定义 Slot，明确标注空槽的内容类型，并用匹配保证两种状态都有解释。",
+        "匹配时需要考虑当前枚举定义中的所有状态，不能因为样例只创建了空槽，就让有值分支失去清楚的处理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "enum Slot<T> { Filled(T), Empty }\nfn main() {\n    let slot: Slot<i32> = Slot::Empty;\n    match slot {\n        Slot::Filled(value) => println!(\"{}\", value),\n        Slot::Empty => println!(\"empty\"),\n    }\n    let _other = Slot::Filled(6);\n}",
+        "description": "给不携带值的泛型变体补足类型信息。",
+        "result": "输出 empty；_other 的内容类型可由 6 推断。",
+        "reason": "自定义泛型枚举与模式匹配未纳入平台执行器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么单独写 Slot::Empty 可能缺少类型信息？",
+        "answer": "这个变体不含任何 T 值，编译器没有依据决定 T；显式标注 Slot<i32> 或其他使用上下文才能确定。",
+        "hints": [
+          "观察构造表达式是否出现能推断 T 的数据。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.02.04",
+      "sourceNodeId": "rust.source.root10.02.04",
+      "title": "在方法定义中",
+      "parent": "rust.book.root10.02",
+      "depth": 3,
+      "physicalPage": 277,
+      "printedPage": null,
+      "leaf": true,
+      "order": 151,
+      "group": 10,
+      "body": [
+        "为泛型类型定义方法时，要在 impl 后声明类型参数，再把它应用到类型名上。方法可借用字段而不复制字段，例如返回 &T 的访问器只建立借用；这比要求所有 T 都可复制更宽泛。",
+        "也可以只为某个具体实例类型写额外方法，或为方法声明与结构体不同的新参数。需要区分这些参数各自的作用域，不要误以为 impl<T> 表示只能对名字叫 T 的具体类型调用。下面的访问器适用于任何 Wrapper<T>，包括拥有堆数据的 String。",
+        "返回字段引用也会约束使用者：不能先销毁或移动包装器，再继续使用从该方法得到的借用结果。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Wrapper<T> { value: T }\nimpl<T> Wrapper<T> {\n    fn get(&self) -> &T { &self.value }\n}\nfn main() {\n    let item = Wrapper { value: String::from(\"guide\") };\n    println!(\"{}\", item.get());\n}",
+        "description": "泛型 impl 为字符串容器提供借用访问器。",
+        "result": "输出 guide；get 没有把字段移出容器。",
+        "reason": "泛型 impl、自定义方法与返回泛型引用未被平台执行器实现。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何 get 返回 &T 时不需要 T: Copy？",
+        "answer": "它返回字段的借用，不复制或移出字段，因此不需要复制能力，只要求引用有效。",
+        "hints": [
+          "先看返回的是 T 还是 &T。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.02.05",
+      "sourceNodeId": "rust.source.root10.02.05",
+      "title": "泛型代码的性能问题",
+      "parent": "rust.book.root10.02",
+      "depth": 3,
+      "physicalPage": 280,
+      "printedPage": null,
+      "leaf": true,
+      "order": 152,
+      "group": 10,
+      "body": [
+        "Rust 的常见泛型调用在编译时单态化：编译器根据实际使用的具体类型生成对应实现，再进行优化。因此泛型并不必然要求运行时查询类型，也不因为写了 T 就自动产生动态分派。",
+        "代价需要全面看待。更多具体实例可能增加编译工作和生成代码体积，而最终速度还受算法、分配和优化配置影响，不能声称任何泛型都一定更快。例子只有整数和布尔两种实例，可用它理解“源代码一份、具体实现按需生成”，不把阅读结果当成性能基准。",
+        "若关心实际构建体积，应检查选定目标与优化配置产生的产物，而不能仅按源文件里出现的泛型次数估计。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn pass<T>(value: T) -> T { value }\nfn main() {\n    let amount = pass(19_i32);\n    let enabled = pass(true);\n    println!(\"{} {}\", amount, enabled);\n}",
+        "description": "观察同一泛型函数的两个具体类型实例。",
+        "result": "输出 19 true；源程序中没有运行时类型判断。",
+        "reason": "平台不实现 Rust 泛型编译和机器码生成，也不能据此测量单态化性能。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "泛型没有必然的动态分派开销，是否意味着不会增加构建代价？",
+        "answer": "不是。多个单态化实例可能增加编译耗时和代码体积，运行性能与构建成本需要分别评估。",
+        "hints": [
+          "区分编译阶段和运行阶段。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.03",
+      "sourceNodeId": "rust.source.root10.03",
+      "title": "trait：定义共享行为",
+      "parent": "rust.book.root10",
+      "depth": 2,
+      "physicalPage": 282,
+      "printedPage": null,
+      "leaf": false,
+      "order": 153,
+      "group": 10,
+      "body": [
+        "trait 把可调用的行为写成契约，让泛型函数在不知道具体类型的情况下仍能合法操作值。实现块为本地类型提供契约中的方法，默认实现则可复用共有逻辑。",
+        "本节先定义和实现小型 trait，再用参数及返回值约束控制抽象边界。比较、复制、显示都是独立能力，缺少哪项就补哪项约束，不把一个宽泛的类型参数当作全能对象。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root10.03.01",
+      "sourceNodeId": "rust.source.root10.03.01",
+      "title": "定义trait",
+      "parent": "rust.book.root10.03",
+      "depth": 3,
+      "physicalPage": 282,
+      "printedPage": null,
+      "leaf": true,
+      "order": 154,
+      "group": 10,
+      "body": [
+        "trait 声明类型愿意提供什么行为，方法签名是调用者与实现者之间的约定。声明没有默认函数体的方法时，每个实现都必须补足它；调用者只依赖约定，无须知道字段如何组织。",
+        "设计 trait 时应让方法语义一致。两个方法恰好同名不代表它们适合归到一个契约中，还要考虑返回值含义和副作用。下面让可标记对象产生一段说明，使用 &self 表示只借用对象；String 返回值由调用者拥有，避免把内部临时文本当作引用返回。",
+        "契约还应描述调用是否会改变状态及结果表示什么，这些语义需要文档和测试补充，只有签名仍不充分。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Label { fn label(&self) -> String; }\nstruct Gate { number: i32 }\nimpl Label for Gate {\n    fn label(&self) -> String { format!(\"gate {}\", self.number) }\n}\nfn main() {\n    let gate = Gate { number: 4 };\n    println!(\"{}\", gate.label());\n}",
+        "description": "定义行为签名，再由本地 Gate 类型实现。",
+        "result": "输出 gate 4。",
+        "reason": "trait 定义、impl 和 format! 不在当前平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "trait 的方法没有默认实现时，实现类型能省略该方法吗？",
+        "answer": "不能。实现块必须满足契约所要求的方法，否则类型就没有真正提供声明的行为。",
+        "hints": [
+          "把签名看作实现者必须履行的承诺。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.03.02",
+      "sourceNodeId": "rust.source.root10.03.02",
+      "title": "为类型实现trait",
+      "parent": "rust.book.root10.03",
+      "depth": 3,
+      "physicalPage": 283,
+      "printedPage": null,
+      "leaf": true,
+      "order": 155,
+      "group": 10,
+      "body": [
+        "impl Trait for Type 把某个契约与具体类型联系起来，方法签名要与 trait 保持一致。实现中可以读取类型私有字段，但泛型调用者只看到 trait 提供的行为，因此内部存储方式可以独立调整。",
+        "实现还受一致性规则约束。通常至少 trait 或类型一方要在当前 crate 中定义，避免两个依赖库各自为同一外部类型添加互相冲突的外部 trait 实现。例子为本地 Reading 实现本地 Score，只借用自身求分，不把字段所有权转给调用端。",
+        "实现方法可采用不同内部算法，但不能改变调用者据以使用契约的含义，例如把评分方法改成销毁全部记录。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Score { fn score(&self) -> i32; }\nstruct Reading { correct: i32 }\nimpl Score for Reading {\n    fn score(&self) -> i32 { self.correct * 5 }\n}\nfn main() {\n    let reading = Reading { correct: 6 };\n    println!(\"{}\", reading.score());\n}",
+        "description": "把领域评分算法装入 trait 实现。",
+        "result": "输出 30，reading 仍持有原字段。",
+        "reason": "平台未实现 trait 实现选择及自定义结构体方法。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何不能任意为外部类型实现外部 trait？",
+        "answer": "不同 crate 可能给同一组合提供冲突实现，一致性与孤儿规则限制这种扩展，使方法解析保持确定。",
+        "hints": [
+          "检查 trait 和类型各自由哪个 crate 定义。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.03.03",
+      "sourceNodeId": "rust.source.root10.03.03",
+      "title": "默认实现",
+      "parent": "rust.book.root10.03",
+      "depth": 3,
+      "physicalPage": 285,
+      "printedPage": null,
+      "leaf": true,
+      "order": 156,
+      "group": 10,
+      "body": [
+        "trait 的默认方法可以建立在必需方法之上，把共同逻辑集中起来。实现类型只补足原始信息，就能获得完整的派生行为；若需求不同，也可以覆盖默认方法，但新实现仍应遵守同一语义约定。",
+        "默认实现不是对字段布局的假设，因为 trait 本身不知道每个类型有哪些字段。它只能调用契约中可用的方法和其他已知操作。下面通过 name 构造显示文本，Desk 不必重复拼接规则；返回拥有所有权的 String，也避免借用临时格式化结果。",
+        "覆盖默认方法前先问是否真的改变了行为需求，单纯复制默认代码会让未来修正需要维护更多重复位置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Named {\n    fn name(&self) -> &str;\n    fn caption(&self) -> String { format!(\"item: {}\", self.name()) }\n}\nstruct Desk;\nimpl Named for Desk { fn name(&self) -> &str { \"desk\" } }\nfn main() { println!(\"{}\", Desk.caption()); }",
+        "description": "默认方法复用实现类型提供的名称。",
+        "result": "输出 item: desk。",
+        "reason": "trait 默认方法、单元结构体和 format! 仅供阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "默认方法为什么调用 name，而不直接读取一个 name 字段？",
+        "answer": "trait 不保证实现类型存在某字段，只保证方法契约；通过必需方法获取信息才能适用于不同内部结构。",
+        "hints": [
+          "区分行为契约和存储布局。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.03.04",
+      "sourceNodeId": "rust.source.root10.03.04",
+      "title": "使用trait作为参数",
+      "parent": "rust.book.root10.03",
+      "depth": 3,
+      "physicalPage": 287,
+      "printedPage": null,
+      "leaf": true,
+      "order": 157,
+      "group": 10,
+      "body": [
+        "函数参数使用 impl Trait 时，调用者可以传入实现该 trait 的具体类型，函数体只依赖声明的行为。等价的泛型约束形式通常写成 T: Trait；需要多项能力时可用加号组合，较复杂的约束可移到 where 子句。",
+        "两个独立的 impl Trait 参数不要求具体类型相同，而两个都标为 T 的参数则要求同一具体类型。这种区别会影响接口可接收的组合。下面借用任何实现 Display 的值，调用过程中不取得所有权；整数与文本都能分别满足显示契约。",
+        "借用参数能减少不必要的所有权转移，但并不自动避免函数内部的分配；仍应核对实际调用了哪些方法。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::fmt::Display;\nfn show(value: &impl Display) { println!(\"value={}\", value); }\nfn main() {\n    show(&32);\n    show(&\"lake\");\n}",
+        "description": "通过 Display 约束接收不同类型的只读参数。",
+        "result": "依次输出 value=32、value=lake。",
+        "reason": "impl Trait、标准格式化 trait 与泛型引用参数超出平台范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "fn pair<T: Display>(a: T, b: T) 能同时接收 i32 和 String 吗？",
+        "answer": "不能，这两个位置共享 T，要求具体类型一致；若允许不同类型，应使用两个类型参数或独立的 impl Display。",
+        "hints": [
+          "先找参数是否共用同一个类型名字。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.03.05",
+      "sourceNodeId": "rust.source.root10.03.05",
+      "title": "返回实现了trait的类型",
+      "parent": "rust.book.root10.03",
+      "depth": 3,
+      "physicalPage": 289,
+      "printedPage": null,
+      "leaf": true,
+      "order": 158,
+      "group": 10,
+      "body": [
+        "返回 impl Trait 可以隐藏具体返回类型，只向调用者承诺可用行为。它不是一个能在各个分支中装任意实现类型的盒子：同一函数的返回路径必须对应同一种具体类型，即使两个类型都实现了同一 trait。",
+        "这种形式适合隐藏复杂的迭代器或闭包类型，让接口只暴露必要能力。若确实要在运行时返回多种类型，就要考虑枚举或 trait 对象等其他设计。下面始终返回 i32，却只承诺 Display；调用者可以格式化结果，不能仅凭接口假定它能参与整数加法。",
+        "隐藏具体类型有助于减少外部依赖内部细节，但所承诺的行为及其返回结果仍需要保持可理解和可验证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::fmt::Display;\nfn answer() -> impl Display { 42_i32 }\nfn main() { println!(\"{}\", answer()); }",
+        "description": "隐藏整数实现，只承诺显示能力。",
+        "result": "输出 42；公开接口保证 Display，不保证所有整数运算。",
+        "reason": "返回位置 impl Trait 未纳入平台的有限函数返回类型。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两个分支分别返回 i32 和 String，且二者都实现 Display，能直接写 -> impl Display 吗？",
+        "answer": "不能。impl Trait 隐藏的是一种确定的具体类型，不是所有实现者的运行时联合。",
+        "hints": [
+          "隐藏类型并不等于允许多种类型。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.03.06",
+      "sourceNodeId": "rust.source.root10.03.06",
+      "title": "使用trait约束来修复largest函数",
+      "parent": "rust.book.root10.03",
+      "depth": 3,
+      "physicalPage": 291,
+      "printedPage": null,
+      "leaf": true,
+      "order": 159,
+      "group": 10,
+      "body": [
+        "泛型最大值算法需要比较元素，因此必须给类型添加 PartialOrd 约束。若直接把元素值从切片复制出来，还需要 Copy；若改为返回元素引用，就可以避免这项额外要求，让 String 等非 Copy 类型也能使用。",
+        "约束应由实际操作推导，不能看到编译错误就随意添加 Clone 或所有常见 trait。还要处理空输入，并理解偏序类型可能存在不可比较的值。下面使用引用保留最大元素，只在非空情况下返回 Some；对普通整数的比较含义清楚，但不宣称这为浮点 NaN 建立了全序。",
+        "当集合可能为空时，返回没有值比任意制造一个默认最大值更准确，因为默认值未必属于输入或满足排序。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn largest<T: PartialOrd>(items: &[T]) -> Option<&T> {\n    let mut best = items.first()?;\n    for item in items { if item > best { best = item; } }\n    Some(best)\n}\nfn main() { println!(\"{:?}\", largest(&[3, 18, 7])); }",
+        "description": "以比较约束和引用返回实现泛型最大值。",
+        "result": "输出 Some(18)，空切片则返回 None。",
+        "reason": "泛型约束、切片、Option 和引用迭代属于阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "返回 &T 而不是 T，为什么能取消 Copy 约束？",
+        "answer": "函数只借用原元素，不需要把元素从共享切片中复制或移出，所以比较能力足够支撑本例算法。",
+        "hints": [
+          "找出算法中是否真正发生元素复制。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.03.07",
+      "sourceNodeId": "rust.source.root10.03.07",
+      "title": "使用trait约束来有条件地实现方法",
+      "parent": "rust.book.root10.03",
+      "depth": 3,
+      "physicalPage": 293,
+      "printedPage": null,
+      "leaf": true,
+      "order": 160,
+      "group": 10,
+      "body": [
+        "可以为所有 Pair<T> 提供通用构造方法，再仅为满足某些能力的 T 提供附加方法。这种条件实现让类型在能力不足时仍可存储数据，但不能调用需要比较或显示的方法，错误会在编译阶段暴露。",
+        "约束的位置决定哪些方法可用，不意味着运行时先检查类型是否“合格”。标准库中也常见为所有满足某条件的类型提供 blanket implementation；设计自己的实现时仍要考虑一致性和冲突。下面只把较大值展示方法放进带约束的 impl，明确各操作所依赖的能力。",
+        "阅读报错时应先找目标方法需要的约束，再核对具体类型是否实现，而不是误判整个容器都不能使用。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::fmt::Display;\nstruct Pair<T> { a: T, b: T }\nimpl<T> Pair<T> { fn new(a: T, b: T) -> Self { Self { a, b } } }\nimpl<T: Display + PartialOrd> Pair<T> {\n    fn show_larger(&self) {\n        let value = if self.a >= self.b { &self.a } else { &self.b };\n        println!(\"{}\", value);\n    }\n}\nfn main() { Pair::new(8, 13).show_larger(); }",
+        "description": "把比较和显示能力限制到需要它们的方法。",
+        "result": "输出 13；new 本身不要求 Display 或 PartialOrd。",
+        "reason": "平台未实现条件 impl 与 trait 约束检查。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "存放一个不可显示的类型，是否一定连 Pair::new 都不能用？",
+        "answer": "不是。new 在无额外约束的 impl 中，只负责构造；受限的是另一个 impl 中的 show_larger。",
+        "hints": [
+          "逐个检查方法所在 impl 的约束。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.04",
+      "sourceNodeId": "rust.source.root10.04",
+      "title": "使用生命周期保证引用的有效性",
+      "parent": "rust.book.root10",
+      "depth": 2,
+      "physicalPage": 295,
+      "printedPage": null,
+      "leaf": false,
+      "order": 161,
+      "group": 10,
+      "body": [
+        "引用不会拥有所指数据，生命周期检查要保证每次使用引用时数据仍然存在。标注的作用是向编译器说明不同借用之间的关系，既不能复活局部变量，也不能把短命数据强行变成长命数据。",
+        "本节从悬垂引用出发，逐步阅读函数与结构体签名，再使用省略规则减少重复标记。分析时先画出数据所有者的作用域，再标引用的使用点，最后核对接口承诺。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root10.04.01",
+      "sourceNodeId": "rust.source.root10.04.01",
+      "title": "使用生命周期来避免悬垂引用",
+      "parent": "rust.book.root10.04",
+      "depth": 3,
+      "physicalPage": 295,
+      "printedPage": null,
+      "leaf": true,
+      "order": 162,
+      "group": 10,
+      "body": [
+        "悬垂引用是指引用仍被使用，但所指数据已经销毁。Rust 不允许通过安全引用构造这种状态：如果内部作用域创建的 String 被销毁，外层变量就不能继续借用它，即使引用变量本身还在作用域中。",
+        "解决办法通常是让数据所有者活得足够久，或把所有权移到需要它的地方，而不是任意加一个生命周期名字。下面先在外层创建字符串，再在内层借用并打印；引用使用期被包含在所有者有效期中，所以不需要克隆。若把所有者移进内层却在外层打印其借用，就会失去这个保证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let owner = String::from(\"river\");\n    {\n        let borrowed = &owner;\n        println!(\"{}\", borrowed);\n    }\n    println!(\"{}\", owner);\n}",
+        "description": "让所有者的作用域包住借用的使用期。",
+        "result": "两次输出 river；内部借用不会夺走字符串所有权。",
+        "reason": "本节点阅读完整 Rust 的作用域与借用期；平台只检查冻结的直接引用参数形式，不等同于完整借用检查器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把字符串的所有者移入内层后，外层引用会自动延长它的生命吗？",
+        "answer": "不会。引用不拥有数据；应调整所有者作用域或移动所有权，不能靠引用变量延长被借用值的存在。",
+        "hints": [
+          "先标拥有数据的变量何时被销毁。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.04.02",
+      "sourceNodeId": "rust.source.root10.04.02",
+      "title": "借用检查器",
+      "parent": "rust.book.root10.04",
+      "depth": 3,
+      "physicalPage": 296,
+      "printedPage": null,
+      "leaf": true,
+      "order": 163,
+      "group": 10,
+      "body": [
+        "借用检查器比较的不是两个变量名字的长短，而是引用可能使用的时间与被引用数据有效的时间。它依据静态控制流与接口约束作保守判断，拒绝可能悬垂的路径，不能靠运行时恰好没有走到坏分支来获得安全保证。",
+        "分析报错时，应找到借用建立、数据销毁以及引用再次使用三个位置。把使用点移到销毁之前可能解决问题，把引用标记成更长的生命周期则不会改变数据事实。下面让较短的数据和借用都留在内部作用域，外层的计数值独立存在，强调安全性来自作用域关系。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let count = 2;\n    {\n        let title = String::from(\"chapter\");\n        let reference = &title;\n        println!(\"{} {}\", count, reference);\n    }\n    println!(\"{}\", count);\n}",
+        "description": "按借用建立、使用、所有者销毁的次序读代码。",
+        "result": "依次输出 2 chapter、2；title 的引用没有逃出其有效范围。",
+        "reason": "平台不提供完整 Rust 借用检查器的控制流和生命周期推断。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "判断一个借用是否有效时，必须检查哪三个位置？",
+        "answer": "借用在何处建立、被借用数据何时失效、引用最后在哪里使用；使用不能超出数据有效期。",
+        "hints": [
+          "把这三个点按执行和作用域顺序排列。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.04.03",
+      "sourceNodeId": "rust.source.root10.04.03",
+      "title": "函数中的泛型生命周期",
+      "parent": "rust.book.root10.04",
+      "depth": 3,
+      "physicalPage": 298,
+      "printedPage": null,
+      "leaf": true,
+      "order": 164,
+      "group": 10,
+      "body": [
+        "函数若可能返回两个输入引用中的任意一个，返回值的有效期就必须同时受到两者约束。只写返回 &str 而不说明关联时，两个输入各有独立生命周期，编译器不能猜测返回值来自哪一个。",
+        "用同一个生命周期参数连接输入与输出，表示调用者只能在两个借用都有效的共同范围内使用结果，并不是让两个 String 具有相同的实际存活时间。下面根据字节长度选择文本；示例全为 ASCII，因此长度也便于直观比较，实际 Unicode 字符数量不能简单等同于 len 的字节数。",
+        "决定比较规则时也应说明长度的单位，否则借用关系正确，业务对最长文本的理解仍可能与实现不同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {\n    if a.len() >= b.len() { a } else { b }\n}\nfn main() {\n    let left = String::from(\"forest\");\n    let right = String::from(\"bay\");\n    println!(\"{}\", longer(&left, &right));\n}",
+        "description": "用同一生命周期描述返回借用的来源范围。",
+        "result": "输出 forest；返回值借用已有文本，没有创建新字符串。",
+        "reason": "显式泛型生命周期和 &str 返回值未纳入平台函数子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "相同的生命周期标注是否让 left 与 right 同时销毁？",
+        "answer": "不会。标注只约束借用关系；调用处选择满足两者的有效范围，原所有者仍按各自作用域销毁。",
+        "hints": [
+          "把数据存活与引用可使用范围分开。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.04.04",
+      "sourceNodeId": "rust.source.root10.04.04",
+      "title": "生命周期标注语法",
+      "parent": "rust.book.root10.04",
+      "depth": 3,
+      "physicalPage": 299,
+      "printedPage": null,
+      "leaf": true,
+      "order": 165,
+      "group": 10,
+      "body": [
+        "生命周期名字写在单引号后，例如 &'a str；声明通常出现在函数名后的尖括号中。它给引用的有效期关系起名字，而不描述一个固定的秒数、源代码行数或堆内存地址。",
+        "同一个名字连接的引用需要满足同一借用范围的要求，实际数据可以存活更久。可变引用则写为 &'a mut T，可变性与有效期是两个不同维度，不能用生命周期标注绕过独占借用规则。下面 identity_ref 原样返回借用，标注说明输出来自输入，没有复制数据或延迟其销毁。",
+        "参数名字只是本签名中的局部名称，改名为其他合法名字并一致使用，不会改变所表达的有效期关系。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn identity_ref<'a>(value: &'a i32) -> &'a i32 { value }\nfn main() {\n    let number = 21;\n    let view = identity_ref(&number);\n    println!(\"{}\", view);\n}",
+        "description": "在一个简单签名中区分声明与使用生命周期参数。",
+        "result": "输出 21；view 指向 number。",
+        "reason": "平台不解析显式生命周期泛型参数，即使值类型是 i32。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "在 &'a mut i32 中，'a 与 mut 分别说明什么？",
+        "answer": "'a 关联引用的有效期，mut 说明独占可变借用；前者不能取消后者要求同一时刻不能有冲突借用的规则。",
+        "hints": [
+          "一个回答何时有效，一个回答允许如何访问。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.04.05",
+      "sourceNodeId": "rust.source.root10.04.05",
+      "title": "函数签名中的生命周期标注",
+      "parent": "rust.book.root10.04",
+      "depth": 3,
+      "physicalPage": 300,
+      "printedPage": null,
+      "leaf": true,
+      "order": 166,
+      "group": 10,
+      "body": [
+        "函数签名是调用者可以独立依赖的契约。把两个输入和输出都写成同一个生命周期，意味着即使函数这次返回较长命的那个输入，调用者也只能按两者共同有效的范围使用结果，不能根据样例内容推翻签名。",
+        "这让函数体可以被修改而不破坏调用者的安全推理。若短命输入在内层创建，应在内层使用返回引用；若确实需要结果逃出该作用域，可考虑复制成拥有所有权的 String。下面在内层完成选择与输出，避开把借用带到短命输入销毁以后的错误。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn choose<'a>(a: &'a str, b: &'a str) -> &'a str {\n    if a.len() > b.len() { a } else { b }\n}\nfn main() {\n    let outer = String::from(\"mountain\");\n    {\n        let inner = String::from(\"hill\");\n        println!(\"{}\", choose(&outer, &inner));\n    }\n}",
+        "description": "把返回借用的使用点放在两个输入均有效处。",
+        "result": "输出 mountain；不把 choose 的结果保存到内层作用域之外。",
+        "reason": "显式生命周期函数与字符串切片返回属于阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "已知这次 outer 更长，能否把同签名函数的结果拿到 inner 销毁后使用？",
+        "answer": "不能。调用者依赖签名中两输入共享的约束，不能依赖特定实现或数据来放宽返回借用的有效期。",
+        "hints": [
+          "按接口可能返回任意一个输入分析。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.04.06",
+      "sourceNodeId": "rust.source.root10.04.06",
+      "title": "深入理解生命周期",
+      "parent": "rust.book.root10.04",
+      "depth": 3,
+      "physicalPage": 303,
+      "printedPage": null,
+      "leaf": true,
+      "order": 167,
+      "group": 10,
+      "body": [
+        "生命周期应只连接真正相关的引用。如果函数始终返回第一个参数，第二个参数仅用于旁路工作，就可以让返回值只关联第一个；这样短命的第二个参数不会无故限制结果使用。",
+        "反过来，返回对函数内新建 String 的引用是不可能靠标注修复的：函数结束时该所有者被销毁，任何生命周期名字都不会替它保留数据。需要返回新内容时应返回 String 转移所有权。下面的 first 明确只返回 a，调用者在 b 离开作用域后仍可使用结果，因为该结果不借用 b。",
+        "减少不必要的关联能使接口更准确，但必须与真实返回来源一致，不能只为了压下报错而谎称结果来源。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn first<'a>(a: &'a str, _b: &str) -> &'a str { a }\nfn main() {\n    let owner = String::from(\"persistent\");\n    let result;\n    {\n        let temporary = String::from(\"short\");\n        result = first(&owner, &temporary);\n    }\n    println!(\"{}\", result);\n}",
+        "description": "仅把输出关联到实际来源参数。",
+        "result": "输出 persistent；result 的来源是 owner。",
+        "reason": "多输入生命周期关系超出平台的直接命名引用参数检查。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "函数内新建字符串后返回 &str，添加 'a 为什么不能解决问题？",
+        "answer": "局部 String 仍在返回时销毁，引用会失去有效目标；应返回拥有所有权的 String，或改为借用调用者已有数据。",
+        "hints": [
+          "标注改变的是关系说明，不是所有权归属。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.04.07",
+      "sourceNodeId": "rust.source.root10.04.07",
+      "title": "结构体定义中的生命周期标注",
+      "parent": "rust.book.root10.04",
+      "depth": 3,
+      "physicalPage": 304,
+      "printedPage": null,
+      "leaf": true,
+      "order": 168,
+      "group": 10,
+      "body": [
+        "结构体保存引用时，它不会自动拥有引用指向的数据。类型上的生命周期参数记录字段借用的来源，使编译器能阻止结构体在所指数据失效后继续被使用；与保存 String 的结构体相比，这是一种不同的所有权选择。",
+        "借用式结构体能避免复制大段文本，适合在解析过程中临时保存视图，但调用者必须保持原始存储有效。下面 Note 保存整段文本的切片，只要 source 仍存在就可以使用；若想让 Note 独立长期保存内容，则可以把字段改为拥有所有权的 String，并相应承担分配成本。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Note<'a> { text: &'a str }\nfn main() {\n    let source = String::from(\"borrowed note\");\n    let note = Note { text: &source };\n    println!(\"{}\", note.text);\n}",
+        "description": "结构体字段借用外部拥有的文本。",
+        "result": "输出 borrowed note；note 不拥有 source 的字符串缓冲区。",
+        "reason": "带生命周期的结构体和借用字段未纳入平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把 Note 移到外层，能否让其字段所指的内层 String 也自动移出？",
+        "answer": "不能。移动保存引用的结构体只移动引用，不会转移所指数据；应调整所有者或让结构体拥有 String。",
+        "hints": [
+          "引用本身与引用目标不是同一个值。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.04.08",
+      "sourceNodeId": "rust.source.root10.04.08",
+      "title": "生命周期省略",
+      "parent": "rust.book.root10.04",
+      "depth": 3,
+      "physicalPage": 305,
+      "printedPage": null,
+      "leaf": true,
+      "order": 169,
+      "group": 10,
+      "body": [
+        "省略规则让常见引用关系无需重复写出名字，但引用的有效期并没有被取消。每个输入引用先获得独立生命周期；如果只有一个输入生命周期，就将它关联给输出引用；方法有 self 借用时，则通常把输出关联到 self。",
+        "应用规则后仍有多个可能来源，编译器不会随意猜测，开发者必须补写关系。下面 echo 只有一个输入引用，省略形式足以表达输出借用它。不要把这条规则推广到两个独立输入的选择函数；那种接口需要说明结果来自哪一个或受哪些输入共同限制。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn echo(text: &str) -> &str { text }\nfn main() {\n    let message = String::from(\"echo\");\n    println!(\"{}\", echo(&message));\n}",
+        "description": "利用单输入省略规则表达输出借用来源。",
+        "result": "输出 echo；省略标注并未复制文本。",
+        "reason": "一般 &str 返回及完整生命周期省略规则属于阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "fn pick(a: &str, b: &str) -> &str 能仅靠单输入省略规则确定输出吗？",
+        "answer": "不能。它有两个独立输入生命周期且没有 self，需要显式表达输出和输入之间的关系。",
+        "hints": [
+          "先数独立输入借用的数量。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.04.09",
+      "sourceNodeId": "rust.source.root10.04.09",
+      "title": "方法定义中的生命周期标注",
+      "parent": "rust.book.root10.04",
+      "depth": 3,
+      "physicalPage": 308,
+      "printedPage": null,
+      "leaf": true,
+      "order": 170,
+      "group": 10,
+      "body": [
+        "给含引用字段的结构体实现方法时，需要在 impl 上声明其生命周期参数，因为它是类型的一部分。方法自己的 &self 借用还可以有更短的使用期；字段引用的存活范围与一次调用借用 self 的范围不能简单画成同一条线。",
+        "当方法同时接收 &self 和其他引用，省略规则通常把输出借用关联到 self。若方法实际想返回其他参数，可能需要显式改写签名。下面的方法打印公告但返回字段文本，正好符合默认关联；公告仅在调用期间使用，不是返回值的数据来源。",
+        "若想让结果独立于方法调用期间的借用，应重新设计明确的返回契约，而不是依赖省略规则猜出另一种关系。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Notice<'a> { text: &'a str }\nimpl<'a> Notice<'a> {\n    fn announce(&self, prefix: &str) -> &str {\n        println!(\"{}\", prefix);\n        self.text\n    }\n}\nfn main() {\n    let n = Notice { text: \"arrival\" };\n    println!(\"{}\", n.announce(\"notice\"));\n}",
+        "description": "区分结构体字段生命周期与方法借用关系。",
+        "result": "依次输出 notice、arrival。",
+        "reason": "生命周期 impl、self 方法及引用返回未被平台实现。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "本例默认输出生命周期与 prefix 还是 self 关联？",
+        "answer": "与 self 关联，这是方法的省略规则；返回的是字段文本，prefix 只是调用中临时读取的信息。",
+        "hints": [
+          "先判断返回值来自哪个对象。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.04.10",
+      "sourceNodeId": "rust.source.root10.04.10",
+      "title": "静态生命周期",
+      "parent": "rust.book.root10.04",
+      "depth": 3,
+      "physicalPage": 309,
+      "printedPage": null,
+      "leaf": true,
+      "order": 171,
+      "group": 10,
+      "body": [
+        "'static 引用表示其所指数据可以在程序的整个运行期保持有效，字符串字面量就是常见来源。它不表示持有这个引用的局部变量必须活到程序结束；局部变量仍可以很早离开作用域。",
+        "遇到生命周期错误时，把任何引用都改成 'static 往往只是提出一个更不可能满足的要求。局部 String 的缓冲区会随所有者销毁，不能因标注就成为静态数据。还要区分 &'static T 与 T: 'static：后者是对类型内部借用的限制，不要求这个值永远不被释放。",
+        "拥有所有权的文本即使满足类型层面的静态约束，也仍可被正常销毁，不能把类型约束读成永久内存驻留。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn banner() -> &'static str { \"learning desk\" }\nfn main() {\n    let text: &'static str = banner();\n    println!(\"{}\", text);\n}",
+        "description": "返回程序中固定的字符串字面量。",
+        "result": "输出 learning desk；没有把局部 String 借用伪装为静态引用。",
+        "reason": "静态生命周期标注与返回字符串切片属于平台阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "给局部 String 的借用写上 &'static str，能否避免它在作用域末尾释放？",
+        "answer": "不能。标注不会改变所有者的析构时机；局部缓冲区不能满足整个程序期有效的要求。",
+        "hints": [
+          "先找真正拥有字符串存储的对象。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.05",
+      "sourceNodeId": "rust.source.root10.05",
+      "title": "同时使用泛型参数、trait约束与生命周期",
+      "parent": "rust.book.root10",
+      "depth": 2,
+      "physicalPage": 311,
+      "printedPage": null,
+      "leaf": true,
+      "order": 172,
+      "group": 10,
+      "body": [
+        "泛型参数、trait 约束和生命周期分别回答不同问题：公告值是什么类型、能否显示、返回文本借用谁。把它们写在同一个签名中，不表示这些问题混为一体，分析时仍应逐项检查。",
+        "通常先声明生命周期参数，再声明类型参数；where 子句可让能力约束独立成行，使参数和返回关系更容易读。下面用 Display 打印任意公告，而两个字符串借用共享 'a。公告按值接收，若传入 String 可能发生移动；它的所有权变化与输出文本的借用来源是两条独立关系。",
+        "签名复杂时可以逐项朗读：公告能显示，结果来自两个文本之一，使用结果期间两份输入借用都要有效。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::fmt::Display;\nfn choose<'a, T>(a: &'a str, b: &'a str, note: T) -> &'a str\nwhere T: Display {\n    println!(\"{}\", note);\n    if a.len() >= b.len() { a } else { b }\n}\nfn main() { println!(\"{}\", choose(\"road\", \"bay\", 7)); }",
+        "description": "在签名中分别表达借用关系和显示能力。",
+        "result": "依次输出 7、road。",
+        "reason": "组合泛型、where 约束及生命周期均属于平台阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "T: Display 能否保证返回的 &str 比两个输入活得更久？",
+        "answer": "不能。Display 只保证公告可显示，引用有效期由 'a 关联；能力约束不延长任何数据的生命。",
+        "hints": [
+          "将每个约束对应到它要回答的问题。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root10.06",
+      "sourceNodeId": "rust.source.root10.06",
+      "title": "总结",
+      "parent": "rust.book.root10",
+      "depth": 2,
+      "physicalPage": 312,
+      "printedPage": null,
+      "leaf": true,
+      "order": 173,
+      "group": 10,
+      "body": [
+        "复盘一个抽象接口时，可以依次问：哪些位置需要不同类型，函数体需要哪些行为，返回借用来自哪份数据。泛型解决复用，trait 给出合法操作，生命周期保证借用仍有目标；任何一项都不会自动代替其他两项。",
+        "良好的抽象还应保留边界条件，例如空集合、无法比较的值，以及所有者提前销毁。下面复用一个带 PartialEq 约束的函数，比较两类输入；它返回布尔值而非引用，因此没有额外的输出生命周期问题，但参数的借用仍须在调用期间有效。",
+        "约束越少并非越好，正确目标是恰好覆盖实现所需能力；漏写会无法编译，多写会不必要地限制调用者。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn same<T: PartialEq>(a: &T, b: &T) -> bool { a == b }\nfn main() {\n    println!(\"{}\", same(&5, &5));\n    println!(\"{}\", same(&String::from(\"a\"), &String::from(\"b\")));\n}",
+        "description": "用最小行为约束复盘通用比较接口。",
+        "result": "依次输出 true、false；参数只被借用。",
+        "reason": "泛型比较与 trait 约束不在平台执行子集内。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删掉 PartialEq 后，编译器能否仅凭 T 推断它支持 ==？",
+        "answer": "不能。泛型函数必须对所有满足声明约束的类型成立，未约束的 T 并不保证具有相等比较行为。",
+        "hints": [
+          "函数体每个运算都需要有类型能力依据。"
+        ]
+      }
+    }
+  ]
+}

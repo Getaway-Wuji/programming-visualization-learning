@@ -1,0 +1,694 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 15,
+  "nodes": [
+    {
+      "id": "rust.book.root15",
+      "sourceNodeId": "rust.source.root15",
+      "title": "第15章 智能指针",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 455,
+      "printedPage": null,
+      "leaf": false,
+      "order": 245,
+      "group": 15,
+      "body": [
+        "普通引用负责借用已有数据，智能指针还可承担拥有堆数据、共享所有权或检查访问规则的责任。本章以 Box、Rc 与 RefCell 展示不同取舍，再说明 Deref、Drop 如何让这些类型融入常见访问与清理方式。",
+        "这些机制不是统一的“更强引用”：Box 通常唯一拥有，Rc 计数共享，RefCell 把借用检查移到运行时。最后还要检查所有权图是否成环，因为内存安全并不保证永无内存泄漏。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root15.01",
+      "sourceNodeId": "rust.source.root15.01",
+      "title": "使用Box<T>在堆上分配数据",
+      "parent": "rust.book.root15",
+      "depth": 2,
+      "physicalPage": 457,
+      "printedPage": null,
+      "leaf": false,
+      "order": 246,
+      "group": 15,
+      "body": [
+        "Box<T> 以拥有所有权的指针管理堆中的 T，让栈上的外层表示具有可确定大小。移动 Box 转移的是管理责任，正常离开作用域则会连同内部值一起清理。",
+        "本节先以单个值理解间接访问，再用递归类型说明为何需要这层间接关系。把所有值装箱并不自动改善性能，选择时应有具体的尺寸、递归或所有权需求。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root15.01.01",
+      "sourceNodeId": "rust.source.root15.01.01",
+      "title": "使用Box<T>在堆上存储数据",
+      "parent": "rust.book.root15.01",
+      "depth": 3,
+      "physicalPage": 457,
+      "printedPage": null,
+      "leaf": true,
+      "order": 247,
+      "group": 15,
+      "body": [
+        "Box::new 把值交给堆分配的拥有式容器，Box 自身保存访问和释放所需的信息。读取可以通过解引用完成，正常离开作用域时会释放其拥有的值；它不同于 &T，因为借用并不负责所指数据的最终清理。",
+        "移动 Box 不会让原绑定和新绑定同时拥有同一份数据。若需要两个独立值，可以在内部类型允许时克隆；若要共享同一份所有权，则应考虑 Rc 等不同机制。下面直接移动装箱整数，再由新的绑定访问，强调装箱没有取消 Rust 原有的所有权规则。",
+        "装箱的成本包括分配与间接访问，应与具体需求匹配；小整数示例用于说明拥有关系，不是建议处处装箱。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let boxed = Box::new(27);\n    let owner = boxed;\n    println!(\"{}\", *owner);\n    // boxed 已移动，不能再用它访问该 Box。\n}",
+        "description": "移动 Box 的所有权，再解引用读取内部值。",
+        "result": "输出 27；原绑定 boxed 随移动失去该 Box 的所有权。",
+        "reason": "平台未实现 Box、堆分配和智能指针解引用轨迹。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "let owner = boxed 后，是否存在两个可各自释放同一内存的拥有者？",
+        "answer": "没有。所有权已转移给 owner，原 boxed 不再可用，编译检查避免两个独立释放者重复清理。",
+        "hints": [
+          "赋值中的移动不同于共享计数克隆。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.01.02",
+      "sourceNodeId": "rust.source.root15.01.02",
+      "title": "使用装箱定义递归类型",
+      "parent": "rust.book.root15.01",
+      "depth": 3,
+      "physicalPage": 458,
+      "printedPage": null,
+      "leaf": true,
+      "order": 248,
+      "group": 15,
+      "body": [
+        "递归类型若直接把同类型放在字段中，编译器计算大小时会无限展开：一个节点里还有一个完整节点。加入 Box 后，递归位置只存一个已知大小的指针，内部数据可以在堆上继续连接，从而形成有限大小的类型表示。",
+        "类型定义的大小有限不代表每个值都必须无限延伸；递归结构还应有结束变体。下面用 End 结束链，逐步匹配读取首节点并跟随 Box 指向的后续节点。它用于理解间接所有权，不意味着链表总比 Vec 更适合连续数据，也不提供平台内的真实堆地址。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "enum Chain { Node(i32, Box<Chain>), End }\nfn total(chain: &Chain) -> i32 {\n    match chain {\n        Chain::Node(value, next) => value + total(next),\n        Chain::End => 0,\n    }\n}\nfn main() {\n    let chain = Chain::Node(4, Box::new(Chain::Node(7, Box::new(Chain::End))));\n    println!(\"{}\", total(&chain));\n}",
+        "description": "以固定大小的 Box 打断类型尺寸的无限递归。",
+        "result": "输出 11；End 使这个值的遍历能够终止。",
+        "reason": "递归枚举、Box 与模式匹配均在平台阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "有了 Box 之后，为什么仍需要 End 之类的终止状态？",
+        "answer": "Box 解决类型大小问题，终止状态解决具体数据结构如何结束；缺少结束条件仍可能无法构造有限值或终止遍历。",
+        "hints": [
+          "类型布局与算法终止是不同问题。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.02",
+      "sourceNodeId": "rust.source.root15.02",
+      "title": "通过Deref trait将智能指针视作常规引用",
+      "parent": "rust.book.root15",
+      "depth": 2,
+      "physicalPage": 464,
+      "printedPage": null,
+      "leaf": false,
+      "order": 249,
+      "group": 15,
+      "body": [
+        "Deref 把包装类型的共享访问映射到其目标引用，使解引用运算与部分参数转换可以复用已有接口。它提供的是受约束的访问规则，不意味着包装值与目标在所有操作中都完全相同。",
+        "下面从普通引用的星号运算开始，逐步实现小型包装器，再观察 deref coercion 与可变性的方向。隐式转换应符合读者直觉，不能用它掩盖昂贵计算或绕过借用约束。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root15.02.01",
+      "sourceNodeId": "rust.source.root15.02.01",
+      "title": "使用解引用运算符跳转到指针指向的值",
+      "parent": "rust.book.root15.02",
+      "depth": 3,
+      "physicalPage": 464,
+      "printedPage": null,
+      "leaf": true,
+      "order": 250,
+      "group": 15,
+      "body": [
+        "引用变量保存的是访问某个值的途径，星号解引用允许沿这个途径访问目标。对整数这样的 Copy 类型，把 *reference 赋给新变量会复制数值，而不是把原变量的所有权移动走；对于非 Copy 数据不能据此任意移出共享引用。",
+        "相等比较也需要分清引用与目标值。下面明确解引用共享借用，再比较整数，说明两次读取都看到同一份原始数值。对可变引用赋值则还需满足独占规则，并非看到星号就可以写入；引用的权限由其类型和借用关系决定。",
+        "引用可读不等于可写，若修改目标，必须从创建借用开始就具有对应权限，而非事后靠星号增加权限。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let value = 16;\n    let reference = &value;\n    let copied = *reference;\n    assert_eq!(copied, value);\n    println!(\"{}\", copied);\n}",
+        "description": "沿共享引用读取 Copy 整数，并保留原值。",
+        "result": "断言成立，输出 16；value 仍然有效。",
+        "reason": "本节点展示通用解引用表达式和 assert_eq!；平台只支持冻结的直接引用参数形式，不提供完整引用运算。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能否从 &String 用同样方式把 String 的所有权直接取走？",
+        "answer": "不能。String 不是 Copy，不能从共享借用中移走其所有权；可借用内容或显式克隆成新拥有值。",
+        "hints": [
+          "先判断目标是否实现 Copy。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.02.02",
+      "sourceNodeId": "rust.source.root15.02.02",
+      "title": "把Box<T>当成引用来操作",
+      "parent": "rust.book.root15.02",
+      "depth": 3,
+      "physicalPage": 465,
+      "printedPage": null,
+      "leaf": true,
+      "order": 251,
+      "group": 15,
+      "body": [
+        "Box 在访问上可以像引用一样使用星号，但它同时承担所有权和释放责任。普通 &T 借用外部数据，Box<T> 通常拥有堆上的数据；相似的读法不意味着生命周期、移动或析构语义也完全相同。",
+        "这种一致的解引用体验来自相关 trait 实现，让调用端不必为每一种拥有式包装都重新学习读取语法。下面把普通整数引用与装箱整数并排比较，两者读到的值相同，清理责任却不同。不要把教学输出解读成两个指针拥有同一宿主地址，示例没有观察或公开任何地址。",
+        "若只需临时读取调用者已经拥有的数据，普通借用往往足够，不必为了使用星号额外分配一个装箱副本。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let original = 11;\n    let borrowed = &original;\n    let boxed = Box::new(11);\n    assert_eq!(*borrowed, *boxed);\n    println!(\"{} {}\", *borrowed, *boxed);\n}",
+        "description": "比较相同解引用语法背后的不同拥有关系。",
+        "result": "断言成立，输出 11 11；Box 拥有自己的装箱值。",
+        "reason": "平台不模拟 Box 所有权、智能指针 Deref 或标准断言。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "borrowed 离开作用域会释放 original 吗？boxed 离开作用域呢？",
+        "answer": "普通借用不负责释放 original；boxed 正常离开作用域会清理自己拥有的装箱值及分配，两者责任不同。",
+        "hints": [
+          "判断谁是真正的所有者。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.02.03",
+      "sourceNodeId": "rust.source.root15.02.03",
+      "title": "定义我们自己的智能指针",
+      "parent": "rust.book.root15.02",
+      "depth": 3,
+      "physicalPage": 466,
+      "printedPage": null,
+      "leaf": true,
+      "order": 252,
+      "group": 15,
+      "body": [
+        "先用元组结构体包装一个值，可以理解“保存值”与“表现得像指针”不是同一件事。构造函数 new 只是常见命名约定，不会自动赋予星号解引用能力，也不会自动把字段放到堆上。",
+        "下面的 Parcel<T> 在自身字段中直接保存 T，通过 peek 显式返回借用。它是实现 Deref 之前的最小包装器，已经可以安全存取数据，却不支持 *parcel 语法。把职责逐步分开有助于排查编译错误：访问器决定如何取得字段引用，Deref 才决定特殊运算符如何调用这种访问。",
+        "以后为包装器增加特殊行为时，应保持显式访问与隐式访问一致，避免调用者因写法不同得到不同语义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Parcel<T>(T);\nimpl<T> Parcel<T> {\n    fn new(value: T) -> Self { Self(value) }\n    fn peek(&self) -> &T { &self.0 }\n}\nfn main() {\n    let parcel = Parcel::new(23);\n    println!(\"{}\", parcel.peek());\n}",
+        "description": "创建直接保存字段的包装器，尚不实现 Deref。",
+        "result": "输出 23；本例未作显式堆分配，*parcel 尚不合法。",
+        "reason": "泛型元组结构体与自定义方法不在平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把构造函数命名为 new，是否就让 Parcel 自动成为 Box？",
+        "answer": "不会。new 只是函数名，实际存储由字段和实现决定；这里直接存 T，没有 Box 的堆管理或 Deref 实现。",
+        "hints": [
+          "检查结构体实际包含什么。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.02.04",
+      "sourceNodeId": "rust.source.root15.02.04",
+      "title": "通过实现Deref trait来将类型视作引用",
+      "parent": "rust.book.root15.02",
+      "depth": 3,
+      "physicalPage": 467,
+      "printedPage": null,
+      "leaf": true,
+      "order": 253,
+      "group": 15,
+      "body": [
+        "实现 Deref 需要声明关联类型 Target，并让 deref(&self) 返回指向目标的共享引用。星号运算可通过这个契约找到内部值，但 deref 本身不把值移出包装器，借用关系仍然有效。",
+        "关联类型表示本实现固定的目标类型，与每次调用临时挑选类型不同。下面让 Parcel<T> 指向内部 T，&self.0 保证引用来自仍有效的包装器字段。若要提供可变解引用，还需要另外实现 DerefMut；单有 Deref 不能让共享访问升级为可变访问，也不会自动承担堆分配责任。",
+        "目标引用必须来自仍然有效的存储，不能在方法里临时创建目标再返回其借用，否则会产生悬垂风险。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::ops::Deref;\nstruct Parcel<T>(T);\nimpl<T> Deref for Parcel<T> {\n    type Target = T;\n    fn deref(&self) -> &Self::Target { &self.0 }\n}\nfn main() {\n    let parcel = Parcel(31);\n    println!(\"{}\", *parcel);\n}",
+        "description": "把显式字段借用接到 Deref 契约。",
+        "result": "输出 31；deref 返回字段引用而非创建新整数容器。",
+        "reason": "Deref、关联类型、泛型结构体和运算符重载未被平台实现。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "deref 为什么返回 &Self::Target 而不是直接返回 Target？",
+        "answer": "它应建立借用访问，不能从 &self 中任意移动内部非 Copy 值；引用返回同时保留包装器所有权。",
+        "hints": [
+          "先看调用接收的是 &self。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.02.05",
+      "sourceNodeId": "rust.source.root15.02.05",
+      "title": "函数和方法的隐式解引用转换",
+      "parent": "rust.book.root15.02",
+      "depth": 3,
+      "physicalPage": 468,
+      "printedPage": null,
+      "leaf": true,
+      "order": 254,
+      "group": 15,
+      "body": [
+        "deref coercion 能在某些需要引用参数的上下文中，把自定义 Deref 包装器的借用转换为目标借用，并可沿多层关系继续转换。例如 &Box<String> 可用于需要 &str 的函数，省去手工展开多层访问。",
+        "这是编译器依据 trait 的受控转换，不是任意类型自动互换，也不意味着函数取得了内部 String 的所有权。下面 speak 只需要文本视图，因此调用者保留 Box；函数结束后仍可以再次使用拥有者。设计接口时尽量接收需要的借用视图，可让更多存储方式共用同一行为。",
+        "这种转换常见于函数参数的类型需求，不能推断任意两种拥有类型都能互相自动转移或重新分配。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn speak(text: &str) { println!(\"hello {}\", text); }\nfn main() {\n    let name = Box::new(String::from(\"reader\"));\n    speak(&name);\n    println!(\"{}\", name.len());\n}",
+        "description": "以参数上下文触发 Box<String> 到 str 的借用转换。",
+        "result": "依次输出 hello reader、6；name 没有被移动。",
+        "reason": "平台不实现 Box、Deref 链与 &str 参数强制转换。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "speak(&name) 是否把 Box 中的字符串移给 speak？",
+        "answer": "没有。传递的是共享借用，经 Deref 转换为文本视图；所有权仍由 name 持有。",
+        "hints": [
+          "观察参数类型是否是引用。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.02.06",
+      "sourceNodeId": "rust.source.root15.02.06",
+      "title": "解引用转换与可变性",
+      "parent": "rust.book.root15.02",
+      "depth": 3,
+      "physicalPage": 470,
+      "printedPage": null,
+      "leaf": true,
+      "order": 255,
+      "group": 15,
+      "body": [
+        "Deref 支持共享目标访问，DerefMut 支持可变目标访问，转换方向仍受 Rust 的可变性规则限制。从可变借用可以形成更受限的共享借用，但不能从共享借用制造可变借用，因为那会破坏独占访问保证。",
+        "包装器本身可变也不代表任何情况下都能写入目标，还要看是否有有效的冲突借用。下面用可变 Box<String> 调用需要 &mut String 的函数，完成追加后再共享读取；这两个阶段按顺序发生，没有同时保留一个仍在使用的共享借用与可变借用。",
+        "若另一个共享视图还在后续使用，修改阶段可能被拒绝；应调整访问次序，而不是试图绕过借用检查。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn add_mark(text: &mut String) { text.push('!'); }\nfn main() {\n    let mut text = Box::new(String::from(\"done\"));\n    add_mark(&mut text);\n    let view: &str = &text;\n    println!(\"{}\", view);\n}",
+        "description": "以可变借用进行修改，再以共享视图读取。",
+        "result": "输出 done!；变更通过独占的 &mut 借用完成。",
+        "reason": "平台未实现 Box 的 DerefMut、字符 push 与借用强制转换。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只有 &Box<String> 时，能否强制转换为 &mut String？",
+        "answer": "不能。共享借用不能提升为独占可变借用，Deref 转换不允许绕过原有权限和借用规则。",
+        "hints": [
+          "权限可以收窄，不能凭空增加。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.03",
+      "sourceNodeId": "rust.source.root15.03",
+      "title": "借助Drop trait在清理时运行代码",
+      "parent": "rust.book.root15",
+      "depth": 2,
+      "physicalPage": 472,
+      "printedPage": null,
+      "leaf": false,
+      "order": 256,
+      "group": 15,
+      "body": [
+        "Drop 允许类型在正常被销毁时执行清理，例如释放资源或记录结束状态。实现 drop(&mut self) 不意味着调用者可以任意直接调用该方法，所有权系统仍负责避免重复清理。",
+        "局部值通常按创建的逆序销毁，字段也有其清理次序。下面用 std::mem::drop 演示提前交还所有权；若直接终止进程或发生泄漏，则不能假定所有析构逻辑都会运行。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root15.03.01",
+      "sourceNodeId": "rust.source.root15.03.01",
+      "title": "使用std::mem::drop提前丢弃值",
+      "parent": "rust.book.root15.03",
+      "depth": 3,
+      "physicalPage": 473,
+      "printedPage": null,
+      "leaf": true,
+      "order": 257,
+      "group": 15,
+      "body": [
+        "std::mem::drop 是取得参数所有权的普通函数，值交给它后在其中被销毁。对于不实现 Copy 的资源对象，这会使原绑定失去可用性，从而能在作用域结束前明确释放资源；不是对值内部手工调用 Drop::drop。",
+        "禁止直接调用析构方法是为避免之后自动析构再次清理同一资源。下面的 Guard 在 drop 实现中打印说明，再用标准函数提前销毁它，最后输出 after。对 Copy 值调用 drop 通常只是丢弃复制出的值，不能据此推断原变量被释放或失效。",
+        "清理时还应避免再次触发不可恢复故障，因为析构往往发生在已有错误处理中，会使整体结束行为更复杂。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Guard;\nimpl Drop for Guard {\n    fn drop(&mut self) { println!(\"guard released\"); }\n}\nfn main() {\n    let guard = Guard;\n    std::mem::drop(guard);\n    println!(\"after\");\n}",
+        "description": "通过转移所有权提前触发一次清理。",
+        "result": "依次输出 guard released、after；作用域结束时不会再次清理同一个 guard。",
+        "reason": "平台不实现 Drop trait、自定义析构和 std::mem::drop。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能直接 guard.drop()，却可以 std::mem::drop(guard)？",
+        "answer": "后者消费所有权，编译器知道原绑定不能再用，避免重复清理；直接调用析构方法会破坏自动管理约定，因此被禁止。",
+        "hints": [
+          "关键是所有权是否被消费。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.04",
+      "sourceNodeId": "rust.source.root15.04",
+      "title": "基于引用计数的智能指针Rc<T>",
+      "parent": "rust.book.root15",
+      "depth": 2,
+      "physicalPage": 476,
+      "printedPage": null,
+      "leaf": false,
+      "order": 258,
+      "group": 15,
+      "body": [
+        "Rc<T> 为单线程中的同一份数据记录强所有者数量，只有最后一个强所有者消失时才销毁内部值。它适合无法在编译时确定谁最后结束使用的共享关系。",
+        "Rc 的克隆增加共享计数，不等于克隆内部数据。共享所有权也不会自动提供可变访问，后面需要把访问控制与拥有关系分开分析，不能把 Rc 当作跨线程共享的通用方案。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root15.04.01",
+      "sourceNodeId": "rust.source.root15.04.01",
+      "title": "使用Rc<T>共享数据",
+      "parent": "rust.book.root15.04",
+      "depth": 3,
+      "physicalPage": 476,
+      "printedPage": null,
+      "leaf": true,
+      "order": 259,
+      "group": 15,
+      "body": [
+        "当多个结构都必须在自己存活期间保留同一份数据，单一 Box 的移动规则无法表达多个拥有者。Rc 通过强计数共享清理责任，每个 Rc 都能在单线程中保持目标有效；普通借用仍可用于不需要拥有责任的临时访问。",
+        "Rc::clone 只建立新的拥有句柄，内部 String 仍是同一份，适合只读共享。下面先构造两个拥有者，再销毁原绑定，另一个仍可读取数据。它不展示真实内存地址，也不允许仅因多个拥有者存在就拿到 &mut T；跨线程场景需要另外的同步与共享机制。",
+        "若拥有关系在编译期已经清楚，唯一所有者加普通借用通常更简单，不必为所有访问都引入共享计数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::rc::Rc;\nfn main() {\n    let original = Rc::new(String::from(\"shared guide\"));\n    let other = Rc::clone(&original);\n    std::mem::drop(original);\n    println!(\"{}\", other);\n}",
+        "description": "让第二个强拥有者延续共享数据的有效期。",
+        "result": "输出 shared guide；销毁 original 后 other 仍拥有数据。",
+        "reason": "平台未实现 Rc、引用计数或共享堆所有权。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "销毁 original 后 other 为何不悬垂？",
+        "answer": "Rc::clone 增加了强所有者，数据只有强计数降到零才销毁；other 仍承担拥有责任。",
+        "hints": [
+          "比较普通借用与强所有者。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.04.02",
+      "sourceNodeId": "rust.source.root15.04.02",
+      "title": "克隆Rc<T>会增加引用计数",
+      "parent": "rust.book.root15.04",
+      "depth": 3,
+      "physicalPage": 479,
+      "printedPage": null,
+      "leaf": true,
+      "order": 260,
+      "group": 15,
+      "body": [
+        "Rc::strong_count 可以观察强拥有者数量。创建 Rc 通常从一个强拥有者开始，每次 Rc::clone 增加一个，对应句柄销毁则减少一个；借用 &Rc<T> 本身不增加强计数，数据的深度拷贝也不是这项操作的含义。",
+        "计数适合教学观察，不宜让业务逻辑依赖某个临时打印时刻恰好为几。下面用内部作用域清楚界定第二个句柄的销毁位置，输出体现所有权范围变化。只要仍有强拥有者，内部值就保持有效；弱引用的计数和作用将在后面单独讨论。",
+        "把临时克隆保存到外层会改变后续计数，因此观察前应列出仍然存活的句柄，而不是只数克隆语句总次数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::rc::Rc;\nfn main() {\n    let data = Rc::new(42);\n    println!(\"{}\", Rc::strong_count(&data));\n    {\n        let _copy = Rc::clone(&data);\n        println!(\"{}\", Rc::strong_count(&data));\n    }\n    println!(\"{}\", Rc::strong_count(&data));\n}",
+        "description": "沿作用域观察强引用计数的增加和减少。",
+        "result": "依次输出 1、2、1；内部句柄离开作用域后计数回落。",
+        "reason": "平台没有 Rc 控制块或 strong_count 观察接口。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "调用 strong_count(&data) 是否会因为传入引用而把计数加一？",
+        "answer": "不会。函数只借用已有 Rc，新的强所有者来自 Rc::clone 等拥有操作，不是普通借用。",
+        "hints": [
+          "数的是拥有句柄，不是所有临时引用。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.05",
+      "sourceNodeId": "rust.source.root15.05",
+      "title": "RefCell<T>和内部可变性模式",
+      "parent": "rust.book.root15",
+      "depth": 2,
+      "physicalPage": 481,
+      "printedPage": null,
+      "leaf": false,
+      "order": 261,
+      "group": 15,
+      "body": [
+        "RefCell<T> 在单线程内保存唯一拥有的数据，却允许通过共享外部接口请求运行时检查的借用。它没有删除借用规则，而是用 Ref 与 RefMut 守卫记录当前访问。",
+        "这一模式适合接口要求 &self、内部又需记录状态的场景。代价是借用冲突可能在运行时失败，守卫作用域必须足够短；它也不因此成为线程同步容器。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root15.05.01",
+      "sourceNodeId": "rust.source.root15.05.01",
+      "title": "使用RefCell<T>在运行时检查借用规则",
+      "parent": "rust.book.root15.05",
+      "depth": 3,
+      "physicalPage": 481,
+      "printedPage": null,
+      "leaf": true,
+      "order": 262,
+      "group": 15,
+      "body": [
+        "RefCell 的 borrow 取得共享守卫，borrow_mut 取得独占守卫。运行时仍要求任意数量共享借用或一个可变借用，二者不能冲突；违反规则的普通借用方法会 panic，try_borrow 系列则能把冲突作为可检查结果。",
+        "守卫持有期间规则持续生效，不是方法返回就立刻解除。下面先保留共享守卫，明确销毁它后再取得可变守卫，避免在错误时机修改。选择 RefCell 是把部分验证延后，应用仍应审查所有访问路径，而不以“能编译”作为没有借用问题的证明。",
+        "守卫可以显式提前销毁，也可以用更小作用域自然结束，后者常让代码更直接地表达允许修改的阶段。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::cell::RefCell;\nfn main() {\n    let cell = RefCell::new(5);\n    let shared = cell.borrow();\n    println!(\"{}\", *shared);\n    std::mem::drop(shared);\n    *cell.borrow_mut() = 8;\n    println!(\"{}\", *cell.borrow());\n}",
+        "description": "先释放共享借用守卫，再申请可变借用。",
+        "result": "依次输出 5、8；若保留 shared 同时调用 borrow_mut，则会发生运行时借用冲突。",
+        "reason": "平台未实现 RefCell、运行时借用守卫及其 panic。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "borrow 返回后检查是否立即结束，为什么？",
+        "answer": "没有。返回的 Ref 守卫仍记录共享借用，必须在守卫销毁后解除；否则与可变借用冲突。",
+        "hints": [
+          "追踪守卫的生命期，而非只看方法调用那一行。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.05.02",
+      "sourceNodeId": "rust.source.root15.05.02",
+      "title": "内部可变性：可变地借用一个不可变的值",
+      "parent": "rust.book.root15.05",
+      "depth": 3,
+      "physicalPage": 483,
+      "printedPage": null,
+      "leaf": true,
+      "order": 263,
+      "group": 15,
+      "body": [
+        "内部可变性允许某个对象对外只提供 &self，却在受控位置修改内部状态。例如测试中的记录器可实现只读消息接口，同时把收到的消息存进 RefCell<Vec<String>>，供测试稍后检查。",
+        "修改权限来自 RefCell 的安全接口与运行时规则，不是把任意共享引用强行变成可变引用。下面简化为调用次数记录器，hit 只借用 self，内部通过可变守卫累加；守卫在语句完成后释放，再读取统计值。真实记录器还应避免回调重入导致同一单元的借用冲突。",
+        "对外只读的方法也可能有记录行为，文档应说明相关副作用，避免调用者误以为重复调用完全没有影响。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::cell::RefCell;\nstruct Recorder { count: RefCell<i32> }\nimpl Recorder {\n    fn hit(&self) { *self.count.borrow_mut() += 1; }\n    fn count(&self) -> i32 { *self.count.borrow() }\n}\nfn main() {\n    let recorder = Recorder { count: RefCell::new(0) };\n    recorder.hit();\n    recorder.hit();\n    println!(\"{}\", recorder.count());\n}",
+        "description": "在 &self 方法中记录内部调用次数。",
+        "result": "输出 2；recorder 绑定本身不需要 mut。",
+        "reason": "平台不实现 RefCell、结构体方法或内部可变性检查。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "recorder 没写 mut 却能增加计数，是否意味着借用规则被取消？",
+        "answer": "没有。计数位于 RefCell 中，其方法在运行时按守卫检查独占和共享访问，冲突仍会失败。",
+        "hints": [
+          "检查可变权限由哪个容器接口授予。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.05.03",
+      "sourceNodeId": "rust.source.root15.05.03",
+      "title": "将Rc<T>和RefCell<T>结合使用来实现一个拥有多重所有权的可变数据",
+      "parent": "rust.book.root15.05",
+      "depth": 3,
+      "physicalPage": 489,
+      "printedPage": null,
+      "leaf": true,
+      "order": 264,
+      "group": 15,
+      "body": [
+        "Rc<RefCell<T>> 组合两个独立职责：外层 Rc 让多个句柄共享拥有责任，内层 RefCell 在运行时控制对 T 的借用。克隆 Rc 不复制 T，通过一个句柄修改 T，其他共享同一单元的句柄随后也会看到变化。",
+        "共享可变数据使依赖关系更复杂，应缩短借用守卫的范围，并确认外部调用不会在守卫持有期间重入。它仍只适合单线程，不能把 Rc 换个变量名就跨线程传递。下面共享一个计分值，修改前后分别结束借用，展示共同指向的状态而不是两个独立克隆。",
+        "若共享状态其实可以通过参数逐步传递，先考虑更清楚的单一所有者设计，再决定是否需要这一组合。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::{cell::RefCell, rc::Rc};\nfn main() {\n    let score = Rc::new(RefCell::new(10));\n    let observer = Rc::clone(&score);\n    *score.borrow_mut() += 4;\n    println!(\"{}\", *observer.borrow());\n}",
+        "description": "用外层共享所有权和内层受检访问共享一次修改。",
+        "result": "输出 14；observer 与 score 指向同一个 RefCell。",
+        "reason": "平台未实现 Rc 与 RefCell 组合、共享状态及运行时借用。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把 Rc::clone 改成复制内层整数并另建 RefCell，会保留相同共享语义吗？",
+        "answer": "不会。新建的 RefCell 保存独立状态，后续修改不再互相可见；Rc::clone 共享同一控制块和目标。",
+        "hints": [
+          "区分共享句柄与新建数据。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.06",
+      "sourceNodeId": "rust.source.root15.06",
+      "title": "循环引用会造成内存泄漏",
+      "parent": "rust.book.root15",
+      "depth": 2,
+      "physicalPage": 492,
+      "printedPage": null,
+      "leaf": false,
+      "order": 265,
+      "group": 15,
+      "body": [
+        "强引用成环可能使每个节点都至少被环内另一个节点拥有，外部句柄即使消失，计数也降不到零。这是泄漏问题，Rust 的内存安全保证并不自动回收所有不可达的 Rc 环。",
+        "接下来先识别成环的拥有关系，再用 Weak 表达观察或反向关联。图可以有导航环，但拥有责任不应未经设计地形成互相保活的闭环。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root15.06.01",
+      "sourceNodeId": "rust.source.root15.06.01",
+      "title": "创建循环引用",
+      "parent": "rust.book.root15.06",
+      "depth": 3,
+      "physicalPage": 492,
+      "printedPage": null,
+      "leaf": true,
+      "order": 266,
+      "group": 15,
+      "body": [
+        "用 RefCell 修改 Rc 指向关系，可以在运行时把原本无环的结构连成强所有权环。两个节点相互拥有后，销毁外部变量只减少外部计数，环内强引用仍保留目标，内部值不会按预期释放。",
+        "这不会必然造成越界或悬垂，因此安全类型系统不把泄漏一概视为内存不安全。下面建立两节点环并观察各为两个强拥有者，随后主动断开其中一条边，以免教学例留下环。不要直接递归打印整个环，未设置终止的调试遍历还可能无限递归。",
+        "泄漏诊断要观察拥有图和释放时机，不应只依赖程序没有崩溃；正常结束仍可能掩盖长时间运行中的增长。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::{cell::RefCell, rc::Rc};\nstruct Node { next: RefCell<Option<Rc<Node>>> }\nfn main() {\n    let a = Rc::new(Node { next: RefCell::new(None) });\n    let b = Rc::new(Node { next: RefCell::new(Some(Rc::clone(&a))) });\n    *a.next.borrow_mut() = Some(Rc::clone(&b));\n    println!(\"{} {}\", Rc::strong_count(&a), Rc::strong_count(&b));\n    // 断开一条拥有边，允许正常回收。\n    *a.next.borrow_mut() = None;\n}",
+        "description": "观察强拥有环，再显式断开一条边。",
+        "result": "输出 2 2；随后断边使 b 不再被 a 拥有，作用域结束时可继续释放整个结构。",
+        "reason": "平台不实现 Rc 图、RefCell 动态关系或真实堆泄漏诊断。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果删掉最后的断边语句，外部 a 和 b 销毁后为什么仍不能释放内部节点？",
+        "answer": "每个节点仍被对方的强 Rc 拥有，计数无法到零；外部不可达不等于强引用计数为零。",
+        "hints": [
+          "把每一条强拥有边都计入计数。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.06.02",
+      "sourceNodeId": "rust.source.root15.06.02",
+      "title": "使用Weak<T>代替Rc<T>来避免循环引用",
+      "parent": "rust.book.root15.06",
+      "depth": 3,
+      "physicalPage": 495,
+      "printedPage": null,
+      "leaf": true,
+      "order": 267,
+      "group": 15,
+      "body": [
+        "Weak 不承担保持内部值存活的强拥有责任，适合父指针、缓存观察或其他可失效关联。Rc::downgrade 创建弱句柄，不增加强计数；使用前调用 upgrade，得到 Some(Rc<T>) 才表示成功临时获得强拥有者。",
+        "强拥有者归零后内部 T 被销毁，弱句柄可继续存在但不能再升级得到该值；控制块的管理与值的生命期应分开理解。树中可让父拥有子、子弱指向父，这样导航关系仍可双向，清理责任却不成强环。下面先成功升级，再销毁最后的强拥有者，观察 None。",
+        "如果把升级得到的强句柄保存起来，它就会延续目标生命期；示例中临时结果没有被保留才会随后失效。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::rc::Rc;\nfn main() {\n    let data = Rc::new(String::from(\"node\"));\n    let weak = Rc::downgrade(&data);\n    println!(\"{}\", weak.upgrade().is_some());\n    std::mem::drop(data);\n    println!(\"{}\", weak.upgrade().is_none());\n}",
+        "description": "观察弱引用在目标销毁前后的升级结果。",
+        "result": "依次输出 true、true；第一次临时升级结果在语句末尾销毁，没有额外强拥有者留存。",
+        "reason": "平台不实现 Weak、Rc::downgrade、Option 升级结果与控制块生命期。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何 upgrade 返回 Option<Rc<T>> 而不是直接返回 &T？",
+        "answer": "弱引用不保证目标仍存在，必须先判断能否取得强拥有者；Some 保持访问期间的数据有效，None 表明值已不可用。",
+        "hints": [
+          "观察关系允许失效，拥有关系才保证存活。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root15.07",
+      "sourceNodeId": "rust.source.root15.07",
+      "title": "总结",
+      "parent": "rust.book.root15",
+      "depth": 2,
+      "physicalPage": 502,
+      "printedPage": null,
+      "leaf": true,
+      "order": 268,
+      "group": 15,
+      "body": [
+        "选择智能指针时先问谁拥有数据，再问怎样访问。Box 对应唯一拥有的堆数据，Rc 对应单线程共享拥有，RefCell 对应运行时受检借用；Deref 改善访问表达，Drop 管理正常清理，Weak 则把观察关系从强拥有中分离。",
+        "组合这些类型之前，应画出强边与弱边，检查守卫何时释放、回调是否重入，以及结束时是否仍有强环。下面用简短对照组织选择依据，不把某个组合宣传为通用方案；本课程只提供这些完整机制的阅读，不生成虚构堆执行轨迹或声称支持完整 Rust 内存模型。",
+        "面向图结构时尤其要区分业务上的相互关联与内存上的相互拥有，前者需要双向访问并不要求后者强成环。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "需求                        常见考虑\n单一拥有者，堆中存值        Box<T>\n单线程，多个强拥有者        Rc<T>\n单线程，动态检查借用        RefCell<T>\n共享拥有且需要受检修改      Rc<RefCell<T>>\n指向可能先消失的对象        Weak<T>，访问前 upgrade\n提前交还非 Copy 值          std::mem::drop(value)\n\n额外核对：强拥有关系是否成环，借用守卫是否重叠。",
+        "description": "按拥有、访问和失效关系选择工具。",
+        "result": "阅读后应能说明各类型解决的问题，并指出 Rc<RefCell<T>> 仍不提供跨线程同步或自动环回收。",
+        "reason": "平台没有这些智能指针和完整 Rust 内存管理模型，表格只供概念阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Rc<RefCell<T>> 同时共享和可变，为什么仍要检查强环与借用冲突？",
+        "answer": "Rc 仅按强计数回收，不能收集强环；RefCell 仅动态检查访问，冲突仍可能 panic。组合不会取消两者的各自限制。",
+        "hints": [
+          "将所有权问题与访问权限问题分别推演。"
+        ]
+      }
+    }
+  ]
+}

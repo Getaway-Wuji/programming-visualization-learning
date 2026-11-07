@@ -1,0 +1,684 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 3,
+  "nodes": [
+    {
+      "id": "rust.book.root03",
+      "sourceNodeId": "rust.source.root03",
+      "title": "第3章 通用编程概念",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 73,
+      "printedPage": null,
+      "leaf": false,
+      "order": 34,
+      "group": 3,
+      "body": [
+        "变量、类型、函数和控制流决定程序如何组织计算。本章先区分不可变绑定、可变绑定与同名隐藏，再观察标量和复合值，随后把重复计算放入函数，用条件和循环选择执行路径。",
+        "阅读每段代码时，先确定变量当前的类型和作用域，再追踪表达式产生的值。运行叶覆盖平台真实子集；浮点数、字符、元组等仍保留完整语言知识，但不能据此宣称平台已经支持。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root03.01",
+      "sourceNodeId": "rust.source.root03.01",
+      "title": "变量与可变性",
+      "parent": "rust.book.root03",
+      "depth": 2,
+      "physicalPage": 75,
+      "printedPage": null,
+      "leaf": false,
+      "order": 35,
+      "group": 3,
+      "body": [
+        "默认不可变的绑定能让读者知道一个名字不会被后续赋值改变。确实需要更新同一份状态时使用 mut；只是转换中间结果时，则可以通过新的 let 隐藏旧名字。",
+        "下面还会对比 const 与不可变 let。关注声明创建的身份、能否赋值以及类型能否变化，避免把三个看起来都能“保存一个值”的工具混为一谈。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root03.01.01",
+      "sourceNodeId": "rust.source.root03.01.01",
+      "title": "变量与常量之间的不同",
+      "parent": "rust.book.root03.01",
+      "depth": 3,
+      "physicalPage": 77,
+      "printedPage": null,
+      "leaf": true,
+      "order": 36,
+      "group": 3,
+      "body": [
+        "不可变 let 表示这个绑定在初始化后不能重新赋值，并不要求初值在编译前已经算好。const 则声明编译期可确定的常量，必须写明类型，不能用 mut 修饰。常量适合表达固定限额和规则，而不是保存每次输入的即时结果。",
+        "常量表达式的能力与工具链规则有关，不应简单理解成“任何函数调用都不行”；本例只使用清楚的整数字面量运算。命名常量还能让计算里的数字具有含义。下面把每分钟秒数用于换算，若将 minutes 改为来自运行时输入，它仍可用 let 保存，却不能因此成为同样的常量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    const SECONDS_PER_MINUTE: i32 = 60;\n    let minutes = 3;\n    let seconds = minutes * SECONDS_PER_MINUTE;\n    println!(\"{}\", seconds);\n}\n",
+        "description": "用固定换算比例对比常量和本次计算的局部绑定。",
+        "result": "按标准 Rust 语义预期输出 180。",
+        "reason": "const 声明不在平台解释器白名单内，本例保留为完整 Rust 阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "不可变 let 的初值能否来自用户输入？它与 const 的主要区别是什么？",
+        "answer": "可以。let 的不可变约束针对初始化后的赋值；const 要求明确类型和符合常量求值规则的初始化式，不能简单用运行时输入赋值。",
+        "hints": [
+          "分别考虑何时获得值、获得后能否修改。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root03.01.02",
+      "sourceNodeId": "rust.source.root03.01.02",
+      "title": "隐藏",
+      "parent": "rust.book.root03.01",
+      "depth": 3,
+      "physicalPage": 78,
+      "printedPage": null,
+      "leaf": true,
+      "order": 37,
+      "group": 3,
+      "body": [
+        "同名隐藏通过新的 let 建立新绑定，后续同名访问指向新绑定，而不是修改旧绑定。初始化式仍可读取此时可见的旧值，所以 let n = n + 2 表示先计算，再让新名字生效。与 mut 赋值不同，标准 Rust 的隐藏还可以改变绑定类型。",
+        "内层块的同名绑定只在自己的作用域中可见。运行例先将输入加二，再在内层乘三；退出内层块后，恢复看到外层加二的结果。输入 4 时两次输出因此为 18 和 6。不要把缩进当作作用域边界，真正决定可见范围的是对应花括号。内层隐藏不会替外层绑定完成一次赋值，离开块后也不会把内层计算自动写回。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let n = n + 2;\n    { let n = n * 3; println!(\"{}\", n); }\n    println!(\"{}\", n);\n}\n",
+        "description": "读入n，通过同名隐藏先加2，在内层块再次隐藏为三倍并输出，离开块后输出外层隐藏值。",
+        "result": "四组输入分别产生：\n输入 '0'：'6\\n2\\n'\n输入 '1'：'9\\n3\\n'\n输入 '4'：'18\\n6\\n'\n输入 '9'：'33\\n11\\n'",
+        "cases": [
+          {
+            "input": "0\n",
+            "expected": "6\n2\n",
+            "requiredFeatures": [
+              "shadow"
+            ]
+          },
+          {
+            "input": "1\n",
+            "expected": "9\n3\n",
+            "requiredFeatures": [
+              "shadow"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "18\n6\n",
+            "requiredFeatures": [
+              "shadow"
+            ]
+          },
+          {
+            "input": "9\n",
+            "expected": "33\n11\n",
+            "requiredFeatures": [
+              "shadow"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root03.01.02.exercise",
+        "prompt": "读入n，通过同名隐藏先加2，在内层块再次隐藏为三倍并输出，离开块后输出外层隐藏值。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "每次let创建独立绑定。",
+          "内层只隐藏查找，不改写外层值。",
+          "两个输出各占一行。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root03.02",
+      "sourceNodeId": "rust.source.root03.02",
+      "title": "数据类型",
+      "parent": "rust.book.root03",
+      "depth": 2,
+      "physicalPage": 81,
+      "printedPage": null,
+      "leaf": false,
+      "order": 38,
+      "group": 3,
+      "body": [
+        "类型说明一个值允许哪些操作，也影响存储范围和错误检查。整数、浮点数、布尔值与字符各表达单一值，元组和数组则将多个值组合起来；静态类型需要在运行前确定，而不必处处手写注解。",
+        "下面通过整数与布尔计算、固定数组复制观察平台支持的部分，同时保留教材对其他类型的讨论。推导失败时，应补足上下文，而不是把类型视为可以任意变化的标签。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root03.02.01",
+      "sourceNodeId": "rust.source.root03.02.01",
+      "title": "标量类型",
+      "parent": "rust.book.root03.02",
+      "depth": 3,
+      "physicalPage": 82,
+      "printedPage": null,
+      "leaf": true,
+      "order": 39,
+      "group": 3,
+      "body": [
+        "Rust 的标量类型包括整数、浮点数、布尔值与字符。整数的符号和位数决定范围，浮点数表示带小数的近似数值，bool 只有 true 与 false，char 表示一个 Unicode 标量值；它们不能仅凭外观相近就互相替代。",
+        "本平台实际计算限 i32 与 bool，运行例将输入乘二，并判断是否大于零。负数、零和正数都值得检查：零的 positive 为 false，最小或最大整数运算可能溢出。条件必须是布尔值，不能把整数直接当条件；教学配置检查 i32 溢出，也不自动转换成更宽整数。字符使用单引号，字符串使用双引号；看似只有一个字的文本也不能因此当作同一种类型。",
+        "完整 Rust 还有不同位宽的有符号与无符号整数，以及随目标指针宽度变化的 isize、usize；无符号范围包含零。浮点数有 f32、f64，常规推导默认 f64。整数除法向零截断，余数与被除数同号；溢出检查与构建配置相关，平台则固定检查。char 占四字节，但 UTF-8 文本中同一标量的编码长度未必是四字节。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let doubled = n * 2;\n    let positive = n > 0;\n    println!(\"{} {}\", doubled, positive);\n}\n",
+        "description": "读入n，输出它的两倍与n>0的布尔结果，中间一个空格，末尾换行。",
+        "result": "四组输入分别产生：\n输入 '-3'：'-6 false\\n'\n输入 '0'：'0 false\\n'\n输入 '4'：'8 true\\n'\n输入 '9'：'18 true\\n'",
+        "cases": [
+          {
+            "input": "-3\n",
+            "expected": "-6 false\n",
+            "requiredFeatures": [
+              "arithmetic"
+            ]
+          },
+          {
+            "input": "0\n",
+            "expected": "0 false\n",
+            "requiredFeatures": [
+              "arithmetic"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "8 true\n",
+            "requiredFeatures": [
+              "arithmetic"
+            ]
+          },
+          {
+            "input": "9\n",
+            "expected": "18 true\n",
+            "requiredFeatures": [
+              "arithmetic"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root03.02.01.exercise",
+        "prompt": "读入n，输出它的两倍与n>0的布尔结果，中间一个空格，末尾换行。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "整数乘法产生新值。",
+          "比较结果是bool。",
+          "Rust布尔格式化为true或false。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root03.02.02",
+      "sourceNodeId": "rust.source.root03.02.02",
+      "title": "复合类型",
+      "parent": "rust.book.root03.02",
+      "depth": 3,
+      "physicalPage": 86,
+      "printedPage": null,
+      "leaf": true,
+      "order": 40,
+      "group": 3,
+      "body": [
+        "元组按固定位置组合可异类型的值，可用解构或 .0 等位置访问；数组则具有固定长度，所有元素类型相同。长度也是数组类型的一部分，[i32; 3] 与 [i32; 4] 不是相同类型，不能把数组当成可以随时增加元素的 Vec。",
+        "平台运行例采用单层固定整数数组。把 values 赋给 copied 时执行 Copy，随后修改 copied[0] 不影响 values[0]。输入 4 时原数组首项仍是 4，副本首项变为 5。访问从零计数并受边界约束；平台目前仅接受非负常量下标，元组、切片和动态长度集合保留为阅读内容。数组副本中每个整数都按值保存，不是通过同一份可变引用共享底层修改。",
+        "完整语言中可用 let (a, b) = pair 解构元组，或用 .0 读取位置；数组可用 [value; count] 重复初始化。无元素的元组 () 是 unit。数组索引与元组位置的语法不同，数组越界会报告错误，不会合法地访问相邻内存；当前运行例只采用固定 i32 数组。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let values = [n, 3, 5];\n    let mut copied = values;\n    copied[0] = copied[0] + 1;\n    println!(\"{} {}\", values[0], copied[0]);\n}\n",
+        "description": "把n放入固定数组首项，复制数组并把副本首项加1。输出原数组首项和副本首项。",
+        "result": "四组输入分别产生：\n输入 '0'：'0 1\\n'\n输入 '1'：'1 2\\n'\n输入 '4'：'4 5\\n'\n输入 '9'：'9 10\\n'",
+        "cases": [
+          {
+            "input": "0\n",
+            "expected": "0 1\n",
+            "requiredFeatures": [
+              "array-copy",
+              "array-write"
+            ]
+          },
+          {
+            "input": "1\n",
+            "expected": "1 2\n",
+            "requiredFeatures": [
+              "array-copy",
+              "array-write"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "4 5\n",
+            "requiredFeatures": [
+              "array-copy",
+              "array-write"
+            ]
+          },
+          {
+            "input": "9\n",
+            "expected": "9 10\n",
+            "requiredFeatures": [
+              "array-copy",
+              "array-write"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root03.02.02.exercise",
+        "prompt": "把n放入固定数组首项，复制数组并把副本首项加1。输出原数组首项和副本首项。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "数组值复制后有独立内容。",
+          "只把副本声明为mut即可修改。",
+          "通过下标0观察两个对象。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root03.03",
+      "sourceNodeId": "rust.source.root03.03",
+      "title": "函数",
+      "parent": "rust.book.root03",
+      "depth": 2,
+      "physicalPage": 91,
+      "printedPage": null,
+      "leaf": false,
+      "order": 41,
+      "group": 3,
+      "body": [
+        "函数给一段计算命名，形参描述输入，返回类型描述输出，函数体负责实现规则。接下来依次讨论参数类型、语句与表达式的差别，以及返回值怎样交回调用者。",
+        "调用函数才会执行其函数体，定义位置不等于执行顺序。阅读时把每次调用看作新的局部环境，分别记录传入的值和返回的结果，可以避免把不同调用里的同名变量混在一起。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root03.03.01",
+      "sourceNodeId": "rust.source.root03.03.01",
+      "title": "函数参数",
+      "parent": "rust.book.root03.03",
+      "depth": 3,
+      "physicalPage": 92,
+      "printedPage": null,
+      "leaf": true,
+      "order": 42,
+      "group": 3,
+      "body": [
+        "函数声明中的参数需要写出类型，调用时则提供与这些类型匹配的实参。形参只是函数内部的名字，不要求与调用处变量同名；多个参数按声明顺序对应，互换位置可能改变含义，类型相同也不代表顺序无关。",
+        "运行例的 twice 接收一个 i32，返回它的两倍。整数按值复制进入形参，不会使调用者的输入绑定失效；这与后面 String 的移动不同。函数定义不会自行产生输出，main 中读入整数并调用后才打印结果。大数乘二还会受 i32 范围限制，函数封装并不会取消算术检查。",
+        "函数名通常采用小写加下画线的蛇形命名，调用所用实参按位置对应形参。函数可写在调用者后面，源码出现顺序并不要求执行先经过定义位置。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn twice(value: i32) -> i32 { value * 2 }\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    println!(\"{}\", twice(n));\n}\n",
+        "description": "定义接收i32并返回其两倍的用户函数，从main按值传入n，再输出返回值。",
+        "result": "四组输入分别产生：\n输入 '0'：'0\\n'\n输入 '1'：'2\\n'\n输入 '4'：'8\\n'\n输入 '9'：'18\\n'",
+        "cases": [
+          {
+            "input": "0\n",
+            "expected": "0\n",
+            "requiredFeatures": [
+              "call"
+            ]
+          },
+          {
+            "input": "1\n",
+            "expected": "2\n",
+            "requiredFeatures": [
+              "call"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "8\n",
+            "requiredFeatures": [
+              "call"
+            ]
+          },
+          {
+            "input": "9\n",
+            "expected": "18\n",
+            "requiredFeatures": [
+              "call"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root03.03.01.exercise",
+        "prompt": "定义接收i32并返回其两倍的用户函数，从main按值传入n，再输出返回值。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "形参需要显式类型。",
+          "返回类型写在->后。",
+          "函数末尾表达式可直接返回。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root03.03.02",
+      "sourceNodeId": "rust.source.root03.03.02",
+      "title": "函数体中的语句和表达式",
+      "parent": "rust.book.root03.03",
+      "depth": 3,
+      "physicalPage": 94,
+      "printedPage": null,
+      "leaf": true,
+      "order": 43,
+      "group": 3,
+      "body": [
+        "表达式产生值，语句则用于声明或执行操作。Rust 的块可以用最后一个没有分号的表达式作为结果；加上分号后，这个表达式成为语句，块不再把它的值交给外面，而通常产生 unit，即 ()。",
+        "这个差别会影响函数返回类型。声明返回 i32 的函数，最后写出计算式能够返回整数；若误加分号且没有其他返回路径，就会因得到 () 而类型不符。不是每个分号都应该删除：let 声明和普通执行语句仍有自己的语法。下面把中间声明与末尾值分开，重点观察最后一行。诊断返回类型不匹配时，应沿每条返回路径检查结果，而不只检查声明中的箭头。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn next(value: i32) -> i32 {\n    let increased = value + 1;\n    increased // 末尾表达式交出 i32\n}\nfn main() {\n    println!(\"{}\", next(6));\n}\n",
+        "description": "利用函数末尾表达式区分声明语句和返回值。",
+        "result": "next(6) 得到 7，预期输出 7。",
+        "reason": "本叶专门阅读语句与表达式，未配置独立判题；通用块表达式范围以平台白名单为准。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "将 increased 后面加上分号，而保持 -> i32，为什么会出错？",
+        "answer": "函数体不再以 increased 的整数作为结果，而得到 unit；它与声明的 i32 返回类型不一致。",
+        "hints": [
+          "检查块的最后一个有效表达式有没有分号。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root03.03.03",
+      "sourceNodeId": "rust.source.root03.03.03",
+      "title": "函数的返回值",
+      "parent": "rust.book.root03.03",
+      "depth": 3,
+      "physicalPage": 96,
+      "printedPage": null,
+      "leaf": true,
+      "order": 44,
+      "group": 3,
+      "body": [
+        "函数用 -> 标出返回类型，可以用末尾表达式交回结果，也可用 return 提前结束当前调用。各条实际返回路径必须与声明一致；打印一个数字只产生输出，不等于返回这个数字，调用者需要的值必须通过返回机制取得。",
+        "运行例用阶乘说明调用如何逐层返回：不大于一时给出基值 1，其余情况把当前值与更小一次调用的结果相乘。输入 4 时依次得到 1、2、6、24。这里的基值也让非正输入返回 1，这是示例明确采用的处理，并非一般数学定义；较大输入还会遇到整数溢出或栈深度预算。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn factorial(value: i32) -> i32 {\n    if value <= 1 { 1 } else { value * factorial(value - 1) }\n}\nfn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    println!(\"{}\", factorial(n));\n}\n",
+        "description": "实现阶乘函数并输出n!，0!=1；非基本情况必须实际递归调用本函数。",
+        "result": "四组输入分别产生：\n输入 '0'：'1\\n'\n输入 '1'：'1\\n'\n输入 '4'：'24\\n'\n输入 '6'：'720\\n'",
+        "cases": [
+          {
+            "input": "0\n",
+            "expected": "1\n",
+            "requiredFeatures": [
+              "call"
+            ]
+          },
+          {
+            "input": "1\n",
+            "expected": "1\n",
+            "requiredFeatures": [
+              "call"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "24\n",
+            "requiredFeatures": [
+              "call",
+              "recursion"
+            ]
+          },
+          {
+            "input": "6\n",
+            "expected": "720\n",
+            "requiredFeatures": [
+              "call",
+              "recursion"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root03.03.03.exercise",
+        "prompt": "实现阶乘函数并输出n!，0!=1；非基本情况必须实际递归调用本函数。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "先处理n<=1。",
+          "其余情况返回n乘以n-1的阶乘。",
+          "返回表达式的末尾不加分号。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root03.04",
+      "sourceNodeId": "rust.source.root03.04",
+      "title": "注释",
+      "parent": "rust.book.root03",
+      "depth": 2,
+      "physicalPage": 99,
+      "printedPage": null,
+      "leaf": true,
+      "order": 45,
+      "group": 3,
+      "body": [
+        "注释让读者理解意图，不参与计算。// 从当前位置延续到本行末尾，块注释用 /* 与 */ 标记范围。它们可解释为什么选择某种边界或公式，却不应逐行重述显而易见的语法，否则真正重要的约束容易被淹没。",
+        "阅读带注释的程序时，以代码的实际控制流和运算为准；修改实现后也应同步检查注释是否失真。字符串中的斜杠只是文本，不能见到 // 就一律删去。下面的注释说明半开范围不包含终点，输出只来自累加结果，不会把说明文字打印出来。好的说明应记录代码没有直接表达的原因，例如为何选择这个端点，而不是重复变量名。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut count = 0;\n    // 0..3 包含 0、1、2，不含 3\n    for _value in 0..3 { count = count + 1; }\n    println!(\"{}\", count);\n}\n",
+        "description": "用注释说明最容易误判的范围端点，而不重复解释每条语句。",
+        "result": "循环执行三次，预期输出 3；注释本身不产生输出。",
+        "reason": "本叶为注释维护阅读例，未配置独立运行题。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若将范围改为 0..=3，却保留原注释，会有什么问题？",
+        "answer": "代码执行四次，而注释仍说不含 3，会误导读者；应同时更新说明，实际结果仍由代码决定。",
+        "hints": [
+          "注释描述规则，但不能改变规则。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root03.05",
+      "sourceNodeId": "rust.source.root03.05",
+      "title": "控制流",
+      "parent": "rust.book.root03",
+      "depth": 2,
+      "physicalPage": 101,
+      "printedPage": null,
+      "leaf": false,
+      "order": 46,
+      "group": 3,
+      "body": [
+        "控制流决定哪些表达式被求值，以及一段代码执行多少次。if 根据布尔条件选择分支，循环则按退出规则重复；它们会改变变量的值与可见范围，也会影响函数何时返回。",
+        "下面先看有结果值的 if，再对比 loop、while 和 for 的适用场景。遇到输出题时，先画出实际经过的路径，不要把所有分支的代码都当作已经执行。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root03.05.01",
+      "sourceNodeId": "rust.source.root03.05.01",
+      "title": "if表达式",
+      "parent": "rust.book.root03.05",
+      "depth": 3,
+      "physicalPage": 101,
+      "printedPage": null,
+      "leaf": true,
+      "order": 47,
+      "group": 3,
+      "body": [
+        "if 的条件必须为 bool，只有条件成立时才执行对应分支。它还是表达式：当结果用于初始化变量时，各分支应产生同一类型的值。if n < 0 { -n } else { n } 因而可以直接给出一个 i32，不必先声明可变结果再在两边赋值。",
+        "运行例用这个表达式计算绝对值形式的 magnitude。负数进入取反分支，零和正数保留原值；只执行被选中的分支，不会同时计算两侧。不过 i32 最小值的正数绝对值超出范围，取反会触发溢出诊断。不要因为其他输入都成功，就把这条边界也认作正常结果。分支中未运行的语句仍须满足静态类型检查，不能依赖某次输入绕开语法或类型错误。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let magnitude = if n < 0 { -n } else { n };\n    println!(\"{}\", magnitude);\n}\n",
+        "description": "用真实if条件数据或控制贡献计算并输出n的绝对值。",
+        "result": "四组输入分别产生：\n输入 '-9'：'9\\n'\n输入 '-1'：'1\\n'\n输入 '0'：'0\\n'\n输入 '4'：'4\\n'",
+        "cases": [
+          {
+            "input": "-9\n",
+            "expected": "9\n",
+            "requiredFeatures": [
+              "condition"
+            ]
+          },
+          {
+            "input": "-1\n",
+            "expected": "1\n",
+            "requiredFeatures": [
+              "condition"
+            ]
+          },
+          {
+            "input": "0\n",
+            "expected": "0\n",
+            "requiredFeatures": [
+              "condition"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "4\n",
+            "requiredFeatures": [
+              "condition"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root03.05.01.exercise",
+        "prompt": "用真实if条件数据或控制贡献计算并输出n的绝对值。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "条件是n<0。",
+          "负数分支取相反数。",
+          "if表达式的两个分支应返回同一类型。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root03.05.02",
+      "sourceNodeId": "rust.source.root03.05.02",
+      "title": "使用循环重复执行代码",
+      "parent": "rust.book.root03.05",
+      "depth": 3,
+      "physicalPage": 106,
+      "printedPage": null,
+      "leaf": true,
+      "order": 48,
+      "group": 3,
+      "body": [
+        "loop 适合由内部 break 决定退出的重复，while 每轮先检查条件，for 则依次访问范围或集合中的值。选择能直接表达结束条件的写法，可以少维护一个手动计数变量，也减少遗漏递增而无限循环的机会。",
+        "运行例用 for 遍历 0..=n，把每个 value 加到 total。..= 包含终点，.. 不含终点，两者会影响求和。n 为零时仍访问一次零，结果为零；n 为负数时该递增范围没有元素，循环体不执行。范围很大时即使数学上可计算，也可能先遇到步数、时间预算或 i32 累加溢出。手算时可以分别记录当前项和累计值，先确认访问次数，再确认每次相加的数。",
+        "完整 Rust 的 loop 可以通过 break value 产生结果，for 可遍历集合，范围也可用 rev 反向访问；这些带值退出与迭代器适配器不在平台子集。while 先检查条件，初始为假便一次也不执行，更新循环变量时要确保仍能到达终止条件。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "rust",
+        "source": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    let mut total = 0;\n    for value in 0..=n { total = total + value; }\n    println!(\"{}\", total);\n}\n",
+        "description": "通过实际循环求0到n的整数和并输出，n为非负整数。",
+        "result": "四组输入分别产生：\n输入 '0'：'0\\n'\n输入 '1'：'1\\n'\n输入 '4'：'10\\n'\n输入 '9'：'45\\n'",
+        "cases": [
+          {
+            "input": "0\n",
+            "expected": "0\n",
+            "requiredFeatures": [
+              "loop"
+            ]
+          },
+          {
+            "input": "1\n",
+            "expected": "1\n",
+            "requiredFeatures": [
+              "loop"
+            ]
+          },
+          {
+            "input": "4\n",
+            "expected": "10\n",
+            "requiredFeatures": [
+              "loop"
+            ]
+          },
+          {
+            "input": "9\n",
+            "expected": "45\n",
+            "requiredFeatures": [
+              "loop"
+            ]
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "rust.book.root03.05.02.exercise",
+        "prompt": "通过实际循环求0到n的整数和并输出，n为非负整数。",
+        "starter": "fn main() {\n    let mut line = String::new();\n    std::io::stdin().read_line(&mut line).unwrap();\n    let n: i32 = line.trim().parse().unwrap();\n    // 在这里完成题目要求。\n}\n",
+        "hints": [
+          "累加器声明为mut。",
+          "0..=n包含上界。",
+          "循环每次把当前值加到累加器。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root03.06",
+      "sourceNodeId": "rust.source.root03.06",
+      "title": "总结",
+      "parent": "rust.book.root03",
+      "depth": 2,
+      "physicalPage": 112,
+      "printedPage": null,
+      "leaf": true,
+      "order": 49,
+      "group": 3,
+      "body": [
+        "本章的工具可以组合成一个小算法：用类型描述数据，用函数封装计算，用局部绑定保存中间结果，再通过控制流决定重复。要证明结果正确，既要核对函数是否返回所需值，也要检查循环边界和变量更新顺序；通过类型检查并不能代替这些推理。",
+        "下面计算斐波那契序列的一个位置，使用旧值更新两个状态。若先改 a 再用新的 a 计算 b，就会得到不同序列，因此临时变量有实际作用。整数示例适合手算前几步；继续增大轮数会超出 i32，并不因为循环写得简短就获得任意精度。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn fib(n: i32) -> i32 {\n    let mut a = 0;\n    let mut b = 1;\n    for _step in 0..n {\n        let next = a + b;\n        a = b;\n        b = next;\n    }\n    a\n}\nfn main() { println!(\"{}\", fib(6)); }\n",
+        "description": "组合函数、可变绑定与范围循环，核对状态更新顺序。",
+        "result": "按 a=0、b=1 开始，六轮后 a 为 8，预期输出 8。",
+        "reason": "本叶是概念组合阅读例，未绑定额外执行与奖励活动。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若把 b = next 改成 b = a + b，仍能得到同样序列吗？",
+        "answer": "不能，因为前一行已把 a 改成旧 b，此时相加使用了更新后的 a。临时 next 保存的才是本轮开始时两个旧值之和。",
+        "hints": [
+          "为每轮画出更新前和更新后两列状态。"
+        ]
+      }
+    }
+  ]
+}

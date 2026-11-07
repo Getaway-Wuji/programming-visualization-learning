@@ -1,0 +1,318 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 6,
+  "nodes": [
+    {
+      "id": "rust.book.root06",
+      "sourceNodeId": "rust.source.root06",
+      "title": "第6章 枚举与模式匹配",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 169,
+      "printedPage": null,
+      "leaf": false,
+      "order": 82,
+      "group": 6,
+      "body": [
+        "枚举用一个类型表达若干互斥可能，变体还能带上各自需要的数据。先从创建枚举值进入 Option 的有值与无值，再用 match 提取数据并检查所有可能分支，最后用 if let 简化只关心一种情况的代码。",
+        "这些内容保留完整 Rust 的建模能力，当前平台解释器不执行 enum、Option、match 或 if let。阅读时把类型定义、当前变体与分支绑定三层分开观察。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root06.01",
+      "sourceNodeId": "rust.source.root06.01",
+      "title": "定义枚举",
+      "parent": "rust.book.root06",
+      "depth": 2,
+      "physicalPage": 170,
+      "printedPage": null,
+      "leaf": false,
+      "order": 83,
+      "group": 6,
+      "body": [
+        "结构体通常把若干字段同时组合起来，枚举则说明当前值属于列出的哪一种情况。各变体共享一个枚举类型，却可以携带不同形状的数据，适合表达状态之间的互斥关系。",
+        "下面先构造带数据的变体，再引入 Option。重点是让类型清楚表达“有值或没有值”，而不是依赖某个特殊整数或空字符串来暗示缺失。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root06.01.01",
+      "sourceNodeId": "rust.source.root06.01.01",
+      "title": "枚举值",
+      "parent": "rust.book.root06.01",
+      "depth": 3,
+      "physicalPage": 170,
+      "printedPage": null,
+      "leaf": true,
+      "order": 84,
+      "group": 6,
+      "body": [
+        "枚举变体位于枚举类型的命名空间中，可通过 Type::Variant 创建值。每个值在某一时刻属于其中一个变体，而不是同时包含所有变体的数据；不同变体仍具有同一个枚举类型，因此函数可以统一接收它们。",
+        "变体可以不携带数据，也可携带元组式或命名字段式的数据，使状态与其必要信息一起保存。下面的 Message 允许结束或显示文本：只有 Text 才拥有 String。这样不会出现“状态说结束却仍要求填写文本”的冗余设计。取出数据时需匹配当前变体，不能把枚举当作总能直接读取的公共字段表。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "enum Message { Stop, Text(String) }\nfn display(message: Message) {\n    match message {\n        Message::Stop => println!(\"结束\"),\n        Message::Text(text) => println!(\"消息：{}\", text),\n    }\n}\nfn main() {\n    display(Message::Text(String::from(\"继续\")));\n    display(Message::Stop);\n}\n",
+        "description": "用带数据和无数据的两个变体表达不同消息。",
+        "result": "预期先输出“消息：继续”，再输出“结束”。",
+        "reason": "enum、带数据变体与 match 均不在平台解释器范围内。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Message::Stop 与 Message::Text(...) 是不同类型吗？它们为什么能传入同一函数？",
+        "answer": "它们是同一 Message 类型的不同变体；函数接收枚举类型，再通过模式区分当前是哪一种。",
+        "hints": [
+          "区分枚举类型名与变体名。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root06.01.02",
+      "sourceNodeId": "rust.source.root06.01.02",
+      "title": "Option枚举及其在空值处理方面的优势",
+      "parent": "rust.book.root06.01",
+      "depth": 3,
+      "physicalPage": 175,
+      "printedPage": null,
+      "leaf": true,
+      "order": 85,
+      "group": 6,
+      "body": [
+        "Option<T> 把一个值可能不存在的情形写进类型：Some(value) 表示存在，None 表示缺失。Option<i32> 与 i32 不同，不能直接把整个 Option 当作整数参与加法；调用者必须先说明如何处理没有值的可能。",
+        "这样可以让“缺失”和“值恰好为零”保持区别，而不是借用零、负一或空文本作为隐藏标记。None 自身没有携带可推断的 T 时，需要类型上下文。下面展示 Some(0) 依然是一个明确存在的值，不能把它误判为缺失；后续 match 会进一步展示如何取出内容并保持穷尽处理。空字符串本身也是存在的字符串值，不宜拿它代替所有可能缺失的情况，这与存在的零同理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let present: Option<i32> = Some(0);\n    let missing: Option<i32> = None;\n    println!(\"有值：{}，缺失：{}\", present.is_some(), missing.is_none());\n}\n",
+        "description": "对比存在的零与没有任何整数。",
+        "result": "预期输出“有值：true，缺失：true”。",
+        "reason": "Option 泛型枚举及其方法不在平台可执行白名单。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Some(0) 与 None 能合并当作同一状态吗？",
+        "answer": "不能。Some(0) 携带有效整数零，None 表示没有整数；混淆它们会丢失业务信息。",
+        "hints": [
+          "先判断是否存在，再判断存在的值是多少。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root06.02",
+      "sourceNodeId": "rust.source.root06.02",
+      "title": "控制流运算符match",
+      "parent": "rust.book.root06",
+      "depth": 2,
+      "physicalPage": 179,
+      "printedPage": null,
+      "leaf": false,
+      "order": 86,
+      "group": 6,
+      "body": [
+        "match 将一个值按模式分配到首个适合的分支，并可从变体中绑定内部数据。表达式需要覆盖类型的全部可能，返回值被使用时，各分支还要产生相容的类型。",
+        "下面分别观察绑定、Option 处理、遗漏分支诊断和通配符。不要只针对手头的一个输入证明可行，类型允许的其他状态也必须有明确定义的处理。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root06.02.01",
+      "sourceNodeId": "rust.source.root06.02.01",
+      "title": "绑定值的模式",
+      "parent": "rust.book.root06.02",
+      "depth": 3,
+      "physicalPage": 180,
+      "printedPage": null,
+      "leaf": true,
+      "order": 87,
+      "group": 6,
+      "body": [
+        "模式不仅判断变体名称，还能为变体内部的数据创建局部绑定。match 中写 Variant(name)，表示把当前变体携带的值交给这个分支内的 name 使用；它不是先去寻找一个同名外部变量进行比较，绑定的可见范围也限于分支。",
+        "匹配拥有值还是借用值会影响移动。下面按值接收 Parcel，将非 Copy 的标签移入 Label 分支的 text；处理结束后它由该局部拥有者清理。没有标签的 Empty 分支不需要伪造一个空 String。把状态和数据连在一起，能让每个分支只接触实际存在的信息。同一个绑定名称可出现在其他分支中，但那些是不同分支自己的局部名字，不相互共享。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "enum Parcel { Empty, Label(String) }\nfn inspect(parcel: Parcel) {\n    match parcel {\n        Parcel::Empty => println!(\"空包裹\"),\n        Parcel::Label(text) => println!(\"标签 {}\", text),\n    }\n}\nfn main() { inspect(Parcel::Label(String::from(\"易碎\"))); }\n",
+        "description": "通过模式名称 text 取出当前 Label 变体的数据。",
+        "result": "当前值是 Label，预期输出“标签 易碎”。",
+        "reason": "枚举模式、分支绑定和部分数据移动超出平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "这里 text 是必须预先声明的变量，还是模式新建立的绑定？",
+        "answer": "它是 Label 分支中新建立的绑定，只在该分支作用域内代表取出的 String，不要求外部同名变量存在。",
+        "hints": [
+          "把模式的“绑定值”与表达式的“读取值”区分开。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root06.02.02",
+      "sourceNodeId": "rust.source.root06.02.02",
+      "title": "匹配Option<T>",
+      "parent": "rust.book.root06.02",
+      "depth": 3,
+      "physicalPage": 182,
+      "printedPage": null,
+      "leaf": true,
+      "order": 88,
+      "group": 6,
+      "body": [
+        "处理 Option 时，Some(value) 分支可使用存在的值，None 分支则明确处理缺失。函数若返回 Option，就能继续保留这种区别：对存在的数字做变换，对缺失保持缺失，而不是悄悄补成某个默认数字。",
+        "下面把存在的整数加二。Some(0) 会变成 Some(2)，None 仍是 None，说明变换并不把缺失误认成零。各分支都返回 Option<i32>，类型一致；若一支返回裸整数、另一支返回 None，就不能满足同一个返回类型。解包应是有根据的分支处理，不能用一串 unwrap 掩盖原本可能缺失的输入。输入已经明确无值时，不应为执行加法而擅自制造零；保持缺失能让调用者继续作出决定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn plus_two(value: Option<i32>) -> Option<i32> {\n    match value {\n        Some(n) => Some(n + 2),\n        None => None,\n    }\n}\nfn main() {\n    println!(\"{:?} {:?}\", plus_two(Some(0)), plus_two(None));\n}\n",
+        "description": "让有值分支执行变换，让缺失分支保持缺失。",
+        "result": "预期显示“Some(2) None”。",
+        "reason": "Option、match、泛型返回和调试格式均属于平台外的完整 Rust 阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么 Some 分支不能只写 n + 2，而让返回类型仍是 Option<i32>？",
+        "answer": "n+2 是 i32，需用 Some 包成 Option<i32>，才能与 None 分支及函数返回类型一致。",
+        "hints": [
+          "分别写出每个分支表达式的类型。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root06.02.03",
+      "sourceNodeId": "rust.source.root06.02.03",
+      "title": "匹配必须穷举所有的可能",
+      "parent": "rust.book.root06.02",
+      "depth": 3,
+      "physicalPage": 183,
+      "printedPage": null,
+      "leaf": true,
+      "order": 89,
+      "group": 6,
+      "body": [
+        "穷尽匹配要求为被匹配类型的每一种可能状态提供处理方式。编译器依据类型检查，并不会因当前测试值恰好为 Some 就允许漏掉 None。这样新增或遗漏状态时，问题可以在运行前暴露，而不是等少见输入触发。",
+        "下面给出刻意不完整的函数，预期是编译诊断，不是正常输出。即使 main 只传 Some(5)，函数签名仍允许 None，所以必须补充该分支或确实合适的通配处理。修复也要表达业务含义：None 是保持缺失、返回默认值还是报告错误，应由函数契约决定，不能仅为了消除诊断任意选择。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "// 故意错误：缺少 None 分支\nfn read(value: Option<i32>) -> i32 {\n    match value {\n        Some(n) => n,\n    }\n}\nfn main() { println!(\"{}\", read(Some(5))); }\n",
+        "description": "阅读一个有意遗漏 None 的反例，理解穷尽性针对整个类型。",
+        "result": "标准 Rust 应在编译期报告模式不穷尽、None 未覆盖；不会产生这里的正常运行输出。",
+        "reason": "本例故意违反标准 Rust 穷尽规则；平台不支持 Option 或 match，不能执行此诊断例。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "main 只传 Some(5)，为什么仍然不能让这个函数通过编译？",
+        "answer": "函数参数类型允许 None，编译器必须保证所有合法输入都有处理；某个调用点或测试并不能缩小函数类型允许的全部状态。",
+        "hints": [
+          "考虑函数还可能被其他调用者传入什么。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root06.02.04",
+      "sourceNodeId": "rust.source.root06.02.04",
+      "title": "_通配符",
+      "parent": "rust.book.root06.02",
+      "depth": 3,
+      "physicalPage": 184,
+      "printedPage": null,
+      "leaf": true,
+      "order": 90,
+      "group": 6,
+      "body": [
+        "_ 模式匹配剩余的任何值，但不创建一个可在分支中使用的绑定。它适合确实不关心剩余数据的处理，例如忽略非目标数字；若需要使用当前值，应写成绑定名称，而不是试图在表达式中读取 _。",
+        "match 按分支顺序尝试，通配符通常应放在最后。若先写 _，后面的具体值分支就无法被到达，可能得到相应警告。通配符虽然能满足穷尽性，也可能把以后新增的枚举变体一起吞掉；当每一种新状态都应提醒维护者处理时，应优先显式列举，而不是无条件忽略。忽略值也是设计决策，应让读者看得出哪些情况无需额外动作。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let code = 8;\n    match code {\n        2 => println!(\"双份\"),\n        4 => println!(\"四份\"),\n        _ => println!(\"其他数量\"),\n    }\n}\n",
+        "description": "用末尾通配符处理未单独列出的整数。",
+        "result": "code 为 8，预期输出“其他数量”。",
+        "reason": "match 和通配模式不在当前平台执行子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把 _ 分支移到最前面，会怎样影响 2 和 4 的分支？",
+        "answer": "通配符首先匹配所有值，后面两个分支不可达；应将通配处理放在具体模式之后。",
+        "hints": [
+          "从第一条模式开始按顺序尝试匹配。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root06.03",
+      "sourceNodeId": "rust.source.root06.03",
+      "title": "简单控制流if let",
+      "parent": "rust.book.root06",
+      "depth": 2,
+      "physicalPage": 185,
+      "printedPage": null,
+      "leaf": true,
+      "order": 91,
+      "group": 6,
+      "body": [
+        "只关心一个模式时，if let 可以把模式匹配与条件执行写在一起。if let Some(value) = option 在匹配成功时建立局部 value，失败时跳过代码块，也可接 else。它不是将右侧值普通赋给左边变量的另一种 let 写法。",
+        "这种简洁来自主动不逐项列举其他可能，不保留 match 的同等穷尽提醒，因此应确认被忽略的情况确实不重要。下面只打印存在的提示，None 时显示没有提示；若未来需要分别处理多种错误或多个枚举状态，清楚的 match 通常更合适，不能只为缩短代码隐藏关键分支。模式中的数字字面量与普通变量绑定还不同，前者要求具体数值匹配，后者接住匹配内容。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let hint: Option<i32> = Some(7);\n    if let Some(number) = hint {\n        println!(\"提示编号 {}\", number);\n    } else {\n        println!(\"没有提示\");\n    }\n}\n",
+        "description": "用一个关注模式与 else 处理 Option 的两类情形。",
+        "result": "当前匹配 Some(7)，预期输出“提示编号 7”。",
+        "reason": "if let、Option 与模式绑定均未纳入平台解释器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删除 else 后，hint 为 None 时会发生什么？这算穷尽错误吗？",
+        "answer": "代码块会被跳过且没有输出；if let 允许忽略未匹配情况，不会像不完整的 match 一样要求逐项穷尽。",
+        "hints": [
+          "简洁语法意味着哪些状态被主动略过？"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root06.04",
+      "sourceNodeId": "rust.source.root06.04",
+      "title": "总结",
+      "parent": "rust.book.root06",
+      "depth": 2,
+      "physicalPage": 187,
+      "printedPage": null,
+      "leaf": true,
+      "order": 92,
+      "group": 6,
+      "body": [
+        "枚举把“当前是哪种情况”与这种情况需要的数据一起表达，Option 则把可能缺失写进类型。match 负责穷尽区分并绑定内容，if let 适合只关注一个模式；选择时应看业务需要覆盖多少状态，而不只是比较代码行数。",
+        "这些工具能减少非法状态，却仍需合理定义每个分支的行为。下面用 Ready、Waiting 两种状态表达任务是否有可用结果，只有 Ready 带整数，等待状态不必约定某个特殊数字。与结构体“同时具有若干字段”相比，这更准确地表达互斥状态；下一章将讨论如何把这些类型和函数组织成清晰的模块接口。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "enum Progress { Waiting, Ready(i32) }\nfn report(state: Progress) {\n    match state {\n        Progress::Waiting => println!(\"等待结果\"),\n        Progress::Ready(value) => println!(\"结果 {}\", value),\n    }\n}\nfn main() {\n    report(Progress::Waiting);\n    report(Progress::Ready(0));\n}\n",
+        "description": "用有结果和等待两个变体避免把零误当作缺失。",
+        "result": "预期输出“等待结果”与“结果 0”两行。",
+        "reason": "枚举和 match 的综合例属于阅读范围，本章没有平台执行配置。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不只用一个 i32，并规定零表示还没准备好？",
+        "answer": "零也可能是合法结果；专门的 Waiting 变体把缺失状态与 Ready(0) 区分，避免隐藏约定吞掉信息。",
+        "hints": [
+          "检查特殊标记会不会与有效数据冲突。"
+        ]
+      }
+    }
+  ]
+}

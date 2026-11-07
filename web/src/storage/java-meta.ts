@@ -73,7 +73,7 @@ export function assertActiveCourseMeta(
 }
 
 export function queueJavaStores(db: IDBDatabase, tx: IDBTransaction, meta: PythonMeta) {
-  if (![JAVA_DB_VERSION, 13].includes(db.version) || tx.mode !== 'versionchange') {
+  if (![JAVA_DB_VERSION, 13, 14].includes(db.version) || tx.mode !== 'versionchange') {
     throw new StorageError('S_MIGRATION_UNSUPPORTED');
   }
   const next = toJavaMeta(meta);

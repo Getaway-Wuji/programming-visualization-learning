@@ -79,13 +79,15 @@ export async function verifyCurrentResetAfterMigration(page: Page, before: Stora
     'javaDrafts',
     'cppActivities',
     'cppDrafts',
+    'rustActivities',
+    'rustDrafts',
   ];
   expect(Object.keys(reset).sort()).toEqual([...C6_RESET_STORES, ...addedStores].sort());
   expect(reset.meta).toMatchObject({
-    dbVersion: 13,
-    schemaVersion: '13.0.0',
+    dbVersion: 14,
+    schemaVersion: '14.0.0',
     activePackageRef: { id: 'content.c.primer6', version: '2.0.0' },
-    activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp', version: '1.0.0' },
+    activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp-rust', version: '1.0.0' },
   });
   expect(reset.meta.generation).not.toBe(before.meta.generation);
   const nativeRows = reset as unknown as Record<string, unknown>;

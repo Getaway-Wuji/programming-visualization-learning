@@ -1,6 +1,13 @@
 import { courseTransaction, type CourseState, type CourseRecipe } from './c6-course';
-import { assertJavaMeta, JAVA_DB_VERSION, JAVA_STORES } from './java-meta';
-import { assertCppMeta, CPP_DB_VERSION, CPP_STORES } from './cpp-course-meta';
+import { JAVA_DB_VERSION, JAVA_STORES } from './java-meta';
+import { CPP_DB_VERSION, CPP_STORES } from './cpp-course-meta';
+import { assertActiveCourseMeta, RUST_DB_VERSION, RUST_STORES } from './rust2018-meta';
+import {
+  isRustDocument,
+  isRustLesson,
+  isRustProgress,
+  rustExercise,
+} from '../rust2018-course/identities';
 import { cppExercise, isCppDocument, isCppLesson, isCppProgress } from '../cpp-course/identities';
 import { isJavaDocument, isJavaLesson, isJavaProgress, javaExercise } from '../java/identities';
 import { assertPublicRef, isSafeUint, isUtcTime, isUuid, validationInternals } from './validation';
@@ -46,14 +53,18 @@ const scalarText = (value: unknown): value is string =>
   !/[\uD800-\uDFFF]/u.test(value) &&
   encoder.encode(value).length <= 32768;
 
-function assertTextCourseState({ snapshot, rows }: JavaCourseState, cpp = false) {
-  if (cpp || snapshot.meta.dbVersion === CPP_DB_VERSION) assertCppMeta(snapshot.meta);
-  else assertJavaMeta(snapshot.meta);
-  const isDocument = cpp ? isCppDocument : isJavaDocument;
-  const isLesson = cpp ? isCppLesson : isJavaLesson;
-  const isProgress = cpp ? isCppProgress : isJavaProgress;
-  const exercise = cpp ? cppExercise : javaExercise;
-  requireRule(rows.activities.length <= (cpp ? 307 : 402) && rows.drafts.length <= 64);
+function assertTextCourseState(
+  { snapshot, rows }: JavaCourseState,
+  language: 'java' | 'cpp' | 'rust' = 'java',
+) {
+  assertActiveCourseMeta(snapshot.meta);
+  const predicates = {
+    java: [isJavaDocument, isJavaLesson, isJavaProgress, javaExercise, 402],
+    cpp: [isCppDocument, isCppLesson, isCppProgress, cppExercise, 307],
+    rust: [isRustDocument, isRustLesson, isRustProgress, rustExercise, 311],
+  } as const;
+  const [isDocument, isLesson, isProgress, exercise, maxActivities] = predicates[language];
+  requireRule(rows.activities.length <= maxActivities && rows.drafts.length <= 64);
   const revisions = (r: { generation: string; revision: number }) =>
     r.generation === snapshot.meta.generation &&
     isSafeUint(r.revision) &&
@@ -153,7 +164,7 @@ export function javaCourseTransaction(
   factory: IDBFactory,
   options?: { generation?: string; revision?: number; prepare?: PrepareJavaCourse },
 ) {
-  if (![JAVA_DB_VERSION, CPP_DB_VERSION].includes(db.version))
+  if (![JAVA_DB_VERSION, CPP_DB_VERSION, RUST_DB_VERSION].includes(db.version))
     throw new StorageError('S_CONTENT_INCOMPATIBLE');
   return courseTransaction(db, factory, JAVA_STORES, assertTextCourseState, options);
 }
@@ -163,12 +174,28 @@ export function cppCourseTransaction(
   factory: IDBFactory,
   options?: { generation?: string; revision?: number; prepare?: PrepareJavaCourse },
 ) {
-  if (db.version !== CPP_DB_VERSION) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  if (![CPP_DB_VERSION, RUST_DB_VERSION].includes(db.version))
+    throw new StorageError('S_CONTENT_INCOMPATIBLE');
   return courseTransaction(
     db,
     factory,
     CPP_STORES,
-    (state) => assertTextCourseState(state, true),
+    (state) => assertTextCourseState(state, 'cpp'),
+    options,
+  );
+}
+
+export function rustCourseTransaction(
+  db: IDBDatabase,
+  factory: IDBFactory,
+  options?: { generation?: string; revision?: number; prepare?: PrepareJavaCourse },
+) {
+  if (db.version !== RUST_DB_VERSION) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  return courseTransaction(
+    db,
+    factory,
+    RUST_STORES,
+    (state) => assertTextCourseState(state, 'rust'),
     options,
   );
 }
@@ -179,8 +206,10 @@ export function readJavaUpgradeRows(
   snapshot: JavaCourseState['snapshot'],
   ready: () => void,
   fail: (error: unknown) => void,
+  language: 'java' | 'cpp' = 'java',
 ) {
-  const [activities, drafts] = JAVA_STORES.map((name) => tx.objectStore(name));
+  const stores = language === 'cpp' ? CPP_STORES : JAVA_STORES;
+  const [activities, drafts] = stores.map((name) => tx.objectStore(name));
   const activityRows = activities.getAll();
   const activityKeys = activities.getAllKeys();
   const draftRows = drafts.getAll();
@@ -193,7 +222,7 @@ export function readJavaUpgradeRows(
         activities: activityRows.result as JavaCourseActivity[],
         drafts: draftRows.result as JavaDraft[],
       };
-      assertTextCourseState({ snapshot, rows });
+      assertTextCourseState({ snapshot, rows }, language);
       const generation = snapshot.meta.generation;
       requireRule(
         rows.activities.length === activityKeys.result.length &&

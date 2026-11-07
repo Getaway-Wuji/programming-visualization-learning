@@ -1,0 +1,490 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 14,
+  "nodes": [
+    {
+      "id": "rust.book.root14",
+      "sourceNodeId": "rust.source.root14",
+      "title": "第14章 进一步认识Cargo及crates.io",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 427,
+      "printedPage": null,
+      "leaf": false,
+      "order": 229,
+      "group": 14,
+      "body": [
+        "Cargo 不只负责一次编译，也组织构建配置、包的文档与版本、多个关联包以及本机工具。本章把这些工程活动放到已有 Rust 代码之外，说明各自输入、产物和责任边界。",
+        "教材基于 Rust 2018，命令阅读重点是理解发布模型与工作空间结构，不把书中的网站界面当作今天的固定界面。课程平台不替使用者创建账户、安装工具或发布包，所有操作示例都明确说明预期与前提。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root14.01",
+      "sourceNodeId": "rust.source.root14.01",
+      "title": "使用发布配置来定制构建",
+      "parent": "rust.book.root14",
+      "depth": 2,
+      "physicalPage": 428,
+      "printedPage": null,
+      "leaf": true,
+      "order": 230,
+      "group": 14,
+      "body": [
+        "开发和发布构建面向不同目标：前者重视编译反馈和调试信息，后者通常更重视生成程序的优化表现。Cargo 的 profile 集中保存这些选项，cargo build 默认使用开发配置，--release 选择发布配置。",
+        "在 Cargo.toml 中调整 opt-level 会改变优化取舍，而不是改变 Rust 代码所承诺的业务结果。过早增加优化也可能拖慢日常迭代；涉及整数溢出等构建检查差异时，更应在目标配置验证边界。下面只展示配置片段，适度提高开发构建优化，不能据此承诺某个项目速度提升多少。",
+        "性能和可调试性存在取舍，团队应按开发阶段选择配置，并在交付前用最终配置验证真正承诺的行为。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "# Cargo.toml 中的构建配置片段\n[profile.dev]\nopt-level = 1\n\n[profile.release]\nopt-level = 3",
+        "description": "区分独立 profile，并观察各自的优化级别。",
+        "result": "默认开发构建应用 dev 配置，--release 构建应用 release 配置；具体编译时间、体积和速度必须实际测量。",
+        "reason": "平台不解析 Cargo.toml profile，不编译用户的宿主机器码。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把 dev 的 opt-level 改为 1，会自动把 release 的选项也改成 1 吗？",
+        "answer": "不会。这是两个独立配置区域，应分别检查实际选择的构建模式与对应选项。",
+        "hints": [
+          "核对命令选中了哪一个 profile。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.02",
+      "sourceNodeId": "rust.source.root14.02",
+      "title": "将包发布到crates.io上",
+      "parent": "rust.book.root14",
+      "depth": 2,
+      "physicalPage": 430,
+      "printedPage": null,
+      "leaf": false,
+      "order": 231,
+      "group": 14,
+      "body": [
+        "发布包是向使用者提供可重复依赖的版本接口，不只是上传一份当前文件。需要先让公开 API、说明、许可证与版本约定一致，再核对打包内容和文档示例。",
+        "下面按教材顺序阅读账户、元数据、发布、新版本与撤回。操作的授权与凭据属于真实注册表环境，本课程只展示原理和审查方法，不会以示例命令触发对外发布。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root14.02.01",
+      "sourceNodeId": "rust.source.root14.02.01",
+      "title": "编写有用的文档注释",
+      "parent": "rust.book.root14.02",
+      "depth": 3,
+      "physicalPage": 430,
+      "printedPage": null,
+      "leaf": true,
+      "order": 232,
+      "group": 14,
+      "body": [
+        "文档注释用 /// 描述后面的公开条目，用 //! 描述所在模块或 crate 的整体意图。它们可被 rustdoc 生成为可浏览的 API 文档，内容应说明调用者关心的输入、结果、错误与示例，而不是逐行重复函数体。",
+        "可运行的文档示例还能帮助发现接口变动后说明失效。示例应足够完整，并与实际包名、可见性一致；错误和 panic 条件也应写清楚。下面先为简单函数解释单位和边界，使用普通函数主入口展示结果，文档内容可在独立库项目中进一步扩展成文档测试。",
+        "文档中的示例输入应与边界说明一致，若只展示合法调用却遗漏失败前提，使用者仍可能误解接口。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "/// 返回 0..=i32::MAX/4 份数对应的总页数，每份固定四页。\n///\n/// # Panics\n/// 当 copies 为负数或超过 i32::MAX/4 时停止，防止结果溢出。\npub fn pages(copies: i32) -> i32 {\n    assert!(copies >= 0 && copies <= i32::MAX / 4, \"copies out of range\");\n    copies * 4\n}\nfn main() { println!(\"{}\", pages(3)); }",
+        "description": "在 API 注释中说明领域意义与失败前提。",
+        "result": "普通入口输出 12；在 Cargo 项目中 cargo doc 可生成该公开条目的文档。",
+        "reason": "平台不运行 rustdoc 或文档测试，也未实现此 assert! 宏。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "“执行 copies * 4”为什么不如说明“每份固定四页”有用？",
+        "answer": "前者重复实现，后者解释业务含义与单位，调用者才能判断函数是否适合自己的场景，并理解参数约定。",
+        "hints": [
+          "从使用者的疑问组织文档。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.02.02",
+      "sourceNodeId": "rust.source.root14.02.02",
+      "title": "使用pub use来导出合适的公共API",
+      "parent": "rust.book.root14.02",
+      "depth": 3,
+      "physicalPage": 434,
+      "printedPage": null,
+      "leaf": true,
+      "order": 233,
+      "group": 14,
+      "body": [
+        "内部模块树通常按实现职责组织，但使用者未必需要记住每一层。pub use 可以把选定的公开条目重新导出到较短路径，让公共 API 围绕使用任务呈现，同时保留内部结构的调整空间。",
+        "重导出不会复制类型，也不会为私有实现自动授予任意访问。只有真正打算维护的接口才应公开，避免把内部细节都变成兼容性承诺。下面把内层函数导到模块根，调用端使用较短路径；无论从哪条公开路径进入，调用的仍是同一个函数定义。",
+        "重导出的路径一旦公开，改名或删除也可能影响用户，所以短路径同样需要版本兼容性维护。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod library {\n    mod internals {\n        pub fn length_unit() -> i32 { 4 }\n    }\n    pub use self::internals::length_unit;\n}\nfn main() { println!(\"{}\", library::length_unit()); }",
+        "description": "以重导出提供简洁稳定的入口路径。",
+        "result": "输出 4；调用者无需访问私有 internals 模块。",
+        "reason": "平台不实现模块隐私、pub use 和公开路径解析。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "pub use 是否创建了一个独立的新函数副本？",
+        "answer": "不是。它为同一条目提供可见的导出路径，改变的是外部访问方式，不是复制函数实现。",
+        "hints": [
+          "把定义位置与公开访问路径分开。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.02.03",
+      "sourceNodeId": "rust.source.root14.02.03",
+      "title": "创建crates.io账户",
+      "parent": "rust.book.root14.02",
+      "depth": 3,
+      "physicalPage": 438,
+      "printedPage": null,
+      "leaf": true,
+      "order": 234,
+      "group": 14,
+      "body": [
+        "教材中的注册表发布流程先建立账户，再取得能够发布的凭据，Cargo 用该凭据证明操作归属。账户登录方式、网页位置和令牌管理界面具有时效性，阅读时应理解身份与权限的关系，而不照搬旧界面截图。",
+        "令牌等同于被授予的操作能力，不应放进公开源码、命令示例或日志。若凭据泄露，应从注册表侧撤销并更换，而不是仅删除本地文件。下面用流程图文字标明凭据边界，不展示真实令牌，也不要求在课程平台输入账户；真实发布前还应确认目标注册表和账户权限。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "发布者账户\n    ↓ 由注册表授予发布权限\n发布凭据（保存在使用者自己的受控环境）\n    ↓ Cargo 使用凭据认证\n目标注册表中的包和版本\n\n课程页面：只解释流程，不接收或保存上述凭据。",
+        "description": "区分账户身份、发布凭据与包版本。",
+        "result": "阅读结果应能指出凭据在本机工具与注册表之间认证，课程页面不参与认证。没有创建账户或发出请求。",
+        "reason": "平台没有 Cargo 登录、账户注册或发布凭据存储功能。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "发现发布令牌曾进入公开仓库，仅删掉最新文件是否足够？",
+        "answer": "不够。历史或他人副本可能仍含令牌，应在注册表撤销旧凭据并重新生成，随后处理泄露路径。",
+        "hints": [
+          "秘密被复制后，删除一个副本不能收回权限。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.02.04",
+      "sourceNodeId": "rust.source.root14.02.04",
+      "title": "为包添加元数据",
+      "parent": "rust.book.root14.02",
+      "depth": 3,
+      "physicalPage": 439,
+      "printedPage": null,
+      "leaf": true,
+      "order": 235,
+      "group": 14,
+      "body": [
+        "包元数据让使用者知道它是什么、如何选择以及能否按许可使用。name 与 version 标识发布版本，description 概括用途，license 或 license-file 表达分发依据；还可以补充文档、仓库和关键词等发现信息。",
+        "不要为了通过检查随意填入不适用的许可证或虚构链接。下面的名字只是教学占位，不声称注册表中可用；edition 表明源码按 Rust 2018 规则处理，并不替代版本号或兼容性说明。Cargo.toml 与实际许可证文件、README 及公开行为应保持一致，发布前仍需核对完整打包内容。",
+        "包名、目标名和源码导入名也应分别核对，元数据可读不表示调用示例就自然正确，仍需通过文档验证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "[package]\nname = \"example-line-notes\"\nversion = \"0.1.0\"\nedition = \"2018\"\ndescription = \"A teaching example for selecting text lines\"\nlicense = \"MIT\"\n\n[dependencies]",
+        "description": "识别包身份、用途、语言版次与分发许可的位置。",
+        "result": "这是教学元数据片段，不表示名称已注册，也不表示实际代码已获 MIT 许可；真实包需有相符的授权与文件。",
+        "reason": "平台不校验注册表名称、不修改包许可，也不执行 Cargo 打包。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "edition 和 version 都出现数字，为什么不能互相替代？",
+        "answer": "edition 选择语言兼容规则，version 标识包的发布与接口演化；二者解决不同问题，一个不能表达另一个的含义。",
+        "hints": [
+          "分别回答“怎样解析源码”和“这是哪版包”。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.02.05",
+      "sourceNodeId": "rust.source.root14.02.05",
+      "title": "发布到crates.io",
+      "parent": "rust.book.root14.02",
+      "depth": 3,
+      "physicalPage": 441,
+      "printedPage": null,
+      "leaf": true,
+      "order": 236,
+      "group": 14,
+      "body": [
+        "正式发布应先核对将被打包的源码、资源、文档和许可证，确保没有本地凭据或无关工作文件。发布以一个确定版本向外提供依赖内容，不能把它当作可随意覆盖的临时草稿位置。",
+        "教材强调已发布版本不可覆写，因此审查应在上传前完成。cargo package --list 可帮助观察入包文件，cargo publish --dry-run 则演练检查而不正式上传；它们也可能触发构建或依赖获取，并非无成本文字预览。下面只展示审查命令，不附真正发布命令，更没有在本课程发起外部操作。",
+        "若演练失败，应先理解缺失文件或构建错误，再处理具体原因，不能为了发布而简单跳过有效检查。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo package --list\ncargo publish --dry-run",
+        "description": "先列打包文件，再演练发布检查。",
+        "result": "在配置正确的标准 Cargo 包中，第一条列出打包文件，第二条尝试发布前检查而不上传正式版本；失败原因取决于包与环境。此处未运行。",
+        "reason": "平台没有包文件打包、网络依赖获取或注册表发布能力。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "发布前为什么应看实际打包清单，而不只看编辑器中可见源码？",
+        "answer": "打包规则可能包含额外资源或遗漏必要文件，实际清单才直接反映使用者将获得什么，也能发现误入包的本地文件。",
+        "hints": [
+          "审查最终交付集合。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.02.06",
+      "sourceNodeId": "rust.source.root14.02.06",
+      "title": "发布已有包的新版本",
+      "parent": "rust.book.root14.02",
+      "depth": 3,
+      "physicalPage": 441,
+      "printedPage": null,
+      "leaf": true,
+      "order": 237,
+      "group": 14,
+      "body": [
+        "新版本是对外部使用者的新承诺。修复内部错误且保持公开契约、增加兼容能力、破坏现有接口，通常应对应不同级别的版本演化；不能只看代码行数决定版本号，删除一个参数也可能影响大量调用者。",
+        "更新 Cargo.toml 的 version 后，还要同步变更说明、文档与测试，确认旧使用方式是否仍成立。下面用稳定主版本后的三个概念场景说明语义化版本判断；早期 0.x 版本有其兼容性惯例，不能机械套用一条口诀。示例并未声明或发布任何实际版本。",
+        "兼容性还包括公开行为和数据含义，接口签名不变但更改返回语义，同样可能让旧调用者出现错误。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "已有版本：1.2.0\n修复错误，维持已承诺的输入输出：可考虑 1.2.1\n增加兼容的公开功能：可考虑 1.3.0\n删除或改变现有公开调用契约：应评估 2.0.0\n\n判断依据：外部调用者是否需要修改，而非提交大小。",
+        "description": "按接口兼容性而非改动规模推理版本。",
+        "result": "阅读后应能说明补丁、次版本和主版本的不同意图；实际选择仍需核对完整公开契约。",
+        "reason": "平台不维护注册表版本、不执行发布或依赖解析。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只删除一个公开参数，即使改动一行，为什么仍可能是破坏性变更？",
+        "answer": "已有调用者的调用方式会失效，兼容性影响取决于公开契约而非改动行数，需要按破坏性接口变化评估版本。",
+        "hints": [
+          "从旧使用者能否继续编译并正确运行出发。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.02.07",
+      "sourceNodeId": "rust.source.root14.02.07",
+      "title": "使用cargo yank命令从cargo.io上移除版本",
+      "parent": "rust.book.root14.02",
+      "depth": 3,
+      "physicalPage": 442,
+      "printedPage": null,
+      "leaf": true,
+      "order": 238,
+      "group": 14,
+      "body": [
+        "yank 是阻止问题版本被新的依赖解析选中，不是删除已经分发的源码。教材标题沿用原目录措辞，理解时应明确目标注册表是 crates.io，撤回的是特定包版本的可选状态。",
+        "已有锁文件所固定的依赖通常仍可使用，因而 yank 不等于强制所有用户立刻升级。它也无法收回被下载的秘密或修正已运行的错误逻辑，应发布修复版本并说明影响。下面展示撤回与恢复可选状态的命令形式，假设包由当前账户维护；这些是阅读说明，不会真实修改任何注册表。",
+        "撤回修复不了依赖者已下载的内容，维护者仍需清楚说明受影响版本和可迁移的替代版本。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo yank --vers 1.2.1 example-line-notes\ncargo yank --vers 1.2.1 --undo example-line-notes",
+        "description": "区分撤回版本与恢复其可被新解析选择的状态。",
+        "result": "具备权限且目标存在时，两条分别申请 yank 与 undo；不会重写该版本源码。此处未调用命令。",
+        "reason": "平台不持有发布权限，不执行注册表版本状态修改。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "某版本误含令牌，yank 为什么不能替代撤销令牌？",
+        "answer": "源码可能已被下载且仍可取得，yank 只是影响新依赖选择；只有撤销凭据才能切断被泄露令牌的操作能力。",
+        "hints": [
+          "版本选择状态与秘密有效性是不同对象。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.03",
+      "sourceNodeId": "rust.source.root14.03",
+      "title": "Cargo工作空间",
+      "parent": "rust.book.root14",
+      "depth": 2,
+      "physicalPage": 443,
+      "printedPage": null,
+      "leaf": false,
+      "order": 239,
+      "group": 14,
+      "body": [
+        "工作空间把多个协同开发的包放在一个统一构建范围内，便于共用锁文件、构建输出和集中运行检查。它不是把所有成员自动合并为一个 crate，也不会替成员自动声明相互依赖。",
+        "接下来先建立根清单与成员，再增加路径依赖。分析时分别追踪工作空间成员关系和 crate 依赖关系，二者在配置中位置不同，含义也不同。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root14.03.01",
+      "sourceNodeId": "rust.source.root14.03.01",
+      "title": "创建工作空间",
+      "parent": "rust.book.root14.03",
+      "depth": 3,
+      "physicalPage": 443,
+      "printedPage": null,
+      "leaf": true,
+      "order": 240,
+      "group": 14,
+      "body": [
+        "一个虚拟工作空间根清单可以只含 [workspace] 与 members，不一定自身就是一个可编译包。成员各有 Cargo.toml 和源码，工作空间层则协调共用的 Cargo.lock 与 target 输出，减少各自独立构建造成的重复管理。",
+        "成员路径是相对根清单的位置，加入列表前应有对应包。共享输出不表示公开接口自动互通，也不表示所有包必须同步使用同一个版本号。下面的布局有一个应用和一个库，根没有 src；阅读重点是根与成员的职责，尚未声明二者的代码依赖。",
+        "根目录执行检查时应核对实际选择的成员范围，不能只看到共享输出目录就假定每个成员都参与验证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "workspace-root/\n  Cargo.toml       # [workspace] members = [\"reader\", \"line_core\"]\n  reader/\n    Cargo.toml     # 一个二进制包\n    src/main.rs\n  line_core/\n    Cargo.toml     # 一个库包\n    src/lib.rs\n  Cargo.lock       # 统一解析得到的锁文件\n  target/          # 默认共享构建输出",
+        "description": "辨认虚拟工作空间根与独立成员包。",
+        "result": "阅读结构后应能指出根管理成员，reader 和 line_core 各自有编译目标；这不是已创建的目录或构建产物。",
+        "reason": "平台不创建或构建用户 Cargo 工作空间。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "根清单只有 [workspace]，是否必须再建一个空的根 src/main.rs？",
+        "answer": "不必。虚拟根可以只管理成员，是否具有自身 package 和目标是独立设计决定。",
+        "hints": [
+          "先看根清单是否定义了 package。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.03.02",
+      "sourceNodeId": "rust.source.root14.03.02",
+      "title": "在工作空间中创建第二个包",
+      "parent": "rust.book.root14.03",
+      "depth": 3,
+      "physicalPage": 444,
+      "printedPage": null,
+      "leaf": true,
+      "order": 241,
+      "group": 14,
+      "body": [
+        "把两个包都列为工作空间成员，只表示它们接受统一管理，不表示一个可以直接 use 另一个。消费方仍须在自己的 dependencies 中声明路径依赖，被消费的库也必须公开所需条目。",
+        "路径依赖通常以消费方清单所在目录为基准。发布场景还要考虑注册表版本依赖，不能指望使用者拥有相同的本地目录树。下面只展示本地协作配置，并用 -p 选择目标成员测试；工作空间能集中运行检查，但不应把一个成员通过误报成所有成员都通过。",
+        "成员包独立维护公开边界，路径依赖也不能访问私有条目，因此本地协作不应取消模块可见性设计。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "# 根 Cargo.toml\n[workspace]\nmembers = [\"reader\", \"line_core\"]\n\n# reader/Cargo.toml 中的片段\n[dependencies]\nline_core = { path = \"../line_core\" }\n\n# 在根目录选择成员测试\n# cargo test -p line_core",
+        "description": "为已加入工作空间的成员显式声明路径依赖。",
+        "result": "reader 才获得依赖 line_core 的配置；cargo test -p line_core 仅选择该成员，实际测试结果须运行后判断。",
+        "reason": "平台不解析多包依赖、路径或 workspace 成员测试。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "同属一个工作空间后，为什么还要写 line_core 路径依赖？",
+        "answer": "成员关系管理构建集合，依赖关系决定哪个 crate 可导入另一个；Cargo 不会因同属空间就让所有成员互相依赖。",
+        "hints": [
+          "把管理关系与代码依赖各画一条边。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.04",
+      "sourceNodeId": "rust.source.root14.04",
+      "title": "使用cargo install从crates.io上安装可执行程序",
+      "parent": "rust.book.root14",
+      "depth": 2,
+      "physicalPage": 451,
+      "printedPage": null,
+      "leaf": true,
+      "order": 242,
+      "group": 14,
+      "body": [
+        "cargo install 面向带二进制目标的包，把生成的工具安装到使用者的 Cargo 工具目录，供命令行调用。它与把库加进项目 dependencies 不同：安装工具不使项目源码自动能够 use 该库，也不修改项目的业务依赖约定。",
+        "安装位置和可执行文件是否能找到取决于工具目录与 PATH。命令可按版本选择工具，但实际可用版本和构建环境要在使用时核对。下面只展示查询已安装工具的只读命令，避免把教学步骤变成下载和运行外部程序；阅读时仍应理解安装属于宿主环境操作。",
+        "机器能找到工具命令，只说明安装目录已被搜索到，不代表当前项目已经记录了可复现的构建依赖。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo install --list",
+        "description": "观察 Cargo 已安装的二进制工具清单。",
+        "result": "在有 Cargo 的环境中列出已安装包及可执行目标；若没有已安装工具，清单可以为空。此处不报告本机安装状态。",
+        "reason": "平台不安装宿主工具、不修改 PATH，也不运行 cargo install。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "cargo install 某工具后，为什么项目中 use 同名库仍可能失败？",
+        "answer": "安装的是本机可执行工具，不等于为当前项目声明了库依赖；源码导入仍由该项目清单及目标决定。",
+        "hints": [
+          "区分给人使用的命令和给源码使用的依赖。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.05",
+      "sourceNodeId": "rust.source.root14.05",
+      "title": "使用自定义命令扩展Cargo的功能",
+      "parent": "rust.book.root14",
+      "depth": 2,
+      "physicalPage": 453,
+      "printedPage": null,
+      "leaf": true,
+      "order": 243,
+      "group": 14,
+      "body": [
+        "Cargo 可把 PATH 中名称符合 cargo-名称 约定的可执行程序作为扩展子命令调用。例如 cargo-audit-example 可通过 cargo audit-example 进入；扩展仍是独立程序，不会因此成为 Cargo 内置实现。",
+        "名字相同不代表来源可信或行为相同，实际调用取决于环境能找到的可执行文件。开发或使用扩展时应看清传参、退出状态和安装来源，尤其不要把第三方命令的输出误认成编译器诊断。下面用 cargo --list 阅读可发现的命令，不安装或执行任何新增扩展。",
+        "扩展也可能返回失败退出状态，调用脚本需要像对待其他外部程序一样检查，不能因命令前缀是 Cargo 就忽略。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "cargo --list",
+        "description": "查看 Cargo 能列出的内置命令与可发现扩展。",
+        "result": "标准 Cargo 环境会显示可用命令；具体扩展项由机器上的程序和 PATH 决定，此处不宣称存在某个第三方命令。",
+        "reason": "平台没有 PATH 搜索、宿主扩展进程或 Cargo 命令发现。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把程序命名为 cargo-report 后，它就自动获得 Cargo 内部权限或实现了吗？",
+        "answer": "没有。它仍是独立可执行程序，名称约定只是让 Cargo 能发现并转交调用，行为和权限来自程序及运行环境本身。",
+        "hints": [
+          "发现约定不等于信任或内置集成。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root14.06",
+      "sourceNodeId": "rust.source.root14.06",
+      "title": "总结",
+      "parent": "rust.book.root14",
+      "depth": 2,
+      "physicalPage": 454,
+      "printedPage": null,
+      "leaf": true,
+      "order": 244,
+      "group": 14,
+      "body": [
+        "工程协作需要同时维护源码行为、公开文档、构建配置与版本边界。profile 选择如何构建，workspace 组织多个包，注册表版本让外部依赖可重复取得；这些机制解决不同层次的问题，不能相互替代。",
+        "复盘交付时，可先列实际打包内容，验证公开例子和测试，再核对元数据及兼容性。任何真实发布或安装都需要在使用者自己的环境明确进行，课程阅读不触发这些动作。下面把常见目标映射为对应工具活动，帮助区分本地检查、文档生成与对外版本管理。",
+        "项目规模变大时，先识别真正独立的责任再拆包，避免仅为了目录整齐而引入不必要的依赖和版本协调。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "目标                    对应活动\n改变构建优化            调整 profile 并核对构建模式\n组织关联包              workspace + 显式依赖\n说明公开用法            文档注释与文档测试\n核对分发文件            cargo package --list\n本机安装命令工具        cargo install（与库依赖不同）\n修复已发布接口行为      新版本与兼容性说明",
+        "description": "将工程需求对应到正确的 Cargo 机制。",
+        "result": "阅读后应能为每个目标指出独立机制，不会因加入 workspace 就自动完成依赖、发布或安装。",
+        "reason": "平台展示工程概念，不执行宿主 Cargo 或注册表工作流。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "仅把包放进 workspace，是否就完成了可发布库的全部准备？",
+        "answer": "没有。还需确认公开 API、显式依赖、打包文件、元数据、许可、文档与检查；workspace 主要提供协同构建组织。",
+        "hints": [
+          "按机制各自负责的层次逐项判断。"
+        ]
+      }
+    }
+  ]
+}

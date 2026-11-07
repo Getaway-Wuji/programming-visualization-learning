@@ -1,0 +1,885 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 19,
+  "nodes": [
+    {
+      "id": "rust.book.root19",
+      "sourceNodeId": "rust.source.root19",
+      "title": "第19章 高级特性",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 596,
+      "printedPage": null,
+      "leaf": false,
+      "order": 323,
+      "group": 19,
+      "body": [
+        "本章是阅读Rust库和诊断时的工具箱：unsafe把部分内存安全证明交给作者，高级trait表达更精确的接口关系，新类型与别名区分类型身份，函数指针和闭包支持传递行为，宏则在编译期生成代码。",
+        "不必为了显得熟练而同时使用这些特性。先识别普通函数、枚举和泛型无法满足的具体需求，再选择最小工具；尤其要让unsafe范围小而理由明确。本章均为阅读内容，平台不执行裸指针、宏展开或第三方构建。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root19.01",
+      "sourceNodeId": "rust.source.root19.01",
+      "title": "不安全Rust",
+      "parent": "rust.book.root19",
+      "depth": 2,
+      "physicalPage": 598,
+      "printedPage": null,
+      "leaf": false,
+      "order": 324,
+      "group": 19,
+      "body": [
+        "unsafe不等于关闭类型系统。教材围绕裸指针解引用、不安全函数、可变静态变量与不安全trait四类能力展开，普通引用、所有权和可变性规则仍继续生效。",
+        "逐个例子要写清楚哪些条件由调用者保证、哪些条件由封装内部检查。一个安全函数只要允许任何合法输入导致未定义行为，就不是健全的安全抽象；把unsafe关键字藏起来本身并不能完成证明。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root19.01.01",
+      "sourceNodeId": "rust.source.root19.01.01",
+      "title": "不安全超能力",
+      "parent": "rust.book.root19.01",
+      "depth": 3,
+      "physicalPage": 598,
+      "printedPage": null,
+      "leaf": true,
+      "order": 325,
+      "group": 19,
+      "body": [
+        "unsafe代码允许执行普通安全代码不能直接执行的部分操作，同时要求作者负责证明它们不会破坏内存安全。教材将重点归为四项：解引用裸指针、调用不安全函数或方法、访问修改可变静态变量、实现不安全trait。这是本书的教学划分，不宜当成所有版次语法的完整清单。",
+        "标记unsafe块不会让悬垂引用、重复可变借用等写法自动合法。它更像一个需要审查的边界：编译器允许某些操作，作者补上有效地址、生命周期、对齐和同步等证明。优先把边界缩小到确有需要的操作，使安全调用者只需遵守普通接口契约。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let value = 17;\n    let ptr = &value as *const i32;\n    // ptr来自仍存活且对齐的value，只进行读取。\n    let copied = unsafe { *ptr };\n    println!(\"{}\", copied);\n}",
+        "description": "由有效引用创建裸指针，标明解引用所依赖的条件。",
+        "result": "按完整Rust语义可读得17；这里只阅读，不执行裸指针操作。",
+        "reason": "执行器不支持裸指针、as转换或unsafe。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把任意整数转换成指针后放进unsafe，是否就保证可以读取？",
+        "answer": "不保证。unsafe不会验证地址存在、对齐或指向有效值；作者仍需证明所有解引用前提，否则可能发生未定义行为。",
+        "hints": [
+          "关键字允许操作，不负责让地址有效。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.01.02",
+      "sourceNodeId": "rust.source.root19.01.02",
+      "title": "解引用裸指针",
+      "parent": "rust.book.root19.01",
+      "depth": 3,
+      "physicalPage": 599,
+      "printedPage": null,
+      "leaf": true,
+      "order": 326,
+      "group": 19,
+      "body": [
+        "裸指针写成*const T或*mut T，不保证非空、有效或独占。创建裸指针可以是安全操作，但解引用需要unsafe，因为编译器无法仅凭类型确认它所指内存仍然存在、对齐正确并允许当前访问。不要把它与受借用检查器约束的&T、&mut T混为一谈。",
+        "示例从局部可变整数取得裸指针，指针只在整数存活期间使用，且访问之间没有并发或冲突引用。*const只限制经这条指针写入，并不保证底层数据永远不变。若指针来自外部接口，还要核对来源、所有权、有效范围与释放责任，而不是只确认类型拼写正确。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut value = 12;\n    let ptr = &mut value as *mut i32;\n    unsafe { *ptr = *ptr + 3; }\n    println!(\"{}\", value);\n}",
+        "description": "从合法独占借用创建指针，在有效期内读写。",
+        "result": "完整Rust中value变为15；这里仅检查代码含义，不访问宿主地址。",
+        "reason": "执行器没有裸指针和unsafe内存访问。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把ptr保存到value离开作用域之后再解引用，有何问题？",
+        "answer": "它会指向已失效的存储，成为悬垂指针。裸指针类型不会延长value生命周期，unsafe也不会恢复被释放的内存。",
+        "hints": [
+          "追踪指针目标而不只追踪指针变量。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.01.03",
+      "sourceNodeId": "rust.source.root19.01.03",
+      "title": "调用不安全函数或方法",
+      "parent": "rust.book.root19.01",
+      "depth": 3,
+      "physicalPage": 602,
+      "printedPage": null,
+      "leaf": true,
+      "order": 327,
+      "group": 19,
+      "body": [
+        "unsafe fn表示调用者必须满足类型签名之外的安全条件。调用它需要unsafe边界，但函数作者同样要明确这些条件是什么。一个常见安全封装先验证边界，再调用底层不检查边界的操作，使所有合法调用都满足其前提。",
+        "示例在索引小于切片长度时才使用get_unchecked，超界返回None。证明依赖检查和访问作用于同一份仍存活的切片，且索引没有在中途改变。这里用不检查索引仅为说明责任转移；实际开发若普通get已经满足需要，使用get会更短，也更容易维护。",
+        "extern \"C\"块声明外部函数的ABI与签名，Rust2018中调用这些函数需满足其额外安全约定。反向导出可用pub extern \"C\" fn并用#[no_mangle]保留符号名；ABI兼容不代表可以把任意Rust引用跨边界传递，内存所有权和错误传播仍要另订契约。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "extern \"C\" { fn abs(input: i32) -> i32; }\n#[no_mangle]\npub extern \"C\" fn answer_code() -> i32 { 42 }\nfn checked_copy(values: &[i32], index: usize) -> Option<i32> {\n    if index < values.len() {\n        // 同一切片和索引已经通过边界检查。\n        Some(unsafe { *values.get_unchecked(index) })\n    } else { None }\n}\nfn main() {\n    println!(\"{:?}\", checked_copy(&[4, 9], 1));\n    println!(\"{:?}\", checked_copy(&[4, 9], 2));\n}",
+        "description": "用检查建立不安全调用的前提，并讨论可直接用get替代。；同时声明但不调用外部abs，并展示Rust2018导出C ABI函数。",
+        "result": "阅读结果为Some(9)、None；没有执行这段unsafe示例。 外部abs没有被调用，answer_code作为可导出接口返回42。",
+        "reason": "执行器不支持切片、usize、Option或不安全库函数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删去if检查后，checked_copy还能作为任意索引可调用的安全函数吗？",
+        "answer": "不能。调用者可传入超界索引，内部get_unchecked的安全前提会被破坏。安全接口不能把未声明的内存安全义务偷偷留给调用者。",
+        "hints": [
+          "检查函数是否对所有合法类型输入都健全。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.01.04",
+      "sourceNodeId": "rust.source.root19.01.04",
+      "title": "访问或修改一个可变静态变量",
+      "parent": "rust.book.root19.01",
+      "depth": 3,
+      "physicalPage": 607,
+      "printedPage": null,
+      "leaf": true,
+      "order": 328,
+      "group": 19,
+      "body": [
+        "static具有固定的存储位置并可在整个程序期间存在；与常量不同，多个访问指向同一个静态对象。可变static允许读写共享的全局状态，因此访问需要特别处理并发和别名风险。长寿命并不等于可任意共享修改，生命周期只能解决数据是否存在的问题。",
+        "本例仅描述单线程顺序访问的条件，把读取结果复制成局部整数后再格式化，避免为可变static创建共享引用。真实并发计数通常应选择原子类型或Mutex，并把访问限制到受控接口。把所有读写包进unsafe不会自动增加同步，也不会把多个增量操作合成一个原子步骤。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "static mut TOTAL: u32 = 0;\nfn main() {\n    // 本阅读例仅有一个线程，且不创建指向TOTAL的引用。\n    let snapshot = unsafe {\n        TOTAL += 2;\n        TOTAL\n    };\n    println!(\"{}\", snapshot);\n}",
+        "description": "顺序修改可变静态量，并复制快照后输出。",
+        "result": "按所列单线程前提快照为2；这里不执行全局读写。",
+        "reason": "执行器没有static存储、u32或unsafe。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两个线程各自把TOTAL += 1放进unsafe，是否能保证最终为2？",
+        "answer": "不能。unsafe不会令读改写原子化；并发无同步读写可导致数据竞争与未定义行为，应使用适当同步类型。",
+        "hints": [
+          "一个增量通常包含读取、计算和写回。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.01.05",
+      "sourceNodeId": "rust.source.root19.01.05",
+      "title": "实现不安全trait",
+      "parent": "rust.book.root19.01",
+      "depth": 3,
+      "physicalPage": 608,
+      "printedPage": null,
+      "leaf": true,
+      "order": 329,
+      "group": 19,
+      "body": [
+        "unsafe trait把无法仅由类型签名验证的条件写成实现者必须兑现的契约。实现时使用unsafe impl，表示作者承担证明责任；这与调用某个unsafe函数需要unsafe块是不同的边界。声明trait本身不会自动验证实现者是否遵守约定。",
+        "例如一个长度接口若承诺返回值一定等于后续可读取的字节数，安全的底层读取代码可能据此安排访问。错误实现就可能破坏调用者的内存安全。若条件只影响业务结果、不关系内存安全，通常没有必要把trait标成unsafe；应让契约严重程度与真正被信任的条件匹配。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "// 安全契约：返回长度必须等于as_bytes可访问的长度。\nunsafe trait ExactBytes {\n    fn len(&self) -> usize;\n    fn as_bytes(&self) -> &[u8];\n}\nstruct Block([u8; 3]);\nunsafe impl ExactBytes for Block {\n    fn len(&self) -> usize { self.0.len() }\n    fn as_bytes(&self) -> &[u8] { &self.0 }\n}\nfn main() {\n    let b = Block([1, 2, 3]);\n    println!(\"{} {}\", b.len(), b.as_bytes().len());\n}",
+        "description": "示意一个必须为潜在底层调用者维护的长度契约。",
+        "result": "两种长度均为3；示例只展示契约，没有执行不安全内存访问。",
+        "reason": "执行器不支持unsafe trait、切片与结构体。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果错误实现len返回100，unsafe impl会自动纠正它吗？",
+        "answer": "不会。实现标记仅声明承诺成立；如果别的底层代码信任此长度而越界访问，就可能导致内存安全错误。",
+        "hints": [
+          "声明承诺与验证承诺不是一回事。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.01.06",
+      "sourceNodeId": "rust.source.root19.01.06",
+      "title": "使用不安全代码的时机",
+      "parent": "rust.book.root19.01",
+      "depth": 3,
+      "physicalPage": 609,
+      "printedPage": null,
+      "leaf": true,
+      "order": 330,
+      "group": 19,
+      "body": [
+        "只有普通安全接口无法满足某个真实需求时，才值得引入unsafe，例如与外部接口交互或构建经过证明的底层抽象。应把需要调用者保证的条件写清，并尽量通过安全的参数类型和内部检查缩小可出错的范围。代码短并不意味着证明简单。",
+        "审查时逐项检查地址来源、有效期、对齐、别名、初始化和同步；也检查所有错误及提前返回路径。若标准库已经提供满足需求的安全方法，直接使用能减少重复证明。unsafe应是局部实现选择，不能让安全调用者在不知情时承担隐藏的内存安全义务。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn choose(values: &[i32], index: usize) -> Option<i32> {\n    values.get(index).copied()\n}\nfn main() {\n    println!(\"{:?}\", choose(&[10, 20], 0));\n    println!(\"{:?}\", choose(&[10, 20], 8));\n}",
+        "description": "用标准库安全接口消除手写指针证明。",
+        "result": "依次得到Some(10)、None；越界通过返回值表达。",
+        "reason": "执行器未支持切片、Option和通用标准库方法。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "这里为了“更快”直接换成get_unchecked是否已经有充分理由？",
+        "answer": "没有。需要真实需求与测量，还要证明所有调用路径的索引有效；当前安全get已清晰表达越界行为，盲目替换会改变接口责任。",
+        "hints": [
+          "先确定需要改变的行为和证据。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.02",
+      "sourceNodeId": "rust.source.root19.02",
+      "title": "高级trait",
+      "parent": "rust.book.root19",
+      "depth": 2,
+      "physicalPage": 610,
+      "printedPage": null,
+      "leaf": false,
+      "order": 331,
+      "group": 19,
+      "body": [
+        "trait不仅声明方法，还能关联类型、设置默认泛型参数、表达依赖或消除同名方法的歧义。这些能力让库接口更精确，也减少调用者需要重复写出的类型信息。",
+        "按顺序比较关联类型与泛型参数，再看运算符重载、完全限定语法和超trait。最后用newtype在本地创建类型身份，从而为外部数据提供符合孤儿规则的接口。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root19.02.01",
+      "sourceNodeId": "rust.source.root19.02.01",
+      "title": "在trait的定义中使用关联类型指定占位类型",
+      "parent": "rust.book.root19.02",
+      "depth": 3,
+      "physicalPage": 610,
+      "printedPage": null,
+      "leaf": true,
+      "order": 332,
+      "group": 19,
+      "body": [
+        "关联类型是在trait内部声明、由具体实现确定的类型。调用者看到某个类型实现该trait后，就能沿关联关系得到它使用的输出类型，而不必在每次调用时另选一个类型参数。Iterator::Item正是这种“这个迭代器产生什么”的契约。",
+        "与trait泛型参数相比，一个具体类型对同一个不带其他区分参数的trait只能有一份实现，所以关联类型通常会固定下来。若希望同一个类型能按多个不同输入类型实现同一接口，泛型参数可能更合适。不要只为缩短尖括号而切换设计，应先确定哪一方有权选择类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Source {\n    type Item;\n    fn get(&self) -> Self::Item;\n}\nstruct Temperature(i32);\nimpl Source for Temperature {\n    type Item = i32;\n    fn get(&self) -> i32 { self.0 }\n}\nfn read<S: Source<Item = i32>>(s: &S) -> i32 { s.get() }\nfn main() { println!(\"{}\", read(&Temperature(23))); }",
+        "description": "实现固定关联输出类型，使用方约束其为i32。",
+        "result": "打印23；Temperature的Source::Item确定为i32。",
+        "reason": "执行器没有trait关联类型或泛型约束。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "调用者能否在本次调用中随意把Temperature的Item换成String？",
+        "answer": "不能。Item由该Source实现确定，调用者只能使用或约束这一关系，不能在每次调用时重选它。",
+        "hints": [
+          "类型选择发生在impl中。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.02.02",
+      "sourceNodeId": "rust.source.root19.02.02",
+      "title": "默认泛型参数和运算符重载",
+      "parent": "rust.book.root19.02",
+      "depth": 3,
+      "physicalPage": 612,
+      "printedPage": null,
+      "leaf": true,
+      "order": 333,
+      "group": 19,
+      "body": [
+        "泛型参数可以设置默认类型，使常见调用不必重复注明。std::ops::Add默认把右操作数类型设为Self，所以最常见的是同类型相加；也可另写Add<Rhs>来支持不同类型的右操作数，并通过关联类型Output确定结果。",
+        "运算符重载只能沿语言已规定的trait接口扩展，不允许发明新的符号或改变优先级。示例让两个位移相加得到新的位移，并消费两个操作数；若希望保留不能Copy的原值，可以考虑实现引用之间的操作。重载行为应符合领域直觉，避免让熟悉的+承担难以发现的副作用。复合赋值另有对应接口，不会因实现Add就自动获得AddAssign。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::ops::Add;\n#[derive(Debug)]\nstruct Offset { x: i32, y: i32 }\nimpl Add for Offset {\n    type Output = Self;\n    fn add(self, rhs: Self) -> Self {\n        Self { x: self.x + rhs.x, y: self.y + rhs.y }\n    }\n}\nfn main() {\n    let sum = Offset { x: 1, y: 4 } + Offset { x: 3, y: -2 };\n    println!(\"{:?}\", sum);\n}",
+        "description": "使用默认Rhs=Self，为位移定义逐坐标加法。",
+        "result": "结果为Offset { x: 4, y: 2 }。",
+        "reason": "执行器没有结构体、Add trait或运算符重载。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "写impl Add是否允许把+的优先级提高到乘法之前？",
+        "answer": "不允许。trait实现只决定已定义运算符如何作用于特定类型，语法和优先级由语言规定。",
+        "hints": [
+          "区分语法解析规则与具体方法实现。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.02.03",
+      "sourceNodeId": "rust.source.root19.02.03",
+      "title": "用于消除歧义的完全限定语法：调用相同名称的方法",
+      "parent": "rust.book.root19.02",
+      "depth": 3,
+      "physicalPage": 614,
+      "printedPage": null,
+      "leaf": true,
+      "order": 334,
+      "group": 19,
+      "body": [
+        "同一个类型可以有固有方法，也可以为多个trait实现同名方法。点调用通常优先使用适用的固有方法；需要明确选择时，可以写Trait::method(&value)，或用<Type as Trait>::method来同时指出类型和trait。完全限定语法避免了依赖上下文猜测。",
+        "没有self参数的关联函数尤其需要标明实现类型，因为仅写Trait::name无法确定用哪个实现。限定语法不是另一种动态派发机制，它只是让编译器知道本次调用究竟指哪项。阅读诊断时应核对trait是否可见、接收者类型是否正确，以及方法是关联函数还是实例方法。写明限定路径也有助于后续接口扩展时保持调用意图。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "trait Formal { fn label(&self) -> &'static str; }\ntrait Short { fn label(&self) -> &'static str; }\nstruct File;\nimpl Formal for File { fn label(&self) -> &'static str { \"正式名称\" } }\nimpl Short for File { fn label(&self) -> &'static str { \"简称\" } }\nimpl File { fn label(&self) -> &'static str { \"固有方法\" } }\nfn main() {\n    let f = File;\n    println!(\"{}\", f.label());\n    println!(\"{}\", Formal::label(&f));\n    println!(\"{}\", <File as Short>::label(&f));\n}",
+        "description": "显式选择三个同名方法。",
+        "result": "依次打印固有方法、正式名称、简称。",
+        "reason": "执行器没有trait及完全限定调用语法。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "<File as Short>::label中的as是否在转换这个对象？",
+        "answer": "不是。这里的as处于限定路径中，用于指明采用File对Short的实现；并非把一个运行时值强制转换。",
+        "hints": [
+          "先判断as所在的是类型路径还是表达式。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.02.04",
+      "sourceNodeId": "rust.source.root19.02.04",
+      "title": "用于在trait中附带另外一个trait功能的超trait",
+      "parent": "rust.book.root19.02",
+      "depth": 3,
+      "physicalPage": 618,
+      "printedPage": null,
+      "leaf": true,
+      "order": 335,
+      "group": 19,
+      "body": [
+        "超trait表示一个接口依赖另一个接口。写trait Framed: Display意味着实现Framed的类型必须同时实现Display，因而Framed的默认方法可以放心调用to_string等依赖Display的能力。它表达的是约束关系，并不会自动生成所依赖trait的实现。",
+        "这种机制常用于把基础能力组合成更高层协议。调用者只要求Framed，仍可知道Display可用，但实现者需要分别履行两个契约。它不等同于结构体继承，不会带来父类字段，也不会替代组合存储。设计时应避免加入与实际默认行为无关的超trait，免得限制本来可用的实现。新增超trait还会影响已有实现者，属于需要评估的接口变化。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::fmt;\ntrait Framed: fmt::Display {\n    fn framed(&self) -> String { format!(\"[{}]\", self) }\n}\nstruct Ticket(u32);\nimpl fmt::Display for Ticket {\n    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {\n        write!(f, \"票号{}\", self.0)\n    }\n}\nimpl Framed for Ticket {}\nfn main() { println!(\"{}\", Ticket(12).framed()); }",
+        "description": "依赖Display的默认方法生成带边框文字。",
+        "result": "打印[票号12]；Ticket显式提供Display后才能实现Framed。",
+        "reason": "执行器没有Display、超trait或格式化器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "仅写impl Framed for Ticket会自动给Ticket派生Display吗？",
+        "answer": "不会。超trait是前置约束而不是生成器，Ticket必须已经满足Display；缺少实现会导致编译错误。",
+        "hints": [
+          "冒号右边说明必须已有的能力。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.02.05",
+      "sourceNodeId": "rust.source.root19.02.05",
+      "title": "使用newtype模式在外部类型上实现外部trait",
+      "parent": "rust.book.root19.02",
+      "depth": 3,
+      "physicalPage": 620,
+      "printedPage": null,
+      "leaf": true,
+      "order": 336,
+      "group": 19,
+      "body": [
+        "孤儿规则限制“为外部类型实现外部trait”，避免不同包对同一组合给出互相冲突的实现。newtype用本地元组结构体包住外部类型，创建新的类型身份。实现外部trait时目标变成本地包装类型，规则因此得到满足。",
+        "包装并不会把内部类型的所有方法自动转交出去；应明确公开哪些接口。示例为字符串列表提供自己的Display格式，内部Vec仍负责存储。若只是给Vec起一个type别名，它仍是同一外部类型，不能产生同样的效果。这里重用的是数据表示，接口和类型身份是新定义的。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::fmt;\nstruct Names(Vec<String>);\nimpl fmt::Display for Names {\n    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {\n        write!(f, \"名单({})\", self.0.join(\"、\"))\n    }\n}\nfn main() {\n    let names = Names(vec![\"林\".into(), \"周\".into()]);\n    println!(\"{}\", names);\n}",
+        "description": "为本地包装类型定义列表展示规则。",
+        "result": "打印名单(林、周)。",
+        "reason": "执行器不支持元组结构体、Display或Vec。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把struct Names改为type Names = Vec<String>还能获得本地类型身份吗？",
+        "answer": "不能。别名只提供另一个名字，目标仍是Vec<String>；newtype才创建一个本地定义的新类型。",
+        "hints": [
+          "观察声明用的是struct还是type。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.03",
+      "sourceNodeId": "rust.source.root19.03",
+      "title": "高级类型",
+      "parent": "rust.book.root19",
+      "depth": 2,
+      "physicalPage": 623,
+      "printedPage": null,
+      "leaf": false,
+      "order": 337,
+      "group": 19,
+      "body": [
+        "类型的名称、身份和大小是三个不同问题。newtype创建新身份并可约束单位，type别名只是给现有类型增加名称，never描述无法产生返回值的控制流，动态大小类型则需要通过指针等方式使用。",
+        "阅读下面的例子时先确定编译器眼中是否仍是同一类型，再看值是否能直接放在局部变量中，以及接口是否需要允许?Sized。这样能避免把语法上的相似误当成语义相同。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root19.03.01",
+      "sourceNodeId": "rust.source.root19.03.01",
+      "title": "使用newtype模式实现类型安全与抽象",
+      "parent": "rust.book.root19.03",
+      "depth": 3,
+      "physicalPage": 623,
+      "printedPage": null,
+      "leaf": true,
+      "order": 338,
+      "group": 19,
+      "body": [
+        "newtype用一个新结构体把同样表示的数据区分成不同概念。毫米和米都可保存整数，但属于不同类型后，函数便不能意外把其中一种当成另一种。转换需要显式构造并处理单位倍率，错误能在编译期比普通数值计算更早被发现。",
+        "包装还可以保护内部表示，例如只提供经过检查的构造函数，避免无效编号流入后续逻辑。它不会自动替开发者验证业务范围，也不会自动提供内部类型的全部方法。应决定何时允许拆出原始值、何时保持抽象边界；随意公开内部字段可能让辛苦建立的不变量失去约束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Meters(u32);\nstruct Millimeters(u32);\nfn to_mm(m: Meters) -> Millimeters { Millimeters(m.0 * 1000) }\nfn show_length(n: Millimeters) { println!(\"{} mm\", n.0); }\nfn main() { show_length(to_mm(Meters(2))); }",
+        "description": "通过显式函数把两个单位类型连接起来。",
+        "result": "打印2000 mm；直接传Meters给show_length不符合参数类型。",
+        "reason": "执行器没有newtype结构体和u32。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "直接把Meters(2)传给show_length为什么比传裸整数更安全？",
+        "answer": "编译器看到不同类型，会拒绝缺少转换的调用；裸整数无法携带单位身份，很容易把2米当成2毫米。",
+        "hints": [
+          "数据表示相同不代表领域含义相同。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.03.02",
+      "sourceNodeId": "rust.source.root19.03.02",
+      "title": "使用类型别名创建同义类型",
+      "parent": "rust.book.root19.03",
+      "depth": 3,
+      "physicalPage": 624,
+      "printedPage": null,
+      "leaf": true,
+      "order": 339,
+      "group": 19,
+      "body": [
+        "type别名给已有类型提供另一个名称，不创建新的类型身份。它适合简化很长的嵌套类型，或让返回值的用途更容易识别。别名和原类型可以互换，因此不能像newtype那样防止单位或编号被混用。",
+        "例如Result<T, String>可别名为应用自己的结果类型，调用者省去重复错误类型；这不会改变Result原有的成功失败语义。命名应帮助理解，而不应暗示并不存在的校验。若接口需要严格区分两个概念，即使底层同为i32，也应考虑结构体包装而不是仅换一个type名字。别名也不会自动运行范围检查或转换单位倍率。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "type Score = i32;\ntype AppResult<T> = Result<T, String>;\nfn checked(n: Score) -> AppResult<Score> {\n    if n >= 0 { Ok(n) } else { Err(\"分数不能为负\".into()) }\n}\nfn main() {\n    let raw: i32 = 8;\n    let score: Score = raw;\n    println!(\"{:?}\", checked(score));\n}",
+        "description": "别名简化接口而不隔离底层类型。",
+        "result": "打印Ok(8)；i32可直接赋给Score。",
+        "reason": "执行器没有type别名、泛型Result或枚举返回值。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Score别名能否自动拒绝把年龄整数赋给它？",
+        "answer": "不能。Score仍是i32，编译器没有新的类型身份可据以区分年龄和分数。需要newtype等设计才可建立这种边界。",
+        "hints": [
+          "别名是同义名称。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.03.03",
+      "sourceNodeId": "rust.source.root19.03.03",
+      "title": "永不返回的Never类型",
+      "parent": "rust.book.root19.03",
+      "depth": 3,
+      "physicalPage": 626,
+      "printedPage": null,
+      "leaf": true,
+      "order": 340,
+      "group": 19,
+      "body": [
+        "never类型写成!，表示没有可以返回的值。永远循环、panic或跳转出当前求值路径的表达式不会向后续代码产生普通结果；这使它们可以出现在原本要求某种具体类型的位置，因为根本不会沿该路径交出一个冲突类型的值。",
+        "不要把!与unit混淆：unit有一个值()，返回unit的函数可以正常结束；返回!的函数不可能正常返回。示例在错误分支continue，整个match仍能给成功分支产生i32。控制流若从错误分支直接进入下一轮，就没有“同时返回另一个类型”的矛盾。panic也属于不正常返回的路径，但它表达失败，不是得到一个空元组。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    for text in [\"4\", \"坏输入\", \"6\"].iter() {\n        let n: i32 = match text.parse() {\n            Ok(n) => n,\n            Err(_) => continue,\n        };\n        println!(\"{}\", n * 2);\n    }\n}",
+        "description": "错误分支continue不产生赋给n的值。",
+        "result": "依次打印8和12；坏输入跳过本轮。",
+        "reason": "执行器未实现match、Result或never类型推理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把Err分支改为println!(\"错误\")，还能作为i32赋值的分支吗？",
+        "answer": "不能直接这样写。println!正常结束产生unit，而成功分支产生i32，二者类型不一致；continue则不返回普通值。",
+        "hints": [
+          "比较正常返回()与不走到赋值点的区别。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.03.04",
+      "sourceNodeId": "rust.source.root19.03.04",
+      "title": "动态大小类型和Sized trait",
+      "parent": "rust.book.root19.03",
+      "depth": 3,
+      "physicalPage": 628,
+      "printedPage": null,
+      "leaf": true,
+      "order": 341,
+      "group": 19,
+      "body": [
+        "str、切片和dyn Trait等类型的具体大小不能仅由类型名在编译期确定，所以通常通过引用或Box等指针使用。&str不仅指向字节，也携带长度信息；字符串长短不同并不会改变这个引用类型本身作为局部变量的固定表示。",
+        "泛型参数默认带Sized约束，表示实例大小可在编译时确定。写T: ?Sized可以放宽这一默认要求，但不能让不定大小值直接按值传递；常把参数改成&T。?Sized不是“大小任意变化”的运行时开关，而是允许调用者选择str这类类型，访问仍需遵守具体表示和借用规则。动态大小不等于动态类型，编译器仍知道它的类型身份。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn size_bytes<T: ?Sized>(value: &T) -> usize {\n    std::mem::size_of_val(value)\n}\nfn main() {\n    let short: &str = \"ab\";\n    let long: &str = \"abcdef\";\n    println!(\"{} {}\", size_bytes(short), size_bytes(long));\n}",
+        "description": "通过引用传入动态大小的str，查询其数据长度。",
+        "result": "打印2 6；查询的是被引用的str数据大小。",
+        "reason": "执行器没有?Sized、DST或通用内存大小函数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "去掉?Sized后，直接让T为str为什么不符合默认约束？",
+        "answer": "泛型默认要求T: Sized，str的大小依赖实际内容，不能满足该约束；改用?Sized并通过引用传入才能覆盖此类输入。",
+        "hints": [
+          "区分&T的固定表示与T本体的大小。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.04",
+      "sourceNodeId": "rust.source.root19.04",
+      "title": "高级函数与闭包",
+      "parent": "rust.book.root19",
+      "depth": 2,
+      "physicalPage": 631,
+      "printedPage": null,
+      "leaf": false,
+      "order": 342,
+      "group": 19,
+      "body": [
+        "行为既可以由普通函数传入，也可以由捕获环境的闭包传入。小写fn表示函数指针类型，大写Fn、FnMut、FnOnce描述闭包的调用能力，二者不能只凭名称相似就互换。",
+        "下面先用函数指针表达可替换计算，再处理闭包返回时的类型与环境存活问题。接口需要不需要捕获环境，是选择函数指针还是闭包trait的重要依据。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root19.04.01",
+      "sourceNodeId": "rust.source.root19.04.01",
+      "title": "函数指针",
+      "parent": "rust.book.root19.04",
+      "depth": 3,
+      "physicalPage": 631,
+      "printedPage": null,
+      "leaf": true,
+      "order": 343,
+      "group": 19,
+      "body": [
+        "普通函数可被转换为fn参数类型，从而像数据一样交给另一个函数调用。函数指针的签名明确列出参数和返回类型，不捕获局部环境。它与Fn闭包trait不同：fn是具体类型，而Fn等是描述调用方式的trait约束。",
+        "函数指针能满足常见闭包调用trait，因此只需要调用行为的泛型接口常可兼容普通函数和闭包。反过来，捕获局部变量的闭包不能直接变成fn指针，因为指针没有保存这份环境的位置。选择接口时，若要让调用者携带配置，使用合适的闭包约束通常比强行全局化数据清楚。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn square(n: i32) -> i32 { n * n }\nfn apply_twice(f: fn(i32) -> i32, n: i32) -> i32 { f(f(n)) }\nfn main() { println!(\"{}\", apply_twice(square, 2)); }",
+        "description": "传入普通函数指针并连续调用。",
+        "result": "打印16：先算square(2)=4，再算square(4)=16。",
+        "reason": "执行器仅支持按名称直接调用函数，不支持函数值及fn参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "捕获offset的|n| n + offset能否直接传给这个fn参数？",
+        "answer": "不能。这个闭包需要保存捕获的offset，函数指针不携带环境；应将接口改成合适的泛型Fn约束或trait对象。",
+        "hints": [
+          "先检查闭包有没有捕获环境。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.04.02",
+      "sourceNodeId": "rust.source.root19.04.02",
+      "title": "返回闭包",
+      "parent": "rust.book.root19.04",
+      "depth": 3,
+      "physicalPage": 633,
+      "printedPage": null,
+      "leaf": true,
+      "order": 344,
+      "group": 19,
+      "body": [
+        "每个闭包都有编译器生成的独特类型，源码通常无法直接写出它的名字。返回单一闭包类型时可用impl Fn描述能力；若要在同一接口中返回不同闭包类型，可以用Box<dyn Fn>擦除具体类型，并承担装箱和动态派发的取舍。",
+        "返回闭包还要处理捕获环境的生命周期。闭包如果借用函数局部变量，函数返回后就可能悬垂；move把需要的数据移进闭包，使它随返回对象一起存活。move不代表返回类型自动满足所有约束，闭包是否只读、可变调用或只能调用一次，仍取决于其体内怎样使用捕获值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn make_shift(delta: i32) -> Box<dyn Fn(i32) -> i32> {\n    Box::new(move |n| n + delta)\n}\nfn main() {\n    let shift = make_shift(3);\n    println!(\"{} {}\", shift(4), shift(8));\n}",
+        "description": "返回拥有环境的闭包对象。",
+        "result": "打印7 11；delta被复制进返回闭包，函数结束后仍可使用。",
+        "reason": "执行器没有闭包、Box<dyn Fn>或调用trait。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能让返回闭包继续借用make_shift里的局部delta？",
+        "answer": "该局部在函数返回时结束，而闭包之后还要使用它。move让环境随闭包保存，避免借用已结束的局部存储。",
+        "hints": [
+          "比较创建函数与闭包的存活时间。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.05",
+      "sourceNodeId": "rust.source.root19.05",
+      "title": "宏",
+      "parent": "rust.book.root19",
+      "depth": 2,
+      "physicalPage": 635,
+      "printedPage": null,
+      "leaf": false,
+      "order": 345,
+      "group": 19,
+      "body": [
+        "宏在编译期处理源码并生成源码，因此能完成普通运行期函数无法完成的工作，例如生成trait实现或接受多种语法形状。声明宏以匹配规则展开，过程宏则用Rust程序处理TokenStream。",
+        "先辨认调用阶段，再看声明宏的捕获与重复，随后分开理解派生宏、属性宏和函数式过程宏。本节的多文件示例是供阅读的构建结构，平台不加载宏插件或执行生成器。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root19.05.01",
+      "sourceNodeId": "rust.source.root19.05.01",
+      "title": "宏与函数之间的差别",
+      "parent": "rust.book.root19.05",
+      "depth": 3,
+      "physicalPage": 635,
+      "printedPage": null,
+      "leaf": true,
+      "order": 346,
+      "group": 19,
+      "body": [
+        "函数在运行时接受已经求值的参数，参数数量和类型由签名约束；宏则在编译期接受源代码标记，展开成后续参与检查的代码。宏能处理可变形式，也能生成类型或实现等条目，这是普通函数调用不能替代的能力。",
+        "灵活性也使错误定位和接口理解更复杂。宏调用通常有!或属性语法，提示读者它可能改变代码结构。能用普通函数表达的计算，优先函数常更容易测试和复用；只有重复代码的结构本身需要生成时，宏才有更明确的价值。展开后的程序依然必须符合类型和所有权规则。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "macro_rules! doubled {\n    ($value:expr) => {{\n        let once = $value;\n        once + once\n    }};\n}\nfn main() {\n    let mut calls = 0;\n    let value = doubled!({ calls += 1; 6 });\n    println!(\"{} {}\", value, calls);\n}",
+        "description": "宏生成局部绑定，确保传入表达式只求值一次。",
+        "result": "打印12 1；若直接展开为$value + $value，副作用会发生两次。",
+        "reason": "执行器只允许白名单输出宏，不支持macro_rules!或自定义展开。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "宏文本上出现两次$value，是否总和调用普通函数一样只求值一次？",
+        "answer": "不是。展开可能把输入表达式复制到多个求值位置，导致副作用重复。本例先绑定once，明确只求值一次。",
+        "hints": [
+          "先写出展开结果再数求值位置。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.05.02",
+      "sourceNodeId": "rust.source.root19.05.02",
+      "title": "用于通用元编程的macro_rules!声明宏",
+      "parent": "rust.book.root19.05",
+      "depth": 3,
+      "physicalPage": 636,
+      "printedPage": null,
+      "leaf": true,
+      "order": 347,
+      "group": 19,
+      "body": [
+        "macro_rules!用规则匹配输入标记，再按模板输出代码。$name:expr捕获一个表达式，$(... ),*等重复结构可接收多个以逗号分隔的项目。这里的匹配发生在编译阶段，不是运行时逐个比较数据值。",
+        "模板中的重复必须与捕获层级对应，输入表达式也应避免无意重复求值。示例在生成的块里建立局部Vec，再按输入顺序逐项push，每项恰好求值一次。末尾返回局部容器作为宏表达式的值。宏展开只减少手写重复，并不会让Vec、泛型或内存分配自动进入平台支持子集。宏局部绑定的作用域在所生成的块内，结果值则可移出该块。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "macro_rules! list {\n    ($($item:expr),* $(,)?) => {{\n        let mut result = Vec::new();\n        $(result.push($item);)*\n        result\n    }};\n}\nfn main() {\n    let values = list![3, 5, 8,];\n    println!(\"{:?}\", values);\n}",
+        "description": "声明宏捕获逗号分隔表达式，并允许尾逗号。",
+        "result": "生成含3、5、8的Vec并打印[3, 5, 8]。",
+        "reason": "执行器没有声明宏展开、Vec或调试格式。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "输入list![1 + 2, 4]时，$item捕获的是两个数字还是两个表达式？",
+        "answer": "是两个expr片段：1 + 2与4。宏按语法片段捕获，随后生成两个push调用，不是按空白把它们拆成若干数字。",
+        "hints": [
+          "注意捕获说明符expr。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.05.03",
+      "sourceNodeId": "rust.source.root19.05.03",
+      "title": "基于属性创建代码的过程宏",
+      "parent": "rust.book.root19.05",
+      "depth": 3,
+      "physicalPage": 639,
+      "printedPage": null,
+      "leaf": true,
+      "order": 348,
+      "group": 19,
+      "body": [
+        "过程宏是运行在编译阶段的Rust代码，输入和输出由TokenStream承载。它需要独立的proc-macro库包，供另一个包在编译时引用。宏入口的函数签名与注册属性决定它属于派生、属性还是函数式过程宏，而不是由函数名称决定。",
+        "下面的函数式宏直接返回输入标记，使调用位置最后看到原来的表达式。这是最小的数据通路，不包含复杂语法分析。即使宏定义可以使用普通Rust处理输入，也必须输出放在调用位置合法的源码；把任意文本转成TokenStream并不能保证类型检查一定成功。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "# Cargo.toml\n[workspace]\nmembers = [\"tokens\", \"app\"]\n# tokens/Cargo.toml\n[package]\nname = \"tokens\"\nversion = \"0.1.0\"\nedition = \"2018\"\n[lib]\nproc-macro = true\n# tokens/src/lib.rs\nextern crate proc_macro;\nuse proc_macro::TokenStream;\n#[proc_macro]\npub fn identity(input: TokenStream) -> TokenStream { input }\n# app/Cargo.toml\n[package]\nname = \"app\"\nversion = \"0.1.0\"\nedition = \"2018\"\n[dependencies]\ntokens = { path = \"../tokens\" }\n# app/src/main.rs\nfn main() { println!(\"{}\", tokens::identity!(2 + 3)); }",
+        "description": "完整双包布局：编译时的宏库和使用宏的程序。",
+        "result": "identity!展开为2 + 3，应用预期打印5；此处仅阅读文件布局。",
+        "reason": "执行器不构建Cargo多包项目或加载proc-macro插件。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "identity!返回原标记后，2 + 3在哪里执行？",
+        "answer": "展开阶段只把表达式标记交回编译器；编译后的应用运行时才求值表达式。过程宏不是替用户提前运行任意输入程序。",
+        "hints": [
+          "把宏执行与生成程序执行分开。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.05.04",
+      "sourceNodeId": "rust.source.root19.05.04",
+      "title": "如何编写一个自定义derive宏",
+      "parent": "rust.book.root19.05",
+      "depth": 3,
+      "physicalPage": 639,
+      "printedPage": null,
+      "leaf": true,
+      "order": 349,
+      "group": 19,
+      "body": [
+        "自定义derive宏接收结构体或枚举定义，生成附加的实现代码。trait本身与同名派生宏可以处于不同命名空间；使用者需要让trait和宏都可见。常见布局把普通trait放在一个库包，把生成实现的入口放在独立proc-macro包。",
+        "实际宏应解析输入结构并给不支持的形状明确诊断，不能依赖从整段源码字符串里猜名字。下面展示一个只接受无属性、无泛型unit结构体的教学宏，限定输入后检查标记序列。它生成kind关联函数，保留原结构体；derive的输出应是追加条目，不应再复制一遍输入定义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "# Cargo.toml\n[workspace]\nmembers = [\"unit_kind\", \"app\"]\n# unit_kind/Cargo.toml\n[package]\nname = \"unit_kind\"\nversion = \"0.1.0\"\nedition = \"2018\"\n[lib]\nproc-macro = true\n# unit_kind/src/lib.rs\nextern crate proc_macro;\nuse proc_macro::{TokenStream, TokenTree};\n#[proc_macro_derive(Kind)]\npub fn kind(input: TokenStream) -> TokenStream {\n    let mut ts = input.into_iter();\n    let head = ts.next(); let name = ts.next(); let tail = ts.next();\n    if let (Some(TokenTree::Ident(h)), Some(TokenTree::Ident(n)), Some(TokenTree::Punct(p))) = (head, name, tail) {\n        if h.to_string() == \"struct\" && p.as_char() == ';' && ts.next().is_none() {\n            return format!(\"impl Kind for {} {{ fn kind() -> &'static str {{ stringify!({}) }} }}\", n, n).parse().unwrap();\n        }\n    }\n    \"compile_error!(\\\"Kind仅接受私有无泛型unit结构体\\\");\".parse().unwrap()\n}\n# app/Cargo.toml\n[package]\nname = \"app\"\nversion = \"0.1.0\"\nedition = \"2018\"\n[dependencies]\nunit_kind = { path = \"../unit_kind\" }\n# app/src/main.rs\nuse unit_kind::Kind;\ntrait Kind { fn kind() -> &'static str; }\n#[derive(Kind)]\nstruct Note;\nfn main() { println!(\"{}\", Note::kind()); }",
+        "description": "受限但有完整入口与输入检查的自定义派生项目。",
+        "result": "宏为Note生成Kind实现，应用预期打印Note；其他结构得到指定编译错误。",
+        "reason": "执行器不加载过程宏，也不支持派生属性和trait。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "derive宏为什么不把输入struct Note再输出一次？",
+        "answer": "编译器保留被派生的原条目，derive的输出作为附加条目加入。再输出原结构体会造成同名重复定义。",
+        "hints": [
+          "派生宏与替换条目的属性宏不同。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.05.05",
+      "sourceNodeId": "rust.source.root19.05.05",
+      "title": "属性宏",
+      "parent": "rust.book.root19.05",
+      "depth": 3,
+      "physicalPage": 646,
+      "printedPage": null,
+      "leaf": true,
+      "order": 350,
+      "group": 19,
+      "body": [
+        "属性过程宏用#[name(...)]附着在条目上，入口接收两份TokenStream：属性参数和被标记条目。它输出的标记替换原条目，因此既可保留条目、添加代码，也可重写结构。与derive仅追加实现相比，这种替换能力要求更仔细地维护可见性和签名。",
+        "下面的宏只接受空属性参数并原样返回函数，用来说明两份输入分别来自哪里。真实路由或测试框架可解析属性参数生成注册代码，但属性本身不会凭空运行网络服务。宏应对不支持的参数给出明确诊断，避免默默忽略拼写错误造成行为与用户预期不同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "# Cargo.toml\n[workspace]\nmembers = [\"marks\", \"app\"]\n# marks/Cargo.toml\n[package]\nname = \"marks\"\nversion = \"0.1.0\"\nedition = \"2018\"\n[lib]\nproc-macro = true\n# marks/src/lib.rs\nextern crate proc_macro;\nuse proc_macro::TokenStream;\n#[proc_macro_attribute]\npub fn keep(attr: TokenStream, item: TokenStream) -> TokenStream {\n    if attr.is_empty() { item }\n    else { \"compile_error!(\\\"keep不接受参数\\\");\".parse().unwrap() }\n}\n# app/Cargo.toml\n[package]\nname = \"app\"\nversion = \"0.1.0\"\nedition = \"2018\"\n[dependencies]\nmarks = { path = \"../marks\" }\n# app/src/main.rs\n#[marks::keep]\nfn answer() -> i32 { 42 }\nfn main() { println!(\"{}\", answer()); }",
+        "description": "最小属性宏保留原函数并拒绝未知参数。",
+        "result": "展开后answer保持原样，应用预期打印42。",
+        "reason": "执行器未实现属性宏、多包编译或标记流。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "给#[marks::keep(test)]传入的test属于哪份输入？",
+        "answer": "它属于attr；item是下面的整个answer函数。该示例发现attr非空后产生明确编译错误。",
+        "hints": [
+          "属性括号内容与附着条目是两个输入。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.05.06",
+      "sourceNodeId": "rust.source.root19.05.06",
+      "title": "函数宏",
+      "parent": "rust.book.root19.05",
+      "depth": 3,
+      "physicalPage": 647,
+      "printedPage": null,
+      "leaf": true,
+      "order": 351,
+      "group": 19,
+      "body": [
+        "函数式过程宏以name!(...)调用，入口仍接收并返回TokenStream。外形像函数不代表它接收普通运行时值；输入可以是自定义语法，宏负责解析后生成调用位置所需的合法Rust表达式或条目。SQL检查等用途依赖真实解析，不能只看宏名字就声称已验证输入。",
+        "示例刻意只接收整数记号7，返回布尔字面量true，其余输入产生编译错误。这展示了“在编译时限制语法”的行为，而不是实现完整计算器。若希望处理多位数字、负数或一般表达式，应明确扩展语法并分别验证，不能依赖TokenStream的文本外观假定全部情况等价。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "# Cargo.toml\n[workspace]\nmembers = [\"seven\", \"app\"]\n# seven/Cargo.toml\n[package]\nname = \"seven\"\nversion = \"0.1.0\"\nedition = \"2018\"\n[lib]\nproc-macro = true\n# seven/src/lib.rs\nextern crate proc_macro;\nuse proc_macro::{TokenStream, TokenTree};\n#[proc_macro]\npub fn is_seven(input: TokenStream) -> TokenStream {\n    let mut ts = input.into_iter();\n    let valid = match ts.next() { Some(TokenTree::Literal(v)) => v.to_string() == \"7\", _ => false } && ts.next().is_none();\n    if valid { \"true\".parse().unwrap() }\n    else { \"compile_error!(\\\"只接受整数记号7\\\");\".parse().unwrap() }\n}\n# app/Cargo.toml\n[package]\nname = \"app\"\nversion = \"0.1.0\"\nedition = \"2018\"\n[dependencies]\nseven = { path = \"../seven\" }\n# app/src/main.rs\nfn main() { println!(\"{}\", seven::is_seven!(7)); }",
+        "description": "限制输入标记形状的函数式过程宏。",
+        "result": "输入7生成true；输入3 + 4按示例契约会报错，即使算术结果也为7。",
+        "reason": "执行器只支持白名单输出宏，不处理自定义TokenStream解析。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "is_seven!(3 + 4)为什么不等同于is_seven!(7)？",
+        "answer": "宏接收求值前的语法标记，3、+、4是多个标记，不是整数记号7。该宏没有承诺执行算术求值。",
+        "hints": [
+          "宏观察的是源码形式。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root19.06",
+      "sourceNodeId": "rust.source.root19.06",
+      "title": "总结",
+      "parent": "rust.book.root19",
+      "depth": 2,
+      "physicalPage": 648,
+      "printedPage": null,
+      "leaf": true,
+      "order": 352,
+      "group": 19,
+      "body": [
+        "高级特性通常用于填补具体接口的表达空缺：关联类型让实现固定输出，newtype区分概念，完全限定语法消除歧义，闭包携带行为和环境，宏处理重复代码结构。识别问题的性质比把所有工具一起使用更重要，也更容易解释给调用者。",
+        "阅读复杂库接口时，先还原普通类型和方法关系，再追踪泛型、别名与派生代码。unsafe需要额外的安全证明，宏展开需要检查生成结果；二者都不会替代常规类型检查。下一章的服务器项目会把所有权、trait、线程与清理协议组合起来，验证这些局部工具如何服务于完整生命周期。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Bytes(usize);\ntrait Measure { type Output; fn measure(&self) -> Self::Output; }\nimpl Measure for Bytes {\n    type Output = usize;\n    fn measure(&self) -> usize { self.0 }\n}\nfn main() {\n    let size = Bytes(128);\n    println!(\"{}\", <Bytes as Measure>::measure(&size));\n}",
+        "description": "用newtype、关联类型和限定调用表达一项明确的测量接口。",
+        "result": "打印128；例子无需unsafe或宏生成即可表达关系。",
+        "reason": "执行器没有newtype、关联类型、usize或trait调用。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若只是要把usize写短一点，应选newtype还是type别名？",
+        "answer": "单纯重命名可用别名；要表达独立领域类型、防止与其他usize混用才需要newtype。工具应由所需语义决定。",
+        "hints": [
+          "区分名称便利和类型隔离。"
+        ]
+      }
+    }
+  ]
+}

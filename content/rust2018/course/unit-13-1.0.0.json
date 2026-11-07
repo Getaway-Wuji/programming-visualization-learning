@@ -1,0 +1,540 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 13,
+  "nodes": [
+    {
+      "id": "rust.book.root13",
+      "sourceNodeId": "rust.source.root13",
+      "title": "第13章 函数式语言特性：迭代器与闭包",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 390,
+      "printedPage": null,
+      "leaf": false,
+      "order": 211,
+      "group": 13,
+      "body": [
+        "闭包把一段行为连同它需要的环境交给另一段代码，迭代器则把序列遍历、变换和收集组合起来。本章先区分闭包定义与调用，再理解迭代器为什么惰性工作，以及消费操作怎样推动计算。",
+        "抽象能让筛选规则更清楚，但并不免除所有权、借用和边界设计。最后用相同输入与输出约定比较实现，性能判断需要测量，不能把简短写法本身当作更快的证据。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root13.01",
+      "sourceNodeId": "rust.source.root13.01",
+      "title": "闭包：能够捕获环境的匿名函数",
+      "parent": "rust.book.root13",
+      "depth": 2,
+      "physicalPage": 392,
+      "printedPage": null,
+      "leaf": false,
+      "order": 212,
+      "group": 13,
+      "body": [
+        "闭包是一种可以保留外部上下文的匿名行为。定义闭包不会自动运行函数体，调用位置才决定何时计算；这一点可以把昂贵工作推迟到真正需要的分支。",
+        "接下来从类型推断、Fn 系列约束到缓存设计逐层观察。缓存是否正确取决于键、输入依赖和失效策略，不能只因为结果被保存过一次就认为适用于任何调用。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root13.01.01",
+      "sourceNodeId": "rust.source.root13.01.01",
+      "title": "使用闭包来创建抽象化的程序行为",
+      "parent": "rust.book.root13.01",
+      "depth": 3,
+      "physicalPage": 392,
+      "printedPage": null,
+      "leaf": true,
+      "order": 213,
+      "group": 13,
+      "body": [
+        "若一项计算只会在部分分支使用，应把它放在需要时才调用的位置。闭包可以把计算规则先保存起来，等业务分支决定后再执行；定义本身不产生结果，也不会天然缓存以后所有调用。",
+        "下面把单价换算写为闭包，普通路径两次调用会计算两次，而跳过路径根本不调用。示例用轻量整数运算解释时机，不用真实等待伪装性能收益。是否缓存还要看重复输入、计算代价和状态变化；有副作用的闭包尤其不能随意减少调用次数，因为观察到的行为也可能随之改变。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let price = |units: i32| {\n        println!(\"calculating\");\n        units * 3\n    };\n    let skip = false;\n    if !skip {\n        println!(\"{}\", price(4));\n        println!(\"{}\", price(4));\n    }\n}",
+        "description": "区分保存计算规则与真正调用闭包。",
+        "result": "依次输出 calculating、12、calculating、12；重复调用并没有自动缓存。",
+        "reason": "平台不实现闭包表达式、环境对象与调用 trait。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把计算写成闭包后，相同参数调用两次会自动只计算一次吗？",
+        "answer": "不会。闭包只是可调用的行为，缓存需要另行保存输入与结果并设计复用规则。",
+        "hints": [
+          "寻找哪里真正存储了历史结果。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.01.02",
+      "sourceNodeId": "rust.source.root13.01.02",
+      "title": "闭包的类型推断和类型标注",
+      "parent": "rust.book.root13.01",
+      "depth": 3,
+      "physicalPage": 398,
+      "printedPage": null,
+      "leaf": true,
+      "order": 214,
+      "group": 13,
+      "body": [
+        "闭包参数和返回类型常可由使用位置推断，也可显式写出以提高可读性。省略类型标注不表示每次调用都能选择新类型：一个具体闭包的参数类型会由约束确定，不能像泛型函数那样仅凭写法简短就跨任意类型调用。",
+        "闭包体只有一个表达式时可省略大括号；若显式写返回类型，则要按完整语法保留函数体形式。下面给整数转换闭包写出类型，避免读者误以为文本也能直接交给它。需要对不同类型复用同一规则时，应根据实际行为设计泛型函数或不同闭包。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let plus_one = |value: i32| -> i32 { value + 1 };\n    println!(\"{}\", plus_one(8));\n    // plus_one(String::from(\"8\")) 会造成类型不匹配。\n}",
+        "description": "显式标注一个闭包的确定输入与输出类型。",
+        "result": "输出 9；被注释的字符串调用若启用会因参数类型不符而编译失败。",
+        "reason": "平台不支持闭包语法和闭包类型推断。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "let identity = |x| x 被第一次按 String 使用后，能再直接按 i32 使用吗？",
+        "answer": "通常不能。同一个闭包的参数类型已受调用约束确定，不会按每次调用分别单态化为任意输入类型。",
+        "hints": [
+          "区分闭包的类型推断与泛型函数声明。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.01.03",
+      "sourceNodeId": "rust.source.root13.01.03",
+      "title": "使用泛型参数和Fn trait来存储闭包",
+      "parent": "rust.book.root13.01",
+      "depth": 3,
+      "physicalPage": 400,
+      "printedPage": null,
+      "leaf": true,
+      "order": 215,
+      "group": 13,
+      "body": [
+        "每个闭包具有编译器生成的具体类型，名称不便直接写出，容器通常用泛型参数 F 保存它，再用 F: Fn(i32) -> i32 说明如何调用。Fn 约束表示可以通过共享借用调用，不需要修改捕获环境或移出捕获值。",
+        "缓存容器还要保存结果的状态，Option 可以表示尚未计算。下面为聚焦存储约束，只保存固定输入 5 的结果，所以没有“换参数仍命中旧值”的歧义。若扩大到任意输入，必须把输入也纳入缓存键。闭包能力约束与缓存正确性是两项独立问题。",
+        "闭包字段上的括号表示先取出可调用值再调用它，不应把字段误认成容器自身声明的普通方法。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Memo<F: Fn(i32) -> i32> { compute: F, value: Option<i32> }\nimpl<F: Fn(i32) -> i32> Memo<F> {\n    fn for_five(&mut self) -> i32 {\n        if let Some(value) = self.value { return value; }\n        let value = (self.compute)(5);\n        self.value = Some(value);\n        value\n    }\n}\nfn main() {\n    let mut memo = Memo { compute: |x| x * 4, value: None };\n    println!(\"{} {}\", memo.for_five(), memo.for_five());\n}",
+        "description": "通过泛型 Fn 约束把闭包保存在缓存容器中。",
+        "result": "输出 20 20；该接口固定只缓存输入 5 的结果。",
+        "reason": "泛型容器、Fn 调用 trait、闭包与 Option 均为平台阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Fn 约束是否保证缓存结果对所有输入都正确？",
+        "answer": "不保证。Fn 只说明调用能力，缓存仍必须正确关联输入、输出及外部依赖，不能拿一个旧值回答所有输入。",
+        "hints": [
+          "接口能力与算法不变量要分开检查。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.01.04",
+      "sourceNodeId": "rust.source.root13.01.04",
+      "title": "Cacher实现的局限性",
+      "parent": "rust.book.root13.01",
+      "depth": 3,
+      "physicalPage": 403,
+      "printedPage": null,
+      "leaf": true,
+      "order": 216,
+      "group": 13,
+      "body": [
+        "只用一个 Option 保存结果，却接受任意参数的缓存，第二次调用可能错误地复用第一次输入的答案。修复时至少保存键与值，并在键相同才复用；若想保留多个输入的结果，可使用映射结构，同时考虑内存增长和失效。",
+        "闭包还可能读取外部状态，即使输入不变，结果也未必永远不变。缓存必须把实际依赖纳入设计，不能因满足 Fn 就认定函数纯粹无副作用。下面采用单项键值缓存，换输入就重新计算，明确其仅保留最近一次结果，而非无限容量缓存。",
+        "若改用多个键的映射，还需决定清除旧条目的时机，否则计算节省可能被无界保存的结果占用抵消。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Last<F: Fn(i32) -> i32> { compute: F, saved: Option<(i32, i32)> }\nimpl<F: Fn(i32) -> i32> Last<F> {\n    fn value(&mut self, key: i32) -> i32 {\n        if let Some((old, value)) = self.saved {\n            if old == key { return value; }\n        }\n        let value = (self.compute)(key);\n        self.saved = Some((key, value));\n        value\n    }\n}\nfn main() {\n    let mut cache = Last { compute: |x| x * 2, saved: None };\n    println!(\"{} {}\", cache.value(3), cache.value(8));\n}",
+        "description": "修复单结果缓存忽略输入变化的问题。",
+        "result": "输出 6 16；第二个键不同，因此重新计算。",
+        "reason": "平台未实现闭包泛型容器、Option 元组和条件缓存。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "什么测试能揭示“所有参数都返回第一次结果”的缓存缺陷？",
+        "answer": "先用一个参数求值，再用应得到不同结果的另一参数求值，断言第二个答案对应新参数；只重复同参数无法发现问题。",
+        "hints": [
+          "让输入变化必然导致期望结果变化。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.01.05",
+      "sourceNodeId": "rust.source.root13.01.05",
+      "title": "使用闭包捕获上下文环境",
+      "parent": "rust.book.root13.01",
+      "depth": 3,
+      "physicalPage": 405,
+      "printedPage": null,
+      "leaf": true,
+      "order": 217,
+      "group": 13,
+      "body": [
+        "闭包能访问定义处可见的局部变量，编译器根据函数体如何使用它们选择借用或移动捕获。只读取环境通常允许共享借用调用；修改环境需要可变调用；把捕获值移出则可能只能调用一次。",
+        "Fn、FnMut、FnOnce 描述这类调用能力。move 强制按值捕获环境，但不意味着闭包必定只能调用一次，仍要看函数体是否把值进一步移出。下面修改累计总数，因此闭包变量需要可变绑定；闭包作用域结束后借用释放，外层才能独立读取 total。",
+        "捕获方式应以实际用途为准，若只是读取环境，就没有必要为了语法方便而强行要求独占的可变调用。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut total = 0;\n    {\n        let mut add = |amount| { total += amount; };\n        add(3);\n        add(5);\n    }\n    println!(\"{}\", total);\n}",
+        "description": "通过可变捕获更新外部累计状态。",
+        "result": "输出 8；闭包使用完毕后外层读取 total。",
+        "reason": "平台不实现闭包捕获、FnMut 和环境借用分析。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "move 闭包是否一定只实现 FnOnce 而不能实现 Fn？",
+        "answer": "不是。move 决定捕获方式，能否重复调用取决于闭包体如何使用捕获值；只读捕获值仍可满足 Fn。",
+        "hints": [
+          "分别看捕获时发生什么和调用时发生什么。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.02",
+      "sourceNodeId": "rust.source.root13.02",
+      "title": "使用迭代器处理元素序列",
+      "parent": "rust.book.root13",
+      "depth": 2,
+      "physicalPage": 408,
+      "printedPage": null,
+      "leaf": false,
+      "order": 218,
+      "group": 13,
+      "body": [
+        "迭代器把“下一个元素是什么”封装为统一接口，让调用端组合遍历、筛选与转换，而不必自己维护索引。创建迭代器通常只保存遍历状态，真正请求元素时才推动计算。",
+        "下面从 next 的状态变化开始，区分消费方法与返回新迭代器的适配器，再实现一个小型自定义序列。所有权方式决定得到元素、共享引用还是可变引用，不能只看方法名字相似。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root13.02.01",
+      "sourceNodeId": "rust.source.root13.02.01",
+      "title": "Iterator trait和next方法",
+      "parent": "rust.book.root13.02",
+      "depth": 3,
+      "physicalPage": 409,
+      "printedPage": null,
+      "leaf": true,
+      "order": 219,
+      "group": 13,
+      "body": [
+        "Iterator 的核心方法 next 接收 &mut self，因为每次请求都需要推进内部状态。返回 Some(item) 表示取得元素，返回 None 表示此时没有下一个元素；对标准集合迭代器，耗尽后继续请求仍会得到 None。",
+        "iter 通常借用集合并产出共享引用，iter_mut 产出可变引用，拥有集合的 into_iter 则常取得元素所有权。Rust 2018 中数组的 into_iter 存在版本与方法解析细节，教学示例明确使用 iter，避免混淆。下面按次序观察返回的借用值，原数组没有被消耗。",
+        "遍历器记录自己走到哪里，并不复制整个数组；因此原数据保持稳定的同时，位置状态仍可不断前进。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let values = [4, 9];\n    let mut iter = values.iter();\n    println!(\"{:?}\", iter.next());\n    println!(\"{:?}\", iter.next());\n    println!(\"{:?}\", iter.next());\n    println!(\"{}\", values[0]);\n}",
+        "description": "逐次请求元素，观察迭代状态推进。",
+        "result": "依次输出 Some(4)、Some(9)、None、4。",
+        "reason": "平台虽支持固定 i32 数组，但未实现 iter、Iterator 和 Option 返回。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么调用 next 的迭代器变量需要 mut？",
+        "answer": "next 会修改迭代器记录的位置，需要对迭代器自身可变借用；这不表示底层数组也被修改。",
+        "hints": [
+          "分清迭代状态和被遍历的数据。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.02.02",
+      "sourceNodeId": "rust.source.root13.02.02",
+      "title": "消耗迭代器的方法",
+      "parent": "rust.book.root13.02",
+      "depth": 3,
+      "physicalPage": 410,
+      "printedPage": null,
+      "leaf": true,
+      "order": 220,
+      "group": 13,
+      "body": [
+        "sum、count、collect 等操作会持续请求元素来产生最终结果，因此被称为消费操作。它们通常取得迭代器所有权，调用后不能继续用原绑定再遍历；若要重新遍历，应从原集合创建新的迭代器。",
+        "消费迭代器不一定销毁底层集合，关键要看迭代器原本拥有还是借用了集合。下面由数组的 iter 建立借用迭代器，再用 copied 把整数引用复制为整数并求和。求和完成后数组仍可读取，因为它不是被移入的 Vec。结果类型标注也给 sum 的泛型返回提供推断依据。",
+        "若改为遍历拥有的字符串向量，取得元素所有权的行为会不同，不能把这里的整数借用经验直接套用。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let values = [3, 5, 7];\n    let total: i32 = values.iter().copied().sum();\n    println!(\"{}\", total);\n    println!(\"{}\", values[1]);\n}",
+        "description": "消费借用迭代器，不移走底层数组。",
+        "result": "依次输出 15、5。",
+        "reason": "copied、sum、泛型迭代器与 trait 调用超出平台数组子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "sum 消费了迭代器，为什么仍能读取 values？",
+        "answer": "被消费的是借用数组的遍历状态，不是数组所有权；本例数组一直由 values 拥有。",
+        "hints": [
+          "问清究竟哪个值被传给消费方法。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.02.03",
+      "sourceNodeId": "rust.source.root13.02.03",
+      "title": "生成其他迭代器的方法",
+      "parent": "rust.book.root13.02",
+      "depth": 3,
+      "physicalPage": 411,
+      "printedPage": null,
+      "leaf": true,
+      "order": 221,
+      "group": 13,
+      "body": [
+        "map、filter 等适配器返回新的迭代器，保存变换或筛选规则，本身通常不请求全部元素。只有 next、for 循环或 collect 等真正消费序列时，这些规则才会随着需求执行。",
+        "因此只创建 map 却不使用它，不能指望闭包里的计算或打印已经发生。惰性还意味着短路消费者可能只访问前几个元素，不应依赖完整遍历的副作用。下面通过 collect 明确收集所有转换结果，用 Vec<i32> 标注目标类型；这会分配结果容器，与单纯建立适配器的成本不同。",
+        "只有最终结果确实需要保存为集合时才收集；若只计算总和，直接消费可避免分配不必要的中间容器。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let values = [1, 3, 5];\n    let mapped = values.iter().map(|value| value * 10);\n    let result: Vec<i32> = mapped.collect();\n    println!(\"{:?}\", result);\n}",
+        "description": "先保存映射规则，再消费得到新集合。",
+        "result": "输出 [10, 30, 50]；计算由 collect 的消费驱动。",
+        "reason": "平台未实现 map 闭包、惰性迭代器或 Vec 收集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删除 collect 及其后的使用，只保留 mapped 创建，能否保证映射闭包执行？",
+        "answer": "不能。map 创建的是惰性适配器，未被消费就不会为了生成所有结果而遍历输入。",
+        "hints": [
+          "寻找主动请求元素的操作。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.02.04",
+      "sourceNodeId": "rust.source.root13.02.04",
+      "title": "使用闭包捕获环境",
+      "parent": "rust.book.root13.02",
+      "depth": 3,
+      "physicalPage": 412,
+      "printedPage": null,
+      "leaf": true,
+      "order": 222,
+      "group": 13,
+      "body": [
+        "filter 接收返回布尔值的闭包，保留使条件成立的元素。闭包可以读取外层阈值，所以筛选标准无需写死在通用遍历逻辑中；捕获的借用必须在迭代器被使用时仍然有效。",
+        "filter 的闭包接收对迭代元素的借用，若迭代器原本产出引用，就可能看到多一层引用。可先用 copied 取得可复制的整数，再通过解引用比较条件。下面阈值只读，结果保持原顺序；改动捕获变量时还要考虑适配器尚未消费期间的借用关系。",
+        "阈值属于筛选策略而不是数据本身，保持它作为外部输入，可以让相同遍历规则用于多种业务条件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let minimum = 6;\n    let values = [2, 8, 6, 3];\n    let selected: Vec<i32> = values.iter().copied()\n        .filter(|value| *value >= minimum).collect();\n    println!(\"{:?}\", selected);\n}",
+        "description": "通过闭包捕获阈值，把选择规则交给 filter。",
+        "result": "输出 [8, 6]，保持输入中的先后顺序。",
+        "reason": "filter、闭包环境捕获和 Vec 不在平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么 filter 条件中的 value 需要解引用？",
+        "answer": "此时迭代元素是 i32，而 filter 把元素的借用 &i32 传给谓词；*value 读取数值后再与阈值比较。",
+        "hints": [
+          "分开写出迭代器 Item 与谓词参数的类型。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.02.05",
+      "sourceNodeId": "rust.source.root13.02.05",
+      "title": "使用Iterator trait来创建自定义迭代器",
+      "parent": "rust.book.root13.02",
+      "depth": 3,
+      "physicalPage": 414,
+      "printedPage": null,
+      "leaf": true,
+      "order": 223,
+      "group": 13,
+      "body": [
+        "自定义迭代器只需保存推进所需的状态，并实现 Iterator 的 Item 与 next。每次调用必须按契约产生一个元素或表示结束，其他默认适配器就能复用这一接口，无需为每个新序列重新实现 map 或 sum。",
+        "结束条件要有针对性地测试，尤其是首次请求、最后一个元素和重复请求结束状态。下面的 Steps 只生成 1 到 3，达到上限后不再推进；这样既不会跳过 3，也不会无限生成。实际迭代器不都保证首次 None 后永久结束，若需要该额外性质应明确实现或使用 fuse。",
+        "自定义序列还应考虑异常初始状态，构造函数可以收紧合法范围，避免外部任意状态破坏推进约定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Steps { next_value: i32 }\nimpl Iterator for Steps {\n    type Item = i32;\n    fn next(&mut self) -> Option<i32> {\n        if self.next_value > 3 { return None; }\n        let value = self.next_value;\n        self.next_value += 1;\n        Some(value)\n    }\n}\nfn main() {\n    let values: Vec<i32> = Steps { next_value: 1 }.collect();\n    println!(\"{:?}\", values);\n}",
+        "description": "用明确的状态与终止条件定义自有序列。",
+        "result": "输出 [1, 2, 3]。",
+        "reason": "自定义 Iterator、关联类型与 collect 均为平台阅读内容。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若先自增再返回，初始值仍设为 1，会造成什么边界错误？",
+        "answer": "可能从 2 开始并错过第一个元素，终点也可能越界；应逐次列出状态变化与返回值验证首尾。",
+        "hints": [
+          "把“调用前状态、返回值、调用后状态”列成三项。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.03",
+      "sourceNodeId": "rust.source.root13.03",
+      "title": "改进I/O项目",
+      "parent": "rust.book.root13",
+      "depth": 2,
+      "physicalPage": 418,
+      "printedPage": null,
+      "leaf": false,
+      "order": 224,
+      "group": 13,
+      "body": [
+        "重访搜索工具时，迭代器可改善两处所有权与表达问题：参数解析不必先收集再克隆，搜索也可以把逐行筛选写为清楚的组合。",
+        "重构仍应保持错误消息、参数约定、匹配顺序和返回借用来源不变。代码行数变少并不是验收标准，应沿原有测试检查行为与边界，再讨论成本是否真的下降。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root13.03.01",
+      "sourceNodeId": "rust.source.root13.03.01",
+      "title": "使用迭代器代替clone",
+      "parent": "rust.book.root13.03",
+      "depth": 3,
+      "physicalPage": 418,
+      "printedPage": null,
+      "leaf": true,
+      "order": 225,
+      "group": 13,
+      "body": [
+        "env::args 的迭代器本来就产出拥有所有权的 String；若先收集为 Vec 再借用元素构造配置，就常需额外 clone。让配置构造器直接接收 Iterator<Item = String>，可用 next 移入参数，省去这次复制。",
+        "每次 next 仍可能得到 None，所以减少克隆不等于可以删除错误检查。下面接受任意同类迭代器，跳过程序名并要求查询词和路径都存在，同时拒绝多余参数。用内置向量的 into_iter 模拟参数所有权转移，避免依赖真实启动环境，也让测试可直接构造输入。",
+        "从借用切片改为消费参数迭代器后，接口的拥有责任已变化，调用者也应清楚传入的迭代器不能原样再用。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Config { query: String, path: String }\nfn config(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {\n    args.next();\n    let query = args.next().ok_or(\"missing query\")?;\n    let path = args.next().ok_or(\"missing path\")?;\n    if args.next().is_some() { return Err(\"too many arguments\"); }\n    Ok(Config { query, path })\n}\nfn main() {\n    let args = vec![\"finder\", \"bird\", \"notes.txt\"].into_iter().map(String::from);\n    let c = config(args).expect(\"complete example arguments\");\n    println!(\"{} {}\", c.query, c.path);\n}",
+        "description": "由迭代器把参数所有权移入配置。",
+        "result": "输出 bird notes.txt；构造器没有为字段调用 clone。",
+        "reason": "impl Iterator、关联类型、闭包和通用 Result 传播超出平台范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "省去了 clone，为什么仍必须检查 next 返回的 None？",
+        "answer": "参数数量没有因所有权转移而获得保证；输入不足仍是可恢复的用法错误，必须在构造配置时识别。",
+        "hints": [
+          "性能改进不能取消输入约定。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.03.02",
+      "sourceNodeId": "rust.source.root13.03.02",
+      "title": "使用迭代器适配器让代码更加清晰",
+      "parent": "rust.book.root13.03",
+      "depth": 3,
+      "physicalPage": 421,
+      "printedPage": null,
+      "leaf": true,
+      "order": 226,
+      "group": 13,
+      "body": [
+        "搜索的显式循环通常包含准备结果、筛选、添加元素与返回四步。lines().filter(...).collect() 可以直接表达“从行序列中收集命中项”，把条件与结果结构集中展示，减少维护索引和容器的样板步骤。",
+        "这种重构必须保留原实现语义：仍按原文顺序、返回整行、借用全文，而且空查询的行为不应无意改变。闭包只是读取 query，不将其放入结果；返回引用依旧来自 text。下面采用原创短文本核对两条命中行，具体性能不能只凭表达式长度作判断。",
+        "若原实现使用额外去重或排序，单纯换成筛选收集并不会保留那些功能，必须逐条核对原本的公开约定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn search<'a>(query: &str, text: &'a str) -> Vec<&'a str> {\n    text.lines().filter(|line| line.contains(query)).collect()\n}\nfn main() {\n    let lines = search(\"sun\", \"sun above\nrain below\nsun again\");\n    println!(\"{:?}\", lines);\n}",
+        "description": "以筛选与收集组合表达原有逐行搜索。",
+        "result": "输出 [\"sun above\", \"sun again\"]。",
+        "reason": "平台未实现字符串迭代、filter 闭包和借用向量返回。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "改写为 filter 后，返回的行会自动按字母排序吗？",
+        "answer": "不会。filter 仅保留符合条件的项，collect 按原迭代顺序收集；排序需要独立操作。",
+        "hints": [
+          "确认每个适配器实际改变哪一项性质。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.04",
+      "sourceNodeId": "rust.source.root13.04",
+      "title": "比较循环和迭代器的性能",
+      "parent": "rust.book.root13",
+      "depth": 2,
+      "physicalPage": 423,
+      "printedPage": null,
+      "leaf": true,
+      "order": 227,
+      "group": 13,
+      "body": [
+        "循环与迭代器是否有性能差异，需要在相同算法、输入、输出和优化配置下比较。调试构建中的数字不能直接代表发布表现；一次运行、缓存冷热差异或把文件读取计入不同一边，都可能产生误导结论。",
+        "Rust 的迭代器设计允许编译器内联和消除抽象层，但这不是对所有程序都更快的保证。先用等价测试确认结果，再设计可重复的性能测量。下面并排展示两个求和函数，只验证语义一致，不报虚构耗时，也不把整数小样例当成真实项目的基准。",
+        "性能报告还应记录输入规模与测量范围，让他人知道测到的是搜索计算，还是连同文件加载的完整流程。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn with_loop(values: &[i32]) -> i32 {\n    let mut total = 0;\n    for value in values { total += value; }\n    total\n}\nfn with_iterator(values: &[i32]) -> i32 { values.iter().copied().sum() }\nfn main() {\n    let values = [2, 4, 8];\n    assert_eq!(with_loop(&values), with_iterator(&values));\n    println!(\"{}\", with_iterator(&values));\n}",
+        "description": "先验证两种表达的结果等价，再考虑性能测量。",
+        "result": "断言成立，输出 14；示例不提供任何运行速度结论。",
+        "reason": "平台不执行切片迭代器、sum 与标准断言，也不能生成原生优化性能数据。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两个版本都返回同样的值，是否已经证明迭代器更快？",
+        "answer": "没有。等价性是公平比较的前提，性能仍需一致条件下多次测量并分析实际资源成本。",
+        "hints": [
+          "正确性证据与速度证据分别收集。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root13.05",
+      "sourceNodeId": "rust.source.root13.05",
+      "title": "总结",
+      "parent": "rust.book.root13",
+      "depth": 2,
+      "physicalPage": 426,
+      "printedPage": null,
+      "leaf": true,
+      "order": 228,
+      "group": 13,
+      "body": [
+        "闭包将行为与环境关联，Fn 系列描述调用所需的访问方式；迭代器用 next 推进状态，适配器记录转换规则，消费者决定何时真正求值。把这几层分清，就能解释代码为什么尚未执行、为什么某变量仍被借用。",
+        "复盘搜索重构时，还应检查输入所有权是否减少复制，结果是否仍借用正确的数据，以及缓存是否包含完整键。下面把捕获偏移量、逐项转换与最终求和连起来；既不分配中间结果向量，也不意味着对所有场景都有零成本承诺。",
+        "组合表达式也需要可读的中间命名，过长链条若隐藏关键业务阶段，可以拆开而不改变惰性求值方式。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let offset = 2;\n    let values = [1, 4, 7];\n    let total: i32 = values.iter().map(|value| value + offset).sum();\n    println!(\"{}\", total);\n}",
+        "description": "把环境捕获、惰性变换与消费操作串为一条数据流。",
+        "result": "输出 18，即 (1+2)+(4+2)+(7+2)。",
+        "reason": "平台不实现闭包、map 和 sum 组合，只支持冻结的显式数组循环。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "此表达式中哪一步推动了全部元素的计算？",
+        "answer": "sum 是消费者，会反复请求映射迭代器的下一项；map 只建立规则，offset 的捕获为规则提供外部值。",
+        "hints": [
+          "寻找产生最终单个结果的操作。"
+        ]
+      }
+    }
+  ]
+}

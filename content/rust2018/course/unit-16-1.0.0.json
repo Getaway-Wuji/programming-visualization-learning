@@ -1,0 +1,482 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 16,
+  "nodes": [
+    {
+      "id": "rust.book.root16",
+      "sourceNodeId": "rust.source.root16",
+      "title": "第16章 无畏并发",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 503,
+      "printedPage": null,
+      "leaf": false,
+      "order": 269,
+      "group": 16,
+      "body": [
+        "并发把任务组织成可独立推进的部分，并行则强调同时执行。线程的交错顺序不能由代码的上下位置推断。本章先区分创建与等待线程，再比较通道移交数据和互斥锁共享数据，最后用Send与Sync解释类型为何能跨线程。",
+        "阅读时同时画出线程生命周期和数据拥有者。锁与类型检查能排除某些数据竞争，却不能替我们证明业务顺序、避免死锁或保证性能。这里的标准库并发例子均供阅读，平台执行器不创建操作系统线程。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root16.01",
+      "sourceNodeId": "rust.source.root16.01",
+      "title": "使用线程同时运行代码",
+      "parent": "rust.book.root16",
+      "depth": 2,
+      "physicalPage": 505,
+      "printedPage": null,
+      "leaf": false,
+      "order": 270,
+      "group": 16,
+      "body": [
+        "创建线程只表示把工作交给调度器，主线程不会自动等待它完成。下面依次观察spawn返回的句柄、join设置的等待点，以及move如何把闭包需要的数据交给新线程。",
+        "不要依赖休眠时长来建立先后关系。阅读程序应明确哪些事件由同一线程保证顺序，哪些事件只有在join之后才能确定已经发生。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root16.01.01",
+      "sourceNodeId": "rust.source.root16.01.01",
+      "title": "使用spawn创建新线程",
+      "parent": "rust.book.root16.01",
+      "depth": 3,
+      "physicalPage": 506,
+      "printedPage": null,
+      "leaf": true,
+      "order": 271,
+      "group": 16,
+      "body": [
+        "thread::spawn接收一个闭包，让其中的工作在新线程中进行。调用者继续执行自己的代码；两边的打印可能交错，不能把某次观察到的先后顺序当作固定规则。创建线程有调度和资源成本，适合独立任务，而不是把每一条简单运算都拆出去。",
+        "示例有两个输出来源，但没有等待点。主线程结束时，进程不会为了尚未结束的普通工作线程而继续存活，因此“工作完成”可能出现，也可能来不及出现。sleep只能增加观察机会，不能代替完成协议。后续将通过保存句柄并调用join建立可靠的结束边界。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::thread;\nfn main() {\n    thread::spawn(|| println!(\"工作完成\"));\n    println!(\"主线程结束\");\n}",
+        "description": "启动独立的打印任务，刻意不等待。",
+        "result": "主线程打印一行；工作线程的输出及其相对顺序不保证。",
+        "reason": "执行器不支持线程、闭包和调度。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能否断言这段程序每次都打印两行？",
+        "answer": "不能。主线程可能在工作线程获得执行机会前结束进程。应保存spawn的句柄并join，才能要求主线程等待该工作完成。",
+        "hints": [
+          "区分“已提交任务”和“任务已完成”。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.01.02",
+      "sourceNodeId": "rust.source.root16.01.02",
+      "title": "使用join句柄等待所有线程结束",
+      "parent": "rust.book.root16.01",
+      "depth": 3,
+      "physicalPage": 507,
+      "printedPage": null,
+      "leaf": true,
+      "order": 272,
+      "group": 16,
+      "body": [
+        "spawn返回的JoinHandle代表一个已经启动的线程。消费句柄调用join会阻塞当前线程，直到目标线程结束，并通过Result报告该线程是否发生panic。等待不是重新运行闭包，也不是指示线程停止；它只是建立完成关系。",
+        "等待点的位置直接影响可重叠的工作量。先执行主线程的独立任务再join，两个任务可并发推进；刚spawn就join，后面的主线程代码只能在工作线程结束后开始。多个线程都启动之后再逐个等待，通常比“启动一个、等完一个”的结构更符合批量独立工作的意图。句柄的join会消费句柄，所以不能对同一份句柄反复等待。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::thread;\nfn main() {\n    let worker = thread::spawn(|| 6 * 7);\n    println!(\"主线程可先做别的事\");\n    let value = worker.join().expect(\"工作线程失败\");\n    println!(\"结果 {}\", value);\n}",
+        "description": "从线程取得计算结果并设置完成边界。",
+        "result": "先输出主线程提示，随后输出“结果 42”；读取结果发生在工作结束后。",
+        "reason": "执行器没有JoinHandle或线程返回结果。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把第一条println!移到join之后会改变什么？",
+        "answer": "输出值仍是42，但主线程提示也必须等待工作结束；等待之前不再有这段可与工作重叠的主线程代码。",
+        "hints": [
+          "join阻塞的是调用它的线程。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.01.03",
+      "sourceNodeId": "rust.source.root16.01.03",
+      "title": "在线程中使用move闭包",
+      "parent": "rust.book.root16.01",
+      "depth": 3,
+      "physicalPage": 510,
+      "printedPage": null,
+      "leaf": true,
+      "order": 273,
+      "group": 16,
+      "body": [
+        "线程中的闭包可能比创建它的作用域活得更久。默认捕获若借用局部String，编译器就无法保证新线程使用它时原值仍存在。move要求闭包按值捕获所需环境，使独立线程拥有自己的数据，消除对创建者局部栈帧的借用。",
+        "捕获String会转移所有权，之后主线程不能继续使用原绑定；捕获Copy类型则复制其值。move只决定如何捕获，并不把任意数据自动变得线程安全，Rc等不满足Send的值依旧不能转入普通工作线程。若两边都需要文字，可以在启动前克隆出独立的String。捕获方式改变之后，线程所需的存活时间约束仍然要满足。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::thread;\nfn main() {\n    let label = String::from(\"任务甲\");\n    let worker = thread::spawn(move || println!(\"{}\", label));\n    worker.join().unwrap();\n}",
+        "description": "闭包拥有启动前准备的String。",
+        "result": "打印“任务甲”；label已经移入闭包，join后也不会自动还回原绑定。",
+        "reason": "执行器支持String移动，但不支持闭包捕获和线程。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "在join之后添加println!(\"{}\", label)能否编译？",
+        "answer": "不能。label的String已被move闭包捕获；等待线程结束不会撤销这次所有权转移。需要事先clone或显式通过线程返回数据。",
+        "hints": [
+          "所有权的转移与线程是否已经结束是两件事。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.02",
+      "sourceNodeId": "rust.source.root16.02",
+      "title": "使用消息传递在线程间转移数据",
+      "parent": "rust.book.root16",
+      "depth": 2,
+      "physicalPage": 514,
+      "printedPage": null,
+      "leaf": false,
+      "order": 274,
+      "group": 16,
+      "body": [
+        "通道把数据交接写成发送和接收。mpsc通道有可克隆的发送端和一个接收端，接收既可能拿到消息，也可能等待或发现全部发送者已经离开。",
+        "下面先追踪String被send消费后的拥有者，再观察连续接收何时结束，最后区分多个生产者各自的发送顺序和它们之间没有保证的交错顺序。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root16.02.01",
+      "sourceNodeId": "rust.source.root16.02.01",
+      "title": "通道和所有权转移",
+      "parent": "rust.book.root16.02",
+      "depth": 3,
+      "physicalPage": 517,
+      "printedPage": null,
+      "leaf": true,
+      "order": 275,
+      "group": 16,
+      "body": [
+        "send按值接收消息。发送String成功后，原发送者不再拥有该值，接收者拿到它时成为新的拥有者；这使“发送之后还修改同一String”的写法在编译阶段就被拦下。通道传递的是值及其所有权，并不是把所有消息隐式克隆一遍。",
+        "recv在没有消息但仍有发送者时等待，全部发送者关闭且缓冲区为空时返回错误。send也可能因接收端已经关闭而失败，所以unwrap只是简短示例中的处理选择，实际协议应决定如何恢复未送达的数据。消息类型还需满足跨线程传递的相应约束。消息很大时还应衡量复制与移动各自的成本。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::sync::mpsc;\nfn main() {\n    let (tx, rx) = mpsc::channel();\n    let note = String::from(\"校对完成\");\n    tx.send(note).unwrap();\n    let received = rx.recv().unwrap();\n    println!(\"{}\", received);\n}",
+        "description": "在同一线程中展示通道的所有权交接。",
+        "result": "打印“校对完成”；send后再读取note会产生已移动错误。",
+        "reason": "执行器未实现通道和Result值，不能运行此标准库消息示例。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若要发送后继续读取原文字，应改哪里？",
+        "answer": "在发送前克隆，或发送note.clone()。这样通道得到独立String，原note仍由发送者持有；不能仅因接收尚未发生就继续使用已移动值。",
+        "hints": [
+          "查找哪个调用按值接收String。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.02.02",
+      "sourceNodeId": "rust.source.root16.02.02",
+      "title": "发送多个值并观察接收者的等待过程",
+      "parent": "rust.book.root16.02",
+      "depth": 3,
+      "physicalPage": 518,
+      "printedPage": null,
+      "leaf": true,
+      "order": 276,
+      "group": 16,
+      "body": [
+        "接收端可以作为迭代器逐条读取消息。队列暂时为空时，它会等待，而不是立即结束循环；只有全部发送者都被丢弃且已排空消息后，迭代才终止。这一点让生产者可以按自己的节奏持续产出数据。",
+        "示例把三个整数依次发送，生产线程结束时自动丢弃它拥有的发送端。接收循环因此既能取得全部消息，也能自然结束。若主线程额外保留一个没有使用的发送端，循环就会一直等它可能发送的下一条消息。判断阻塞原因时，要检查仍存活的句柄，而不只检查队列里有没有值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::{sync::mpsc, thread};\nfn main() {\n    let (tx, rx) = mpsc::channel();\n    let producer = thread::spawn(move || {\n        for n in 1..=3 { tx.send(n).unwrap(); }\n    });\n    for n in rx { println!(\"收到 {}\", n); }\n    producer.join().unwrap();\n}",
+        "description": "连续接收，借生产线程结束关闭通道。",
+        "result": "依次打印收到1、2、3；生产者关闭发送端后接收循环结束。",
+        "reason": "执行器不支持通道迭代器或线程等待。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么“当前没有消息”不足以让for n in rx结束？",
+        "answer": "仍有发送端存活时，未来还可能有新消息。迭代器会阻塞等待；只有所有发送端关闭且队列清空才返回None。",
+        "hints": [
+          "接收结束由发送端生命周期决定。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.02.03",
+      "sourceNodeId": "rust.source.root16.02.03",
+      "title": "通过克隆发送者创建多个生产者",
+      "parent": "rust.book.root16.02",
+      "depth": 3,
+      "physicalPage": 519,
+      "printedPage": null,
+      "leaf": true,
+      "order": 277,
+      "group": 16,
+      "body": [
+        "克隆Sender会增加一个通向同一接收端的入口，不会复制接收队列。每个生产者都可以独立拥有一个发送端，从而避免共享可变发送句柄。mpsc只允许一个消费者；不能用克隆发送者的办法得到多个接收者。",
+        "同一个生产者顺序发送的消息保持该发送顺序，但不同生产者之间谁先发送取决于调度。示例保证最后收到甲、乙各一条，不能保证哪条先出现。接收循环要结束，原发送端与所有克隆都必须关闭；保留一个闲置的副本也会影响关闭判定。克隆发送端只增加入口，不会替原生产者复制业务状态。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::{sync::mpsc, thread};\nfn main() {\n    let (tx, rx) = mpsc::channel();\n    let other = tx.clone();\n    let a = thread::spawn(move || tx.send(\"甲\").unwrap());\n    let b = thread::spawn(move || other.send(\"乙\").unwrap());\n    for text in rx { println!(\"{}\", text); }\n    a.join().unwrap();\n    b.join().unwrap();\n}",
+        "description": "两个生产者分别持有同一通道的发送端。",
+        "result": "甲、乙各输出一次，二者顺序不保证；两线程结束后迭代终止。",
+        "reason": "执行器没有多生产者通道及调度模型。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若在主线程还保留第三个Sender，会发生什么？",
+        "answer": "即使甲乙线程已结束，接收循环仍可能阻塞，因为第三个Sender使通道保持开放。主线程需在接收循环前drop它。",
+        "hints": [
+          "检查每个clone最终由谁持有。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.03",
+      "sourceNodeId": "rust.source.root16.03",
+      "title": "共享状态的并发",
+      "parent": "rust.book.root16",
+      "depth": 2,
+      "physicalPage": 522,
+      "printedPage": null,
+      "leaf": false,
+      "order": 278,
+      "group": 16,
+      "body": [
+        "共享状态让多个任务访问同一个值，因此除了延长值的生命周期，还要规定访问时机。Arc解决线程间共同持有的问题，Mutex限制同一时刻进入临界区的访问者。",
+        "本节先看锁守卫何时释放，再和单线程的Rc、RefCell比较。阅读时分别检查“谁保证值还存在”和“谁保证修改互斥”，不能让一种智能指针承担两种职责。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root16.03.01",
+      "sourceNodeId": "rust.source.root16.03.01",
+      "title": "互斥体一次只允许一个线程访问数据",
+      "parent": "rust.book.root16.03",
+      "depth": 3,
+      "physicalPage": 522,
+      "printedPage": null,
+      "leaf": true,
+      "order": 279,
+      "group": 16,
+      "body": [
+        "Mutex<T>把数据和互斥访问协议绑在一起。lock成功后返回MutexGuard，经过守卫才能访问内部值；守卫离开作用域时自动释放锁。把守卫限制在较小的块中，可以明确临界区的开始和结束，避免把无需保护的慢操作也放进锁里。",
+        "跨线程共享时通常把Mutex放入Arc，由原子引用计数管理共同所有权。锁保证每次增量修改互斥，join保证最终读取发生在所有工作结束之后。锁不能自动避免死锁；若同一线程在仍持锁时再次取得同一把非重入锁，或多把锁取得顺序相反，就可能永远等待。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::sync::{Arc, Mutex};\nuse std::thread;\nfn main() {\n    let count = Arc::new(Mutex::new(0));\n    let mut handles = Vec::new();\n    for _ in 0..3 {\n        let shared = Arc::clone(&count);\n        handles.push(thread::spawn(move || {\n            *shared.lock().unwrap() += 1;\n        }));\n    }\n    for handle in handles { handle.join().unwrap(); }\n    println!(\"{}\", *count.lock().unwrap());\n}",
+        "description": "三线程在锁内更新同一计数器。",
+        "result": "所有工作结束后计数为3；线程取得锁的顺序不保证。",
+        "reason": "执行器不支持Arc、Mutex、Vec或真实线程。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只有Arc而没有Mutex，是否足以安全地修改共享整数？",
+        "answer": "不够。Arc仅保证共同拥有及原子引用计数，不能把普通整数的读取修改变成互斥操作。共享可变数据仍需锁或其他同步设计。",
+        "hints": [
+          "所有权管理和访问同步分别由谁提供？"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.03.02",
+      "sourceNodeId": "rust.source.root16.03.02",
+      "title": "RefCell<T>/Rc<T>和Mutex<T>/Arc<T>之间的相似性",
+      "parent": "rust.book.root16.03",
+      "depth": 3,
+      "physicalPage": 530,
+      "printedPage": null,
+      "leaf": true,
+      "order": 280,
+      "group": 16,
+      "body": [
+        "Rc<RefCell<T>>与Arc<Mutex<T>>都能表达共同拥有和内部可变性，但它们针对的运行环境不同。Rc的引用计数不具备跨线程同步能力；RefCell在运行时检查借用冲突，冲突时panic，而不是等待别的线程归还借用。",
+        "Arc用原子操作维护引用计数，Mutex用锁协调访问，因此可组成常见的多线程共享结构。Mutex的锁毒化用Result暴露先前持锁者panic的情况；它也可能阻塞甚至形成死锁。替换指针名称并不能完成并发设计，还要明确守卫作用域、锁的顺序和异常后的业务不变量。恢复毒化锁时，也必须先确认数据不变量是否仍然成立，而不是只忽略错误标记。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::sync::{Arc, Mutex};\nfn main() {\n    let original = Arc::new(Mutex::new(8));\n    let alias = Arc::clone(&original);\n    {\n        let mut guard = alias.lock().unwrap();\n        *guard += 2;\n    }\n    println!(\"{}\", *original.lock().unwrap());\n}",
+        "description": "两个Arc句柄访问同一Mutex中的值。",
+        "result": "守卫先释放，再次锁定后打印10；克隆Arc没有复制内部整数。",
+        "reason": "执行器未实现内部可变性指针及锁守卫。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把花括号去掉，并在guard仍持锁时再次lock，是否只是增加一次借用检查？",
+        "answer": "不是。第二次lock可能阻塞等待自己持有的锁，造成死锁；这与RefCell直接因借用冲突而panic的机制不同。",
+        "hints": [
+          "检查第一次守卫究竟何时drop。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.04",
+      "sourceNodeId": "rust.source.root16.04",
+      "title": "使用Sync trait和Send trait对并发进行扩展",
+      "parent": "rust.book.root16",
+      "depth": 2,
+      "physicalPage": 531,
+      "printedPage": null,
+      "leaf": false,
+      "order": 281,
+      "group": 16,
+      "body": [
+        "标准库的线程、通道和锁并不是全部语言内建能力。Send描述所有权能否安全转入其他线程，Sync描述共享引用能否安全用于线程间通信；库可借这两个约束组织自己的并发抽象。",
+        "下面用编译期约束区分两种性质，再说明自动推导与手写unsafe impl的责任。能通过约束不代表算法没有死锁、饥饿或业务上的竞争。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root16.04.01",
+      "sourceNodeId": "rust.source.root16.04.01",
+      "title": "允许线程间转移所有权的Send trait",
+      "parent": "rust.book.root16.04",
+      "depth": 3,
+      "physicalPage": 531,
+      "printedPage": null,
+      "leaf": true,
+      "order": 282,
+      "group": 16,
+      "body": [
+        "Send描述一个值的所有权能否安全地转移到另一个线程。String拥有独立缓冲区，适合在移交后由接收线程单独使用；Rc则可能让多个线程同时操作非原子的引用计数，因而不满足Send。这个限制在编译时生效，不依赖错误是否真的在某次运行中出现。",
+        "由满足Send的字段组成的普通类型通常会自动获得相应性质。函数可以用T: Send表达需求，让编译器帮忙核对，而不必真的创建线程才知道是否合格。Send不表示“可以同时任意修改”；它关注移交所有权，数据在新线程里依然遵守借用和可变性规则。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn require_send<T: Send>(_: T) {}\nfn main() {\n    require_send(String::from(\"可移交\"));\n    // 换成Rc::new(1)会因缺少Send而被拒绝。\n}",
+        "description": "用泛型约束检查类型是否允许跨线程移交。",
+        "result": "String满足约束，程序无输出；Rc<i32>不满足该约束。",
+        "reason": "执行器未实现trait、泛型或Send自动推导。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Rc<i32>内部只是整数，为何仍不能Send？",
+        "answer": "危险来自Rc共同拥有的非原子引用计数，而非整数本身。不同线程可能同时克隆或丢弃关联Rc，使计数更新发生数据竞争。",
+        "hints": [
+          "检查指针维护的元数据，而不只检查载荷。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.04.02",
+      "sourceNodeId": "rust.source.root16.04.02",
+      "title": "允许多线程同时访问的Sync trait",
+      "parent": "rust.book.root16.04",
+      "depth": 3,
+      "physicalPage": 532,
+      "printedPage": null,
+      "leaf": true,
+      "order": 283,
+      "group": 16,
+      "body": [
+        "Sync关注共享引用的跨线程安全性：T满足Sync，意味着&T可以安全地Send到另一个线程。共享引用通常只允许读，但内部可变性类型会改变分析；RefCell虽然能在单线程中动态检查借用，却没有为多线程提供同步，所以不能Sync。",
+        "Mutex通过同步访问内部数据来提供不同的保证；它是否能Send或Sync还取决于所包裹类型的约束。不要把不可变绑定误解为线程安全证明，绑定不能重新赋值，并不说明内部数据永远不会变化。检查共享容器时，需要连同字段、访问接口和同步协议一起考虑。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn require_sync<T: Sync>() {}\nfn main() {\n    require_sync::<String>();\n    require_sync::<std::sync::Mutex<i32>>();\n    // require_sync::<std::cell::RefCell<i32>>(); // 预期编译错误\n}",
+        "description": "对共享引用的安全性作类型层面的对比。",
+        "result": "前两项满足Sync；启用RefCell一行会因不满足Sync而编译失败。",
+        "reason": "执行器没有泛型trait约束或同步类型。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Sync与Send能否互换解释？",
+        "answer": "不能。Send讨论值的所有权能否移交；Sync讨论&T能否移交，从而允许多个线程通过共享引用访问T。它们描述不同的使用方式。",
+        "hints": [
+          "把Sync的判断改写为&T: Send。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.04.03",
+      "sourceNodeId": "rust.source.root16.04.03",
+      "title": "手动实现Send和Sync是不安全的",
+      "parent": "rust.book.root16.04",
+      "depth": 3,
+      "physicalPage": 532,
+      "printedPage": null,
+      "leaf": true,
+      "order": 284,
+      "group": 16,
+      "body": [
+        "Send和Sync是无方法的unsafe trait。普通结构体常可由字段自动推导这些性质；当某个字段阻止自动推导时，不应该先写unsafe impl来压下错误，而应先判断阻止的理由是否反映了真实的并发风险。",
+        "手工实现是在向所有安全调用者承诺：跨线程移交或共享引用不会破坏内存安全。编译器不验证这份证明，空的实现体也不会添加锁、原子计数或生命周期管理。只有理解内部表示、所有访问路径和释放时机，才能判断承诺是否成立；使用已有安全容器往往能减少需要维护的证明。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "struct Packet { text: String }\nfn require_both<T: Send + Sync>() {}\nfn main() {\n    require_both::<Packet>();\n    let p = Packet { text: String::from(\"无需手写实现\") };\n    println!(\"{}\", p.text);\n}",
+        "description": "普通字段已满足约束时依赖自动推导。",
+        "result": "Packet自动满足Send与Sync，打印文字；没有unsafe impl。",
+        "reason": "执行器不支持结构体及自动trait约束。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "给Rc包装器写unsafe impl Send会把引用计数变成原子操作吗？",
+        "answer": "不会。它只改变类型系统对承诺的信任，底层行为完全不变；不正确承诺可能让安全调用者触发未定义行为。",
+        "hints": [
+          "trait标记不会生成同步算法。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root16.05",
+      "sourceNodeId": "rust.source.root16.05",
+      "title": "总结",
+      "parent": "rust.book.root16",
+      "depth": 2,
+      "physicalPage": 533,
+      "printedPage": null,
+      "leaf": true,
+      "order": 285,
+      "group": 16,
+      "body": [
+        "整理并发程序时，可以分三层提问：任务何时启动和结束，值由谁拥有，访问是否存在同步。spawn与join处理生命周期，通道处理移交，Arc与Mutex分别处理共同拥有和互斥。Send、Sync则约束这些组合在类型层面是否可安全跨线程。",
+        "内存安全并不是完整的正确性证明。即使每次访问都加锁，两个工作仍可能以不符合业务要求的顺序发生；即使没有数据竞争，也可能死锁或一直等待未关闭的通道。先用清晰的完成和关闭协议建立可推理结构，再考虑是否值得增加线程数量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::{sync::mpsc, thread};\nfn main() {\n    let (tx, rx) = mpsc::channel();\n    let task = thread::spawn(move || tx.send(21 * 2).unwrap());\n    let result = rx.recv().unwrap();\n    task.join().unwrap();\n    println!(\"结果 {}\", result);\n}",
+        "description": "把所有权移交、消息结果和完成等待合在一个小流程中。",
+        "result": "收到42后确认线程结束，再打印“结果 42”。",
+        "reason": "执行器没有线程和通道，此例不生成平台并发轨迹。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "recv已收到结果，为什么还可能选择保留join？",
+        "answer": "接收到结果只证明send之前的工作已发生；线程在send之后仍可能有清理或其他工作。join明确确认整个线程结束，并可报告线程panic。",
+        "hints": [
+          "“收到消息”与“生产者退出”是两个事件。"
+        ]
+      }
+    }
+  ]
+}

@@ -7,7 +7,7 @@ import { cppExercise } from './identities';
 
 export default function CppReviewPage() {
   const { service, state } = useLearning();
-  const enabled = state.snapshot?.meta.dbVersion === 13 && state.recovery?.writable !== false;
+  const enabled = (state.snapshot?.meta.dbVersion ?? 0) >= 13 && state.recovery?.writable !== false;
   const epoch = state.sessionEpoch;
   const load = useCallback(
     async () => (enabled ? (await service.readCppCourse(epoch)).activities : []),

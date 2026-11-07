@@ -1,0 +1,690 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 8,
+  "nodes": [
+    {
+      "id": "rust.book.root08",
+      "sourceNodeId": "rust.source.root08",
+      "title": "第8章 通用集合类型",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 215,
+      "printedPage": null,
+      "leaf": false,
+      "order": 109,
+      "group": 8,
+      "body": [
+        "集合在运行中管理多个值，不同结构适合不同访问方式。Vec 按连续位置保存同型元素，String 维护有效 UTF-8 文本，HashMap 通过键关联值；选择时要同时考虑访问方式、所有权与可能的错误。",
+        "本章先看动态数组的创建与访问，再深入文本的字节边界，最后比较映射的查找和更新策略。平台只开放指定 String 操作，Vec、HashMap 与迭代器等继续用完整阅读例说明。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root08.01",
+      "sourceNodeId": "rust.source.root08.01",
+      "title": "使用动态数组存储多个值",
+      "parent": "rust.book.root08",
+      "depth": 2,
+      "physicalPage": 217,
+      "printedPage": null,
+      "leaf": false,
+      "order": 110,
+      "group": 8,
+      "body": [
+        "Vec<T> 把同一类型的多个值连续组织起来，长度可随 push 等操作改变。它和固定数组不同：数组长度参与类型，Vec 的运行时长度可以变化；二者都不能随意混入不匹配的元素。",
+        "下面先创建和更新，再看销毁、访问、遍历与枚举元素。重点关注访问是否可能越界、修改是否影响已有借用，以及数据最终由谁负责清理。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root08.01.01",
+      "sourceNodeId": "rust.source.root08.01.01",
+      "title": "创建动态数组",
+      "parent": "rust.book.root08.01",
+      "depth": 3,
+      "physicalPage": 217,
+      "printedPage": null,
+      "leaf": true,
+      "order": 111,
+      "group": 8,
+      "body": [
+        "Vec::new 创建空动态数组，vec![...] 则用列出的元素建立动态数组。两者都需要确定元素类型；空集合暂时没有元素提供线索时，可标注 Vec<i32>，之后也可能通过 push 等使用上下文推导类型。空不表示可以在后续混用任意类型。",
+        "Vec 的长度可以在运行时变化，而固定数组 [i32; N] 的长度属于类型。创建三个元素的 Vec，不会因此变成长度三的固定数组。下面分别建立空集合与有值集合，以 len 观察数量；它们都使用整数作为元素，不能直接再放一个 String。平台固定数组的可执行能力不等同于 Vec 支持。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let empty: Vec<i32> = Vec::new();\n    let values = vec![6, 12, 18];\n    println!(\"{} {}\", empty.len(), values.len());\n}\n",
+        "description": "对比空 Vec 与通过宏创建的三个元素集合。",
+        "result": "标准 Rust 中预期输出“0 3”。",
+        "reason": "Vec 泛型、vec! 宏与 len 调用不受平台解释器支持。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "Vec<i32> 当前为空，下一步能直接 push 一个 String 吗？",
+        "answer": "不能。元素类型已经确定为 i32，空集合仍有类型约束；不同内容需设计统一元素类型。",
+        "hints": [
+          "长度为零与类型未知不是一回事。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.01.02",
+      "sourceNodeId": "rust.source.root08.01.02",
+      "title": "更新动态数组",
+      "parent": "rust.book.root08.01",
+      "depth": 3,
+      "physicalPage": 218,
+      "printedPage": null,
+      "leaf": true,
+      "order": 112,
+      "group": 8,
+      "body": [
+        "给 Vec 追加元素使用 push，集合绑定需要允许可变访问。push 将元素放在当前末尾，使长度增加；它不重新排序旧元素，也不在每次调用后创建一个新的变量名。可变绑定与元素类型分别决定“能否改集合”和“能放什么”。",
+        "增长时底层存储可能重新分配，因此持有元素引用的同时调用会改变容器的操作，需要遵守借用规则，不能假定元素地址永不变化。下面从空 Vec 追加两个整数，编译器可从 push 的实参推断元素类型。容量和长度也不同：预留空间不等于已经具有那些可读取的元素。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut samples = Vec::new();\n    samples.push(7);\n    samples.push(11);\n    println!(\"长度 {}，末项 {}\", samples.len(), samples[1]);\n}\n",
+        "description": "通过两次追加观察长度和零起点索引。",
+        "result": "预期输出“长度 2，末项 11”。",
+        "reason": "动态 Vec、push 和动态存储增长不在平台固定数组执行子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为 Vec 预留容量后，是否就可以读取所有容量范围内的位置？",
+        "answer": "不能。只有已初始化、在当前长度内的元素可读取；容量只是底层可容纳的空间，不表示已有元素数量。",
+        "hints": [
+          "将 len 与 capacity 的概念分开。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.01.03",
+      "sourceNodeId": "rust.source.root08.01.03",
+      "title": "销毁动态数组时也会销毁其中的元素",
+      "parent": "rust.book.root08.01",
+      "depth": 3,
+      "physicalPage": 218,
+      "printedPage": null,
+      "leaf": true,
+      "order": 113,
+      "group": 8,
+      "body": [
+        "Vec 拥有自己的元素，拥有者结束作用域且未移出时，容器和仍在其中的元素一起被清理。元素如果是 String，其拥有的数据也随之处理，因此容器不是只释放一个外壳而留下所有内部文本。用引用访问元素则没有把它移出容器。",
+        "返回或移动整个 Vec 会转交容器及元素的责任，不能仅因旧局部绑定结束就说新拥有者的值被销毁。下面把拥有两个 String 的 Vec 限定在内层块，只在块内读取；块外继续执行独立输出，不会再使用旧集合。若要带出某个内容，应明确设计拥有值转移或合法借用关系。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    {\n        let notes = vec![String::from(\"开头\"), String::from(\"结尾\")];\n        println!(\"{}\", notes[0]);\n    } // notes 及仍由它持有的 String 在这里结束\n    println!(\"临时集合已结束作用域\");\n}\n",
+        "description": "将 Vec<String> 放入独立块，观察资源责任与可见范围一致。",
+        "result": "预期先显示“开头”，再显示作用域结束提示；块外不能再访问 notes。",
+        "reason": "Vec<String> 及容器元素析构的示例属于平台外的阅读内容。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果把整个 notes 返回给外部拥有者，仍会在旧块结束时销毁外部那份 Vec 吗？",
+        "answer": "不会。所有权已转移，旧绑定不再持有容器，新拥有者负责后续清理。",
+        "hints": [
+          "与单个 String 的移动规则作同样判断。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.01.04",
+      "sourceNodeId": "rust.source.root08.01.04",
+      "title": "读取动态数组中的元素",
+      "parent": "rust.book.root08.01",
+      "depth": 3,
+      "physicalPage": 219,
+      "printedPage": null,
+      "leaf": true,
+      "order": 114,
+      "group": 8,
+      "body": [
+        "Vec 可通过索引或 get 读取。values[index] 越界时会 panic；get(index) 返回 Option<&T>，把不存在的情况交给调用者处理。已知内部不变量能保证下标有效时可考虑索引，来自用户或搜索结果的未知下标则适合显式处理缺失。",
+        "两种方式取得的借用都关联底层集合，不应在引用仍要使用时进行可能使它失效的容器修改。下面查询恰好等于长度的索引，它已经越界，因为有效索引从零到长度减一。代码选用 get，因而进入 None 分支；不要把这个安全返回推广为直接索引也会自动返回 None。设计提示时应说明位置是否存在，不应把缺失解释成容器内恰好存有一个零。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let values = vec![4, 8, 12];\n    match values.get(3) {\n        Some(value) => println!(\"取得 {}\", value),\n        None => println!(\"没有该位置\"),\n    }\n}\n",
+        "description": "用 get 检查第一个越过末尾的位置。",
+        "result": "长度为 3，有效索引是 0、1、2；当前预期显示“没有该位置”。",
+        "reason": "Vec、get、Option 引用和 match 均不在当前平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "将 values.get(3) 改成直接读取 values[3]，还是相同的可恢复分支吗？",
+        "answer": "不是。直接索引越界会 panic，而 get 返回 None，允许程序明确选择恢复或提示。",
+        "hints": [
+          "边界检查的结果形式也是接口契约的一部分。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.01.05",
+      "sourceNodeId": "rust.source.root08.01.05",
+      "title": "遍历动态数组中的值",
+      "parent": "rust.book.root08.01",
+      "depth": 3,
+      "physicalPage": 221,
+      "printedPage": null,
+      "leaf": true,
+      "order": 115,
+      "group": 8,
+      "body": [
+        "for 遍历 &values 时得到元素的共享引用，适合读取而保留整个 Vec；遍历 &mut values 得到可变引用，可通过解引用修改元素。直接遍历拥有的 Vec 则可能按值消耗集合，选择哪一种取决于循环结束后还需要什么。",
+        "下面先为每个整数加三，再共享读取结果。循环中的 *value 表示所指向的整数，不是给引用变量重新绑定一个数字。遍历时不宜再对同一容器 push：迭代已有借用与改变容器可能冲突。用元素迭代也能避免自己维护索引，但不会取消溢出或其他业务约束。同一个集合的读取遍历和修改遍历应清楚分段，便于检查借用何时结束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut values = vec![1, 4, 7];\n    for value in &mut values {\n        *value = *value + 3;\n    }\n    for value in &values { println!(\"{}\", value); }\n}\n",
+        "description": "先通过可变元素引用更新，再通过共享引用读取。",
+        "result": "预期依次输出 4、7、10，各占一行，Vec 仍由 values 持有。",
+        "reason": "Vec 引用迭代和局部可变引用不属于平台直接函数借用子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么修改语句写 *value = ...，而不是把 value 当作普通 i32？",
+        "answer": "可变遍历中的 value 是 &mut i32，*value 才访问引用指向的整数；给引用本身赋整数会类型不符。",
+        "hints": [
+          "先写出循环变量的类型，再决定是否解引用。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.01.06",
+      "sourceNodeId": "rust.source.root08.01.06",
+      "title": "使用枚举来存储多个类型的值",
+      "parent": "rust.book.root08.01",
+      "depth": 3,
+      "physicalPage": 222,
+      "printedPage": null,
+      "leaf": true,
+      "order": 116,
+      "group": 8,
+      "body": [
+        "Vec 要求所有元素同型，但同一个枚举的不同变体可以携带不同种类的数据。通过定义 Cell::Number 与 Cell::Text，可以在 Vec<Cell> 中保存数字和文本；从容器角度看，元素始终是 Cell，并未突破同型约束。",
+        "这种设计适合可能种类事先可列举的场景。每次读取需要根据变体决定如何解释数据，match 的穷尽检查还能提醒遗漏某类。若种类不断开放扩展，则需考虑后续 trait 等其他设计，不应把一个巨大的枚举当作所有场景的答案。下面只提供两种值，明确列出数据与显示的对应关系。增加新变体后，应重新检查各处匹配分支，确保显示与处理规则仍覆盖所有状态。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "enum Cell { Number(i32), Text(String) }\nfn main() {\n    let cells = vec![Cell::Number(12), Cell::Text(String::from(\"合计\"))];\n    for cell in cells {\n        match cell {\n            Cell::Number(n) => println!(\"数值 {}\", n),\n            Cell::Text(text) => println!(\"文本 {}\", text),\n        }\n    }\n}\n",
+        "description": "用统一枚举类型装入不同形状的数据，并在读取时分类。",
+        "result": "预期先输出“数值 12”，再输出“文本 合计”；循环按值消费 cells。",
+        "reason": "枚举、Vec 与按值集合迭代均在平台可执行范围外。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "这里的 Vec 真的混装了两个不同元素类型吗？",
+        "answer": "没有。每个元素都属于 Cell，只是变体及内部数据类型不同，所以仍符合 Vec<T> 的同型要求。",
+        "hints": [
+          "容器元素类型与变体内部字段类型是两层概念。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.02",
+      "sourceNodeId": "rust.source.root08.02",
+      "title": "使用字符串存储UTF-8编码的文本",
+      "parent": "rust.book.root08",
+      "depth": 2,
+      "physicalPage": 224,
+      "printedPage": null,
+      "leaf": false,
+      "order": 117,
+      "group": 8,
+      "body": [
+        "String 与 &str 都描述有效 UTF-8 文本，但一个负责拥有和修改数据，一个主要用于借用已有内容。下面从创建、追加与拼接开始，再解释为什么不能用单个整数下标直接取得“字符”。",
+        "处理文本前先决定单位：字节、Unicode 标量值，还是用户眼中的字形。这个选择会影响长度、遍历和切片边界，也决定代码是否能正确处理非 ASCII 文本。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root08.02.01",
+      "sourceNodeId": "rust.source.root08.02.01",
+      "title": "字符串是什么",
+      "parent": "rust.book.root08.02",
+      "depth": 3,
+      "physicalPage": 224,
+      "printedPage": null,
+      "leaf": true,
+      "order": 118,
+      "group": 8,
+      "body": [
+        "str 是字符串切片所表示的 UTF-8 文本类型，通常通过 &str 借用使用；String 是标准库提供的拥有、可增长字符串。字面量常以 &str 形式使用，String::from 则把文本复制到新的拥有值中。二者相关，却不能忽略所有权差异。",
+        "标准库还存在面向操作系统字符串或 C 接口的其他类型，不能假定凡是名字含 String 都有同样的编码保证。下面将 &str 参数用于只读展示，再让 String 通过借用配合它；这种接口不要求调用者转交文本。平台仅支持指定 &String 函数借用，不涵盖这段通用 &str 及自动转换示例。接口选择应描述是否需要拥有文本，避免为了临时读取而强迫调用者反复复制内容。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn show(text: &str) { println!(\"{}\", text); }\nfn main() {\n    let literal = \"文字\";\n    let owned = String::from(literal);\n    show(literal);\n    show(&owned);\n    println!(\"拥有值仍在：{}\", owned);\n}\n",
+        "description": "对比字面量借用与拥有字符串，并以 &str 参数只读展示。",
+        "result": "预期显示两行“文字”，再显示“拥有值仍在：文字”。",
+        "reason": "通用 &str 参数、局部字符串引用和自动解引用转换不在平台子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只读函数接收 &str，是否意味着调用者必须交出 String 所有权？",
+        "answer": "不需要。它借用文本，可从合适的 String 借用而来；调用结束后原拥有者仍可继续使用。",
+        "hints": [
+          "从参数中的 & 判断访问意图，再确认具体类型。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.02.02",
+      "sourceNodeId": "rust.source.root08.02.02",
+      "title": "创建一个新的字符串",
+      "parent": "rust.book.root08.02",
+      "depth": 3,
+      "physicalPage": 225,
+      "printedPage": null,
+      "leaf": true,
+      "order": 119,
+      "group": 8,
+      "body": [
+        "创建 String 可以从空值开始，也可从已有文本构造。String::new 适合之后逐步追加，String::from(\"...\") 适合已有初始内容；对实现相应显示能力的值，to_string 还能得到拥有字符串，但它依赖完整标准库与 trait 机制。",
+        "所有这些 String 都保持 UTF-8 有效，文本可以包含中文等非 ASCII 内容。新建拥有值不等于取得原有 String 的共享别名，后续修改应按具体操作分析。下面采用平台白名单中的两种构造，并给空字符串追加内容；若只读已有文字，不一定需要为了调用而额外构造一份拥有值。空拥有值和空切片在显示上可能相同，但后续能否增长及资源归属不能因此混同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut empty = String::new();\n    let initial = String::from(\"入门\");\n    empty.push_str(\"准备\");\n    println!(\"{} {}\", empty, initial);\n}\n",
+        "description": "比较空 String 后续填充与携带初始内容的 String。",
+        "result": "预期输出“准备 入门”。",
+        "reason": "本叶是构造方式阅读；仅 new/from 与指定追加受支持，to_string 未在平台开放。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "从字面量构造 String 的目的是什么？只读显示时总要这样做吗？",
+        "answer": "构造得到可独立拥有和按规则修改的文本；若仅只读显示，合适的字面量或借用已可满足需求，不总需新分配拥有值。",
+        "hints": [
+          "先判断是否需要拥有和修改，再选择构造方式。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.02.03",
+      "sourceNodeId": "rust.source.root08.02.03",
+      "title": "更新字符串",
+      "parent": "rust.book.root08.02",
+      "depth": 3,
+      "physicalPage": 226,
+      "printedPage": null,
+      "leaf": true,
+      "order": 120,
+      "group": 8,
+      "body": [
+        "push_str 追加一段文本，push 追加一个 char，二者都修改可变 String。用 + 拼接时，左侧 String 通常按值参与并被消耗，右侧是借用文本；因此拼接后不能不加分析地继续使用左侧旧绑定，而右侧拥有者通常仍有效。",
+        "format! 则按格式生成新的 String，适合多段组合，格式化通常借用参数展示。选择哪一种应看是修改原对象还是产生新值，并留意所有权与成本。下面依次追加、拼接和格式化；平台目前只支持指定 push_str 字面量等操作，不把 char、字符串加法与任意格式宏都视为可运行。追加和拼接的结果都应保持有效文本，但它们对原绑定的影响需要分别推理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let mut text = String::from(\"Rust\");\n    text.push_str(\"课\");\n    text.push('!');\n    let suffix = String::from(\"开始\");\n    let combined = text + \" \" + &suffix;\n    let framed = format!(\"[{}]\", combined);\n    println!(\"{} {}\", framed, suffix);\n}\n",
+        "description": "分别观察就地追加、消耗左值的拼接和新建格式化文本。",
+        "result": "标准 Rust 中预期输出“[Rust课! 开始] 开始”；text 已在加法中移动。",
+        "reason": "char、push、字符串 +、format! 和相关借用转换不在平台支持范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "拼接完成后 suffix 还可以使用，是否说明左侧 text 也能照样使用？",
+        "answer": "不是。加法对左侧 String 取得所有权，对右侧 &str 借用，二者参数角色不同；这里 text 已移动，suffix 未移动。",
+        "hints": [
+          "不要因为一个运算符连接两个值，就假定两边使用方式相同。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.02.04",
+      "sourceNodeId": "rust.source.root08.02.04",
+      "title": "字符串索引",
+      "parent": "rust.book.root08.02",
+      "depth": 3,
+      "physicalPage": 229,
+      "printedPage": null,
+      "leaf": true,
+      "order": 121,
+      "group": 8,
+      "body": [
+        "Rust 不允许用 String 的单个整数下标直接取得字符，因为 UTF-8 是可变长编码。下标若被理解为字节位置，可能落在多字节字符中间；若理解为第几个 Unicode 标量值，又不具备数组那样固定步长的直接访问性质。",
+        "还应区分字节、Unicode 标量值与用户看到的字形，三者数量可能不同。因此 s[0] 不是一个可以默认选定含义的操作。下面故意展示不合法的单下标写法，预期编译失败，而不是拿到第一字节或第一个字符。需要按字节访问可显式取字节，需要逐标量处理则使用相应迭代方式。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let text = String::from(\"编码\");\n    // 故意错误：String 没有这种单整数索引操作\n    let first = text[0];\n    println!(\"{}\", first);\n}\n",
+        "description": "阅读字符串单整数索引的反例，辨认编译期限制。",
+        "result": "标准 Rust 应报告 String 不能按整数下标这样索引；本例没有正常输出。",
+        "reason": "该代码是故意非法的标准 Rust 阅读例；平台也不支持字符串索引或字符提取。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么 text[0] 不能直接解释成“第一个中文字符”？",
+        "answer": "UTF-8 字符占用字节数不固定，单整数下标没有被 String 定义为字符序号访问；应明确选择 bytes 或 chars 等操作。",
+        "hints": [
+          "先说明需要的单位，再选择接口。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.02.05",
+      "sourceNodeId": "rust.source.root08.02.05",
+      "title": "字符串切片",
+      "parent": "rust.book.root08.02",
+      "depth": 3,
+      "physicalPage": 232,
+      "printedPage": null,
+      "leaf": true,
+      "order": 122,
+      "group": 8,
+      "body": [
+        "字符串范围索引产生 &str 切片，起止值仍然是字节位置。起点和终点都必须落在合法 UTF-8 边界，且不能超出文本范围；端点满足数字大小关系并不足以保证切片有效，还要考虑编码边界。",
+        "ASCII 中一个字符一字节，容易让按字符计数的误解暂时隐藏。下面的“春天”共六字节，0..3 取得第一个汉字；0..1 会从编码中间截断并 panic。切片借用原数据，使用期间仍需满足共享引用约束。若字节位置来自外部输入，应先验证或采用能显式报告失败的接口，而不是任意切开。完整边界之外的索引同样会失败，编码正确不能弥补范围超过长度的问题。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let season = String::from(\"春天\");\n    let first = &season[0..3];\n    println!(\"{}\", first);\n}\n",
+        "description": "用一个三字节汉字展示范围切片和字符边界。",
+        "result": "标准 Rust 中预期输出“春”；若改成 0..1，将因不处于字符边界而失败。",
+        "reason": "字符串切片、&str 局部绑定与运行时 UTF-8 范围访问均属平台外阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么 0..3 合法，而 0..1 虽然没有超过总长度仍不合法？",
+        "answer": "首个汉字的完整 UTF-8 编码占三个字节，偏移 1 在编码内部；切片必须同时满足范围有效与端点位于字符边界。",
+        "hints": [
+          "长度检查与编码边界检查缺一不可。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.02.06",
+      "sourceNodeId": "rust.source.root08.02.06",
+      "title": "遍历字符串的方法",
+      "parent": "rust.book.root08.02",
+      "depth": 3,
+      "physicalPage": 232,
+      "printedPage": null,
+      "leaf": true,
+      "order": 123,
+      "group": 8,
+      "body": [
+        "chars 按 Unicode 标量值遍历文本，bytes 按原始 UTF-8 字节遍历。处理编码协议时可能需要字节，分析文字时常先按标量值；选择应由任务决定，不能认为其中一种在所有场景都代表“用户看到的一个字”。",
+        "组合附加符和表情序列可能让一个可见字形由多个标量值构成，因此 chars 数量仍不等于字形数量。下面的“中A”含两个标量值，却占四个 UTF-8 字节。循环按各自接口取得项目，不需要用非法 String 整数索引猜测字符；平台当前没有实现这些迭代器与 char 值。如果任务只处理编码字节，不应再把每个字节单独显示为一个字符来推断原文。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let text = \"中A\";\n    for scalar in text.chars() { println!(\"标量 {}\", scalar); }\n    for byte in text.bytes() { println!(\"字节 {}\", byte); }\n}\n",
+        "description": "对同一文本进行两种单位的遍历，观察数量与内容。",
+        "result": "chars 依次给出 中、A；bytes 依次给出 228、184、173、65，因此一共两次标量输出和四次字节输出。",
+        "reason": "chars、bytes、char 与通用迭代器不在当前平台执行白名单。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果仅把 chars().count() 当作屏幕上可见字形数，会在哪类文本中出问题？",
+        "answer": "组合附加符或多标量表情序列可能由多个标量组成一个字形，chars 计数会与可见字形数不同。",
+        "hints": [
+          "区分 UTF-8 字节、Unicode 标量与字形簇。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.02.07",
+      "sourceNodeId": "rust.source.root08.02.07",
+      "title": "字符串的确没那么简单",
+      "parent": "rust.book.root08.02",
+      "depth": 3,
+      "physicalPage": 233,
+      "printedPage": null,
+      "leaf": true,
+      "order": 124,
+      "group": 8,
+      "body": [
+        "字符串处理的复杂性来自文本本身：存储单位、语言文字与显示单位并不总是一致。Rust 通过类型和接口要求开发者明确选择字节或 Unicode 标量，并在切片时维护 UTF-8 有效性，这能让许多非 ASCII 问题更早暴露。",
+        "不要为了让英文测试通过就把所有文本假设成单字节。测试应至少加入多字节字符和组合序列，分别检查字节长度、标量数量及业务所需的显示单位。下面一个 e 加组合重音只占一个常见可见字形，却有两个标量和三个字节；这也说明“长度”必须先说明按什么度量，标准库并不自动完成所有自然语言分词或显示处理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let accented = \"e\\u{301}\";\n    println!(\"字节 {}，标量 {}\", accented.len(), accented.chars().count());\n}\n",
+        "description": "用组合重音序列区分存储长度与标量数量。",
+        "result": "预期输出“字节 3，标量 2”；通常显示成一个带重音字形，具体字形呈现取决于字体环境。",
+        "reason": "len、字符迭代与字形分段均未在平台执行子集开放；本例只说明完整语言概念。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "用户要求最多十个“可见字符”，直接检查 String::len() <= 10 是否足够？",
+        "answer": "不足够。len 是字节数；业务若按可见字形限制，还需要明确字形分段规则及相应处理，而非仅用字节或标量数量代替。",
+        "hints": [
+          "先定义业务所说的字符是什么单位。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.03",
+      "sourceNodeId": "rust.source.root08.03",
+      "title": "在哈希映射中存储键值对",
+      "parent": "rust.book.root08",
+      "depth": 2,
+      "physicalPage": 235,
+      "printedPage": null,
+      "leaf": false,
+      "order": 125,
+      "group": 8,
+      "body": [
+        "HashMap 将键关联到值，适合按名称或其他标识查找，而不必记住数组位置。每种映射有确定的键类型和值类型，相同键只有一个当前值，遍历顺序则不应被当作插入顺序。",
+        "下面依次看创建、所有权、可缺失的查找、更新策略与哈希函数。重要的是明确键是否存在、更新是覆盖还是累加，并按数据来源选择合适的安全与性能权衡。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root08.03.01",
+      "sourceNodeId": "rust.source.root08.03.01",
+      "title": "创建一个新的哈希映射",
+      "parent": "rust.book.root08.03",
+      "depth": 3,
+      "physicalPage": 235,
+      "printedPage": null,
+      "leaf": true,
+      "order": 126,
+      "group": 8,
+      "body": [
+        "HashMap<K,V> 保存同一种键类型到同一种值类型的映射。它不在常用预导入类型之列，通常需要先从 std::collections 引入；创建空映射时，可用类型注解或后续 insert 操作提供推断信息。",
+        "键不同不意味着值必须不同；相同键再次插入则会更新对应值，而不是得到两个并列条目。遍历顺序也不保证按插入次序，因此固定输出不应依赖未经排序的遍历。下面用书名作为键、册数作为值，查询一个明确存在的键，结果可直接核对，不需要猜底层存储位置。映射的键和值也可以分别采用其他合适类型，只要同一映射内遵守各自的类型约束。",
+        "已有键序列和值序列时，还可用 zip 配对后 collect 为 HashMap。collect 能构造多种集合，通常需要目标类型上下文；HashMap<_, _> 表明集合种类而让键值类型继续推导。两序列配对到较短者为止，不能默认多出的项目也进入映射。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::collections::HashMap;\nfn main() {\n    let mut copies: HashMap<String, i32> = HashMap::new();\n    copies.insert(String::from(\"语法\"), 3);\n    copies.insert(String::from(\"实践\"), 5);\n    println!(\"条目 {}，语法册数 {:?}\", copies.len(), copies.get(\"语法\"));\n}\n",
+        "description": "创建字符串键到整数值的映射，区分条目数与存储内容。",
+        "result": "预期显示“条目 2，语法册数 Some(3)”。",
+        "reason": "HashMap、泛型、use 与 Option 查询结果均在平台可执行子集外。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两个不同键都映射到 3，会自动合并成一个条目吗？",
+        "answer": "不会。映射按键区分条目，不同键可以具有相同值；只有相同键的插入会影响同一对应关系。",
+        "hints": [
+          "键负责识别条目，值只是该键关联的数据。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.03.02",
+      "sourceNodeId": "rust.source.root08.03.02",
+      "title": "哈希映射与所有权",
+      "parent": "rust.book.root08.03",
+      "depth": 3,
+      "physicalPage": 236,
+      "printedPage": null,
+      "leaf": true,
+      "order": 127,
+      "group": 8,
+      "body": [
+        "向 HashMap 插入拥有的键和值时，集合也参与所有权管理。i32 等 Copy 值可复制进去，原绑定仍有效；String 等非 Copy 值按值插入时会移动，旧绑定不能再读取，映射成为它们的新拥有者。",
+        "如果存入引用，映射不拥有引用背后的数据，但需要保证底层值在引用使用期间有效，不能把引用当作免费延长生命周期的方法。下面让 String 键移动进去，而计数整数保留在外部继续使用。想保留独立 String 可显式 clone，但应清楚这是额外的拥有副本，不是 insert 自动完成的深复制。当映射被整体移动时，内部拥有的键和值也随新的容器拥有者一起转移管理责任。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::collections::HashMap;\nfn main() {\n    let name = String::from(\"画册\");\n    let count = 7;\n    let mut stock = HashMap::new();\n    stock.insert(name, count);\n    println!(\"原计数 {}，映射 {:?}\", count, stock.get(\"画册\"));\n}\n",
+        "description": "在同次插入中对比 String 键移动与整数值复制。",
+        "result": "预期显示“原计数 7，映射 Some(7)”；name 已移动，不能再作为原 String 使用。",
+        "reason": "HashMap 插入及容器拥有规则的例子属于平台外阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若插入后还需要 name 的独立拥有值，应怎样修改调用？",
+        "answer": "可以在明确需要副本时插入 name.clone()，让映射拥有副本而原 name 保留；也可重新设计引用存储，但必须满足有效期约束。",
+        "hints": [
+          "先决定要保留独立值还是仅需要临时查看。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.03.03",
+      "sourceNodeId": "rust.source.root08.03.03",
+      "title": "访问哈希映射中的值",
+      "parent": "rust.book.root08.03",
+      "depth": 3,
+      "physicalPage": 237,
+      "printedPage": null,
+      "leaf": true,
+      "order": 128,
+      "group": 8,
+      "body": [
+        "get 按键查找并返回 Option<&V>，因为请求的键不一定存在。找到时取得共享引用，没有找到时得到 None；它既不会自动插入默认值，也不会因为键不存在就必然 panic，调用者可明确处理这种缺失。",
+        "遍历映射可逐个取得键和值的借用，但顺序不保证稳定，输出需求若要求排序应另行整理。下面分别查询存在和不存在的键，把 Some 与 None 的区别显示出来。查询结果引用着映射中的数据，在该引用还要使用时，不应随意进行与之冲突的修改；这和 Vec 元素借用遵守同一类原则。只查找确定的键可以得到稳定结果，而不能由此推断整个映射的遍历顺序也固定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::collections::HashMap;\nfn main() {\n    let mut counts = HashMap::new();\n    counts.insert(String::from(\"笔记\"), 4);\n    for name in &[\"笔记\", \"练习\"] {\n        match counts.get(*name) {\n            Some(value) => println!(\"{} 有 {}\", name, value),\n            None => println!(\"{} 未登记\", name),\n        }\n    }\n}\n",
+        "description": "用明确查询顺序展示命中与缺失，避免依赖映射遍历顺序。",
+        "result": "预期输出“笔记 有 4”和“练习 未登记”，原映射仍只有一个条目。",
+        "reason": "HashMap 查询、Option<&V>、引用数组遍历和 match 不在平台执行子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "查询“练习”返回 None 后，映射中会自动多一个零值条目吗？",
+        "answer": "不会。get 只查询，不插入；需要缺失时插入应使用 insert 或合适的 entry 操作。",
+        "hints": [
+          "读取操作与更新操作分开判断。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.03.04",
+      "sourceNodeId": "rust.source.root08.03.04",
+      "title": "更新哈希映射",
+      "parent": "rust.book.root08.03",
+      "depth": 3,
+      "physicalPage": 238,
+      "printedPage": null,
+      "leaf": true,
+      "order": 129,
+      "group": 8,
+      "body": [
+        "更新映射前必须明确策略：insert 对同一键替换旧值，entry(...).or_insert(...) 只在缺失时放入默认值，通过返回的可变引用还可在旧值基础上累加。三种行为分别适合覆盖设置、初始化与计数，不能把它们视为相同写法。",
+        "entry 返回的引用指向当前键的值，需要解引用才能改整数。每次借用应控制在合适范围，随后才能继续其他访问。下面同一键先设为二、覆盖为五、尝试默认九但保持五，最后加一得到六。由此可以逐步验证每种操作是否符合预期，而不是只看最后条目数量没有增加。",
+        "词频统计可先用 split_whitespace 逐词取得借用文本，再对每个词执行 entry(...).or_insert(0) 并累加。这里按空白分隔，不会自动去标点或合并大小写，统计规则还需与实际任务对齐。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::collections::HashMap;\nfn main() {\n    let mut counts = HashMap::new();\n    counts.insert(\"书签\", 2);\n    counts.insert(\"书签\", 5);\n    counts.entry(\"书签\").or_insert(9);\n    {\n        let value = counts.entry(\"书签\").or_insert(0);\n        *value = *value + 1;\n    }\n    println!(\"{:?}\", counts.get(\"书签\"));\n}\n",
+        "description": "依次执行覆盖、缺失时初始化与累加，核对每一步的值。",
+        "result": "已有键不会被 or_insert(9) 覆盖，最后加一，预期显示 Some(6)。",
+        "reason": "HashMap entry API、可变引用局部绑定与容器更新在平台范围外。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果在某键已有五时调用 or_insert(9)，值会变九吗？为什么？",
+        "answer": "不会。or_insert 只在键缺失时使用默认值；存在时返回已有值的可变引用，五保持不变。",
+        "hints": [
+          "看方法名背后的条件，而不只看传入的数字。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.03.05",
+      "sourceNodeId": "rust.source.root08.03.05",
+      "title": "哈希函数",
+      "parent": "rust.book.root08.03",
+      "depth": 3,
+      "physicalPage": 240,
+      "printedPage": null,
+      "leaf": true,
+      "order": 130,
+      "group": 8,
+      "body": [
+        "哈希函数将键映射为用于定位的哈希值，映射还需通过相等性区分真正相同的键与碰撞。不同键可能产生相同哈希值，所以哈希相等不能单独证明键相等；键的 Hash 与 Eq 行为也必须相互一致，才能可靠查找。",
+        "默认哈希策略会考虑恶意键输入造成大量碰撞等风险，不能只凭一次微小基准就随意替换。实际算法和种子是实现细节，不应把输出哈希当作稳定存储格式或密码学摘要。下面仅比较同一文本在同类新哈希器上的结果是否一致，不承诺某个十进制哈希数，也不据此声称映射顺序固定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::collections::hash_map::DefaultHasher;\nuse std::hash::{Hash, Hasher};\nfn digest(text: &str) -> u64 {\n    let mut state = DefaultHasher::new();\n    text.hash(&mut state);\n    state.finish()\n}\nfn main() {\n    println!(\"{}\", digest(\"教材\") == digest(\"教材\"));\n}\n",
+        "description": "比较同一输入的哈希一致性，不把具体算法结果当成公开契约。",
+        "result": "使用同类新 DefaultHasher 处理同一输入，预期显示 true；具体哈希数不作为本例要求。",
+        "reason": "Hash/Hasher trait、u64、DefaultHasher 和通用哈希计算不在平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两个不同键哈希值相同，HashMap 是否就必须把它们当同一个键？",
+        "answer": "不是。哈希可能碰撞，映射还使用相等性判断键是否真正相同；仅凭哈希相等不能合并不同键。",
+        "hints": [
+          "哈希用于定位，相等性用于确认身份。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root08.04",
+      "sourceNodeId": "rust.source.root08.04",
+      "title": "总结",
+      "parent": "rust.book.root08",
+      "depth": 2,
+      "physicalPage": 241,
+      "printedPage": null,
+      "leaf": true,
+      "order": 131,
+      "group": 8,
+      "body": [
+        "选择集合先看主要操作：连续位置和遍历可考虑 Vec，拥有 UTF-8 文本用 String，按键查找和累计用 HashMap。接着检查元素所有权、借用与缺失处理，不要因为接口短就忽略越界、文本边界或键不存在等情况。",
+        "练习可以把数字整理为平均数、中位数与众数，或把词语按明确规则转换，再设计按部门组织姓名的文本接口。这里用一组小整数统计出现次数，展示 Vec 的顺序数据如何进入映射；平均数还要决定整数还是浮点运算，中位数须先排序，文本处理则需另设 UTF-8 边界规则，不能让一种数据结构替代所有分析。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::collections::HashMap;\nfn main() {\n    let values = vec![2, 5, 2, 8, 2];\n    let mut frequencies = HashMap::new();\n    for value in values {\n        let count = frequencies.entry(value).or_insert(0);\n        *count = *count + 1;\n    }\n    println!(\"数字 2 出现 {:?} 次\", frequencies.get(&2));\n}\n",
+        "description": "把有序输入序列转成按数字查找的频数表。",
+        "result": "数字 2 出现三次，预期输出“数字 2 出现 Some(3) 次”；不依赖 HashMap 遍历顺序。",
+        "reason": "Vec、HashMap、entry、局部可变引用和泛型迭代均属于平台外阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "这段代码统计频数后，能直接把 HashMap 的第一个遍历项称为中位数吗？",
+        "answer": "不能。映射遍历没有数值排序保证，中位数应基于排序后的原始数据位置计算；频数表解决的是出现次数问题。",
+        "hints": [
+          "让数据结构与所需统计量一一对应。"
+        ]
+      }
+    }
+  ]
+}

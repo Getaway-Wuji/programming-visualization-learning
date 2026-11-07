@@ -10,10 +10,10 @@ export async function waitForPhase2Archive(page: Page) {
   await expect
     .poll(async () => (await native(page)).meta)
     .toMatchObject({
-      dbVersion: 13,
-      schemaVersion: '13.0.0',
+      dbVersion: 14,
+      schemaVersion: '14.0.0',
       activePackageRef: { id: 'content.c.primer6', version: '2.0.0' },
-      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp', version: '1.0.0' },
+      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp-rust', version: '1.0.0' },
     });
   await expect.poll(async () => (await native(page)).settings.goalTemplate).not.toBeNull();
 }

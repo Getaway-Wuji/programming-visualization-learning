@@ -566,9 +566,11 @@ test('continuous public learning navigation integrates reviewed reading, validat
       'javaDrafts',
       'cppActivities',
       'cppDrafts',
+      'rustActivities',
+      'rustDrafts',
     ].sort(),
   );
-  expect(archive.meta.dbVersion).toBe(13);
+  expect(archive.meta.dbVersion).toBe(14);
   for (const name of C6_RESET_CLEAR_STORES)
     expect((archive as unknown as Record<string, unknown>)[name]).toEqual([]);
   await expect(page.getByTestId('engine-connection')).toHaveCount(0);

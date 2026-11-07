@@ -1,0 +1,376 @@
+{
+  "version": "1.0.0",
+  "language": "rust",
+  "edition": "2018",
+  "group": 9,
+  "nodes": [
+    {
+      "id": "rust.book.root09",
+      "sourceNodeId": "rust.source.root09",
+      "title": "第9章 错误处理",
+      "parent": null,
+      "depth": 1,
+      "physicalPage": 242,
+      "printedPage": null,
+      "leaf": false,
+      "order": 132,
+      "group": 9,
+      "body": [
+        "错误处理首先要回答谁有足够的信息作决定。文件不存在可以让用户换路径，程序内部的不变量被破坏则应及时停止。本章把这些选择落实为 Result、错误传播和 panic，再通过受约束的自定义类型把一部分运行时检查集中到入口。",
+        "阅读时同时追踪成功值和失败值的去向，不把能编译等同于不会失败。涉及 Result、文件及自定义类型的完整 Rust 写法属于阅读范围，平台可执行子集的输入解析另有固定边界。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root09.01",
+      "sourceNodeId": "rust.source.root09.01",
+      "title": "不可恢复错误与panic!",
+      "parent": "rust.book.root09",
+      "depth": 2,
+      "physicalPage": 243,
+      "printedPage": null,
+      "leaf": false,
+      "order": 133,
+      "group": 9,
+      "body": [
+        "panic 表示当前执行路径无法维持约定，应停止继续计算。它与返回一个可供调用者处理的错误值不同；正常的用户输入失败不应仅为了少写分支就全部变成 panic。",
+        "接下来从回溯定位错误发生的调用链。要区分展开栈时的清理与直接终止策略，不能推断所有目标、构建配置都会执行相同的析构过程。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root09.01.01",
+      "sourceNodeId": "rust.source.root09.01.01",
+      "title": "使用panic!产生的回溯信息",
+      "parent": "rust.book.root09.01",
+      "depth": 3,
+      "physicalPage": 244,
+      "printedPage": null,
+      "leaf": true,
+      "order": 134,
+      "group": 9,
+      "body": [
+        "回溯记录程序如何逐层走到失败点。诊断中最先出现的位置可能位于标准库，真正需要修复的却是业务代码传入的参数；阅读调用链时，应寻找第一个属于自己项目的栈帧，再核查它所依赖的前置条件。",
+        "调试构建中的符号信息能帮助把栈帧映射到文件和行号，环境变量 RUST_BACKTRACE 可请求回溯。不同工具链和系统的输出细节会变化，因此应认调用关系而不是记住固定帧号。下面明确制造 panic，后面的打印在该执行路径上不会发生。",
+        "回溯只能展示到达停止点的线索，修复后仍应回到原始输入重新验证，不能把关闭回溯当作消除错误。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn load_count() -> i32 {\n    panic!(\"count invariant broken\");\n}\nfn main() {\n    let count = load_count();\n    println!(\"{}\", count);\n}",
+        "description": "沿 main → load_count 追踪显式失败点。",
+        "result": "普通运行在 load_count 中触发 panic；请求回溯后可查找 main 与 load_count 对应的项目栈帧，具体诊断文本不固定。",
+        "reason": "平台不模拟宿主 Rust 的 panic 展开、调试符号或原生栈回溯。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何回溯指向标准库时仍要寻找项目自己的栈帧？",
+        "answer": "库可能只是检测到非法参数并停止运行；项目栈帧揭示谁把错误参数交给库，修复通常应从该调用处开始。",
+        "hints": [
+          "区分发现错误的位置和引入错误的位置。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root09.02",
+      "sourceNodeId": "rust.source.root09.02",
+      "title": "可恢复错误与Result",
+      "parent": "rust.book.root09",
+      "depth": 2,
+      "physicalPage": 248,
+      "printedPage": null,
+      "leaf": false,
+      "order": 135,
+      "group": 9,
+      "body": [
+        "Result 用 Ok 携带成功值，用 Err 携带失败原因，使可能失败这件事成为函数接口的一部分。调用者可以返回错误、重试或选择停止，但每项选择都应与业务情境相符。",
+        "本节依次把所有错误合并处理改为分类处理，再比较 unwrap、expect 与错误传播。尤其要注意返回 Err 并不等于已经恢复，错误仍需由有上下文的一层作最终决定。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root09.02.01",
+      "sourceNodeId": "rust.source.root09.02.01",
+      "title": "匹配不同的错误",
+      "parent": "rust.book.root09.02",
+      "depth": 3,
+      "physicalPage": 250,
+      "printedPage": null,
+      "leaf": true,
+      "order": 136,
+      "group": 9,
+      "body": [
+        "错误分类的价值在于采取不同动作，而不只是打印不同文字。I/O 错误中的 NotFound 可以提示检查路径，PermissionDenied 则应提示权限问题；不应在任意失败后盲目创建或覆盖文件，否则可能掩盖真实原因。",
+        "先匹配 Result，再检查 Err 中错误的 kind，能够保留成功路径的值并细分失败路径。分类不是穷举所有操作系统细节，最后仍应保留兜底分支。例子用人工构造的标准库错误说明分支，不实际访问文件，也不依赖本机权限恰好产生某种故障。",
+        "恢复操作本身也可能失败，必须继续保留它的错误结果，不能把进入某个分类分支等同于恢复成功。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::io::{Error, ErrorKind};\nfn advice(error: &Error) -> &str {\n    match error.kind() {\n        ErrorKind::NotFound => \"check path\",\n        ErrorKind::PermissionDenied => \"check permission\",\n        _ => \"report failure\",\n    }\n}\nfn main() {\n    let error = Error::new(ErrorKind::NotFound, \"missing notes\");\n    println!(\"{}\", advice(&error));\n}",
+        "description": "把错误类别映射为可操作的建议。",
+        "result": "按标准 Rust 语义输出 check path；没有创建或读取文件。",
+        "reason": "平台未实现 io::Error、ErrorKind 和模式匹配这些完整错误类型。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "文件权限不足时自动创建同一路径文件，为什么不是可靠恢复策略？",
+        "answer": "权限不足不表示文件不存在，而且创建也可能失败或带来覆盖风险；应按错误类别选择处理，并保留新操作的失败信息。",
+        "hints": [
+          "先问错误说明了什么，再选择动作。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root09.02.02",
+      "sourceNodeId": "rust.source.root09.02.02",
+      "title": "失败时触发panic的快捷方式：unwrap和expect",
+      "parent": "rust.book.root09.02",
+      "depth": 3,
+      "physicalPage": 252,
+      "printedPage": null,
+      "leaf": true,
+      "order": 137,
+      "group": 9,
+      "body": [
+        "unwrap 和 expect 都把 Result 的成功值取出来，并在 Err 时触发 panic。expect 允许附加说明，可写明原本成立的假设，帮助定位程序哪里失去约定；它并不会把错误转成可恢复结果，也不会自动重试。",
+        "对受控样例或不变量使用快捷方式时，应能解释成功的依据。用户输入、网络与文件条件通常不具备这样的保证，应用层更适合显式处理 Err。例子解析写死的有效数字，展示成功分支；将文本改为非数字会改变为失败路径，而非得到零这个默认值。",
+        "提示文字最好解释为何原本不该失败，这样维护者在数据来源改变时，才能及时发现旧假设已经失效。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let count = \"24\".parse::<i32>().expect(\"built-in count must be numeric\");\n    println!(\"{}\", count);\n}",
+        "description": "用 expect 表达内置常量应可解析的假设。",
+        "result": "输出 24；若把常量改为 sky，会触发包含自定义说明的 panic。",
+        "reason": "这里展示 Result::expect 和类型参数写法；平台只支持已冻结的输入解析形式，不支持任意 Result 方法链。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把 unwrap 改成 expect 是否就能让用户纠正输入？",
+        "answer": "不能。两者遇到 Err 都会 panic；expect 只改善诊断，要允许纠正输入必须保留错误分支和后续交互。",
+        "hints": [
+          "比较的是失败时的控制流程，而非消息长度。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root09.02.03",
+      "sourceNodeId": "rust.source.root09.02.03",
+      "title": "传播错误",
+      "parent": "rust.book.root09.02",
+      "depth": 3,
+      "physicalPage": 253,
+      "printedPage": null,
+      "leaf": true,
+      "order": 138,
+      "group": 9,
+      "body": [
+        "底层函数通常不知道失败后应该显示对话框、重试还是退出，因此返回 Result 可以把决定留给调用者。问号运算符在成功时取出值继续执行，在失败时提前返回；返回错误的类型必须能转换为当前函数所承诺的错误类型。",
+        "问号不会记录日志、修补输入或吞掉错误。把它放在返回单位类型的普通 main 中也不自动成立，必须让接口的返回类型与传播方式兼容。例子保留 ParseIntError，让加法函数专心完成解析与计算；调用端再统一给出可理解的输出。",
+        "传播时还应避免把不同原因都改成一个含糊字符串，否则上层虽然收到错误，却失去了分类处理的依据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::num::ParseIntError;\nfn add_ten(text: &str) -> Result<i32, ParseIntError> {\n    let value = text.parse::<i32>()?;\n    Ok(value + 10)\n}\nfn main() {\n    match add_ten(\"bad\") {\n        Ok(value) => println!(\"{}\", value),\n        Err(_) => println!(\"invalid number\"),\n    }\n}",
+        "description": "由计算层传播解析失败，主函数负责呈现。",
+        "result": "输出 invalid number，失败时不会执行 value + 10。",
+        "reason": "通用 Result 返回值、问号传播与 match 不在平台执行子集内。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "问号返回 Err 时，当前函数后面的 Ok 表达式还会执行吗？",
+        "answer": "不会。问号在错误分支提前从当前函数返回，只有成功时才继续计算并构造 Ok。",
+        "hints": [
+          "把问号展开为成功继续、错误 return 两条路径。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root09.03",
+      "sourceNodeId": "rust.source.root09.03",
+      "title": "要不要使用panic!",
+      "parent": "rust.book.root09",
+      "depth": 2,
+      "physicalPage": 259,
+      "printedPage": null,
+      "leaf": false,
+      "order": 139,
+      "group": 9,
+      "body": [
+        "选择 panic 还是 Result 的关键是接口约定和恢复责任。外部条件不符合预期，通常仍是可报告的失败；内部数据已违反关键不变量，继续运行则可能产生更难定位的结果。",
+        "接下来考察教学原型、可证明的常量以及自定义类型的边界。任何依赖“这里一定成功”的写法，都应说明依据在后续需求变化后是否仍然成立。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "rust.book.root09.03.01",
+      "sourceNodeId": "rust.source.root09.03.01",
+      "title": "示例、原型和测试",
+      "parent": "rust.book.root09.03",
+      "depth": 3,
+      "physicalPage": 259,
+      "printedPage": null,
+      "leaf": true,
+      "order": 140,
+      "group": 9,
+      "body": [
+        "原型的目的常是验证主流程，暂时用 expect 标出尚未设计的失败路径可以减少干扰。这个记号应成为后续审查入口：哪些数据受控、哪些可能由用户或环境提供，需要逐项重新判断，而不是把示例中的省略直接当作产品策略。",
+        "测试中的准备步骤若失败，测试目标往往已无法成立，此时 panic 能使该测试明确失败。相反，真实应用接收错误输入时可能应给用户第二次机会。下面把固定数据解析作为准备工作，再用断言检查业务关系；这只是标准 Rust 阅读例，并非平台已经执行了测试框架。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn main() {\n    let prepared = \"8\".parse::<i32>().expect(\"fixture must be numeric\");\n    assert_eq!(prepared * 2, 16);\n    println!(\"fixture checked\");\n}",
+        "description": "把样例准备失败和业务断言失败分别标出。",
+        "result": "标准 Rust 中断言成立，输出 fixture checked。",
+        "reason": "平台不提供完整 assert_eq! 宏和宿主自动化测试框架。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "原型改为读取用户输入后，为什么要重新审查原有 expect？",
+        "answer": "固定样例的可解析性可以人工保证，用户输入则可能非法；原型阶段的假设失效后，应增加可恢复的错误处理。",
+        "hints": [
+          "检查数据来源是否从受控变成不受控。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root09.03.02",
+      "sourceNodeId": "rust.source.root09.03.02",
+      "title": "当你比编译器拥有更多信息时",
+      "parent": "rust.book.root09.03",
+      "depth": 3,
+      "physicalPage": 260,
+      "printedPage": null,
+      "leaf": true,
+      "order": 141,
+      "group": 9,
+      "body": [
+        "编译器按函数的一般接口检查程序，不会因为某一次调用用了人工确认过的文本，就把 parse 的返回类型改成普通整数。对于固定且有效的常量，可以用 expect 表达这项局部证明，并说明证明依赖的内容。",
+        "证明必须覆盖所有实际输入。若以后把常量换成配置文件或终端输入，原先的保证就不再成立；继续保留 expect 会把可预期的输入错误变成程序停止。类型已经允许直接构造值时，也应考虑是否有必要先写成字符串再解析，减少不必要的失败入口。",
+        "人工保证需要能随代码一起被审查，写在注释或消息中的具体依据，比一句“不会失败”更容易维护。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "use std::net::Ipv4Addr;\nfn main() {\n    let address: Ipv4Addr = \"192.0.2.8\".parse()\n        .expect(\"example literal is a valid IPv4 address\");\n    println!(\"{}\", address);\n}",
+        "description": "对固定示例地址的有效性作显式说明。",
+        "result": "输出 192.0.2.8；这段代码只解析地址，不发起网络请求。",
+        "reason": "平台未实现网络地址类型及其 FromStr 解析。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "“测试时输入过一次没问题”能否证明任意配置字符串可安全 unwrap？",
+        "answer": "不能。单次样例只覆盖一个输入，配置的整个取值范围仍可能包含非法文本，应该返回或处理解析错误。",
+        "hints": [
+          "局部证明要明确覆盖的输入集合。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root09.03.03",
+      "sourceNodeId": "rust.source.root09.03.03",
+      "title": "错误处理的指导原则",
+      "parent": "rust.book.root09.03",
+      "depth": 3,
+      "physicalPage": 260,
+      "printedPage": null,
+      "leaf": true,
+      "order": 142,
+      "group": 9,
+      "body": [
+        "错误策略应从调用者能够采取的动作出发。数字格式不对、资源暂不可用等情况适合返回 Result，让上层补充上下文；内部索引或状态违反必须成立的约定时，则不应让计算悄悄沿错误数据继续进行。",
+        "文档还应说明何时会 panic、哪些值合法，以及调用者该承担什么责任。不能简单按“失败很少发生”决定 unwrap，也不能把错误时返回零当作通用恢复，因为零可能与合法结果混淆。例子使用明确的错误返回，保证除数不合法不会伪装成一次成功运算。",
+        "发生概率低并不等于不可恢复，选择接口时应看调用者能采取的行动，而不是只按开发时遇到的频率。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn divide(total: i32, parts: i32) -> Result<i32, &'static str> {\n    if parts <= 0 { return Err(\"parts must be positive\"); }\n    Ok(total / parts)\n}\nfn main() {\n    match divide(18, 0) {\n        Ok(value) => println!(\"{}\", value),\n        Err(message) => println!(\"{}\", message),\n    }\n}",
+        "description": "把调用者可纠正的分组数错误作为接口结果。",
+        "result": "输出 parts must be positive；不会执行除以零。",
+        "reason": "自定义 Result 接口及枚举匹配超出平台当前执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "错误时返回 0，为何可能比返回 Err 更难排查？",
+        "answer": "调用者无法区分合法结果零与失败占位值，错误可能继续传播到后续业务；Err 明确要求决定如何处理失败。",
+        "hints": [
+          "检查失败值是否与正常值共享表示。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root09.03.04",
+      "sourceNodeId": "rust.source.root09.03.04",
+      "title": "创建自定义类型来进行有效性验证",
+      "parent": "rust.book.root09.03",
+      "depth": 3,
+      "physicalPage": 262,
+      "printedPage": null,
+      "leaf": true,
+      "order": 143,
+      "group": 9,
+      "body": [
+        "如果许多函数都要求某个整数在同一区间内，每处重复检查容易遗漏。可以定义字段私有的类型，把合法性检查集中在构造函数：成功创建的实例就代表已满足约定，后续方法按这个约定工作。",
+        "私有字段很重要；若外部能随意写入字段，就能绕过构造检查。构造函数可返回 Result 处理用户数据，而不必强制 panic。下面用模块模拟公开边界，只允许通过 new 创建百分比，并通过只读方法取得数值；验证一次不意味着可以允许其他入口随意修改内部状态。",
+        "新增修改方法时也要保持相同不变量，否则构造入口检查再严格，实例仍可能在后续操作中变成非法状态。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "mod percent {\n    pub struct Percent(i32);\n    impl Percent {\n        pub fn new(value: i32) -> Result<Self, &'static str> {\n            if value < 0 || value > 100 { return Err(\"outside 0..=100\"); }\n            Ok(Self(value))\n        }\n        pub fn value(&self) -> i32 { self.0 }\n    }\n}\nfn main() {\n    let value = percent::Percent::new(75).expect(\"valid example\");\n    println!(\"{}\", value.value());\n}",
+        "description": "以私有字段和检查过的构造入口维护百分比不变量。",
+        "result": "输出 75；模块外不能直接调用私有元组构造器绕过检查。",
+        "reason": "结构体、模块可见性和 Result 构造接口属于平台阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只写 new 检查，但把字段公开，能否保证所有实例有效？",
+        "answer": "不能。调用者可绕过 new 直接构造或修改字段；需要同时限制创建和修改入口。",
+        "hints": [
+          "把所有能写入内部数值的路径列出来。"
+        ]
+      }
+    },
+    {
+      "id": "rust.book.root09.04",
+      "sourceNodeId": "rust.source.root09.04",
+      "title": "总结",
+      "parent": "rust.book.root09",
+      "depth": 2,
+      "physicalPage": 265,
+      "printedPage": null,
+      "leaf": true,
+      "order": 144,
+      "group": 9,
+      "body": [
+        "本章可以沿着一条错误链复盘：操作返回 Result，底层传播原因，有上下文的调用者决定如何呈现或恢复；遇到无法维持的不变量才停止当前路径。expect 的信息解释假设，回溯帮助定位调用链，两者都不能替代失败策略。",
+        "设计接口时还可把合法性装进私有字段类型，让成功构造承担验证责任。复习的重点不是让代码中没有 Err，而是每个失败都有明确的去向。下面将输入范围检查与调用端提示相连，故意提供越界值，检查错误没有被误当作正常数据。",
+        "相同操作可以在不同层采用不同策略：库负责交付原因，命令行入口决定提示，而交互界面可能允许重试。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "rust",
+        "source": "fn checked_level(n: i32) -> Result<i32, &'static str> {\n    if n >= 1 && n <= 5 { Ok(n) } else { Err(\"choose 1 through 5\") }\n}\nfn main() {\n    match checked_level(9) {\n        Ok(n) => println!(\"level {}\", n),\n        Err(message) => println!(\"{}\", message),\n    }\n}",
+        "description": "用范围错误复核失败的最终去向。",
+        "result": "输出 choose 1 through 5。",
+        "reason": "完整 Result 与 match 是阅读示例，不映射为平台的有限解析轨迹。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "返回 Err、使用 expect、忽略结果，哪一种保留了调用者的恢复选择？",
+        "answer": "返回 Err 保留选择；expect 已决定 panic，忽略结果则没有完成错误处理，可能丢失失败信息。",
+        "hints": [
+          "看失败是否仍以数据交给上层。"
+        ]
+      }
+    }
+  ]
+}
