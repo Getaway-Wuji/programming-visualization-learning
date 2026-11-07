@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { format, resolveConfig } from 'prettier';
+import { verifyBuildInputs } from '../build-inputs.mjs';
 import { checkEnvironment } from '../environment.mjs';
 import { run } from '../process.mjs';
 import { inspectWasm } from '../wasm-inspect.mjs';
@@ -39,7 +40,17 @@ assert.deepEqual(
   lock.inputs.map((entry) => entry.path),
   paths,
 );
-assert.deepEqual(paths.map(proof), lock.inputs);
+// Shared workspace metadata follows the current product lock. The registered
+// C6-only inputs and the published WASM keep their original identities.
+verifyBuildInputs();
+const workspaceInputs = new Set([
+  'Cargo.toml',
+  'Cargo.lock',
+  'scripts/c6-course/build-teaching-wasm.mjs',
+]);
+const inputs = paths.map(proof);
+const c6Inputs = (rows) => rows.filter(({ path }) => !workspaceInputs.has(path));
+assert.deepEqual(c6Inputs(inputs), c6Inputs(lock.inputs));
 const previous = [
   'c_viz_wasm_bg.wasm',
   'memory/c_viz_memory_bg.wasm',
@@ -83,7 +94,7 @@ assert.equal(inspection.memories[0].shared, false);
 assert(
   !inspection.imports.some((entry) => /wasi|thread|socket|proc_/i.test(entry.module + entry.name)),
 );
-assert.deepEqual(paths.map(proof), lock.inputs);
+assert.deepEqual(paths.map(proof), inputs);
 assert.deepEqual(
   previous.map((entry) => proof(entry.path)),
   previous,
@@ -116,7 +127,7 @@ if (process.argv.includes('--check')) {
         environment,
         ...metadata,
         inspection,
-        inputs: lock.inputs,
+        inputs,
         outputs: [
           'c_viz_c6.js',
           'c_viz_c6.d.ts',
