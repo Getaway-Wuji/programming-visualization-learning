@@ -8,11 +8,17 @@ export function JavaBlocks({
   disabled,
   apply,
   onDirty,
+  toolbox = javaToolbox,
+  generate = javaFromBlocks,
+  language = 'Java',
 }: {
   initial: Blockly.serialization.blocks.State | undefined;
   disabled: boolean;
   apply: (source: string) => Promise<void>;
   onDirty: (dirty: boolean) => void;
+  toolbox?: typeof javaToolbox;
+  generate?: (workspace: Blockly.Workspace) => string;
+  language?: string;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const workspace = useRef<Blockly.WorkspaceSvg | null>(null);
@@ -24,7 +30,7 @@ export function JavaBlocks({
   useEffect(() => {
     const view = withoutWorkspaceAudio(() =>
       Blockly.inject(host.current!, {
-        toolbox: javaToolbox,
+        toolbox,
         trashcan: true,
         sounds: false,
         media: import.meta.env.BASE_URL + 'blockly/13.4.0/media/',
@@ -58,12 +64,12 @@ export function JavaBlocks({
       view.dispose();
       workspace.current = null;
     };
-  }, [initial]);
+  }, [initial, toolbox]);
   async function commit() {
     try {
       if (!workspace.current || disabled) return;
       setError('');
-      await apply(javaFromBlocks(workspace.current));
+      await apply(generate(workspace.current));
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : '积木未应用。');
     }
@@ -71,7 +77,7 @@ export function JavaBlocks({
   return (
     <div className="python-blocks">
       <p>拖动积木连接程序，确认后应用到同一份代码。</p>
-      <div ref={host} className="python-block-canvas" aria-label="Java Blockly 积木画布" />
+      <div ref={host} className="python-block-canvas" aria-label={language + ' Blockly 积木画布'} />
       <button disabled={disabled} onClick={() => void commit()}>
         应用积木到代码
       </button>

@@ -1,0 +1,273 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 18,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-18",
+      "title": "图书管理系统",
+      "number": "第18章",
+      "parent": "cpp.book.part-4",
+      "depth": 2,
+      "order": 366,
+      "printedPage": 381,
+      "leaf": false,
+      "group": 18,
+      "body": [
+        "从图书记录的稳定编号开始，依次追踪菜单输入、查重、显示和删除。每次操作记录前后状态，并检查失败路径是否保留数据。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.18-1",
+      "title": "系统设计",
+      "number": "18.1",
+      "parent": "cpp.book.chapter-18",
+      "depth": 3,
+      "order": 367,
+      "printedPage": 382,
+      "leaf": false,
+      "group": 18,
+      "body": [
+        "先把用户需求写成输入输出和不变量。再将操作分配给界面、目录与存储模块，并约定错误返回。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.18-1-1",
+      "title": "需求分析",
+      "number": "18.1.1",
+      "parent": "cpp.book.18-1",
+      "depth": 4,
+      "order": 368,
+      "printedPage": 382,
+      "leaf": true,
+      "group": 18,
+      "body": [
+        "需求分析先列角色、动作和失败情形。把“可管理图书”拆成能验收的添加、查看和删除。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "管理员新增编号 104，再按编号查看。重复编号应有明确信息。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只写“可以维护资料”足够验收吗？",
+        "answer": "不够。需要具体输入、操作、约束和预期输出。"
+      }
+    },
+    {
+      "id": "cpp.book.18-1-2",
+      "title": "系统目标",
+      "number": "18.1.2",
+      "parent": "cpp.book.18-1",
+      "depth": 4,
+      "order": 369,
+      "printedPage": 382,
+      "leaf": true,
+      "group": 18,
+      "body": [
+        "系统目标需要区分功能与边界。先明确记录数量、编号规则和持久化位置，才能选择实现。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "每条记录包含唯一编号与标题，终端操作后可再次查询。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果编号重复，是否覆盖必须先定义吗？",
+        "answer": "是。拒绝、覆盖和合并是三种不同可验收行为。"
+      }
+    },
+    {
+      "id": "cpp.book.18-1-3",
+      "title": "系统功能结构",
+      "number": "18.1.3",
+      "parent": "cpp.book.18-1",
+      "depth": 4,
+      "order": 370,
+      "printedPage": 382,
+      "leaf": true,
+      "group": 18,
+      "body": [
+        "功能结构可把界面选择、业务校验与数据存取分层。模块之间以清楚的输入输出连接。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "添加由主程序读取，目录模块查重，保存层负责持久化。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果改成另一种存储，哪些部分应少受影响？",
+        "answer": "界面和查重规则，因为存储实现由独立模块承担。"
+      }
+    },
+    {
+      "id": "cpp.book.18-2",
+      "title": "图书类",
+      "number": "18.2",
+      "parent": "cpp.book.chapter-18",
+      "depth": 3,
+      "order": 371,
+      "printedPage": 383,
+      "leaf": true,
+      "group": 18,
+      "body": [
+        "图书类应描述标识和属性。可把编号定义为稳定身份，标题作为可编辑内容。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "两本书标题相同而编号不同，可以分别查询及删除。",
+        "source": "#include <iostream>\n#include <string>\nstruct Book { int id; std::string title; };\nint main() {\n    Book a{7, \"Trees\"}, b{9, \"Trees\"};\n    std::cout << a.id << \" \" << b.id << std::endl;\n}\n",
+        "result": "无输入，同名书仍有不同编号，输出 `7 9`。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能以标题作为唯一键？",
+        "answer": "同名书或不同版本可能同时存在。"
+      }
+    },
+    {
+      "id": "cpp.book.18-3",
+      "title": "主程序",
+      "number": "18.3",
+      "parent": "cpp.book.chapter-18",
+      "depth": 3,
+      "order": 372,
+      "printedPage": 387,
+      "leaf": true,
+      "group": 18,
+      "body": [
+        "主程序协调菜单、输入和调用，并决定何时退出。业务处理保留在独立模块，便于分别测试。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "用户输入菜单 3 执行查询，输入退出命令时停止循环并完成清理。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "非法菜单值应调用业务操作吗？",
+        "answer": "不应。提示后回到输入流程。"
+      }
+    },
+    {
+      "id": "cpp.book.18-4",
+      "title": "添加图书",
+      "number": "18.4",
+      "parent": "cpp.book.chapter-18",
+      "depth": 3,
+      "order": 373,
+      "printedPage": 391,
+      "leaf": true,
+      "group": 18,
+      "body": [
+        "添加操作先验证编号和字段，再检查重复，最后提交记录。失败不应留下半条数据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "已有编号 7 时新增编号 7，若采用拒绝策略，旧标题应保持。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么先写入再查重不妥？",
+        "answer": "写入可能已覆盖原数据，难以原样恢复。"
+      }
+    },
+    {
+      "id": "cpp.book.18-5",
+      "title": "显示图书信息",
+      "number": "18.5",
+      "parent": "cpp.book.chapter-18",
+      "depth": 3,
+      "order": 374,
+      "printedPage": 391,
+      "leaf": true,
+      "group": 18,
+      "body": [
+        "显示前确定排序、字段和空结果提示。显示动作应避免意外修改记录。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "当前只有编号 3 和 1，按编号升序显示 1 再 3。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "没有记录时显示空白还是说明？",
+        "answer": "明确显示“暂无记录”能区分空库与故障。"
+      }
+    },
+    {
+      "id": "cpp.book.18-6",
+      "title": "删除图书",
+      "number": "18.6",
+      "parent": "cpp.book.chapter-18",
+      "depth": 3,
+      "order": 375,
+      "printedPage": 394,
+      "leaf": true,
+      "group": 18,
+      "body": [
+        "删除以稳定编号定位，确认目标存在后才提交。失败时保留原目录状态。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "请求删除不存在的编号 9，原有 1、3 应保留。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么测试连续删除同一编号？",
+        "answer": "第二次应明确目标缺失，避免误删相邻记录。"
+      }
+    },
+    {
+      "id": "cpp.book.18-7",
+      "title": "小结",
+      "number": "18.7",
+      "parent": "cpp.book.chapter-18",
+      "depth": 3,
+      "order": 376,
+      "printedPage": 394,
+      "leaf": true,
+      "group": 18,
+      "body": [
+        "完整验收应串联添加、查看、删除和重启后读取。按当前系统规则对照每一步状态。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "添加 4、尝试重复添加、查看、删除 4、再次查看。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "哪些步骤应改变记录？",
+        "answer": "首次成功添加及成功删除，查询和重复失败都不改变记录。"
+      }
+    }
+  ]
+}

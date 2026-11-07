@@ -1,0 +1,505 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 5,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-5",
+      "title": "循环语句",
+      "number": "第5章",
+      "parent": "cpp.book.part-1",
+      "depth": 2,
+      "order": 81,
+      "printedPage": 69,
+      "leaf": false,
+      "group": 5,
+      "body": [
+        "从循环条件、循环体和更新三个部分描述重复操作。用一次、零次和提前退出对比前测与后测循环，并核对多层循环的计数。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.5-1",
+      "title": "while循环",
+      "number": "5.1",
+      "parent": "cpp.book.chapter-5",
+      "depth": 3,
+      "order": 82,
+      "printedPage": 70,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "`while` 在每次循环前检查条件。要写出向终止条件推进的量，并考虑初值已经不满足条件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "用 `while(i<3)` 输出 0、1、2，每次循环后将 i 加一。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "i 一开始是 3 会输出什么？",
+        "answer": "循环体一次也不执行。"
+      }
+    },
+    {
+      "id": "cpp.book.5-2",
+      "title": "do...while循环",
+      "number": "5.2",
+      "parent": "cpp.book.chapter-5",
+      "depth": 3,
+      "order": 83,
+      "printedPage": 71,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "后测循环先执行大括号内的更新，再求条件。即使初始状态已满足退出条件，首次更新仍会发生。",
+        "循环尾部的分号属于语法。`continue` 会前往尾部条件。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 0，k 从 0 写到 1，再检查 `1<0`。条件为假，输出 1。",
+        "source": "#include <iostream>\nint main() { int n=0; int k=0; std::cin >> n; do { k=k+1; } while(k<n); std::cout << k << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "5\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                5
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                0
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                1
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -7
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.5-2.exercise",
+        "prompt": "输入 n。令 k 从零开始，在每次循环中将 k 加一，直到 k 大于等于 n，输出 k。即使 n 非正也至少执行一次。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "循环尾部的分号属于语法。`continue` 会前往尾部条件。"
+      }
+    },
+    {
+      "id": "cpp.book.5-3",
+      "title": "while与do...while比较",
+      "number": "5.3",
+      "parent": "cpp.book.chapter-5",
+      "depth": 3,
+      "order": 84,
+      "printedPage": 73,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "`while` 可以零次执行。`do/while` 总会先完成一轮动作，再评估是否继续。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "模拟读取后才判定是否结束的交互适合先执行体。计数初值已经越界时可用前测循环。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "同一个假条件让两种循环各执行几次？",
+        "answer": "while 零次，do/while 一次。"
+      }
+    },
+    {
+      "id": "cpp.book.5-4",
+      "title": "for循环语句",
+      "number": "5.4",
+      "parent": "cpp.book.chapter-5",
+      "depth": 3,
+      "order": 85,
+      "printedPage": 74,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "`for` 先初始化 i，每轮开始时判断边界，执行循环体后做更新。总和在第 i 轮前保存前 i-1 项。",
+        "写成 `i<n` 会漏掉最后一项。n 为零时循环体不进入。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 3，sum 依次为 1、3、6。i 变为 4 后退出。",
+        "source": "#include <iostream>\nint main() { int n=0; int sum=0; std::cin >> n; for(int i=1; i<=n; i=i+1){ sum=sum+i; } std::cout << sum << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "21\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                6
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "0\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                0
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                1
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "210\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                20
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.5-4.exercise",
+        "prompt": "输入 n，输出从 1 到 n 的整数和，n 小于 1 时输出零。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "写成 `i<n` 会漏掉最后一项。n 为零时循环体不进入。"
+      }
+    },
+    {
+      "id": "cpp.book.5-5",
+      "title": "循环控制",
+      "number": "5.5",
+      "parent": "cpp.book.chapter-5",
+      "depth": 3,
+      "order": 86,
+      "printedPage": 78,
+      "leaf": false,
+      "group": 5,
+      "body": [
+        "检查 break、continue 和标签跳转如何改变下一条语句。关注跳转后循环变量是否仍会推进。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.5-5-1",
+      "title": "控制循环的变量",
+      "number": "5.5.1",
+      "parent": "cpp.book.5-5",
+      "depth": 4,
+      "order": 87,
+      "printedPage": 78,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "控制循环的变量要有初值、步进和退出条件。循环不变量可说明每次迭代前已经处理的范围。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "i 从 0 到 n-1，循环开头表示前 i 个元素已经累计。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把条件写成 `i<=n` 可能发生什么？",
+        "answer": "会多访问一个下标 n。"
+      }
+    },
+    {
+      "id": "cpp.book.5-5-2",
+      "title": "break语句",
+      "number": "5.5.2",
+      "parent": "cpp.book.5-5",
+      "depth": 4,
+      "order": 88,
+      "printedPage": 79,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "`break` 退出最近的循环或 `switch`。查找第一个命中项后即可退出当前循环。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "在内外两层网格扫描里，内层 `break` 只停止当前行的扫描。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "怎样让外层也停止？",
+        "answer": "记录找到标志并在外层检查，或从函数返回。"
+      }
+    },
+    {
+      "id": "cpp.book.5-5-3",
+      "title": "continue语句",
+      "number": "5.5.3",
+      "parent": "cpp.book.5-5",
+      "depth": 4,
+      "order": 89,
+      "printedPage": 80,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "`continue` 放弃当前轮的剩余语句。`for` 仍执行更新，`while` 直接回到条件，`do` 回到底部条件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "当 i 是 3 的倍数时跳过输出。若用 while，应先确保 i 已推进。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么跳过递增语句会卡住？",
+        "answer": "下一次条件看到相同的 i，会继续走相同路径。"
+      }
+    },
+    {
+      "id": "cpp.book.5-5-4",
+      "title": "goto语句",
+      "number": "5.5.4",
+      "parent": "cpp.book.5-5",
+      "depth": 4,
+      "order": 90,
+      "printedPage": 81,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "`goto` 跳到函数内的标签。向后跳可能形成循环，跳入初始化范围受到限制。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "把无条件回跳的累加改写成 while，并将退出条件放到循环顶部。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么改写后更容易核对？",
+        "answer": "入口、退出和推进写在局部结构中。"
+      }
+    },
+    {
+      "id": "cpp.book.5-6",
+      "title": "循环嵌套",
+      "number": "5.6",
+      "parent": "cpp.book.chapter-5",
+      "depth": 3,
+      "order": 91,
+      "printedPage": 82,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "内层循环通常在每个外层值上重新初始化。计算总执行次数时要检查内层边界是否依赖外层。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "外层取 1、2、3，内层分别运行 1、2、3 次，总共 6 次。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "它相当于固定 3×3 吗？",
+        "answer": "不相当。内层长度逐轮改变。"
+      }
+    },
+    {
+      "id": "cpp.book.5-7",
+      "title": "循环应用实例",
+      "number": "5.7",
+      "parent": "cpp.book.chapter-5",
+      "depth": 3,
+      "order": 92,
+      "printedPage": 84,
+      "leaf": false,
+      "group": 5,
+      "body": [
+        "用拆位、相邻求和和按条件计数观察三种循环用途。先用纸面小输入确认每轮更新，再扩大规模。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.5-7-1",
+      "title": "阿姆斯壮数",
+      "number": "5.7.1",
+      "parent": "cpp.book.5-7",
+      "depth": 4,
+      "order": 93,
+      "printedPage": 84,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "阿姆斯壮数可按位拆分后计算各位的相应幂和。先确定讨论三位数还是任意位数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "三位数 153 满足 `1*1*1+5*5*5+3*3*3=153`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "测试 154 期望是什么？",
+        "answer": "不成立，三位立方和不是 154。"
+      }
+    },
+    {
+      "id": "cpp.book.5-7-2",
+      "title": "巴斯卡三角形",
+      "number": "5.7.2",
+      "parent": "cpp.book.5-7",
+      "depth": 4,
+      "order": 94,
+      "printedPage": 85,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "巴斯卡三角形每一行两端是 1，中间值为上一行相邻两项之和。用两行存储可避免覆盖还要读取的数据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "从 `1 2 1` 生成 `1 3 3 1`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若只用一行原地更新，应从哪边写？",
+        "answer": "通常从右向左，以免提前覆盖左邻旧值。"
+      }
+    },
+    {
+      "id": "cpp.book.5-7-3",
+      "title": "对输入的分数进行排名",
+      "number": "5.7.3",
+      "parent": "cpp.book.5-7",
+      "depth": 4,
+      "order": 95,
+      "printedPage": 86,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "排名先定义同分规则，再决定排序或逐个计数。若排名为“严格较高人数加一”，同分共享排名。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "分数 90、90、80 的名次为 1、1、3。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何 80 不是第 2？",
+        "answer": "有两个分数严格高于它。"
+      }
+    },
+    {
+      "id": "cpp.book.5-8",
+      "title": "小结",
+      "number": "5.8",
+      "parent": "cpp.book.chapter-5",
+      "depth": 3,
+      "order": 96,
+      "printedPage": 87,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "检查循环先看是否允许零次、每轮怎样推进、哪条路径会提前跳出。零、一和多轮输入都值得测。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "从 1 开始累加到 n，n 分别取 0、1、3。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "三组预期是什么？",
+        "answer": "0、1、6，分别覆盖零次、一轮和多轮。"
+      }
+    },
+    {
+      "id": "cpp.book.5-9",
+      "title": "实践与练习",
+      "number": "5.9",
+      "parent": "cpp.book.chapter-5",
+      "depth": 3,
+      "order": 97,
+      "printedPage": 87,
+      "leaf": true,
+      "group": 5,
+      "body": [
+        "打印图形前，先把每一行的位置与字符数列成表。内层循环的次数从行号算出。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "高度 3 的居中三角形，星号数为 1、3、5，左侧空格数为 2、1、0。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "第 2 行应打印多少星号？",
+        "answer": "3 个，按 `2*行号-1` 计算。"
+      }
+    }
+  ]
+}

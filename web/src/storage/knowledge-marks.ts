@@ -149,7 +149,7 @@ export async function knowledgeMarksTransaction(
               requireRule(
                 same(command.packageRef, meta.activePackageRef) ||
                   (meta.dbVersion >= 11 && isPythonMark(command)) ||
-                  (meta.dbVersion === 12 && isJavaMark(command)),
+                  (meta.dbVersion >= 12 && isJavaMark(command)),
               );
               const old = rows.find((r) => r.knowledgeRef.id === command.knowledgeRef.id);
               if (old?.commandId === command.commandId) {

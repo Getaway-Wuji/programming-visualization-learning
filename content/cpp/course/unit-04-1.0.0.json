@@ -1,0 +1,316 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 4,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-4",
+      "title": "条件判断语句",
+      "number": "第4章",
+      "parent": "cpp.book.part-1",
+      "depth": 2,
+      "order": 70,
+      "printedPage": 55,
+      "leaf": false,
+      "group": 4,
+      "body": [
+        "先列决策表，再写互斥路径。每条分支用一个代表输入和一个边界输入验证。命中顺序改变时，重新检查全部路径。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.4-1",
+      "title": "决策分支",
+      "number": "4.1",
+      "parent": "cpp.book.chapter-4",
+      "depth": 3,
+      "order": 71,
+      "printedPage": 56,
+      "leaf": true,
+      "group": 4,
+      "body": [
+        "决策分支把不同输入分到互斥路径。先列条件表，再补无匹配时的动作。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "运费判断分为订单金额小于 50 与至少 50。测试金额 49、50、51。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "哪组最能揭示 `>` 与 `>=` 的差异？",
+        "answer": "恰好 50 的一组。"
+      }
+    },
+    {
+      "id": "cpp.book.4-2",
+      "title": "判断语句",
+      "number": "4.2",
+      "parent": "cpp.book.chapter-4",
+      "depth": 3,
+      "order": 72,
+      "printedPage": 57,
+      "leaf": false,
+      "group": 4,
+      "body": [
+        "从一个条件体扩展到二选一和多段分支。写一张带“恰好等于边界”的输入表，再与执行路径逐项核对。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.4-2-1",
+      "title": "第一种形式的判断语句",
+      "number": "4.2.1",
+      "parent": "cpp.book.4-2",
+      "depth": 4,
+      "order": 73,
+      "printedPage": 57,
+      "leaf": true,
+      "group": 4,
+      "body": [
+        "只有 `if` 的分支在条件为真时执行，假时直接继续后续语句。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "库存为零时提示售罄。库存仍大于零时无提示并继续读取下一个请求。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "可以用一个 `if` 同时明确两种输出吗？",
+        "answer": "要覆盖两种输出，通常加入 `else`。"
+      }
+    },
+    {
+      "id": "cpp.book.4-2-2",
+      "title": "第二种形式的判断语句",
+      "number": "4.2.2",
+      "parent": "cpp.book.4-2",
+      "depth": 4,
+      "order": 74,
+      "printedPage": 58,
+      "leaf": true,
+      "group": 4,
+      "body": [
+        "`if` 与 `else` 组成二选一。只要进入语句，就只运行其中一支。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "分数低于 60 输出“待达标”，否则输出“达标”。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "分数 60 走哪支？",
+        "answer": "低于 60 为假，走 `else`。"
+      }
+    },
+    {
+      "id": "cpp.book.4-2-3",
+      "title": "第三种形式的判断语句",
+      "number": "4.2.3",
+      "parent": "cpp.book.4-2",
+      "depth": 4,
+      "order": 75,
+      "printedPage": 60,
+      "leaf": true,
+      "group": 4,
+      "body": [
+        "多分支从上到下尝试。负数分支为假后才判断零，余下输入必为正数。",
+        "测试应包含负数、零、正数，尤其不要将 `<0` 写成 `<=0`。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 0，第一支不命中，第二支输出 0，第三支跳过。",
+        "source": "#include <iostream>\nint main() { int n=0; std::cin >> n; if(n<0){ std::cout << -1; } else if(n==0){ std::cout << 0; } else { std::cout << 1; } std::cout << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "-1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -42
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "0\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                0
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                42
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "-1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -999
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.4-2-3.exercise",
+        "prompt": "输入一个整数，按负数、零、正数分别输出 -1、0、1。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "测试应包含负数、零、正数，尤其不要将 `<0` 写成 `<=0`。"
+      }
+    },
+    {
+      "id": "cpp.book.4-3",
+      "title": "使用条件运算符进行判断",
+      "number": "4.3",
+      "parent": "cpp.book.chapter-4",
+      "depth": 3,
+      "order": 76,
+      "printedPage": 61,
+      "leaf": true,
+      "group": 4,
+      "body": [
+        "用条件运算符挑选一个值，再把它交给同一个输出语句。选择有副作用的表达式时要核对哪个分支被求值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`n%2==0 ? \"even\" : \"odd\"` 可用于整数奇偶。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "负数 -3 会选哪一支？",
+        "answer": "余数非零，选 odd。"
+      }
+    },
+    {
+      "id": "cpp.book.4-4",
+      "title": "switch语句",
+      "number": "4.4",
+      "parent": "cpp.book.chapter-4",
+      "depth": 3,
+      "order": 77,
+      "printedPage": 63,
+      "leaf": true,
+      "group": 4,
+      "body": [
+        "`switch` 用离散标签匹配整数或枚举值。某个标签命中后可能继续执行下方标签的语句，除非遇到跳出。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "菜单 1 表示查看，2 表示退出，其余交给 `default`。",
+        "source": "#include <iostream>\nint main() {\n    int choice = 0;\n    if (!(std::cin >> choice)) return 1;\n    switch (choice) {\n      case 1: std::cout << \"view\\n\"; break;\n      case 2: std::cout << \"quit\\n\"; break;\n      default: std::cout << \"unknown\\n\";\n    }\n}\n",
+        "result": "输入 1、2、0 分别输出 view、quit、unknown。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么每个菜单动作末尾常写 `break`？",
+        "answer": "避免命中一项后继续执行下一项。"
+      }
+    },
+    {
+      "id": "cpp.book.4-5",
+      "title": "判断语句的嵌套",
+      "number": "4.5",
+      "parent": "cpp.book.chapter-4",
+      "depth": 3,
+      "order": 78,
+      "printedPage": 66,
+      "leaf": true,
+      "group": 4,
+      "body": [
+        "嵌套判断先满足外层前置条件，再考察内层细节。给内外层都写大括号能明确 `else` 的归属。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "先判断有库存，再判断会员能否使用优惠。无库存时不进入会员分支。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "去掉括号后，一个 `else` 通常配给谁？",
+        "answer": "配给最近的尚未匹配的 `if`。"
+      }
+    },
+    {
+      "id": "cpp.book.4-6",
+      "title": "小结",
+      "number": "4.6",
+      "parent": "cpp.book.chapter-4",
+      "depth": 3,
+      "order": 79,
+      "printedPage": 68,
+      "leaf": true,
+      "group": 4,
+      "body": [
+        "复核分支时列出互斥输入、边界和默认动作。先写范围更窄的高优先级条件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "成绩至少 90 得 A，至少 60 得 B，否则待达标。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若先测试至少 60 会怎样？",
+        "answer": "90 以上也会先命中该支，无法进入 A。"
+      }
+    },
+    {
+      "id": "cpp.book.4-7",
+      "title": "实践与练习",
+      "number": "4.7",
+      "parent": "cpp.book.chapter-4",
+      "depth": 3,
+      "order": 80,
+      "printedPage": 68,
+      "leaf": true,
+      "group": 4,
+      "body": [
+        "为两个整数取较大值写测试，覆盖首数大、次数大和相等。三数排序还要测试重复值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "对 9、3、9 排序，期望 3、9、9。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么只测 1、2、3 不足？",
+        "answer": "它不触发交换，也检验不了相等值的路径。"
+      }
+    }
+  ]
+}

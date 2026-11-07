@@ -38,8 +38,20 @@ import {
   type PreparePythonCourse,
 } from './python3-course';
 import { assertPythonMeta } from './python3-meta';
-import { JAVA_DB_VERSION, JAVA_STORES, queueJavaStores, toJavaMeta } from './java-meta';
-import { javaCourseTransaction, type PrepareJavaCourse } from './java-course';
+import {
+  assertJavaMeta,
+  JAVA_DB_VERSION,
+  JAVA_STORES,
+  queueJavaStores,
+  toJavaMeta,
+} from './java-meta';
+import { CPP_DB_VERSION, CPP_STORES, queueCppStores, toCppMeta } from './cpp-course-meta';
+import {
+  cppCourseTransaction,
+  javaCourseTransaction,
+  readJavaUpgradeRows,
+  type PrepareJavaCourse,
+} from './java-course';
 import { c6ActivationIndex } from './c6-activation';
 import type { C6StorageActivation } from './c6-activation';
 import { c6CourseTransaction, readC6Rows, type PrepareC6Course } from './c6-course';
@@ -136,6 +148,7 @@ export interface OpenStorageOptions {
   c6Activation?: C6StorageActivation;
   enablePython?: boolean;
   enableJava?: boolean;
+  enableCpp?: boolean;
   signal?: AbortSignal;
   onBlocked?: () => void;
   // Dependency injection is internal; the public entry point fixes the production DB.
@@ -146,6 +159,8 @@ export interface OpenStorageOptions {
 }
 
 function physicalStores(db: IDBDatabase): readonly string[] {
+  if (db.version === CPP_DB_VERSION)
+    return [...C6_RESET_STORES, ...PYTHON_STORES, ...JAVA_STORES, ...CPP_STORES];
   if (db.version === JAVA_DB_VERSION) return [...C6_RESET_STORES, ...PYTHON_STORES, ...JAVA_STORES];
   if (db.version === PYTHON_DB_VERSION) return [...C6_RESET_STORES, ...PYTHON_STORES];
   if (db.version === 10) return C6_RESET_STORES;
@@ -185,7 +200,8 @@ function checkedMeta(value: unknown): asserts value is Meta {
     value.schemaVersion !== SCHEMA_VERSION &&
     value.schemaVersion !== '10.0.0' &&
     value.schemaVersion !== '11.0.0' &&
-    value.schemaVersion !== '12.0.0'
+    value.schemaVersion !== '12.0.0' &&
+    value.schemaVersion !== '13.0.0'
   ) {
     throw new StorageError(
       value.schemaVersion === '0.9.0' ? 'S_MIGRATION_UNSUPPORTED' : 'S_VERSION_UNKNOWN',
@@ -204,7 +220,11 @@ export function readTransaction(
   expectedDbVersion: number = DB_VERSION,
   c6Index?: C6LearningIndex,
 ): void {
-  if (![DB_VERSION, 10, PYTHON_DB_VERSION, JAVA_DB_VERSION].includes(expectedDbVersion)) {
+  if (
+    ![DB_VERSION, 10, PYTHON_DB_VERSION, JAVA_DB_VERSION, CPP_DB_VERSION].includes(
+      expectedDbVersion,
+    )
+  ) {
     fail(new StorageError('S_VERSION_UNKNOWN'));
     return;
   }
@@ -477,6 +497,18 @@ export class StorageClient {
     if (!result.saved.replayed) this.broadcast(result.state.snapshot.meta);
     return result.saved;
   }
+  async readCppCourse() {
+    return (await cppCourseTransaction(this.connection(), this.factory)).state;
+  }
+  async commitCppCourse(generation: string, revision: number, prepare: PrepareJavaCourse) {
+    const result = await cppCourseTransaction(this.connection(), this.factory, {
+      generation,
+      revision,
+      prepare,
+    });
+    if (!result.saved.replayed) this.broadcast(result.state.snapshot.meta);
+    return result.saved;
+  }
   async probe(): Promise<{ available: true }> {
     const initial = await this.read();
     await this.execute(initial.meta.generation, () => [], undefined, undefined, true);
@@ -553,9 +585,14 @@ export class StorageClient {
           if (!sameRecoveryValue(python.snapshot.meta, recovery.snapshot.meta))
             return this.readRecovery();
         }
-        if (this.connection().version === JAVA_DB_VERSION) {
+        if (this.connection().version >= JAVA_DB_VERSION) {
           const java = await this.readJavaCourse();
           if (!sameRecoveryValue(java.snapshot.meta, recovery.snapshot.meta))
+            return this.readRecovery();
+        }
+        if (this.connection().version === CPP_DB_VERSION) {
+          const cpp = await this.readCppCourse();
+          if (!sameRecoveryValue(cpp.snapshot.meta, recovery.snapshot.meta))
             return this.readRecovery();
         }
       } catch (error) {
@@ -600,12 +637,11 @@ export class StorageClient {
             createdAt: new Date().toISOString(),
             activePackageRef,
           });
-    const meta =
-      baseMeta.dbVersion === 10 && this.connection().version >= PYTHON_DB_VERSION
-        ? this.connection().version === JAVA_DB_VERSION
-          ? toJavaMeta(toPythonMeta(baseMeta))
-          : toPythonMeta(baseMeta)
-        : baseMeta;
+    let meta: Meta = baseMeta;
+    const version = this.connection().version;
+    if (meta.dbVersion === 10 && version >= PYTHON_DB_VERSION) meta = toPythonMeta(meta);
+    if (meta.dbVersion === PYTHON_DB_VERSION && version >= JAVA_DB_VERSION) meta = toJavaMeta(meta);
+    if (meta.dbVersion === JAVA_DB_VERSION && version === CPP_DB_VERSION) meta = toCppMeta(meta);
     assertRecord('meta', meta);
     if (meta.generation === rawGeneration(confirmation.raw.meta))
       throw new StorageError('S_RECORD_INVALID');
@@ -1122,15 +1158,21 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
   try {
     if (options.signal?.aborted) throw new StorageError('S_ABORTED');
     const index = options.c6Activation ? c6ActivationIndex(options.c6Activation) : null;
-    if ((options.enablePython && !index) || (options.enableJava && !options.enablePython))
+    if (
+      (options.enablePython && !index) ||
+      (options.enableJava && !options.enablePython) ||
+      (options.enableCpp && !options.enableJava)
+    )
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
-    const targetVersion = options.enableJava
-      ? JAVA_DB_VERSION
-      : index
-        ? options.enablePython
-          ? PYTHON_DB_VERSION
-          : 10
-        : DB_VERSION;
+    const targetVersion = options.enableCpp
+      ? CPP_DB_VERSION
+      : options.enableJava
+        ? JAVA_DB_VERSION
+        : index
+          ? options.enablePython
+            ? PYTHON_DB_VERSION
+            : 10
+          : DB_VERSION;
     const activePackageRef = { ...options.activePackageRef };
     if (activePackageRef.id === 'content.c.primer6' && !index)
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
@@ -1194,17 +1236,26 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
             createdNew = event.oldVersion === 0;
             const db = request.result;
             const tx = request.transaction!;
+            const afterPython = (value: ReturnType<typeof toPythonMeta>) => {
+              if (!options.enableJava) return;
+              const java = queueJavaStores(db, tx, value);
+              if (options.enableCpp) queueCppStores(db, tx, java);
+            };
             const afterC6 = (value: ReturnType<typeof createC6ResetMeta>) => {
               const python = queuePythonStores(db, tx, value);
-              if (options.enableJava) queueJavaStores(db, tx, python);
+              afterPython(python);
             };
             if (
               (options.enablePython && event.oldVersion === 10) ||
-              (options.enableJava && event.oldVersion === PYTHON_DB_VERSION)
+              (options.enableJava && event.oldVersion === PYTHON_DB_VERSION) ||
+              (options.enableCpp && event.oldVersion === JAVA_DB_VERSION)
             ) {
               const oldVersion = event.oldVersion;
-              const names =
-                oldVersion === 10 ? C6_RESET_STORES : [...C6_RESET_STORES, ...PYTHON_STORES];
+              const names = [
+                ...C6_RESET_STORES,
+                ...(oldVersion >= PYTHON_DB_VERSION ? PYTHON_STORES : []),
+                ...(oldVersion >= JAVA_DB_VERSION ? JAVA_STORES : []),
+              ];
               if (
                 db.objectStoreNames.length !== names.length ||
                 names.some((name) => {
@@ -1225,14 +1276,26 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                     if (oldVersion === 10) {
                       assertC6Meta(snapshot.meta);
                       afterC6(snapshot.meta);
-                    } else {
+                    } else if (oldVersion === PYTHON_DB_VERSION) {
                       const meta = snapshot.meta;
                       assertPythonMeta(meta);
+                      readPythonUpgradeRows(tx, factory, snapshot, () => afterPython(meta), fail);
+                    } else {
+                      const meta = snapshot.meta;
+                      assertJavaMeta(meta);
                       readPythonUpgradeRows(
                         tx,
                         factory,
                         snapshot,
-                        () => queueJavaStores(db, tx, meta),
+                        () => {
+                          readJavaUpgradeRows(
+                            tx,
+                            factory,
+                            snapshot,
+                            () => queueCppStores(db, tx, meta),
+                            fail,
+                          );
+                        },
                         fail,
                       );
                     }

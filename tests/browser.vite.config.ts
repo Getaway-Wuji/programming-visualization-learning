@@ -18,6 +18,7 @@ export default defineConfig({
         adapters: fileURLToPath(new URL('./browser/harness/adapters.html', import.meta.url)),
         reviews: fileURLToPath(new URL('./browser/harness/reviews.html', import.meta.url)),
         java: fileURLToPath(new URL('./browser/harness/java.html', import.meta.url)),
+        cppCourse: fileURLToPath(new URL('./browser/harness/cpp-course.html', import.meta.url)),
         python3: fileURLToPath(new URL('./browser/harness/python3.html', import.meta.url)),
       },
     },

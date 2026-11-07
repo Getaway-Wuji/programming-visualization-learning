@@ -1,0 +1,622 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 3,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-3",
+      "title": "表达式与语句",
+      "number": "第3章",
+      "parent": "cpp.book.part-1",
+      "depth": 2,
+      "order": 47,
+      "printedPage": 37,
+      "leaf": false,
+      "group": 3,
+      "body": [
+        "把表达式当成一组有类型的求值步骤。先画分组，再核对中间值和写入动作。用零除数、边界整数和短路条件检验推导。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.3-1",
+      "title": "运算符",
+      "number": "3.1",
+      "parent": "cpp.book.chapter-3",
+      "depth": 3,
+      "order": 48,
+      "printedPage": 38,
+      "leaf": false,
+      "group": 3,
+      "body": [
+        "运算符有不同的操作数要求和结果。用同一组整数分别比较算术结果、逻辑真假和位模式，避免混用短路与按位行为。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.3-1-1",
+      "title": "算术运算符",
+      "number": "3.1.1",
+      "parent": "cpp.book.3-1",
+      "depth": 4,
+      "order": 49,
+      "printedPage": 38,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "整数除法向零截断。余数由 `a-(a/b)*b` 得出，有余数时符号与被除数相同。",
+        "分母不得为零，程序会报告除零。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 `-17 5`，商为 -3，余数为 -2。乘回并加余数可验证原数。",
+        "source": "#include <iostream>\nint main() { int a=0; int b=0; std::cin >> a >> b; std::cout << a/b << \" \" << a%b << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "3 2\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                17,
+                5
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "-3 -2\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -17,
+                5
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "-3 2\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                17,
+                -5
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "0 0\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                0,
+                1
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.3-1-1.exercise",
+        "prompt": "输入 a 和非零 b，依次输出 a/b 和 a%b，中间空格。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "分母不得为零，程序会报告除零。"
+      }
+    },
+    {
+      "id": "cpp.book.3-1-2",
+      "title": "关系运算符",
+      "number": "3.1.2",
+      "parent": "cpp.book.3-1",
+      "depth": 4,
+      "order": 50,
+      "printedPage": 39,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "关系运算生成真或假，用来表达边界。严格与非严格比较要从规格推导。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "温度至少 18 度写 `t>=18`，18 恰好达标。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "用 `t>18` 会漏掉什么？",
+        "answer": "恰好等于 18 的情况。"
+      }
+    },
+    {
+      "id": "cpp.book.3-1-3",
+      "title": "逻辑运算符",
+      "number": "3.1.3",
+      "parent": "cpp.book.3-1",
+      "depth": 4,
+      "order": 51,
+      "printedPage": 40,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "`&&` 左侧为假时跳过右侧，`||` 左侧为真时跳过右侧。利用这一点保护有前置条件的运算。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`n!=0 && total/n>2` 在 n 为零时不除法。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "换成先算 `total/n` 会怎样？",
+        "answer": "零输入可能先触发除零。"
+      }
+    },
+    {
+      "id": "cpp.book.3-1-4",
+      "title": "赋值运算符",
+      "number": "3.1.4",
+      "parent": "cpp.book.3-1",
+      "depth": 4,
+      "order": 52,
+      "printedPage": 41,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "普通赋值写入一次。复合赋值把一个运算和更新组合在一起，左侧求值次数会影响有副作用的位置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "在标准 C++ 中 `a[i] += 2` 可理解为将该元素增加 2。平台可用独立的 `a[i]=a[i]+2` 演示无副作用的下标。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若下标表达式会递增，能机械地复制到右侧吗？",
+        "answer": "不能。复制可能让它求值两次。"
+      }
+    },
+    {
+      "id": "cpp.book.3-1-5",
+      "title": "位运算",
+      "number": "3.1.5",
+      "parent": "cpp.book.3-1",
+      "depth": 4,
+      "order": 53,
+      "printedPage": 42,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "位运算逐位作用于整数表示。掩码先选定目标位，再决定测试、置位或清除。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "状态位 `0101` 与掩码 `0100` 按位与得到 `0100`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "掩码 `0010` 与 `0101` 按位与的结果是什么？",
+        "answer": "`0000`，目标位未设置。"
+      }
+    },
+    {
+      "id": "cpp.book.3-1-6",
+      "title": "移位运算符",
+      "number": "3.1.6",
+      "parent": "cpp.book.3-1",
+      "depth": 4,
+      "order": 54,
+      "printedPage": 43,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "移位移动整数的二进制位。计数必须小于运算位宽，理解掩码时优先用无符号类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "二进制 `0011` 左移一位得到 `0110`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "可把 32 位值左移 32 位来清零吗？",
+        "answer": "不能。计数超出允许范围。"
+      }
+    },
+    {
+      "id": "cpp.book.3-1-7",
+      "title": "sizeof运算符",
+      "number": "3.1.7",
+      "parent": "cpp.book.3-1",
+      "depth": 4,
+      "order": 55,
+      "printedPage": 45,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "`sizeof` 返回对象类型占用的字节数。数组对象与形参位置的指针在这件事上不同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int a[3];` 的 `sizeof a` 是 `3*sizeof(int)`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能用一个 `int* p` 的 `sizeof p` 得到数组长度吗？",
+        "answer": "不能。它给出指针本身的大小。"
+      }
+    },
+    {
+      "id": "cpp.book.3-1-8",
+      "title": "条件运算符",
+      "number": "3.1.8",
+      "parent": "cpp.book.3-1",
+      "depth": 4,
+      "order": 56,
+      "printedPage": 45,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "条件运算符按条件选择一个表达式求值，再产生一个结果。第二、第三操作数的类型也参与决定结果类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`n<0 ? -n : n` 选取绝对值分支。最小有符号整数要额外检查。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "n 为 5 会求值 `-n` 吗？",
+        "answer": "不会。选择的分支是 n。"
+      }
+    },
+    {
+      "id": "cpp.book.3-1-9",
+      "title": "逗号运算符",
+      "number": "3.1.9",
+      "parent": "cpp.book.3-1",
+      "depth": 4,
+      "order": 57,
+      "printedPage": 46,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "逗号运算符先执行左表达式，再执行右表达式，并取右侧结果。分隔实参的逗号承担的是语法分隔职责。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`(a=2, a+3)` 的值是 5，a 保持 2。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`f(a,b)` 中间的逗号会先丢掉 a 吗？",
+        "answer": "不会。它在分隔两个参数。"
+      }
+    },
+    {
+      "id": "cpp.book.3-2",
+      "title": "结合性和优先级",
+      "number": "3.2",
+      "parent": "cpp.book.chapter-3",
+      "depth": 3,
+      "order": 58,
+      "printedPage": 46,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "优先级确定怎样分组，结合性消解同一层级。两者不能一概决定所有子表达式的执行先后。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`20-6-3` 按 `(20-6)-3` 分组，结果 11。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`20-(6-3)` 的结果为什么不同？",
+        "answer": "括号改成先减 3 得 3，再用 20 减 3。"
+      }
+    },
+    {
+      "id": "cpp.book.3-3",
+      "title": "表达式",
+      "number": "3.3",
+      "parent": "cpp.book.chapter-3",
+      "depth": 3,
+      "order": 59,
+      "printedPage": 47,
+      "leaf": false,
+      "group": 3,
+      "body": [
+        "把复杂表达式逐层拆解，特别标记隐式转换与写入发生的时机。用一个反例检验分组是否正确。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.3-3-1",
+      "title": "算术表达式",
+      "number": "3.3.1",
+      "parent": "cpp.book.3-3",
+      "depth": 4,
+      "order": 60,
+      "printedPage": 48,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "把算术式的每层值列出来，便于定位整数除法和中间溢出。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`(7/2)*2` 先得到 3，再得到 6。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "怎样用括号和实型字面量保留 3.5？",
+        "answer": "把除式写作 `7/2.0`。"
+      }
+    },
+    {
+      "id": "cpp.book.3-3-2",
+      "title": "关系表达式",
+      "number": "3.3.2",
+      "parent": "cpp.book.3-3",
+      "depth": 4,
+      "order": 61,
+      "printedPage": 48,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "区间判断应拆成两个比较，再用逻辑与连接。C++ 的链式比较会先生成一个布尔结果。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "检验 x 位于 1 到 4，用 `1<=x && x<=4`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么 `1<=x<=4` 容易误判？",
+        "answer": "第一次比较只剩真假，第二次比较的是转换后的 0 或 1。"
+      }
+    },
+    {
+      "id": "cpp.book.3-3-3",
+      "title": "条件表达式",
+      "number": "3.3.3",
+      "parent": "cpp.book.3-3",
+      "depth": 4,
+      "order": 62,
+      "printedPage": 48,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "条件表达式适合从两个简单值中挑一个。多层嵌套容易遮住分支条件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`count==1 ? \"item\" : \"items\"` 选择单数或复数。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "有三个分支且每支还要更新状态时怎样写更清楚？",
+        "answer": "用带大括号的条件语句把每支动作列开。"
+      }
+    },
+    {
+      "id": "cpp.book.3-3-4",
+      "title": "赋值表达式",
+      "number": "3.3.4",
+      "parent": "cpp.book.3-3",
+      "depth": 4,
+      "order": 63,
+      "printedPage": 49,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "赋值表达式本身有结果，容易被误写进条件。将状态更新单独成句便于复盘。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`if (n=0)` 会把 n 改成 0，随后条件为假。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果只想判断 n 是否为零，要改什么？",
+        "answer": "使用 `n==0`。"
+      }
+    },
+    {
+      "id": "cpp.book.3-3-5",
+      "title": "逻辑表达式",
+      "number": "3.3.5",
+      "parent": "cpp.book.3-3",
+      "depth": 4,
+      "order": 64,
+      "printedPage": 49,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "逻辑表达式把条件组合成决策。先列真值和边界，再加短路保护。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "年龄达标且票有效才能通过。票不存在时应跳过读取票字段。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么把“票存在”放在读取字段前？",
+        "answer": "前置条件为假时短路，避免访问无对象。"
+      }
+    },
+    {
+      "id": "cpp.book.3-3-6",
+      "title": "逗号表达式",
+      "number": "3.3.6",
+      "parent": "cpp.book.3-3",
+      "depth": 4,
+      "order": 65,
+      "printedPage": 49,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "逗号表达式可在一个位置依序完成多件事。学习时拆成多句，能更清楚标记各自作用。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`(n=2, n+1)` 的结果是 3，变量 n 的值是 2。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "最终结果是 3 是否说明 n 也变成 3？",
+        "answer": "不说明。右表达式没有执行赋值。"
+      }
+    },
+    {
+      "id": "cpp.book.3-3-7",
+      "title": "表达式中的类型转换",
+      "number": "3.3.7",
+      "parent": "cpp.book.3-3",
+      "depth": 4,
+      "order": 66,
+      "printedPage": 50,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "显式转换应放在精度丢失之前。已经截断的值再转换不能恢复丢失的信息。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`static_cast<double>(3/2)` 得到 1.0，`static_cast<double>(3)/2` 得到 1.5。",
+        "source": "#include <iostream>\nint main() {\n    std::cout << static_cast<double>(3 / 2) << \" \"\n              << static_cast<double>(3) / 2 << std::endl;\n}\n",
+        "result": "无输入，输出 `1 1.5` 后换行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "什么时候应做转换？",
+        "answer": "在除法之前让至少一个操作数具有所需类型。"
+      }
+    },
+    {
+      "id": "cpp.book.3-4",
+      "title": "语句",
+      "number": "3.4",
+      "parent": "cpp.book.chapter-3",
+      "depth": 3,
+      "order": 67,
+      "printedPage": 53,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "语句控制程序的动作顺序。分号结束简单语句，块语句把多条动作组成一组。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`if (ready); { ... }` 中分号形成了空的条件体，后面的块会独立执行。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "怎样防止误写空条件体？",
+        "answer": "给条件分支直接加大括号，并检查没有多余分号。"
+      }
+    },
+    {
+      "id": "cpp.book.3-5",
+      "title": "小结",
+      "number": "3.5",
+      "parent": "cpp.book.chapter-3",
+      "depth": 3,
+      "order": 68,
+      "printedPage": 54,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "阅读混合表达式时先标括号，再写中间类型和可能的副作用。对有符号算术还要确认可表示性。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`a/b+b` 先做除法。b 为零时在加法之前就失败。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只检查最后的结果范围足够吗？",
+        "answer": "不够。中间除法及每次运算都可能出错。"
+      }
+    },
+    {
+      "id": "cpp.book.3-6",
+      "title": "实践与练习",
+      "number": "3.6",
+      "parent": "cpp.book.chapter-3",
+      "depth": 3,
+      "order": 69,
+      "printedPage": 54,
+      "leaf": true,
+      "group": 3,
+      "body": [
+        "把复杂复合赋值拆成可验证步骤。题目若依赖旧写法，应先核对求值顺序及除零。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "用临时变量交换 2 和 7，依次保存 2、把 7 写给第一个变量、把 2 写给第二个。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么加减交换不总适合？",
+        "answer": "中间加法可能溢出，临时变量写法更容易核对。"
+      }
+    }
+  ]
+}

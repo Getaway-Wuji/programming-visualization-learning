@@ -1,0 +1,748 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 10,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-10",
+      "title": "类和对象",
+      "number": "第10章",
+      "parent": "cpp.book.part-2",
+      "depth": 2,
+      "order": 185,
+      "printedPage": 177,
+      "leaf": false,
+      "group": 10,
+      "body": [
+        "从最小公开聚合开始，再阅读成员函数、构造、析构与命名空间。分清字段的访问规则和对象的真实生命周期。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.10-1",
+      "title": "C++类",
+      "number": "10.1",
+      "parent": "cpp.book.chapter-10",
+      "depth": 3,
+      "order": 186,
+      "printedPage": 178,
+      "leaf": false,
+      "group": 10,
+      "body": [
+        "从类名、定义、实现和对象创建顺序解释一份代码。观察同一类型的两个对象如何分别保存字段。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.10-1-1",
+      "title": "类概述",
+      "number": "10.1.1",
+      "parent": "cpp.book.10-1",
+      "depth": 4,
+      "order": 187,
+      "printedPage": 178,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "类把对象的表示和操作组织在一起。创建对象后，每个实例保存自己的非静态字段。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "两个计数器初值分别为 0 和 4，对第一个累加时第二个保持 4。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "类名和对象名承担同一角色吗？",
+        "answer": "类名标识类型，对象名标识某个实例。"
+      }
+    },
+    {
+      "id": "cpp.book.10-1-2",
+      "title": "类的声明与定义",
+      "number": "10.1.2",
+      "parent": "cpp.book.10-1",
+      "depth": 4,
+      "order": 188,
+      "printedPage": 178,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "类前向声明给出名字，完整定义给出字段和操作声明。只有需要对象大小或成员时必须看到完整定义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "`class Ticket;` 足够声明 `Ticket*`，分配 `Ticket t` 需要完整定义。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么只知道名字不能创建对象？",
+        "answer": "编译器还不知道布局和初始化规则。"
+      }
+    },
+    {
+      "id": "cpp.book.10-1-3",
+      "title": "类的实现",
+      "number": "10.1.3",
+      "parent": "cpp.book.10-1",
+      "depth": 4,
+      "order": 189,
+      "printedPage": 180,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "成员函数可在类内给出定义，也可在类外用 `类名::成员名` 实现。声明和定义要有相同签名。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "类内写 `int size() const;`，类外写 `int Bag::size() const` 的实现。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "类外漏写 `const` 会怎样？",
+        "answer": "签名不一致，不能作为原成员的定义。"
+      }
+    },
+    {
+      "id": "cpp.book.10-1-4",
+      "title": "对象的声明",
+      "number": "10.1.4",
+      "parent": "cpp.book.10-1",
+      "depth": 4,
+      "order": 190,
+      "printedPage": 184,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "类定义描述对象字段，实例拥有实际存储。课程执行支持公开字段的简单聚合类。",
+        "普通成员函数与构造析构代码在后续章节阅读。本题只写公开字段。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 `5 7`，先把 value 写成 5，再用增量 7 更新为 12。",
+        "source": "#include <iostream>\nclass Counter{ public: int value; };\nint main(){ Counter counter{}; int delta=0; std::cin >> counter.value >> delta; counter.value=counter.value+delta; std::cout << counter.value << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "12\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                5,
+                7
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "0\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "-2\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                4,
+                -6
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "1998\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                999,
+                999
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.10-1-4.exercise",
+        "prompt": "创建只有公开字段 value 的 Counter 对象。读取初始值与增量，累加到字段后输出。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "普通成员函数与构造析构代码在后续章节阅读。本题只写公开字段。"
+      }
+    },
+    {
+      "id": "cpp.book.10-2",
+      "title": "构造函数",
+      "number": "10.2",
+      "parent": "cpp.book.chapter-10",
+      "depth": 3,
+      "order": 191,
+      "printedPage": 186,
+      "leaf": false,
+      "group": 10,
+      "body": [
+        "构造决定新对象如何取得有效状态，复制构造决定新旧对象是否共享资源。用两个对象分别验证其生命周期。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.10-2-1",
+      "title": "构造函数概述",
+      "number": "10.2.1",
+      "parent": "cpp.book.10-2",
+      "depth": 4,
+      "order": 192,
+      "printedPage": 186,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "构造函数负责让新对象满足可用条件。初始化列表直接初始化成员，执行顺序由成员声明顺序决定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "容量对象构造时验证上限大于零，再保存限制。",
+        "source": "#include <iostream>\nclass Capacity {\n    int limit_;\npublic:\n    explicit Capacity(int limit) : limit_(limit > 0 ? limit : 1) {}\n    int limit() const { return limit_; }\n};\nint main() {\n    Capacity limit(8);\n    std::cout << limit.limit() << std::endl;\n}\n",
+        "result": "无输入，输出 8 后换行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "初始化列表顺序能改变字段真实初始化顺序吗？",
+        "answer": "不能，顺序来自字段声明。"
+      }
+    },
+    {
+      "id": "cpp.book.10-2-2",
+      "title": "复制构造函数",
+      "number": "10.2.2",
+      "parent": "cpp.book.10-2",
+      "depth": 4,
+      "order": 193,
+      "printedPage": 188,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "复制构造从已有同类型对象初始化新对象。值成员独立复制，资源句柄要遵循所有权策略。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "复制拥有堆缓冲区的对象时，两个拥有者共享裸地址可能重复释放。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如何避免重复释放？",
+        "answer": "用独立深复制，或明确不可复制、共享所有权等规则。"
+      }
+    },
+    {
+      "id": "cpp.book.10-3",
+      "title": "析构函数",
+      "number": "10.3",
+      "parent": "cpp.book.chapter-10",
+      "depth": 3,
+      "order": 194,
+      "printedPage": 190,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "析构在对象生命周期结束时执行，常用于归还资源。自动对象通常随作用域结束按逆构造顺序销毁。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "锁保护对象离开作用域时释放锁，提前返回也会退出作用域。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删除基类指针所指派生对象时要留意什么？",
+        "answer": "基类用于多态删除时应有合适的虚析构函数。"
+      }
+    },
+    {
+      "id": "cpp.book.10-4",
+      "title": "类成员",
+      "number": "10.4",
+      "parent": "cpp.book.chapter-10",
+      "depth": 3,
+      "order": 195,
+      "printedPage": 192,
+      "leaf": false,
+      "group": 10,
+      "body": [
+        "把成员划分为每个实例拥有、全类共享和辅助类型。每种成员的访问方式与生命周期不同。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.10-4-1",
+      "title": "访问类成员",
+      "number": "10.4.1",
+      "parent": "cpp.book.10-4",
+      "depth": 4,
+      "order": 196,
+      "printedPage": 192,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "成员访问受访问级别约束。对象用点运算，指针用箭头。公开接口可检查变更条件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "`counter.value` 读取公开字段，若字段私有，可用公开读取函数。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能在类外直接写私有字段吗？",
+        "answer": "一般不能，需通过公开接口或有访问权的代码。"
+      }
+    },
+    {
+      "id": "cpp.book.10-4-2",
+      "title": "内联成员函数",
+      "number": "10.4.2",
+      "parent": "cpp.book.10-4",
+      "depth": 4,
+      "order": 197,
+      "printedPage": 194,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "类定义内直接定义的成员函数通常具备 inline 语义。短函数是否展开仍是优化选择。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "类内写 `int size() const { return size_; }` 可让使用者看到定义。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "此写法能保证消除函数调用开销吗？",
+        "answer": "不能保证，需看编译优化结果。"
+      }
+    },
+    {
+      "id": "cpp.book.10-4-3",
+      "title": "静态类成员",
+      "number": "10.4.3",
+      "parent": "cpp.book.10-4",
+      "depth": 4,
+      "order": 198,
+      "printedPage": 195,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "静态成员属于类而非单个实例。共享计数用静态成员时要明确创建和销毁的更新规则。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "两个对象都可读取类级别的当前实例数，各自字段仍独立。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "修改类静态值会只影响当前对象吗？",
+        "answer": "不会，它由该类的实例共享。"
+      }
+    },
+    {
+      "id": "cpp.book.10-4-4",
+      "title": "隐藏的this指针",
+      "number": "10.4.4",
+      "parent": "cpp.book.10-4",
+      "depth": 4,
+      "order": 199,
+      "printedPage": 197,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "`this` 指向调用非静态成员函数的当前对象。成员与参数重名时可用它明确访问成员。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "`this->size = size;` 左侧写对象字段，右侧读参数。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "静态成员函数有 this 吗？",
+        "answer": "没有，调用无需当前对象。"
+      }
+    },
+    {
+      "id": "cpp.book.10-4-5",
+      "title": "嵌套类",
+      "number": "10.4.5",
+      "parent": "cpp.book.10-4",
+      "depth": 4,
+      "order": 200,
+      "printedPage": 198,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "嵌套类定义在另一个类的作用域内。嵌套类型能组织辅助类型，但它的对象不会自动携带外层实例。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "容器可定义 `Container::Iterator` 作为遍历接口的一部分。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "迭代器对象能自动取得某一个容器吗？",
+        "answer": "不能，通常需要在构造或调用时保存关联。"
+      }
+    },
+    {
+      "id": "cpp.book.10-4-6",
+      "title": "局部类",
+      "number": "10.4.6",
+      "parent": "cpp.book.10-4",
+      "depth": 4,
+      "order": 201,
+      "printedPage": 199,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "局部类在函数或块作用域中定义。它适合局部实现细节，名字对外不可见。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "函数里定义一条临时排序规则类型，仅在当前计算中使用。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "另一个函数能直接声明这个局部类吗？",
+        "answer": "不能，名字在该局部范围之外不可见。"
+      }
+    },
+    {
+      "id": "cpp.book.10-5",
+      "title": "友元",
+      "number": "10.5",
+      "parent": "cpp.book.chapter-10",
+      "depth": 3,
+      "order": 202,
+      "printedPage": 200,
+      "leaf": false,
+      "group": 10,
+      "body": [
+        "审查友元授权的范围和必要性。比较只授予一个函数与授予整个类会暴露哪些内部状态。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.10-5-1",
+      "title": "友元概述",
+      "number": "10.5.1",
+      "parent": "cpp.book.10-5",
+      "depth": 4,
+      "order": 203,
+      "printedPage": 200,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "友元授予特定实体访问非公开成员的权限。友元应表达有限协作关系。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "序列化函数需要读取私有表示时，可为该函数明确授权。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "某个函数是友元，就变成类成员了吗？",
+        "answer": "不会。它仍然可以是独立函数。"
+      }
+    },
+    {
+      "id": "cpp.book.10-5-2",
+      "title": "友元类",
+      "number": "10.5.2",
+      "parent": "cpp.book.10-5",
+      "depth": 4,
+      "order": 204,
+      "printedPage": 202,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "友元类的成员可访问授权类的私有部分。该关系不会自动对称或传递。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "A 声明 B 为友元，只赋予 B 对 A 的访问。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "A 因此能访问 B 的私有字段吗？",
+        "answer": "不能，除非 B 也显式授权。"
+      }
+    },
+    {
+      "id": "cpp.book.10-5-3",
+      "title": "友元方法",
+      "number": "10.5.3",
+      "parent": "cpp.book.10-5",
+      "depth": 4,
+      "order": 205,
+      "printedPage": 203,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "可以只授予另一类的某个成员函数友元权。声明要能找到准确的函数签名。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "只授权 `Inspector::read` 读内部状态，其他成员保持普通访问权限。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么比授权整个 Inspector 更窄？",
+        "answer": "只有指定成员函数拥有特权。"
+      }
+    },
+    {
+      "id": "cpp.book.10-6",
+      "title": "命名空间",
+      "number": "10.6",
+      "parent": "cpp.book.chapter-10",
+      "depth": 3,
+      "order": 206,
+      "printedPage": 206,
+      "leaf": false,
+      "group": 10,
+      "body": [
+        "把名称按模块分组，使用限定名观察同名接口。跨文件定义与匿名命名空间要分别检查可见性和链接。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.10-6-1",
+      "title": "使用命名空间",
+      "number": "10.6.1",
+      "parent": "cpp.book.10-6",
+      "depth": 4,
+      "order": 207,
+      "printedPage": 206,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "命名空间区分不同模块的同名实体。限定名可读出来源，局部 using 声明可减少重复。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "`std::cout` 明确使用标准库中的 cout。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "在共享头文件使用全局 using 指令有何风险？",
+        "answer": "可能把大量名字带入使用者作用域，引发冲突。"
+      }
+    },
+    {
+      "id": "cpp.book.10-6-2",
+      "title": "定义命名空间",
+      "number": "10.6.2",
+      "parent": "cpp.book.10-6",
+      "depth": 4,
+      "order": 208,
+      "printedPage": 206,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "命名空间可组合相关接口，多处定义可以扩展同一个命名空间。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "`namespace report { int count(); }` 中的函数用 `report::count()` 调用。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "同名函数在另一个命名空间会冲突吗？",
+        "answer": "限定名不同，可各自使用。"
+      }
+    },
+    {
+      "id": "cpp.book.10-6-3",
+      "title": "在多个文件中定义命名空间",
+      "number": "10.6.3",
+      "parent": "cpp.book.10-6",
+      "depth": 4,
+      "order": 209,
+      "printedPage": 209,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "多文件项目可在头文件声明命名空间接口，在各实现文件提供定义。命名空间不取代构建目标。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "头文件声明 `report::count`，链接时仍需包含提供定义的目标文件。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "命名空间一致却链接失败，查什么？",
+        "answer": "签名和参与链接的定义文件。"
+      }
+    },
+    {
+      "id": "cpp.book.10-6-4",
+      "title": "定义嵌套的命名空间",
+      "number": "10.6.4",
+      "parent": "cpp.book.10-6",
+      "depth": 4,
+      "order": 210,
+      "printedPage": 210,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "嵌套命名空间表达模块内的层级。C++17 起可写紧凑的多段定义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "`namespace app::view { void show(); }` 声明 `app::view::show`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "另一个模块 `app::data` 能定义自己的 show 吗？",
+        "answer": "可以，限定路径不同。"
+      }
+    },
+    {
+      "id": "cpp.book.10-6-5",
+      "title": "定义未命名的命名空间",
+      "number": "10.6.5",
+      "parent": "cpp.book.10-6",
+      "depth": 4,
+      "order": 211,
+      "printedPage": 212,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "匿名命名空间中的实体在翻译单元内使用。它适合不对外公开的辅助函数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "两个实现文件可分别拥有自己的匿名命名空间 `parse`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能把其中一个 parse 当成跨文件 API 吗？",
+        "answer": "不能，外部文件看不到这个独立实体。"
+      }
+    },
+    {
+      "id": "cpp.book.10-7",
+      "title": "小结",
+      "number": "10.7",
+      "parent": "cpp.book.chapter-10",
+      "depth": 3,
+      "order": 212,
+      "printedPage": 212,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "检查一个类时先看谁创建对象、谁修改状态、谁负责资源释放。接口与表示的分离可以隔离变化。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "若更换内部计数单位，尽量让 `increase()` 的外部调用保持稳定。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "用户需要知道字段布局吗？",
+        "answer": "如果接口足够，应只依赖公开行为。"
+      }
+    },
+    {
+      "id": "cpp.book.10-8",
+      "title": "实践与练习",
+      "number": "10.8",
+      "parent": "cpp.book.chapter-10",
+      "depth": 3,
+      "order": 213,
+      "printedPage": 213,
+      "leaf": true,
+      "group": 10,
+      "body": [
+        "把学生记录设计成有明确字段和验证规则的类。先列构造输入及不合法状态，再决定接口。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "编号不能为空，成绩必须在 0 到 100 之间。测试空编号、100 和 101。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "成绩 101 应如何处理？",
+        "answer": "拒绝变更或报告构造失败，避免留下无效对象。"
+      }
+    }
+  ]
+}

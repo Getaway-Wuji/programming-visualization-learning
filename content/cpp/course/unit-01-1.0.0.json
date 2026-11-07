@@ -1,0 +1,419 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 1,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-1",
+      "title": "绪论",
+      "number": "第1章",
+      "parent": "cpp.book.part-1",
+      "depth": 2,
+      "order": 2,
+      "printedPage": 3,
+      "leaf": false,
+      "group": 1,
+      "body": [
+        "先从现代 C++ 程序入口理解代码，再回头识别旧版 IDE 的术语。能说清预处理、编译和链接各自处理什么，便可用日志定位构建错误。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.1-1",
+      "title": "C++历史背景",
+      "number": "1.1",
+      "parent": "cpp.book.chapter-1",
+      "depth": 3,
+      "order": 3,
+      "printedPage": 4,
+      "leaf": false,
+      "group": 1,
+      "body": [
+        "用一条时间线区分 C++ 的早期设计、标准化和工具演进。对历史例子记录它依赖的环境，再核对现代写法。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.1-1-1",
+      "title": "20世纪最伟大的发明",
+      "number": "1.1.1",
+      "parent": "cpp.book.1-1",
+      "depth": 4,
+      "order": 4,
+      "printedPage": 4,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "计算机能反复执行同一份指令。程序员把要反复做的决策写成规则，再用可观测的中间值核对规则。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "库存从 3 件减到 2 件。机器按同一条减一规则处理每次售出，程序负责阻止扣到负数。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么测试库存为零的情况？",
+        "answer": "它能检验是否先做边界判断，再执行扣减。"
+      }
+    },
+    {
+      "id": "cpp.book.1-1-2",
+      "title": "C++发展历程",
+      "number": "1.1.2",
+      "parent": "cpp.book.1-1",
+      "depth": 4,
+      "order": 5,
+      "printedPage": 4,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "C++ 从 C 的系统编程环境发展而来，逐步增加类、泛型和资源管理能力。阅读老源码时应记录它依赖的标准与编译器。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`void main()` 曾被一些编译器扩展接受。标准入口写 `int main()`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "旧工具能构建，就说明源码可移植吗？",
+        "answer": "不能。还要核对标准和实现扩展。"
+      }
+    },
+    {
+      "id": "cpp.book.1-1-3",
+      "title": "C++中的杰出人物",
+      "number": "1.1.3",
+      "parent": "cpp.book.1-1",
+      "depth": 4,
+      "order": 6,
+      "printedPage": 5,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "Bjarne Stroustrup 发起 C++ 设计。语言规范由委员会维护，工具厂商实现规范，教材作者负责解释。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "遇到同一个类型在两套工具里大小不同，先查标准是否给实现留下选择。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "谁定义跨实现应遵循的规则？",
+        "answer": "语言标准。具体取值还可能依赖实现。"
+      }
+    },
+    {
+      "id": "cpp.book.1-2",
+      "title": "常用开发环境",
+      "number": "1.2",
+      "parent": "cpp.book.chapter-1",
+      "depth": 3,
+      "order": 7,
+      "printedPage": 6,
+      "leaf": false,
+      "group": 1,
+      "body": [
+        "用同一最小控制台程序比较 IDE 和工具链。把编辑器提示、构建结果与调试启动分成三份证据。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.1-2-1",
+      "title": "Visual C++ 6.0",
+      "number": "1.2.1",
+      "parent": "cpp.book.1-2",
+      "depth": 4,
+      "order": 8,
+      "printedPage": 6,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "Visual C++ 6.0 是书中使用的历史集成环境。读截图时把建立项目、构建、启动调试分成三个独立动作。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "旧项目出现 `iostream.h`，迁移时先核对标准头 `<iostream>` 和 `std::cout`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "迁移旧工程时应先恢复旧菜单，还是定位源码依赖？",
+        "answer": "先定位源码和构建依赖，菜单只是操作入口。"
+      }
+    },
+    {
+      "id": "cpp.book.1-2-2",
+      "title": "Visual C++ 2008",
+      "number": "1.2.2",
+      "parent": "cpp.book.1-2",
+      "depth": 4,
+      "order": 9,
+      "printedPage": 7,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "Visual C++ 2008 的解决方案可以包含多个项目。活动项目及构建配置共同决定会启动哪一个可执行文件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "同一解决方案包含 `demo` 和 `tests`，改完 `demo` 却启动了 `tests`，界面自然看不到改动。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "应核对哪两项？",
+        "answer": "启动项目和当前构建配置。"
+      }
+    },
+    {
+      "id": "cpp.book.1-2-3",
+      "title": "GCC/G++",
+      "number": "1.2.3",
+      "parent": "cpp.book.1-2",
+      "depth": 4,
+      "order": 10,
+      "printedPage": 8,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "`g++` 是 GNU 工具链的 C++ 驱动，负责把多个翻译单元交给编译和链接步骤。课程工作台在浏览器里解释受限程序。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "桌面项目可分开编译 `main.cpp` 与 `total.cpp`，再链接两份目标文件。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "漏掉 `total` 的定义通常在哪个步骤失败？",
+        "answer": "链接。调用端仍可能通过编译。"
+      }
+    },
+    {
+      "id": "cpp.book.1-2-4",
+      "title": "Dev-C",
+      "number": "1.2.4",
+      "parent": "cpp.book.1-2",
+      "depth": 4,
+      "order": 11,
+      "printedPage": 8,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "Dev-C++ 把编辑器、项目配置和编译工具链放在同一界面。使用它时仍要知道实际调用的编译器版本。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "项目从另一台机器打开时报找不到头文件，先核对 include 路径和工具链安装位置。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "重装编辑器必然能修复缺少头文件吗？",
+        "answer": "不能。依赖和搜索路径需要单独确认。"
+      }
+    },
+    {
+      "id": "cpp.book.1-2-5",
+      "title": "Eclipse",
+      "number": "1.2.5",
+      "parent": "cpp.book.1-2",
+      "depth": 4,
+      "order": 12,
+      "printedPage": 8,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "Eclipse 的 C/C++ 项目需要编辑支持和构建工具链。索引器的提示与真正编译结果可能因配置不同而分歧。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "源码能通过构建但编辑器标红 `std::cout`，可比较索引器和构建使用的头文件路径。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "最后该用哪份结果确认能否构建？",
+        "answer": "实际构建日志，并用它排查索引配置差异。"
+      }
+    },
+    {
+      "id": "cpp.book.1-3",
+      "title": "认知C++程序代码",
+      "number": "1.3",
+      "parent": "cpp.book.chapter-1",
+      "depth": 3,
+      "order": 13,
+      "printedPage": 9,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "把程序分成依赖、入口、计算和输出四块。阅读时先找到数据进入和离开程序的位置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`#include <iostream>` 提供声明，`int main(){ std::cout << 3; }` 从入口输出 3。",
+        "source": "#include <iostream>\nint main() {\n    std::cout << 3 << std::endl;\n}\n",
+        "result": "无输入，输出 3 后换行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "改变包含文件能代替修改计算吗？",
+        "answer": "不能。包含文件提供接口，计算仍在程序语句里。"
+      }
+    },
+    {
+      "id": "cpp.book.1-4",
+      "title": "C++工程项目文件",
+      "number": "1.4",
+      "parent": "cpp.book.chapter-1",
+      "depth": 3,
+      "order": 14,
+      "printedPage": 10,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "工程文件记录编译目标、源码列表和配置。源文件记录程序逻辑，两类文件的修改影响不同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "把 `report.cpp` 写好但未加入项目，构建没有生成该文件的目标代码。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "构建成功后仍找不到新函数，先查什么？",
+        "answer": "确认文件属于活动目标并进入链接。"
+      }
+    },
+    {
+      "id": "cpp.book.1-5",
+      "title": "使用VC创建程序",
+      "number": "1.5",
+      "parent": "cpp.book.chapter-1",
+      "depth": 3,
+      "order": 15,
+      "printedPage": 11,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "把旧版 VC 建项目的步骤抽象为选择控制台目标、添加源文件和检查构建输出。先写最小入口再增量添加功能。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "用 `int main(){return 0;}` 确认配置后，再加入终端输出。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么第一步只放空入口？",
+        "answer": "把工具链问题与业务代码问题分开。"
+      }
+    },
+    {
+      "id": "cpp.book.1-6",
+      "title": "编译与连接过程",
+      "number": "1.6",
+      "parent": "cpp.book.chapter-1",
+      "depth": 3,
+      "order": 16,
+      "printedPage": 13,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "预处理处理包含与宏。编译检查翻译单元并生成目标文件。链接把定义和引用接起来。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "声明 `int total();` 存在而定义未链接，编译器能确定调用形式，链接器找不到实现。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "拼错括号和缺少定义分别在哪一步出现？",
+        "answer": "括号通常是编译错误，缺少定义通常是链接错误。"
+      }
+    },
+    {
+      "id": "cpp.book.1-7",
+      "title": "C++的特点",
+      "number": "1.7",
+      "parent": "cpp.book.chapter-1",
+      "depth": 3,
+      "order": 17,
+      "printedPage": 15,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "C++ 可同时组织低层对象与高层抽象。资源拥有者和借用者应有明确边界。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "文件包装对象在作用域退出时关闭文件，调用者只负责传入路径和处理失败。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "自动关闭为什么和作用域有关？",
+        "answer": "拥有者的生命周期结束会触发清理规则。"
+      }
+    },
+    {
+      "id": "cpp.book.1-8",
+      "title": "小结",
+      "number": "1.8",
+      "parent": "cpp.book.chapter-1",
+      "depth": 3,
+      "order": 18,
+      "printedPage": 16,
+      "leaf": true,
+      "group": 1,
+      "body": [
+        "用一条从源码到结果的路径复习工具链。先定位失败阶段，再选择对应证据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "能生成目标文件但启动前失败，先看链接输出。运行时输出错误，再看输入与状态。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "编辑器能着色是否证明程序正确？",
+        "answer": "着色只识别文本形式，正确性需要构建与行为验证。"
+      }
+    }
+  ]
+}

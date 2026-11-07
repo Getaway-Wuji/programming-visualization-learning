@@ -1,6 +1,7 @@
 import { courseTransaction, type CourseState, type CourseRecipe } from './c6-course';
 import { PYTHON_DB_VERSION, PYTHON_STORES } from './python3-meta';
-import { assertActiveCourseMeta, JAVA_DB_VERSION } from './java-meta';
+import { assertActiveCourseMeta, CPP_DB_VERSION } from './cpp-course-meta';
+import { JAVA_DB_VERSION } from './java-meta';
 import {
   isPythonDocument,
   isPythonLesson,
@@ -153,7 +154,7 @@ export function pythonCourseTransaction(
   factory: IDBFactory,
   options?: { generation?: string; revision?: number; prepare?: PreparePythonCourse },
 ) {
-  if (db.version !== PYTHON_DB_VERSION && db.version !== JAVA_DB_VERSION)
+  if (![PYTHON_DB_VERSION, JAVA_DB_VERSION, CPP_DB_VERSION].includes(db.version))
     throw new StorageError('S_CONTENT_INCOMPATIBLE');
   return courseTransaction(db, factory, PYTHON_STORES, assertPythonCourseState, options);
 }

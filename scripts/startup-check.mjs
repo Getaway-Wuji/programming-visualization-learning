@@ -318,6 +318,8 @@ try {
             'pythonDrafts',
             'javaActivities',
             'javaDrafts',
+            'cppActivities',
+            'cppDrafts',
           ];
           const tx = db.transaction(names, 'readonly');
           return {
@@ -337,8 +339,8 @@ try {
           db.close();
         }
       });
-      assert.equal(learningRows.version, 12);
-      assert.deepEqual(learningRows.counts, Array(18).fill(0));
+      assert.equal(learningRows.version, 13);
+      assert.deepEqual(learningRows.counts, Array(20).fill(0));
       assert.deepEqual(pageErrors, []);
       assert.ok(requests.every((request) => request.origin === origin && request.method === 'GET'));
       await page.screenshot({

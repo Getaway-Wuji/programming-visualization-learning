@@ -1,9 +1,11 @@
 import type { JavaResponse } from '../engine/java-types';
-import { applyJavaLearningEvent } from '../learning/domain';
+import { applyCppLearningEvent, applyJavaLearningEvent } from '../learning/domain';
+import type { CppCourseResponse } from '../engine/cpp-course-protocol';
+import { cppExercise, cppPackageRef, isCppDocument, isCppLesson } from '../cpp-course/identities';
 import type { LearningReceiptSummary } from '../learning/types';
 import type { SaveResult, StorageClient, StorageMutation } from '../storage/client';
 import type { StorageSnapshot } from '../storage/model';
-import type { JavaAttempt, JavaCourseActivity } from '../storage/java-course';
+import type { JavaAttempt, JavaCourseActivity, PrepareJavaCourse } from '../storage/java-course';
 import { StorageError } from '../storage/errors';
 import { localDateAt } from '../storage/validation';
 import { isJavaDocument, isJavaLesson, javaExercise, javaPackageRef } from './identities';
@@ -25,23 +27,45 @@ interface SessionHooks {
 
 export class JavaLearningSession {
   private occurrences = new WeakMap<
-    JavaResponse,
+    JavaResponse | CppCourseResponse,
     { at: string; generation: string; epoch: number }
   >();
-  constructor(private readonly hooks: SessionHooks) {}
+  constructor(
+    private readonly hooks: SessionHooks,
+    private readonly language: 'java' | 'cpp' = 'java',
+  ) {}
+
+  private readCourse(storage: StorageClient) {
+    return this.language === 'cpp' ? storage.readCppCourse() : storage.readJavaCourse();
+  }
+
+  private commitCourse(
+    storage: StorageClient,
+    generation: string,
+    revision: number,
+    prepare: PrepareJavaCourse,
+  ) {
+    return this.language === 'cpp'
+      ? storage.commitCppCourse(generation, revision, prepare)
+      : storage.commitJavaCourse(generation, revision, prepare);
+  }
 
   private meta(epoch: number, generation?: string) {
     const state = this.hooks.current();
     if (state.epoch !== epoch || (generation && generation !== state.snapshot?.meta.generation))
       throw new StorageError('S_GENERATION_STALE');
-    if (!state.writable || state.snapshot?.meta.dbVersion !== 12)
+    if (
+      !state.writable ||
+      !state.snapshot ||
+      state.snapshot.meta.dbVersion < (this.language === 'cpp' ? 13 : 12)
+    )
       throw new StorageError('S_STORAGE_UNAVAILABLE');
     return state.snapshot.meta;
   }
 
   async read(epoch: number) {
     const { generation } = this.meta(epoch);
-    const current = await this.hooks.storage().readJavaCourse();
+    const current = await this.readCourse(this.hooks.storage());
     this.meta(epoch, generation);
     if (current.snapshot.meta.generation !== generation)
       throw new StorageError('S_GENERATION_STALE');
@@ -49,13 +73,15 @@ export class JavaLearningSession {
   }
 
   recordLesson(id: string, epoch: number) {
-    if (!isJavaLesson(id)) return Promise.reject(new StorageError('S_CONTENT_INCOMPATIBLE'));
+    if (!(this.language === 'cpp' ? isCppLesson(id) : isJavaLesson(id)))
+      return Promise.reject(new StorageError('S_CONTENT_INCOMPATIBLE'));
     const at = this.hooks.clock();
     return this.record(id, epoch, at, null);
   }
 
   async recordJudge(id: string, response: JavaResponse, epoch: number, revision: string) {
-    if (!javaExercise(id)) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    if (this.language !== 'java' || !javaExercise(id))
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
     const { generation } = this.meta(epoch);
     const { currentJavaExecution } = await import('../engine/java-client');
     const guard = () => {
@@ -107,6 +133,51 @@ export class JavaLearningSession {
     return this.record(id, epoch, occurrence.at, attempt, guard);
   }
 
+  async recordCppJudge(id: string, response: CppCourseResponse, epoch: number, revision: string) {
+    if (this.language !== 'cpp' || !cppExercise(id))
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    const { generation } = this.meta(epoch);
+    const { currentCppExecution } = await import('../engine/cpp-course-client');
+    const guard = () => {
+      this.meta(epoch, generation);
+      const proof = currentCppExecution(response);
+      if (
+        proof?.request.operation !== 'judge' ||
+        proof.request.profile !== id ||
+        proof.request.sourceRevision !== revision
+      )
+        throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    };
+    guard();
+    const result = response.judgement;
+    if (
+      !result ||
+      response.status !== 'completed' ||
+      result.cases.length !== 4 ||
+      result.cases.some((group) => group.status === 'limited')
+    )
+      return null;
+    const first = result.cases.find((group) => !group.passed);
+    if (result.passed !== !first) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    const occurrence = this.occurrences.get(response) ?? {
+      at: this.hooks.clock(),
+      generation,
+      epoch,
+    };
+    if (occurrence.generation !== generation || occurrence.epoch !== epoch)
+      throw new StorageError('S_GENERATION_STALE');
+    this.occurrences.set(response, occurrence);
+    const attempt: JavaAttempt = {
+      eventId: response.identity.runId,
+      at: occurrence.at,
+      status: first ? 'failed' : 'passed',
+      caseCount: 4,
+      failedCaseKey: first ? `case-${first.index + 1}` : null,
+      category: first ? (first.status === 'completed' ? 'wrong-answer' : 'program-error') : null,
+    };
+    return this.record(id, epoch, occurrence.at, attempt, guard);
+  }
+
   private async record(
     id: string,
     epoch: number,
@@ -122,8 +193,9 @@ export class JavaLearningSession {
       guard();
       await this.hooks.openDay(generation, at);
       const storage = this.hooks.storage();
-      const current = await storage.readJavaCourse();
-      const saved = await storage.commitJavaCourse(
+      const current = await this.readCourse(storage);
+      const saved = await this.commitCourse(
+        storage,
         generation,
         current.snapshot.meta.revision,
         ({ snapshot, rows }) => {
@@ -158,12 +230,15 @@ export class JavaLearningSession {
             goalVersion: goal.goalVersion,
             occurredAt: at,
             localDate,
-            packageRef: javaPackageRef,
+            packageRef: this.language === 'cpp' ? cppPackageRef : javaPackageRef,
             subjectRef: { id, version: '1.0.0' },
             learningRevision: 1,
           };
           const operations = this.hooks.rewards(
-            applyJavaLearningEvent(snapshot, { generation, receipt }),
+            (this.language === 'cpp' ? applyCppLearningEvent : applyJavaLearningEvent)(snapshot, {
+              generation,
+              receipt,
+            }),
           );
           const base = {
             activityVersion: '2.2.0' as const,
@@ -212,29 +287,35 @@ export class JavaLearningSession {
   }
 
   async saveDraft(id: string, source: string, expectedDraft: number | null, epoch: number) {
-    if (!isJavaDocument(id)) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    if (!(this.language === 'cpp' ? isCppDocument(id) : isJavaDocument(id)))
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
     const { generation } = this.meta(epoch);
     return this.hooks.run(async () => {
       const storage = this.hooks.storage();
-      const { snapshot } = await storage.readJavaCourse();
-      const saved = await storage.commitJavaCourse(generation, snapshot.meta.revision, (state) => {
-        this.meta(epoch, generation);
-        const prior = state.rows.drafts.find((row) => row.documentId === id);
-        if ((prior?.revision ?? null) !== expectedDraft)
-          throw new StorageError('S_REVISION_CONFLICT');
-        if (prior?.source === source) return { operations: [] };
-        return {
-          operations: [],
-          draft: {
-            draftVersion: '2.2.0',
-            generation,
-            documentId: id,
-            source,
-            revision: state.snapshot.meta.revision + 1,
-            updatedAt: this.hooks.clock(),
-          },
-        };
-      });
+      const { snapshot } = await this.readCourse(storage);
+      const saved = await this.commitCourse(
+        storage,
+        generation,
+        snapshot.meta.revision,
+        (state) => {
+          this.meta(epoch, generation);
+          const prior = state.rows.drafts.find((row) => row.documentId === id);
+          if ((prior?.revision ?? null) !== expectedDraft)
+            throw new StorageError('S_REVISION_CONFLICT');
+          if (prior?.source === source) return { operations: [] };
+          return {
+            operations: [],
+            draft: {
+              draftVersion: '2.2.0',
+              generation,
+              documentId: id,
+              source,
+              revision: state.snapshot.meta.revision + 1,
+              updatedAt: this.hooks.clock(),
+            },
+          };
+        },
+      );
       await this.hooks.saved(saved, generation, epoch);
       const current = await this.read(epoch);
       const savedDraft = current.drafts.find((row) => row.documentId === id);

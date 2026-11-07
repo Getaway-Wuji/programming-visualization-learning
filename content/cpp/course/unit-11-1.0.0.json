@@ -1,0 +1,571 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 11,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-11",
+      "title": "继承与派生",
+      "number": "第11章",
+      "parent": "cpp.book.part-2",
+      "depth": 2,
+      "order": 214,
+      "printedPage": 215,
+      "leaf": false,
+      "group": 11,
+      "body": [
+        "在一个基类接口下比较派生类型。将成员查找、构造次序与虚调用分别画图，避免把同名成员都视为重写。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.11-1",
+      "title": "继承",
+      "number": "11.1",
+      "parent": "cpp.book.chapter-11",
+      "depth": 3,
+      "order": 215,
+      "printedPage": 216,
+      "leaf": false,
+      "group": 11,
+      "body": [
+        "比较继承方式、访问限制和构造顺序。用一个同名函数反例区分隐藏和重写。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.11-1-1",
+      "title": "类的继承",
+      "number": "11.1.1",
+      "parent": "cpp.book.11-1",
+      "depth": 4,
+      "order": 216,
+      "printedPage": 216,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "派生类可扩充基类行为。公开继承适合派生对象能按基类契约使用的关系。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "圆可通过“图形”接口提供面积，发动机作为车的组成部分更适合组合。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "车拥有发动机适合公开继承吗？",
+        "answer": "不适合，拥有关系不表示可替换关系。"
+      }
+    },
+    {
+      "id": "cpp.book.11-1-2",
+      "title": "继承后可访问性",
+      "number": "11.1.2",
+      "parent": "cpp.book.11-1",
+      "depth": 4,
+      "order": 217,
+      "printedPage": 218,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "可访问性同时由成员访问级别与继承方式决定。基类私有成员不能被派生类直接访问。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "派生类可通过基类公开或受保护函数访问基类维护的数据。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把继承写成 public 会公开基类私有字段吗？",
+        "answer": "不会，字段仍私有。"
+      }
+    },
+    {
+      "id": "cpp.book.11-1-3",
+      "title": "构造函数访问顺序",
+      "number": "11.1.3",
+      "parent": "cpp.book.11-1",
+      "depth": 4,
+      "order": 218,
+      "printedPage": 220,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "构造派生对象先初始化基类，再初始化成员，最后执行派生构造函数体。销毁顺序相反。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "跟踪 Base、member、Derived 的构造日志，先出现 Base，再出现 member 与 Derived。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么派生体中可以使用基类接口？",
+        "answer": "进入派生体之前基类部分已构造。"
+      }
+    },
+    {
+      "id": "cpp.book.11-1-4",
+      "title": "子类隐藏父类的成员函数",
+      "number": "11.1.4",
+      "parent": "cpp.book.11-1",
+      "depth": 4,
+      "order": 219,
+      "printedPage": 222,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "派生类中的同名声明可能隐藏基类重载集合。需要时显式引入基类同名函数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "派生类提供 `log(double)` 后，可用 `using Base::log;` 保留基类的 `log(int)` 候选。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "隐藏等同于虚函数重写吗？",
+        "answer": "不同。隐藏影响名称查找，重写需要匹配虚函数。"
+      }
+    },
+    {
+      "id": "cpp.book.11-2",
+      "title": "重载运算符",
+      "number": "11.2",
+      "parent": "cpp.book.chapter-11",
+      "depth": 3,
+      "order": 220,
+      "printedPage": 225,
+      "leaf": false,
+      "group": 11,
+      "body": [
+        "为用户类型设计符合直觉的运算语义。明确是否复制、是否修改、返回何种类型，再测试相等及边界情况。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.11-2-1",
+      "title": "重载运算符的必要性",
+      "number": "11.2.1",
+      "parent": "cpp.book.11-2",
+      "depth": 4,
+      "order": 221,
+      "printedPage": 225,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "运算符重载让自定义类型沿熟悉语法表达自然操作。含义应保持与数学或领域惯例一致。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "二维位移可用加法组合两个向量分量。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "用 `+` 表示从磁盘删除文件适合吗？",
+        "answer": "不适合，调用者难以从语法判断副作用。"
+      }
+    },
+    {
+      "id": "cpp.book.11-2-2",
+      "title": "重载运算符的形式与规则",
+      "number": "11.2.2",
+      "parent": "cpp.book.11-2",
+      "depth": 4,
+      "order": 222,
+      "printedPage": 226,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "重载不能改变运算符优先级、结合性或参数个数。通常至少一个操作数是用户定义类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "`Vector+Vector` 可定义，但不能重新定义两个内建整数相加。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能把 `a+b*c` 的分组规则改掉吗？",
+        "answer": "不能，分组由语言固定。"
+      }
+    },
+    {
+      "id": "cpp.book.11-2-3",
+      "title": "重载运算符的运算",
+      "number": "11.2.3",
+      "parent": "cpp.book.11-2",
+      "depth": 4,
+      "order": 223,
+      "printedPage": 228,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "重载运算符应规定结果类型、是否修改操作数及溢出等边界。加法常返回一个新值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "两个位移 `(1,2)` 与 `(3,-1)` 相加得 `(4,1)`，原值都保持。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若 `a+b` 改写 a，会影响什么？",
+        "answer": "调用者对无副作用加法的预期和后续计算。"
+      }
+    },
+    {
+      "id": "cpp.book.11-2-4",
+      "title": "转换运算符",
+      "number": "11.2.4",
+      "parent": "cpp.book.11-2",
+      "depth": 4,
+      "order": 224,
+      "printedPage": 230,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "转换运算符使对象能转换为另一类型。`explicit` 可阻止意外隐式转换。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "资源句柄可提供 `explicit operator bool()` 用于有效性判断。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何不让对象随意隐式转为 int？",
+        "answer": "容易在算术或重载选择中产生意外结果。"
+      }
+    },
+    {
+      "id": "cpp.book.11-3",
+      "title": "多重继承",
+      "number": "11.3",
+      "parent": "cpp.book.chapter-11",
+      "depth": 3,
+      "order": 225,
+      "printedPage": 231,
+      "leaf": false,
+      "group": 11,
+      "body": [
+        "多重继承先画基类子对象，再检查同名成员、构造顺序和公共祖先出现的份数。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.11-3-1",
+      "title": "多重继承定义",
+      "number": "11.3.1",
+      "parent": "cpp.book.11-3",
+      "depth": 4,
+      "order": 226,
+      "printedPage": 231,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "多重继承让同一类型具有多个基类。每个基类应提供清晰、相对独立的契约。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "可打印、可重置两个接口由同一设备对象实现。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "何时更适合组合多个对象？",
+        "answer": "需要组合实现而不要求派生对象可作为各基类使用时。"
+      }
+    },
+    {
+      "id": "cpp.book.11-3-2",
+      "title": "二义性",
+      "number": "11.3.2",
+      "parent": "cpp.book.11-3",
+      "depth": 4,
+      "order": 227,
+      "printedPage": 233,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "多个基类含同名成员时，未限定的调用可能有歧义。用限定名或在派生类定义统一接口解决。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "`Printer::reset()` 与 `Network::reset()` 同时可见，明确指定要重置哪一部分。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "编译器会任意选一个吗？",
+        "answer": "不会，歧义需要由程序消解。"
+      }
+    },
+    {
+      "id": "cpp.book.11-3-3",
+      "title": "多重继承的构造顺序",
+      "number": "11.3.3",
+      "parent": "cpp.book.11-3",
+      "depth": 4,
+      "order": 228,
+      "printedPage": 234,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "非虚直接基类按类定义中的基类列表顺序构造。构造函数初始化列表的书写顺序不改变它。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "`struct D : B, A` 先构造 B，再构造 A。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把初始化列表写成 A 在前会改变顺序吗？",
+        "answer": "不会，类定义顺序决定真实顺序。"
+      }
+    },
+    {
+      "id": "cpp.book.11-4",
+      "title": "多态",
+      "number": "11.4",
+      "parent": "cpp.book.chapter-11",
+      "depth": 3,
+      "order": 229,
+      "printedPage": 235,
+      "leaf": false,
+      "group": 11,
+      "body": [
+        "用一个基类引用分别绑定不同派生实例。比较虚函数动态分派、非虚函数选择和虚基类的不同职责。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.11-4-1",
+      "title": "虚函数概述",
+      "number": "11.4.1",
+      "parent": "cpp.book.11-4",
+      "depth": 4,
+      "order": 230,
+      "printedPage": 236,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "虚函数允许经基类引用或指针调用实际派生实现。使用 `override` 可以检查签名是否真重写。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "Shape 的 `area()` 经 Circle 对象调用时执行 Circle 实现。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "参数类型写错会怎样？",
+        "answer": "不会重写该虚函数，`override` 能让编译器报错。"
+      }
+    },
+    {
+      "id": "cpp.book.11-4-2",
+      "title": "利用虚函数实现动态绑定",
+      "number": "11.4.2",
+      "parent": "cpp.book.11-4",
+      "depth": 4,
+      "order": 231,
+      "printedPage": 236,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "动态绑定根据对象的动态类型选择虚函数实现。非虚调用通常按表达式的静态类型解析。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "基类引用绑定到圆，调用虚面积选择圆的公式。",
+        "source": "#include <iostream>\nstruct Shape { virtual int area() const = 0; virtual ~Shape() = default; };\nstruct Square : Shape { int area() const override { return 9; } };\nint main() {\n    Square square;\n    const Shape& shape = square;\n    std::cout << shape.area() << std::endl;\n}\n",
+        "result": "无输入，经基类引用输出 9。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "同一引用调用非虚成员会选择派生实现吗？",
+        "answer": "不会仅因对象动态类型而改变绑定。"
+      }
+    },
+    {
+      "id": "cpp.book.11-4-3",
+      "title": "虚继承",
+      "number": "11.4.3",
+      "parent": "cpp.book.11-4",
+      "depth": 4,
+      "order": 232,
+      "printedPage": 237,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "菱形层次可以用虚继承共享公共基类子对象。最派生对象负责虚基类的初始化。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "两条路径都继承同一个虚基类时，最终对象只含一份公共基类状态。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "没有虚继承时可能有几份？",
+        "answer": "通常每条非虚路径各一份。"
+      }
+    },
+    {
+      "id": "cpp.book.11-5",
+      "title": "抽象类",
+      "number": "11.5",
+      "parent": "cpp.book.chapter-11",
+      "depth": 3,
+      "order": 233,
+      "printedPage": 239,
+      "leaf": false,
+      "group": 11,
+      "body": [
+        "抽象类定义一组派生类型必须提供的操作。共同功能留在基类，只把变化部分留给具体实现。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.11-5-1",
+      "title": "纯虚函数",
+      "number": "11.5.1",
+      "parent": "cpp.book.11-5",
+      "depth": 4,
+      "order": 234,
+      "printedPage": 239,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "纯虚函数声明接口义务，包含尚未实现纯虚接口的类不能直接实例化。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "抽象 Shape 要求 `area() const = 0`，派生 Circle 实现公式。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能把 Shape 作为独立值创建吗？",
+        "answer": "不能，但可通过指针或引用使用派生对象。"
+      }
+    },
+    {
+      "id": "cpp.book.11-5-2",
+      "title": "实现抽象类中的成员函数",
+      "number": "11.5.2",
+      "parent": "cpp.book.11-5",
+      "depth": 4,
+      "order": 235,
+      "printedPage": 241,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "抽象类也能提供普通函数和部分通用实现。派生类只需填补它承诺的抽象操作。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "基类提供 `printArea()`，内部调用由派生类实现的 `area()`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "纯虚函数在类外有定义，类就不抽象了吗？",
+        "answer": "不会。纯虚声明仍保留，具体类型仍需适当重写。"
+      }
+    },
+    {
+      "id": "cpp.book.11-6",
+      "title": "小结",
+      "number": "11.6",
+      "parent": "cpp.book.chapter-11",
+      "depth": 3,
+      "order": 236,
+      "printedPage": 242,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "区分名称查找、重载选择和虚分派三步。调用路径应能说明由哪一层决定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "先找到基类接口，再按参数选择签名，最后对虚函数按实际对象分派。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若有多个同名基类成员产生歧义，动态绑定能修复吗？",
+        "answer": "不能。名称查找必须先得到明确的目标。"
+      }
+    },
+    {
+      "id": "cpp.book.11-7",
+      "title": "实践与练习",
+      "number": "11.7",
+      "parent": "cpp.book.chapter-11",
+      "depth": 3,
+      "order": 237,
+      "printedPage": 243,
+      "leaf": true,
+      "group": 11,
+      "body": [
+        "用两种实现验证同一个基类接口，再检查析构和错误输入。不要把正常分派当成访问权限也正确。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "两个图形经 Shape 引用返回不同面积，删除操作另外验证。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么需要分别测试虚函数调用和销毁？",
+        "answer": "分派路径正确不能证明资源释放路径正确。"
+      }
+    }
+  ]
+}

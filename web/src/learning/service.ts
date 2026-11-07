@@ -152,6 +152,7 @@ interface ServiceOptions {
   openStorage?: () => Promise<StorageClient>;
   enablePython?: boolean;
   enableJava?: boolean;
+  enableCpp?: boolean;
   clock?: () => string;
   id?: () => string;
 }
@@ -243,6 +244,7 @@ export class LearningService {
   }
   private readonly pythonSession = new PythonLearningSession(this.courseHooks());
   private readonly javaSession = new JavaLearningSession(this.courseHooks());
+  private readonly cppSession = new JavaLearningSession(this.courseHooks(), 'cpp');
   readPythonCourse = (...args: Parameters<PythonLearningSession['read']>) =>
     this.pythonSession.read(...args);
   recordPythonLesson = (...args: Parameters<PythonLearningSession['recordLesson']>) =>
@@ -259,6 +261,14 @@ export class LearningService {
     this.javaSession.recordJudge(...args);
   saveJavaDraft = (...args: Parameters<JavaLearningSession['saveDraft']>) =>
     this.javaSession.saveDraft(...args);
+  readCppCourse = (...args: Parameters<JavaLearningSession['read']>) =>
+    this.cppSession.read(...args);
+  recordCppLesson = (...args: Parameters<JavaLearningSession['recordLesson']>) =>
+    this.cppSession.recordLesson(...args);
+  recordCppJudge = (...args: Parameters<JavaLearningSession['recordCppJudge']>) =>
+    this.cppSession.recordCppJudge(...args);
+  saveCppDraft = (...args: Parameters<JavaLearningSession['saveDraft']>) =>
+    this.cppSession.saveDraft(...args);
   courseRepository = () => this.c6Repository;
   private courseSession() {
     if (!this.c6Session) throw new StorageError('S_CONTENT_INCOMPATIBLE');
@@ -620,7 +630,7 @@ export class LearningService {
       (c6
         ? !validC6 &&
           !((this.state.snapshot?.meta.dbVersion ?? 0) >= 11 && isPythonMark(command)) &&
-          !(this.state.snapshot?.meta.dbVersion === 12 && isJavaMark(command))
+          !((this.state.snapshot?.meta.dbVersion ?? 0) >= 12 && isJavaMark(command))
         : !reading ||
           !lesson ||
           command.packageRef.id !== reading.packageRef.id ||
@@ -963,6 +973,7 @@ export class LearningService {
             : {}),
           enablePython: this.options.enablePython,
           enableJava: this.options.enableJava,
+          enableCpp: this.options.enableCpp,
           recovery: true,
         }));
       if (this.disposed) {
@@ -2296,7 +2307,12 @@ export class LearningService {
 }
 
 export function createLearningService() {
-  const service = new LearningService({ c6Course: true, enablePython: true, enableJava: true });
+  const service = new LearningService({
+    c6Course: true,
+    enablePython: true,
+    enableJava: true,
+    enableCpp: true,
+  });
   // Deliberately no raw command, trusted authority, DB name or fixture options.
   return {
     readPythonCourse: service.readPythonCourse,
@@ -2307,6 +2323,10 @@ export function createLearningService() {
     recordJavaLesson: service.recordJavaLesson,
     recordJavaJudge: service.recordJavaJudge,
     saveJavaDraft: service.saveJavaDraft,
+    readCppCourse: service.readCppCourse,
+    recordCppLesson: service.recordCppLesson,
+    recordCppJudge: service.recordCppJudge,
+    saveCppDraft: service.saveCppDraft,
     courseRepository: service.courseRepository,
     beginC6Practice: service.beginC6Practice,
     invalidateC6Practice: service.invalidateC6Practice,

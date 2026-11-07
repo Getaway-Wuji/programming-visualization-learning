@@ -1,4 +1,5 @@
 import { isJavaProgress, javaExercise, javaPackageRef } from '../java/identities';
+import { cppExercise, cppPackageRef, isCppProgress } from '../cpp-course/identities';
 import { c6LearningCatalog, type C6LearningCatalog, type C6LearningIndex } from '../c6-learning';
 import type { C6LearningCommand } from '../c6-learning/model';
 import { isPythonProgress, pythonExercise, pythonPackageRef } from '../python3/identities';
@@ -82,6 +83,7 @@ export function isCompatibleLearningHistory(
 ): boolean {
   if (current.ref.id.startsWith('py3.') && !isPythonProgress(progress)) return false;
   if (current.ref.id.startsWith('java.') && !isJavaProgress(progress)) return false;
+  if (current.ref.id.startsWith('cpp.book.') && !isCppProgress(progress)) return false;
   if (
     /^(lesson|exercise)\.c6\./u.test(current.ref.id) &&
     (progress.packageRef.id !== 'content.c.primer6' || progress.packageRef.version !== '2.0.0')
@@ -185,46 +187,69 @@ export function applyC6LearningEvent(
 }
 
 export function applyPythonLearningEvent(snapshot: StorageSnapshot, command: LearningCommand) {
-  return applyTextCourseLearningEvent(snapshot, command, false);
+  return applyTextCourseLearningEvent(snapshot, command, 'python');
 }
 
 export function applyJavaLearningEvent(snapshot: StorageSnapshot, command: LearningCommand) {
-  return applyTextCourseLearningEvent(snapshot, command, true);
+  return applyTextCourseLearningEvent(snapshot, command, 'java');
 }
+
+export function applyCppLearningEvent(snapshot: StorageSnapshot, command: LearningCommand) {
+  return applyTextCourseLearningEvent(snapshot, command, 'cpp');
+}
+
+const textCourses = {
+  python: {
+    db: 11,
+    progress: isPythonProgress,
+    packageRef: pythonPackageRef,
+    lesson: (id: string) => pythonExercise(id)?.lessonId,
+  },
+  java: {
+    db: 12,
+    progress: isJavaProgress,
+    packageRef: javaPackageRef,
+    lesson: (id: string) => javaExercise(id)?.lessonId,
+  },
+  cpp: {
+    db: 13,
+    progress: isCppProgress,
+    packageRef: cppPackageRef,
+    lesson: (id: string) => cppExercise(id)?.lesson,
+  },
+};
 
 function applyTextCourseLearningEvent(
   snapshot: StorageSnapshot,
   command: LearningCommand,
-  java: boolean,
+  language: keyof typeof textCourses,
 ) {
   const receipt = command.receipt;
   const facts = { ...receipt, committedRevision: 0 };
+  const course = textCourses[language];
   if (
-    (java
-      ? snapshot.meta.dbVersion !== 12 || !isJavaProgress(facts)
-      : snapshot.meta.dbVersion < 11 || !isPythonProgress(facts)) ||
+    snapshot.meta.dbVersion < course.db ||
+    !course.progress(facts) ||
     !['lesson.study-confirmed', 'exercise.passed', 'exercise.attempt-evaluated'].includes(
       receipt.eventType,
     )
   )
     throw new StorageError('S_CONTENT_INCOMPATIBLE');
-  const exercise = java
-    ? javaExercise(receipt.subjectRef.id)
-    : pythonExercise(receipt.subjectRef.id);
+  const exerciseLesson = course.lesson(receipt.subjectRef.id);
   const entity = (id: string) => ({
     ref: { id, version: '1.0.0' },
     learningRevision: 1,
     acceptedPriorVersions: [],
   });
   const lesson = {
-    ...entity(exercise?.lessonId ?? receipt.subjectRef.id),
+    ...entity(exerciseLesson ?? receipt.subjectRef.id),
     requiredExerciseRefs: [],
   };
   return applyEvent(snapshot, command, {
     purpose: 'text-course-practice',
-    packageRef: java ? javaPackageRef : pythonPackageRef,
+    packageRef: course.packageRef,
     lessons: [lesson],
-    exercises: exercise
+    exercises: exerciseLesson
       ? [
           {
             ...entity(receipt.subjectRef.id),

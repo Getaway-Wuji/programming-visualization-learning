@@ -767,10 +767,14 @@ function projectStep(
   step: AdvancedStep,
   types: TypeMap,
   backward = false,
+  detachChanges = true,
 ): AdvancedState {
   // Copy only touched records. Earlier states and checkpoint records remain
   // immutable; a deep copy of the whole live stack per delta is unnecessary.
   const next: AdvancedState = { ...state };
+  // During course packet validation, the parsed records are private to the
+  // validator. Reuse them across projections, which only mutate copied tables.
+  const detach = detachChanges ? structuredClone : <T>(value: T) => value;
   const writable = (table: 'frames' | 'scopes' | 'objects'): RecordValue[] => {
     if (next[table] === state[table]) Object.assign(next, { [table]: [...state[table]] });
     return next[table];
@@ -787,9 +791,9 @@ function projectStep(
             ? !table.some((item) => item.id === change.id)
             : equal(table[change.index], before)),
       );
-      if (before === null) table.splice(change.index, 0, structuredClone(after!));
+      if (before === null) table.splice(change.index, 0, detach(after!));
       else if (after === null) table.splice(change.index, 1);
-      else table[change.index] = structuredClone(after);
+      else table[change.index] = detach(after);
     } else if (change.op === 'cell') {
       writable('objects');
       const position = next.objects.findIndex((item) => item.id === change.objectId);
@@ -811,7 +815,7 @@ function projectStep(
       valueType(after, type, types);
       if (at >= 0) object.cells.splice(at, 1);
       if (!equal(after, defaultCell(object, change.byteOffset, types))) {
-        object.cells.push({ byteOffset: change.byteOffset, value: structuredClone(after) });
+        object.cells.push({ byteOffset: change.byteOffset, value: detach(after) });
         object.cells.sort((a, b) => a.byteOffset - b.byteOffset);
       }
     } else if (change.op === 'output') {
@@ -825,7 +829,7 @@ function projectStep(
       const before = backward ? change.after : change.before;
       const after = backward ? change.before : change.after;
       advancedAssert(equal(next[change.op], before));
-      Object.assign(next, { [change.op]: structuredClone(after) });
+      Object.assign(next, { [change.op]: detach(after) });
     }
   }
   return next;
@@ -934,221 +938,240 @@ export async function decodeAdvancedResult(
       }
     }
     guard();
-    const result = JSON.parse(text) as AdvancedResult;
-    // Parsed records are private until this decode finishes. Projection uses
-    // copy-on-write, so a record already checked in this decode never changes.
-    // Keep the cache local: callers may mutate a previously returned packet.
-    const cache: ValidationCache = {
-      records: new WeakMap(),
-      singletons: new WeakMap(),
-      tables: new WeakMap(),
-    };
-    keys(result, [
-      'execVersion',
-      'dslVersion',
-      'diagnosticVersion',
-      'integerEncoding',
-      'language',
-      'engine',
-      'identity',
-      'nodeMap',
-      'types',
-      'trace',
-      'terminal',
-      'stats',
-    ]);
-    advancedAssert(
-      result.execVersion === '1.4.0' &&
-        result.dslVersion === '1.3.0' &&
-        result.diagnosticVersion === '1.3.0' &&
-        result.integerEncoding === '1.0.0' &&
-        result.language === request.language,
+    return await validateAdvancedPacket(
+      JSON.parse(text) as AdvancedResult,
+      request,
+      buildId,
+      guard,
     );
-    const types =
-      result.trace === null && Array.isArray(result.types) && result.types.length === 0
-        ? new Map<string, AdvancedType>()
-        : validateTypes(result.types);
-    keys(result.engine, ['id', 'version', 'buildId']);
-    advancedAssert(
-      result.engine.id === 'engine.rust.advanced' &&
-        result.engine.version === '0.1.0' &&
-        result.engine.buildId === buildId,
-    );
-    keys(result.identity, ['runId', 'sourceRevision']);
-    advancedAssert(
-      result.identity.runId === request.runId &&
-        result.identity.sourceRevision === request.sourceRevision,
-    );
-    const boundaries = new Set<number>([0]);
-    let bytes = 0;
-    let previousWasCR = false;
-    for (const scalar of request.source) {
-      if (previousWasCR && scalar === '\n') boundaries.delete(bytes);
-      bytes += size(scalar);
-      boundaries.add(bytes);
-      previousWasCR = scalar === '\r';
-    }
-    const range = (value: unknown) => {
-      keys(value, ['start', 'end']);
-      advancedAssert(
-        uint(value.start) &&
-          uint(value.end) &&
-          value.start <= value.end &&
-          boundaries.has(value.start) &&
-          boundaries.has(value.end),
-      );
-    };
-    advancedAssert(Array.isArray(result.nodeMap) && result.nodeMap.length <= 32768);
-    const nodes = new Map<string, AdvancedNode>();
-    for (const [index, node] of result.nodeMap.entries()) {
-      keys(node, ['nodeId', 'kind', 'byteRange']);
-      advancedAssert(node.nodeId === `n${index + 1}` && nodeKinds.includes(node.kind));
-      range(node.byteRange);
-      nodes.set(node.nodeId, node);
-    }
-    keys(result.terminal, ['status', 'code', 'byteRange', 'cursor', 'returnValue']);
-    advancedAssert(['completed', 'error', 'limited', 'cancelled'].includes(result.terminal.status));
-    advancedAssert(result.terminal.code === null || errorCodes.includes(result.terminal.code));
-    if (result.terminal.byteRange !== null) range(result.terminal.byteRange);
-    advancedAssert(uint(result.terminal.cursor) && nullableInt(result.terminal.returnValue));
-    advancedAssert((result.terminal.status === 'completed') === (result.terminal.code === null));
-    advancedAssert(
-      (result.terminal.status === 'cancelled') === (result.terminal.code === 'E_CANCELLED'),
-    );
-    const limited =
-      result.terminal.code !== null &&
-      (result.terminal.code.endsWith('_LIMIT') || result.terminal.code === 'E_DEADLINE');
-    advancedAssert((result.terminal.status === 'limited') === limited);
-    if (result.terminal.status === 'completed') advancedAssert(result.terminal.byteRange === null);
-    keys(result.stats, ['fuelUsed']);
-    advancedAssert(uint(result.stats.fuelUsed) && result.stats.fuelUsed <= 1000000);
-    advancedAssert(result.terminal.status !== 'cancelled' && result.terminal.code !== 'E_DEADLINE');
-    if (result.trace === null) {
-      advancedAssert(result.terminal.status !== 'completed' && result.terminal.cursor === 0);
-      return result;
-    }
-    const trace = result.trace;
-    keys(trace, ['dslVersion', 'completeness', 'initialState', 'steps', 'checkpoints']);
-    advancedAssert(
-      trace.dslVersion === '1.3.0' &&
-        trace.completeness === (result.terminal.status === 'completed' ? 'complete' : 'prefix'),
-    );
-    advancedAssert(
-      Array.isArray(trace.steps) &&
-        trace.steps.length <= 20000 &&
-        result.terminal.cursor === trace.steps.length &&
-        Array.isArray(trace.checkpoints),
-    );
-    advancedAssert(trace.checkpoints.length === Math.floor(trace.steps.length / 128) + 1);
-    validateState(trace.initialState, nodes, request.input.values.length, types, cache);
-    advancedAssert(
-      trace.initialState.frames.length === 0 &&
-        trace.initialState.scopes.length === 0 &&
-        trace.initialState.objects.length === 0 &&
-        trace.initialState.output === '' &&
-        trace.initialState.control.inputCursor === 0 &&
-        trace.initialState.control.returnValue === null &&
-        equal(trace.initialState.counters, {
-          comparisons: 0,
-          scalarWrites: 0,
-          arrayWrites: 0,
-          swaps: 0,
-        }) &&
-        equal(trace.initialState.allocator, {
-          nextAddress: 4096,
-          liveBytes: 0,
-          nextObject: 1,
-          nextScope: 1,
-          nextFrame: 1,
-        }),
-    );
-    let state = trace.initialState;
-    for (let cursor = 0; cursor <= trace.steps.length; cursor++) {
-      if (cursor % 128 === 0) {
-        const checkpoint = trace.checkpoints[cursor / 128];
-        keys(checkpoint, ['cursor', 'state']);
-        advancedAssert(checkpoint.cursor === cursor && equal(checkpoint.state, state));
-      }
-      if (cursor === trace.steps.length) break;
-      if (cursor % 32 === 0) {
-        guard();
-        if (performance.now() - sinceYield >= 6) {
-          await yieldAdvancedTask();
-          guard();
-          sinceYield = performance.now();
-        }
-      }
-      const step = trace.steps[cursor];
-      keys(step, ['seq', 'kind', 'nodeId', 'changes']);
-      advancedAssert(
-        step.seq === cursor + 1 &&
-          stepKinds.includes(step.kind) &&
-          nodes.has(step.nodeId) &&
-          Array.isArray(step.changes),
-      );
-      const records = new Set<string>();
-      const cells = new Map<string, Set<number>>();
-      const singletons = new Set<string>();
-      for (const change of step.changes) {
-        validateChange(change, nodes, request.input.values.length, types, cache);
-        // A producer diff has one final change per target. Disallow hidden
-        // intermediate writes which could otherwise disappear before state
-        // provenance validation, including record/cell overlap on one object.
-        if (change.op === 'record') {
-          const key = `${change.table}:${change.id}`;
-          advancedAssert(!records.has(key));
-          advancedAssert(change.table !== 'objects' || !cells.has(change.id));
-          records.add(key);
-        } else if (change.op === 'cell') {
-          const offsets = cells.get(change.objectId) ?? new Set<number>();
-          advancedAssert(
-            !offsets.has(change.byteOffset) && !records.has(`objects:${change.objectId}`),
-          );
-          offsets.add(change.byteOffset);
-          cells.set(change.objectId, offsets);
-        } else {
-          advancedAssert(!singletons.has(change.op));
-          singletons.add(change.op);
-        }
-      }
-      const next = projectStep(state, step, types);
-      validateState(next, nodes, request.input.values.length, types, cache);
-      const count = next.frames.length - state.frames.length;
-      advancedAssert(
-        count ===
-          (['program.enter', 'function.enter'].includes(step.kind)
-            ? 1
-            : ['program.return', 'function.return'].includes(step.kind)
-              ? -1
-              : 0),
-      );
-      if (step.kind === 'program.enter')
-        advancedAssert(state.frames.length === 0 && next.frames[0].functionName === 'main');
-      if (step.kind === 'program.return') advancedAssert(next.frames.length === 0);
-      for (const key of ['nextAddress', 'nextObject', 'nextScope', 'nextFrame'] as const)
-        advancedAssert(next.allocator[key] >= state.allocator[key]);
-      for (const key of ['comparisons', 'scalarWrites', 'arrayWrites', 'swaps'] as const)
-        advancedAssert(next.counters[key] >= state.counters[key]);
-      advancedAssert(next.control.inputCursor >= state.control.inputCursor);
-      advancedAssert(equal(projectStep(next, step, types, true), state));
-      state = next;
-    }
-    if (result.terminal.status === 'completed')
-      advancedAssert(
-        result.terminal.returnValue === state.control.returnValue &&
-          state.frames.length === 0 &&
-          state.objects.every((object) => !object.alive || object.storage === 'heap') &&
-          state.scopes.length === 0 &&
-          state.allocator.liveBytes ===
-            state.objects
-              .filter((object) => object.alive)
-              .reduce((sum, object) => sum + object.byteLength, 0),
-      );
-    else advancedAssert(result.terminal.returnValue === null);
-    guard();
-    return result;
   } catch (error) {
     if (error instanceof Error && /^E_[A-Z_]+$/.test(error.message)) throw error;
     throw new Error('E_PROTOCOL_INVALID', { cause: error });
   }
+}
+
+/** Validate a decoded packet after the caller's bounded JSON preflight. */
+export async function validateAdvancedPacket(
+  result: AdvancedResult,
+  request: AdvancedRequest,
+  buildId: string,
+  guard: () => void,
+  course = false,
+): Promise<AdvancedResult> {
+  let sinceYield = performance.now();
+  // Parsed records are private until this decode finishes. Projection uses
+  // copy-on-write, so a record already checked in this decode never changes.
+  // Keep the cache local: callers may mutate a previously returned packet.
+  const cache: ValidationCache = {
+    records: new WeakMap(),
+    singletons: new WeakMap(),
+    tables: new WeakMap(),
+  };
+  keys(result, [
+    'execVersion',
+    'dslVersion',
+    'diagnosticVersion',
+    'integerEncoding',
+    'language',
+    'engine',
+    'identity',
+    'nodeMap',
+    'types',
+    'trace',
+    'terminal',
+    'stats',
+  ]);
+  advancedAssert(
+    result.execVersion === '1.4.0' &&
+      result.dslVersion === '1.3.0' &&
+      result.diagnosticVersion === '1.3.0' &&
+      result.integerEncoding === '1.0.0' &&
+      result.language === request.language,
+  );
+  const types =
+    result.trace === null && Array.isArray(result.types) && result.types.length === 0
+      ? new Map<string, AdvancedType>()
+      : validateTypes(result.types);
+  keys(result.engine, ['id', 'version', 'buildId']);
+  advancedAssert(
+    result.engine.id === 'engine.rust.advanced' &&
+      result.engine.version === '0.1.0' &&
+      result.engine.buildId === buildId,
+  );
+  keys(result.identity, ['runId', 'sourceRevision']);
+  advancedAssert(
+    result.identity.runId === request.runId &&
+      result.identity.sourceRevision === request.sourceRevision,
+  );
+  const boundaries = new Set<number>([0]);
+  let bytes = 0;
+  let previousWasCR = false;
+  for (const scalar of request.source) {
+    if (previousWasCR && scalar === '\n') boundaries.delete(bytes);
+    bytes += size(scalar);
+    boundaries.add(bytes);
+    previousWasCR = scalar === '\r';
+  }
+  const range = (value: unknown) => {
+    keys(value, ['start', 'end']);
+    advancedAssert(
+      uint(value.start) &&
+        uint(value.end) &&
+        value.start <= value.end &&
+        boundaries.has(value.start) &&
+        boundaries.has(value.end),
+    );
+  };
+  advancedAssert(Array.isArray(result.nodeMap) && result.nodeMap.length <= 32768);
+  const nodes = new Map<string, AdvancedNode>();
+  for (const [index, node] of result.nodeMap.entries()) {
+    keys(node, ['nodeId', 'kind', 'byteRange']);
+    advancedAssert(
+      node.nodeId === `n${index + 1}` &&
+        (nodeKinds.includes(node.kind) || (course && node.kind === 'do-while')),
+    );
+    range(node.byteRange);
+    nodes.set(node.nodeId, node);
+  }
+  keys(result.terminal, ['status', 'code', 'byteRange', 'cursor', 'returnValue']);
+  advancedAssert(['completed', 'error', 'limited', 'cancelled'].includes(result.terminal.status));
+  advancedAssert(result.terminal.code === null || errorCodes.includes(result.terminal.code));
+  if (result.terminal.byteRange !== null) range(result.terminal.byteRange);
+  advancedAssert(uint(result.terminal.cursor) && nullableInt(result.terminal.returnValue));
+  advancedAssert((result.terminal.status === 'completed') === (result.terminal.code === null));
+  advancedAssert(
+    (result.terminal.status === 'cancelled') === (result.terminal.code === 'E_CANCELLED'),
+  );
+  const limited =
+    result.terminal.code !== null &&
+    (result.terminal.code.endsWith('_LIMIT') || result.terminal.code === 'E_DEADLINE');
+  advancedAssert((result.terminal.status === 'limited') === limited);
+  if (result.terminal.status === 'completed') advancedAssert(result.terminal.byteRange === null);
+  keys(result.stats, ['fuelUsed']);
+  advancedAssert(uint(result.stats.fuelUsed) && result.stats.fuelUsed <= 1000000);
+  advancedAssert(result.terminal.status !== 'cancelled' && result.terminal.code !== 'E_DEADLINE');
+  if (result.trace === null) {
+    advancedAssert(result.terminal.status !== 'completed' && result.terminal.cursor === 0);
+    return result;
+  }
+  const trace = result.trace;
+  keys(trace, ['dslVersion', 'completeness', 'initialState', 'steps', 'checkpoints']);
+  advancedAssert(
+    trace.dslVersion === '1.3.0' &&
+      trace.completeness === (result.terminal.status === 'completed' ? 'complete' : 'prefix'),
+  );
+  advancedAssert(
+    Array.isArray(trace.steps) &&
+      trace.steps.length <= 20000 &&
+      result.terminal.cursor === trace.steps.length &&
+      Array.isArray(trace.checkpoints),
+  );
+  advancedAssert(trace.checkpoints.length === Math.floor(trace.steps.length / 128) + 1);
+  validateState(trace.initialState, nodes, request.input.values.length, types, cache);
+  advancedAssert(
+    trace.initialState.frames.length === 0 &&
+      trace.initialState.scopes.length === 0 &&
+      trace.initialState.objects.length === 0 &&
+      trace.initialState.output === '' &&
+      trace.initialState.control.inputCursor === 0 &&
+      trace.initialState.control.returnValue === null &&
+      equal(trace.initialState.counters, {
+        comparisons: 0,
+        scalarWrites: 0,
+        arrayWrites: 0,
+        swaps: 0,
+      }) &&
+      equal(trace.initialState.allocator, {
+        nextAddress: 4096,
+        liveBytes: 0,
+        nextObject: 1,
+        nextScope: 1,
+        nextFrame: 1,
+      }),
+  );
+  let state = trace.initialState;
+  for (let cursor = 0; cursor <= trace.steps.length; cursor++) {
+    if (cursor % 128 === 0) {
+      const checkpoint = trace.checkpoints[cursor / 128];
+      keys(checkpoint, ['cursor', 'state']);
+      advancedAssert(checkpoint.cursor === cursor && equal(checkpoint.state, state));
+    }
+    if (cursor === trace.steps.length) break;
+    if (cursor % 32 === 0) {
+      guard();
+      if (performance.now() - sinceYield >= 6) {
+        await yieldAdvancedTask();
+        guard();
+        sinceYield = performance.now();
+      }
+    }
+    const step = trace.steps[cursor];
+    keys(step, ['seq', 'kind', 'nodeId', 'changes']);
+    advancedAssert(
+      step.seq === cursor + 1 &&
+        stepKinds.includes(step.kind) &&
+        nodes.has(step.nodeId) &&
+        Array.isArray(step.changes),
+    );
+    const records = new Set<string>();
+    const cells = new Map<string, Set<number>>();
+    const singletons = new Set<string>();
+    for (const change of step.changes) {
+      validateChange(change, nodes, request.input.values.length, types, cache);
+      // A producer diff has one final change per target. Disallow hidden
+      // intermediate writes which could otherwise disappear before state
+      // provenance validation, including record/cell overlap on one object.
+      if (change.op === 'record') {
+        const key = `${change.table}:${change.id}`;
+        advancedAssert(!records.has(key));
+        advancedAssert(change.table !== 'objects' || !cells.has(change.id));
+        records.add(key);
+      } else if (change.op === 'cell') {
+        const offsets = cells.get(change.objectId) ?? new Set<number>();
+        advancedAssert(
+          !offsets.has(change.byteOffset) && !records.has(`objects:${change.objectId}`),
+        );
+        offsets.add(change.byteOffset);
+        cells.set(change.objectId, offsets);
+      } else {
+        advancedAssert(!singletons.has(change.op));
+        singletons.add(change.op);
+      }
+    }
+    const next = projectStep(state, step, types, false, !course);
+    validateState(next, nodes, request.input.values.length, types, cache);
+    const count = next.frames.length - state.frames.length;
+    advancedAssert(
+      count ===
+        (['program.enter', 'function.enter'].includes(step.kind)
+          ? 1
+          : ['program.return', 'function.return'].includes(step.kind)
+            ? -1
+            : 0),
+    );
+    if (step.kind === 'program.enter')
+      advancedAssert(state.frames.length === 0 && next.frames[0].functionName === 'main');
+    if (step.kind === 'program.return') advancedAssert(next.frames.length === 0);
+    for (const key of ['nextAddress', 'nextObject', 'nextScope', 'nextFrame'] as const)
+      advancedAssert(next.allocator[key] >= state.allocator[key]);
+    for (const key of ['comparisons', 'scalarWrites', 'arrayWrites', 'swaps'] as const)
+      advancedAssert(next.counters[key] >= state.counters[key]);
+    advancedAssert(next.control.inputCursor >= state.control.inputCursor);
+    advancedAssert(equal(projectStep(next, step, types, true, !course), state));
+    state = next;
+  }
+  if (result.terminal.status === 'completed')
+    advancedAssert(
+      result.terminal.returnValue === state.control.returnValue &&
+        state.frames.length === 0 &&
+        state.objects.every((object) => !object.alive || object.storage === 'heap') &&
+        state.scopes.length === 0 &&
+        state.allocator.liveBytes ===
+          state.objects
+            .filter((object) => object.alive)
+            .reduce((sum, object) => sum + object.byteLength, 0),
+    );
+  else advancedAssert(result.terminal.returnValue === null);
+  guard();
+  return result;
 }

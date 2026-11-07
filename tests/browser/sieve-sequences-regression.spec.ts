@@ -26,7 +26,7 @@ for (const id of caseSetIds) {
       db.close();
       return value;
     });
-    expect(storage.version).toBe(12);
+    expect(storage.version).toBe(13);
     expect(storage.stores).toEqual([
       'achievements',
       'aliases',
@@ -35,6 +35,8 @@ for (const id of caseSetIds) {
       'avatar',
       'courseActivities',
       'courseDrafts',
+      'cppActivities',
+      'cppDrafts',
       'customDrafts',
       'dailyFacts',
       'editHistory',

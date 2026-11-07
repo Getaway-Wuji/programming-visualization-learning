@@ -23,7 +23,7 @@ export default function JavaReviewPage() {
     () => service.readJavaCourse(state.sessionEpoch),
     [service, state.sessionEpoch],
   );
-  const ready = state.snapshot?.meta.dbVersion === 12 && state.recovery?.writable !== false;
+  const ready = (state.snapshot?.meta.dbVersion ?? 0) >= 12 && state.recovery?.writable !== false;
   const { value, failed, retry } = useJavaResource(
     ready ? state.snapshot!.meta.revision : -1,
     read,

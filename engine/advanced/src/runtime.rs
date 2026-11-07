@@ -11,6 +11,10 @@ use serde::Serialize;
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 
+#[cfg(feature = "cpp-course")]
+#[path = "course.rs"]
+pub mod course;
+
 pub const EXEC_VERSION: &str = "1.4.0";
 pub const DSL_VERSION: &str = "1.3.0";
 pub const ENGINE_ID: &str = "engine.rust.advanced";
@@ -451,6 +455,15 @@ impl Checker<'_, '_> {
                     return Err(self.err("E_ARGUMENTS", id));
                 }
                 for (arg, param) in args.iter().zip(f.params) {
+                    #[cfg(feature = "cpp-course")]
+                    if param.by_reference {
+                        if !matches!(self.p.nodes[*arg].kind, Kind::Expr(Expr::Name(_)))
+                            || self.target(*arg)? != Ty::Int
+                        {
+                            return Err(self.err("E_TYPE_INVALID", *arg));
+                        }
+                        continue;
+                    }
                     let expected = if param.is_array {
                         Ty::Array(param.type_name.clone())
                     } else {
@@ -559,6 +572,13 @@ impl Checker<'_, '_> {
                 self.loops += 1;
                 self.stmt(body, false)?;
                 self.loops -= 1;
+            }
+            #[cfg(feature = "cpp-course")]
+            Kind::DoWhile { body, condition } => {
+                self.loops += 1;
+                self.stmt(body, false)?;
+                self.loops -= 1;
+                self.scalar(condition)?;
             }
             Kind::For {
                 init,
@@ -807,6 +827,8 @@ struct Recording {
     frame_versions: Vec<usize>,
     scope_versions: Vec<usize>,
     object_versions: Vec<usize>,
+    #[cfg(feature = "cpp-course")]
+    course_limits: Option<course::CaseLimits>,
 }
 impl Recording {
     fn new(
@@ -843,6 +865,8 @@ impl Recording {
             frame_versions: vec![],
             scope_versions: vec![],
             object_versions: vec![],
+            #[cfg(feature = "cpp-course")]
+            course_limits: None,
         })
     }
     fn emit(
@@ -853,7 +877,10 @@ impl Recording {
         meter: &mut Meter,
         range: ByteRange,
     ) -> Result<(), Fault> {
-        if self.steps.len() >= meter.limits().steps {
+        let step_limit = meter.limits().steps;
+        #[cfg(feature = "cpp-course")]
+        let step_limit = self.course_limits.map_or(step_limit, |limits| limits.steps);
+        if self.steps.len() >= step_limit {
             return Err(fault("E_STEP_LIMIT", range));
         }
         meter.check_commit().map_err(|e| budget(e, range))?;
@@ -937,7 +964,12 @@ impl Recording {
             })
             .transpose()?;
         let bytes = step_bytes.len() + 1 + point_bytes.as_ref().map_or(0, |point| point.len() + 1);
-        if self.bytes.saturating_add(bytes) > meter.limits().result_bytes.saturating_sub(65536) {
+        let packet_limit = meter.limits().result_bytes;
+        #[cfg(feature = "cpp-course")]
+        let packet_limit = self
+            .course_limits
+            .map_or(packet_limit, |limits| limits.bytes);
+        if self.bytes.saturating_add(bytes) > packet_limit.saturating_sub(65536) {
             return Err(fault("E_RESULT_LIMIT", range));
         }
         meter
@@ -1013,7 +1045,7 @@ trait Versioned: Serialize {
     fn weight(&self) -> usize {
         1
     }
-    fn cell_update(&self) -> Option<(usize, Value)> {
+    fn cell_update(&self) -> Option<(usize, Option<Value>)> {
         None
     }
 }
@@ -1049,18 +1081,14 @@ impl Versioned for Object {
     fn weight(&self) -> usize {
         1 + self.cells.len()
     }
-    fn cell_update(&self) -> Option<(usize, Value)> {
+    fn cell_update(&self) -> Option<(usize, Option<Value>)> {
         self.last_write.map(|offset| {
             (
                 offset,
-                serde_json::to_value(
-                    &self.cells[self
-                        .cells
-                        .binary_search_by_key(&offset, |c| c.byte_offset)
-                        .unwrap()]
-                    .value,
-                )
-                .unwrap(),
+                self.cells
+                    .binary_search_by_key(&offset, |c| c.byte_offset)
+                    .ok()
+                    .map(|index| serde_json::to_value(&self.cells[index].value).unwrap()),
             )
         })
     }
@@ -1126,6 +1154,7 @@ fn table_changes<T: Versioned>(
                 .charge(1 + cells.len().checked_ilog2().unwrap_or(0) as usize)
                 .map_err(|e| budget(e, range))?;
             let previous = effective(&old[at], index, types);
+            let value = value.unwrap_or_else(|| default_cell(&old[at], index, types));
             if previous != value {
                 changes.push(json!({"op":"cell","objectId":row.id(),"byteOffset":index,"before":previous,"after":value}));
             }
@@ -1353,6 +1382,16 @@ impl Runtime<'_, '_> {
             .map_err(|e| budget(e, self.p.nodes[id].range))
     }
     fn emit(&mut self, id: Id, kind: &str) -> Result<(), Fault> {
+        #[cfg(feature = "cpp-course")]
+        let kind = if self.record.course_limits.is_some() {
+            match kind {
+                "memory.allocate" => "advanced.allocate",
+                "memory.release" => "advanced.release",
+                _ => kind,
+            }
+        } else {
+            kind
+        };
         self.state.control.next_node_id = Some(nid(id));
         let result = self
             .record
@@ -1656,6 +1695,19 @@ impl Runtime<'_, '_> {
         } else {
             self.state.counters.scalar_writes += 1;
         }
+        #[cfg(feature = "cpp-course")]
+        if self.record.course_limits.is_some()
+            && o.zero_initialized
+            && course::default_value(&value)
+        {
+            if let Ok(at) = o
+                .cells
+                .binary_search_by_key(&place.offset, |c| c.byte_offset)
+            {
+                o.cells.remove(at);
+            }
+            return Ok(());
+        }
         match o
             .cells
             .binary_search_by_key(&place.offset, |c| c.byte_offset)
@@ -1917,7 +1969,13 @@ impl Runtime<'_, '_> {
         zero: bool,
         node: Id,
     ) -> Result<usize, Fault> {
-        if self.state.objects.len() >= 4096 {
+        let object_limit = 4096;
+        #[cfg(feature = "cpp-course")]
+        let object_limit = self
+            .record
+            .course_limits
+            .map_or(object_limit, |limits| limits.objects);
+        if self.state.objects.len() >= object_limit {
             return Err(self.err("E_OBJECT_LIMIT", node));
         }
         if heap && self.active_heap >= 128 {
@@ -2026,6 +2084,12 @@ impl Runtime<'_, '_> {
         }
         let mut values = vec![];
         for (arg, param) in args.iter().zip(&f.params) {
+            #[cfg(feature = "cpp-course")]
+            if param.by_reference {
+                let place = self.locate(*arg, false)?;
+                values.push(Argument::Array(self.state.objects[place.object].id.clone()));
+                continue;
+            }
             values.push(if param.is_array {
                 let at = self.array(*arg)?;
                 Argument::Array(self.state.objects[at].id.clone())
@@ -2149,7 +2213,13 @@ impl Runtime<'_, '_> {
     }
     fn output(&mut self, text: String, id: Id) -> Result<(), Fault> {
         self.tick(id, text.len().div_ceil(64))?;
-        if self.state.output.len().saturating_add(text.len()) > self.meter.limits().output_bytes {
+        let output_limit = self.meter.limits().output_bytes;
+        #[cfg(feature = "cpp-course")]
+        let output_limit = self
+            .record
+            .course_limits
+            .map_or(output_limit, |limits| limits.output);
+        if self.state.output.len().saturating_add(text.len()) > output_limit {
             return Err(self.err("E_OUTPUT_LIMIT", id));
         }
         self.state.output.push_str(&text);
@@ -2223,9 +2293,12 @@ impl Runtime<'_, '_> {
                         o.last_write = None;
                         o.zero_initialized = true;
                         let size = self.size(&type_name);
-                        self.state.objects[object].cells = values
-                            .into_iter()
-                            .enumerate()
+                        let cells = values.into_iter().enumerate();
+                        #[cfg(feature = "cpp-course")]
+                        let cells = cells.filter(|(_, value)| {
+                            self.record.course_limits.is_none() || !course::default_value(value)
+                        });
+                        self.state.objects[object].cells = cells
                             .map(|(i, value)| Cell {
                                 byte_offset: i * size,
                                 value,
@@ -2404,6 +2477,19 @@ impl Runtime<'_, '_> {
                     Flow::Return(v, n) => return Ok(Flow::Return(v, n)),
                     Flow::Break => break,
                     _ => {}
+                }
+            },
+            #[cfg(feature = "cpp-course")]
+            Kind::DoWhile { body, condition } => loop {
+                match self.stmt(body)? {
+                    Flow::Return(v, n) => return Ok(Flow::Return(v, n)),
+                    Flow::Break => break,
+                    Flow::Continue | Flow::Next => {}
+                }
+                let value = self.eval(condition)?;
+                self.emit(condition, "condition")?;
+                if !value.truth() {
+                    break;
                 }
             },
             Kind::For {

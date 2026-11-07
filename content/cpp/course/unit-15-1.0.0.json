@@ -1,0 +1,650 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 15,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-15",
+      "title": "程序调试",
+      "number": "第15章",
+      "parent": "cpp.book.part-3",
+      "depth": 2,
+      "order": 296,
+      "printedPage": 327,
+      "leaf": false,
+      "group": 15,
+      "body": [
+        "先用最小输入复现，再在第一次状态分歧处检查条件、变量和栈。用回放把失败位置与具体源码修订关联。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.15-1",
+      "title": "选择正确的调试方法",
+      "number": "15.1",
+      "parent": "cpp.book.chapter-15",
+      "depth": 3,
+      "order": 297,
+      "printedPage": 328,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "选择调试方法前先复现故障并缩小输入。断点、日志和断言分别适合控制流、历史事件和不变量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "排序遗漏尾项时，用三元素输入并记录每一轮处理区间。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "先随机改几行再观察是否好转有什么问题？",
+        "answer": "改动可能掩盖症状，无法确认真正原因。"
+      }
+    },
+    {
+      "id": "cpp.book.15-2",
+      "title": "程序错误常见的4种类型",
+      "number": "15.2",
+      "parent": "cpp.book.chapter-15",
+      "depth": 3,
+      "order": 298,
+      "printedPage": 328,
+      "leaf": false,
+      "group": 15,
+      "body": [
+        "根据失败发生于解析、链接、执行或结果核对，分别选择日志、断点或输入对照。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.15-2-1",
+      "title": "语法错误",
+      "number": "15.2.1",
+      "parent": "cpp.book.15-2",
+      "depth": 4,
+      "order": 299,
+      "printedPage": 328,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "语法错误表示编译器无法按语言规则解析代码。首条准确诊断常比后续连锁报错更有用。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "漏掉上一句分号时，报错位置可能落在下一句开头。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "应先只改报错的那个词吗？",
+        "answer": "先检查诊断附近及上一语句的边界。"
+      }
+    },
+    {
+      "id": "cpp.book.15-2-2",
+      "title": "连接错误",
+      "number": "15.2.2",
+      "parent": "cpp.book.15-2",
+      "depth": 4,
+      "order": 300,
+      "printedPage": 329,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "连接错误通常表示目标文件和库之间缺少定义，或重复提供定义。编译阶段可能已成功。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "调用声明过的 `readCount()`，但目标未包含其实现。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "最直接的证据是什么？",
+        "answer": "链接诊断中的未解析符号和构建目标文件列表。"
+      }
+    },
+    {
+      "id": "cpp.book.15-2-3",
+      "title": "运行时错误",
+      "number": "15.2.3",
+      "parent": "cpp.book.15-2",
+      "depth": 4,
+      "order": 301,
+      "printedPage": 329,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "运行时错误在执行特定路径时发生。保存触发输入及故障前状态才能复现。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "读数组的第 3 个下标却只有 3 个元素，会触发越界。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "输入哪个边界最容易复现？",
+        "answer": "合法下标尾后一格，即索引 3。"
+      }
+    },
+    {
+      "id": "cpp.book.15-2-4",
+      "title": "逻辑错误",
+      "number": "15.2.4",
+      "parent": "cpp.book.15-2",
+      "depth": 4,
+      "order": 302,
+      "printedPage": 330,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "逻辑错误表示程序正常结束却得到错误结果。对照独立预期，找第一次状态分歧。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "平均值程序把数量从 1 开始计，导致分母大一。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "怎样区分求和错还是计数错？",
+        "answer": "分别观察累计和与元素计数，再比较结果。"
+      }
+    },
+    {
+      "id": "cpp.book.15-3",
+      "title": "调试工具的使用",
+      "number": "15.3",
+      "parent": "cpp.book.chapter-15",
+      "depth": 3,
+      "order": 303,
+      "printedPage": 330,
+      "leaf": false,
+      "group": 15,
+      "body": [
+        "各调试窗口观察不同视角。程序现有状态从变量与栈读取，底层实现再看地址、寄存器和反汇编。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.15-3-1",
+      "title": "创建调试程序",
+      "number": "15.3.1",
+      "parent": "cpp.book.15-3",
+      "depth": 4,
+      "order": 304,
+      "printedPage": 331,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "调试构建通常保留符号，并减少会改变源码与机器步骤对应的优化。发布配置仍需单独测试。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "函数被内联时，调试器可能无法按原始调用顺序单步。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "调试构建通过能替代发布构建验证吗？",
+        "answer": "不能。配置和优化会影响行为暴露方式。"
+      }
+    },
+    {
+      "id": "cpp.book.15-3-2",
+      "title": "进入调试状态",
+      "number": "15.3.2",
+      "parent": "cpp.book.15-3",
+      "depth": 4,
+      "order": 305,
+      "printedPage": 332,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "进入调试可从入口启动或在断点暂停。先确认运行的是当前生成物。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "修改源文件后重新构建，停在首条可执行语句，再检查输入。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "断点无法绑定时先查什么？",
+        "answer": "检查当前二进制、符号以及目标行是否有可执行代码。"
+      }
+    },
+    {
+      "id": "cpp.book.15-3-3",
+      "title": "Watch窗口",
+      "number": "15.3.3",
+      "parent": "cpp.book.15-3",
+      "depth": 4,
+      "order": 306,
+      "printedPage": 332,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "Watch 窗口反复显示表达式。观察应优先用无副作用表达式，避免影响原程序。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "查看 `total+fee` 可观察组合值，不修改变量。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不在观察表达式中写 `i++`？",
+        "answer": "求值可能改变 i，干扰调试对象。"
+      }
+    },
+    {
+      "id": "cpp.book.15-3-4",
+      "title": "Call Stack窗口",
+      "number": "15.3.4",
+      "parent": "cpp.book.15-3",
+      "depth": 4,
+      "order": 307,
+      "printedPage": 332,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "调用栈列出当前和调用者的帧。递归会出现多个同名函数帧，参数值各不相同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "递归深度三时，当前帧可接收 1，上两层分别接收 2、3。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "在上一帧看局部值是否相同？",
+        "answer": "同名变量属于不同帧，值可不同。"
+      }
+    },
+    {
+      "id": "cpp.book.15-3-5",
+      "title": "Memory窗口",
+      "number": "15.3.5",
+      "parent": "cpp.book.15-3",
+      "depth": 4,
+      "order": 308,
+      "printedPage": 333,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "内存窗口显示对象附近的存储。解读前先确定对象地址、大小、类型和有效期。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "两个 4 字节整数的槽起点相隔 4 个字节。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "平台虚拟地址能复制到宿主调试器解引用吗？",
+        "answer": "不能。它只是解释器内的教学编号。"
+      }
+    },
+    {
+      "id": "cpp.book.15-3-6",
+      "title": "Variables窗口",
+      "number": "15.3.6",
+      "parent": "cpp.book.15-3",
+      "depth": 4,
+      "order": 309,
+      "printedPage": 333,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "变量窗口显示当前帧和作用域中的名字和值。选错帧会看到另一份同名变量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "函数退出后，它的局部变量不再是活动绑定，回放可回到退出之前观察。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "回放中的旧绑定等于当前还活着吗？",
+        "answer": "不等于。它属于选定的历史游标。"
+      }
+    },
+    {
+      "id": "cpp.book.15-3-7",
+      "title": "Registers窗口",
+      "number": "15.3.7",
+      "parent": "cpp.book.15-3",
+      "depth": 4,
+      "order": 310,
+      "printedPage": 333,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "寄存器窗口显示真实目标处理器状态，依赖体系结构及调用约定。教学解释器提供虚拟状态。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "桌面调试器可观察程序计数器，工作台用步骤游标指示执行位置。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两种位置编号能直接比较吗？",
+        "answer": "不能，一个是机器状态，一个是解释器轨迹位置。"
+      }
+    },
+    {
+      "id": "cpp.book.15-3-8",
+      "title": "Disassembly窗口",
+      "number": "15.3.8",
+      "parent": "cpp.book.15-3",
+      "depth": 4,
+      "order": 311,
+      "printedPage": 334,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "反汇编窗口把机器指令译成汇编文本。源码行与机器指令可能一对多或被优化重排。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "一条循环语句可能对应比较、条件跳转和计数更新等多条指令。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么一个源码断点可能落到相邻行？",
+        "answer": "调试信息只在有可执行机器位置处提供映射。"
+      }
+    },
+    {
+      "id": "cpp.book.15-4",
+      "title": "调试的基本应用",
+      "number": "15.4",
+      "parent": "cpp.book.chapter-15",
+      "depth": 3,
+      "order": 312,
+      "printedPage": 334,
+      "leaf": false,
+      "group": 15,
+      "body": [
+        "用源码位置找到停点，再观察当前值。将位置条件与“特定数据被写入”的触发条件区分开来。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.15-4-1",
+      "title": "变量的跟踪与查看",
+      "number": "15.4.1",
+      "parent": "cpp.book.15-4",
+      "depth": 4,
+      "order": 313,
+      "printedPage": 334,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "把表达式拆成有名字的中间值，能在对应源码步骤观察变量。两次更新可独立判断哪里偏离预期。",
+        "改动代码后，重新运行再观察，旧步骤对应的是先前源码。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 3，afterAdd 为 5，afterScale 为 15。沿轨迹后退可重新看到赋值前状态。",
+        "source": "#include <iostream>\nint main(){ int n=0; std::cin >> n; int afterAdd=n+2; int afterScale=afterAdd*3; std::cout << afterScale << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "15\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                3
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "0\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -2
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "-3\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -3
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "3003\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                999
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.15-4-1.exercise",
+        "prompt": "输入 n，保存两次中间状态。第一步把 n 加 2，第二步把结果乘 3。输出最后的状态，并在回放中核对两个赋值。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "改动代码后，重新运行再观察，旧步骤对应的是先前源码。"
+      }
+    },
+    {
+      "id": "cpp.book.15-4-2",
+      "title": "位置断点的使用",
+      "number": "15.4.2",
+      "parent": "cpp.book.15-4",
+      "depth": 4,
+      "order": 314,
+      "printedPage": 335,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "位置断点在指定源码位置暂停。循环中同一位置可能在多轮被触发。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "把断点设在累加语句，依次查看三轮的 i 与 total。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "改码后还能使用原字节位置吗？",
+        "answer": "需要重新匹配新源码修订对应的位置。"
+      }
+    },
+    {
+      "id": "cpp.book.15-4-3",
+      "title": "数据断点的使用",
+      "number": "15.4.3",
+      "parent": "cpp.book.15-4",
+      "depth": 4,
+      "order": 315,
+      "printedPage": 337,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "数据断点用于在某个对象或地址被改写时暂停。它依赖对象仍有效、底层环境支持。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "当 total 异常变小，可让桌面调试器在写 total 时停下。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "对已结束生命周期的对象继续监视有什么问题？",
+        "answer": "原位置可能已无原对象或被重新使用。"
+      }
+    },
+    {
+      "id": "cpp.book.15-5",
+      "title": "调试的高级应用",
+      "number": "15.5",
+      "parent": "cpp.book.chapter-15",
+      "depth": 3,
+      "order": 316,
+      "printedPage": 338,
+      "leaf": false,
+      "group": 15,
+      "body": [
+        "用临时值与条件断点验证具体假设。回到未经修改的原始输入复测，才能确认实际修复。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.15-5-1",
+      "title": "在调试时修改变量的值",
+      "number": "15.5.1",
+      "parent": "cpp.book.15-5",
+      "depth": 4,
+      "order": 317,
+      "printedPage": 338,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "调试器临时改值可以检验一个假设，但会产生与原始输入不同的状态。记录改动并重新以原输入验证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "把计数临时设为边界值，观察分支是否会触发。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "临时改值后通过能证明原程序正确吗？",
+        "answer": "不能，仍要用原程序和真实输入复测。"
+      }
+    },
+    {
+      "id": "cpp.book.15-5-2",
+      "title": "在循环中调试",
+      "number": "15.5.2",
+      "parent": "cpp.book.15-5",
+      "depth": 4,
+      "order": 318,
+      "printedPage": 339,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "循环调试应选择首次进入、最后一次合法迭代和退出时刻。长循环可用条件断点缩小观察范围。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "只在 `i==n-1` 时停下，核查最后一个元素是否处理。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何也要看退出之后的 i？",
+        "answer": "可区分退出条件正确与最后一轮漏处理。"
+      }
+    },
+    {
+      "id": "cpp.book.15-6",
+      "title": "小结",
+      "number": "15.6",
+      "parent": "cpp.book.chapter-15",
+      "depth": 3,
+      "order": 319,
+      "printedPage": 340,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "先按故障类别选择观察位置，再记录输入、源码修订和第一处异常状态。修复后同时重测触发输入与邻近边界。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "溢出问题修复后测最大合法结果与超限结果，分别验证成功和诊断。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么只测之前失败的一组不够？",
+        "answer": "修复可能破坏相邻的合法输入。"
+      }
+    },
+    {
+      "id": "cpp.book.15-7",
+      "title": "实践与练习",
+      "number": "15.7",
+      "parent": "cpp.book.chapter-15",
+      "depth": 3,
+      "order": 320,
+      "printedPage": 340,
+      "leaf": true,
+      "group": 15,
+      "body": [
+        "调试排序时用小序列逐轮标记已确定的前缀。错误可从未保持的不变量回溯。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。此处用纸面状态说明调试工具及其边界。",
+        "description": "输入 3、1、2，第一次选最小值后前缀应为 1。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果第一次把 2 放在首位，先看哪部分？",
+        "answer": "查看扫描范围、比较方向及最小位置更新。"
+      }
+    }
+  ]
+}

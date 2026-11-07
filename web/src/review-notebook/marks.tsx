@@ -79,7 +79,7 @@ export class KnowledgeMarksController {
     };
     const java = { ...python, packageRef: javaPackageRef };
     const validPython = (state.snapshot?.meta.dbVersion ?? 0) >= 11 && isPythonMark(python);
-    const validJava = state.snapshot?.meta.dbVersion === 12 && isJavaMark(java);
+    const validJava = (state.snapshot?.meta.dbVersion ?? 0) >= 12 && isJavaMark(java);
     if (
       !context ||
       (!validPython && !validJava && !c6Lesson && (!reading || !lesson || !knowledge))

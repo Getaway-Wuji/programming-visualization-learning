@@ -562,7 +562,7 @@ function Editor({
 function Session({ target }: { target: Target }) {
   const { service, state } = useLearning();
   const readDrafts = useCallback((epoch: number) => service.readJavaCourse(epoch), [service]);
-  const ready = state.snapshot?.meta.dbVersion === 12 && state.recovery?.writable !== false;
+  const ready = (state.snapshot?.meta.dbVersion ?? 0) >= 12 && state.recovery?.writable !== false;
   const epoch = state.sessionEpoch;
   const { value, failed, retry } = useJavaResource(
     ready && !target.example ? epoch : -1,

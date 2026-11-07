@@ -1,0 +1,503 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 12,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-12",
+      "title": "模板",
+      "number": "第12章",
+      "parent": "cpp.book.part-3",
+      "depth": 2,
+      "order": 239,
+      "printedPage": 247,
+      "leaf": false,
+      "group": 12,
+      "body": [
+        "从一个可比较的类型开始定义模板，再换一种满足要求的类型，最后试不满足约束的反例。比较全特化、部分特化和通用实例。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.12-1",
+      "title": "函数模板",
+      "number": "12.1",
+      "parent": "cpp.book.chapter-12",
+      "depth": 3,
+      "order": 240,
+      "printedPage": 248,
+      "leaf": false,
+      "group": 12,
+      "body": [
+        "从可以通用化的算法找出变化的类型，再写参数和约束。重载时逐个检查候选是否可用。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.12-1-1",
+      "title": "函数模板的定义",
+      "number": "12.1.1",
+      "parent": "cpp.book.12-1",
+      "depth": 4,
+      "order": 241,
+      "printedPage": 248,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "函数模板按类型或值参数生成函数。模板体应说明操作对参数提出的要求。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "`template<class T> T larger(T a,T b){ return a<b?b:a; }` 要求 T 支持小于比较。",
+        "source": "#include <iostream>\ntemplate<class T> T larger(T a, T b) { return a < b ? b : a; }\nint main() {\n    std::cout << larger(2, 7) << \" \" << larger(1.5, 0.5) << std::endl;\n}\n",
+        "result": "无输入，输出 `7 1.5`。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "参数类型不能比较会在何时出错？",
+        "answer": "在使用该类型实例化模板时会暴露。"
+      }
+    },
+    {
+      "id": "cpp.book.12-1-2",
+      "title": "函数模板的作用",
+      "number": "12.1.2",
+      "parent": "cpp.book.12-1",
+      "depth": 4,
+      "order": 242,
+      "printedPage": 249,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "函数模板减少只差类型的重复实现。适用范围仍由模板体真正使用的操作决定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "一个交换模板可适用于多种可移动类型。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "任意不可移动对象也能使用同一模板吗？",
+        "answer": "只有在类型满足所选实现的复制或移动要求时才可以。"
+      }
+    },
+    {
+      "id": "cpp.book.12-1-3",
+      "title": "重载函数模板",
+      "number": "12.1.3",
+      "parent": "cpp.book.12-1",
+      "depth": 4,
+      "order": 243,
+      "printedPage": 251,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "函数模板可以重载。调用时比较可用候选与转换，若几个同样合适则可能歧义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "分别提供单参数和双参数模板，调用参数个数可先排除一组。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "同名模板定义顺序能解决候选歧义吗？",
+        "answer": "通常不能。应改变签名或明确提供选择依据。"
+      }
+    },
+    {
+      "id": "cpp.book.12-2",
+      "title": "类模板",
+      "number": "12.2",
+      "parent": "cpp.book.chapter-12",
+      "depth": 3,
+      "order": 244,
+      "printedPage": 252,
+      "leaf": false,
+      "group": 12,
+      "body": [
+        "用类模板组织一组相关类型。容量参数、默认类型和成员要求都应随具体实例记录。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.12-2-1",
+      "title": "类模板的定义与声明",
+      "number": "12.2.1",
+      "parent": "cpp.book.12-2",
+      "depth": 4,
+      "order": 245,
+      "printedPage": 252,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "类模板声明一族类型。具体模板实参决定字段类型、成员函数和生成的独立类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "`Box<int>` 与 `Box<double>` 是不同实例类型。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "这两种 Box 可直接互相赋值吗？",
+        "answer": "除非模板额外提供转换，否则不能。"
+      }
+    },
+    {
+      "id": "cpp.book.12-2-2",
+      "title": "简单类模板",
+      "number": "12.2.2",
+      "parent": "cpp.book.12-2",
+      "depth": 4,
+      "order": 246,
+      "printedPage": 254,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "简单类模板可把保存、取出、更新等操作与元素类型分离。先明确空值及默认构造的约束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "为 `Box<int>` 保存 7，为 `Box<char>` 保存 A，两者共享方法结构。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "类模板中的所有成员都必须对每种类型有效吗？",
+        "answer": "已使用并实例化的成员必须满足要求，未用成员可能不会实例化。"
+      }
+    },
+    {
+      "id": "cpp.book.12-2-3",
+      "title": "默认模板参数",
+      "number": "12.2.3",
+      "parent": "cpp.book.12-2",
+      "depth": 4,
+      "order": 247,
+      "printedPage": 255,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "默认模板参数让常见情形省略部分类型。调用者仍可显式覆盖默认项。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "`template<class T, int N=4>` 中 `Buffer<int>` 使用容量 4。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`Buffer<int,8>` 的容量是什么？",
+        "answer": "显式参数 8 覆盖了默认值。"
+      }
+    },
+    {
+      "id": "cpp.book.12-2-4",
+      "title": "为具体类型的参数提供默认值",
+      "number": "12.2.4",
+      "parent": "cpp.book.12-2",
+      "depth": 4,
+      "order": 248,
+      "printedPage": 255,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "默认类型参数可以依赖先前模板参数，使默认配置随元素类型变化。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "`template<class T, class Compare=std::less<T>>` 默认按 T 的通常顺序比较。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "要降序比较应该怎样做？",
+        "answer": "传入另一个兼容比较器类型。"
+      }
+    },
+    {
+      "id": "cpp.book.12-2-5",
+      "title": "有界数组模板",
+      "number": "12.2.5",
+      "parent": "cpp.book.12-2",
+      "depth": 4,
+      "order": 249,
+      "printedPage": 256,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "用非类型模板参数表示编译期容量，可以把长度纳入类型。下标的运行期边界仍需检查。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "`Buffer<int,3>` 与 `Buffer<int,5>` 的容量不同，前者可访问 0、1、2。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "容量由类型编码是否意味着任何下标都合法？",
+        "answer": "不是。仍需限制实际下标。"
+      }
+    },
+    {
+      "id": "cpp.book.12-3",
+      "title": "模板的使用",
+      "number": "12.3",
+      "parent": "cpp.book.chapter-12",
+      "depth": 3,
+      "order": 250,
+      "printedPage": 258,
+      "leaf": false,
+      "group": 12,
+      "body": [
+        "先判断通用定义能否满足使用，再选择为精确类型或一类实参提供特化。检查匹配结果是否唯一。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.12-3-1",
+      "title": "定制类模板",
+      "number": "12.3.1",
+      "parent": "cpp.book.12-3",
+      "depth": 4,
+      "order": 251,
+      "printedPage": 258,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "全特化给一组精确实参提供专用实现。它可改变数据布局和操作，但应保持预期接口。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "为 `Box<bool>` 采用单个位的紧凑表示。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "该特化会改变 `Box<int>` 吗？",
+        "answer": "不会，它只匹配明确指定的参数。"
+      }
+    },
+    {
+      "id": "cpp.book.12-3-2",
+      "title": "定制类模板成员函数",
+      "number": "12.3.2",
+      "parent": "cpp.book.12-3",
+      "depth": 4,
+      "order": 252,
+      "printedPage": 260,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "类模板的成员函数可针对确定的模板参数提供专用实现。声明和定义需准确匹配。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "只为整数显示函数增加固定宽度输出，其余元素沿通用格式。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能用不同参数个数定义同一个成员的特化吗？",
+        "answer": "不能，参数列表要对应被特化的成员。"
+      }
+    },
+    {
+      "id": "cpp.book.12-3-3",
+      "title": "模板部分定制",
+      "number": "12.3.3",
+      "parent": "cpp.book.12-3",
+      "depth": 4,
+      "order": 253,
+      "printedPage": 261,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "部分特化匹配一类实参，例如全部指针类型。编译器会选择匹配且更具体的版本。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "`Box<T*>` 可为任意指针提供是否为空的操作。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`Box<int>` 会进入该特化吗？",
+        "answer": "不会，`int` 不是指针类型。"
+      }
+    },
+    {
+      "id": "cpp.book.12-4",
+      "title": "链表类模板",
+      "number": "12.4",
+      "parent": "cpp.book.chapter-12",
+      "depth": 3,
+      "order": 254,
+      "printedPage": 262,
+      "leaf": false,
+      "group": 12,
+      "body": [
+        "用小链表演算插入、删除和释放，再把元素类型参数化。区分单个列表状态与实例类型的静态成员。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.12-4-1",
+      "title": "链表",
+      "number": "12.4.1",
+      "parent": "cpp.book.12-4",
+      "depth": 4,
+      "order": 255,
+      "printedPage": 263,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "链表的连接由节点内的链接维护。插入或删除时先保存仍要使用的下一节点。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "在 A 与 C 中间插 B，先设 B.next=C，再让 A.next=B。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若先改 A.next 且没有保存 C 会怎样？",
+        "answer": "可能丢失从 A 到原后继链的连接。"
+      }
+    },
+    {
+      "id": "cpp.book.12-4-2",
+      "title": "链表类模板",
+      "number": "12.4.2",
+      "parent": "cpp.book.12-4",
+      "depth": 4,
+      "order": 256,
+      "printedPage": 265,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "链表类模板让节点保存通用元素。链表本身负责节点的所有权和生命周期。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "`List<int>` 与 `List<string>` 共用插入逻辑，元素值类型不同。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删除节点后迭代器还能访问它吗？",
+        "answer": "指向被删节点的迭代器已经失效。"
+      }
+    },
+    {
+      "id": "cpp.book.12-4-3",
+      "title": "类模板的静态数据成员",
+      "number": "12.4.3",
+      "parent": "cpp.book.12-4",
+      "depth": 4,
+      "order": 257,
+      "printedPage": 267,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "类模板的静态数据通常按具体实例类型分别拥有。它可统计某一类型的实例，但不会自动合计所有类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "两个 `List<int>` 和一个 `List<double>` 分别更新各自的计数。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "整数列表计数会包含 double 列表吗？",
+        "answer": "不会，它们是不同的实例类型。"
+      }
+    },
+    {
+      "id": "cpp.book.12-5",
+      "title": "小结",
+      "number": "12.5",
+      "parent": "cpp.book.chapter-12",
+      "depth": 3,
+      "order": 258,
+      "printedPage": 269,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "设计模板先记录类型要求，再测试正常类型和故意不满足要求的类型。实例化能帮助确认错误发生位置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "比较模板先测整数和字符串，再测没有比较操作的记录。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如何知道错误是模板约束还是算法行为？",
+        "answer": "先确认能实例化，再用输入测试结果。"
+      }
+    },
+    {
+      "id": "cpp.book.12-6",
+      "title": "实践与练习",
+      "number": "12.6",
+      "parent": "cpp.book.chapter-12",
+      "depth": 3,
+      "order": 259,
+      "printedPage": 269,
+      "leaf": true,
+      "group": 12,
+      "body": [
+        "写最大值模板时说明何种值顺序可以比较，以及相等时保留谁。测试整数与字符串可区分只适用数值的实现。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "按词典顺序比较 `bee` 和 `ant`，结果为 `bee`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若模板使用减法比较，会影响哪类输入？",
+        "answer": "字符串没有通用减法，实例化会失败。"
+      }
+    }
+  ]
+}

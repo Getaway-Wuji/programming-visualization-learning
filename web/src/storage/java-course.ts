@@ -1,5 +1,7 @@
 import { courseTransaction, type CourseState, type CourseRecipe } from './c6-course';
 import { assertJavaMeta, JAVA_DB_VERSION, JAVA_STORES } from './java-meta';
+import { assertCppMeta, CPP_DB_VERSION, CPP_STORES } from './cpp-course-meta';
+import { cppExercise, isCppDocument, isCppLesson, isCppProgress } from '../cpp-course/identities';
 import { isJavaDocument, isJavaLesson, isJavaProgress, javaExercise } from '../java/identities';
 import { assertPublicRef, isSafeUint, isUtcTime, isUuid, validationInternals } from './validation';
 import { StorageError } from './errors';
@@ -44,9 +46,14 @@ const scalarText = (value: unknown): value is string =>
   !/[\uD800-\uDFFF]/u.test(value) &&
   encoder.encode(value).length <= 32768;
 
-function assertJavaCourseState({ snapshot, rows }: JavaCourseState) {
-  assertJavaMeta(snapshot.meta);
-  requireRule(rows.activities.length <= 402 && rows.drafts.length <= 64);
+function assertTextCourseState({ snapshot, rows }: JavaCourseState, cpp = false) {
+  if (cpp || snapshot.meta.dbVersion === CPP_DB_VERSION) assertCppMeta(snapshot.meta);
+  else assertJavaMeta(snapshot.meta);
+  const isDocument = cpp ? isCppDocument : isJavaDocument;
+  const isLesson = cpp ? isCppLesson : isJavaLesson;
+  const isProgress = cpp ? isCppProgress : isJavaProgress;
+  const exercise = cpp ? cppExercise : javaExercise;
+  requireRule(rows.activities.length <= (cpp ? 307 : 402) && rows.drafts.length <= 64);
   const revisions = (r: { generation: string; revision: number }) =>
     r.generation === snapshot.meta.generation &&
     isSafeUint(r.revision) &&
@@ -58,14 +65,14 @@ function assertJavaCourseState({ snapshot, rows }: JavaCourseState) {
     requireRule(
       draft.draftVersion === '2.2.0' &&
         revisions(draft) &&
-        isJavaDocument(draft.documentId) &&
+        isDocument(draft.documentId) &&
         isUtcTime(draft.updatedAt) &&
         scalarText(draft.source),
     );
     bytes += encoder.encode(draft.source).length;
   }
   if (bytes > 2097152) throw new StorageError('S_QUOTA');
-  const progress = snapshot.progress.filter(isJavaProgress);
+  const progress = snapshot.progress.filter(isProgress);
   const byId = new Map(rows.activities.map((r) => [r.subjectRef?.id, r]));
   requireRule(byId.size === rows.activities.length);
   for (const p of progress) requireRule(byId.has(p.subjectRef.id));
@@ -89,7 +96,7 @@ function assertJavaCourseState({ snapshot, rows }: JavaCourseState) {
     const facts = progress.filter((p) => p.subjectRef.id === id);
     if (activity.kind === 'lesson') {
       requireRule(
-        isJavaLesson(id) &&
+        isLesson(id) &&
           isUtcTime(activity.readAt) &&
           isUtcTime(activity.completedAt) &&
           facts.some(
@@ -101,7 +108,7 @@ function assertJavaCourseState({ snapshot, rows }: JavaCourseState) {
       );
       continue;
     }
-    requireRule(javaExercise(id));
+    requireRule(exercise(id));
     requireRule(
       Boolean(activity.firstPass) === facts.some((p) => p.eventType === 'exercise.passed'),
     );
@@ -126,7 +133,7 @@ function assertJavaCourseState({ snapshot, rows }: JavaCourseState) {
       requireRule(
         snapshot.receipts.some(
           (r) =>
-            isJavaProgress(r) &&
+            isProgress(r) &&
             r.eventId === attempt.eventId &&
             r.subjectRef.id === id &&
             r.occurredAt === attempt.at &&
@@ -146,6 +153,65 @@ export function javaCourseTransaction(
   factory: IDBFactory,
   options?: { generation?: string; revision?: number; prepare?: PrepareJavaCourse },
 ) {
-  if (db.version !== JAVA_DB_VERSION) throw new StorageError('S_CONTENT_INCOMPATIBLE');
-  return courseTransaction(db, factory, JAVA_STORES, assertJavaCourseState, options);
+  if (![JAVA_DB_VERSION, CPP_DB_VERSION].includes(db.version))
+    throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  return courseTransaction(db, factory, JAVA_STORES, assertTextCourseState, options);
+}
+
+export function cppCourseTransaction(
+  db: IDBDatabase,
+  factory: IDBFactory,
+  options?: { generation?: string; revision?: number; prepare?: PrepareJavaCourse },
+) {
+  if (db.version !== CPP_DB_VERSION) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  return courseTransaction(
+    db,
+    factory,
+    CPP_STORES,
+    (state) => assertTextCourseState(state, true),
+    options,
+  );
+}
+
+export function readJavaUpgradeRows(
+  tx: IDBTransaction,
+  factory: IDBFactory,
+  snapshot: JavaCourseState['snapshot'],
+  ready: () => void,
+  fail: (error: unknown) => void,
+) {
+  const [activities, drafts] = JAVA_STORES.map((name) => tx.objectStore(name));
+  const activityRows = activities.getAll();
+  const activityKeys = activities.getAllKeys();
+  const draftRows = drafts.getAll();
+  const draftKeys = drafts.getAllKeys();
+  let remaining = 4;
+  const finish = () => {
+    if (--remaining) return;
+    try {
+      const rows = {
+        activities: activityRows.result as JavaCourseActivity[],
+        drafts: draftRows.result as JavaDraft[],
+      };
+      assertTextCourseState({ snapshot, rows });
+      const generation = snapshot.meta.generation;
+      requireRule(
+        rows.activities.length === activityKeys.result.length &&
+          rows.drafts.length === draftKeys.result.length,
+      );
+      rows.activities.forEach((row, index) =>
+        requireRule(factory.cmp(activityKeys.result[index], [generation, row.subjectRef.id]) === 0),
+      );
+      rows.drafts.forEach((row, index) =>
+        requireRule(factory.cmp(draftKeys.result[index], [generation, row.documentId]) === 0),
+      );
+      ready();
+    } catch (error) {
+      fail(error);
+    }
+  };
+  for (const request of [activityRows, activityKeys, draftRows, draftKeys]) {
+    request.onsuccess = finish;
+    request.onerror = () => fail(request.error);
+  }
 }

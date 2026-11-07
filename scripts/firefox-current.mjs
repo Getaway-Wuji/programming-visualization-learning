@@ -98,6 +98,8 @@ const expectedStores = [
   'pythonDrafts',
   'javaActivities',
   'javaDrafts',
+  'cppActivities',
+  'cppDrafts',
 ];
 const report = {
   label,
@@ -187,7 +189,7 @@ async function snapshot(name) {
     Buffer.from(await wd(route + '/screenshot'), 'base64'),
   );
 }
-async function archive(version = 12) {
+async function archive(version = 13) {
   const data = await wd(route + '/execute/async', 'POST', {
     args: [],
     script: `
@@ -211,6 +213,7 @@ async function archive(version = 12) {
     expectedStores
       .filter((name) => version >= 11 || !name.startsWith('python'))
       .filter((name) => version >= 12 || !name.startsWith('java'))
+      .filter((name) => version >= 13 || !name.startsWith('cpp'))
       .toSorted(),
   );
   return data;
@@ -602,7 +605,7 @@ async function runPython(legacy) {
       keys.appearanceAssets=[[meta.generation,'background']];
       const request=indexedDB.open('c-viz-learning',10);
       request.onupgradeneeded=()=>{
-        for(const name of names.filter(n=>!n.startsWith('python')&&!n.startsWith('java'))){
+        for(const name of names.filter(n=>!n.startsWith('python')&&!n.startsWith('java')&&!n.startsWith('cpp'))){
           const store=request.result.createObjectStore(name);
           rows[name].forEach((value,i)=>store.add(value,keys[name][i]));
         }
@@ -619,7 +622,7 @@ async function runPython(legacy) {
   await wait(
     () =>
       js('return document.querySelector(".app-shell")?.dataset.learningStorageStatus==="ready"'),
-    'Native DB12 did not open',
+    'Native DB13 did not open',
   );
   const migrated = await archive();
   for (const name of prior.names) {
@@ -629,9 +632,9 @@ async function runPython(legacy) {
   assert.deepEqual(migrated.rows.meta, [
     {
       ...prior.rows.meta[0],
-      dbVersion: 12,
-      schemaVersion: '12.0.0',
-      activeCatalogSetRef: { id: 'catalog-set.c-python-java', version: '1.0.0' },
+      dbVersion: 13,
+      schemaVersion: '13.0.0',
+      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp', version: '1.0.0' },
     },
   ]);
   for (const name of ['pythonActivities', 'pythonDrafts', 'javaActivities', 'javaDrafts'])
@@ -743,7 +746,7 @@ async function runPython(legacy) {
     JSON.stringify({ prior, migrated, saved }, null, 2),
   );
   report.results.push({
-    id: 'native-python-db10-to-12-edit-cancel-judge-and-exports',
+    id: 'native-python-db10-to-13-edit-cancel-judge-and-exports',
     passed: true,
     cancelled,
     files: files.map((path) => ({
@@ -757,22 +760,22 @@ async function runPython(legacy) {
   return saved;
 }
 
-async function runJava(legacy) {
+async function migrateNativeArchive(legacy, language, version, catalogId, excluded) {
   const home = 'http://127.0.0.1:4212';
-  await wd(route + '/url', 'POST', { url: home + '/native-java-migration-fixture' });
+  await wd(route + '/url', 'POST', { url: home + '/native-' + language + '-migration-fixture' });
   const seed = await wd(route + '/execute/async', 'POST', {
-    args: [legacy],
+    args: [legacy, version, catalogId, excluded],
     script: `
-    const [legacy,done]=arguments;
+    const [legacy,version,catalogId,excluded,done]=arguments;
     const result=r=>new Promise((yes,no)=>{r.onsuccess=()=>yes(r.result);r.onerror=()=>no(r.error);r.onblocked=()=>no(Error('fixture blocked'))});
     (async()=>{
       await result(indexedDB.deleteDatabase('c-viz-learning'));
       const {rows,keys,names}=legacy;
-      Object.assign(rows.meta[0],{dbVersion:11,schemaVersion:'11.0.0',activeCatalogSetRef:{id:'catalog-set.c-python',version:'1.0.0'}});
+      Object.assign(rows.meta[0],{dbVersion:version,schemaVersion:version+'.0.0',activeCatalogSetRef:{id:catalogId,version:'1.0.0'}});
       for(const row of rows.appearanceAssets)row.blob=new Blob([Uint8Array.from(row.blob.bytes)],{type:row.blob.type});
-      const request=indexedDB.open('c-viz-learning',11);
+      const request=indexedDB.open('c-viz-learning',version);
       request.onupgradeneeded=()=>{
-        for(const name of names.filter(n=>!n.startsWith('java'))){
+        for(const name of names.filter(n=>!excluded.some(prefix=>n.startsWith(prefix)))){
           const store=request.result.createObjectStore(name);
           rows[name].forEach((value,i)=>store.add(value,keys[name][i]));
         }
@@ -782,13 +785,13 @@ async function runJava(legacy) {
     })().then(done,e=>done({error:String(e)}));`,
   });
   assert.equal(seed.ok, true, seed.error);
-  const prior = await archive(11);
-  assert.equal(prior.rows.pythonActivities.length, 1);
-  assert.equal(prior.rows.pythonDrafts.length, 1);
-  await wd(route + '/url', 'POST', { url: home + '/#/java/workbench' });
-  const editor = 'textarea[aria-label="Java 代码"]';
-  const trace = '[data-testid="java-trace"]';
-  await nativeElement(editor);
+  const prior = await archive(version);
+  await wd(route + '/url', 'POST', { url: home + '/#/' + language + '/workbench' });
+  await wait(
+    () =>
+      js('return document.querySelector(".app-shell")?.dataset.learningStorageStatus==="ready"'),
+    'Native DB13 did not open',
+  );
   const migrated = await archive();
   for (const name of prior.names) {
     assert.deepEqual(migrated.keys[name], prior.keys[name], name);
@@ -798,6 +801,22 @@ async function runJava(legacy) {
       name,
     );
   }
+  return { prior, migrated };
+}
+
+async function runJava(legacy) {
+  const { prior, migrated } = await migrateNativeArchive(
+    legacy,
+    'java',
+    11,
+    'catalog-set.c-python',
+    ['java', 'cpp'],
+  );
+  assert.equal(prior.rows.pythonActivities.length, 1);
+  assert.equal(prior.rows.pythonDrafts.length, 1);
+  const editor = 'textarea[aria-label="Java 代码"]';
+  const trace = '[data-testid="java-trace"]';
+  await nativeElement(editor);
   assert.deepEqual(migrated.rows.javaActivities, []);
   assert.deepEqual(migrated.rows.javaDrafts, []);
   const textVisible = (text) =>
@@ -905,7 +924,7 @@ async function runJava(legacy) {
     JSON.stringify({ prior, migrated, saved }, null, 2),
   );
   report.results.push({
-    id: 'native-java-db11-to-12-edit-cancel-judge-and-exports',
+    id: 'native-java-db11-to-13-edit-cancel-judge-and-exports',
     passed: true,
     cancelled,
     files: files.map((path) => ({
@@ -916,6 +935,144 @@ async function runJava(legacy) {
   });
   save();
   console.log('PASS actual Firefox Java migration, edit, cancellation, judge and exports');
+  return saved;
+}
+
+async function runCppCourse(legacy) {
+  const { prior, migrated } = await migrateNativeArchive(
+    legacy,
+    'cpp',
+    12,
+    'catalog-set.c-python-java',
+    ['cpp'],
+  );
+  assert(prior.rows.courseActivities.length > 0);
+  assert(prior.rows.pythonActivities.length > 0);
+  assert(prior.rows.javaActivities.length > 0);
+  assert(prior.rows.appearanceAssets[0].blob.bytes.length > 0);
+  assert.deepEqual(migrated.rows.cppActivities, []);
+  assert.deepEqual(migrated.rows.cppDrafts, []);
+  const editor = 'textarea[aria-label="C++ 源码"]';
+  const trace = '[data-testid="cpp-trace"]';
+  const textVisible = (text) =>
+    wait(
+      () => js('return document.querySelector("main")?.textContent.includes(arguments[0])', [text]),
+      'Missing C++ result: ' + text,
+    );
+  const outputText = (text) =>
+    wait(
+      () =>
+        js(
+          'return document.querySelector("[data-testid=cpp-output]")?.textContent===arguments[0]',
+          [text],
+        ),
+      'C++ trace output mismatch',
+    );
+  await fill(editor, 'int main(){ int* p = nullptr; return *p; }');
+  await button('运行');
+  await textVisible('执行出错');
+  await nativeElement('section[aria-label="运行结果"] button');
+  await fill(editor, '#include <iostream>\nint main(){ int n = 7; std::cout << n; }');
+  await button('运行');
+  await button('到最后一步', trace);
+  await outputText('7');
+  await button('回到开头', trace);
+  await outputText('暂无输出');
+  await button('切换到积木');
+  await nativeElement('.python-block-canvas .blocklySvg');
+  await button('应用积木到代码');
+  await button('运行');
+  await button('到最后一步', trace);
+  await outputText('7');
+  await js(`
+    window.cppCancelProof={posted:false,terminated:false,received:false};
+    const Original=window.Worker;
+    window.Worker=class extends Original {
+      postMessage(...args){
+        window.cppCancelProof.posted=true;
+        this.addEventListener('message',()=>{window.cppCancelProof.received=true});
+        setTimeout(()=>{if(!window.cppCancelProof.terminated)super.postMessage(...args)},650);
+      }
+      terminate(){
+        window.cppCancelProof.terminated=true;
+        window.Worker=Original;
+        super.terminate();
+      }
+    };
+  `);
+  await button('运行');
+  await wait(() => js('return window.cppCancelProof.posted'), 'Missing actual C++ Worker');
+  await button('取消', '.cpp-editor-grid');
+  await textVisible('已取消当前操作。');
+  const cancelled = await js('return window.cppCancelProof');
+  assert.deepEqual(cancelled, { posted: true, terminated: true, received: false });
+  await button('运行');
+  await button('下一步', trace);
+  const files = [];
+  for (const [format, extension] of [
+    ['JSON', '.json'],
+    ['PNG', '.png'],
+    ['Markdown', '.md'],
+    ['ZIP', '.zip'],
+  ])
+    files.push(await download(() => button('导出 ' + format), extension));
+  const exported = read(files[0]);
+  assert.equal(exported.language, 'cpp');
+  assert.equal(exported.position.cursor, 1);
+  assert.equal(readFileSync(files[1]).subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  assert(readFileSync(files[2], 'utf8').includes('C++ · 步骤 1'));
+  assert.equal(readFileSync(files[3]).subarray(0, 4).toString('hex'), '504b0304');
+  const profile = read('content/cpp/course/exercises-1.0.0.json').find(
+    (row) => row.lesson === 'cpp.book.5-2',
+  );
+  await navigate('#/cpp/practice/' + profile.id);
+  await fill(editor, profile.source);
+  await button('保存草稿');
+  await textVisible('草稿已保存到此浏览器。');
+  await button('提交判题');
+  await textVisible('判题结果已记入本地复盘。');
+  await textVisible('四组均通过');
+  await button('复盘第 2 组 · 通过', 'section[aria-label="运行结果"]');
+  await wait(
+    () =>
+      js(
+        'return !!document.querySelector(\'section[aria-label="运行结果"] button[aria-pressed="true"]\')?.textContent.includes("第 2 组")',
+      ),
+    'Missing C++ selected judgement group',
+  );
+  await button('到最后一步', trace);
+  await outputText('1\n');
+  await snapshot('cpp-four-groups');
+  await click('main a', '查看本地复盘');
+  await wd(route + '/refresh', 'POST', {});
+  await textVisible('四组均通过');
+  const saved = await archive();
+  assert.equal(saved.rows.cppActivities.length, 1);
+  assert.equal(saved.rows.cppDrafts[0].source, profile.source);
+  for (const name of [
+    'courseActivities',
+    'pythonActivities',
+    'javaActivities',
+    'appearanceAssets',
+    'achievements',
+  ])
+    assert.deepEqual(saved.rows[name], migrated.rows[name], name);
+  writeFileSync(
+    join(output, 'cpp-native-migration.json'),
+    JSON.stringify({ prior, migrated, saved }, null, 2),
+  );
+  report.results.push({
+    id: 'native-cpp-db12-to-13-edit-cancel-judge-and-exports',
+    passed: true,
+    cancelled,
+    files: files.map((path) => ({
+      path,
+      sha256: sha(readFileSync(path)),
+      bytes: statSync(path).size,
+    })),
+  });
+  save();
+  console.log('PASS actual Firefox C++ migration, edit, cancellation, judge and exports');
 }
 
 try {
@@ -1041,17 +1198,18 @@ try {
   const actualLearning = cleared.names.filter(
     (n) => !['meta', 'settings', 'avatar', 'appearance', 'appearanceAssets'].includes(n),
   );
-  assert.equal(actualLearning.length, 18);
+  assert.equal(actualLearning.length, 20);
   report.actualResetStores = actualLearning;
   for (const name of actualLearning) assert.deepEqual(cleared.rows[name], [], name);
   writeFileSync(
     join(output, 'native-save-reload-clear.json'),
     JSON.stringify({ initial, durable, reloaded, cleared }, null, 2),
   );
-  report.results.push({ id: 'native-db12-save-refresh-cancel-and-clear', passed: true });
+  report.results.push({ id: 'native-db13-save-refresh-cancel-and-clear', passed: true });
   const pythonSaved = await runPython(durable);
-  await runJava(pythonSaved);
-  assert.equal(report.results.length, programs.length + cppQuestions.length + 5);
+  const javaSaved = await runJava(pythonSaved);
+  await runCppCourse(javaSaved);
+  assert.equal(report.results.length, programs.length + cppQuestions.length + 6);
   assert.equal(sha(readFileSync('content/build/source-lock.json')), sourceLockBefore);
   verifyBuildInputs();
   report.passed = true;

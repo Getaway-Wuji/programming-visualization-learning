@@ -1,0 +1,790 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 7,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-7",
+      "title": "数组、指针和引用",
+      "number": "第7章",
+      "parent": "cpp.book.part-1",
+      "depth": 2,
+      "order": 122,
+      "printedPage": 111,
+      "leaf": false,
+      "group": 7,
+      "body": [
+        "画出数组范围、指针指向及引用别名。访问前依次确认目标仍存活、指针有效、下标落在边界内。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.7-1",
+      "title": "一维数组",
+      "number": "7.1",
+      "parent": "cpp.book.chapter-7",
+      "depth": 3,
+      "order": 123,
+      "printedPage": 112,
+      "leaf": false,
+      "group": 7,
+      "body": [
+        "从数组长度推导合法下标。分别验证声明、读取、写入和初始化后的空缺位置。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.7-1-1",
+      "title": "一维数组的声明",
+      "number": "7.1.1",
+      "parent": "cpp.book.7-1",
+      "depth": 4,
+      "order": 124,
+      "printedPage": 112,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "一维数组由同类型元素连续组成，固定长度决定可访问的下标范围。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int a[3]={};` 有 3 个零，合法下标是 0、1、2。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`a[3]` 指向最后一个元素吗？",
+        "answer": "不指向。它越过了最后一个合法下标。"
+      }
+    },
+    {
+      "id": "cpp.book.7-1-2",
+      "title": "一维数组的引用",
+      "number": "7.1.2",
+      "parent": "cpp.book.7-1",
+      "depth": 4,
+      "order": 125,
+      "printedPage": 112,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "下标表达式定位某个数组元素，可读也可写。先验证范围，再访问元素。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int a[3]={1,2,3}; a[1]=9;` 只改中间一格。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "写入后数组内容是什么？",
+        "answer": "1、9、3。"
+      }
+    },
+    {
+      "id": "cpp.book.7-1-3",
+      "title": "一维数组的初始化",
+      "number": "7.1.3",
+      "parent": "cpp.book.7-1",
+      "depth": 4,
+      "order": 126,
+      "printedPage": 113,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "固定长度数组用下标定位元素。初始化建立三个可访问槽，输入语句再逐个更新。",
+        "最大下标为 2。将 `a[3]` 当成第三个元素会越界。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 `2 3 4`，两次相邻乘积为 6 和 12，输出 18。",
+        "source": "#include <iostream>\nint main(){ int a[3]={0,0,0}; std::cin >> a[0] >> a[1] >> a[2]; std::cout << a[0]*a[1]+a[1]*a[2] << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "18\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                2,
+                3,
+                4
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "0\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                1,
+                0,
+                7
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "-20\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -2,
+                4,
+                -3
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "-1996002\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                999,
+                -999,
+                999
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.7-1-3.exercise",
+        "prompt": "读三个整数覆盖数组的三个元素，输出相邻乘积的和 a[0]*a[1]+a[1]*a[2]。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "最大下标为 2。将 `a[3]` 当成第三个元素会越界。"
+      }
+    },
+    {
+      "id": "cpp.book.7-2",
+      "title": "二维数组",
+      "number": "7.2",
+      "parent": "cpp.book.chapter-7",
+      "depth": 3,
+      "order": 127,
+      "printedPage": 114,
+      "leaf": false,
+      "group": 7,
+      "body": [
+        "先画出行和列，再将访问和初始化定位到具体格。两种下标都必须在各自边界内。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.7-2-1",
+      "title": "二维数组的声明",
+      "number": "7.2.1",
+      "parent": "cpp.book.7-2",
+      "depth": 4,
+      "order": 128,
+      "printedPage": 114,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "二维数组由一组等长的行构成。声明里两个长度分别表示行数和每行元素数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int grid[2][3]={};` 有两行，每行三个整数。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`grid[2][0]` 是否有效？",
+        "answer": "无效，行下标只允许 0 与 1。"
+      }
+    },
+    {
+      "id": "cpp.book.7-2-2",
+      "title": "二维数组元素的引用",
+      "number": "7.2.2",
+      "parent": "cpp.book.7-2",
+      "depth": 4,
+      "order": 129,
+      "printedPage": 115,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "二维数组访问需同时校验行下标与列下标。能在线性内存里碰到另一行，也不代表该访问合法。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`grid[1][2]` 是第二行第三列。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "当每行有三列，`grid[0][3]` 能当作 `grid[1][0]` 吗？",
+        "answer": "不能。第一个写法越过当前行的数组边界。"
+      }
+    },
+    {
+      "id": "cpp.book.7-2-3",
+      "title": "二维数组的初始化",
+      "number": "7.2.3",
+      "parent": "cpp.book.7-2",
+      "depth": 4,
+      "order": 130,
+      "printedPage": 115,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "按行给二维数组列表初始化。缺少的元素用零值补齐，明确内层大括号能保留行的边界。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int g[2][3]={{1},{2,3}};` 产生 `1 0 0` 和 `2 3 0`。",
+        "source": "#include <iostream>\nint main() {\n    int grid[2][3] = {{1}, {2, 3}};\n    std::cout << grid[0][1] << \" \" << grid[1][2] << std::endl;\n}\n",
+        "result": "无输入，输出 `0 0` 后换行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "第二行的第三个元素是多少？",
+        "answer": "0，缺省的整型元素被值初始化。"
+      }
+    },
+    {
+      "id": "cpp.book.7-3",
+      "title": "字符数组",
+      "number": "7.3",
+      "parent": "cpp.book.chapter-7",
+      "depth": 3,
+      "order": 131,
+      "printedPage": 117,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "字符数组可以存放 C 风格字符串，但必须包含终止符。存储容量与当前文本长度要分别判断。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`char tag[4]=\"cat\";` 用三格保存字母和一格保存 `\\0`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能把同样字符串初始化进 `char tag[3]` 吗？",
+        "answer": "在标准 C++ 中不行，放不下终止符。"
+      }
+    },
+    {
+      "id": "cpp.book.7-4",
+      "title": "指针",
+      "number": "7.4",
+      "parent": "cpp.book.chapter-7",
+      "depth": 3,
+      "order": 132,
+      "printedPage": 124,
+      "leaf": false,
+      "group": 7,
+      "body": [
+        "把变量槽、指针槽和指向关系分别画出。指针值的复制、偏移和解引用是不同操作。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.7-4-1",
+      "title": "变量与指针",
+      "number": "7.4.1",
+      "parent": "cpp.book.7-4",
+      "depth": 4,
+      "order": 133,
+      "printedPage": 124,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "指针保存对象位置，目标对象自身另占存储。复制指针不会复制目标对象。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int n=5; int* p=&n;` 中 p 保存 n 的位置，`*p` 读到 5。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`p=nullptr` 后 n 还是 5 吗？",
+        "answer": "是。清空的是指针，不是目标。"
+      }
+    },
+    {
+      "id": "cpp.book.7-4-2",
+      "title": "指针运算符和取地址运算符",
+      "number": "7.4.2",
+      "parent": "cpp.book.7-4",
+      "depth": 4,
+      "order": 134,
+      "printedPage": 127,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "`&n` 取得 n 的位置，指针 p 保存该位置。`*p` 定位同一个 n，可先读再写。",
+        "空指针或悬空指针不能解引用。回放中的地址是教学地址。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 7，指针槽保持指向 n，目标槽从 7 更新成 10。",
+        "source": "#include <iostream>\nint main(){ int n=0; std::cin >> n; int* p=&n; *p=*p+3; std::cout << n << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "10\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                7
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "3\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                0
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "0\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -3
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "1002\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                999
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.7-4-2.exercise",
+        "prompt": "输入一个整数，把它加上三后输出。通过指针改写原变量。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "空指针或悬空指针不能解引用。回放中的地址是教学地址。"
+      }
+    },
+    {
+      "id": "cpp.book.7-4-3",
+      "title": "指针运算",
+      "number": "7.4.3",
+      "parent": "cpp.book.7-4",
+      "depth": 4,
+      "order": 135,
+      "printedPage": 128,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "指针偏移按目标类型大小计算，只在同一数组对象及尾后位置内有效。尾后指针可以比较，不能解引用。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "对 3 元素数组，`p+3` 可作结束位置，`*(p+3)` 越界。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "从尾后指针减一得到什么？",
+        "answer": "同一数组的最后一个元素位置。"
+      }
+    },
+    {
+      "id": "cpp.book.7-5",
+      "title": "指针与数组",
+      "number": "7.5",
+      "parent": "cpp.book.chapter-7",
+      "depth": 3,
+      "order": 136,
+      "printedPage": 130,
+      "leaf": false,
+      "group": 7,
+      "body": [
+        "先对比数组对象与指针值，再看按元素大小计算的位移。二维和字符序列分别有行宽和终止符的额外边界。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.7-5-1",
+      "title": "数组的存储",
+      "number": "7.5.1",
+      "parent": "cpp.book.7-5",
+      "depth": 4,
+      "order": 137,
+      "printedPage": 130,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "数组元素连续排列。内存图按类型宽度显示相邻槽，真实运行界面的地址是教学地址。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "若每个整数槽占 4 字节，地址 100、104、108 对应三个相邻元素。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "相邻下标差 1，地址也差 1 吗？",
+        "answer": "不一定。地址差为元素大小。"
+      }
+    },
+    {
+      "id": "cpp.book.7-5-2",
+      "title": "指针与一维数组",
+      "number": "7.5.2",
+      "parent": "cpp.book.7-5",
+      "depth": 4,
+      "order": 138,
+      "printedPage": 130,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "数组名在多数表达式里转换为指向首元素的指针。数组本身仍有固定长度。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`a[i]` 与 `*(a+i)` 定位同一合法元素。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只拿到 `a` 转换后的指针还能推知长度吗？",
+        "answer": "不能。需要单独保存长度或结束位置。"
+      }
+    },
+    {
+      "id": "cpp.book.7-5-3",
+      "title": "指针与二维数组",
+      "number": "7.5.3",
+      "parent": "cpp.book.7-5",
+      "depth": 4,
+      "order": 139,
+      "printedPage": 132,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "二维数组名转换为指向一整行的指针。加一跨过整行，和单个元素指针的步长不同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int a[2][3];` 中 `a+1` 指向第二行。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么 `int**` 不能自然接收 `a`？",
+        "answer": "二维数组保存连续行，没有保存一张行指针表。"
+      }
+    },
+    {
+      "id": "cpp.book.7-5-4",
+      "title": "指针与字符数组",
+      "number": "7.5.4",
+      "parent": "cpp.book.7-5",
+      "depth": 4,
+      "order": 140,
+      "printedPage": 135,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "指向字符数组的指针经常交给按终止符读取的函数。缓冲区内没有终止符时，读取可能越界。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "复制三字符文本到四格缓冲区时，第四格要写 `\\0`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果函数知道长度，还需所有内容都用终止符表示吗？",
+        "answer": "不一定。显式长度可以限定读取范围。"
+      }
+    },
+    {
+      "id": "cpp.book.7-6",
+      "title": "指向函数的指针",
+      "number": "7.6",
+      "parent": "cpp.book.chapter-7",
+      "depth": 3,
+      "order": 141,
+      "printedPage": 136,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "函数指针保存可调用入口。参数和返回类型必须与函数签名一致。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int (*operation)(int,int)` 可指向两个整数相加的函数。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "可把返回 double 的函数交给该指针吗？",
+        "answer": "不能。返回类型不同，签名不匹配。"
+      }
+    },
+    {
+      "id": "cpp.book.7-7",
+      "title": "引用",
+      "number": "7.7",
+      "parent": "cpp.book.chapter-7",
+      "depth": 3,
+      "order": 142,
+      "printedPage": 137,
+      "leaf": false,
+      "group": 7,
+      "body": [
+        "参数传递可以复制值、复制地址或绑定引用。用同一个交换需求比较调用后原变量是否改变。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.7-7-1",
+      "title": "使用引用传递参数",
+      "number": "7.7.1",
+      "parent": "cpp.book.7-7",
+      "depth": 4,
+      "order": 143,
+      "printedPage": 139,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "`int&` 参数绑定调用者对象。给引用形参赋值时写入原对象，函数退出只移除形参绑定。",
+        "本子集要求命名的整数左值。字面量无法绑定这种可写引用。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 `4 9`。先保存 4，再将 9 写入第一槽，最后把 4 写入第二槽。",
+        "source": "#include <iostream>\nvoid exchange(int& a, int& b){ int hold=a; a=b; b=hold; }\nint main(){ int a=0; int b=0; std::cin >> a >> b; exchange(a,b); std::cout << a << \" \" << b << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "9 4\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                4,
+                9
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "0 0\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "5 -1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -1,
+                5
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "-999 999\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                999,
+                -999
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.7-7-1.exercise",
+        "prompt": "输入两个整数，用接受两个 int 引用参数的函数交换值，再输出这两个整数。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "本子集要求命名的整数左值。字面量无法绑定这种可写引用。"
+      }
+    },
+    {
+      "id": "cpp.book.7-7-2",
+      "title": "指针传递参数",
+      "number": "7.7.2",
+      "parent": "cpp.book.7-7",
+      "depth": 4,
+      "order": 144,
+      "printedPage": 140,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "值传递的指针允许通过间接访问修改调用者对象。调用者必须传入仍有效的地址。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`void add(int* p){ *p=*p+1; }` 用 `add(&n)` 改写 n。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "传入空指针前应做什么？",
+        "answer": "选择拒绝空指针或在函数中检查它。"
+      }
+    },
+    {
+      "id": "cpp.book.7-7-3",
+      "title": "数组作函数参数",
+      "number": "7.7.3",
+      "parent": "cpp.book.7-7",
+      "depth": 4,
+      "order": 145,
+      "printedPage": 141,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "普通数组形参写法会调整为指针形式。函数需要另收长度，避免把形参自身大小误当数组大小。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`sum(int a[], int length)` 用 length 限制循环。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "空数组范围可以传长度 0 吗？",
+        "answer": "可按接口约定接受，并跳过全部解引用。"
+      }
+    },
+    {
+      "id": "cpp.book.7-8",
+      "title": "指针数组",
+      "number": "7.8",
+      "parent": "cpp.book.chapter-7",
+      "depth": 3,
+      "order": 146,
+      "printedPage": 143,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "指针数组的每个元素保存独立的位置。它可以引用不同长度的数据，也可能有空项。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "三个菜单指针分别指向三段不同长度的文字。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "访问某项前检查什么？",
+        "answer": "检查下标以及取得的指针是否有效。"
+      }
+    },
+    {
+      "id": "cpp.book.7-9",
+      "title": "小结",
+      "number": "7.9",
+      "parent": "cpp.book.chapter-7",
+      "depth": 3,
+      "order": 147,
+      "printedPage": 145,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "数组、指针和引用分别表示一组对象、位置值和别名。选择它们前先问目标是谁，何时消失。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "函数接收数组范围用指针与长度，接收一个必有的可写整数可用引用。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "释放堆对象后，把一个指针置空能保护所有别名吗？",
+        "answer": "不能，其他位置值仍会悬空。"
+      }
+    },
+    {
+      "id": "cpp.book.7-10",
+      "title": "实践与练习",
+      "number": "7.10",
+      "parent": "cpp.book.chapter-7",
+      "depth": 3,
+      "order": 148,
+      "printedPage": 145,
+      "leaf": true,
+      "group": 7,
+      "body": [
+        "用小规模数组练习遍历边界。设计零长度、单元素、重复元素和最后一个位置的测试。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "星期表可用 0 代表周一，6 代表周日，其他编号拒绝。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "输入 7 为什么值得测？",
+        "answer": "它是数组尾后位置，最容易因 `<=` 写错而访问。"
+      }
+    }
+  ]
+}

@@ -64,6 +64,8 @@ pub struct Param {
     pub name: String,
     pub type_name: String,
     pub is_array: bool,
+    #[cfg(feature = "cpp-course")]
+    pub by_reference: bool,
     pub node: Id,
 }
 
@@ -110,6 +112,11 @@ pub enum Kind {
     While {
         condition: Id,
         body: Id,
+    },
+    #[cfg(feature = "cpp-course")]
+    DoWhile {
+        body: Id,
+        condition: Id,
     },
     For {
         init: Option<Id>,
@@ -200,6 +207,8 @@ impl Kind {
                 .flatten()
                 .collect(),
             Self::While { condition, body } => vec![*condition, *body],
+            #[cfg(feature = "cpp-course")]
+            Self::DoWhile { body, condition } => vec![*body, *condition],
             Self::For {
                 init,
                 condition,
@@ -241,6 +250,8 @@ impl Kind {
             Self::Assign { .. } => "assignment",
             Self::If { .. } => "if",
             Self::While { .. } => "while",
+            #[cfg(feature = "cpp-course")]
+            Self::DoWhile { .. } => "do-while",
             Self::For { .. } => "for",
             Self::Return(_) => "return",
             Self::Delete(_) => "delete",
@@ -277,6 +288,8 @@ struct Scanner<'a, 'm> {
     text: &'a str,
     at: usize,
     meter: &'m mut Meter,
+    #[cfg(feature = "cpp-course")]
+    course: bool,
 }
 
 impl Scanner<'_, '_> {
@@ -457,7 +470,10 @@ impl Scanner<'_, '_> {
                     TokenKind::Symbol(symbol)
                 } else {
                     self.advance()?;
-                    if !"(){}[];,=+-*/%<>!&.".contains(ch) {
+                    let allowed = "(){}[];,=+-*/%<>!&.".contains(ch);
+                    #[cfg(feature = "cpp-course")]
+                    let allowed = allowed || (self.course && ch == ':');
+                    if !allowed {
                         return Err(fault("E_UNSUPPORTED_SYNTAX", self.range(start)));
                     }
                     TokenKind::Symbol(ch.to_string())
@@ -483,6 +499,8 @@ struct Parser<'m> {
     nodes: Vec<Node>,
     depths: Vec<usize>,
     cpp: bool,
+    #[cfg(feature = "cpp-course")]
+    course: bool,
     iostream: bool,
     string_header: bool,
     stdio: bool,
@@ -612,7 +630,10 @@ impl Parser<'_> {
         Ok(name)
     }
     fn struct_definition(&self) -> bool {
-        self.is("struct")
+        let keyword = self.is("struct");
+        #[cfg(feature = "cpp-course")]
+        let keyword = keyword || (self.course && self.is("class"));
+        keyword
             && self.tokens.get(self.at + 2).is_some_and(
                 |token| matches!(&token.kind, TokenKind::Symbol(symbol) if symbol == "{"),
             )
@@ -622,13 +643,23 @@ impl Parser<'_> {
         if self.struct_names.len() >= 8 {
             return Err(self.error("E_STRUCT_LIMIT"));
         }
-        self.expect("struct")?;
+        #[cfg(feature = "cpp-course")]
+        let class = self.course && self.take("class")?;
+        #[cfg(not(feature = "cpp-course"))]
+        let class = false;
+        if !class {
+            self.expect("struct")?;
+        }
         let name = self.name()?;
         if self.struct_names.contains(&name) {
             return Err(self.error("E_NAME_INVALID"));
         }
         self.struct_names.push(name.clone());
         self.expect("{")?;
+        if class {
+            self.expect("public")?;
+            self.expect(":")?;
+        }
         let mut fields = Vec::new();
         while !self.take("}")? {
             if fields.len() >= 8 {
@@ -689,6 +720,10 @@ impl Parser<'_> {
         let mut functions: Vec<Function> = Vec::new();
         let mut structs = Vec::new();
         while self.token().kind != TokenKind::Eof {
+            #[cfg(feature = "cpp-course")]
+            if self.course && self.is("template") {
+                return Err(self.error("E_UNSUPPORTED_SYNTAX"));
+            }
             if self.struct_definition() {
                 structs.push(self.structure()?);
                 continue;
@@ -720,6 +755,8 @@ impl Parser<'_> {
                     }
                     let param_start = self.token().range.start;
                     let type_name = self.type_name(false)?;
+                    #[cfg(feature = "cpp-course")]
+                    let by_reference = self.course && type_name == "int" && self.take("&")?;
                     let param_name = self.name()?;
                     if self.cpp && self.struct_names.contains(&param_name) {
                         return Err(self.error("E_NAME_INVALID"));
@@ -739,6 +776,10 @@ impl Parser<'_> {
                     {
                         return Err(self.error("E_UNSUPPORTED_SYNTAX"));
                     }
+                    #[cfg(feature = "cpp-course")]
+                    if by_reference && is_array {
+                        return Err(self.error("E_UNSUPPORTED_SYNTAX"));
+                    }
                     let node = self.add(
                         Kind::Param {
                             name: param_name.clone(),
@@ -752,6 +793,8 @@ impl Parser<'_> {
                         name: param_name,
                         type_name,
                         is_array,
+                        #[cfg(feature = "cpp-course")]
+                        by_reference,
                         node,
                     });
                     if self.take(")")? {
@@ -846,6 +889,16 @@ impl Parser<'_> {
             self.expect(")")?;
             let body = self.control_body()?;
             return self.add(Kind::While { condition, body }, start, self.end());
+        }
+        #[cfg(feature = "cpp-course")]
+        if self.course && self.take("do")? {
+            let body = self.block()?;
+            self.expect("while")?;
+            self.expect("(")?;
+            let condition = self.expression()?;
+            self.expect(")")?;
+            self.expect(";")?;
+            return self.add(Kind::DoWhile { body, condition }, start, self.end());
         }
         if self.take("for")? {
             self.expect("(")?;
@@ -1462,6 +1515,20 @@ fn reserved(name: &str) -> bool {
 }
 
 pub fn parse(source: &str, language: &str, meter: &mut Meter) -> Result<Program, Fault> {
+    parse_profile(source, language, meter, false)
+}
+
+#[cfg(feature = "cpp-course")]
+pub(crate) fn parse_course(source: &str, meter: &mut Meter) -> Result<Program, Fault> {
+    parse_profile(source, "cpp", meter, true)
+}
+
+fn parse_profile(
+    source: &str,
+    language: &str,
+    meter: &mut Meter,
+    #[cfg_attr(not(feature = "cpp-course"), allow(unused_variables))] course: bool,
+) -> Result<Program, Fault> {
     let range = ByteRange {
         start: 0,
         end: source.len(),
@@ -1476,6 +1543,8 @@ pub fn parse(source: &str, language: &str, meter: &mut Meter) -> Result<Program,
         text: source,
         at: 0,
         meter,
+        #[cfg(feature = "cpp-course")]
+        course,
     }
     .scan()?;
     Parser {
@@ -1484,6 +1553,8 @@ pub fn parse(source: &str, language: &str, meter: &mut Meter) -> Result<Program,
         nodes: Vec::new(),
         depths: Vec::new(),
         cpp: language == "cpp",
+        #[cfg(feature = "cpp-course")]
+        course,
         iostream: false,
         string_header: false,
         stdio: false,

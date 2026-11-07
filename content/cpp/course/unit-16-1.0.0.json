@@ -1,0 +1,607 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 16,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-16",
+      "title": "文件操作",
+      "number": "第16章",
+      "parent": "cpp.book.part-3",
+      "depth": 2,
+      "order": 321,
+      "printedPage": 341,
+      "leaf": false,
+      "group": 16,
+      "body": [
+        "按打开、读取或写入、定位、关闭检查文件流。把失败作为每一步的可能结果，纸面练习用固定字节序列代替宿主文件。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.16-1",
+      "title": "文件流",
+      "number": "16.1",
+      "parent": "cpp.book.chapter-16",
+      "depth": 3,
+      "order": 322,
+      "printedPage": 342,
+      "leaf": false,
+      "group": 16,
+      "body": [
+        "用流对象理解格式与数据来源的分离。按读、写、状态三个部分观察同一次文件操作。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.16-1-1",
+      "title": "C++中的流类库",
+      "number": "16.1.1",
+      "parent": "cpp.book.16-1",
+      "depth": 4,
+      "order": 323,
+      "printedPage": 342,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "C++ 流库把格式化接口和数据来源分开。控制台流、字符串流和文件流各用相应缓冲。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "同样的 `<<` 可写到 `std::cout` 或一个已打开的文件流。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么语法类似而失败方式可能不同？",
+        "answer": "底层数据来源不同，文件还涉及打开和写入错误。"
+      }
+    },
+    {
+      "id": "cpp.book.16-1-2",
+      "title": "类库的使用",
+      "number": "16.1.2",
+      "parent": "cpp.book.16-1",
+      "depth": 4,
+      "order": 324,
+      "printedPage": 342,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "在使用文件类库前明确选择读流、写流或双向流。用作用域管理流对象并检查每项操作。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "只读取报告时选择 `ifstream`。需要读写的随机访问任务可用 `fstream`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只读任务为何不默认用双向流？",
+        "answer": "明确权限和模式能减少意外写入。"
+      }
+    },
+    {
+      "id": "cpp.book.16-1-3",
+      "title": "ios类中的枚举常量",
+      "number": "16.1.3",
+      "parent": "cpp.book.16-1",
+      "depth": 4,
+      "order": 325,
+      "printedPage": 343,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "文件打开标志可以组合。每个标志说明读、写、截断、追加或二进制等不同意图。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "`std::ios::out` 配 `std::ios::app` 表示写入追加。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`app` 和 `trunc` 表达同一意图吗？",
+        "answer": "不同，追加保留旧内容，截断清除旧内容。"
+      }
+    },
+    {
+      "id": "cpp.book.16-1-4",
+      "title": "流的输入/输出",
+      "number": "16.1.4",
+      "parent": "cpp.book.16-1",
+      "depth": 4,
+      "order": 326,
+      "printedPage": 343,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "格式化输入把文本解析为类型，非格式化输入按字符或字节操作。读之前先确定格式。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "用 `>>` 读取整数会跳过前导空白，`getline` 可保留一行中的普通空格。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "要读包含空格的姓名应选哪种方式？",
+        "answer": "通常按行读取，再独立验证内容。"
+      }
+    },
+    {
+      "id": "cpp.book.16-2",
+      "title": "文件打开",
+      "number": "16.2",
+      "parent": "cpp.book.chapter-16",
+      "depth": 3,
+      "order": 327,
+      "printedPage": 344,
+      "leaf": false,
+      "group": 16,
+      "body": [
+        "先写出目标对旧内容的影响，再选择打开模式。分别测试文件存在、不存在和权限不足的情形。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.16-2-1",
+      "title": "打开方式",
+      "number": "16.2.1",
+      "parent": "cpp.book.16-2",
+      "depth": 4,
+      "order": 328,
+      "printedPage": 344,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "选择打开模式前先明确是否创建、保留或覆盖原文件。模式错误可能造成数据丢失。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "日志需要追加，生成可替换报告才可能选择截断。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只查找文本时用写模式有什么问题？",
+        "answer": "可能改动或截断原文件，应使用只读模式。"
+      }
+    },
+    {
+      "id": "cpp.book.16-2-2",
+      "title": "默认打开模式",
+      "number": "16.2.2",
+      "parent": "cpp.book.16-2",
+      "depth": 4,
+      "order": 329,
+      "printedPage": 345,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "流类型各有默认模式。即使省略参数，也要知道默认行为对既有文件的影响。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "打开已有文件的默认输出流可能截断内容。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么关键程序常显式写模式？",
+        "answer": "调用者可以清楚审查会不会覆盖已有内容。"
+      }
+    },
+    {
+      "id": "cpp.book.16-2-3",
+      "title": "打开文件同时创建文件",
+      "number": "16.2.3",
+      "parent": "cpp.book.16-2",
+      "depth": 4,
+      "order": 330,
+      "printedPage": 346,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "创建文件也可能失败。要检查父路径、权限和打开结果，成功后再写。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "用户给出的目录不存在，构造文件流后检查失败状态并提示。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "检查路径字符串非空就足够吗？",
+        "answer": "不够，路径能否打开由实际环境和模式决定。"
+      }
+    },
+    {
+      "id": "cpp.book.16-3",
+      "title": "文件的读写",
+      "number": "16.3",
+      "parent": "cpp.book.chapter-16",
+      "depth": 3,
+      "order": 331,
+      "printedPage": 347,
+      "leaf": false,
+      "group": 16,
+      "body": [
+        "读写任务需要明确文本或二进制协议。复制流程还要检查最后一次实际读到的字节数。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.16-3-1",
+      "title": "文件流",
+      "number": "16.3.1",
+      "parent": "cpp.book.16-3",
+      "depth": 4,
+      "order": 332,
+      "printedPage": 347,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "流有当前读写位置与状态。读取或写入之后，位置按实际传输的数据移动。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "从开头读两个字节后，下一个读位置通常是第三个字节。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果一次读取失败应继续假定位置吗？",
+        "answer": "不应，先处理错误并确认状态和位置。"
+      }
+    },
+    {
+      "id": "cpp.book.16-3-2",
+      "title": "写文本文件",
+      "number": "16.3.2",
+      "parent": "cpp.book.16-3",
+      "depth": 4,
+      "order": 333,
+      "printedPage": 349,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "写文本时约定编码、字段分隔和换行。生成后用同样规范读取以发现缺行或分隔问题。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "输出两个字段 `name,count`，包含分隔符的名称要约定转义或引用。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "名字 `Li, Ming` 为什么不能直接拼进普通 CSV 行？",
+        "answer": "逗号可能被误读为字段分隔，需要合适转义。"
+      }
+    },
+    {
+      "id": "cpp.book.16-3-3",
+      "title": "读取文本文件",
+      "number": "16.3.3",
+      "parent": "cpp.book.16-3",
+      "depth": 4,
+      "order": 334,
+      "printedPage": 349,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "读取文本应以成功提取作为循环条件。每行解析失败时保留行号和原输入。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "`while (std::getline(in,line))` 只处理读成功的行。",
+        "source": "#include <iostream>\n#include <sstream>\n#include <string>\nint main() {\n    std::istringstream input(\"first\\nlast\");\n    std::string line;\n    while (std::getline(input, line)) std::cout << line << std::endl;\n}\n",
+        "result": "虚拟文本有两行，末尾无换行。仍输出 first 和 last 两行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "空文件的循环体会运行吗？",
+        "answer": "不会。第一次 getline 就无法取得一行。"
+      }
+    },
+    {
+      "id": "cpp.book.16-3-4",
+      "title": "二进制文件的读写",
+      "number": "16.3.4",
+      "parent": "cpp.book.16-3",
+      "depth": 4,
+      "order": 335,
+      "printedPage": 350,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "二进制协议应明确字段宽度、字节顺序与编码。直接转存对象内存可能包含填充或地址。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "用四个固定字节编码 32 位记录数量，再按协议解码。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能直接写一个含指针的结构体？",
+        "answer": "指针值只在原进程中有意义，且布局依赖实现。"
+      }
+    },
+    {
+      "id": "cpp.book.16-3-5",
+      "title": "实现文件复制",
+      "number": "16.3.5",
+      "parent": "cpp.book.16-3",
+      "depth": 4,
+      "order": 336,
+      "printedPage": 351,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "复制文件时要同时检查读、写和结束状态。若目标需要保持旧版本，可先写临时文件，成功后更换。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "复制 10 字节、缓冲区 4 字节时，最后只写实际读到的 2 字节。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "每次都写满缓冲区会怎样？",
+        "answer": "最后一批会写出未使用或旧内容。"
+      }
+    },
+    {
+      "id": "cpp.book.16-4",
+      "title": "文件指针移动操作",
+      "number": "16.4",
+      "parent": "cpp.book.chapter-16",
+      "depth": 3,
+      "order": 337,
+      "printedPage": 352,
+      "leaf": false,
+      "group": 16,
+      "body": [
+        "定位、追加和文件结束都影响下一次操作。记下当前读写位置和错误状态，再决定是否恢复。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.16-4-1",
+      "title": "文件错误与状态",
+      "number": "16.4.1",
+      "parent": "cpp.book.16-4",
+      "depth": 4,
+      "order": 338,
+      "printedPage": 352,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "流状态区分到达结尾、格式失败及较严重的底层故障。恢复读取前需要处理失败原因。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "读整数时遇到字母，清除失败位后还需跳过或处理非法文本。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只清除状态并立即重读会怎样？",
+        "answer": "如果坏输入仍在，可能再次失败。"
+      }
+    },
+    {
+      "id": "cpp.book.16-4-2",
+      "title": "文件的追加",
+      "number": "16.4.2",
+      "parent": "cpp.book.16-4",
+      "depth": 4,
+      "order": 339,
+      "printedPage": 353,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "追加模式把每次写入放到末尾。它适合保留已有记录的日志，但不代表多个进程可随意并发写。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "依次追加两条事件，旧事件仍在它们之前。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想修改中间一条记录适合使用追加吗？",
+        "answer": "不适合，追加不会覆盖中间内容。"
+      }
+    },
+    {
+      "id": "cpp.book.16-4-3",
+      "title": "文件结尾的判断",
+      "number": "16.4.3",
+      "parent": "cpp.book.16-4",
+      "depth": 4,
+      "order": 340,
+      "printedPage": 354,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "EOF 往往在一次读取尝试之后才反映出来。循环应依据提取是否成功。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "文件只有一行时，先成功取得这一行，再在下一次读取时结束。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么 `while(!in.eof())` 可能多处理一次？",
+        "answer": "循环入口时还未执行那次失败读取。"
+      }
+    },
+    {
+      "id": "cpp.book.16-4-4",
+      "title": "在指定位置读写文件",
+      "number": "16.4.4",
+      "parent": "cpp.book.16-4",
+      "depth": 4,
+      "order": 341,
+      "printedPage": 356,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "定位可相对起点、当前位置或末尾。定位后还要确认状态和范围。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "定长记录为 8 字节，零基第 3 条记录从字节 24 开始。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "变长记录也能用 `编号×长度` 吗？",
+        "answer": "不能直接使用。需要索引或顺序扫描。"
+      }
+    },
+    {
+      "id": "cpp.book.16-5",
+      "title": "文件和流的关联和分离",
+      "number": "16.5",
+      "parent": "cpp.book.chapter-16",
+      "depth": 3,
+      "order": 342,
+      "printedPage": 357,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "流对象打开后与文件关联，关闭时应处理缓冲及错误。一个流对象在复用前先结束前一次关联。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "读取配置后关闭，再明确打开第二份文件。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "销毁输出流前为什么可能需要显式检查？",
+        "answer": "写缓冲的最终结果可能在关闭时才确定。"
+      }
+    },
+    {
+      "id": "cpp.book.16-6",
+      "title": "删除文件",
+      "number": "16.6",
+      "parent": "cpp.book.chapter-16",
+      "depth": 3,
+      "order": 343,
+      "printedPage": 358,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "删除文件前应确认目标、权限及打开状态。操作系统对打开文件的删除行为可能不同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "删临时导出文件前检查路径确实处于临时目录。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能只凭文件名包含 `temp` 判断？",
+        "answer": "可能匹配到不相关的真实用户文件。"
+      }
+    },
+    {
+      "id": "cpp.book.16-7",
+      "title": "小结",
+      "number": "16.7",
+      "parent": "cpp.book.chapter-16",
+      "depth": 3,
+      "order": 344,
+      "printedPage": 359,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "把文件操作分成打开、传输、校验和关闭。每一步都可单独失败，调用者需要区分原因。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "读入没有结尾换行的最后一行后仍应处理该行。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只检查打开成功能证明读写成功吗？",
+        "answer": "不能，后续格式、权限和设备故障仍可能出现。"
+      }
+    },
+    {
+      "id": "cpp.book.16-8",
+      "title": "实践与练习",
+      "number": "16.8",
+      "parent": "cpp.book.chapter-16",
+      "depth": 3,
+      "order": 345,
+      "printedPage": 359,
+      "leaf": true,
+      "group": 16,
+      "body": [
+        "设计按字符过滤的复制任务，明确字符范围和编码。分别测试空文件、非目标字符和末块短读。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "在仅限 ASCII 的练习里，`A2b!` 保留字母得到 `Ab`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "对 Unicode 文本直接按单字节判断会怎样？",
+        "answer": "可能拆分编码单元。需要按约定解码后判断。"
+      }
+    }
+  ]
+}

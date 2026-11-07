@@ -1,0 +1,263 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 9,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-9",
+      "title": "面向对象编程",
+      "number": "第9章",
+      "parent": "cpp.book.part-2",
+      "depth": 2,
+      "order": 174,
+      "printedPage": 169,
+      "leaf": false,
+      "group": 9,
+      "body": [
+        "把软件场景拆成状态、职责和交互。用类图描述静态关系，用顺序图核对一个具体业务过程。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.9-1",
+      "title": "面向对象概述",
+      "number": "9.1",
+      "parent": "cpp.book.chapter-9",
+      "depth": 3,
+      "order": 175,
+      "printedPage": 170,
+      "leaf": true,
+      "group": 9,
+      "body": [
+        "对象把一份状态和操作它的规则放在一起。设计时先写对象保证维持的约束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "库存对象保存数量，并把出库限制在 0 到当前库存之间。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不允许调用方随意写负数？",
+        "answer": "对象负责保持数量非负的业务约束。"
+      }
+    },
+    {
+      "id": "cpp.book.9-2",
+      "title": "面向对象与面向过程编程",
+      "number": "9.2",
+      "parent": "cpp.book.chapter-9",
+      "depth": 3,
+      "order": 176,
+      "printedPage": 171,
+      "leaf": false,
+      "group": 9,
+      "body": [
+        "对同一需求各画一张步骤图与职责图。比较修改计价规则时哪部分代码需改变，再选择组织方式。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.9-2-1",
+      "title": "面向过程编程",
+      "number": "9.2.1",
+      "parent": "cpp.book.9-2",
+      "depth": 4,
+      "order": 177,
+      "printedPage": 171,
+      "leaf": true,
+      "group": 9,
+      "body": [
+        "面向过程从要完成的步骤出发，将输入、计算和输出拆成函数。适合表达简单的计算管道。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "排序报告可由读入、排序、打印三个函数依次完成。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "状态由哪一层传递？",
+        "answer": "调用方通过参数和返回值在各步骤间传递。"
+      }
+    },
+    {
+      "id": "cpp.book.9-2-2",
+      "title": "面向对象编程",
+      "number": "9.2.2",
+      "parent": "cpp.book.9-2",
+      "depth": 4,
+      "order": 178,
+      "printedPage": 171,
+      "leaf": true,
+      "group": 9,
+      "body": [
+        "面向对象先分配责任，再让对象通过接口协作。接口体现调用者可依赖的行为。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "订单负责合计金额，库存负责确认数量，结账流程协调两者。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "应该由库存对象计算订单折扣吗？",
+        "answer": "通常由订单或独立计价规则负责，库存只管理数量。"
+      }
+    },
+    {
+      "id": "cpp.book.9-2-3",
+      "title": "面向对象的特点",
+      "number": "9.2.3",
+      "parent": "cpp.book.9-2",
+      "depth": 4,
+      "order": 179,
+      "printedPage": 172,
+      "leaf": true,
+      "group": 9,
+      "body": [
+        "封装控制访问范围，继承描述可替换关系，多态允许同一接口根据对象选择实现。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "多种图形都能回答面积，调用者不必知道具体形状的计算细节。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若新图形加入，调用者要改判断链吗？",
+        "answer": "使用统一的虚接口时可以保留原调用方式。"
+      }
+    },
+    {
+      "id": "cpp.book.9-3",
+      "title": "统一建模语言",
+      "number": "9.3",
+      "parent": "cpp.book.chapter-9",
+      "depth": 3,
+      "order": 180,
+      "printedPage": 172,
+      "leaf": false,
+      "group": 9,
+      "body": [
+        "先确定想回答结构问题还是顺序问题，再选 UML 视角。不要在类图中混入某次运行的具体时序。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.9-3-1",
+      "title": "统一建模语言概述",
+      "number": "9.3.1",
+      "parent": "cpp.book.9-3",
+      "depth": 4,
+      "order": 181,
+      "printedPage": 172,
+      "leaf": true,
+      "group": 9,
+      "body": [
+        "UML 是用于沟通结构与行为的符号体系。选择能回答当前问题的图形。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "类图描述票与订单的关系，顺序图描述付款消息的发送顺序。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想排查重复扣款优先用哪类图？",
+        "answer": "可先用顺序图找出重复消息的路径。"
+      }
+    },
+    {
+      "id": "cpp.book.9-3-2",
+      "title": "统一建模语言的结构",
+      "number": "9.3.2",
+      "parent": "cpp.book.9-3",
+      "depth": 4,
+      "order": 182,
+      "printedPage": 173,
+      "leaf": true,
+      "group": 9,
+      "body": [
+        "类图通常列类名、字段、操作和关系。关系端点的数量表达每一端能关联几个对象。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "一份订单可包含多个明细，每条明细属于一个订单。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "数量标注能帮助发现什么错误？",
+        "answer": "例如误把只能有一位负责人的关系实现成任意多位。"
+      }
+    },
+    {
+      "id": "cpp.book.9-3-3",
+      "title": "面向对象的建模",
+      "number": "9.3.3",
+      "parent": "cpp.book.9-3",
+      "depth": 4,
+      "order": 183,
+      "printedPage": 175,
+      "leaf": true,
+      "group": 9,
+      "body": [
+        "建模先从场景识别名词、动作及不变量。不同场景可逐步修订类和消息。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "图书借阅包含副本、读者和借阅记录，归还动作修改记录的状态。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "书名适合作为副本唯一编号吗？",
+        "answer": "不适合。同一本书可能有多个副本。"
+      }
+    },
+    {
+      "id": "cpp.book.9-4",
+      "title": "小结",
+      "number": "9.4",
+      "parent": "cpp.book.chapter-9",
+      "depth": 3,
+      "order": 184,
+      "printedPage": 175,
+      "leaf": true,
+      "group": 9,
+      "body": [
+        "复习时分别画状态结构和消息顺序。类描述职责，实际调用路径用行为图或手工轨迹表达。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。用对象状态和调用关系核对概念，课程执行仅覆盖公开字段聚合等有限语法。",
+        "description": "预约状态从待确认到已确认再到已完成，取消可能走独立路径。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只画字段能看出何时取消吗？",
+        "answer": "不能。需要状态转移条件或调用顺序。"
+      }
+    }
+  ]
+}

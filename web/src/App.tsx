@@ -74,6 +74,9 @@ const PythonReviewPage = lazy(() => import('./python3/ReviewPage'));
 const JavaCoursePage = lazy(() => import('./java/CoursePage'));
 const JavaWorkbench = lazy(() => import('./java/Workbench'));
 const JavaReviewPage = lazy(() => import('./java/ReviewPage'));
+const CppCoursePage = lazy(() => import('./cpp-course/CoursePage'));
+const CppWorkbench = lazy(() => import('./cpp-course/Workbench'));
+const CppReviewPage = lazy(() => import('./cpp-course/ReviewPage'));
 import { bugQuestions } from './bugs/content';
 import { useParams } from 'react-router';
 function PracticeRoute({ review = false }: { review?: boolean }) {
@@ -148,6 +151,12 @@ function AppRoutes() {
             <Route path="/java/example/:order/:section" element={<JavaWorkbench />} />
             <Route path="/java/practice/:exerciseId" element={<JavaWorkbench />} />
             <Route path="/java/review" element={<JavaReviewPage />} />
+            <Route path="/cpp" element={<CppCoursePage />} />
+            <Route path="/cpp/lesson/:lessonId" element={<CppCoursePage />} />
+            <Route path="/cpp/workbench" element={<CppWorkbench />} />
+            <Route path="/cpp/example/:lessonId" element={<CppWorkbench />} />
+            <Route path="/cpp/practice/:profileId" element={<CppWorkbench />} />
+            <Route path="/cpp/review" element={<CppReviewPage />} />
             <Route path="/advanced" element={<AdvancedCoursePage />} />
             <Route path="/advanced/migration" element={<LanguageMigrationPage />} />
             <Route path="/advanced/examples" element={<ExamplePage />} />

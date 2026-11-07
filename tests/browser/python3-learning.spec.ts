@@ -78,8 +78,8 @@ test('published Python course loads one article, saves reading independently and
   await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read-today', 'true');
   await page.keyboard.press('End');
   const read = await archive(page);
-  expect(read.version).toBe(12);
-  expect(Object.keys(read.rows)).toHaveLength(23);
+  expect(read.version).toBe(13);
+  expect(Object.keys(read.rows)).toHaveLength(25);
   expect(read.rows.pythonActivities.values).toHaveLength(1);
   expect(
     read.rows.ledger.values.filter((row) => row.subjectId === greeting.platformRef.id),
@@ -232,7 +232,7 @@ test('native DB10 upgrade preserves real C exercise and C++ algorithm observatio
   expect(JSON.stringify(original.rows.achievements.values)).toContain('observation.stack.hanoi');
   const prior = Object.fromEntries(
     Object.entries(original.rows).filter(
-      ([name]) => !name.startsWith('python') && !name.startsWith('java'),
+      ([name]) => !name.startsWith('python') && !name.startsWith('java') && !name.startsWith('cpp'),
     ),
   );
   prior.meta.values[0] = {
@@ -272,7 +272,7 @@ test('native DB10 upgrade preserves real C exercise and C++ algorithm observatio
       'ready',
     );
     const upgraded = await archive(migrated);
-    expect(upgraded.version).toBe(12);
+    expect(upgraded.version).toBe(13);
     expect(upgraded.rows.pythonActivities.values).toEqual([]);
     expect(upgraded.rows.pythonDrafts.values).toEqual([]);
     for (const [name, rows] of Object.entries(prior)) {
@@ -281,12 +281,17 @@ test('native DB10 upgrade preserves real C exercise and C++ algorithm observatio
     }
     expect(upgraded.rows.meta.values[0]).toMatchObject({
       ...prior.meta.values[0],
-      dbVersion: 12,
-      schemaVersion: '12.0.0',
-      activeCatalogSetRef: { id: 'catalog-set.c-python-java', version: '1.0.0' },
+      dbVersion: 13,
+      schemaVersion: '13.0.0',
+      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp', version: '1.0.0' },
     });
-    await migrated.keyboard.press('End');
-    await expect(migrated.getByTestId('reading-end')).toHaveAttribute('data-read-today', 'true');
+    const readingEnd = migrated.getByTestId('reading-end');
+    await expect(readingEnd).toBeAttached();
+    await migrated.bringToFront();
+    await expect(async () => {
+      await migrated.keyboard.press('End');
+      await expect(readingEnd).toHaveAttribute('data-read-today', 'true', { timeout: 800 });
+    }).toPass({ timeout: 8000 });
     await migrated.getByRole('link', { name: '打开练习', exact: true }).click();
     await code(migrated).fill(sample.greeting);
     await migrated.getByRole('button', { name: '保存草稿' }).click();

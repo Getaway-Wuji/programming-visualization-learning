@@ -1,0 +1,618 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 8,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-8",
+      "title": "构造数据类型",
+      "number": "第8章",
+      "parent": "cpp.book.part-1",
+      "depth": 2,
+      "order": 149,
+      "printedPage": 147,
+      "leaf": false,
+      "group": 8,
+      "body": [
+        "选择数据表示时先问字段是并存、互斥还是有限状态。用同一业务记录对比聚合、共用存储和枚举。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.8-1",
+      "title": "结构体",
+      "number": "8.1",
+      "parent": "cpp.book.chapter-8",
+      "depth": 3,
+      "order": 150,
+      "printedPage": 148,
+      "leaf": false,
+      "group": 8,
+      "body": [
+        "把一组有意义的字段定义成类型，再创建实例。初始化、嵌套和布局分别决定初值、对象所有权与地址解释。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.8-1-1",
+      "title": "结构体定义",
+      "number": "8.1.1",
+      "parent": "cpp.book.8-1",
+      "depth": 4,
+      "order": 151,
+      "printedPage": 148,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "结构体把相关字段组成一个类型。字段说明该值有哪些组成部分，各字段保持自己的类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`struct Point{ int x; int y; };` 用两个整数描述平面位置。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "定义结构体时是否已经创建了一个 Point 对象？",
+        "answer": "没有。还需声明对象或分配它。"
+      }
+    },
+    {
+      "id": "cpp.book.8-1-2",
+      "title": "结构体变量",
+      "number": "8.1.2",
+      "parent": "cpp.book.8-1",
+      "depth": 4,
+      "order": 152,
+      "printedPage": 149,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "同一种结构体可创建多个独立对象。修改一个对象的字段不会改变另一个。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`Point a{}; Point b{}; a.x=5;` 只改变 a 的 x。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "b.x 仍为多少？",
+        "answer": "0，两个对象各有自己的字段。"
+      }
+    },
+    {
+      "id": "cpp.book.8-1-3",
+      "title": "结构体成员及初始化",
+      "number": "8.1.3",
+      "parent": "cpp.book.8-1",
+      "depth": 4,
+      "order": 153,
+      "printedPage": 149,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "结构体对象各字段共享记录身份，但可独立读取和更新。空大括号初始化会给示例的整数字段赋零值。",
+        "使用点访问具体字段。字段顺序决定本题的输入和运算含义。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 `3 4` 时 x 变成 3，y 变成 4，表达式得到 10。",
+        "source": "#include <iostream>\nstruct Point{ int x; int y; };\nint main(){ Point p{}; std::cin >> p.x >> p.y; std::cout << 2*p.x+p.y << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "10\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                3,
+                4
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "0\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "-1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -5,
+                9
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "2997\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                999,
+                999
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.8-1-3.exercise",
+        "prompt": "把两个输入存到结构体的两个字段，输出第一个字段的两倍加上第二个。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "使用点访问具体字段。字段顺序决定本题的输入和运算含义。"
+      }
+    },
+    {
+      "id": "cpp.book.8-1-4",
+      "title": "结构体的嵌套",
+      "number": "8.1.4",
+      "parent": "cpp.book.8-1",
+      "depth": 4,
+      "order": 154,
+      "printedPage": 152,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "嵌套结构体将完整的子对象作为字段。读取时沿字段链逐层定位。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "地址可包含一个坐标对象。`item.point.x` 先找到 point，再找 x。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "嵌套字段和指向它的指针有何区别？",
+        "answer": "嵌套字段属于外层对象，指针只保留目标位置。"
+      }
+    },
+    {
+      "id": "cpp.book.8-1-5",
+      "title": "结构体大小",
+      "number": "8.1.5",
+      "parent": "cpp.book.8-1",
+      "depth": 4,
+      "order": 155,
+      "printedPage": 153,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "结构体大小可包含对齐填充。序列化时应按明确定义的字段编码处理，而非依赖内存布局。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "含 `char` 与 `int` 的记录可能比 1 加 4 字节更大。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么两个工具链不一定得到相同大小？",
+        "answer": "对齐和布局规则可随目标实现而不同。"
+      }
+    },
+    {
+      "id": "cpp.book.8-2",
+      "title": "结构体与函数",
+      "number": "8.2",
+      "parent": "cpp.book.chapter-8",
+      "depth": 3,
+      "order": 156,
+      "printedPage": 154,
+      "leaf": false,
+      "group": 8,
+      "body": [
+        "比较值参数与指针参数。给同一字段赋值时，一种改变副本，另一种可改变调用者的记录。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.8-2-1",
+      "title": "结构体变量作函数参数",
+      "number": "8.2.1",
+      "parent": "cpp.book.8-2",
+      "depth": 4,
+      "order": 157,
+      "printedPage": 155,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "按值传结构体会创建独立的形参对象。对象大时应考虑复制成本和是否需要修改原对象。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "值形参 `Point p` 内写 `p.x=0`，调用者的 x 保持原值。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "字段若是指针，复制是否会复制目标？",
+        "answer": "不会。它会复制字段中的位置值。"
+      }
+    },
+    {
+      "id": "cpp.book.8-2-2",
+      "title": "结构体指针作函数参数",
+      "number": "8.2.2",
+      "parent": "cpp.book.8-2",
+      "depth": 4,
+      "order": 158,
+      "printedPage": 155,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "通过结构体指针可访问原对象字段。`p->x` 是对 `(*p).x` 的便捷写法。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "先用 `p=&point` 建立有效指向，再执行 `p->x=7`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果 p 为空会怎样？",
+        "answer": "访问成员不合法，平台会给出空指针诊断。"
+      }
+    },
+    {
+      "id": "cpp.book.8-3",
+      "title": "结构体数组",
+      "number": "8.3",
+      "parent": "cpp.book.chapter-8",
+      "depth": 3,
+      "order": 159,
+      "printedPage": 156,
+      "leaf": false,
+      "group": 8,
+      "body": [
+        "先用索引选择一条记录，再选字段。用首条、尾条和越界位置检验遍历逻辑。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.8-3-1",
+      "title": "结构体数组声明与引用",
+      "number": "8.3.1",
+      "parent": "cpp.book.8-3",
+      "depth": 4,
+      "order": 160,
+      "printedPage": 157,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "结构体数组的每格是一条记录。访问时先定位一格，再选择字段。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`points[1].y` 读取第二条记录的 y。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "写 `points[1].y=4` 会修改 `points[0]` 吗？",
+        "answer": "不会，两个下标对应不同对象。"
+      }
+    },
+    {
+      "id": "cpp.book.8-3-2",
+      "title": "指针访问结构体数组",
+      "number": "8.3.2",
+      "parent": "cpp.book.8-3",
+      "depth": 4,
+      "order": 161,
+      "printedPage": 158,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "记录指针递增一格会跳到下一条记录。每次访问仍要判断范围和目标生命周期。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "遍历 `p` 到 `end`，每轮读取 `p->x` 后前进。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能在 `p==end` 时读取字段吗？",
+        "answer": "不能，end 只标记尾后位置。"
+      }
+    },
+    {
+      "id": "cpp.book.8-4",
+      "title": "共用体",
+      "number": "8.4",
+      "parent": "cpp.book.chapter-8",
+      "depth": 3,
+      "order": 162,
+      "printedPage": 159,
+      "leaf": false,
+      "group": 8,
+      "body": [
+        "共享存储需要明确当前活动成员。采用标签记录含义，再比较切换前后哪些读取仍有效。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.8-4-1",
+      "title": "共用体的定义与声明",
+      "number": "8.4.1",
+      "parent": "cpp.book.8-4",
+      "depth": 4,
+      "order": 163,
+      "printedPage": 159,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "共用体的成员共享存储，通常只有一个活动成员。显式标签可记录当前存放的是哪一种。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "用类型标签区分整数或小数，读值时先查标签。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不直接依次读所有成员？",
+        "answer": "它们并不同时保存独立值，读取非活动成员通常不合法。"
+      }
+    },
+    {
+      "id": "cpp.book.8-4-2",
+      "title": "共用体的大小",
+      "number": "8.4.2",
+      "parent": "cpp.book.8-4",
+      "depth": 4,
+      "order": 164,
+      "printedPage": 160,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "共用体必须放得下最大的成员，并满足对齐要求。大小不等于各成员大小之和。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "一个能存 `int` 或 `double` 的共用体至少需要容纳 double。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "加一个小字符成员必然增大吗？",
+        "answer": "不必然，已有空间和对齐可能已足够。"
+      }
+    },
+    {
+      "id": "cpp.book.8-4-3",
+      "title": "共用体的特点",
+      "number": "8.4.3",
+      "parent": "cpp.book.8-4",
+      "depth": 4,
+      "order": 165,
+      "printedPage": 161,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "共用体适合有明确判别标签的互斥数据。切换活动成员后，旧成员的解释就失效。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "消息类型从数字切换到字节时，先更新存储，再同步标签供读取端选择。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "哪个测试能查出标签失步？",
+        "answer": "先写第一种，再切换第二种后按标签读取。"
+      }
+    },
+    {
+      "id": "cpp.book.8-5",
+      "title": "枚举类型",
+      "number": "8.5",
+      "parent": "cpp.book.chapter-8",
+      "depth": 3,
+      "order": 166,
+      "printedPage": 161,
+      "leaf": false,
+      "group": 8,
+      "body": [
+        "用枚举命名业务状态并集中定义合法转换。边界输入要在转成枚举前验证。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.8-5-1",
+      "title": "枚举类型的声明",
+      "number": "8.5.1",
+      "parent": "cpp.book.8-5",
+      "depth": 4,
+      "order": 167,
+      "printedPage": 161,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "枚举给有限状态命名，适合固定集合。`enum class` 把名称限制在枚举作用域。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`enum class Light { red, yellow, green };` 表示三种灯态。",
+        "source": "#include <iostream>\nenum class Light { red, yellow, green };\nint main() {\n    Light current = Light::red;\n    if (current == Light::red) std::cout << \"stop\\n\";\n}\n",
+        "result": "无输入，输出 stop 后换行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么用 `Light::red` 比数字 0 清楚？",
+        "answer": "名字表达了状态，也限制了误用无关整数。"
+      }
+    },
+    {
+      "id": "cpp.book.8-5-2",
+      "title": "枚举类型变量",
+      "number": "8.5.2",
+      "parent": "cpp.book.8-5",
+      "depth": 4,
+      "order": 168,
+      "printedPage": 162,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "枚举变量存放某种枚举的值。外部整数转成枚举前应验证它属于协议定义的状态。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "从键盘读 0、1、2 再映射成灯态，其他输入报告无效。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若输入 9，可直接视作一个合法灯态吗？",
+        "answer": "不能。它不在问题定义的集合内。"
+      }
+    },
+    {
+      "id": "cpp.book.8-5-3",
+      "title": "枚举类型的运算",
+      "number": "8.5.3",
+      "parent": "cpp.book.8-5",
+      "depth": 4,
+      "order": 169,
+      "printedPage": 163,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "对枚举先明确操作的含义。比较是否同态通常合理，对状态做任意算术往往没有业务意义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "“红变绿”通过状态转换表表达，比把枚举底层整数加二清楚。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么重排枚举后转换表仍可靠？",
+        "answer": "规则依赖状态名，而非偶然的编号。"
+      }
+    },
+    {
+      "id": "cpp.book.8-6",
+      "title": "自定义数据类型",
+      "number": "8.6",
+      "parent": "cpp.book.chapter-8",
+      "depth": 3,
+      "order": 170,
+      "printedPage": 165,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "类型别名给现有类型另一个名字，有助于表达用途。别名通常不会创建独立的新类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`using Milliseconds = int;` 使时间单位在声明中更清楚。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "它能自动阻止把秒赋给 Milliseconds 吗？",
+        "answer": "不能。要强制区分，可定义独立包装类型。"
+      }
+    },
+    {
+      "id": "cpp.book.8-7",
+      "title": "小结",
+      "number": "8.7",
+      "parent": "cpp.book.chapter-8",
+      "depth": 3,
+      "order": 171,
+      "printedPage": 166,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "选择记录结构时区分组合、互斥和有限状态。字段同时存在用结构体，互斥数据需要显式标记。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "一张票同时有编号与价格。票状态是有效、使用或取消之一。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两类数据分别适合什么？",
+        "answer": "编号和价格是结构字段，有限状态适合枚举。"
+      }
+    },
+    {
+      "id": "cpp.book.8-8",
+      "title": "实践与练习",
+      "number": "8.8",
+      "parent": "cpp.book.chapter-8",
+      "depth": 3,
+      "order": 172,
+      "printedPage": 166,
+      "leaf": true,
+      "group": 8,
+      "body": [
+        "为每个候选人保存姓名及得票数。逐票校验目标是否存在，再累加对应字段。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "选票 A、B、A 和未知值，合法票应得到 A 两票、B 一票。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "未知值不应增加谁的票？",
+        "answer": "不应增加任何候选人的票，需记录或报告无效输入。"
+      }
+    }
+  ]
+}

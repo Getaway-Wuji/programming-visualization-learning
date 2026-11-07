@@ -11,7 +11,7 @@ import {
 } from './identities';
 
 function topics(snapshot: StorageSnapshot, marks: readonly KnowledgeMark[]) {
-  if (snapshot.meta.dbVersion !== 12) return [];
+  if (snapshot.meta.dbVersion < 12) return [];
   return Object.entries(javaExercises).map(([id, exercise]) => {
     const events = snapshot.receipts
       .filter(

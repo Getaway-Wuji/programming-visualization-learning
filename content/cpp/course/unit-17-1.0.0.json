@@ -1,0 +1,461 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 17,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-17",
+      "title": "网络通信",
+      "number": "第17章",
+      "parent": "cpp.book.part-3",
+      "depth": 2,
+      "order": 346,
+      "printedPage": 361,
+      "leaf": false,
+      "group": 17,
+      "body": [
+        "从协议分层理解地址、端口和会话，再用模拟消息判断分片、超时和断开。通信接口在此章用于阅读。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.17-1",
+      "title": "TCP/IP协议",
+      "number": "17.1",
+      "parent": "cpp.book.chapter-17",
+      "depth": 3,
+      "order": 347,
+      "printedPage": 362,
+      "leaf": false,
+      "group": 17,
+      "body": [
+        "把模型、地址与数据包放在同一张示意图。先分清每一层解决的问题，再分析一个请求的各段数据。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.17-1-1",
+      "title": "OSI参考模型",
+      "number": "17.1.1",
+      "parent": "cpp.book.17-1",
+      "depth": 4,
+      "order": 348,
+      "printedPage": 362,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "OSI 模型用层次分开传输介质、寻址、端到端传输和应用等职责。分层便于定位失败环节。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "页面请求失败时，可分别验证链路、网络寻址、传输连接与应用响应。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "本机有链路是否保证应用可用？",
+        "answer": "不保证，较高层仍可能发生故障。"
+      }
+    },
+    {
+      "id": "cpp.book.17-1-2",
+      "title": "TCP/IP参考模型",
+      "number": "17.1.2",
+      "parent": "cpp.book.17-1",
+      "depth": 4,
+      "order": 349,
+      "printedPage": 362,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "TCP/IP 模型通常按链路、互联网、传输、应用职责理解。IP 负责寻址路由，TCP 和 UDP 提供不同传输服务。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "客户端能到达 IP 地址，但应用端口可能仍未开放。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "检查到达地址与检查端口属于同一步吗？",
+        "answer": "属于不同层面的诊断。"
+      }
+    },
+    {
+      "id": "cpp.book.17-1-3",
+      "title": "IP地址",
+      "number": "17.1.3",
+      "parent": "cpp.book.17-1",
+      "depth": 4,
+      "order": 350,
+      "printedPage": 363,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "IP 地址标识网络接口的寻址位置。端口在传输层区分同一主机上的应用服务。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "同一 IP 的端口 8000 和 9000 可由两个服务监听。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只知道 IP 就能确定访问哪个服务吗？",
+        "answer": "通常还需要端口和传输协议。"
+      }
+    },
+    {
+      "id": "cpp.book.17-1-4",
+      "title": "数据包格式",
+      "number": "17.1.4",
+      "parent": "cpp.book.17-1",
+      "depth": 4,
+      "order": 351,
+      "printedPage": 364,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "网络数据包由协议头与负载组成。接收端按字段宽度、字节顺序及长度进行解析。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "应用帧可先存 2 字节负载长度，再存 UTF-8 内容。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "声明长度比已收数据大时应怎么办？",
+        "answer": "等待剩余数据或在超时、连接关闭后判为不完整。"
+      }
+    },
+    {
+      "id": "cpp.book.17-2",
+      "title": "套接字",
+      "number": "17.2",
+      "parent": "cpp.book.chapter-17",
+      "depth": 3,
+      "order": 352,
+      "printedPage": 366,
+      "leaf": false,
+      "group": 17,
+      "body": [
+        "套接字承担连接或数据报收发。核对阻塞策略、字节顺序、资源关闭和消息边界。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.17-2-1",
+      "title": "Winsock套接字",
+      "number": "17.2.1",
+      "parent": "cpp.book.17-2",
+      "depth": 4,
+      "order": 353,
+      "printedPage": 366,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "Winsock 是 Windows 的套接字接口。程序应检查初始化、套接字创建及后续调用，并成对释放资源。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "启动后创建一个流套接字，结束时关闭它并清理 Winsock。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "平台课程能直接调用 Winsock 吗？",
+        "answer": "网络和宿主调用不在浏览器解释器的执行范围，使用纸面分析。"
+      }
+    },
+    {
+      "id": "cpp.book.17-2-2",
+      "title": "Winsock的使用",
+      "number": "17.2.2",
+      "parent": "cpp.book.17-2",
+      "depth": 4,
+      "order": 354,
+      "printedPage": 366,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "服务端一般绑定地址并监听，客户端发起连接。监听套接字与已接受的会话套接字各有职责。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "服务端接受两个连接时，分别处理两份连接对象。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "处理首个会话后应关闭监听器吗？",
+        "answer": "要继续接收新会话时应保留监听器，只关闭结束的会话。"
+      }
+    },
+    {
+      "id": "cpp.book.17-2-3",
+      "title": "套接字阻塞模式",
+      "number": "17.2.3",
+      "parent": "cpp.book.17-2",
+      "depth": 4,
+      "order": 355,
+      "printedPage": 371,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "阻塞操作等待数据或错误，非阻塞操作可能立即返回暂不可用。应用需决定重试和超时策略。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "非阻塞读取暂时没数据，可等到套接字可读再继续。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "暂不可用等同于对端关闭吗？",
+        "answer": "不同。暂不可用时连接可能仍有效。"
+      }
+    },
+    {
+      "id": "cpp.book.17-2-4",
+      "title": "字节顺序",
+      "number": "17.2.4",
+      "parent": "cpp.book.17-2",
+      "depth": 4,
+      "order": 356,
+      "printedPage": 371,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "多字节整数的排列顺序需要双方一致。网络协议通常使用明确的网络字节序。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "十六进制值 0x1234 以大端发送为 0x12、0x34。",
+        "source": "#include <iostream>\nint main() {\n    unsigned value = 0x1234;\n    unsigned high = (value >> 8) & 0xff;\n    unsigned low = value & 0xff;\n    std::cout << std::hex << high << \" \" << low << std::endl;\n}\n",
+        "result": "无输入，输出 `12 34`，对应高字节在前。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若另一端按小端直接解释会得到什么？",
+        "answer": "会得到 0x3412，必须按协议转换。"
+      }
+    },
+    {
+      "id": "cpp.book.17-2-5",
+      "title": "面向连接流",
+      "number": "17.2.5",
+      "parent": "cpp.book.17-2",
+      "depth": 4,
+      "order": 357,
+      "printedPage": 372,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "面向连接的 TCP 提供有序字节流。单次发送与单次接收之间没有消息边界对应。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "连续发送两条消息，接收端可能一次收到半条或两条合在一起。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如何识别消息边界？",
+        "answer": "使用长度前缀、分隔规则或其他明确的帧格式。"
+      }
+    },
+    {
+      "id": "cpp.book.17-2-6",
+      "title": "面向无连接流",
+      "number": "17.2.6",
+      "parent": "cpp.book.17-2",
+      "depth": 4,
+      "order": 358,
+      "printedPage": 372,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "UDP 以数据报为单位，应用需要自行处理可能的丢失、乱序和重复。适合能容忍这些情况的协议。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "每秒发送一个位置，接收端只使用序号最大的更新。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果序号较小的包后到，该怎样处理？",
+        "answer": "按规则忽略旧更新，避免状态倒退。"
+      }
+    },
+    {
+      "id": "cpp.book.17-3",
+      "title": "简单协议通信",
+      "number": "17.3",
+      "parent": "cpp.book.chapter-17",
+      "depth": 3,
+      "order": 359,
+      "printedPage": 373,
+      "leaf": false,
+      "group": 17,
+      "body": [
+        "把服务端和客户端拆成两份事件序列。用模拟连接、分片响应与断开验证双方是否按同一协议行动。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.17-3-1",
+      "title": "服务端",
+      "number": "17.3.1",
+      "parent": "cpp.book.17-3",
+      "depth": 4,
+      "order": 360,
+      "printedPage": 373,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "服务端接收数据后应先完成分帧和验证，再执行业务并返回明确结果。断开连接时释放对应会话。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "收到长度超过上限的请求时拒绝该帧，避免分配任意大小缓冲区。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "服务端为什么不能相信客户端给的长度？",
+        "answer": "客户端可能误发或发送超限数据，需要按协议验证。"
+      }
+    },
+    {
+      "id": "cpp.book.17-3-2",
+      "title": "客户端",
+      "number": "17.3.2",
+      "parent": "cpp.book.17-3",
+      "depth": 4,
+      "order": 361,
+      "printedPage": 375,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "客户端发起连接并发送请求。应区分连接失败、发送部分完成、等待超时与完整响应。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "请求发出后等待有界时间，接收到完整帧才显示结果。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只收到一个字节能标记响应成功吗？",
+        "answer": "只有协议规定完整响应正好一个字节才可以。"
+      }
+    },
+    {
+      "id": "cpp.book.17-3-3",
+      "title": "实例的运行",
+      "number": "17.3.3",
+      "parent": "cpp.book.17-3",
+      "depth": 4,
+      "order": 362,
+      "printedPage": 377,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "运行通信示例要分别观察服务端启动、客户端连接、消息往返和断开。日志应带会话及时间信息。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "先启动服务端，再让客户端发两条分开的请求，核对两条响应。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "服务端日志没有连接记录时应先查业务解析吗？",
+        "answer": "应先查监听地址、端口和连接路径。"
+      }
+    },
+    {
+      "id": "cpp.book.17-4",
+      "title": "小结",
+      "number": "17.4",
+      "parent": "cpp.book.chapter-17",
+      "depth": 3,
+      "order": 363,
+      "printedPage": 377,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "网络程序的正确性来自明确的消息边界和失败恢复规则。测试需要覆盖分片、延迟、关闭和重复。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "发送前缀后立即断开，应记录未完成帧并释放会话。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "半条消息能当成空请求吗？",
+        "answer": "不能，应按协议报告中断或忽略未完成数据。"
+      }
+    },
+    {
+      "id": "cpp.book.17-5",
+      "title": "实践与练习",
+      "number": "17.5",
+      "parent": "cpp.book.chapter-17",
+      "depth": 3,
+      "order": 364,
+      "printedPage": 377,
+      "leaf": true,
+      "group": 17,
+      "body": [
+        "比较 TCP 和 UDP 聊天模型时，分别定义消息身份、时序和连接反馈。用纸面输入检验丢失和重发。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。宿主文件、网络和跨模块项目不进入课程执行。",
+        "description": "顺序发送编号 1、2、3，模拟收到 1、3、3。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如何避免重复显示第 3 条？",
+        "answer": "为每条消息保留唯一编号，接收端检查已处理记录。"
+      }
+    }
+  ]
+}

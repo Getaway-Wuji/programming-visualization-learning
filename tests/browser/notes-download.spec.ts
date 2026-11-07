@@ -60,7 +60,7 @@ async function raw(p: Page) {
 }
 async function unchanged(p: Page, name: string, before: Awaited<ReturnType<typeof raw>>) {
   const after = await raw(p);
-  expect(Object.keys(after.stores)).toHaveLength(23);
+  expect(Object.keys(after.stores)).toHaveLength(25);
   expect(after).toEqual(before);
   await writeFile(`${folder}/${name}-native.json.gz`, gzipSync(JSON.stringify({ before, after })), {
     flag: 'wx',
@@ -434,16 +434,21 @@ test('20.2 peer clearing while a real image is pending releases snapshots and no
   await expect(
     page.getByText('先选择内容类型，再逐条勾选要整理的记录。', { exact: true }),
   ).toBeVisible();
-  await page
-    .getByRole('group', { name: '内容类型' })
-    .getByRole('checkbox', { name: '快照', exact: true })
-    .check();
-  await expect(page.locator('[data-note-kind="snapshot"]')).toHaveCount(0);
-  await expect(
-    page.getByText('这个范围没有可整理的记录。快照需先从真实运行中加入。', { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByText(/^本次临时快照/)).toHaveCount(0);
   await release(page);
   await expect(page.locator('.note-download')).toHaveCount(0);
+  expect(downloads).toHaveLength(0);
+  // A generation change remounts the filter while the peer's archive arrives.
+  await expect(async () => {
+    await page
+      .getByRole('group', { name: '内容类型' })
+      .getByRole('checkbox', { name: '快照', exact: true })
+      .check();
+    await expect(
+      page.getByText('这个范围没有可整理的记录。快照需先从真实运行中加入。', { exact: true }),
+    ).toBeVisible({ timeout: 500 });
+  }).toPass({ timeout: 5000 });
+  await expect(page.locator('[data-note-kind="snapshot"]')).toHaveCount(0);
   expect(downloads).toHaveLength(0);
 });
 

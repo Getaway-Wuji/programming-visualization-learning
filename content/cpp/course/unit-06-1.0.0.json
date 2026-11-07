@@ -1,0 +1,624 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 6,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-6",
+      "title": "函数",
+      "number": "第6章",
+      "parent": "cpp.book.part-1",
+      "depth": 2,
+      "order": 98,
+      "printedPage": 89,
+      "leaf": false,
+      "group": 6,
+      "body": [
+        "用调用帧解释函数传参、局部名字与返回值。递归练习先检查基例，再追踪最小的非平凡调用。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.6-1",
+      "title": "函数概述",
+      "number": "6.1",
+      "parent": "cpp.book.chapter-6",
+      "depth": 3,
+      "order": 99,
+      "printedPage": 90,
+      "leaf": false,
+      "group": 6,
+      "body": [
+        "分清让编译器看见调用签名的声明与提供代码的定义。把函数的输入、输出和约束写成可验证契约。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.6-1-1",
+      "title": "函数的定义",
+      "number": "6.1.1",
+      "parent": "cpp.book.6-1",
+      "depth": 4,
+      "order": 100,
+      "printedPage": 90,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "定义函数需给返回类型、名字、形参和函数体。把任务拆成输入到结果的可独立检验关系。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int doubleValue(int n){ return n*2; }` 输入 -3 返回 -6。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若调用端传 0，预期返回什么？",
+        "answer": "0，倍增关系对零也成立。"
+      }
+    },
+    {
+      "id": "cpp.book.6-1-2",
+      "title": "函数的声明",
+      "number": "6.1.2",
+      "parent": "cpp.book.6-1",
+      "depth": 4,
+      "order": 101,
+      "printedPage": 90,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "声明向使用处公开函数签名，定义给出函数体。标准项目可将声明放在头文件，并用独立文件实现。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "在 `main` 前声明 `int sum(int,int);`，之后提供同一签名的定义。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只加声明会消除所有错误吗？",
+        "answer": "只让调用通过类型检查，链接还需要定义。"
+      }
+    },
+    {
+      "id": "cpp.book.6-2",
+      "title": "函数参数及返回值",
+      "number": "6.2",
+      "parent": "cpp.book.chapter-6",
+      "depth": 3,
+      "order": 102,
+      "printedPage": 92,
+      "leaf": false,
+      "group": 6,
+      "body": [
+        "用有无返回值、必传和默认参数分别检查调用契约。对可变参数额外核对实参的数量和类型。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.6-2-1",
+      "title": "返回值",
+      "number": "6.2.1",
+      "parent": "cpp.book.6-2",
+      "depth": 4,
+      "order": 103,
+      "printedPage": 92,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "返回表达式先求值，再按照函数声明的返回类型处理。函数结束后本地自动对象生命周期终止。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "函数返回一个整数副本可在调用端继续用。返回指向本地整数的指针会悬空。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能在函数外访问本地对象的地址吗？",
+        "answer": "对象生命周期已结束，不能再解引用。"
+      }
+    },
+    {
+      "id": "cpp.book.6-2-2",
+      "title": "空函数",
+      "number": "6.2.2",
+      "parent": "cpp.book.6-2",
+      "depth": 4,
+      "order": 104,
+      "printedPage": 92,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "`void` 表明调用不会产生结果值。它仍能执行写入或输出等动作，也可用 `return;` 提前结束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`void log(){ std::cout<<\"ready\"; }` 会输出 ready。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`int x=log();` 合法吗？",
+        "answer": "不合法。调用没有可赋给 x 的值。"
+      }
+    },
+    {
+      "id": "cpp.book.6-2-3",
+      "title": "形参与实参",
+      "number": "6.2.3",
+      "parent": "cpp.book.6-2",
+      "depth": 4,
+      "order": 105,
+      "printedPage": 93,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "形参是函数声明中的名字，实参是调用时传入的表达式。类型与传递方式决定是否共享对象。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`square(3+2)` 中实参求得 5，进入函数后由形参接收。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "修改值形参会改掉 `3+2` 吗？",
+        "answer": "不会。形参有自己的对象。"
+      }
+    },
+    {
+      "id": "cpp.book.6-2-4",
+      "title": "默认参数",
+      "number": "6.2.4",
+      "parent": "cpp.book.6-2",
+      "depth": 4,
+      "order": 106,
+      "printedPage": 93,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "默认参数在调用省略尾部参数时补上，通常放在声明中。调用点按它所见的声明决定默认值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int scale(int n,int factor=2);` 中 `scale(4)` 等价于显式传 2。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能只省略第一个参数，传第二个吗？",
+        "answer": "不能通过普通位置实参做到。"
+      }
+    },
+    {
+      "id": "cpp.book.6-2-5",
+      "title": "可变参数",
+      "number": "6.2.5",
+      "parent": "cpp.book.6-2",
+      "depth": 4,
+      "order": 107,
+      "printedPage": 95,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "传统 C 风格可变参数需约定数量和类型，编译器难以在调用处完整检查。C++ 泛型有更类型安全的设计。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "格式或计数说明后续参数若为两个整数，就不能传一个字符串代替第二个整数。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么格式与实际类型不一致危险？",
+        "answer": "读取端会按约定类型解释内存，产生错误行为。"
+      }
+    },
+    {
+      "id": "cpp.book.6-3",
+      "title": "函数调用",
+      "number": "6.3",
+      "parent": "cpp.book.chapter-6",
+      "depth": 3,
+      "order": 108,
+      "printedPage": 96,
+      "leaf": false,
+      "group": 6,
+      "body": [
+        "把普通调用、嵌套和递归画成栈。每次进入都记录实参，每次返回都记下传给调用处的值。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.6-3-1",
+      "title": "传值调用",
+      "number": "6.3.1",
+      "parent": "cpp.book.6-3",
+      "depth": 4,
+      "order": 109,
+      "printedPage": 96,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "值传递给被调用函数一个独立副本。复制出的指针值仍可能指向调用者对象，要区分指针变量与目标。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "函数改写值形参 x，外层 x 保持原值。若形参是指针，改 `*p` 则作用于目标。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把指针形参重新赋值会改变外层指针吗？",
+        "answer": "值传递下不会，改变的是副本。"
+      }
+    },
+    {
+      "id": "cpp.book.6-3-2",
+      "title": "嵌套调用",
+      "number": "6.3.2",
+      "parent": "cpp.book.6-3",
+      "depth": 4,
+      "order": 110,
+      "printedPage": 98,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "调用的参数可以来自另一次调用。内层先算出外层需要的实参，外层随后运行。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`doubleValue(square(3))` 先得 9，再得 18。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "在哪一步可观察到 9？",
+        "answer": "square 返回时，以及外层函数接收参数时。"
+      }
+    },
+    {
+      "id": "cpp.book.6-3-3",
+      "title": "递归调用",
+      "number": "6.3.3",
+      "parent": "cpp.book.6-3",
+      "depth": 4,
+      "order": 111,
+      "printedPage": 98,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "递归计算需要可直接返回的基例和逐步缩小的参数。每层保存自己的 n，等内层返回后才完成本层乘法。",
+        "遗漏基例会耗尽调用栈。此题把输入限制在 0 到 10。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 4，调用从 4 下降到 1，再返回 1、2、6、24。",
+        "source": "#include <iostream>\nint fac(int n){ if(n<=1){ return 1; } return n*fac(n-1); }\nint main(){ int n=0; std::cin >> n; std::cout << fac(n) << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "24\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                4
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                0
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "1\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                1
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "3628800\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                10
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.6-3-3.exercise",
+        "prompt": "输入 0 到 10 之间的 n，用递归计算 n 的阶乘。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "遗漏基例会耗尽调用栈。此题把输入限制在 0 到 10。"
+      }
+    },
+    {
+      "id": "cpp.book.6-4",
+      "title": "变量作用域",
+      "number": "6.4",
+      "parent": "cpp.book.chapter-6",
+      "depth": 3,
+      "order": 112,
+      "printedPage": 102,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "作用域决定哪里能找到名字，生命周期决定对象什么时候可用。局部变量还可能遮蔽同名外层变量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "在 if 块内定义 `count`，块结束后不能用这个名字访问该对象。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "块外又有同名变量时，块外引用谁？",
+        "answer": "引用外层声明对应的对象。"
+      }
+    },
+    {
+      "id": "cpp.book.6-5",
+      "title": "重载函数",
+      "number": "6.5",
+      "parent": "cpp.book.chapter-6",
+      "depth": 3,
+      "order": 113,
+      "printedPage": 103,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "重载按参数类型和可用转换选候选。仅改变返回类型不能区分两份同名函数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "标准 C++ 可同时定义 `score(int)` 与 `score(double)`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`int score(int)` 和 `double score(int)` 能作为重载吗？",
+        "answer": "不能。参数列表相同，调用处无法据此区分。"
+      }
+    },
+    {
+      "id": "cpp.book.6-6",
+      "title": "内联函数",
+      "number": "6.6",
+      "parent": "cpp.book.chapter-6",
+      "depth": 3,
+      "order": 114,
+      "printedPage": 104,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "`inline` 主要影响某些重复定义规则。是否展开函数由实现决定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "把小的 inline 定义放进头文件，多个翻译单元可见同一份定义。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "加 inline 就能保证不产生调用吗？",
+        "answer": "不能。优化器根据代码与设置选择。"
+      }
+    },
+    {
+      "id": "cpp.book.6-7",
+      "title": "变量的存储类别",
+      "number": "6.7",
+      "parent": "cpp.book.chapter-6",
+      "depth": 3,
+      "order": 115,
+      "printedPage": 105,
+      "leaf": false,
+      "group": 6,
+      "body": [
+        "存储期和链接决定对象何时存在、不同文件能否共享名字。书中的老关键字需按对应年代阅读。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.6-7-1",
+      "title": "auto变量",
+      "number": "6.7.1",
+      "parent": "cpp.book.6-7",
+      "depth": 4,
+      "order": 116,
+      "printedPage": 105,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "现代 C++ 的 `auto` 让类型从初始化式推断。老书中用 `auto` 表示存储类别的语境需要和现代语法分开。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`auto n=4;` 推断为 `int`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`auto n;` 能推断吗？",
+        "answer": "不能，缺少初始化式来提供类型信息。"
+      }
+    },
+    {
+      "id": "cpp.book.6-7-2",
+      "title": "static变量",
+      "number": "6.7.2",
+      "parent": "cpp.book.6-7",
+      "depth": 4,
+      "order": 117,
+      "printedPage": 106,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "函数内静态变量跨调用保存状态，首次初始化后继续用同一个对象。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "标准程序中 `int next(){ static int n=0; return ++n; }` 连续返回 1 和 2。",
+        "source": "#include <iostream>\nint next() { static int n = 0; return ++n; }\nint main() {\n    std::cout << next() << \" \" << next() << std::endl;\n}\n",
+        "result": "无输入，输出 `1 2` 后换行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "普通局部变量会得到相同序列吗？",
+        "answer": "每次重新初始化时会反复返回 1。"
+      }
+    },
+    {
+      "id": "cpp.book.6-7-3",
+      "title": "register变量",
+      "number": "6.7.3",
+      "parent": "cpp.book.6-7",
+      "depth": 4,
+      "order": 118,
+      "printedPage": 108,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "`register` 是旧标准中的提示，现代标准 C++ 已移除该存储类用法。寄存器分配由编译器决定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "旧源码里的 `register int i` 可改为普通局部整数，再以真实性能证据判断优化。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能用该词强制现代编译器把 i 放进寄存器吗？",
+        "answer": "不能。"
+      }
+    },
+    {
+      "id": "cpp.book.6-7-4",
+      "title": "extern变量",
+      "number": "6.7.4",
+      "parent": "cpp.book.6-7",
+      "depth": 4,
+      "order": 119,
+      "printedPage": 108,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "`extern` 让某文件引用别处定义的对象。相同声明应使用一致的类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "头文件声明 `extern int count;`，一个源文件定义 `int count=0;`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两个源文件各提供一个外部定义会怎样？",
+        "answer": "通常违反单一定义要求并导致链接错误。"
+      }
+    },
+    {
+      "id": "cpp.book.6-8",
+      "title": "小结",
+      "number": "6.8",
+      "parent": "cpp.book.chapter-6",
+      "depth": 3,
+      "order": 120,
+      "printedPage": 109,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "复习函数时在纸上画调用帧，标出形参、局部值和返回位置。对递归还要指出每层怎样接近基例。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "阶乘从 3 调到 2 再到 1，先返回 1，再计算 2 和 6。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "没有基例时程序能正常返回吗？",
+        "answer": "若没有其他终止路径，会持续调用直至资源上限。"
+      }
+    },
+    {
+      "id": "cpp.book.6-9",
+      "title": "实践与练习",
+      "number": "6.9",
+      "parent": "cpp.book.chapter-6",
+      "depth": 3,
+      "order": 121,
+      "printedPage": 109,
+      "leaf": true,
+      "group": 6,
+      "body": [
+        "编写比较函数前固定相等时的结果。先验证单次调用，再用多个输入测试。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`max(4,9)` 与 `max(9,4)` 均应返回 9，`max(-2,-2)` 返回 -2。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么测试两个负数？",
+        "answer": "可发现把默认最大值错误设为零的实现。"
+      }
+    }
+  ]
+}

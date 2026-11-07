@@ -557,8 +557,18 @@ test('continuous public learning navigation integrates reviewed reading, validat
   await expect(page.getByRole('tabpanel')).toContainText('学习档案保存在当前浏览器');
   await currentLocalReady(page);
   const archive = await currentSnapshot(page);
-  expect(Object.keys(archive).sort()).toEqual([...C6_RESET_STORES].sort());
-  expect(archive.meta.dbVersion).toBe(12);
+  expect(Object.keys(archive).sort()).toEqual(
+    [
+      ...C6_RESET_STORES,
+      'pythonActivities',
+      'pythonDrafts',
+      'javaActivities',
+      'javaDrafts',
+      'cppActivities',
+      'cppDrafts',
+    ].sort(),
+  );
+  expect(archive.meta.dbVersion).toBe(13);
   for (const name of C6_RESET_CLEAR_STORES)
     expect((archive as unknown as Record<string, unknown>)[name]).toEqual([]);
   await expect(page.getByTestId('engine-connection')).toHaveCount(0);

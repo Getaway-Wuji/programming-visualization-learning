@@ -25,8 +25,9 @@ run('cargo', [
   'warnings',
 ]);
 run('cargo', ['+1.99.0', 'test', '--workspace', '--locked']);
+run('cargo', ['+1.99.0', 'test', '-p', 'c-viz-advanced', '--features', 'cpp-course', '--locked']);
 
-for (const language of ['python3', 'java']) {
+for (const language of ['python3', 'java', 'cpp-course']) {
   const manifest = ['--manifest-path', `engine/${language}/Cargo.toml`];
   const workspace = [...manifest, '--target-dir', `target/${language}`, '--workspace', '--locked'];
   run('cargo', ['+1.99.0', 'fmt', ...manifest, '--all', '--', '--check']);

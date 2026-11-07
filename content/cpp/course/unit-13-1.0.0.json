@@ -1,0 +1,555 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 13,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-13",
+      "title": "STL标准模板库",
+      "number": "第13章",
+      "parent": "cpp.book.part-3",
+      "depth": 2,
+      "order": 260,
+      "printedPage": 271,
+      "leaf": false,
+      "group": 13,
+      "body": [
+        "根据访问模式选择容器，再从算法的迭代器要求判断能否组合。修改容器后重新检查旧位置是否仍有效。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.13-1",
+      "title": "序列容器",
+      "number": "13.1",
+      "parent": "cpp.book.chapter-13",
+      "depth": 3,
+      "order": 261,
+      "printedPage": 272,
+      "leaf": false,
+      "group": 13,
+      "body": [
+        "序列容器保持元素顺序。根据访问位置、增删位置和迭代器失效规则，在 vector、deque 和 list 之间比较。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.13-1-1",
+      "title": "向量类模板",
+      "number": "13.1.1",
+      "parent": "cpp.book.13-1",
+      "depth": 4,
+      "order": 262,
+      "printedPage": 272,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "`vector` 保存连续元素，末尾添加可能重分配。重分配后旧迭代器、指针与引用会失效。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "获取首元素地址后向容器添加很多项，需重新获取地址。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "预留容量能永久保证地址稳定吗？",
+        "answer": "不能。超过预留容量仍会重分配。"
+      }
+    },
+    {
+      "id": "cpp.book.13-1-2",
+      "title": "双端队列类模板",
+      "number": "13.1.2",
+      "parent": "cpp.book.13-1",
+      "depth": 4,
+      "order": 263,
+      "printedPage": 274,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "`deque` 支持两端增长及随机访问。它的存储不要求整体连续。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "排队模拟可在前端弹出、后端加入，还能按下标观察某个位置。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能把 deque 首元素地址当成一整段连续数组吗？",
+        "answer": "不能，它可能分段存放。"
+      }
+    },
+    {
+      "id": "cpp.book.13-1-3",
+      "title": "链表类模板",
+      "number": "13.1.3",
+      "parent": "cpp.book.13-1",
+      "depth": 4,
+      "order": 264,
+      "printedPage": 276,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "`list` 以节点组织顺序，已有位置处的插入和删除较方便，但从头寻找某个位置通常需遍历。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "已拿到中间迭代器时可直接插入，不需要移动后续元素。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "按下标频繁读第 100 项是否合适？",
+        "answer": "通常不合适。链表没有常数时间随机访问。"
+      }
+    },
+    {
+      "id": "cpp.book.13-2",
+      "title": "结合容器",
+      "number": "13.2",
+      "parent": "cpp.book.chapter-13",
+      "depth": 3,
+      "order": 265,
+      "printedPage": 278,
+      "leaf": false,
+      "group": 13,
+      "body": [
+        "结合容器按键检索。先确定键是否唯一、是否有关联值，再选集合或映射及其重复版本。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.13-2-1",
+      "title": "set类模板",
+      "number": "13.2.1",
+      "parent": "cpp.book.13-2",
+      "depth": 4,
+      "order": 266,
+      "printedPage": 278,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "`set` 保存按比较规则唯一的键。插入已有等价键时，集合不会增加一个元素。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "依次插入 4、2、4，得到两个元素，遍历顺序为 2、4。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "“唯一”依赖什么？",
+        "answer": "依赖比较器定义的等价关系。"
+      }
+    },
+    {
+      "id": "cpp.book.13-2-2",
+      "title": "multiset类模板",
+      "number": "13.2.2",
+      "parent": "cpp.book.13-2",
+      "depth": 4,
+      "order": 267,
+      "printedPage": 282,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "`multiset` 允许等价键重复，适合需要保留次数的排序集合。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "插入 2、2、5，`count(2)` 得到 2。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删除键 2 和删除其中一个迭代器有什么差异？",
+        "answer": "按键擦除可移除所有等价项，按位置擦除只移除一项。"
+      }
+    },
+    {
+      "id": "cpp.book.13-2-3",
+      "title": "map类模板",
+      "number": "13.2.3",
+      "parent": "cpp.book.13-2",
+      "depth": 4,
+      "order": 268,
+      "printedPage": 286,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "`map` 把唯一键关联到值，按键排序。只查询时应避免使用会插入缺失键的 `operator[]`。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "读取单词计数可用 `find`，累计次数可使用 `++counts[word]`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "读取缺失键时用 `[]` 会发生什么？",
+        "answer": "可能插入一个值初始化的记录。"
+      }
+    },
+    {
+      "id": "cpp.book.13-2-4",
+      "title": "multimap类模板",
+      "number": "13.2.4",
+      "parent": "cpp.book.13-2",
+      "depth": 4,
+      "order": 269,
+      "printedPage": 288,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "`multimap` 可以让同一个键对应多个值。用 `equal_range` 遍历一个键的全部匹配项。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "一个城市可关联多个站点，不需要覆盖先插入的站点。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只检查 `find` 返回的一条记录能完整列出站点吗？",
+        "answer": "不能，要遍历相同键的范围。"
+      }
+    },
+    {
+      "id": "cpp.book.13-3",
+      "title": "算法",
+      "number": "13.3",
+      "parent": "cpp.book.chapter-13",
+      "depth": 3,
+      "order": 270,
+      "printedPage": 289,
+      "leaf": false,
+      "group": 13,
+      "body": [
+        "使用标准算法前检查读写范围、输出容量和比较器。先验证短区间，包括空输入和重复元素。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.13-3-1",
+      "title": "非修正序列算法",
+      "number": "13.3.1",
+      "parent": "cpp.book.13-3",
+      "depth": 4,
+      "order": 271,
+      "printedPage": 289,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "非修正算法在给定区间观察数据，如查找和计数。区间采用首位置包含、尾位置排除。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "`count` 在 `2 1 2` 中统计数值 2，得到 2。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "没找到时 `find` 返回什么？",
+        "answer": "返回尾后迭代器，不能解引用。"
+      }
+    },
+    {
+      "id": "cpp.book.13-3-2",
+      "title": "修正序列算法",
+      "number": "13.3.2",
+      "parent": "cpp.book.13-3",
+      "depth": 4,
+      "order": 272,
+      "printedPage": 292,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "修正算法写入或重排指定区间。调用前核对输出容量与输入输出区间能否重叠。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "复制三个元素到目标区间前，确保目标有三格，或使用插入迭代器。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "空 vector 的 `begin()` 可直接接收三个写入吗？",
+        "answer": "不能，没有实际元素位置。"
+      }
+    },
+    {
+      "id": "cpp.book.13-3-3",
+      "title": "排序算法",
+      "number": "13.3.3",
+      "parent": "cpp.book.13-3",
+      "depth": 4,
+      "order": 273,
+      "printedPage": 295,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "排序算法按一致比较规则排列元素。若相等元素的原相对次序有意义，应选择稳定排序。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "两名同分学生原顺序为甲、乙，稳定按分数排序会保持这个次序。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "可用 `<=` 直接当排序比较器吗？",
+        "answer": "不宜。它在相等时返回真，不能形成严格顺序。"
+      }
+    },
+    {
+      "id": "cpp.book.13-3-4",
+      "title": "数值算法",
+      "number": "13.3.4",
+      "parent": "cpp.book.13-3",
+      "depth": 4,
+      "order": 274,
+      "printedPage": 301,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "累积算法从初值开始依次组合元素。初值的类型影响累积类型及精度。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "标准 C++ 用 `accumulate` 求小数和时，以 `0.0` 起步，避免整数截断。",
+        "source": "#include <iostream>\n#include <numeric>\n#include <vector>\nint main() {\n    std::vector<double> values{1.25, 2.75};\n    std::cout << std::accumulate(values.begin(), values.end(), 0.0) << std::endl;\n}\n",
+        "result": "无输入，输出 4。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把初值写成 0 会有什么风险？",
+        "answer": "累积值可能按整数处理，损失小数。"
+      }
+    },
+    {
+      "id": "cpp.book.13-4",
+      "title": "迭代器",
+      "number": "13.4",
+      "parent": "cpp.book.chapter-13",
+      "depth": 3,
+      "order": 275,
+      "printedPage": 305,
+      "leaf": false,
+      "group": 13,
+      "body": [
+        "迭代器表达访问能力而不是固定实现。对同一个任务问是否需要写、重读、倒退或跳转，再核对容器提供什么。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.13-4-1",
+      "title": "输出迭代器",
+      "number": "13.4.1",
+      "parent": "cpp.book.13-4",
+      "depth": 4,
+      "order": 276,
+      "printedPage": 305,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "输出迭代器提供写入位置，通常只需写和前进。它不保证能读回值或倒退。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "用插入迭代器向容器追加算法结果。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能从输出迭代器读出上一个值吗？",
+        "answer": "不能依赖这一能力。"
+      }
+    },
+    {
+      "id": "cpp.book.13-4-2",
+      "title": "输入迭代器",
+      "number": "13.4.2",
+      "parent": "cpp.book.13-4",
+      "depth": 4,
+      "order": 277,
+      "printedPage": 306,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "输入迭代器用于单次顺序读取。复制一份迭代器也未必能独立重读同一输入流。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "两个流输入迭代器读取同一输入，推进一个可能消耗底层数据。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "需要重读时应怎么做？",
+        "answer": "先把值收集到支持多次遍历的容器。"
+      }
+    },
+    {
+      "id": "cpp.book.13-4-3",
+      "title": "前向迭代器",
+      "number": "13.4.3",
+      "parent": "cpp.book.13-4",
+      "depth": 4,
+      "order": 278,
+      "printedPage": 307,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "前向迭代器在可读基础上支持多趟前进，但通常不支持减一。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "单链表可从同一节点开始多次前向遍历。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能从某个节点直接回到前一节点吗？",
+        "answer": "没有前向迭代器能力保证，可能要从头查找。"
+      }
+    },
+    {
+      "id": "cpp.book.13-4-4",
+      "title": "双向迭代器",
+      "number": "13.4.4",
+      "parent": "cpp.book.13-4",
+      "depth": 4,
+      "order": 279,
+      "printedPage": 307,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "双向迭代器可向前和向后各移动一步，仍不保证任意距离跳转。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "从非空 list 的尾后位置减一可以得到最后元素。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能用 `it+5` 当常数时间操作吗？",
+        "answer": "不能。双向迭代器不要求随机访问。"
+      }
+    },
+    {
+      "id": "cpp.book.13-4-5",
+      "title": "随机访问迭代器",
+      "number": "13.4.5",
+      "parent": "cpp.book.13-4",
+      "depth": 4,
+      "order": 280,
+      "printedPage": 308,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "随机访问迭代器支持常数时间偏移和距离计算。算法借它快速定位任意位置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "vector 迭代器加 3 可直接定位第四个位置。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能用 `std::sort` 排普通 list 迭代器吗？",
+        "answer": "不能直接用，应使用 list 自己的排序操作。"
+      }
+    },
+    {
+      "id": "cpp.book.13-5",
+      "title": "小结",
+      "number": "13.5",
+      "parent": "cpp.book.chapter-13",
+      "depth": 3,
+      "order": 281,
+      "printedPage": 309,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "选容器先看操作模式，再检查迭代器要求和失效规则。语法相似的容器可能有不同复杂度。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "频繁按下标访问适合 vector，已知位置的节点插入可考虑 list。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只看支持 `insert` 能判断代价吗？",
+        "answer": "不能。还要看定位、移动和重分配成本。"
+      }
+    },
+    {
+      "id": "cpp.book.13-6",
+      "title": "实践与练习",
+      "number": "13.6",
+      "parent": "cpp.book.chapter-13",
+      "depth": 3,
+      "order": 282,
+      "printedPage": 309,
+      "leaf": true,
+      "group": 13,
+      "body": [
+        "去重前先说明“去重相邻项”还是“全局去重”。`unique` 只压缩相邻等价元素并返回新逻辑尾。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "`2 1 2 2` 经相邻去重后逻辑区间为 `2 1 2`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "需要全局去重时还应做什么？",
+        "answer": "可先排序，再做相邻去重并擦除尾部，若要保持原序则用已见集合。"
+      }
+    }
+  ]
+}

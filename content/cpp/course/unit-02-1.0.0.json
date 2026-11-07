@@ -1,0 +1,732 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 2,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-2",
+      "title": "数据类型",
+      "number": "第2章",
+      "parent": "cpp.book.part-1",
+      "depth": 2,
+      "order": 19,
+      "printedPage": 17,
+      "leaf": false,
+      "group": 2,
+      "body": [
+        "从只有 `main` 的程序逐步添加值、变量和流。每次只改一个因素，对照数值、类型和实际输出，尤其检查空白与换行。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.2-1",
+      "title": "第一个C++程序",
+      "number": "2.1",
+      "parent": "cpp.book.chapter-2",
+      "depth": 3,
+      "order": 20,
+      "printedPage": 18,
+      "leaf": false,
+      "group": 2,
+      "body": [
+        "先定位头文件、注释、入口签名和函数体，再看返回值。保持最小程序可读有助于逐项排查初次构建错误。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.2-1-1",
+      "title": "#include指令",
+      "number": "2.1.1",
+      "parent": "cpp.book.2-1",
+      "depth": 4,
+      "order": 21,
+      "printedPage": 18,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "`#include` 让翻译单元看到需要的声明。包含标准头时用尖括号，并使用标准库名称所属的命名空间。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`#include <iostream>` 配合 `std::cout`，`iostream.h` 是历史写法。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "加入 `<iostream>` 后能省略 `std::` 吗？",
+        "answer": "只有通过合适的 using 声明等方式引入名称时才可以。"
+      }
+    },
+    {
+      "id": "cpp.book.2-1-2",
+      "title": "注释",
+      "number": "2.1.2",
+      "parent": "cpp.book.2-1",
+      "depth": 4,
+      "order": 22,
+      "printedPage": 18,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "行注释从 `//` 到行末，块注释有独立边界。优先说明关键判断为什么存在。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`if (n == 0)` 上方写“零是合法的空数量”，比复述“如果 n 等于零”更有帮助。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`\"//\"` 会开始注释吗？",
+        "answer": "不会。它在字符串字面量中。"
+      }
+    },
+    {
+      "id": "cpp.book.2-1-3",
+      "title": "main函数",
+      "number": "2.1.3",
+      "parent": "cpp.book.2-1",
+      "depth": 4,
+      "order": 23,
+      "printedPage": 19,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "程序从 `main` 进入。它返回 `int`，走到函数末尾等价于返回零。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int main() {}` 是最小入口。调用者可以用退出值检查程序是否正常完成。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`main` 可用 `void` 返回类型吗？",
+        "answer": "标准 C++ 的入口返回 `int`。"
+      }
+    },
+    {
+      "id": "cpp.book.2-1-4",
+      "title": "函数体",
+      "number": "2.1.4",
+      "parent": "cpp.book.2-1",
+      "depth": 4,
+      "order": 24,
+      "printedPage": 19,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "大括号围成函数体。内部块能缩小名字的可见范围，调试时应区分同名变量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int n=1; { int n=2; }` 退出内部块后，外层 n 仍为 1。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "内层初始化会把外层也改成 2 吗？",
+        "answer": "不会。内层声明创建了另一个对象。"
+      }
+    },
+    {
+      "id": "cpp.book.2-1-5",
+      "title": "函数返回值",
+      "number": "2.1.5",
+      "parent": "cpp.book.2-1",
+      "depth": 4,
+      "order": 25,
+      "printedPage": 19,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "返回值交给调用者。终端输出留给观察者。函数若只输出数字，调用者不能把输出当作它的返回值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int size(){ return 4; }` 可用 `int n=size();` 接收结果。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`return 4` 自动在终端打印 4 吗？",
+        "answer": "不会。需要显式输出语句。"
+      }
+    },
+    {
+      "id": "cpp.book.2-2",
+      "title": "数据类型",
+      "number": "2.2",
+      "parent": "cpp.book.chapter-2",
+      "depth": 3,
+      "order": 26,
+      "printedPage": 19,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "类型规定值域、运算和转换。选择类型时先写出输入范围与结果精度。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "人数用整数。米的测量值若带小数，需要明确误差与单位。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`int` 适合保存 1.75 米原值吗？",
+        "answer": "不适合。可选浮点或以厘米为单位保存整数。"
+      }
+    },
+    {
+      "id": "cpp.book.2-3",
+      "title": "常量及符号",
+      "number": "2.3",
+      "parent": "cpp.book.chapter-2",
+      "depth": 3,
+      "order": 27,
+      "printedPage": 20,
+      "leaf": false,
+      "group": 2,
+      "body": [
+        "把字面量分类为整数、实数、字符和字符串。比较写法相似的 `0`、`'0'` 与 `\"0\"`，指出它们各自表示什么。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.2-3-1",
+      "title": "整型常量",
+      "number": "2.3.1",
+      "parent": "cpp.book.2-3",
+      "depth": 4,
+      "order": 28,
+      "printedPage": 21,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "整数字面量的进制和后缀会影响类型及含义。教学子集采用有限的写法和有界整数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "标准 C++ 中 `10`、`012` 和 `0xA` 都表示十进制 10。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`08` 是有效八进制字面量吗？",
+        "answer": "不是。八进制数字只能是 0 至 7。"
+      }
+    },
+    {
+      "id": "cpp.book.2-3-2",
+      "title": "实型常量",
+      "number": "2.3.2",
+      "parent": "cpp.book.2-3",
+      "depth": 4,
+      "order": 29,
+      "printedPage": 21,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "浮点字面量可用小数点和指数。十进制小数在二进制浮点中可能只能近似表示。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`2.5e-2` 表示 0.025。无后缀时通常使用 `double`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "比较两次浮点计算是否相等，应注意什么？",
+        "answer": "先选择符合问题单位和规模的容差。"
+      }
+    },
+    {
+      "id": "cpp.book.2-3-3",
+      "title": "字符常量",
+      "number": "2.3.3",
+      "parent": "cpp.book.2-3",
+      "depth": 4,
+      "order": 30,
+      "printedPage": 22,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "字符字面量用单引号。反斜线可以表示换行等不可见字符。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`'A'` 是一个字符，`'\\n'` 表示换行。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "单引号与双引号写法能随意互换吗？",
+        "answer": "不能。两种字面量的类型与存储不同。"
+      }
+    },
+    {
+      "id": "cpp.book.2-3-4",
+      "title": "字符串常量",
+      "number": "2.3.4",
+      "parent": "cpp.book.2-3",
+      "depth": 4,
+      "order": 31,
+      "printedPage": 23,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "普通字符串字面量包含末尾空字符。该字符决定 C 风格字符串处理的结束位置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`\"hi\"` 存放 h、i、`\\0`，总共三个窄字符位置。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "可见长度为 2 时需要几个数组位置？",
+        "answer": "需要 3 个，第三个保存终止符。"
+      }
+    },
+    {
+      "id": "cpp.book.2-3-5",
+      "title": "其他常量",
+      "number": "2.3.5",
+      "parent": "cpp.book.2-3",
+      "depth": 4,
+      "order": 32,
+      "printedPage": 23,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "布尔常量用于逻辑，空指针字面量用于指针。类型明确后，编译器能更早发现误用。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "标准代码中 `nullptr` 表示指针没有对象，`false` 表示条件为假。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能用 `nullptr` 代表一笔金额为零吗？",
+        "answer": "不能。它的语义是空指针。"
+      }
+    },
+    {
+      "id": "cpp.book.2-4",
+      "title": "变量",
+      "number": "2.4",
+      "parent": "cpp.book.chapter-2",
+      "depth": 3,
+      "order": 33,
+      "printedPage": 23,
+      "leaf": false,
+      "group": 2,
+      "body": [
+        "从名称、类型和初值描述一个变量。把首次创建与后续赋值分开，再用一次读取核对实际保存的值。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.2-4-1",
+      "title": "标识符",
+      "number": "2.4.1",
+      "parent": "cpp.book.2-4",
+      "depth": 4,
+      "order": 34,
+      "printedPage": 24,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "标识符命名应体现用途，避免关键字及保留标识符。C++ 区分大小写。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`remainingSeats` 和 `RemainingSeats` 是两个名字。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能把计数变量命名为 `while` 吗？",
+        "answer": "不能。它是保留关键字。"
+      }
+    },
+    {
+      "id": "cpp.book.2-4-2",
+      "title": "变量与变量说明",
+      "number": "2.4.2",
+      "parent": "cpp.book.2-4",
+      "depth": 4,
+      "order": 35,
+      "printedPage": 24,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "定义变量通常会指定类型并创建对象。只声明外部对象时，仍需要在程序中提供定义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int count=0;` 给 count 一个对象和初值。`extern int count;` 可以声明别处的对象。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只在各文件写 `extern` 就足够吗？",
+        "answer": "不够。仍要有合适的实际定义。"
+      }
+    },
+    {
+      "id": "cpp.book.2-4-3",
+      "title": "整型变量",
+      "number": "2.4.3",
+      "parent": "cpp.book.2-4",
+      "depth": 4,
+      "order": 36,
+      "printedPage": 25,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "整数类型的可表示范围受位宽和符号影响。标准对不同实现只保证部分范围，平台固定教学 `int` 为 32 位。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "32 位有符号最大值是 2147483647。再加一的操作会被平台诊断。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能依赖有符号加法溢出回绕吗？",
+        "answer": "不能。标准对该溢出不给出通用结果。"
+      }
+    },
+    {
+      "id": "cpp.book.2-4-4",
+      "title": "实型变量",
+      "number": "2.4.4",
+      "parent": "cpp.book.2-4",
+      "depth": 4,
+      "order": 37,
+      "printedPage": 25,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "实型变量适合近似量。有效数字、指数范围和精度都应考虑。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "当基数很大时，小幅增量可能小于当前精度，结果看起来没有变化。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "用 `float` 精确记录分币合适吗？",
+        "answer": "通常用整数分更容易保证精确。"
+      }
+    },
+    {
+      "id": "cpp.book.2-4-5",
+      "title": "变量赋值",
+      "number": "2.4.5",
+      "parent": "cpp.book.2-4",
+      "depth": 4,
+      "order": 38,
+      "printedPage": 26,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "赋值更新已有对象。右侧先计算出值，再写入左侧，先前的值可作为本次计算输入。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int count=2; count=count+3;` 执行后 count 为 5。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么 `count=count+3` 不是代数等式？",
+        "answer": "它描述旧值参与计算后，将结果存回对象。"
+      }
+    },
+    {
+      "id": "cpp.book.2-4-6",
+      "title": "变量赋初值",
+      "number": "2.4.6",
+      "parent": "cpp.book.2-4",
+      "depth": 4,
+      "order": 39,
+      "printedPage": 26,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "初始化让对象第一次取得值。局部整数省略初始值后，首次读取可能没有合法结果。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "`int total{};` 初始化为零，再将每笔数量累加进去。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么只声明 `int total;` 就累加不妥？",
+        "answer": "第一次加法要读取尚未初始化的 total。"
+      }
+    },
+    {
+      "id": "cpp.book.2-4-7",
+      "title": "字符变量",
+      "number": "2.4.7",
+      "parent": "cpp.book.2-4",
+      "depth": 4,
+      "order": 40,
+      "printedPage": 27,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "字符对象保存编码单元。字符数字与数值本身有区别。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "输入字符 `'8'` 时，可先检验它属于 `'0'` 至 `'9'`，再用 `c-'0'` 得到 8。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "字符 `'0'` 与整数 `0` 相同吗？",
+        "answer": "不同。前者是字符编码，后者是数量。"
+      }
+    },
+    {
+      "id": "cpp.book.2-5",
+      "title": "数据输入与输出",
+      "number": "2.5",
+      "parent": "cpp.book.chapter-2",
+      "depth": 3,
+      "order": 41,
+      "printedPage": 28,
+      "leaf": false,
+      "group": 2,
+      "body": [
+        "把终端交互画成输入流、值、输出流三段。分别验证能否读入、是否算对、最后的字符和换行是否精确。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.2-5-1",
+      "title": "控制台屏幕",
+      "number": "2.5.1",
+      "parent": "cpp.book.2-5",
+      "depth": 4,
+      "order": 42,
+      "printedPage": 28,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "控制台输出可以拆成内容、空白和行尾。比较程序输出时三者都可见。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "想得到两行 `A` 和 `B`，可将 `\"A\\nB\\n\"` 写入输出流。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么肉眼相同的输出可能未过判题？",
+        "answer": "尾部空格或最后换行可能不同。"
+      }
+    },
+    {
+      "id": "cpp.book.2-5-2",
+      "title": "C++语言中的流",
+      "number": "2.5.2",
+      "parent": "cpp.book.2-5",
+      "depth": 4,
+      "order": 43,
+      "printedPage": 28,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "`std::cin` 的每次提取把下一项输入存入目标变量。`std::cout` 按代码顺序拼接各段字符。",
+        "如果使用相同输入却输出 `2 7`，检查两段 `<<` 的先后。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "description": "输入 `2 7`，先把 2 保存到 a，再把 7 保存到 b。输出从 b 开始，所以先出现 7。",
+        "source": "#include <iostream>\nint main() { int a=0; int b=0; std::cin >> a >> b; std::cout << b << \" \" << a << std::endl; }\n",
+        "cases": [
+          {
+            "id": "case-1",
+            "expected": "7 2\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                2,
+                7
+              ]
+            }
+          },
+          {
+            "id": "case-2",
+            "expected": "0 0\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "id": "case-3",
+            "expected": "4 -9\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                -9,
+                4
+              ]
+            }
+          },
+          {
+            "id": "case-4",
+            "expected": "-999 999\n",
+            "input": {
+              "kind": "integers",
+              "values": [
+                999,
+                -999
+              ]
+            }
+          }
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "cpp.book.2-5-2.exercise",
+        "prompt": "读两个整数并按输入顺序输出第二个、第一个，中间空格，末尾换行。",
+        "starter": "#include <iostream>\nint main() {\n  // 在这里编写你的解法\n  return 0;\n}\n",
+        "hint": "如果使用相同输入却输出 `2 7`，检查两段 `<<` 的先后。"
+      }
+    },
+    {
+      "id": "cpp.book.2-5-3",
+      "title": "流操作的控制",
+      "number": "2.5.3",
+      "parent": "cpp.book.2-5",
+      "depth": 4,
+      "order": 44,
+      "printedPage": 30,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "标准流有格式状态，操纵器可改变后续格式。与一次性的分隔字符相比，状态可能影响多次输出。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "标准 C++ 的 `std::hex` 会让后续整数按十六进制输出。恢复十进制需 `std::dec`。",
+        "source": "#include <iostream>\nint main() {\n    std::cout << std::hex << 26 << \" \" << 15 << std::endl;\n    std::cout << std::dec << 26 << std::endl;\n}\n",
+        "result": "无输入，输出两行 `1a f` 和 `26`。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "设置十六进制后，为什么下一行仍出现字母？",
+        "answer": "格式状态保留，直到切换回来。"
+      }
+    },
+    {
+      "id": "cpp.book.2-6",
+      "title": "小结",
+      "number": "2.6",
+      "parent": "cpp.book.chapter-2",
+      "depth": 3,
+      "order": 45,
+      "printedPage": 36,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "检查最小程序时依次确认入口、初值、输入形式和输出。类型错误与显示格式错误可用不同输入隔离。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "对“读 n 再加 1”分别输入 0 和 -1，期待 1 和 0。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么要包含负数输入？",
+        "answer": "可检验符号是否被正确读取与保存。"
+      }
+    },
+    {
+      "id": "cpp.book.2-7",
+      "title": "实践与练习",
+      "number": "2.7",
+      "parent": "cpp.book.chapter-2",
+      "depth": 3,
+      "order": 46,
+      "printedPage": 36,
+      "leaf": true,
+      "group": 2,
+      "body": [
+        "练习先规定输入和精确输出，再从最小程序扩展。先确认单次读取成功，再改格式或加运算。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。按下列输入、状态或输出手工核对本节概念。",
+        "description": "设计两整数求差任务。输入 3 和 8 得 -5，输入 0 和 0 得 0。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果两次读取颠倒，会在哪组暴露？",
+        "answer": "3 和 8 会得到 5，零组不能区分。"
+      }
+    }
+  ]
+}

@@ -1,0 +1,315 @@
+{
+  "version": "1.0.0",
+  "language": "cpp",
+  "group": 14,
+  "nodes": [
+    {
+      "id": "cpp.book.chapter-14",
+      "title": "RTTI与异常处理",
+      "number": "第14章",
+      "parent": "cpp.book.part-3",
+      "depth": 2,
+      "order": 283,
+      "printedPage": 311,
+      "leaf": false,
+      "group": 14,
+      "body": [
+        "用类型查询观察多态对象，随后跟踪失败怎样沿调用栈传播。把可恢复的异常与应中止的错误分别处理。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.14-1",
+      "title": "RTTI（运行时类型识别）",
+      "number": "14.1",
+      "parent": "cpp.book.chapter-14",
+      "depth": 3,
+      "order": 284,
+      "printedPage": 312,
+      "leaf": false,
+      "group": 14,
+      "body": [
+        "运行时类型识别依赖对象动态类型和继承关系。对每次转型分别测试成功、失败和空指针路径。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.14-1-1",
+      "title": "什么是RTTI",
+      "number": "14.1.1",
+      "parent": "cpp.book.14-1",
+      "depth": 4,
+      "order": 285,
+      "printedPage": 312,
+      "leaf": true,
+      "group": 14,
+      "body": [
+        "运行时类型识别可查询多态对象的动态类型，或检查跨类型转换是否可行。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "基类引用实际绑定到 Circle 时，多态查询可得到 Circle。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "静态类型和动态类型一定相同吗？",
+        "answer": "不一定。基类接口可引用派生对象。"
+      }
+    },
+    {
+      "id": "cpp.book.14-1-2",
+      "title": "RTTI与引用",
+      "number": "14.1.2",
+      "parent": "cpp.book.14-1",
+      "depth": 4,
+      "order": 286,
+      "printedPage": 313,
+      "leaf": true,
+      "group": 14,
+      "body": [
+        "`dynamic_cast` 对指针失败返回空指针。对引用失败时用异常表示，因为引用没有空值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "把 Shape 指针转换为 Square 指针，若实际对象是 Circle，结果为空。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "换成引用转换会怎样？",
+        "answer": "失败时抛出 `std::bad_cast`。"
+      }
+    },
+    {
+      "id": "cpp.book.14-1-3",
+      "title": "RTTI与多重继承",
+      "number": "14.1.3",
+      "parent": "cpp.book.14-1",
+      "depth": 4,
+      "order": 287,
+      "printedPage": 314,
+      "leaf": true,
+      "group": 14,
+      "body": [
+        "多重继承中的跨转型需要可访问、无歧义的基类关系。实现会定位实际对象内对应的子对象。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "同一设备可通过两个接口引用，跨转型找到该设备的另一接口。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只有类名字相似是否足够？",
+        "answer": "不够。必须有真实对象及适用继承路径。"
+      }
+    },
+    {
+      "id": "cpp.book.14-1-4",
+      "title": "RTTI映射语法",
+      "number": "14.1.4",
+      "parent": "cpp.book.14-1",
+      "depth": 4,
+      "order": 288,
+      "printedPage": 315,
+      "leaf": true,
+      "group": 14,
+      "body": [
+        "`typeid` 对多态对象表达式可给出动态类型信息。其返回的名称字符串不宜用作可移植协议。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "可比较 `typeid(*p)==typeid(Circle)`，前提是指针和表达式符合查询条件。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何不把 `name()` 存进跨机器文件作类型编号？",
+        "answer": "格式由实现决定，不是稳定标识。"
+      }
+    },
+    {
+      "id": "cpp.book.14-2",
+      "title": "异常处理",
+      "number": "14.2",
+      "parent": "cpp.book.chapter-14",
+      "depth": 3,
+      "order": 289,
+      "printedPage": 317,
+      "leaf": false,
+      "group": 14,
+      "body": [
+        "画出抛出层、资源清理层和处理层。每个 catch 应有明确恢复策略，按从具体到一般排列。"
+      ],
+      "example": null,
+      "activity": null
+    },
+    {
+      "id": "cpp.book.14-2-1",
+      "title": "抛出异常",
+      "number": "14.2.1",
+      "parent": "cpp.book.14-2",
+      "depth": 4,
+      "order": 290,
+      "printedPage": 318,
+      "leaf": true,
+      "group": 14,
+      "body": [
+        "抛出异常把控制权交给能处理该异常的调用层。抛出后当前正常路径不会继续。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "长度为负时抛出参数错误，避免创建不合法对象。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "抛出语句后的普通代码会执行吗？",
+        "answer": "不会沿正常路径继续。"
+      }
+    },
+    {
+      "id": "cpp.book.14-2-2",
+      "title": "异常捕获",
+      "number": "14.2.2",
+      "parent": "cpp.book.14-2",
+      "depth": 4,
+      "order": 291,
+      "printedPage": 319,
+      "leaf": true,
+      "group": 14,
+      "body": [
+        "`try` 包围可能抛出的调用，`catch` 处理匹配类型。栈展开时自动对象会被销毁。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "构造文件包装后读入失败，异常传播时包装对象负责关闭文件。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何用拥有资源的自动对象有帮助？",
+        "answer": "异常退出时仍遵循生命周期清理规则。"
+      }
+    },
+    {
+      "id": "cpp.book.14-2-3",
+      "title": "异常匹配",
+      "number": "14.2.3",
+      "parent": "cpp.book.14-2",
+      "depth": 4,
+      "order": 292,
+      "printedPage": 322,
+      "leaf": true,
+      "group": 14,
+      "body": [
+        "异常处理器按书写顺序匹配。基类处理器放得太早可能抢先匹配派生异常。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "先处理具体参数错误，再用更广的 `std::exception` 记录其他错误。",
+        "source": "#include <iostream>\n#include <stdexcept>\nint main() {\n    try { throw std::out_of_range(\"index\"); }\n    catch (const std::out_of_range&) { std::cout << \"range\\n\"; }\n    catch (const std::exception&) { std::cout << \"other\\n\"; }\n}\n",
+        "result": "无输入，先匹配具体类型，输出 range。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "`catch(...)` 应放在哪里？",
+        "answer": "放在最后，作为兜底处理器。"
+      }
+    },
+    {
+      "id": "cpp.book.14-2-4",
+      "title": "标准异常",
+      "number": "14.2.4",
+      "parent": "cpp.book.14-2",
+      "depth": 4,
+      "order": 293,
+      "printedPage": 324,
+      "leaf": true,
+      "group": 14,
+      "body": [
+        "标准异常类型帮助区分参数、范围、分配等失败。调用者可以按能恢复的类别处理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "范围访问失败可用 `std::out_of_range`，输入本身无效可用 `std::invalid_argument`。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "是否应把所有错误都用一个无信息整数抛出？",
+        "answer": "明确类型及上下文能让处理和排查更可靠。"
+      }
+    },
+    {
+      "id": "cpp.book.14-3",
+      "title": "小结",
+      "number": "14.3",
+      "parent": "cpp.book.chapter-14",
+      "depth": 3,
+      "order": 294,
+      "printedPage": 324,
+      "leaf": true,
+      "group": 14,
+      "body": [
+        "复习 RTTI 时先确认对象是否多态，再区分指针与引用的转换。复习异常时画出抛出到捕获之间的作用域。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "输入错误由参数层抛出，应用层恢复输入，资源层按作用域释放。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "捕获后程序一定能继续原操作吗？",
+        "answer": "不一定。应由捕获层决定重试、恢复或终止。"
+      }
+    },
+    {
+      "id": "cpp.book.14-4",
+      "title": "实践与练习",
+      "number": "14.4",
+      "parent": "cpp.book.chapter-14",
+      "depth": 3,
+      "order": 295,
+      "printedPage": 325,
+      "leaf": true,
+      "group": 14,
+      "body": [
+        "用边长计算面积之前先验证三边为正，再验证任意两边之和大于第三边。错误与结果应能独立观察。"
+      ],
+      "example": {
+        "mode": "reading",
+        "reason": "阅读示例。本节的模板、标准容器或异常能力需在支持完整 C++ 的环境中观察。",
+        "description": "3、4、5 合法且面积为 6。1、2、3 退化，应报告失败。",
+        "source": null,
+        "result": null
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "哪一组用来检验零边长？",
+        "answer": "0、4、5。它应在边长检查阶段失败。"
+      }
+    }
+  ]
+}

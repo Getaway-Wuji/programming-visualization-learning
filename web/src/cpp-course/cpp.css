@@ -1,0 +1,217 @@
+.cpp-screen {
+  --cpp-line: var(--border-tone, var(--line));
+  --cpp-sheet: var(--surface-raised, var(--panel));
+  --cpp-accent: var(--p05-accent, var(--green));
+  gap: 1rem;
+}
+
+.cpp-nav {
+  padding: 0.45rem 0.8rem;
+  background: var(--surface-tone, var(--panel));
+  border: 1px solid var(--cpp-line);
+  border-radius: 0.55rem;
+}
+
+.cpp-nav a,
+.cpp-language-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 2.35rem;
+}
+
+.cpp-language-links {
+  margin-inline-start: auto;
+}
+
+.cpp-title,
+.cpp-page-turn,
+.cpp-reading-progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem 1rem;
+}
+
+.cpp-title p,
+.cpp-muted {
+  color: var(--muted);
+  margin: 0.35rem 0;
+}
+
+.cpp-sheet {
+  background: var(--cpp-sheet);
+  border: 1px solid var(--cpp-line);
+  border-radius: 1rem;
+  padding: 1rem;
+  min-width: 0;
+}
+
+.cpp-sheet h2,
+.cpp-sheet h3 {
+  margin: 0 0 0.6rem;
+}
+
+.cpp-reading {
+  max-width: 54rem;
+  line-height: 1.7;
+}
+
+.cpp-reading h1 {
+  line-height: 1.35;
+}
+
+.cpp-section,
+.cpp-page-turn {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--cpp-line);
+}
+
+.cpp-tree {
+  list-style: none;
+  margin: 0.3rem 0 0;
+  padding-inline-start: 1.1rem;
+}
+
+.cpp-sheet > .cpp-tree {
+  padding-inline-start: 0;
+}
+
+.cpp-tree > li {
+  padding-block: 0.28rem;
+}
+
+.cpp-tree summary {
+  padding-block: 0.32rem;
+}
+
+.cpp-guide {
+  margin-inline-start: 1.1rem;
+}
+
+.cpp-search,
+.cpp-trace-position label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cpp-search input,
+.cpp-input-panel select,
+.cpp-trace-position input[type='number'] {
+  color: inherit;
+  background: var(--surface-tone, var(--panel));
+  border: 1px solid var(--cpp-line);
+  border-radius: 0.45rem;
+  padding: 0.42rem 0.55rem;
+  min-width: 0;
+}
+
+.cpp-editor-grid,
+.cpp-trace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.3fr) minmax(12.5rem, 1fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.cpp-editor-grid {
+  align-items: stretch;
+}
+
+.cpp-input-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.cpp-input-panel textarea {
+  flex: 1;
+}
+
+.cpp-editor-panel textarea,
+.cpp-input-panel textarea {
+  margin-block: 0.55rem;
+  min-width: 0;
+}
+
+.cpp-trace-position {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  margin-block: 0.7rem;
+}
+
+.cpp-trace-position input[type='number'] {
+  width: 5rem;
+}
+
+.cpp-active-line {
+  border-inline-start: 3px solid var(--cpp-accent);
+  background: var(--surface-tone, var(--panel));
+  padding: 0.45rem 0.65rem;
+}
+
+.cpp-sheet pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--surface-tone, var(--panel));
+  border-radius: 0.45rem;
+  padding: 0.65rem;
+}
+
+.cpp-table-wrap {
+  overflow: auto;
+  margin-top: 0.55rem;
+}
+
+.cpp-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cpp-table-wrap :is(th, td) {
+  padding: 0.4rem 0.55rem;
+  text-align: start;
+  border-bottom: 1px solid var(--cpp-line);
+}
+
+.cpp-table-wrap :is(th, td):nth-child(3) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.cpp-reviews {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cpp-reviews li {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--cpp-line);
+}
+
+.cpp-reviews li p {
+  margin: 0.2rem 0;
+}
+
+@media (max-width: 720px) {
+  .cpp-editor-grid,
+  .cpp-trace-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cpp-actions button,
+  .cpp-nav a {
+    min-height: 44px;
+  }
+
+  .cpp-language-links {
+    margin-inline-start: 0;
+  }
+}
