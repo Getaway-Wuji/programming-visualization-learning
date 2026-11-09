@@ -39,7 +39,9 @@ if (p05) {
 runNode('scripts/c6-course/build-learning-index.mjs');
 runNode('scripts/c6-course/build-learning-supplements.mjs');
 runNode('scripts/c6-course/build-learning-schemas.mjs');
+runNode('scripts/build-learning-navigation.mjs');
 runNode('node_modules/vite/bin/vite.js', ['build', '--config', 'vite.config.ts']);
 runNode('scripts/prepare-ai-gateway.mjs');
+runNode('scripts/precompress.mjs');
 runNode('node_modules/vite/bin/vite.js', ['build', '--config', 'tests/browser.vite.config.ts']);
 runNode('scripts/artifacts.mjs');

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Icon } from '../components/Icon';
 import { StatePanel } from '../components/Ui';
 import { lessons, cases } from '../navigation';
@@ -10,6 +10,7 @@ import { DailyGoalSettings, GoalHistory } from './goal-components';
 import { savedCourseProjection } from './profile-components';
 import { bugQuestions } from '../bugs/content';
 import './rewards.css';
+import { languages, loadLanguageNavigation, subjectLanguage, type TextLanguage } from './languages';
 
 export const homePanels = {
   points: {
@@ -54,6 +55,33 @@ export function HomePanel({
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { state, service } = useLearning();
+  const [titles, setTitles] = useState<Record<string, string>>({});
+  useEffect(() => {
+    if (panel !== 'points') return;
+    let current = true;
+    const needed = [
+      ...new Set(
+        state.snapshot?.ledger
+          .map((row) => subjectLanguage(row.subjectId))
+          .filter((language): language is TextLanguage => !!language && language !== 'c'),
+      ),
+    ];
+    void Promise.allSettled(needed.map((language) => loadLanguageNavigation(language))).then(
+      (results) => {
+        if (!current) return;
+        const next: Record<string, string> = {};
+        for (const result of results)
+          if (result.status === 'fulfilled')
+            for (const [id, title] of result.value.subjects)
+              next[id] =
+                `${languages.find((language) => language.id === result.value.language)!.label} · ${title}`;
+        setTitles(next);
+      },
+    );
+    return () => {
+      current = false;
+    };
+  }, [panel, state.snapshot?.ledger]);
   const projection = savedCourseProjection(state);
   const subjectTitle = (entry: LedgerEntry) => {
     const group = state.c6?.index?.rewardGroups.find(
@@ -63,7 +91,13 @@ export function HomePanel({
         (entry.sourceId === 'reward.exercise.first-pass' &&
           g.exerciseReward.subjectId === entry.subjectId),
     );
-    if (!group) return contentTitle(entry.subjectId);
+    if (!group) {
+      const language = subjectLanguage(entry.subjectId);
+      return language && language !== 'c'
+        ? (titles[entry.subjectId] ??
+            `${languages.find((item) => item.id === language)!.label} 学习内容`)
+        : contentTitle(entry.subjectId);
+    }
     return (
       group.lessonRefs
         .map((ref) => {
@@ -108,10 +142,9 @@ export function HomePanel({
         {panel === 'points' && (
           <section className="reward-rules" aria-label="首次奖励规则">
             <h3>首次学习奖励</h3>
-            <p>
-              {state.c6
-                ? '组内执行练习首次通过 10 分 · 教学组首次完成 20 分 · 案例首次观看 5 分'
-                : '练习首次通过 10 分 · 小节首次完成 20 分 · 案例首次观看 5 分'}
+            <p>练习首次通过 10 分 · 阅读首次完成 20 分 · 案例首次观看 5 分</p>
+            <p className="muted">
+              C 课程按同源教学组结算阅读奖励，其他语言按小节结算；同一奖励只发一次。
             </p>
             <p>每日目标达成另奖 5 分，每个日期只奖励一次。</p>
             <p className="muted">
@@ -160,7 +193,10 @@ export function HomePanel({
                     <li key={`${entry.sourceId}:${entry.subjectId}:${entry.localDate}`}>
                       <strong>{subjectTitle(entry)}</strong>
                       <span>
-                        {state.c6 && entry.sourceId === 'reward.lesson.first-completion'
+                        {entry.sourceId === 'reward.lesson.first-completion' &&
+                        state.c6?.index?.rewardGroups.some(
+                          (group) => group.lessonReward.subjectId === entry.subjectId,
+                        )
                           ? '教学组首次完成'
                           : rewardTitle(entry)}{' '}
                         · {entry.localDate}

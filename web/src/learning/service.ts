@@ -1,4 +1,4 @@
-import { MysqlLearningSession } from './mysql-session';
+import type { MysqlLearningSession } from './mysql-session';
 import { c6ReviewSources, deriveC6Weaknesses, c6ExerciseEvents } from '../c6-learning/review';
 import { activateC6IndependentCases } from '../c6-learning/cases';
 import {
@@ -13,13 +13,12 @@ import { createC6TeachingRepository } from '../content/c6-teaching-repository';
 import type { C6TeachingManifest } from '../content/c6-teaching-types';
 import type { C6CourseRows } from '../c6-learning/model';
 import { projectC6Learning } from './domain';
-import { JavaLearningSession } from '../java/session';
-import { RustLearningSession } from './rust2018-session';
+import type { JavaLearningSession } from '../java/session';
+import type { RustLearningSession } from './rust2018-session';
 import { isJavaMark } from '../java/identities';
-import { javaReviewSources, javaWeaknessRows } from '../java/review';
-import { PythonLearningSession } from '../python3/session';
+import type { PythonLearningSession } from '../python3/session';
 import { isPythonMark } from '../python3/identities';
-import { pythonReviewSources, pythonWeaknessRows } from '../python3/review';
+import type { PreparedBackup } from '../storage/backup';
 import type { CustomDraftWrite } from '../storage/custom-draft';
 import { loadCoursePractice } from '../content/practice';
 import { deriveWeaknesses } from '../weaknesses/model';
@@ -138,6 +137,7 @@ export interface LearningServiceState {
   pendingCount: number;
   sessionEpoch: number;
   cleared: boolean;
+  backupRestored?: boolean;
   appearanceReadOnly?: boolean;
   appearanceCanReset?: boolean;
   appearanceError?: string | null;
@@ -218,6 +218,14 @@ function freeze<T>(value: T): T {
 function same(a: unknown, b: unknown): boolean {
   return JSON.stringify(a) === JSON.stringify(b);
 }
+function lazySession<T>(load: () => Promise<T>) {
+  let pending: Promise<T> | undefined;
+  return () =>
+    (pending ??= load().catch((error: unknown) => {
+      pending = undefined;
+      throw error;
+    }));
+}
 
 // This class and its command methods are storage internals. The public index
 // exposes only state/settings capability; it never exposes a learning issuer.
@@ -246,53 +254,74 @@ export class LearningService {
         this.savedRead(result, generation, epoch),
     };
   }
-  private readonly pythonSession = new PythonLearningSession(this.courseHooks());
-  private readonly javaSession = new JavaLearningSession(this.courseHooks());
-  private readonly cppSession = new JavaLearningSession(this.courseHooks(), 'cpp');
-  private readonly mysqlSession = new MysqlLearningSession(this.courseHooks());
+  private readonly pythonSession = lazySession(
+    async () => new (await import('../python3/session')).PythonLearningSession(this.courseHooks()),
+  );
+  private readonly javaSession = lazySession(
+    async () => new (await import('../java/session')).JavaLearningSession(this.courseHooks()),
+  );
+  private readonly cppSession = lazySession(
+    async () =>
+      new (await import('../java/session')).JavaLearningSession(this.courseHooks(), 'cpp'),
+  );
+  private readonly mysqlSession = lazySession(
+    async () => new (await import('./mysql-session')).MysqlLearningSession(this.courseHooks()),
+  );
   readMysqlActivities = (...args: Parameters<MysqlLearningSession['readActivities']>) =>
-    this.mysqlSession.readActivities(...args);
+    this.mysqlSession().then((session) => session.readActivities(...args));
   readMysqlDraft = (...args: Parameters<MysqlLearningSession['readDraft']>) =>
-    this.mysqlSession.readDraft(...args);
+    this.mysqlSession().then((session) => session.readDraft(...args));
   saveMysqlDraft = (...args: Parameters<MysqlLearningSession['saveDraft']>) =>
-    this.mysqlSession.saveDraft(...args);
-  recordMysqlLesson = (...args: Parameters<MysqlLearningSession['recordLesson']>) =>
-    this.mysqlSession.recordLesson(...args);
+    this.mysqlSession().then((session) => session.saveDraft(...args));
+  recordMysqlLesson = (id: string, epoch: number) => {
+    const at = this.courseHooks().clock();
+    return this.mysqlSession().then((session) => session.recordLesson(id, epoch, at));
+  };
   recordMysqlJudge = (...args: Parameters<MysqlLearningSession['recordJudge']>) =>
-    this.mysqlSession.recordJudge(...args);
-  private readonly rustSession = new RustLearningSession(this.courseHooks());
+    this.mysqlSession().then((session) => session.recordJudge(...args));
+  private readonly rustSession = lazySession(
+    async () => new (await import('./rust2018-session')).RustLearningSession(this.courseHooks()),
+  );
   readRustCourse = (...args: Parameters<RustLearningSession['read']>) =>
-    this.rustSession.read(...args);
-  recordRustLesson = (...args: Parameters<RustLearningSession['recordLesson']>) =>
-    this.rustSession.recordLesson(...args);
+    this.rustSession().then((session) => session.read(...args));
+  recordRustLesson = (id: string, epoch: number) => {
+    const at = this.courseHooks().clock();
+    return this.rustSession().then((session) => session.recordLesson(id, epoch, at));
+  };
   recordRustJudge = (...args: Parameters<RustLearningSession['recordJudge']>) =>
-    this.rustSession.recordJudge(...args);
+    this.rustSession().then((session) => session.recordJudge(...args));
   saveRustDraft = (...args: Parameters<RustLearningSession['saveDraft']>) =>
-    this.rustSession.saveDraft(...args);
+    this.rustSession().then((session) => session.saveDraft(...args));
   readPythonCourse = (...args: Parameters<PythonLearningSession['read']>) =>
-    this.pythonSession.read(...args);
-  recordPythonLesson = (...args: Parameters<PythonLearningSession['recordLesson']>) =>
-    this.pythonSession.recordLesson(...args);
+    this.pythonSession().then((session) => session.read(...args));
+  recordPythonLesson = (id: string, epoch: number) => {
+    const at = this.courseHooks().clock();
+    return this.pythonSession().then((session) => session.recordLesson(id, epoch, at));
+  };
   recordPythonJudge = (...args: Parameters<PythonLearningSession['recordJudge']>) =>
-    this.pythonSession.recordJudge(...args);
+    this.pythonSession().then((session) => session.recordJudge(...args));
   savePythonDraft = (...args: Parameters<PythonLearningSession['saveDraft']>) =>
-    this.pythonSession.saveDraft(...args);
+    this.pythonSession().then((session) => session.saveDraft(...args));
   readJavaCourse = (...args: Parameters<JavaLearningSession['read']>) =>
-    this.javaSession.read(...args);
-  recordJavaLesson = (...args: Parameters<JavaLearningSession['recordLesson']>) =>
-    this.javaSession.recordLesson(...args);
+    this.javaSession().then((session) => session.read(...args));
+  recordJavaLesson = (id: string, epoch: number) => {
+    const at = this.courseHooks().clock();
+    return this.javaSession().then((session) => session.recordLesson(id, epoch, at));
+  };
   recordJavaJudge = (...args: Parameters<JavaLearningSession['recordJudge']>) =>
-    this.javaSession.recordJudge(...args);
+    this.javaSession().then((session) => session.recordJudge(...args));
   saveJavaDraft = (...args: Parameters<JavaLearningSession['saveDraft']>) =>
-    this.javaSession.saveDraft(...args);
+    this.javaSession().then((session) => session.saveDraft(...args));
   readCppCourse = (...args: Parameters<JavaLearningSession['read']>) =>
-    this.cppSession.read(...args);
-  recordCppLesson = (...args: Parameters<JavaLearningSession['recordLesson']>) =>
-    this.cppSession.recordLesson(...args);
+    this.cppSession().then((session) => session.read(...args));
+  recordCppLesson = (id: string, epoch: number) => {
+    const at = this.courseHooks().clock();
+    return this.cppSession().then((session) => session.recordLesson(id, epoch, at));
+  };
   recordCppJudge = (...args: Parameters<JavaLearningSession['recordCppJudge']>) =>
-    this.cppSession.recordCppJudge(...args);
+    this.cppSession().then((session) => session.recordCppJudge(...args));
   saveCppDraft = (...args: Parameters<JavaLearningSession['saveDraft']>) =>
-    this.cppSession.saveDraft(...args);
+    this.cppSession().then((session) => session.saveDraft(...args));
   courseRepository = () => this.c6Repository;
   private courseSession() {
     if (!this.c6Session) throw new StorageError('S_CONTENT_INCOMPATIBLE');
@@ -578,14 +607,18 @@ export class LearningService {
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
     if (command && this.state.clockStatus === 'rollback') throw new StorageError('S_DATE_INVALID');
     const at = (this.options.clock ?? (() => new Date().toISOString()))();
+    const [python, java] = c6Index
+      ? await Promise.all([import('../python3/review'), import('../java/review')])
+      : [];
+    this.checkEditorHistory(context);
     const result = await this.storage().syncReviewCards(
       context,
       (snapshot, marks) =>
         c6Index
           ? [
               ...c6ReviewSources(snapshot, marks, c6Index),
-              ...pythonReviewSources(snapshot, marks),
-              ...javaReviewSources(snapshot, marks),
+              ...python!.pythonReviewSources(snapshot, marks),
+              ...java!.javaReviewSources(snapshot, marks),
             ]
           : reviewSources(snapshot, marks, catalog!, reading!),
       at,
@@ -611,6 +644,10 @@ export class LearningService {
     const practice = c6Index ? null : await loadCoursePractice();
     this.checkEditorHistory(context);
     const at = (this.options.clock ?? (() => new Date().toISOString()))();
+    const [python, java] = c6Index
+      ? await Promise.all([import('../python3/review'), import('../java/review')])
+      : [];
+    this.checkEditorHistory(context);
     const result = await this.storage().syncWeaknesses(
       context,
       (snapshot, marks) =>
@@ -621,8 +658,8 @@ export class LearningService {
                 ...original,
                 rows: [
                   ...original.rows,
-                  ...pythonWeaknessRows(snapshot, marks, at),
-                  ...javaWeaknessRows(snapshot, marks, at),
+                  ...python!.pythonWeaknessRows(snapshot, marks, at),
+                  ...java!.javaWeaknessRows(snapshot, marks, at),
                 ].sort((a, b) => a.knowledgeRef.id.localeCompare(b.knowledgeRef.id)),
               };
             })()
@@ -1875,13 +1912,86 @@ export class LearningService {
       ];
     }, expectedRevision);
   };
+  exportLocalBackup = (): Promise<Blob> => {
+    const epoch = this.state.sessionEpoch;
+    return this.enqueue(async () => {
+      if (epoch !== this.state.sessionEpoch || this.disposed)
+        throw new StorageError('S_GENERATION_STALE');
+      const backup = await this.storage().exportBackup();
+      if (epoch !== this.state.sessionEpoch || this.disposed)
+        throw new StorageError('S_GENERATION_STALE');
+      return backup;
+    });
+  };
+  prepareLocalBackup = async (file: Blob): Promise<PreparedBackup> => {
+    const epoch = this.state.sessionEpoch;
+    const prepared = await this.storage().prepareBackup(file);
+    if (epoch !== this.state.sessionEpoch || this.disposed)
+      throw new StorageError('S_GENERATION_STALE');
+    return prepared;
+  };
+  restoreLocalBackup = (
+    prepared: PreparedBackup,
+    generation: string,
+    revision: number,
+  ): Promise<void> => {
+    const client = this.client;
+    if (
+      !client ||
+      this.state.snapshot?.meta.generation !== generation ||
+      this.state.snapshot.meta.revision !== revision
+    )
+      return Promise.reject(new StorageError('S_REVISION_CONFLICT'));
+    this.invalidateSession();
+    const epoch = this.state.sessionEpoch;
+    this.publish({
+      status: 'saving',
+      lastSaved: false,
+      errorCode: null,
+      temporary: false,
+      backupRestored: false,
+    });
+    return this.enqueue(async () => {
+      try {
+        const restored = await client.restoreBackup(prepared, generation, revision);
+        if (epoch !== this.state.sessionEpoch || this.disposed)
+          throw new StorageError('S_GENERATION_STALE');
+        this.observedTime = 0;
+        await this.readCurrent(false, restored.meta.generation);
+        if (epoch !== this.state.sessionEpoch) throw new StorageError('S_GENERATION_STALE');
+        this.publish({
+          backupRestored: true,
+          cleared: false,
+          lastSaved: true,
+          temporary: false,
+          pendingCount: 0,
+        });
+      } catch (error) {
+        if (epoch === this.state.sessionEpoch) {
+          try {
+            await this.readCurrent(false);
+          } catch {
+            /* preserve the operation's failure */
+          }
+          this.fail(error);
+        }
+        throw error;
+      }
+    });
+  };
   clearLocalData = (): Promise<void> => {
     const client = this.client;
     const guard = this.recoveryGuard;
     // Invalidate active contexts before waiting behind any earlier local write.
     this.invalidateSession();
     const epoch = this.state.sessionEpoch;
-    this.publish({ status: 'saving', lastSaved: false, errorCode: null, temporary: false });
+    this.publish({
+      status: 'saving',
+      lastSaved: false,
+      errorCode: null,
+      temporary: false,
+      backupRestored: false,
+    });
     return this.enqueue(async () => {
       try {
         if (!client || !guard || !this.state.recovery?.canClear)
@@ -2400,6 +2510,9 @@ export function createLearningService() {
     saveAvatar: service.saveAvatar,
     saveGoalTemplate: service.saveGoalTemplate,
     clearLocalData: service.clearLocalData,
+    exportLocalBackup: service.exportLocalBackup,
+    prepareLocalBackup: service.prepareLocalBackup,
+    restoreLocalBackup: service.restoreLocalBackup,
     resetLocalPreference: service.resetLocalPreference,
     retryPending: service.retryPending,
     subscribeSessionInvalidation: service.subscribeSessionInvalidation,

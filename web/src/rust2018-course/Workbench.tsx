@@ -7,6 +7,7 @@ import type { JavaDraft } from '../storage/java-course';
 import { useLearning } from '../learning/react';
 import { useJavaResource } from '../java/use-resource';
 import { useUnsavedChanges } from '../workbench/use-unsaved-changes';
+import { CodeEditor, type CodeEditorHandle } from '../components/CodeEditor';
 import { RustLoadState, RustNav, RustText } from './CoursePage';
 import { rustExercise, rustFreeDocument } from './identities';
 import { loadRustLesson, type RustCase } from './repository';
@@ -67,9 +68,9 @@ function Editor({
   const [blockDirty, setBlockDirty] = useState(false);
   const operation = useRef(0);
   const position = useRef(0);
-  const editor = useRef<HTMLTextAreaElement>(null);
+  const editor = useRef<CodeEditorHandle>(null);
   const dirty = source !== (saved?.source ?? target.source);
-  useUnsavedChanges(!target.example && (dirty || blockDirty));
+  useUnsavedChanges(dirty || blockDirty);
   const abort = useCallback(() => {
     operation.current++;
     engine.invalidate();
@@ -159,6 +160,37 @@ function Editor({
     }
   }
 
+  async function copyExample() {
+    if (!writable || saving || blockDirty) return;
+    const copy = source;
+    setSaving(true);
+    setError('');
+    try {
+      const previous = (await service.readRustCourse(epoch)).drafts.find(
+        (row) => row.documentId === rustFreeDocument,
+      );
+      if (
+        previous &&
+        previous.source !== copy &&
+        !window.confirm('自由工作台已有草稿。用当前示例代码替换它？')
+      )
+        return;
+      const value = await service.saveRustDraft(
+        rustFreeDocument,
+        copy,
+        previous?.revision ?? null,
+        epoch,
+      );
+      if (service.getState().sessionEpoch !== epoch) return;
+      setSaved(value);
+      setNotice('这份示例代码的副本已保存到 Rust 自由工作台。可打开自由工作台继续编辑。');
+    } catch (cause) {
+      if (service.getState().sessionEpoch === epoch) setError(friendly(cause));
+    } finally {
+      setSaving(false);
+    }
+  }
+
   async function map() {
     resetResult();
     const token = operation.current;
@@ -230,7 +262,7 @@ function Editor({
   const locate = () => {
     if (!diagnostic || !where) return;
     editor.current?.focus();
-    editor.current?.setSelectionRange(
+    editor.current?.select(
       where.utf16Offset,
       positions.get(diagnostic.byteRange.end)?.utf16Offset ?? where.utf16Offset,
     );
@@ -239,11 +271,17 @@ function Editor({
     <>
       <header className="rust-title">
         <div>
-          <h1>{target.title}</h1>
+          <h1 tabIndex={-1}>{target.title}</h1>
           <p>Rust 2018 教学子集 · 输入、变量与轨迹在当前浏览器中处理。</p>
         </div>
         {target.lesson && <Link to={'/rust/lesson/' + target.lesson}>返回小节</Link>}
       </header>
+      {target.example && (
+        <p className="muted">示例可临时修改和运行。需要保留修改时，请复制到自由工作台并保存。</p>
+      )}
+      {!writable && (
+        <p className="muted">当前只能临时编辑和运行；草稿与判题记录需要可写的本地档案。</p>
+      )}
       {target.prompt && (
         <section className="rust-sheet" aria-label="题目要求">
           <h2>练习要求</h2>
@@ -263,17 +301,21 @@ function Editor({
           <div className="rust-title">
             <h2>源码</h2>
             <span className="rust-muted">
-              {dirty ? '有改动' : saved ? '已保存草稿' : '当前文档'}
+              {saving
+                ? '正在保存草稿…'
+                : dirty
+                  ? '有未保存的修改'
+                  : saved
+                    ? '草稿已保存到此浏览器'
+                    : '当前文档，修改后可保存草稿'}
             </span>
           </div>
-          <textarea
+          <CodeEditor
             ref={editor}
-            aria-label="Rust 源码"
-            className="python-editor"
+            label="Rust 源码"
+            dialect="rust"
             value={source}
-            onChange={(event) => changeSource(event.target.value)}
-            spellCheck={false}
-            rows={14}
+            onChange={changeSource}
           />
           {blocks && (
             <Suspense fallback={<p role="status">正在打开积木…</p>}>
@@ -317,6 +359,19 @@ function Editor({
               >
                 保存草稿
               </button>
+            )}
+            {target.example && (
+              <>
+                <button
+                  disabled={!writable || saving || blockDirty || !!busy}
+                  onClick={() => void copyExample()}
+                >
+                  复制到自由工作台并保存
+                </button>
+                {saved?.documentId === rustFreeDocument && (
+                  <Link to="/rust/workbench">打开已保存的自由工作台</Link>
+                )}
+              </>
             )}
             {blocks ? (
               <button

@@ -296,6 +296,53 @@ export function readTransaction(
   );
 }
 export class StorageClient {
+  /** Archive support is loaded only when the user opens the local backup controls. */
+  async exportBackup(): Promise<Blob> {
+    const db = this.connection();
+    checkLayout(db);
+    if (db.version !== MYSQL_DB_VERSION || !this.initialization?.c6Activation)
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    const [{ readBackupRows }, { createBackupFile }] = await Promise.all([
+      import('./backup-store'),
+      import('./backup'),
+    ]);
+    return createBackupFile(
+      await readBackupRows(db),
+      c6ActivationIndex(this.initialization.c6Activation),
+      (a, b) => this.factory.cmp(a, b),
+    );
+  }
+  async prepareBackup(file: Blob): Promise<import('./backup').PreparedBackup> {
+    if (this.connection().version !== MYSQL_DB_VERSION || !this.initialization?.c6Activation)
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    const { prepareBackupFile } = await import('./backup');
+    return prepareBackupFile(file, c6ActivationIndex(this.initialization.c6Activation), (a, b) =>
+      this.factory.cmp(a, b),
+    );
+  }
+  async restoreBackup(
+    prepared: import('./backup').PreparedBackup,
+    generation: string,
+    revision: number,
+  ): Promise<StorageSnapshot> {
+    const db = this.connection();
+    checkLayout(db);
+    if (db.version !== MYSQL_DB_VERSION || !this.initialization?.c6Activation)
+      throw new StorageError('S_CONTENT_INCOMPATIBLE');
+    const { restoreBackup } = await import('./backup-store');
+    const result = await restoreBackup(
+      db,
+      this.factory,
+      c6ActivationIndex(this.initialization.c6Activation),
+      prepared,
+      generation,
+      revision,
+    );
+    this.guards.clear();
+    this.fallback = false;
+    this.broadcast(result.meta);
+    return result;
+  }
   private closed = false;
   private channel: BroadcastChannel | undefined;
   private listeners = new Set<() => void>();

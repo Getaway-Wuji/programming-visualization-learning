@@ -7,6 +7,7 @@ import type { Settings } from '../storage/model';
 import { AppearanceSettings } from '../appearance/AppearanceSettings';
 import { SavedBlockWorkspacePreference } from '../appearance/BlockWorkspacePreference';
 import { AiSettings } from '../ai-debug/Settings';
+import { BackupPanel } from '../storage/BackupPanel';
 
 const tabs = [
   { id: 'appearance', label: '外观与主题' },
@@ -375,6 +376,7 @@ function SettingsContent() {
                   </dd>
                 </div>
               </dl>
+              <BackupPanel />
               {!!state.recovery?.issues.length && (
                 <section aria-labelledby="recovery-options-title">
                   <h3 id="recovery-options-title">数据恢复</h3>
@@ -433,9 +435,9 @@ function SettingsContent() {
               )}
               <h3>清除本地数据</h3>
               <p className="notice">
-                清除会移除学习进度、练习记录、积分账本及防重记录、每日目标与打卡、显示设置和C 和
-                Python
-                工作台草稿与薄弱点依据，并丢弃当前临时内容与待保存操作。清除后无法在本平台找回。
+                清除会移除六语言学习进度、练习记录、积分账本及防重记录、每日目标与打卡、显示设置、外观偏好与背景图片、C、Python、Java、C++、Rust
+                和 MySQL 工作台草稿与薄弱点依据（包含 MySQL
+                教学数据库与事务），并丢弃当前临时内容与待保存操作。清除后只能从你此前下载的完整备份恢复。
               </p>
               {!canClear && !busy && (
                 <p className="muted">

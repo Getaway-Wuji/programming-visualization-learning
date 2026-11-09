@@ -40,6 +40,7 @@ import { canonicalMysqlJson, defaultMysqlSession } from '../../../web/src/engine
 import { MysqlClient } from '../../../web/src/engine/mysql-client';
 import { StorageError } from '../../../web/src/storage/errors';
 import { MysqlPlayer } from '../../../web/src/engine/mysql-player';
+import type { PreparedBackup } from '../../../web/src/storage/backup';
 
 // Every database name is supplied by the test and must be in this isolated namespace.
 const namespace = 'c-viz-learning.test.mysql-storage.';
@@ -47,6 +48,22 @@ const at = '2026-11-09T02:00:00.000Z';
 const clients = new Map<string, StorageClient>();
 const blockers = new Map<string, IDBDatabase>();
 const invalidations = new Map<string, number>();
+const backups = new Map<string, PreparedBackup>();
+let backupFault: 'quota' | 'abort-after-success' | undefined;
+const nativeAdd = IDBObjectStore.prototype.add;
+IDBObjectStore.prototype.add = function (value, key) {
+  const selected = this.name === 'mysqlDrafts' ? backupFault : undefined;
+  if (selected === 'quota') {
+    backupFault = undefined;
+    throw new DOMException('Isolated restore fault', 'QuotaExceededError');
+  }
+  const request = nativeAdd.call(this, value, key!);
+  if (selected === 'abort-after-success') {
+    backupFault = undefined;
+    request.addEventListener('success', () => this.transaction.abort(), { once: true });
+  }
+  return request;
+};
 const nativePut = IDBObjectStore.prototype.put;
 const nativeCreate = IDBDatabase.prototype.createObjectStore;
 let fault: 'quota' | 'abort-after-success' | 'upgrade-create' | 'upgrade-meta' | undefined;
@@ -381,6 +398,45 @@ async function guarded<T>(action: () => Promise<T>) {
   }
 }
 const harness = {
+  async corruptBackupProgress(name: string) {
+    const database = await db(name);
+    const tx = database.transaction(['progress'], 'readwrite');
+    const done = complete(tx);
+    tx.objectStore('progress').put({ invalid: true }, ['bad-backup-progress']);
+    await done;
+    database.close();
+  },
+  async seedBackup(name: string) {
+    await seed(name);
+    const database = await db(name);
+    const tx = database.transaction(['appearance'], 'readwrite');
+    const done = complete(tx);
+    const appearance = defaultAppearance();
+    appearance.background.assetId = 'background';
+    appearance.background.visible = true;
+    tx.objectStore('appearance').put(appearance, 'current');
+    await done;
+    database.close();
+  },
+  backup: (id: string) => guarded(async () => (await client(id).exportBackup()).text()),
+  prepareBackup: (id: string, text: string) =>
+    guarded(async () => {
+      const prepared = await client(id).prepareBackup(
+        new Blob([text], { type: 'application/json' }),
+      );
+      const token = crypto.randomUUID();
+      backups.set(token, prepared);
+      return { token, summary: prepared.summary };
+    }),
+  restoreBackup: (id: string, token: string, generation: string, revision: number) =>
+    guarded(async () => {
+      const prepared = backups.get(token);
+      if (!prepared) throw new Error('Missing isolated backup');
+      return client(id).restoreBackup(prepared, generation, revision);
+    }),
+  failBackup(next: typeof backupFault) {
+    backupFault = next;
+  },
   seed,
   dump,
   open: (name: string) => guarded(() => open(name)),

@@ -11,6 +11,8 @@ import { C6Boundary } from './CoursePages';
 import { collectC6Mistakes, isC6Mark } from './review';
 import { c6DisplayReference } from './display';
 import { c6IndependentReference, c6IndependentHref } from './independent';
+import { languages } from '../learning/languages';
+import '../course-ui/course-ui.css';
 
 export default function C6NotebookPage() {
   return (
@@ -42,16 +44,24 @@ function Notebook() {
         <Link className="text-link" to="/study-notes">
           整理学习笔记
         </Link>
-        <Link className="text-link" to="/python/review">
-          查看 Python 复盘
-        </Link>
-        <Link className="text-link" to="/java/review">
-          查看 Java 复盘
-        </Link>
-        <Link className="text-link" to="/mysql/review">
-          查看 MySQL 复盘
-        </Link>
       </div>
+      <section className="course-next" aria-label="按语言查看复盘">
+        <div>
+          <h2>各语言判题复盘</h2>
+          <p className="course-help">
+            下方汇总 C 语言错题；其他语言的最近提交与首次通过记录可从这里查看。
+          </p>
+        </div>
+        <nav className="course-language-list" aria-label="语言复盘">
+          {languages
+            .filter((language) => language.id !== 'c')
+            .map((language) => (
+              <Link className="text-link" key={language.id} to={language.review}>
+                查看 {language.label} 复盘
+              </Link>
+            ))}
+        </nav>
+      </section>
       <section className="c6-section">
         <h2>错题记录{mistakes ? ` · ${mistakes.length} 题` : ''}</h2>
         <p className="muted">

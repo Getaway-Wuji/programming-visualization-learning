@@ -1,5 +1,5 @@
 import { useImperativeHandle, useLayoutEffect, useRef, type Ref } from 'react';
-import { ChangeSet, EditorState, Prec } from '@codemirror/state';
+import { ChangeSet, EditorState, Prec, Transaction } from '@codemirror/state';
 import {
   EditorView,
   keymap,
@@ -7,7 +7,6 @@ import {
   highlightActiveLine,
   drawSelection,
 } from '@codemirror/view';
-import { cpp } from '@codemirror/lang-cpp';
 import {
   defaultHighlightStyle,
   HighlightStyle,
@@ -30,22 +29,31 @@ import {
   completionKeymap,
 } from '@codemirror/autocomplete';
 import { codeCompletions, type CodeDialect } from './code-completions';
+import { codeLanguage } from './code-languages';
 import './code-editor.css';
 import editorStyles from './code-editor.css?url';
 
+const colorPairs: Record<string, [string, string]> = {
+  '#708': ['#7a2794', '#ddb3f4'],
+  '#219': ['#7042a5', '#ccb5f6'],
+  '#164': ['#126b40', '#8fd6a8'],
+  '#a11': ['#a12634', '#ffb5ae'],
+  '#e40': ['#98420c', '#ffc08b'],
+  '#00f': ['#175bb4', '#a9caff'],
+  '#30a': ['#5940a2', '#c4baff'],
+  '#085': ['#0b6b66', '#83d5cf'],
+  '#167': ['#17667d', '#92d4e9'],
+  '#256': ['#245c72', '#a4d8e9'],
+  '#00c': ['#2457ad', '#a9caff'],
+  '#940': ['#735d43', '#c5b79f'],
+  '#f00': ['#b52230', '#ffb0b9'],
+};
 const codeColors = HighlightStyle.define(
   defaultHighlightStyle.specs.map((style) => ({
     ...style,
     ...(style.color
       ? {
-          color:
-            'light-dark(' +
-            style.color +
-            ', ' +
-            (['#708', '#219', '#00f'].includes(style.color)
-              ? 'var(--p05-accent)'
-              : 'var(--p05-text)') +
-            ')',
+          color: `light-dark(${(colorPairs[style.color] ?? [style.color, '#d7e2ed']).join(', ')})`,
         }
       : {}),
   })),
@@ -54,6 +62,7 @@ const codeColors = HighlightStyle.define(
 export interface CodeEditorHandle {
   select(start: number, end: number, scroll?: boolean): void;
   focus(): void;
+  text(): string;
 }
 export function CodeEditor({
   value,
@@ -61,6 +70,8 @@ export function CodeEditor({
   onSelect,
   label,
   dialect = 'c6',
+  readOnly = false,
+  identifiers = [],
   ref,
 }: {
   value: string;
@@ -68,20 +79,24 @@ export function CodeEditor({
   onSelect?(range: { start: number; end: number }): void;
   label: string;
   dialect?: CodeDialect;
+  readOnly?: boolean;
+  identifiers?: readonly string[];
   ref?: Ref<CodeEditorHandle>;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const editor = useRef<EditorView | null>(null);
-  const callbacks = useRef({ onChange, onSelect, value });
+  const callbacks = useRef({ onChange, onSelect, value, identifiers });
   useLayoutEffect(() => {
-    callbacks.current = { onChange, onSelect, value };
+    callbacks.current = { onChange, onSelect, value, identifiers };
   });
-  const initial = useRef(value);
   useImperativeHandle(
     ref,
     () => ({
       focus() {
         editor.current?.focus();
+      },
+      text() {
+        return editor.current?.state.doc.toString() ?? callbacks.current.value;
       },
       select(start, end, scroll = true) {
         const view = editor.current;
@@ -107,6 +122,7 @@ export function CodeEditor({
       changes: ChangeSet;
       active: boolean;
       cancelled: boolean;
+      historyStarted: boolean;
     } | null = null;
     const compositionMeasureKey = {};
     const changed = (before: string, text: string, changes: ChangeSet) => {
@@ -146,9 +162,82 @@ export function CodeEditor({
     const view = new EditorView({
       parent: root,
       state: EditorState.create({
-        doc: initial.current,
+        doc: callbacks.current.value,
         extensions: [
-          cpp(),
+          codeLanguage(dialect),
+          EditorState.readOnly.of(readOnly),
+          // Firefox may label the first DOM edit as a continuing composition,
+          // which otherwise absorbs an earlier independent undo operation.
+          EditorState.transactionFilter.of((transaction) => {
+            if (
+              !external &&
+              composition &&
+              !composition.cancelled &&
+              !composition.historyStarted &&
+              transaction.docChanged &&
+              (transaction.isUserEvent('input') || transaction.isUserEvent('delete'))
+            )
+              return [
+                {
+                  annotations: [
+                    Transaction.userEvent.of('input.type.compose.start'),
+                    isolateHistory.of('before'),
+                  ],
+                },
+                transaction,
+              ];
+            return transaction;
+          }),
+          EditorView.domEventHandlers({
+            beforeinput(event, view) {
+              if (
+                !event.cancelable ||
+                event.defaultPrevented ||
+                event.inputType !== 'insertText' ||
+                event.data === null ||
+                event.isComposing ||
+                view.composing ||
+                view.compositionStarted ||
+                view.state.readOnly
+              )
+                return false;
+              const selectionRoot = view.root as (Document | ShadowRoot) & {
+                getSelection?(): Selection | null;
+              };
+              const nativeSelection =
+                selectionRoot.getSelection?.() ?? view.dom.ownerDocument.getSelection();
+              if (
+                !nativeSelection?.anchorNode ||
+                !nativeSelection.focusNode ||
+                !view.contentDOM.contains(nativeSelection.anchorNode) ||
+                !view.contentDOM.contains(nativeSelection.focusNode)
+              )
+                return false;
+              const anchor = view.posAtDOM(
+                nativeSelection.anchorNode,
+                nativeSelection.anchorOffset,
+              );
+              const head = view.posAtDOM(nativeSelection.focusNode, nativeSelection.focusOffset);
+              // Browser select-all/replacement can precede selectionchange.
+              // Read its real selection before inserting, including in shadow DOM.
+              if (
+                anchor !== view.state.selection.main.anchor ||
+                head !== view.state.selection.main.head
+              )
+                view.dispatch({ selection: { anchor, head }, userEvent: 'select' });
+              // Native contenteditable replacement may briefly synthesize an
+              // inline color style from the highlighted text. A normal editor
+              // transaction inserts plain text under the unchanged strict CSP.
+              // Native IME composition retains its separate atomic path below.
+              event.preventDefault();
+              view.dispatch({
+                ...view.state.replaceSelection(event.data),
+                scrollIntoView: true,
+                userEvent: 'input.type',
+              });
+              return true;
+            },
+          }),
           lineNumbers(),
           highlightActiveLine(),
           drawSelection(),
@@ -161,6 +250,9 @@ export function CodeEditor({
             spellcheck: 'false',
             autocapitalize: 'off',
             autocorrect: 'off',
+            'aria-description': readOnly
+              ? '只读示例。可用方向键阅读，Tab 移到下一项。'
+              : 'Tab 补全或缩进；先按 Esc，再按 Tab 可离开编辑区；Ctrl 加空格显示提示。',
           }),
           EditorView.theme({
             '&': {
@@ -188,20 +280,27 @@ export function CodeEditor({
             '&.cm-focused': { outline: '2px solid var(--p05-accent)' },
           }),
           autocompletion({
-            override: [codeCompletions(dialect)],
+            override: [codeCompletions(dialect, () => callbacks.current.identifiers)],
             defaultKeymap: false,
-            activateOnTyping: true,
+            activateOnTyping: !readOnly,
             interactionDelay: 0,
           }),
           Prec.highest(
             keymap.of([
               {
                 key: 'Tab',
-                run: (v) => acceptCompletion(v) || indent(indentMore)(v),
-                shift: indent(indentLess),
+                run: (v) => !readOnly && (acceptCompletion(v) || indent(indentMore)(v)),
+                shift: (v) => !readOnly && indent(indentLess)(v),
               },
               { key: 'Enter', run: (v) => acceptCompletion(v) || insertNewlineAndIndent(v) },
-              { key: 'Escape', run: closeCompletion },
+              {
+                key: 'Escape',
+                run: (v) => {
+                  closeCompletion(v);
+                  v.setTabFocusMode(10000);
+                  return true;
+                },
+              },
               ...completionKeymap,
               ...historyKeymap,
               ...defaultKeymap,
@@ -211,6 +310,7 @@ export function CodeEditor({
             if (external) return;
             if (update.docChanged) {
               if (composition) {
+                composition.historyStarted = true;
                 if (!composition.cancelled)
                   composition.changes = composition.changes.compose(update.changes);
               } else
@@ -237,11 +337,13 @@ export function CodeEditor({
     // inserting its text. Publish the completed edit once, so a rejected input
     // cannot replace the accepted draft with that temporary empty document.
     const beginComposition = () => {
+      if (composition && !composition.active) composition.historyStarted = false;
       composition ??= {
         before: view.state.doc.toString(),
         changes: ChangeSet.empty(view.state.doc.length),
         active: true,
         cancelled: false,
+        historyStarted: false,
       };
       composition.active = true;
     };
@@ -299,9 +401,16 @@ export function CodeEditor({
       styles.remove();
       editor.current = null;
     };
-  }, [label, dialect]);
+  }, [label, dialect, readOnly]);
   useLayoutEffect(() => {
     host.current?.dispatchEvent(new CustomEvent('code-replace', { detail: value }));
   });
-  return <div className="code-editor" ref={host} data-testid="code-editor" />;
+  return (
+    <>
+      <div className="code-editor" ref={host} data-testid="code-editor" data-dialect={dialect} />
+      <p className="code-editor-help">
+        {readOnly ? '只读示例' : 'Tab 补全或缩进 · Esc 后按 Tab 离开编辑区 · Ctrl + 空格查看提示'}
+      </p>
+    </>
+  );
 }

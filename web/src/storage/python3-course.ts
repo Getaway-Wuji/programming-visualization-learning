@@ -53,7 +53,7 @@ const scalarText = (value: unknown): value is string =>
   !/[\uD800-\uDFFF]/u.test(value) &&
   encoder.encode(value).length <= 32768;
 
-function assertPythonCourseState({ snapshot, rows }: PythonCourseState) {
+export function assertPythonCourseState({ snapshot, rows }: PythonCourseState) {
   assertActiveCourseMeta(snapshot.meta);
   requireRule(snapshot.meta.dbVersion >= PYTHON_DB_VERSION);
   requireRule(rows.activities.length <= 778 && rows.drafts.length <= 64);

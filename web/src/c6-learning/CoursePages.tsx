@@ -12,6 +12,8 @@ import type { C6LearningIndex } from './index';
 import './course.css';
 import { C6KnowledgeOverview } from './Knowledge';
 import { ReadingEnd } from './ReadingEnd';
+import { languages, recentLearningLanguage } from '../learning/languages';
+import { LanguageStudyCard } from '../learning/LanguageStudyCard';
 
 export function C6Boundary({ children }: { children: ReactNode }) {
   const { state, service } = useLearning();
@@ -111,6 +113,9 @@ function Home() {
       : null;
   const index = state.c6!.index!,
     manifest = state.c6!.manifest!;
+  const selectedLanguage =
+    languages.find((item) => item.id === search.get('language')) ??
+    languages.find((item) => item.id === recentLearningLanguage(state.snapshot))!;
   const completed = state.projection?.lessons.filter((l) => l.completed).length ?? 0;
   const started = state.projection?.lessons
     .filter((l) => l.started && !l.completed)
@@ -125,43 +130,74 @@ function Home() {
     <div className="c6-course-page">
       <PageHeading
         kicker="我的学习"
-        title="继续学 C"
-        description="按《C Primer Plus》第 6 版的章节顺序，阅读、运行，再动手练习。"
+        title={`继续学 ${selectedLanguage.label}`}
+        description={
+          selectedLanguage.id === 'c'
+            ? '按《C Primer Plus》第 6 版的章节顺序，阅读、运行，再动手练习。'
+            : '接着最近的学习进度，阅读、自检，并在工作台观察真实执行。'
+        }
       />
+      <div className="learning-language-picker" aria-label="选择学习语言">
+        {languages.map((language) => (
+          <button
+            key={language.id}
+            type="button"
+            aria-pressed={selectedLanguage.id === language.id}
+            onClick={() =>
+              setSearch(
+                (current) => {
+                  const next = new URLSearchParams(current);
+                  next.set('language', language.id);
+                  return next;
+                },
+                { replace: true },
+              )
+            }
+          >
+            {language.label}
+          </button>
+        ))}
+      </div>
       <div className="c6-home-columns">
-        <section className="card c6-next-section" aria-labelledby="c6-next-title">
-          <p className="muted">
-            {state.projection ? `${completed} / 404 个小节已完成` : '正在确认学习进度'}
-          </p>
-          {state.projection && <progress value={completed} max={404} aria-label="C 课程完成进度" />}
-          <h2 id="c6-next-title">{title ?? '全书小节已完成'}</h2>
-          {next ? (
-            <Link className="button button-primary" to={`/lessons/${next[0]}`}>
-              {started ? '继续阅读' : '开始阅读'}
-            </Link>
-          ) : (
-            <Link className="button button-primary" to="/courses">
-              回顾全书
-            </Link>
-          )}
-          <Link className="text-link" to="/courses">
-            查看课程目录
-          </Link>
-          <p className="muted">读到页末自动完成小节，练习可以从左侧菜单随时进入。</p>
-          <div className="c6-home-practice-shortcuts">
-            <h3>动手练习</h3>
-            <div className="inline-actions">
-              <Link className="text-link" to="/practice">
-                进入练习 →
+        {selectedLanguage.id !== 'c' ? (
+          <LanguageStudyCard language={selectedLanguage.id} />
+        ) : (
+          <section className="card c6-next-section" aria-labelledby="c6-next-title">
+            <p className="muted">
+              {state.projection ? `${completed} / 404 个小节已完成` : '正在确认学习进度'}
+            </p>
+            {state.projection && (
+              <progress value={completed} max={404} aria-label="C 课程完成进度" />
+            )}
+            <h2 id="c6-next-title">{title ?? '全书小节已完成'}</h2>
+            {next ? (
+              <Link className="button button-primary" to={`/lessons/${next[0]}`}>
+                {started ? '继续阅读' : '开始阅读'}
               </Link>
-              <Link className="text-link" to="/bugs">
-                Bug 修复闯关 →
+            ) : (
+              <Link className="button button-primary" to="/courses">
+                回顾全书
               </Link>
+            )}
+            <Link className="text-link" to="/courses">
+              查看课程目录
+            </Link>
+            <p className="muted">读到页末自动完成小节，练习可以从左侧菜单随时进入。</p>
+            <div className="c6-home-practice-shortcuts">
+              <h3>动手练习</h3>
+              <div className="inline-actions">
+                <Link className="text-link" to="/practice">
+                  进入练习 →
+                </Link>
+                <Link className="text-link" to="/bugs">
+                  Bug 修复闯关 →
+                </Link>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
         <div className="card c6-goal-section">
-          <DailyGoalSummary />
+          <DailyGoalSummary language={selectedLanguage.id} />
           <p className="inline-actions">
             <Link className="text-link" to="/?panel=goals">
               设置每日目标
@@ -173,26 +209,23 @@ function Home() {
         </div>
       </div>
       <section className="card c6-course-switcher" aria-label="其他课程">
-        <h2>其他课程</h2>
+        <h2>课程与复盘</h2>
         <div className="inline-actions">
-          <Link className="text-link" to="/python">
-            Python
+          <Link className="text-link" to={selectedLanguage.directory}>
+            {selectedLanguage.label} 课程目录
           </Link>
-          <Link className="text-link" to="/java">
-            Java
+          <Link className="text-link" to={selectedLanguage.workbench}>
+            {selectedLanguage.label} 工作台
           </Link>
-          <Link className="text-link" to="/cpp">
-            C++
+          <Link className="text-link" to={selectedLanguage.review}>
+            {selectedLanguage.label} 学习复盘
           </Link>
-          <Link className="text-link" to="/rust">
-            Rust
-          </Link>
-          <Link className="text-link" to="/mysql">
-            MySQL · SQL 与数据表
+          <Link className="text-link" to="/notebook">
+            全部语言复盘入口
           </Link>
         </div>
       </section>
-      <C6KnowledgeOverview />
+      {selectedLanguage.id === 'c' && <C6KnowledgeOverview />}
       <LearningSaveStatus />
       {panel && (
         <HomePanel key={panel} panel={panel} dismiss={() => setSearch({}, { replace: true })} />

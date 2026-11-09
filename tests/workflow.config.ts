@@ -3,7 +3,14 @@ import { fileURLToPath } from 'node:url';
 
 export default defineConfig({
   testDir: './browser',
-  testMatch: 'learning-workflow.spec.ts',
+  testMatch: [
+    'learning-workflow.spec.ts',
+    'language-workflow.spec.ts',
+    'six-language-editor.spec.ts',
+    'course-navigation.spec.ts',
+    'local-backup.spec.ts',
+    'local-backup-ui.spec.ts',
+  ],
   workers: 1,
   retries: 0,
   timeout: 45_000,

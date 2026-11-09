@@ -1,6 +1,33 @@
 .c6-course-page {
   min-width: 0;
 }
+.learning-language-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 24px;
+}
+.learning-language-picker button {
+  min-height: 40px;
+  min-width: 60px;
+  padding: 7px 16px;
+  color: var(--p05-text, var(--ink));
+  background: var(--p05-surface, #fff);
+  border: 1px solid var(--p05-border, var(--line));
+  border-radius: 6px;
+  font: inherit;
+}
+.learning-language-picker button[aria-pressed='true'] {
+  background: var(--p05-active, #e8ebef);
+  border-color: currentColor;
+  font-weight: 600;
+}
+@media (max-width: 600px) {
+  .learning-language-picker button {
+    min-height: 44px;
+    flex: 1 0 26%;
+  }
+}
 .c6-course-switcher {
   margin-block: 24px;
 }

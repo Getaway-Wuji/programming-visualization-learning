@@ -137,6 +137,17 @@ function savingMessage(state: LearningServiceState, dirty: boolean) {
       title: '本地档案暂不可写',
       description: '现有数据会保留。请重新打开页面或在本地数据中查看恢复选项。',
     };
+  if (
+    state.backupRestored &&
+    !dirty &&
+    state.status === 'ready' &&
+    state.lastSaved &&
+    !state.temporary
+  )
+    return {
+      title: '备份已恢复',
+      description: '已保存档案已恢复。旧的运行结果与待保存操作已经失效，可以继续学习。',
+    };
   if (state.cleared && !dirty)
     return {
       title: '本地数据已清除',

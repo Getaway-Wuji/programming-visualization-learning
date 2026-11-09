@@ -18,6 +18,7 @@ import { useLearning } from '../learning/react';
 import { useJavaResource } from '../java/use-resource';
 import type { MysqlDraft } from '../storage/mysql-course';
 import { useUnsavedChanges } from '../workbench/use-unsaved-changes';
+import { CodeEditor, type CodeEditorHandle } from '../components/CodeEditor';
 import { MysqlLoadState, MysqlNav, MysqlText } from './CoursePage';
 import { mysqlExercise, mysqlFreeDocument } from './identities';
 import { loadMysqlLesson } from './repository';
@@ -110,7 +111,7 @@ function Editor({
     position = useRef(0),
     positionRevision = useRef(0),
     mounted = useRef(true);
-  const editor = useRef<HTMLTextAreaElement>(null);
+  const editor = useRef<CodeEditorHandle>(null);
   const dirty =
     source !== (saved?.source ?? target.source) ||
     !mysqlEqual(liveSession, saved?.session ?? target.session);
@@ -271,7 +272,7 @@ function Editor({
     setPane('sql');
     requestAnimationFrame(() => {
       editor.current?.focus();
-      editor.current?.setSelectionRange(start.utf16Offset, end.utf16Offset);
+      editor.current?.select(start.utf16Offset, end.utf16Offset);
     });
   };
   const diagnostic = response?.diagnostic ?? response?.replay?.terminal.diagnostic;
@@ -280,7 +281,7 @@ function Editor({
     <>
       <header className="mysql-title">
         <div>
-          <h1>{target.title}</h1>
+          <h1 tabIndex={-1}>{target.title}</h1>
           <p>输入 SQL，观察对应表格与查询结果。</p>
         </div>
         {target.lesson && <Link to={'/mysql/lesson/' + target.lesson}>返回小节</Link>}
@@ -318,17 +319,25 @@ function Editor({
             <div className="mysql-title">
               <h2>SQL</h2>
               <span className="mysql-muted">
-                {dirty ? '有未保存的改动' : saved ? '已保存草稿' : '当前文档'}
+                {saving
+                  ? '正在保存草稿…'
+                  : dirty
+                    ? '有未保存的修改'
+                    : saved
+                      ? '草稿已保存到此浏览器'
+                      : '当前文档，修改后可保存草稿'}
               </span>
             </div>
-            <textarea
+            <CodeEditor
               ref={editor}
-              aria-label="SQL 源码"
-              className="mysql-editor"
+              label="SQL 源码"
+              dialect="mysql"
+              identifiers={liveSession.database.tables.flatMap((table) => [
+                table.name,
+                ...table.columns.map((column) => column.name),
+              ])}
               value={source}
-              onChange={(event) => changeSource(event.target.value)}
-              spellCheck={false}
-              rows={9}
+              onChange={changeSource}
             />
             <div className="mysql-actions">
               <button
@@ -410,6 +419,18 @@ function Editor({
             )}
           </section>
           <MysqlResultTable result={view.result} />
+          {response?.replay && (
+            <MysqlTrace
+              key={response.identity.runId}
+              response={response}
+              source={source}
+              cursor={cursor}
+              seek={seek}
+              locate={locate}
+              playbackRate={state.snapshot?.settings.playbackRate ?? 1}
+              exporting={exporting}
+            />
+          )}
         </div>
         <aside className="mysql-data-column">
           <MysqlDatabaseTables state={view} historical={historical} />
@@ -462,18 +483,6 @@ function Editor({
           </div>
           <p className="mysql-muted">复盘重新验证当前 SQL，显示所选组的真实表格和轨迹。</p>
         </section>
-      )}
-      {response?.replay && (
-        <MysqlTrace
-          key={response.identity.runId}
-          response={response}
-          source={source}
-          cursor={cursor}
-          seek={seek}
-          locate={locate}
-          playbackRate={state.snapshot?.settings.playbackRate ?? 1}
-          exporting={exporting}
-        />
       )}
       {response?.replay && (
         <section className="mysql-sheet mysql-export">

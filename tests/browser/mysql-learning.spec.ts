@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue, editorSelection } from './editor-value';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
@@ -169,7 +170,7 @@ test('MySQL public catalog preserves all numbered nodes, parent guides, source d
 for (const profile of profiles)
   test(`MySQL visible example and all four initial databases / ${profile.id}`, async ({ page }) => {
     await page.goto('/#/mysql/example/' + profile.lessonId);
-    await expect(editor(page)).toHaveValue(profile.referenceSource);
+    await expectEditorValue(editor(page), profile.referenceSource);
     for (const group of profile.cases) {
       if (group.index)
         await page
@@ -230,12 +231,15 @@ test('MySQL live database and query results start at the accepted end state and 
   await trace(page)
     .getByRole('button', { name: /^定位第 1 行/u })
     .click();
-  const selected = await editor(page).evaluate((element: HTMLTextAreaElement) => ({
-    text: element.value.slice(element.selectionStart, element.selectionEnd),
-    before: element.value.slice(0, element.selectionStart),
-  }));
-  expect(selected.text).toBe('-- 字🙂，原始 SQL\nUPDATE students SET score = 0 WHERE id = 1');
-  expect(selected.before).toBe('');
+  const selected = async () => {
+    const range = await editorSelection(editor(page));
+    const source = await editorValue(editor(page));
+    return { text: source.slice(range.start, range.end), before: source.slice(0, range.start) };
+  };
+  await expect.poll(selected).toEqual({
+    text: '-- 字🙂，原始 SQL\nUPDATE students SET score = 0 WHERE id = 1',
+    before: '',
+  });
   await trace(page).getByRole('button', { name: '回到当前数据库', exact: true }).click();
   expect(
     await database(page).getByRole('region', { name: 'students 数据', exact: true }).innerText(),
@@ -243,14 +247,10 @@ test('MySQL live database and query results start at the accepted end state and 
   await trace(page)
     .getByRole('button', { name: /^定位第 3 行/u })
     .click();
-  const finalSelection = await editor(page).evaluate((element: HTMLTextAreaElement) => ({
-    text: element.value.slice(element.selectionStart, element.selectionEnd),
-    before: element.value.slice(0, element.selectionStart),
-  }));
-  expect(finalSelection.text).toBe('SELECT id, score FROM students ORDER BY id');
-  expect(finalSelection.before).toBe(
-    '-- 字🙂，原始 SQL\nUPDATE students SET score = 0 WHERE id = 1;\n',
-  );
+  await expect.poll(selected).toEqual({
+    text: 'SELECT id, score FROM students ORDER BY id',
+    before: '-- 字🙂，原始 SQL\nUPDATE students SET score = 0 WHERE id = 1;\n',
+  });
   await editor(page).fill('SELECT id, score FROM students ORDER BY id;');
   await expect(trace(page)).toHaveCount(0);
   await expect(result(page)).toContainText('运行 SQL 后');
@@ -322,7 +322,7 @@ test('MySQL transaction crosses requests and a refreshed atomic SQL/session draf
   const draft = (await archive(page)).rows.mysqlDrafts.values[0];
   expect((draft.session as MysqlSession).transaction.active).toBe(true);
   await page.reload();
-  await expect(editor(page)).toHaveValue('BEGIN; UPDATE students SET score = 0 WHERE id=1;');
+  await expectEditorValue(editor(page), 'BEGIN; UPDATE students SET score = 0 WHERE id=1;');
   await expect(page.getByTestId('mysql-transaction')).toContainText('事务进行中');
   await expect(database(page).getByRole('row').filter({ hasText: '林安' })).toContainText('0');
   await expect(trace(page)).toHaveCount(0);
@@ -332,7 +332,7 @@ test('MySQL transaction crosses requests and a refreshed atomic SQL/session draf
   expect(await cells(page)).toEqual([['88']]);
   await expect(page.getByTestId('mysql-transaction')).toContainText('当前无活动事务');
   await page.getByRole('button', { name: '重置数据库', exact: true }).click();
-  await expect(editor(page)).toHaveValue('ROLLBACK; SELECT score FROM students WHERE id=1;');
+  await expectEditorValue(editor(page), 'ROLLBACK; SELECT score FROM students WHERE id=1;');
   await expect(trace(page)).toHaveCount(0);
 });
 
@@ -428,12 +428,12 @@ test('MySQL quota and multi-tab draft conflicts preserve both SQL and database a
   await expect(page.getByText(saved)).toBeVisible();
   await other.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(other.getByRole('alert')).toContainText('另一页面更新了草稿');
-  await expect(editor(other)).toHaveValue('UPDATE students SET score=22 WHERE id=1;');
+  await expectEditorValue(editor(other), 'UPDATE students SET score=22 WHERE id=1;');
   await expect(database(other).getByRole('row').filter({ hasText: '林安' })).toContainText('22');
   await other.getByRole('button', { name: '以当前 SQL 和数据库保存', exact: true }).click();
   await expect(other.getByText(saved)).toBeVisible();
   await other.reload();
-  await expect(editor(other)).toHaveValue('UPDATE students SET score=22 WHERE id=1;');
+  await expectEditorValue(editor(other), 'UPDATE students SET score=22 WHERE id=1;');
   await expect(database(other).getByRole('row').filter({ hasText: '林安' })).toContainText('22');
   await expect(trace(other)).toHaveCount(0);
 });
@@ -466,7 +466,7 @@ test('MySQL clear barrier discards pending judge and prior draft without accepti
   await expect
     .poll(async () => (await archive(page)).rows.meta.values[0].generation)
     .not.toBe(before.rows.meta.values[0].generation);
-  await expect(editor(page)).toHaveValue(projection.starter);
+  await expectEditorValue(editor(page), projection.starter);
   await expect(trace(page)).toHaveCount(0);
   const after = await archive(page);
   for (const name of ['mysqlActivities', 'mysqlDrafts', 'ledger'])

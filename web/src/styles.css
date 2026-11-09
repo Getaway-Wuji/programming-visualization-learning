@@ -23,6 +23,24 @@ body {
   min-width: 320px;
   line-height: 1.65;
 }
+.nav-group {
+  display: grid;
+  gap: 3px;
+}
+.nav-group + .nav-group {
+  margin-top: 16px;
+}
+.nav-group-label {
+  margin: 6px 14px;
+  color: var(--p05-muted, var(--muted));
+  font-size: 12px;
+}
+[data-sidebar='collapsed'] .nav-group-label {
+  display: none;
+}
+h1[tabindex='-1']:focus {
+  outline: none;
+}
 button,
 input,
 select,

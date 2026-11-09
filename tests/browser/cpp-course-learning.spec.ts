@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import { openCurrentAnswer, submitCurrent } from './current-course-helpers';
@@ -41,17 +42,17 @@ test('quota and tab conflicts retain C++ edits and an explicit retry can save th
   await editor(page).fill('int main(){return 4;}');
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByRole('alert')).toHaveText('S_QUOTA');
-  await expect(editor(page)).toHaveValue('int main(){return 4;}');
+  await expectEditorValue(editor(page), 'int main(){return 4;}');
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByText(saved)).toBeVisible();
   await editor(other).fill('int main(){return 8;}');
   await other.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(other.getByRole('alert')).toContainText('另一页面更新了草稿');
-  await expect(editor(other)).toHaveValue('int main(){return 8;}');
+  await expectEditorValue(editor(other), 'int main(){return 8;}');
   await other.getByRole('button', { name: '以当前代码保存', exact: true }).click();
   await expect(other.getByText(saved)).toBeVisible();
   await other.reload();
-  await expect(editor(other)).toHaveValue('int main(){return 8;}');
+  await expectEditorValue(editor(other), 'int main(){return 8;}');
 });
 
 type Rows = Record<string, { keys: IDBValidKey[]; values: Record<string, unknown>[] }>;
@@ -110,7 +111,7 @@ test('clearing the archive invalidates a pending C++ verdict and leaves the new 
   await expect
     .poll(async () => (await archive(page)).rows.meta.values[0].generation)
     .not.toBe(before.rows.meta.values[0].generation);
-  await expect(editor(page)).not.toHaveValue(profile.source);
+  await expectEditorValue(editor(page), profile.source, { not: true });
   await expect(page.getByTestId('cpp-trace')).toHaveCount(0);
   const after = await archive(page);
   expect(after.rows.cppDrafts.values).toEqual([]);
@@ -160,7 +161,7 @@ test('public catalog, automatic reading, four-group judgement, replay and refres
   await page.reload();
   await expect(page.getByText('四组均通过', { exact: true })).toBeVisible();
   await page.getByRole('link', { name: /^do.*while循环$/u }).click();
-  await expect(editor(page)).toHaveValue(profile.source);
+  await expectEditorValue(editor(page), profile.source);
   const data = await archive(page);
   expect(data.version).toBe(15);
   expect(Object.keys(data.rows)).toHaveLength(29);
@@ -188,7 +189,7 @@ test('Blockly applies to the same C++ source and an unsupported mapping preserve
   await page.locator('input.blocklyHtmlInput').fill('8');
   await page.locator('input.blocklyHtmlInput').press('Enter');
   await page.getByRole('button', { name: '应用积木到代码' }).click();
-  await expect(editor(page)).toHaveValue(/int n = 8;/u);
+  await expectEditorValue(editor(page), /int n = 8;/u);
   await page.getByRole('button', { name: '运行', exact: true }).click();
   await page.getByRole('button', { name: '到最后一步' }).click();
   await expect(page.getByTestId('cpp-output')).toHaveText('8');
@@ -197,7 +198,7 @@ test('Blockly applies to the same C++ source and an unsupported mapping preserve
   await expect(page.getByTestId('cpp-trace')).toHaveCount(0);
   await page.getByRole('button', { name: '切换到积木' }).click();
   await expect(page.getByRole('alert')).toContainText('保留原稿');
-  await expect(editor(page)).toHaveValue(pointer);
+  await expectEditorValue(editor(page), pointer);
 });
 
 test('all four exports come from the selected source, input and cursor', async ({ page }) => {
@@ -312,7 +313,7 @@ test('native DB12 upgrade preserves keys and authentic C, Python, Java and C++ a
     await migrated.getByRole('button', { name: '提交判题' }).click();
     await expect(migrated.getByText(judged)).toBeVisible();
     await migrated.reload();
-    await expect(editor(migrated)).toHaveValue(profile.source);
+    await expectEditorValue(editor(migrated), profile.source);
     const final = await archive(migrated);
     for (const name of ['courseActivities', 'pythonActivities', 'javaActivities', 'achievements'])
       expect(final.rows[name]).toEqual(prior[name]);

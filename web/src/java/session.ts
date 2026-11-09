@@ -72,10 +72,9 @@ export class JavaLearningSession {
     return current.rows;
   }
 
-  recordLesson(id: string, epoch: number) {
+  recordLesson(id: string, epoch: number, at = this.hooks.clock()) {
     if (!(this.language === 'cpp' ? isCppLesson(id) : isJavaLesson(id)))
       return Promise.reject(new StorageError('S_CONTENT_INCOMPATIBLE'));
-    const at = this.hooks.clock();
     return this.record(id, epoch, at, null);
   }
 

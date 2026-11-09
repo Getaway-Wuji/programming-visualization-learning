@@ -225,6 +225,9 @@
   border-radius: 0.375rem;
   tab-size: 2;
 }
+.mysql-editor-panel .code-editor {
+  --code-editor-height: 260px;
+}
 .mysql-pane-tabs {
   display: none;
 }
@@ -358,6 +361,15 @@
 .mysql-trace-position label {
   display: flex;
   align-items: center;
+  gap: 0.65rem;
+}
+.mysql-sql-column [data-testid='mysql-trace'] .mysql-title {
+  align-items: baseline;
+}
+.mysql-sql-column [data-testid='mysql-trace'] .mysql-actions {
+  gap: 0.35rem;
+}
+.mysql-sql-column [data-testid='mysql-trace'] .mysql-trace-position {
   gap: 0.65rem;
 }
 .mysql-trace-position label:first-child {

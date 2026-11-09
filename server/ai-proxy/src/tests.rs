@@ -312,6 +312,47 @@ async fn real_http_capabilities_static_csp_verify_and_explain_use_one_origin() {
     server.abort();
 }
 #[tokio::test]
+async fn static_compression_negotiates_brotli_gzip_and_identity_without_changing_resources() {
+    let (origin, server) = start(Arc::new(Immediate)).await;
+    let client = reqwest::Client::builder().no_proxy().build().unwrap();
+    let root = config(1).static_dir;
+    let html = std::fs::read_to_string(root.join("index.html")).unwrap();
+    let path = html
+        .split("src=\"")
+        .nth(1)
+        .unwrap()
+        .split('"')
+        .next()
+        .unwrap();
+    for (encoding, suffix) in [("br", ".br"), ("gzip", ".gz"), ("identity", "")] {
+        let expected =
+            std::fs::read(root.join(format!("{}{suffix}", path.trim_start_matches('/')))).unwrap();
+        let response = client
+            .get(format!("{origin}{path}"))
+            .header("Accept-Encoding", encoding)
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(response.status(), 200);
+        assert!(
+            response.headers()["content-type"]
+                .to_str()
+                .unwrap()
+                .contains("javascript")
+        );
+        if encoding == "identity" {
+            assert!(response.headers().get("content-encoding").is_none());
+        } else {
+            assert_eq!(response.headers()["content-encoding"], encoding);
+        }
+        assert_eq!(
+            response.bytes().await.unwrap().as_ref(),
+            expected.as_slice()
+        );
+    }
+    server.abort();
+}
+#[tokio::test]
 async fn real_http_rejects_cross_origin_arbitrary_urls_extra_secrets_and_oversized_requests() {
     let (origin, server) = start(Arc::new(Immediate)).await;
     let client = reqwest::Client::builder().no_proxy().build().unwrap();

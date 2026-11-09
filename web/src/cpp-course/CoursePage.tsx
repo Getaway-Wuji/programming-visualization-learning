@@ -1,9 +1,17 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
+import {
+  CourseNav,
+  CourseLoadState,
+  CourseSearch,
+  CourseMode,
+  CourseProgress,
+  CourseNext,
+} from '../course-ui/CourseUi';
 import { ReadingEnd } from '../c6-learning/ReadingEnd';
 import { useLearning } from '../learning/react';
 import { useJavaResource } from '../java/use-resource';
-import { isCppProgress } from './identities';
+import { isCppProgress, cppExercises } from './identities';
 import {
   loadCppLesson,
   loadCppManifest,
@@ -17,28 +25,11 @@ const lessonPath = (id: string) => '/cpp/lesson/' + id;
 const loadIndex = (_: null, signal: AbortSignal) => loadCppManifest(signal);
 
 export function CppNav() {
-  return (
-    <nav className="python-nav cpp-nav" aria-label="C++ 学习">
-      <Link to="/cpp">C++ 目录</Link>
-      <Link to="/cpp/workbench">工作台</Link>
-      <Link to="/cpp/review">复盘</Link>
-      <span className="cpp-language-links">
-        <Link to="/custom-code">C</Link>
-        <Link to="/python/workbench">Python</Link>
-        <Link to="/java/workbench">Java</Link>
-      </span>
-    </nav>
-  );
+  return <CourseNav language="C++" path="/cpp" />;
 }
 
 export function CppLoadState({ failed, retry }: { failed: boolean; retry: () => void }) {
-  return failed ? (
-    <p role="alert">
-      暂时无法读取 C++ 课程。 <button onClick={retry}>重试</button>
-    </p>
-  ) : (
-    <p role="status">正在读取 C++ 课程…</p>
-  );
+  return <CourseLoadState language="C++" failed={failed} retry={retry} />;
 }
 
 export function CppText({ text }: { text: string }) {
@@ -49,7 +40,15 @@ export function CppText({ text }: { text: string }) {
   );
 }
 
+const runnableLessons = new Set(Object.values(cppExercises).map((profile) => profile.lesson));
+
 function BookCatalog({ index }: { index: CppManifest }) {
+  const { state } = useLearning();
+  const completed = new Set(
+    state.snapshot?.progress
+      .filter((row) => row.eventType === 'lesson.completed' && isCppProgress(row))
+      .map((row) => row.subjectRef.id),
+  );
   const [query, setQuery] = useState('');
   const term = query.trim().toLowerCase();
   const byParent = useMemo(() => {
@@ -66,9 +65,16 @@ function BookCatalog({ index }: { index: CppManifest }) {
       {byParent.get(parent)?.map((node) => (
         <li key={node.id}>
           {node.leaf ? (
-            <Link to={lessonPath(node.id)}>
-              {node.number} {node.title}
-            </Link>
+            <>
+              <Link to={lessonPath(node.id)}>
+                {node.number} {node.title}
+              </Link>
+              <CourseMode
+                runnable={runnableLessons.has(node.id)}
+                practice={runnableLessons.has(node.id)}
+                completed={completed.has(node.id)}
+              />
+            </>
           ) : (
             <details open={node.depth === 1 && node.order === 1 ? true : undefined}>
               <summary>
@@ -88,11 +94,9 @@ function BookCatalog({ index }: { index: CppManifest }) {
     ? index.catalog.filter((row) => (row.number + ' ' + row.title).toLowerCase().includes(term))
     : [];
   return (
-    <section className="cpp-sheet" aria-label="教材目录">
-      <label className="cpp-search">
-        搜索目录{' '}
-        <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} />
-      </label>
+    <section className="cpp-sheet course-catalog-panel" aria-label="教材目录">
+      <h2>教材目录</h2>
+      <CourseSearch query={query} change={setQuery} />
       {term ? (
         matches.length ? (
           <ul className="cpp-tree">
@@ -100,7 +104,14 @@ function BookCatalog({ index }: { index: CppManifest }) {
               <li key={row.id}>
                 <Link to={lessonPath(row.id)}>
                   {row.number} {row.title}
-                </Link>{' '}
+                </Link>
+                {row.leaf && (
+                  <CourseMode
+                    runnable={runnableLessons.has(row.id)}
+                    practice={runnableLessons.has(row.id)}
+                    completed={completed.has(row.id)}
+                  />
+                )}{' '}
                 <span className="cpp-muted">第 {row.printedPage} 页</span>
               </li>
             ))}
@@ -123,11 +134,18 @@ function Catalog() {
       (row) => row.eventType === 'lesson.completed' && isCppProgress(row),
     ).length ?? 0;
   const index = resource.value;
+  const completed = new Set(
+    state.snapshot?.progress
+      .filter((row) => row.eventType === 'lesson.completed' && isCppProgress(row))
+      .map((row) => row.subjectRef.id),
+  );
+  const next = index?.catalog.find((node) => node.leaf && !completed.has(node.id));
+  const first = index?.catalog.find((node) => node.leaf);
   return (
     <>
       <header className="cpp-title">
         <div>
-          <h1>C++ 课程</h1>
+          <h1 tabIndex={-1}>C++ 课程</h1>
           <p>按教材顺序阅读，用真实程序观察变量、指针和调用帧。</p>
         </div>
         <Link className="button" to="/cpp/workbench">
@@ -136,13 +154,34 @@ function Catalog() {
       </header>
       {index ? (
         <>
-          <div className="cpp-reading-progress">
-            <span>
-              已读 {count} / {index.counts.leaves} 小节
-            </span>
-            <progress value={count} max={index.counts.leaves} aria-label="C++ 阅读进度" />
+          <CourseProgress
+            count={state.snapshot ? count : undefined}
+            total={index.counts.leaves}
+            label="C++ 阅读进度"
+          />
+          {(next ?? first) && (
+            <CourseNext
+              title={(next ?? first!).title}
+              to={lessonPath((next ?? first)!.id)}
+              started={completed.size > 0}
+              complete={!next}
+              description="按目录顺序继续未读小节，也可随时打开标为可运行的小节动手观察。"
+            />
+          )}
+          <div className="course-catalog-grid">
+            <BookCatalog index={index} />
+            <aside className="cpp-sheet course-catalog-panel" aria-label="C++ 课程练习">
+              <h2>课程练习</h2>
+              <p className="course-help">每题用四组独立输入验证当前代码，阅读与练习分别记录。</p>
+              <ul className="cpp-tree">
+                {Object.entries(cppExercises).map(([id, profile]) => (
+                  <li key={id}>
+                    <Link to={'/cpp/practice/' + id}>{profile.title}</Link>
+                  </li>
+                ))}
+              </ul>
+            </aside>
           </div>
-          <BookCatalog index={index} />
           <p className="cpp-muted">
             目录来源为《{index.source.title}》，{index.source.author} 编著，{index.source.publisher}
             ，{index.source.year} 年。讲解和练习为平台原创。
@@ -175,7 +214,7 @@ function Lesson({ id }: { id: string }) {
         )}
         教材第 {lesson.printedPage} 页
       </p>
-      <h1>
+      <h1 tabIndex={-1}>
         {lesson.number} {lesson.title}
       </h1>
       {lesson.body.map((text) => (

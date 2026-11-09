@@ -310,7 +310,10 @@ async fn explain(State(state): State<Arc<Gateway>>, request: Request) -> Respons
 }
 fn make_router(config: Config, upstream: Arc<dyn Upstream>) -> Router {
     let prefix = config.base.trim_end_matches('/').to_owned();
-    let static_files = ServeDir::new(&config.static_dir).append_index_html_on_directories(true);
+    let static_files = ServeDir::new(&config.static_dir)
+        .append_index_html_on_directories(true)
+        .precompressed_br()
+        .precompressed_gzip();
     let policy = config.policy.clone();
     let state = Arc::new(Gateway {
         config,

@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue, editorSelection } from './editor-value';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
@@ -191,14 +192,14 @@ test('Rust reading, actual four-group judgement, selected replay and refreshed r
   await expect(page.getByText('四组均通过', { exact: true })).toBeVisible();
   await expect(page.getByText('已有首次通过记录')).toBeVisible();
   await page.locator(`a[href="#/rust/practice/${formatted.id}"]`).click();
-  await expect(editor(page)).toHaveValue(formatted.source);
+  await expectEditorValue(editor(page), formatted.source);
 });
 
 test('Rust examples execute the current source and exact input and invalidate obsolete output', async ({
   page,
 }) => {
   await page.goto('/#/rust/example/' + shadow.lesson);
-  await expect(editor(page)).toHaveValue(shadow.source);
+  await expectEditorValue(editor(page), shadow.source);
   await input(page).fill(shadow.cases[2].input);
   await page.getByRole('button', { name: '运行', exact: true }).click();
   await finish(page, shadow.cases[2].expected);
@@ -215,14 +216,19 @@ test('Rust examples execute the current source and exact input and invalidate ob
   await expect(trace(page)).toHaveCount(0);
   await page.getByRole('button', { name: '运行', exact: true }).click();
   await finish(page, '42\n14\n');
+  page.once('dialog', (dialog) => dialog.accept());
   await page
-    .getByRole('navigation', { name: 'Rust 学习', exact: true })
-    .getByRole('link', { name: 'C++', exact: true })
+    .getByRole('navigation', { name: '主导航', exact: true })
+    .getByRole('link', { name: 'C++ 课程', exact: true })
+    .click();
+  await page
+    .getByRole('navigation', { name: 'C++ 学习', exact: true })
+    .getByRole('link', { name: '工作台', exact: true })
     .click();
   await expect(page.getByRole('textbox', { name: 'C++ 源码', exact: true })).toBeEditable();
   await expect(trace(page)).toHaveCount(0);
   await page.goto('/#/rust/example/' + shadow.lesson);
-  await expect(editor(page)).toHaveValue(shadow.source);
+  await expectEditorValue(editor(page), shadow.source);
   await expect(trace(page)).toHaveCount(0);
 });
 
@@ -331,14 +337,15 @@ for (const scenario of [
     await page
       .getByRole('button', { name: new RegExp(`^定位第 ${scenario.line} 行`, 'u') })
       .click();
-    const selection = await editor(page).evaluate((element: HTMLTextAreaElement) => ({
-      selected: element.value.slice(element.selectionStart, element.selectionEnd),
-      prefix: element.value.slice(0, element.selectionStart),
-      focused: document.activeElement === element,
-    }));
+    const range = await editorSelection(editor(page));
+    const selectedSource = await editorValue(editor(page));
+    const selection = {
+      selected: selectedSource.slice(range.start, range.end),
+      prefix: selectedSource.slice(0, range.start),
+    };
+    await expect(editor(page)).toBeFocused();
     expect(selection.selected).toBe(scenario.token);
     expect(selection.prefix.split('\n')).toHaveLength(scenario.line);
-    expect(selection.focused).toBe(true);
   });
 }
 
@@ -354,7 +361,7 @@ test('Rust Blockly changes the same executable source and preserves unsupported 
   await page.locator('input.blocklyHtmlInput').fill('8');
   await page.locator('input.blocklyHtmlInput').press('Enter');
   await page.getByRole('button', { name: '应用积木到代码', exact: true }).click();
-  await expect(editor(page)).toHaveValue(/let n = 8;/u);
+  await expectEditorValue(editor(page), /let n = 8;/u);
   await page.getByRole('button', { name: '运行', exact: true }).click();
   await finish(page, '8\n');
   const unsupported = 'fn main(){let s=String::from("原稿🙂");println!("{}",s);}';
@@ -362,7 +369,7 @@ test('Rust Blockly changes the same executable source and preserves unsupported 
   await expect(trace(page)).toHaveCount(0);
   await page.getByRole('button', { name: '切换到积木', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText(/保留/u);
-  await expect(editor(page)).toHaveValue(unsupported);
+  await expectEditorValue(editor(page), unsupported);
   await expect(canvas).toHaveCount(0);
 });
 
@@ -390,18 +397,18 @@ test('Rust quota and multi-tab conflicts retain edits and permit an explicit dra
   await editor(page).fill(first);
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByRole('alert')).toHaveText('S_QUOTA');
-  await expect(editor(page)).toHaveValue(first);
+  await expectEditorValue(editor(page), first);
   expect((await archive(page)).rows.rustDrafts.values).toEqual([]);
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByText(saved)).toBeVisible();
   await editor(other).fill(second);
   await other.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(other.getByRole('alert')).toContainText('另一页面更新了草稿');
-  await expect(editor(other)).toHaveValue(second);
+  await expectEditorValue(editor(other), second);
   await other.getByRole('button', { name: '以当前代码保存', exact: true }).click();
   await expect(other.getByText(saved)).toBeVisible();
   await other.reload();
-  await expect(editor(other)).toHaveValue(second);
+  await expectEditorValue(editor(other), second);
 });
 
 test('clearing local data invalidates a pending Rust verdict and its prior generation draft', async ({
@@ -432,7 +439,7 @@ test('clearing local data invalidates a pending Rust verdict and its prior gener
   await expect
     .poll(async () => (await archive(page)).rows.meta.values[0].generation)
     .not.toBe(before.rows.meta.values[0].generation);
-  await expect(editor(page)).not.toHaveValue(formatted.source);
+  await expectEditorValue(editor(page), formatted.source, { not: true });
   await expect(trace(page)).toHaveCount(0);
   const after = await archive(page);
   for (const name of ['rustActivities', 'rustDrafts', 'ledger'])
@@ -686,7 +693,7 @@ test('native DB13 upgrade preserves actual four-language records, original keys 
     await migrated.getByRole('button', { name: '提交判题', exact: true }).click();
     await expect(migrated.getByText(judged)).toBeVisible();
     await migrated.reload();
-    await expect(editor(migrated)).toHaveValue(formatted.source);
+    await expectEditorValue(editor(migrated), formatted.source);
     const final = await archive(migrated);
     for (const name of [
       'courseActivities',

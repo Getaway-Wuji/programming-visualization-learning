@@ -28,6 +28,11 @@ const navigation = [
   { to: '/achievements', label: '学习成就', icon: 'book' },
   { to: '/settings', label: '本地设置', icon: 'settings' },
 ] as const;
+const navigationGroups = [
+  { label: '课程学习', items: navigation.slice(0, 7) },
+  { label: '实践工具', items: navigation.slice(7, 12) },
+  { label: '我的学习', items: navigation.slice(12) },
+];
 
 export function Layout({ children }: { children: ReactNode }) {
   const location = useLocation();
@@ -82,8 +87,9 @@ export function Layout({ children }: { children: ReactNode }) {
     const focusHeading = () => {
       const heading = main?.querySelector<HTMLElement>('h1');
       if (!heading) return false;
+      if (!heading.hasAttribute('tabindex')) heading.tabIndex = -1;
       heading.focus({ preventScroll: true });
-      return true;
+      return document.activeElement === heading;
     };
     if (focusHeading()) return;
     main?.focus({ preventScroll: true });
@@ -107,7 +113,7 @@ export function Layout({ children }: { children: ReactNode }) {
     caseRoute ||
     location.pathname.startsWith('/practice/') ||
     location.pathname.startsWith('/c6/program/') ||
-    /^\/mysql\/(workbench|example|practice)(\/|$)/.test(location.pathname) ||
+    /^\/(python|java|cpp|rust|mysql)\/(workbench|example|practice)(\/|$)/.test(location.pathname) ||
     location.pathname.startsWith('/advanced/examples/') ||
     location.pathname.startsWith('/advanced/algorithms/');
   const focused = toolRoute && workbench.layout.workbenchMode === 'focus';
@@ -188,29 +194,34 @@ export function Layout({ children }: { children: ReactNode }) {
         </Link>
         <p className="sidebar-note">从代码，到理解。</p>
         <nav id="primary-navigation" aria-label="主导航">
-          {navigation.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              aria-label={item.label}
-              title={item.label}
-              onClick={() => {
-                if (menuOpen) closeMenu(item.to === location.pathname);
-              }}
-              className={`nav-link${location.pathname === item.to || (item.to !== '/' && location.pathname.startsWith(`${item.to}/`)) || (item.to === '/practice' && location.pathname.startsWith('/bugs')) || (item.to === '/courses' && courseRoute) || (item.to === '/cases' && caseRoute) ? ' active' : ''}`}
-              aria-current={
-                location.pathname === item.to ||
-                (item.to !== '/' && location.pathname.startsWith(`${item.to}/`)) ||
-                (item.to === '/practice' && location.pathname.startsWith('/bugs')) ||
-                (item.to === '/courses' && courseRoute) ||
-                (item.to === '/cases' && caseRoute)
-                  ? 'page'
-                  : undefined
-              }
-            >
-              <Icon name={item.icon} />
-              <span>{item.label}</span>
-            </Link>
+          {navigationGroups.map((group) => (
+            <div className="nav-group" key={group.label}>
+              <p className="nav-group-label">{group.label}</p>
+              {group.items.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  aria-label={item.label}
+                  title={item.label}
+                  onClick={() => {
+                    if (menuOpen) closeMenu(item.to === location.pathname);
+                  }}
+                  className={`nav-link${location.pathname === item.to || (item.to !== '/' && location.pathname.startsWith(`${item.to}/`)) || (item.to === '/practice' && location.pathname.startsWith('/bugs')) || (item.to === '/courses' && courseRoute) || (item.to === '/cases' && caseRoute) ? ' active' : ''}`}
+                  aria-current={
+                    location.pathname === item.to ||
+                    (item.to !== '/' && location.pathname.startsWith(`${item.to}/`)) ||
+                    (item.to === '/practice' && location.pathname.startsWith('/bugs')) ||
+                    (item.to === '/courses' && courseRoute) ||
+                    (item.to === '/cases' && caseRoute)
+                      ? 'page'
+                      : undefined
+                  }
+                >
+                  <Icon name={item.icon} />
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </div>
           ))}
         </nav>
         <div className="sidebar-footer">
@@ -254,7 +265,9 @@ export function Layout({ children }: { children: ReactNode }) {
                             ? '进阶课程 · C / C++'
                             : ['/memory', '/compare'].includes(location.pathname)
                               ? '程序执行观察'
-                              : 'C 语言 · 从零开始'}
+                              : location.pathname === '/'
+                                ? '我的学习 · 六种语言'
+                                : 'C 语言 · 从零开始'}
           </span>
           <div className="local-note">
             {toolRoute && (

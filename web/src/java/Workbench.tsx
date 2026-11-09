@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { useLearning } from '../learning/react';
 import { JavaExecutionClient } from '../engine/java-client';
 import type { JavaPacket, JavaResponse } from '../engine/java-types';
 import type { JavaDraft } from '../storage/java-course';
 import { useUnsavedChanges } from '../workbench/use-unsaved-changes';
+import { CodeEditor, type CodeEditorHandle } from '../components/CodeEditor';
 import type { JavaActivity, JavaExample } from './content-types';
 import { JavaLoadState, JavaNavigation } from './CoursePage';
 import { javaExercise, javaFreeDocument } from './identities';
@@ -85,7 +86,7 @@ function Editor({
   const [mobilePane, setMobilePane] = useState<'task' | 'work'>('work');
   const [showSnapshot, setShowSnapshot] = useState(false);
   const operation = useRef(0);
-  const editor = useRef<HTMLTextAreaElement>(null);
+  const editor = useRef<CodeEditorHandle>(null);
   const sourceRef = useRef(source);
   const dirty = source !== (savedDraft?.source ?? target.initial);
   useUnsavedChanges(!target.example && (dirty || blockDirty));
@@ -230,56 +231,6 @@ function Editor({
       setSaving(false);
     }
   }
-  function indent(event: KeyboardEvent<HTMLTextAreaElement>) {
-    if (
-      target.example ||
-      (event.key !== 'Tab' && event.key !== 'Enter') ||
-      event.ctrlKey ||
-      event.metaKey ||
-      event.altKey ||
-      event.nativeEvent.isComposing
-    )
-      return;
-    const area = event.currentTarget;
-    const { selectionStart: start, selectionEnd: end } = area;
-    const first = start === 0 ? 0 : source.lastIndexOf('\n', start - 1) + 1;
-    const before = source.slice(0, first);
-    const line = source.slice(first, start);
-    if (event.key === 'Enter') {
-      const existing = /^ */u.exec(line)?.[0] ?? '';
-      const suite = line.trimEnd().endsWith('{');
-      if (!existing && !suite) return;
-      event.preventDefault();
-      const insertion = '\n' + existing + (suite ? '    ' : '');
-      changeSource(source.slice(0, start) + insertion + source.slice(end));
-      requestAnimationFrame(() =>
-        editor.current?.setSelectionRange(start + insertion.length, start + insertion.length),
-      );
-      return;
-    }
-    if (event.shiftKey && start === end) {
-      const remove = /^ {1,4}/u.exec(source.slice(first))?.[0].length ?? 0;
-      if (!remove) return;
-      event.preventDefault();
-      changeSource(before + source.slice(first + remove));
-      const next = Math.max(first, start - remove);
-      requestAnimationFrame(() => editor.current?.setSelectionRange(next, next));
-      return;
-    }
-    event.preventDefault();
-    const changed = source
-      .slice(first, end)
-      .split('\n')
-      .map((line) => (event.shiftKey ? line.replace(/^ {1,4}/u, '') : '    ' + line))
-      .join('\n');
-    if (start === end) {
-      changeSource(source.slice(0, start) + '    ' + source.slice(end));
-      requestAnimationFrame(() => editor.current?.setSelectionRange(start + 4, end + 4));
-    } else {
-      changeSource(before + changed + source.slice(end));
-      requestAnimationFrame(() => editor.current?.setSelectionRange(first, first + changed.length));
-    }
-  }
   const evaluation = result?.response.result;
   const packet: JavaPacket | undefined =
     evaluation?.kind === 'run'
@@ -400,6 +351,17 @@ function Editor({
                 </button>
               )}
             </div>
+            <p className="muted" role="status" aria-label="编辑保存状态">
+              {target.example
+                ? '只读示例'
+                : saving
+                  ? '正在保存草稿…'
+                  : dirty
+                    ? '有未保存的修改'
+                    : savedDraft
+                      ? '草稿已保存到此浏览器'
+                      : '当前文档，修改后可保存草稿'}
+            </p>
             <div className="python-editor-tabs">
               <button
                 type="button"
@@ -429,17 +391,13 @@ function Editor({
                 onDirty={setBlockDirty}
               />
             ) : (
-              <textarea
+              <CodeEditor
                 ref={editor}
-                className="python-editor"
-                aria-label="Java 代码"
-                spellCheck={false}
-                autoCapitalize="off"
-                autoComplete="off"
+                label="Java 代码"
+                dialect="java"
                 value={source}
                 readOnly={!!target.example}
-                onKeyDown={indent}
-                onChange={(event) => changeSource(event.target.value)}
+                onChange={changeSource}
               />
             )}
             {blockDirty && (

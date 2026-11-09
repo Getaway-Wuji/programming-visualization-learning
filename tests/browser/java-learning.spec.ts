@@ -1,3 +1,4 @@
+import { expectEditorValue } from './editor-value';
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import type { JavaArticle } from '../../web/src/java/content-types';
@@ -115,7 +116,7 @@ test('course assets load lazily and reading, judge, review and draft persist ind
   await page.reload();
   await expect(page.getByText('四组全部通过', { exact: true })).toBeVisible();
   await page.getByRole('link', { name: '再次练习' }).click();
-  await expect(code(page)).toHaveValue(samples['utf16-length']);
+  await expectEditorValue(code(page), samples['utf16-length']);
   await expect(page.getByText('此题已通过并保存在本机。')).toBeVisible();
   const final = await archive(page);
   expect(final.rows.javaActivities.values).toHaveLength(2);
@@ -146,14 +147,14 @@ test('Java Blockly updates source and output while an unmapped program stays int
   await expect(page.getByText(/积木修改尚未应用/u)).toBeVisible();
   await page.getByRole('button', { name: '应用积木到代码' }).click();
   await page.getByRole('button', { name: '代码', exact: true }).click();
-  await expect(code(page)).toHaveValue(/public class Main.*while/su);
+  await expectEditorValue(code(page), /public class Main.*while/su);
   await page.getByRole('button', { name: '运行代码' }).click();
   await expect(page.getByTestId('java-output')).toHaveText('8');
   const unmapped = body('int[] a = new int[1]; a[0] = 9; System.out.println(a[0]);');
   await code(page).fill(unmapped);
   await page.getByRole('button', { name: '积木', exact: true }).click();
   await expect(page.getByText(/原稿已保留/u)).toBeVisible();
-  await expect(code(page)).toHaveValue(unmapped);
+  await expectEditorValue(code(page), unmapped);
   await page.getByRole('button', { name: '运行代码' }).click();
   await expect(page.getByTestId('java-output')).toHaveText('9');
 });
@@ -164,13 +165,27 @@ test('Java and Python workbench drafts have independent identities', async ({ pa
   await code(page).fill(source);
   await page.getByRole('button', { name: '保存草稿' }).click();
   await expect(page.getByText(savedDraft)).toBeVisible();
-  await page.getByRole('link', { name: 'Python 工作台', exact: true }).click();
+  await page
+    .getByRole('navigation', { name: '主导航', exact: true })
+    .getByRole('link', { name: 'Python 课程', exact: true })
+    .click();
+  await page
+    .getByRole('navigation', { name: 'Python 学习', exact: true })
+    .getByRole('link', { name: '工作台', exact: true })
+    .click();
   const pythonEditor = page.getByRole('textbox', { name: 'Python 代码', exact: true });
   await pythonEditor.fill('print(8)\n');
   await page.getByRole('button', { name: '保存草稿' }).click();
   await expect(page.getByText(savedDraft)).toBeVisible();
-  await page.getByRole('link', { name: 'Java 工作台', exact: true }).click();
-  await expect(code(page)).toHaveValue(source);
+  await page
+    .getByRole('navigation', { name: '主导航', exact: true })
+    .getByRole('link', { name: 'Java 课程', exact: true })
+    .click();
+  await page
+    .getByRole('navigation', { name: 'Java 学习', exact: true })
+    .getByRole('link', { name: '工作台', exact: true })
+    .click();
+  await expectEditorValue(code(page), source);
   const data = await archive(page);
   expect(data.rows.javaDrafts.values[0].source).toBe(source);
   expect(data.rows.pythonDrafts.values[0].source).toBe('print(8)\n');
@@ -354,10 +369,10 @@ test('Java draft quota failure and tab conflict preserve editable source and per
   context,
 }) => {
   await page.goto(practice);
-  await expect(code(page)).toHaveValue(emptyProgram);
+  await expectEditorValue(code(page), emptyProgram);
   const other = await context.newPage();
   await other.goto(practice);
-  await expect(code(other)).toHaveValue(emptyProgram);
+  await expectEditorValue(code(other), emptyProgram);
   await page.evaluate(() => {
     const put = IDBObjectStore.prototype.put;
     IDBObjectStore.prototype.put = function (value, key) {
@@ -371,19 +386,19 @@ test('Java draft quota failure and tab conflict preserve editable source and per
   await code(page).fill(samples['utf16-length']);
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('S_QUOTA');
-  await expect(code(page)).toHaveValue(samples['utf16-length']);
+  await expectEditorValue(code(page), samples['utf16-length']);
   expect((await archive(page)).rows.javaDrafts.values).toHaveLength(0);
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByText('草稿已保存到本机。')).toBeVisible();
   await code(other).fill(body('System.out.println(123);'));
   await other.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(other.getByRole('alert')).toContainText('另一页面更新了草稿');
-  await expect(code(other)).toHaveValue(body('System.out.println(123);'));
+  await expectEditorValue(code(other), body('System.out.println(123);'));
   other.once('dialog', (dialog) => void dialog.accept());
   await other.getByRole('button', { name: '以当前代码保存' }).click();
   await expect(other.getByText('草稿已保存到本机。')).toBeVisible();
   await other.reload();
-  await expect(code(other)).toHaveValue(body('System.out.println(123);'));
+  await expectEditorValue(code(other), body('System.out.println(123);'));
 });
 
 test('explicit clear changes the generation, clears both Java stores and rejects a pending judge', async ({
@@ -413,7 +428,7 @@ test('explicit clear changes the generation, clears both Java stores and rejects
   await expect
     .poll(async () => (await archive(page)).rows.meta.values[0].generation)
     .not.toBe(old.rows.meta.values[0].generation);
-  await expect(code(page)).toHaveValue(emptyProgram);
+  await expectEditorValue(code(page), emptyProgram);
   const after = await archive(page);
   expect(after.rows.javaDrafts.values).toEqual([]);
   expect(after.rows.javaActivities.values).toEqual([]);

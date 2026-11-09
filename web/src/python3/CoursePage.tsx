@@ -1,11 +1,21 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router';
+import {
+  CourseNav,
+  CourseLoadState,
+  CourseSearch,
+  CourseMode,
+  CourseProgress,
+  CourseNext,
+  CourseResume,
+  useCourseNavigation,
+} from '../course-ui/CourseUi';
 import { ReadingEnd } from '../c6-learning/ReadingEnd';
 import { useLearning } from '../learning/react';
 import type { PythonArticle, PythonCourseNode, PythonManifest } from './content-types';
 import { loadPythonArticle, loadPythonManifest } from './repository';
 import { usePythonResource } from './use-resource';
-import { isPythonProgress, pythonTopicId } from './identities';
+import { isPythonProgress, pythonTopicId, pythonExercises } from './identities';
 import { pythonLessonIds } from './release.generated';
 import './python.css';
 
@@ -14,36 +24,32 @@ const coursePath = (order: number, id?: string) =>
   '/python/article/' + order + (id ? '/' + id : '');
 
 export function PythonNavigation() {
-  return (
-    <nav className="python-nav" aria-label="Python">
-      <Link to="/python">Python 课程</Link>
-      <Link to="/python/workbench">Python 工作台</Link>
-      <Link to="/python/review">Python 复盘</Link>
-      <Link to="/courses">C 语言课程</Link>
-      <Link to="/java/workbench">Java 工作台</Link>
-    </nav>
-  );
+  return <CourseNav language="Python" path="/python" />;
 }
 
 export function PythonLoadState({ failed, retry }: { failed: boolean; retry: () => void }) {
-  return failed ? (
-    <p role="alert">
-      课程内容暂时无法读取。 <button onClick={retry}>重试</button>
-    </p>
-  ) : (
-    <p role="status">正在加载 Python 课程…</p>
-  );
+  return <CourseLoadState language="Python" failed={failed} retry={retry} />;
 }
 
 function Catalog({ manifest }: { manifest: PythonManifest }) {
+  const navigation = useCourseNavigation('python');
+  const { state } = useLearning();
+  const completed = new Set(
+    state.snapshot?.progress
+      .filter((row) => row.eventType === 'lesson.completed' && isPythonProgress(row))
+      .map((row) => row.subjectRef.id),
+  );
   const [query, setQuery] = useState('');
   const keyword = query.trim().toLocaleLowerCase();
+  const leaves = keyword
+    ? (navigation.value?.lessons.filter(([, title]) =>
+        title.toLocaleLowerCase().includes(keyword),
+      ) ?? [])
+    : [];
   return (
-    <div className="python-catalog">
-      <label>
-        查找文章{' '}
-        <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} />
-      </label>
+    <section className="python-catalog course-catalog-panel" aria-label="教材目录">
+      <h2>教材目录</h2>
+      <CourseSearch query={query} change={setQuery} />
       {manifest.sections.map((section) => {
         const entries = [
           ...manifest.chunks
@@ -53,10 +59,19 @@ function Catalog({ manifest }: { manifest: PythonManifest }) {
               title: e.titleDisplay,
               path: coursePath(e.articleSourceOrder),
               external: false,
+              runnable: Object.values(pythonExercises).some(
+                (exercise) => exercise.articleOrder === e.articleSourceOrder,
+              ),
             })),
           ...manifest.supplementarySidebarLinks
             .filter((e) => e.sourceParent === section.sourceNodeId)
-            .map((e) => ({ order: e.groupOrder, title: e.title, path: e.url, external: true })),
+            .map((e) => ({
+              order: e.groupOrder,
+              title: e.title,
+              path: e.url,
+              external: true,
+              runnable: false,
+            })),
         ]
           .filter((entry) => entry.title.toLocaleLowerCase().includes(keyword))
           .sort((a, b) => a.order - b.order);
@@ -71,7 +86,10 @@ function Catalog({ manifest }: { manifest: PythonManifest }) {
                       {e.title}（来源参考）
                     </a>
                   ) : (
-                    <Link to={e.path}>{e.title}</Link>
+                    <>
+                      <Link to={e.path}>{e.title}</Link>
+                      <CourseMode runnable={e.runnable} practice={e.runnable} contains />
+                    </>
                   )}
                 </li>
               ))}
@@ -79,26 +97,53 @@ function Catalog({ manifest }: { manifest: PythonManifest }) {
           </section>
         ) : null;
       })}
+      {keyword && leaves.length > 0 && (
+        <section aria-label="匹配小节">
+          <h2>匹配小节</h2>
+          <ul className="python-list">
+            {leaves.map(([id, title, path, mode]) => (
+              <li key={id}>
+                <Link to={path}>{title}</Link>
+                <CourseMode
+                  runnable={mode !== 'reading'}
+                  practice={mode === 'practice'}
+                  completed={completed.has(id)}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {keyword &&
+        leaves.length === 0 &&
         !manifest.chunks.some((entry) =>
           entry.titleDisplay.toLocaleLowerCase().includes(keyword),
         ) &&
         !manifest.supplementarySidebarLinks.some((entry) =>
           entry.title.toLocaleLowerCase().includes(keyword),
-        ) && <p>未找到匹配的文章。</p>}
-    </div>
+        ) && <p role="status">没有匹配的小节。</p>}
+    </section>
   );
 }
 
-function Tree({
-  nodes,
-  order,
-  active,
-}: {
-  nodes: PythonCourseNode[];
-  order: number;
-  active: string;
-}) {
+function Tree({ data, order, active }: { data: PythonArticle; order: number; active: string }) {
+  const { nodes } = data;
+  const { state } = useLearning();
+  const completed = new Set(
+    state.snapshot?.progress
+      .filter((row) => row.eventType === 'lesson.completed' && isPythonProgress(row))
+      .map((row) => row.subjectRef.id),
+  );
+  const runnable = new Set(
+    data.examples
+      .filter((example) => example.status === 'runnable-required')
+      .map((example) => example.id),
+  );
+  const judged = new Set(
+    data.activities
+      .filter((activity) => activity.kind === 'rust-judge')
+      .map((activity) => activity.id),
+  );
   const byParent = new Map<string, PythonCourseNode[]>();
   for (const node of nodes) {
     const children = byParent.get(node.parent);
@@ -115,6 +160,13 @@ function Tree({
           {node.titleDisplay}
           {node.status === 'context-only' ? '（示例标题）' : ''}
         </Link>
+        {node.leaf && node.status === 'authored' && (
+          <CourseMode
+            runnable={runnable.has(node.exampleId ?? '')}
+            practice={judged.has(node.activityId ?? '')}
+            completed={completed.has(node.platformRef.id)}
+          />
+        )}
         {byParent.has(node.sourceNodeId) && <ul>{list(node.sourceNodeId)}</ul>}
       </li>
     ));
@@ -130,6 +182,16 @@ function ArticleBody({
   order: number;
   section?: string;
 }) {
+  const { state } = useLearning();
+  const completed = new Set(
+    state.snapshot?.progress
+      .filter((row) => row.eventType === 'lesson.completed' && isPythonProgress(row))
+      .map((row) => row.subjectRef.id),
+  );
+  const unread = data.nodes.find(
+    (row) => row.leaf && row.status === 'authored' && !completed.has(row.platformRef.id),
+  );
+  const [directoryOpen] = useState(() => matchMedia('(min-width: 761px)').matches);
   const node = section ? data.nodes.find((row) => row.platformRef.id === section) : data.nodes[0];
   if (!node)
     return (
@@ -145,12 +207,19 @@ function ArticleBody({
     .find((row) => row.status !== 'context-only');
   return (
     <div className="python-article-grid">
-      <details className="python-directory" open>
+      <details className="python-directory" open={directoryOpen}>
         <summary>本篇目录</summary>
-        <Tree nodes={data.nodes} order={order} active={node.platformRef.id} />
+        <Tree data={data} order={order} active={node.platformRef.id} />
       </details>
       <article className="python-reading" key={node.platformRef.id}>
         <h1 tabIndex={-1}>{node.titleDisplay}</h1>
+        {node.leaf && node.status === 'authored' && (
+          <CourseMode
+            runnable={example?.status === 'runnable-required'}
+            practice={activity?.kind === 'rust-judge'}
+            completed={completed.has(node.platformRef.id)}
+          />
+        )}
         {node.status === 'context-only' && (
           <p>
             这是原文章中的示例标题。
@@ -235,6 +304,14 @@ function ArticleBody({
             <Link to={coursePath(order, next.platformRef.id)}>继续阅读 {next.titleDisplay}</Link>
           </p>
         )}
+        {unread && unread.platformRef.id !== node.platformRef.id && (
+          <CourseNext
+            title={unread.titleDisplay}
+            to={coursePath(order, unread.platformRef.id)}
+            started={completed.size > 0}
+            description="本篇下一步 · 阅读与练习分别记录。"
+          />
+        )}
         {node.leaf && node.status === 'authored' && (
           <ReadingEnd
             lessonId={node.platformRef.id}
@@ -270,18 +347,30 @@ export default function PythonCoursePage() {
         <Article order={Number(order)} section={section} />
       ) : (
         <>
-          <h1 tabIndex={-1}>Python 3 课程</h1>
-          <p className="muted">按文章阅读，在可运行小节里观察程序的每一步。</p>
-          {complete !== undefined && (
-            <label className="python-course-progress">
-              已读 {complete} / {pythonLessonIds.length} 小节
-              <progress
-                aria-label="Python 课程完成进度"
-                value={complete}
-                max={pythonLessonIds.length}
-              />
-            </label>
-          )}
+          <header className="course-header">
+            <div>
+              <h1 tabIndex={-1}>Python 3 课程</h1>
+              <p>按文章阅读，在可运行小节里观察程序的每一步。</p>
+            </div>
+            <Link className="button button-secondary" to="/python/workbench">
+              打开工作台
+            </Link>
+          </header>
+          <CourseProgress
+            count={complete}
+            total={pythonLessonIds.length}
+            label="Python 课程完成进度"
+          />
+          <CourseResume
+            language="python"
+            completed={
+              new Set(
+                state.snapshot?.progress
+                  .filter((row) => row.eventType === 'lesson.completed' && isPythonProgress(row))
+                  .map((row) => row.subjectRef.id),
+              )
+            }
+          />
           {value ? <Catalog manifest={value} /> : <PythonLoadState failed={failed} retry={retry} />}
         </>
       )}

@@ -12,6 +12,7 @@ import { useAi } from '../ai-debug/react';
 import { AiPanel } from '../ai-debug/Panel';
 import './custom-code.css';
 import { useUnsavedChanges } from '../workbench/use-unsaved-changes';
+import { CodeEditor, type CodeEditorHandle } from '../components/CodeEditor';
 const initial =
   '#include <stdio.h>\n\nint main() {\n  int number;\n  scanf("%d", &number);\n  printf("%d\\n", number * 2);\n  return 0;\n}\n';
 export default function CustomCodePage() {
@@ -52,7 +53,7 @@ export default function CustomCodePage() {
     [draft, setDraft] = useState<CustomDraft | null>(null),
     [saveStatus, setSaveStatus] = useState('loading'),
     [saveError, setSaveError] = useState('');
-  const editor = useRef<HTMLTextAreaElement>(null);
+  const editor = useRef<CodeEditorHandle>(null);
   const edits = useRef(0);
   useUnsavedChanges(source !== (savedText ?? initial));
   const lease = useRef(0);
@@ -290,24 +291,24 @@ export default function CustomCodePage() {
               </div>
             </header>
             <div hidden={!editing}>
-              <label htmlFor="custom-source">可粘贴或编辑原始 C 代码</label>
-              <textarea
+              <p>可粘贴或编辑原始 C 代码</p>
+              <CodeEditor
                 ref={editor}
-                id="custom-source"
-                aria-label="C 代码"
-                spellCheck={false}
+                label="C 代码"
+                dialect="c"
                 value={source}
-                onChange={(e) => {
+                onChange={(text) => {
                   edits.current++;
                   ai.invalidateContext();
                   setSelection(null);
-                  controller.setSource(e.target.value, 'c');
-                  setSource(e.target.value);
+                  controller.setSource(text, 'c');
+                  setSource(text);
                 }}
-                onSelect={(e) => {
+                onSelect={(range) => {
+                  const bytes = new TextEncoder().encode(editor.current?.text() ?? source);
                   const next = {
-                    start: e.currentTarget.selectionStart,
-                    end: e.currentTarget.selectionEnd,
+                    start: new TextDecoder().decode(bytes.slice(0, range.start)).length,
+                    end: new TextDecoder().decode(bytes.slice(0, range.end)).length,
                   };
                   if (next.start !== selection?.start || next.end !== selection?.end) {
                     ai.invalidateContext();
@@ -418,7 +419,7 @@ export default function CustomCodePage() {
                       setEditing(true);
                       requestAnimationFrame(() => {
                         editor.current?.focus();
-                        editor.current?.setSelectionRange(
+                        editor.current?.select(
                           at,
                           at +
                             new TextDecoder().decode(
@@ -554,7 +555,7 @@ export default function CustomCodePage() {
                   ).length;
                   requestAnimationFrame(() => {
                     editor.current?.focus();
-                    editor.current?.setSelectionRange(start, end);
+                    editor.current?.select(start, end);
                   });
                 }
               }}

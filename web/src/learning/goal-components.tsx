@@ -5,6 +5,7 @@ import type { GoalTargets } from '../storage/model';
 import { useLearning } from './react';
 import './goals.css';
 import { useLocalLearningDate } from './use-local-date';
+import { languages, recentLearningLanguage, type LearningLanguage } from './languages';
 export { useLocalLearningDate } from './use-local-date';
 
 const kinds = ['exercise', 'lesson', 'case'] as const;
@@ -15,8 +16,11 @@ export function targetText(targets: GoalTargets) {
   return `${targets.exercise} 道练习 · ${targets.lesson} 个小节 · ${targets.case} 个案例`;
 }
 
-export function DailyGoalSummary() {
+export function DailyGoalSummary({ language }: { language?: LearningLanguage } = {}) {
   const { state } = useLearning();
+  const selectedLanguage = languages.find(
+    (item) => item.id === (language ?? recentLearningLanguage(state.snapshot)),
+  )!;
   const today = useLocalLearningDate(state.snapshot?.meta.timeZone);
   const snapshot = state.snapshot;
   const goal = snapshot?.goals.find((row) => row.localDate === today);
@@ -67,7 +71,15 @@ export function DailyGoalSummary() {
               <li key={kind} data-testid={`goal-progress-${kind}`}>
                 <Link
                   className="text-link"
-                  to={kind === 'exercise' ? '/practice' : kind === 'lesson' ? '/courses' : '/cases'}
+                  to={
+                    kind === 'exercise'
+                      ? selectedLanguage.id === 'c'
+                        ? '/practice'
+                        : selectedLanguage.directory
+                      : kind === 'lesson'
+                        ? selectedLanguage.directory
+                        : '/cases'
+                  }
                 >
                   {labels[kind]} →
                 </Link>

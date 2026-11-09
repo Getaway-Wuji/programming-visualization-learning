@@ -78,11 +78,13 @@ const code = standalone(ajv, {
 });
 writeFileSync(
   output + '/protocol.mjs',
-  'import ucs2length from "ajv/dist/runtime/ucs2length.js";\n' +
-    code.replaceAll(
-      'require("ajv/dist/runtime/ucs2length").default',
-      '(ucs2length.default ?? ucs2length)',
-    ),
+  'import ucs2length from "ajv/dist/runtime/ucs2length.js";\nimport equal from "ajv/dist/runtime/equal.js";\n' +
+    code
+      .replaceAll('require("ajv/dist/runtime/equal").default', '(equal.default ?? equal)')
+      .replaceAll(
+        'require("ajv/dist/runtime/ucs2length").default',
+        '(ucs2length.default ?? ucs2length)',
+      ),
 );
 writeFileSync(
   output + '/protocol.d.mts',

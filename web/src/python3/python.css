@@ -76,6 +76,16 @@
 .python-list li {
   padding-block: 0.28rem;
 }
+@media (min-width: 700px) {
+  .python-catalog > section > .python-list {
+    columns: 2;
+    column-gap: 2.5rem;
+  }
+  .python-catalog > section > .python-list > li {
+    break-inside: avoid;
+    padding-inline-end: 0.5rem;
+  }
+}
 .python-article-grid,
 .python-work-grid {
   display: grid;
@@ -94,6 +104,10 @@
 .python-directory summary,
 .python-screen details summary {
   cursor: pointer;
+}
+.python-directory > .python-tree > li > a {
+  display: inline-block;
+  padding-block: 0.25rem;
 }
 .python-tree,
 .python-tree ul {

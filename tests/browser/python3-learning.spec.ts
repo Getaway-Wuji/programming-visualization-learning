@@ -1,3 +1,4 @@
+import { editorValue, expectEditorValue } from './editor-value';
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import type { PythonArticle } from '../../web/src/python3/content-types';
@@ -104,7 +105,7 @@ test('published Python course loads one article, saves reading independently and
   await page.reload();
   await expect(page.getByText('四组全部通过', { exact: true })).toBeVisible();
   await page.getByRole('link', { name: '再次练习', exact: true }).click();
-  await expect(code(page)).toHaveValue(sample.greeting);
+  await expectEditorValue(code(page), sample.greeting);
   await expect(page.getByText('此题已通过并保存在本机。')).toBeVisible();
   const after = await archive(page);
   expect(after.rows.pythonActivities.values).toHaveLength(2);
@@ -130,7 +131,7 @@ test('real Blockly round trip preserves if/else and loop semantics and retains u
   await page.getByRole('button', { name: '应用积木到代码', exact: true }).click();
   await expect(page.getByRole('button', { name: '运行代码' })).toBeEnabled();
   await page.getByRole('button', { name: '代码', exact: true }).click();
-  expect(await code(page).inputValue()).toContain('else:\n        pass');
+  expect(await editorValue(code(page))).toContain('else:\n        pass');
   await page.getByRole('button', { name: '运行代码' }).click();
   await expect(page.getByTestId('python-output')).toHaveText('1\n0');
   await page.getByRole('button', { name: '积木', exact: true }).click();
@@ -149,7 +150,7 @@ test('real Blockly round trip preserves if/else and loop semantics and retains u
   await code(page).fill(unsupported);
   await page.getByRole('button', { name: '积木', exact: true }).click();
   await expect(page.getByText(/代码原稿已保留/)).toBeVisible();
-  await expect(code(page)).toHaveValue(unsupported);
+  await expectEditorValue(code(page), unsupported);
   expect(errors).toEqual([]);
 });
 
@@ -158,10 +159,10 @@ test('native draft quota failure and tab conflict preserve editable source and p
   context,
 }) => {
   await page.goto(practice);
-  await expect(code(page)).toHaveValue('pass\n');
+  await expectEditorValue(code(page), 'pass\n');
   const other = await context.newPage();
   await other.goto(practice);
-  await expect(code(other)).toHaveValue('pass\n');
+  await expectEditorValue(code(other), 'pass\n');
   await page.evaluate(() => {
     const put = IDBObjectStore.prototype.put;
     IDBObjectStore.prototype.put = function (value, key) {
@@ -175,19 +176,19 @@ test('native draft quota failure and tab conflict preserve editable source and p
   await code(page).fill(sample.greeting);
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('S_QUOTA');
-  await expect(code(page)).toHaveValue(sample.greeting);
+  await expectEditorValue(code(page), sample.greeting);
   expect((await archive(page)).rows.pythonDrafts.values).toHaveLength(0);
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByText('草稿已保存到本机。')).toBeVisible();
   await code(other).fill('print(123)');
   await other.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(other.getByRole('alert')).toContainText('另一页面更新了草稿');
-  await expect(code(other)).toHaveValue('print(123)');
+  await expectEditorValue(code(other), 'print(123)');
   other.once('dialog', (dialog) => void dialog.accept());
   await other.getByRole('button', { name: '以当前代码保存' }).click();
   await expect(other.getByText('草稿已保存到本机。')).toBeVisible();
   await other.reload();
-  await expect(code(other)).toHaveValue('print(123)');
+  await expectEditorValue(code(other), 'print(123)');
 });
 
 test('editing during a live judge invalidates the old result and its save proof', async ({
@@ -351,7 +352,7 @@ test('explicit clear changes the generation, clears both Python stores and rejec
   await expect
     .poll(async () => (await archive(page)).rows.meta.values[0].generation)
     .not.toBe(old.rows.meta.values[0].generation);
-  await expect(code(page)).toHaveValue('pass\n');
+  await expectEditorValue(code(page), 'pass\n');
   const after = await archive(page);
   expect(after.rows.pythonDrafts.values).toEqual([]);
   expect(after.rows.pythonActivities.values).toEqual([]);

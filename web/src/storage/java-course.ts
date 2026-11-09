@@ -54,7 +54,7 @@ const scalarText = (value: unknown): value is string =>
   !/[\uD800-\uDFFF]/u.test(value) &&
   encoder.encode(value).length <= 32768;
 
-function assertTextCourseState(
+export function assertTextCourseState(
   { snapshot, rows }: JavaCourseState,
   language: 'java' | 'cpp' | 'rust' = 'java',
 ) {
