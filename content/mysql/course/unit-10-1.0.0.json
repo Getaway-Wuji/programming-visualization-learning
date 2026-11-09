@@ -1,0 +1,854 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 10,
+  "nodes": [
+    {
+      "id": "mysql.lesson.10",
+      "sourceNodeId": "mysql.source.chapter-10",
+      "number": "10",
+      "title": "视图",
+      "parent": null,
+      "depth": 1,
+      "order": 215,
+      "group": 10,
+      "leaf": false,
+      "printedPage": 211,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "视图把一条查询保存为可反复引用的数据库对象，用于统一列名、封装关联与筛选，以及在配合授权时提供受控的数据入口。它通常保存定义而不是一份独立业务数据，底层变化会影响下一次查询结果。",
+        "本章所有视图操作按原生MySQL 8.0阅读。示例沿用students(id,name,dept_id,score)与departments(id,name)，初始数据为林安(1,1,88)、陈禾(2,2,72)、周岚(3,NULL,NULL)、苏宁(4,99,59)，院系1计算机、2数学、3设计。各阅读例从注明的初始数据独立推导，不把前例写入接续到后例。当前平台不执行视图、元数据SHOW或授权，也不连接外部服务器。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.1",
+      "sourceNodeId": "mysql.source.10-1",
+      "number": "10.1",
+      "title": "视图概述",
+      "parent": "mysql.lesson.10",
+      "depth": 2,
+      "order": 216,
+      "group": 10,
+      "leaf": false,
+      "printedPage": 211,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "理解视图先区分基表、查询结果和保存的查询定义。基表保存业务行，一次SELECT产生当前结果，视图则给查询定义一个名字，让其他查询能够在当前底层数据上再使用它。",
+        "使用视图仍需关心依赖、权限和执行代价。封装复杂SQL并不自动物化结果，也不保证比直接查询更快；修改基表结构时还要检查已有视图是否有效。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.1.1",
+      "sourceNodeId": "mysql.source.10-1-1",
+      "number": "10.1.1",
+      "title": "视图的含义",
+      "parent": "mysql.lesson.10.1",
+      "depth": 3,
+      "order": 217,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 211,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "视图可以看作由查询定义的虚拟表。用户能够SELECT视图的列，但视图没有一份与基表独立维护的业务行；读取它相当于按定义从当前底层数据计算结果。",
+        "下面v_known_scores只暴露非空成绩的学生id、name、score。初始周岚被定义中的WHERE过滤，其他三名学生可见；这不是从students删除周岚。",
+        "视图不是备份或历史快照。以后基表成绩改变，查询视图也会随之改变；若需要某个历史时刻的固定记录，应另行设计快照或备份，不依赖普通视图。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE VIEW v_known_scores AS SELECT id,name,score FROM students WHERE score IS NOT NULL;\nSELECT id,score FROM v_known_scores ORDER BY id;",
+        "description": "视图可以看作由查询定义的虚拟表。用户能够SELECT视图的列，但视图没有一份与基表独立维护的业务行；读取它相当于按定义从当前底层数据计算结果。",
+        "result": "初始原生推导输出(1,88)、(2,72)、(4,59)，students仍有4名学生。",
+        "reason": "平台不执行CREATE VIEW；示例按给定原生基表推导。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把周岚score从NULL改为80后，再查该视图会看到她吗？",
+        "answer": "会，当前底层行满足score IS NOT NULL，普通视图不是创建时的数据快照。",
+        "hints": [
+          "视图保存的是查询定义。",
+          "后续读取使用当前底层数据。",
+          "新成绩80满足定义条件。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.1.2",
+      "sourceNodeId": "mysql.source.10-1-2",
+      "number": "10.1.2",
+      "title": "视图的作用",
+      "parent": "mysql.lesson.10.1",
+      "depth": 3,
+      "order": 218,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 212,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "视图可以把反复使用的字段与条件集中定义，减少多个报表各自维护同一段SQL的偏差。面向公开名册时只提供id和姓名，比每个使用方都SELECT *更能说明数据接口。",
+        "隐藏列只有在配合恰当授权和SQL SECURITY上下文时才能形成访问控制边界。若用户仍有基表读取权限，他依然可能直接查询其他列；创建视图本身不会自动撤销权限。",
+        "视图还可稳定旧接口列名，但底层结构和语义变化仍要维护。它不是无条件的性能优化，也不会自动消除敏感数据风险；本平台不提供原生账号权限系统，相关操作只作原理阅读。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE SQL SECURITY INVOKER VIEW v_public_students AS SELECT id,name FROM students;\nSELECT id,name FROM v_public_students WHERE id=1;",
+        "description": "视图可以把反复使用的字段与条件集中定义，减少多个报表各自维护同一段SQL的偏差。面向公开名册时只提供id和姓名，比每个使用方都SELECT *更能说明数据接口。",
+        "result": "原生初始结果(1,林安)，视图只定义id、name两列；INVOKER表示底层访问按调用者安全上下文检查。",
+        "reason": "视图与原生授权环境都不在平台执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "创建只含姓名的视图后，已有基表SELECT权限会自动消失吗？",
+        "answer": "不会。对象定义和账号授权是不同操作，必须另行配置并验证访问权限。",
+        "hints": [
+          "CREATE VIEW不包含撤权动作。",
+          "先查用户实际拥有的基表权限。",
+          "只有正确授权组合才限制访问入口。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.2",
+      "sourceNodeId": "mysql.source.10-2",
+      "number": "10.2",
+      "title": "创建视图",
+      "parent": "mysql.lesson.10",
+      "depth": 2,
+      "order": 219,
+      "group": 10,
+      "leaf": false,
+      "printedPage": 213,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "创建视图需要给它命名并提供合法SELECT，还可指定列名、安全上下文和检查选项。定义前先直接运行或推导SELECT，确认列数、列名与所需结果粒度。",
+        "单表投影最容易对应回基表，多表连接和聚合能封装复杂报告，但可更新性会受到限制。视图列名必须唯一，表和视图在同一数据库共享名称空间，命名要避免冲突。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.2.1",
+      "sourceNodeId": "mysql.source.10-2-1",
+      "number": "10.2.1",
+      "title": "创建视图的语法形式",
+      "parent": "mysql.lesson.10.2",
+      "depth": 3,
+      "order": 220,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 213,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "基本形式为CREATE VIEW 名称 AS SELECT查询，可在名称后给出列名列表，其数量必须与查询投影列数一致。可选SQL SECURITY决定以定义者还是调用者身份检查底层访问。",
+        "WITH CHECK OPTION用于可更新视图，限制经该视图写入后的行仍满足视图条件。它不是替代基表全部约束，也不自动使本来不可更新的聚合视图变成可更新。",
+        "原生创建需要相应CREATE VIEW及底层访问权限；OR REPLACE还涉及替换权限。以下例子只定义及格学生入口，检查选项的CASCADED涉及视图层叠检查，本例只依赖基表。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE SQL SECURITY INVOKER VIEW v_passing(student_id,student_name,score)\nAS SELECT id,name,score FROM students WHERE score>=60\nWITH CASCADED CHECK OPTION;",
+        "description": "基本形式为CREATE VIEW 名称 AS SELECT查询，可在名称后给出列名列表，其数量必须与查询投影列数一致。可选SQL SECURITY决定以定义者还是调用者身份检查底层访问。",
+        "result": "定义后初始可见林安88、陈禾72，列名为student_id、student_name、score；没有复制students数据。",
+        "reason": "原生CREATE VIEW及CHECK OPTION为阅读；平台不创建持久视图。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "显式列名列表少写一个名字，会只是省略那一列吗？",
+        "answer": "不会，列名数量必须与SELECT投影列数一致，否则创建失败。",
+        "hints": [
+          "列名列表负责命名，不负责筛列。",
+          "筛哪些列由SELECT决定。",
+          "三个投影项需要三个列名。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · view check option",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/view-check-option.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.2.2",
+      "sourceNodeId": "mysql.source.10-2-2",
+      "number": "10.2.2",
+      "title": "在单表上创建视图",
+      "parent": "mysql.lesson.10.2",
+      "depth": 3,
+      "order": 221,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 214,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "单表视图可以投影所需列、重命名列并固定行条件。例如为查成绩建立只含id、name、score的入口，底层院系字段仍然存在。",
+        "建议显式列清单。原生MySQL在创建视图时冻结定义的列展开，若用SELECT *创建后基表新增列，新增列不会自动进入已有视图；而删掉被依赖列可能使视图失效。",
+        "单表不等于必然可更新：DISTINCT、聚合和GROUP BY等会改变行映射。先看查询结构与元数据，而不是只数FROM里有几张表。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE VIEW v_student_scores AS SELECT id,name,score FROM students;\nSELECT name,score FROM v_student_scores WHERE id=2;",
+        "description": "单表视图可以投影所需列、重命名列并固定行条件。例如为查成绩建立只含id、name、score的入口，底层院系字段仍然存在。",
+        "result": "初始原生推导得到(陈禾,72)；视图列清单没有dept_id。",
+        "reason": "阅读单表视图与列依赖；未在平台执行视图或ALTER TABLE。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "用SELECT *创建视图后新增email列，已有视图是否自动多出email？",
+        "answer": "不会。MySQL在创建视图时冻结列展开，需按新需求修改定义。",
+        "hints": [
+          "区分每次普通SELECT *与已保存视图定义。",
+          "视图创建时已确定列。",
+          "新增基表列不会自动进入该视图。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.2.3",
+      "sourceNodeId": "mysql.source.10-2-3",
+      "number": "10.2.3",
+      "title": "在多表上创建视图",
+      "parent": "mysql.lesson.10.2",
+      "depth": 3,
+      "order": 222,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 214,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "多表视图把连接关系集中到一个对象中。学生院系名册需要通过dept_id关联院系id，并把两个name列分别命名，避免重复的视图列名。",
+        "选择LEFT JOIN会保留缺配学生，INNER JOIN则仅保留成功配对。连接定义的保留策略会影响所有使用该视图的查询，因此应在视图用途里写清。",
+        "多表视图的可更新性有专门限制，外连接视图通常不可更新，某些可合并的内连接视图又有条件地允许更新一个基表。不能以“能查出来”推断“能随意写回”。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE VIEW v_student_departments AS\nSELECT s.id,s.name AS student_name,d.name AS department_name\nFROM students AS s LEFT JOIN departments AS d ON s.dept_id=d.id;\nSELECT * FROM v_student_departments ORDER BY id;",
+        "description": "多表视图把连接关系集中到一个对象中。学生院系名册需要通过dept_id关联院系id，并把两个name列分别命名，避免重复的视图列名。",
+        "result": "初始原生结果为(1,林安,计算机)、(2,陈禾,数学)、(3,周岚,NULL)、(4,苏宁,NULL)。",
+        "reason": "多表视图为原生阅读，连接语义与平台基本JOIN能力分开。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若不把两个name分别取别名，视图定义会有什么问题？",
+        "answer": "视图列名需要唯一，两个同名投影会冲突；应显式命名student_name、department_name等。",
+        "hints": [
+          "检查连接两边都有name。",
+          "普通结果可有易混列名，但视图列必须唯一。",
+          "为投影或整个视图列列表明确命名。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · view updatability",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/view-updatability.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.3",
+      "sourceNodeId": "mysql.source.10-3",
+      "number": "10.3",
+      "title": "查看视图",
+      "parent": "mysql.lesson.10",
+      "depth": 2,
+      "order": 223,
+      "group": 10,
+      "leaf": false,
+      "printedPage": 215,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "查看视图时需要区分列结构、对象状态、完整创建定义和可查询元数据。DESCRIBE适合看暴露字段，SHOW CREATE VIEW适合审查定义，information_schema适合筛选与批量检查。",
+        "这些工具不能互相代替。列结构看不出全部筛选和连接条件，状态中的VIEW标记也不代表已经理解安全上下文；应根据排查问题选择足够信息。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.3.1",
+      "sourceNodeId": "mysql.source.10-3-1",
+      "number": "10.3.1",
+      "title": "使用DESCRIBE语句查看视图的基本信息",
+      "parent": "mysql.lesson.10.3",
+      "depth": 3,
+      "order": 224,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 215,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DESCRIBE或DESC可以显示视图暴露的字段信息，如字段名、类型和可空性。它回答使用者能看到哪些列，不会展开完整SELECT和所有依赖关系。",
+        "假定已经创建v_public_students AS SELECT id,name FROM students，DESCRIBE会列出id和name，没有score与dept_id。字段类型来自相应表达式及底层定义，不能一律当作VARCHAR。",
+        "某些表达式和连接会影响可空性，查看列信息后仍应审查原定义。原生元数据输出格式可能因版本及客户端不同，平台不执行DESCRIBE。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DESCRIBE v_public_students;",
+        "description": "DESCRIBE或DESC可以显示视图暴露的字段信息，如字段名、类型和可空性。它回答使用者能看到哪些列，不会展开完整SELECT和所有依赖关系。",
+        "result": "在本章已定义的视图上，原生元信息包含id、name两行字段说明；不包含score与dept_id，完整细节以实际定义为准。",
+        "reason": "DESCRIBE视图需要原生元数据接口，本版只阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "DESCRIBE能否直接说明该视图WHERE过滤了什么条件？",
+        "answer": "不能，它主要显示列信息；应使用SHOW CREATE VIEW或相应元数据查看SELECT定义。",
+        "hints": [
+          "列结构与查询逻辑是不同层。",
+          "相同列可以配不同WHERE。",
+          "需要完整定义才能审查筛选。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · show columns",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-columns.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.3.2",
+      "sourceNodeId": "mysql.source.10-3-2",
+      "number": "10.3.2",
+      "title": "使用SHOW TABLE STATUS语句查看视图的基本信息",
+      "parent": "mysql.lesson.10.3",
+      "depth": 3,
+      "order": 225,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 216,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SHOW TABLE STATUS可列出数据库对象的状态信息，视图也会出现在结果中，但不能把它当成独立存储表来解释行数与数据文件大小。",
+        "对视图，Name是视图名，Create_time是创建时间，Comment标示VIEW，其余多数存储表专用字段为0或NULL。原生工具展示这些状态并不是报告“视图没有任何查询结果”。",
+        "要统计视图当前结果行数，应显式SELECT COUNT(*) FROM view，并考虑查询成本；状态元数据不是一份精确的实时业务行数。本例假定已有本章公开名册视图。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW TABLE STATUS WHERE Name='v_public_students';",
+        "description": "SHOW TABLE STATUS可列出数据库对象的状态信息，视图也会出现在结果中，但不能把它当成独立存储表来解释行数与数据文件大小。",
+        "result": "原生会识别视图对象，Comment为VIEW，存储表专用状态字段多为0或NULL；不能从Rows=NULL断言名册零行。",
+        "reason": "原生SHOW状态为阅读，不模拟服务器存储或业务计数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "状态里的Rows为NULL，是否说明SELECT视图得到零行？",
+        "answer": "不是。视图没有独立存储行数，这个状态字段不提供该结论。",
+        "hints": [
+          "状态面向对象存储属性。",
+          "视图数据按查询定义取得。",
+          "实际数量要查询视图结果。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · show table status",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-table-status.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.3.3",
+      "sourceNodeId": "mysql.source.10-3-3",
+      "number": "10.3.3",
+      "title": "使用SHOW CREATE VIEW语句查看视图的详细信息",
+      "parent": "mysql.lesson.10.3",
+      "depth": 3,
+      "order": 226,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 217,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SHOW CREATE VIEW返回视图的创建定义及相关字符集元信息，适合核对SELECT、列名、算法和安全上下文。它比只看字段列表更接近审查或迁移所需信息。",
+        "返回的SQL可能被服务器规范化，补上限定名、反引号和默认定义者；与最初输入的空白或写法不同不代表含义被破坏，比较时应看语义及环境字段。",
+        "查看定义需要适当原生权限，导出后还要确认目标环境的定义者、安全上下文和依赖对象。本平台不读取账号或视图定义，以下仅示范查询入口。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW CREATE VIEW v_student_departments;",
+        "description": "SHOW CREATE VIEW返回视图的创建定义及相关字符集元信息，适合核对SELECT、列名、算法和安全上下文。它比只看字段列表更接近审查或迁移所需信息。",
+        "result": "原生返回保存的视图定义，能看到students与departments的LEFT JOIN及列别名；Definer与字符集等具体值取决于实际创建环境。",
+        "reason": "SHOW CREATE VIEW需原生元数据与权限，本例不给出虚构账号。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "SHOW CREATE VIEW与原始输入空白不同，是否足以判定定义错误？",
+        "answer": "不足。服务器可能规范化SQL；应核对投影、条件、关联和安全属性是否一致。",
+        "hints": [
+          "先忽略无语义的排版差异。",
+          "查关键列和ON条件。",
+          "再核对定义者与SQL SECURITY等环境属性。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · show create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.3.4",
+      "sourceNodeId": "mysql.source.10-3-4",
+      "number": "10.3.4",
+      "title": "在views表中查看视图的详细信息",
+      "parent": "mysql.lesson.10.3",
+      "depth": 3,
+      "order": 227,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 217,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "information_schema.VIEWS把视图元信息暴露为可查询的表，包括TABLE_SCHEMA、TABLE_NAME、VIEW_DEFINITION、CHECK_OPTION、IS_UPDATABLE与SECURITY_TYPE等。它适合按库或名称批量筛选。",
+        "查询时应同时限定数据库与视图名，因为不同库可以有同名视图。VIEW_DEFINITION记录查询定义而不是整条CREATE的所有内容；完整重建仍应结合SHOW CREATE VIEW。",
+        "IS_UPDATABLE说明服务器判定的可更新标志，不保证任意列都可写或一定可INSERT。可见的定义还受权限影响；本版不实现information_schema，不能用平台表格冒充原生元数据库。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT TABLE_NAME,IS_UPDATABLE,CHECK_OPTION,SECURITY_TYPE\nFROM information_schema.VIEWS\nWHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='v_passing';",
+        "description": "information_schema.VIEWS把视图元信息暴露为可查询的表，包括TABLE_SCHEMA、TABLE_NAME、VIEW_DEFINITION、CHECK_OPTION、IS_UPDATABLE与SECURITY_TYPE等。它适合按库或名称批量筛选。",
+        "result": "对本章简单单表v_passing，原生通常标为IS_UPDATABLE=YES、CHECK_OPTION=CASCADE、SECURITY_TYPE=INVOKER；前提是依定义成功创建且具备查看权限。",
+        "reason": "原生information_schema阅读；标志不等于任何写操作都可成功。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么除了TABLE_NAME还要筛TABLE_SCHEMA？",
+        "answer": "因为不同数据库可以有同名视图，限定当前库能避免混合其他库对象。",
+        "hints": [
+          "视图名称只在所在数据库内定位。",
+          "元数据库可能包含多个库。",
+          "库名与对象名共同确定目标。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · information schema views table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/information-schema-views-table.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · view updatability",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/view-updatability.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.4",
+      "sourceNodeId": "mysql.source.10-4",
+      "number": "10.4",
+      "title": "修改视图",
+      "parent": "mysql.lesson.10",
+      "depth": 2,
+      "order": 228,
+      "group": 10,
+      "leaf": false,
+      "printedPage": 218,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "修改视图定义是在改变保存的SELECT和对象属性，与通过视图UPDATE业务数据是两件事。先确定下游依赖的列名、类型和可见范围，再选CREATE OR REPLACE或ALTER VIEW。",
+        "定义改变可能让报表列缺失、暴露额外字段或改变行数，所以应审查影响并重新核对SHOW CREATE VIEW。原生DDL有其提交与权限规则，当前平台不执行视图DDL。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.4.1",
+      "sourceNodeId": "mysql.source.10-4-1",
+      "number": "10.4.1",
+      "title": "使用CREATE OR REPLACE VIEW语句修改视图",
+      "parent": "mysql.lesson.10.4",
+      "depth": 3,
+      "order": 229,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 218,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "CREATE OR REPLACE VIEW在目标不存在时创建，在已存在时用新定义替换。它适合部署一个期望定义，但不能把它当成“只在对象已经存在时才修改”的命令。",
+        "下面把公开名册改成只展示已知成绩的学生。列仍是id、name，下游字段契约不变，但可见行从4变为3，属于真实业务行为变化。",
+        "替换必须审查旧安全上下文、列名和依赖，不要因为语法能一次完成就忽略权限要求。OR REPLACE不能任意把同名基表改成视图，表与视图的名称空间冲突仍需处理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE OR REPLACE SQL SECURITY INVOKER VIEW v_public_students AS\nSELECT id,name FROM students WHERE score IS NOT NULL;\nSELECT * FROM v_public_students ORDER BY id;",
+        "description": "CREATE OR REPLACE VIEW在目标不存在时创建，在已存在时用新定义替换。它适合部署一个期望定义，但不能把它当成“只在对象已经存在时才修改”的命令。",
+        "result": "原生初始结果只含林安、陈禾、苏宁；周岚仍在students，但不再通过此视图显示。",
+        "reason": "视图替换为原生阅读，本版不实施DDL或权限变动。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "目标视图尚不存在时，OR REPLACE会报“无对象可替换”吗？",
+        "answer": "不会，它会按CREATE VIEW创建；这与必须已有目标的ALTER VIEW不同。",
+        "hints": [
+          "看OR REPLACE的双重语义。",
+          "存在则替换。",
+          "不存在则创建。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.4.2",
+      "sourceNodeId": "mysql.source.10-4-2",
+      "number": "10.4.2",
+      "title": "使用ALTER语句修改视图",
+      "parent": "mysql.lesson.10.4",
+      "depth": 3,
+      "order": 230,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 218,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "ALTER VIEW修改一个已存在视图的定义，可给出新SELECT及相关属性。和OR REPLACE不同，目标不存在会失败，因此适合需要确认对象已部署的维护场景。",
+        "下面把v_public_students的范围限定为院系1。外层调用者继续使用同一个视图名，但结果只保留林安；对象名不变不等于行为不变。",
+        "ALTER VIEW不是ALTER TABLE，不能用它直接改变students列类型，也不能通过它改名。修改后应查看定义并核对依赖查询，相关原生权限由实际数据库环境决定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "ALTER SQL SECURITY INVOKER VIEW v_public_students AS\nSELECT id,name FROM students WHERE dept_id=1;\nSELECT id,name FROM v_public_students ORDER BY id;",
+        "description": "ALTER VIEW修改一个已存在视图的定义，可给出新SELECT及相关属性。和OR REPLACE不同，目标不存在会失败，因此适合需要确认对象已部署的维护场景。",
+        "result": "在目标视图已存在的前提下，原生初始结果仅(1,林安)。",
+        "reason": "ALTER VIEW属于原生阅读，平台不改变真实数据库对象。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "ALTER VIEW能否把students.score从INT改为日期类型？",
+        "answer": "不能。它改的是视图查询定义；基表列结构变更属于ALTER TABLE及相应数据迁移。",
+        "hints": [
+          "先识别操作对象是视图还是基表。",
+          "视图保存SELECT定义。",
+          "基表字段类型不是ALTER VIEW的修改目标。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.5",
+      "sourceNodeId": "mysql.source.10-5",
+      "number": "10.5",
+      "title": "更新视图",
+      "parent": "mysql.lesson.10",
+      "depth": 2,
+      "order": 231,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 219,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "更新视图是经视图把业务数据写回基表，与修改视图定义不同。简单可合并单表投影可能可更新，而聚合、DISTINCT、GROUP BY、UNION等常使视图不可更新。",
+        "对v_passing把林安成绩从88改为90，可以映射到students中的同一行；把分数改成50则会使该行不再满足视图条件。WITH CHECK OPTION能拒绝这种经视图变成不可见的更新。",
+        "可更新不等于任何列可赋值，也不必然可插入。计算表达式列与缺失必填基表列都会带来额外限制；需要以具体定义及原生规则判断，平台不执行视图写入。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE VIEW v_passing_edit AS SELECT id,name,score FROM students WHERE score>=60 WITH CHECK OPTION;\nUPDATE v_passing_edit SET score=90 WHERE id=1;\nSELECT score FROM students WHERE id=1;",
+        "description": "更新视图是经视图把业务数据写回基表，与修改视图定义不同。简单可合并单表投影可能可更新，而聚合、DISTINCT、GROUP BY、UNION等常使视图不可更新。",
+        "result": "原生InnoDB示例中最后结果90，说明写入落到基表。若改为SET score=50则检查选项拒绝，原值保持。",
+        "reason": "视图DML在平台外，按给定原生InnoDB及成功创建条件解释。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能否通过SUM(score)组成的汇总视图直接把总分写成300？",
+        "answer": "不能通常这样更新。汇总值无法唯一映射为某一底层行的修改，聚合视图不可更新。",
+        "hints": [
+          "一个汇总值可能来自很多行。",
+          "修改总分没有唯一的行级解释。",
+          "因此不能把聚合列当普通基表列写入。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · view updatability",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/view-updatability.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · view check option",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/view-check-option.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.6",
+      "sourceNodeId": "mysql.source.10-6",
+      "number": "10.6",
+      "title": "删除视图",
+      "parent": "mysql.lesson.10",
+      "depth": 2,
+      "order": 232,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 221,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DROP VIEW删除视图定义，不删除其基表与基表中的业务行。IF EXISTS可在目标缺失时避免通常的不存在错误，并产生相应提示；它不是强行删除其他对象类型。",
+        "删视图前要检查下游报表、其他视图和程序依赖。基表仍在，不代表所有使用者仍能沿原名字查询；依赖对象可能失效，需要同步维护。",
+        "DROP VIEW不是DELETE FROM view，也不是DROP TABLE。前者删除虚拟入口，DELETE可能改动底层数据，DROP TABLE则删除基表对象，三者的影响范围完全不同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DROP VIEW IF EXISTS v_public_students;\nSELECT COUNT(*) AS total FROM students;",
+        "description": "DROP VIEW删除视图定义，不删除其基表与基表中的业务行。IF EXISTS可在目标缺失时避免通常的不存在错误，并产生相应提示；它不是强行删除其他对象类型。",
+        "result": "原生删除视图后，初始未改基表的前提下students仍有4行；再SELECT该视图会因对象不存在失败。",
+        "reason": "原生视图删除为阅读，未在真实服务执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删除v_public_students会把所有学生一并删除吗？",
+        "answer": "不会，DROP VIEW只删定义，students基表及记录仍保留。",
+        "hints": [
+          "区分定义依赖与数据所有权。",
+          "视图引用students。",
+          "删除引用入口不会删除被引用的基表。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.7",
+      "sourceNodeId": "mysql.source.10-7",
+      "number": "10.7",
+      "title": "本章实战",
+      "parent": "mysql.lesson.10",
+      "depth": 2,
+      "order": 233,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 221,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章实战建立院系统计视图，目标是院系列表中的每个院系都出现，包括没有学生的设计院系。以departments作左表，再关联students，才能保留这些空院系。",
+        "COUNT(s.id)只统计实际匹配的非空学生主键；若误写COUNT(*)，设计院系的补NULL行也会计成1。AVG(s.score)忽略缺失成绩，没有非空成绩的院系均值为NULL。",
+        "该视图使用分组聚合，按原生规则不可直接更新。它也不会列出未登记的99院系，因为保留对象是院系表；“所有登记院系”和“所有学生院系号”属于不同报表口径。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE VIEW v_dept_summary AS\nSELECT d.id AS dept_id,d.name AS department,COUNT(s.id) AS total,AVG(s.score) AS average_score\nFROM departments AS d LEFT JOIN students AS s ON s.dept_id=d.id\nGROUP BY d.id,d.name;\nSELECT * FROM v_dept_summary ORDER BY dept_id;",
+        "description": "本章实战建立院系统计视图，目标是院系列表中的每个院系都出现，包括没有学生的设计院系。以departments作左表，再关联students，才能保留这些空院系。",
+        "result": "原生默认整数AVG显示四位小数时，初始得到(1,计算机,1,88.0000)、(2,数学,1,72.0000)、(3,设计,0,NULL)。",
+        "reason": "原生视图聚合实战为阅读；完整清单需在原生MySQL中使用。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "设计院系无人，为什么COUNT(*)可能是1而COUNT(s.id)为0？",
+        "answer": "LEFT JOIN为无匹配左行生成一条右侧补NULL行；COUNT(*)数这一行，COUNT(s.id)跳过其NULL。",
+        "hints": [
+          "先画出设计院系的连接结果。",
+          "左侧存在一行，右侧s.id为NULL。",
+          "两种COUNT的统计对象不同。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · aggregate functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/aggregate-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · view updatability",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/view-updatability.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.8",
+      "sourceNodeId": "mysql.source.10-8",
+      "number": "10.8",
+      "title": "本章小结",
+      "parent": "mysql.lesson.10",
+      "depth": 2,
+      "order": 234,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 224,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "视图生命周期可以概括为先设计查询，再创建与核查，再维护依赖，最后按需删除。它的核心价值是稳定的查询接口，不能仅凭“像表一样SELECT”就忽略其虚拟定义。",
+        "查看工具各有分工：DESCRIBE看列，SHOW TABLE STATUS辨对象状态，SHOW CREATE VIEW核定义，information_schema支持结构化筛选。可更新性与权限则要结合具体定义判断。",
+        "平台不执行视图；本章根据原生MySQL规则和给定数据推导结果。视图DDL、提交边界及授权需要在具备相应权限的原生环境中验证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE VIEW v_names_only AS SELECT id,name FROM students;\nSELECT id,name FROM v_names_only WHERE id=3;",
+        "description": "视图生命周期可以概括为先设计查询，再创建与核查，再维护依赖，最后按需删除。它的核心价值是稳定的查询接口，不能仅凭“像表一样SELECT”就忽略其虚拟定义。",
+        "result": "原生初始得到(3,周岚)；未投影score不等于score已被清空。",
+        "reason": "章节复盘以原生投影视图阅读，不执行或修改外部服务。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "一张视图查不到score列，是否说明基表已删除score？",
+        "answer": "不是。视图可以只投影部分字段，基表结构须另外查看。",
+        "hints": [
+          "视图列由SELECT列表决定。",
+          "隐藏不等于删除。",
+          "检查基表定义才能确认结构变化。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.10.9",
+      "sourceNodeId": "mysql.source.10-9",
+      "number": "10.9",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.10",
+      "depth": 2,
+      "order": 235,
+      "group": 10,
+      "leaf": true,
+      "printedPage": 225,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章练习审查CHECK OPTION，而非只背创建语法。先确认视图可更新，再判断某次更新是否仍满足其WHERE条件，最后区分失败语句与已有数据状态。",
+        "对及格视图把88改成50，会使原来可见的行不再及格；有检查选项时应拒绝该写入。在InnoDB普通单条更新条件下，失败不会把成绩先改50后藏起来。",
+        "检查选项约束经该视图的写入，不是给所有基表通路加上同一个业务约束。若其他有权限的语句直接改基表，仍须根据基表约束与权限判断；平台不执行这些视图操作。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE VIEW v_passing_guard AS SELECT id,name,score FROM students WHERE score>=60 WITH CHECK OPTION;\nUPDATE v_passing_guard SET score=50 WHERE id=1;",
+        "description": "本章练习审查CHECK OPTION，而非只背创建语法。先确认视图可更新，再判断某次更新是否仍满足其WHERE条件，最后区分失败语句与已有数据状态。",
+        "result": "按初始InnoDB数据推导，第二条因CHECK OPTION失败，林安score仍为88；视图定义保持原样。",
+        "reason": "原生视图边界阅读自检，未执行真实写入。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么没有CHECK OPTION时，该更新可能成功却让林安从视图消失？",
+        "answer": "写入能映射到基表，但新分数50不再满足视图WHERE；没有检查选项就不一定阻止这种可见到不可见的变化。",
+        "hints": [
+          "分别检查可更新性与行可见条件。",
+          "可写回不代表写后仍可见。",
+          "CHECK OPTION专门限制经视图写入后条件不为真的情况。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · view check option",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/view-check-option.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · view updatability",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/view-updatability.html"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1155 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 5,
+  "nodes": [
+    {
+      "id": "mysql.lesson.5",
+      "sourceNodeId": "mysql.source.chapter-5",
+      "number": "5",
+      "title": "数据表操作",
+      "parent": null,
+      "depth": 1,
+      "order": 88,
+      "group": 5,
+      "leaf": false,
+      "printedPage": 87,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "数据表定义把业务概念变成可检查的列、类型和约束。本章先创建与查看表，再比较类型、约束和索引；每一条结构规则都应能解释它允许什么、拒绝什么，以及修改已有表时的影响。",
+        "表结构与数据内容需分别检查：当前三行互不相同不证明存在唯一约束，字段看起来像日期不证明服务器验证了日期。本章介绍原生表管理，同时通过建表练习在平台真实创建notes表。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        },
+        {
+          "title": "MySQL 8.0：数据类型",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/data-types.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.1",
+      "sourceNodeId": "mysql.source.5-1",
+      "number": "5.1",
+      "title": "数据表基本操作",
+      "parent": "mysql.lesson.5",
+      "depth": 2,
+      "order": 89,
+      "group": 5,
+      "leaf": false,
+      "printedPage": 87,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "建表先明确每行的粒度，再给字段命名并定义类型和键。查看、复制、改名、修改与删除是不同的结构动作；它们对原数据、约束、依赖与权限的影响也不同。",
+        "平台建表题使用INT与VARCHAR及单列约束；查看原生元数据、复制与ALTER等操作在本节阅读。阅读分配不等于清单中每个关键词都不受支持，应依据具体语句和平台支持范围判断。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        },
+        {
+          "title": "MySQL 8.0：ALTER TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/alter-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.1.1",
+      "sourceNodeId": "mysql.source.5-1-1",
+      "number": "5.1.1",
+      "title": "创建数据表",
+      "parent": "mysql.lesson.5.1",
+      "depth": 3,
+      "order": 90,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 87,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "CREATE TABLE给新表命名，并在括号中列出字段定义。逗号分隔字段，INT用于整数，VARCHAR(64)表示最大64个字符的变长文本；PRIMARY KEY使id唯一且非空，NOT NULL明确要求title有值。",
+        "本题在每组独立教学数据库中建立notes，字段必须是id INT主键和title VARCHAR(64)非空。表创建后没有记录，但约束已经存在；保留初始students、departments和所有数据也是判题目标。",
+        "重复建表会触发表已存在的诊断，不能用删除其他表来规避题目约束。原生MySQL还有更多类型、键和ENGINE选项，平台仅执行声明子集；建表须在活动事务之外进行，不能把平台拒绝事务DDL当原生DDL规则。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "CREATE TABLE notes (id INT PRIMARY KEY, title VARCHAR(64) NOT NULL);",
+        "description": "创建带约束的数据表",
+        "result": "四组实际创建一张空notes表，id为INT主键、title为VARCHAR(64)非空；原始表与记录保持不变。",
+        "profile": "mysql.exercise.schema",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.schema",
+        "prompt": "创建notes表，id为INT主键，title为VARCHAR(64)且非空，保留原有表和数据。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.1.2",
+      "sourceNodeId": "mysql.source.5-1-2",
+      "number": "5.1.2",
+      "title": "查看表结构",
+      "parent": "mysql.lesson.5.1",
+      "depth": 3,
+      "order": 91,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 89,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "查看表结构主要是读元数据而非读业务行。DESCRIBE简要列出字段信息，SHOW CREATE TABLE显示服务器记录的建表定义，两者适合回答不同粒度的问题。",
+        "检查结构时逐项看类型、可空、默认值和键。不能从SELECT *的几行样本推断字段类型，例如没有缺失值的样本也可能来自允许NULL的列。",
+        "平台表格显示已验证的类型与约束，但不执行原生DESCRIBE或SHOW。下面假设tags已建立，用两种接口交叉核查；真实输出应以服务器返回为准。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DESCRIBE tags;\nSHOW CREATE TABLE tags;",
+        "description": "查看表结构主要是读元数据而非读业务行。",
+        "result": "原生成功时前句返回字段摘要，后句返回完整定义；字段名、附加属性和显示细节由实际表与版本决定。",
+        "reason": "DESCRIBE和SHOW CREATE TABLE是原生元数据语句；平台用教学表格展示结构，不执行这些命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想确认外键和引擎声明，只看两行数据够吗？",
+        "answer": "不够。这些属于表定义，应查看SHOW CREATE TABLE等元数据，不能从数据样本可靠推断。",
+        "hints": [
+          "数据值与模式声明分开。",
+          "外键未被违反不表示一定声明过外键。",
+          "以完整结构定义核实。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：DESCRIBE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/describe.html"
+        },
+        {
+          "title": "MySQL 8.0：SHOW CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/show-create-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.1.3",
+      "sourceNodeId": "mysql.source.5-1-3",
+      "number": "5.1.3",
+      "title": "复制数据表",
+      "parent": "mysql.lesson.5.1",
+      "depth": 3,
+      "order": 92,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 90,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "复制表要区分复制结构与复制数据。CREATE TABLE ... LIKE以已有表为模板建立新表，INSERT ... SELECT复制查询结果；CREATE TABLE ... SELECT也可同时建立数据列与行，但不应假定它完整保留原表的键和所有属性。",
+        "即使是LIKE也有明确的保留与不保留项目，原生外键定义等不能想当然地视为已复制。复制完成后应核查新表的实际结构、行数和关键数据，特别是业务依赖的约束。",
+        "复制是新对象，不会因之后修改原表就自动同步。平台不执行LIKE建表或INSERT SELECT；下面给出原生两步阅读清单，前提是源tags存在且目标tags_copy不存在。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE tags_copy LIKE tags;\nINSERT INTO tags_copy SELECT * FROM tags;",
+        "description": "复制表要区分复制结构与复制数据。",
+        "result": "第一句创建结构模板，第二句把当时查询到的源行写入；并发数据与事务边界会影响复制时点，约束仍需实际核对。",
+        "reason": "该清单需要原生LIKE及INSERT SELECT；平台不执行这两种结构。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只执行第一句，目标是否已经含源表全部记录？",
+        "answer": "没有。LIKE建立结构，不复制行；数据需要随后显式写入。",
+        "hints": [
+          "分别观察两条语句的职责。",
+          "“像”源表结构不等于读取源行。",
+          "行数检查应在插入步骤之后进行。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE LIKE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table-like.html"
+        },
+        {
+          "title": "MySQL 8.0：INSERT SELECT",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/insert-select.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.1.4",
+      "sourceNodeId": "mysql.source.5-1-4",
+      "number": "5.1.4",
+      "title": "修改表结构",
+      "parent": "mysql.lesson.5.1",
+      "depth": 3,
+      "order": 93,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 92,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "ALTER TABLE修改已有表的列、约束或其他属性。与重新创建空表不同，它面对已存在的数据和依赖，添加非空字段、缩短字符串长度或改变类型都需要判断旧行能否满足新定义。",
+        "原生操作可能重建数据、等待锁或采用在线方式，策略取决于版本、引擎和具体修改。不能把“在线DDL”理解为所有改动都不锁、不耗时或不会失败。",
+        "先查看当前定义，列出目标变化及兼容条件，再核对执行后的结构与数据。平台不执行ALTER TABLE；其中VARCHAR类型本身受支持，超出范围的是已有表结构变更操作。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 前提：原生tags表已存在，且没有remark列\nALTER TABLE tags ADD COLUMN remark VARCHAR(80) NULL;",
+        "description": "ALTER TABLE修改已有表的列、约束或其他属性。",
+        "result": "原生成功后增加允许NULL的备注列；原有行的该列按实际默认规则得到值，本例未声明默认值且允许NULL，预期为NULL。",
+        "reason": "ALTER TABLE属于原生表结构管理，平台不执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么把VARCHAR(80)改成VARCHAR(8)前要检查旧数据？",
+        "answer": "旧值可能超过新上限，修改会失败或受SQL模式等影响；必须先确定无损转换条件。",
+        "hints": [
+          "新约束要应用到旧行。",
+          "找出长度大于8的候选值。",
+          "结构修改不能忽略已有内容。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：ALTER TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/alter-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.1.5",
+      "sourceNodeId": "mysql.source.5-1-5",
+      "number": "5.1.5",
+      "title": "重命名数据表",
+      "parent": "mysql.lesson.5.1",
+      "depth": 3,
+      "order": 94,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 95,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "RENAME TABLE改变表的名称，不是复制出一份新表。数据仍属于同一个被改名的对象，而应用中的硬编码表名、视图或脚本可能需要同步检查。",
+        "原生多表重命名可用于某些切换操作，但有权限和锁等要求；不能把名字交换当作自动迁移所有业务依赖。改名前应确认目标名未冲突，并列出外部引用。",
+        "平台不执行RENAME TABLE。阅读时关注结构身份与访问名称的区别：改名后旧SQL若仍使用旧名字，可能找不到对象，这不是原数据凭空消失。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 前提：tags存在，event_tags不存在\nRENAME TABLE tags TO event_tags;\nSELECT id, name FROM event_tags;",
+        "description": "RENAME TABLE改变表的名称，不是复制出一份新表。",
+        "result": "原生成功后通过event_tags访问原表，原tags名称不再指向它；查询能否成功还依赖实际列名与权限。",
+        "reason": "RENAME TABLE是原生命名管理；平台不执行表改名。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "重命名后旧脚本SELECT * FROM tags为何可能失败？",
+        "answer": "脚本仍使用旧名称，名称解析找不到改名后的表；应检查依赖并更新引用。",
+        "hints": [
+          "对象内容与引用名字分开。",
+          "改名不会自动重写所有外部脚本文本。",
+          "根据依赖清单核对引用。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：RENAME TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/rename-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.1.6",
+      "sourceNodeId": "mysql.source.5-1-6",
+      "number": "5.1.6",
+      "title": "删除数据表",
+      "parent": "mysql.lesson.5.1",
+      "depth": 3,
+      "order": 95,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 95,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DROP TABLE删除表结构和数据，DELETE删除行而保留表，TRUNCATE清空表行但属于原生DDL。三种动作的范围、事务及副作用不能只用“删除”二字概括。",
+        "DROP TABLE IF EXISTS在表不存在时按条件处理，不能保存表定义或提供撤销保障。被其他对象引用时还要考虑依赖；原生外键、视图和权限等影响需要另行核查。",
+        "平台在事务外支持DROP TABLE，但本节点采用阅读自检比较删除层级。原生MySQL的DDL通常涉及隐式提交，平台则明确拒绝活动事务中的DDL，两者应分别记忆。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 假设scratch_tags仅用于一次性练习\nDROP TABLE IF EXISTS scratch_tags;",
+        "description": "DROP TABLE删除表结构和数据，DELETE删除行而保留表，TRUNCATE清空表行但属于原生DDL。",
+        "result": "目标存在且可删除时，表与记录都不再存在；后续SELECT需先重新建表，不会得到一个仅零行的旧表。",
+        "reason": "平台支持事务外DROP TABLE；本节阅读比较对象删除与行删除，不安排独立判题。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "DROP TABLE后查询为什么不是简单返回空结果？",
+        "answer": "因为表对象已被删除，名称解析将失败；空结果要求表存在但没有匹配行。",
+        "hints": [
+          "区分“对象不存在”和“对象为空”。",
+          "DELETE保留表，DROP不保留。",
+          "错误与零行结果是不同终态。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：DROP TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/drop-table.html"
+        },
+        {
+          "title": "MySQL 8.0：隐式提交",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.2",
+      "sourceNodeId": "mysql.source.5-2",
+      "number": "5.2",
+      "title": "数据类型",
+      "parent": "mysql.lesson.5",
+      "depth": 2,
+      "order": 96,
+      "group": 5,
+      "leaf": false,
+      "printedPage": 96,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "字段类型规定可接受的值和运算方式。整数、精确小数、浮点数、文本及日期时间各有语义，选择时应考虑业务单位、范围、比较和存储，而不只看样例能否写进去。",
+        "本节完整介绍原生MySQL类型类别，同时明确平台列只支持有符号INT和VARCHAR(1—256)。聚合结果的DECIMAL是结果协议类型，不等于平台支持创建DECIMAL字段。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：数据类型",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/data-types.html"
+        },
+        {
+          "title": "MySQL 8.0：数值类型",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/numeric-types.html"
+        },
+        {
+          "title": "MySQL 8.0：字符串类型",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/string-types.html"
+        },
+        {
+          "title": "MySQL 8.0：日期与时间类型",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/date-and-time-types.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.2.1",
+      "sourceNodeId": "mysql.source.5-2-1",
+      "number": "5.2.1",
+      "title": "数字类型",
+      "parent": "mysql.lesson.5.2",
+      "depth": 3,
+      "order": 97,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 96,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL原生数值类型包含整数、定点小数和浮点数。DECIMAL用于精确十进制值，FLOAT/DOUBLE用近似表示；INT的字节范围与显示样式不同，不能把显示宽度当作最大数值位数。",
+        "先为业务量确定单位与上下界。库存是整数，金额通常需要精确到分，科学测量常接受近似值；把这些都存为字符串会使比较与计算混乱。原生还需考虑有符号和无符号范围。",
+        "平台列仅为有符号32位INT，范围-2147483648至2147483647，不做文本到数值的隐式转换。SUM和AVG的精确DECIMAL输出另有约定；原生DECIMAL列和浮点列在这里作为阅读知识。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "原生设计：stock INT，unit_price DECIMAL(8,2)，sensor_value DOUBLE\n平台整数模型：unit_price_cents INT\n例：12.35元 ↔ 1235分（单位必须固定）",
+        "description": "MySQL原生数值类型包含整数、定点小数和浮点数。",
+        "result": "整数分可精确表达以分为最小单位的金额，但上限与运算溢出仍要检查；不能把1235分直接展示成1235元。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么DOUBLE不适合要求分位完全精确的账款字段？",
+        "answer": "二进制近似浮点不保证每个十进制金额都能精确表示；应优先用符合精度要求的DECIMAL或明确单位整数。",
+        "hints": [
+          "区分近似测量和精确金额。",
+          "思考十进制小数能否总用有限二进制表示。",
+          "数据类型要符合业务精度。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：数值类型",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/numeric-types.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.2.2",
+      "sourceNodeId": "mysql.source.5-2-2",
+      "number": "5.2.2",
+      "title": "字符串类型",
+      "parent": "mysql.lesson.5.2",
+      "depth": 3,
+      "order": 98,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 97,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "字符串类型既包括CHAR/VARCHAR等字符数据，也包括BINARY/VARBINARY和TEXT/BLOB等不同用途。字符长度、字节长度、字符集与排序规则相互相关，却不是同一个量。",
+        "VARCHAR(n)中的n表示声明的最大字符数，实际字节消耗还受字符集影响。比较是否区分大小写、尾空格如何处理由类型和排序规则等决定，不能从文本外观自行推断。",
+        "平台仅支持VARCHAR(1—256)，按Unicode标量计长度，使用utf8mb4_0900_bin且尾空格参与比较。LENGTH返回UTF-8字节数，CHAR_LENGTH返回字符数；原生CHAR和大文本等类型在这里阅读。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT CHAR_LENGTH('春A') AS chars, LENGTH('春A') AS bytes;",
+        "description": "字符串类型既包括CHAR/VARCHAR等字符数据，也包括BINARY/VARBINARY和TEXT/BLOB等不同用途。",
+        "result": "在utf8mb4连接语义下，“春A”为2个字符、4个UTF-8字节；该标量函数组合属于平台支持范围。",
+        "reason": "本节以阅读演算长度；所用字符串和LENGTH/CHAR_LENGTH在平台支持范围内。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "VARCHAR(2)的“2”是否意味着最多两个UTF-8字节？",
+        "answer": "不是。它是字符数上限；春A有2个字符但用4个UTF-8字节，字符集影响字节存储。",
+        "hints": [
+          "分别计算字与字节。",
+          "汉字“春”通常为3个UTF-8字节，A为1。",
+          "声明字符长度不是固定字节数。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：字符串类型",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/string-types.html"
+        },
+        {
+          "title": "MySQL 8.0：连接字符集",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/charset-connection.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.2.3",
+      "sourceNodeId": "mysql.source.5-2-3",
+      "number": "5.2.3",
+      "title": "日期和时间类型",
+      "parent": "mysql.lesson.5.2",
+      "depth": 3,
+      "order": 99,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 98,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DATE保存日期，TIME表达时间或时长语义，DATETIME与TIMESTAMP都含日期时间但范围、存储及会话时区转换规则不同。日期值不只是带横线的文本，原生合法性检查还受SQL模式影响。",
+        "记录事件时要说明时区和精度。例如跨地区系统显示同一瞬间，需要区分存储的时间语义与展示时区；生日等纯日期则不应凭显示习惯强行加入某个时间点。",
+        "平台不执行日期时间类型、日期函数或时区设置。下面为原生字段设计阅读，使用合法日期样本；原生实验应记录会话时区和SQL模式。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE visits (\n id INT PRIMARY KEY,\n visit_day DATE NOT NULL,\n arrived_at DATETIME NULL\n);\n-- 合法日期示意：2027-05-06；不是每个形似YYYY-MM-DD的串都有效。",
+        "description": "DATE保存日期，TIME表达时间或时长语义，DATETIME与TIMESTAMP都含日期时间但范围、存储及会话时区转换规则不同。",
+        "result": "原生可建立日期与日期时间列；此清单不在平台执行。具体非法日期处理需结合目标MySQL的SQL模式。",
+        "reason": "需要原生DATE/DATETIME类型与日期规则，平台不执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把生日放进VARCHAR(10)与DATE在约束语义上相同吗？",
+        "answer": "不相同。VARCHAR主要约束文本长度，DATE提供日期类型语义及相关检查，仍需确认原生SQL模式。",
+        "hints": [
+          "形状合法不等于日历合法。",
+          "2月31日能满足文本长度。",
+          "类型选择应保留业务语义。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：日期与时间类型",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/date-and-time-types.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.2.4",
+      "sourceNodeId": "mysql.source.5-2-4",
+      "number": "5.2.4",
+      "title": "如何选择数据类型",
+      "parent": "mysql.lesson.5.2",
+      "depth": 3,
+      "order": 100,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 98,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "类型选择从值域、运算、精度和缺失含义出发。电话号码和证件编号即便由数字组成，通常也不参与加减，可能含前导零或符号；把它们存为整数会丢失表达信息。",
+        "在满足业务范围前提下选合适容量，并把单位写清。不要为节省字节把未来增长的数量限制到无法使用，也不要把任意文本都设成无上限大字段而忽略索引与访问需求。",
+        "平台练习可在INT和VARCHAR之间做明确选择；需要金额小数、日期或二进制等原生能力时，应标记阅读环境与替代模型的局限，而不是偷偷把不同语义都当字符串处理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "字段判断：\nmember_code='00042' → VARCHAR，保留前导零\nbooks_borrowed=4 → INT，参与计数\nprice_cents=1299 → INT，明确单位分\nbirthday=2027-05-06 → 原生DATE",
+        "description": "类型选择从值域、运算、精度和缺失含义出发。",
+        "result": "类型建议来自业务语义；生日使用DATE是原生设计，在平台需作为阅读字段。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "现有会员编号只有数字，能否据此保证INT合适？",
+        "answer": "不能。还要问前导零、长度、未来字母扩展及是否参与算术；标识通常应保留原样。",
+        "hints": [
+          "查看业务含义而不只看样本。",
+          "00042和42可能是不同表示规则。",
+          "数据类型不能丢失所需信息。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：数据类型",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/data-types.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.3",
+      "sourceNodeId": "mysql.source.5-3",
+      "number": "5.3",
+      "title": "表约束操作",
+      "parent": "mysql.lesson.5",
+      "depth": 2,
+      "order": 101,
+      "group": 5,
+      "leaf": false,
+      "printedPage": 100,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "约束是服务器接纳每次写入前必须满足的规则。非空、默认值、唯一、主键、自增和外键分别解决不同问题；它们常组合出现，但不能互相替代。",
+        "本节用小清单推导合法与非法行，特别区分NULL、空串、零值及省略字段。平台支持标量默认值与单列非空/唯一/主键，自增和外键保留原生教学。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        },
+        {
+          "title": "MySQL 8.0：数据类型默认值",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/data-type-defaults.html"
+        },
+        {
+          "title": "MySQL 8.0：外键约束",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.3.1",
+      "sourceNodeId": "mysql.source.5-3-1",
+      "number": "5.3.1",
+      "title": "设置表字段的非空约束",
+      "parent": "mysql.lesson.5.3",
+      "depth": 3,
+      "order": 102,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 100,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "NOT NULL表示字段不能取NULL，但不会自动要求文本非空、数值为正或业务值有效。NULL是缺失标记，空字符串和数字0仍是具体值，应该分别定义其含义。",
+        "给已有字段增设NOT NULL前，需要处理旧数据中的NULL；只修改前端必填提示不足以约束其他写入入口。约束声明在表结构中，由数据库对每次相关写入执行检查。",
+        "平台支持NOT NULL并拒绝违规写入，单条语句失败不发布其部分表变化。下面用全新表推导：name为空串满足非空，但是否符合业务仍需额外规则。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE required_names (id INT PRIMARY KEY, name VARCHAR(20) NOT NULL);\nINSERT INTO required_names (id, name) VALUES (1, '');",
+        "description": "NOT NULL表示字段不能取NULL，但不会自动要求文本非空、数值为正或业务值有效。",
+        "result": "本清单可建立并插入一行空字符串name；若把值改为NULL，则违反NOT NULL。",
+        "reason": "非空约束与本清单类型受平台支持；本节点用阅读自检比较NULL与空文本。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "要禁止用户提交空白姓名，仅NOT NULL足够吗？",
+        "answer": "不够。空串或空格不是NULL；需要另外定义并校验非空白业务规则。",
+        "hints": [
+          "分别检查NULL和长度0。",
+          "一个空格也有字符长度。",
+          "约束名中的“空”专指NULL。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.3.2",
+      "sourceNodeId": "mysql.source.5-3-2",
+      "number": "5.3.2",
+      "title": "设置表字段的默认值",
+      "parent": "mysql.lesson.5.3",
+      "depth": 3,
+      "order": 103,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 101,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DEFAULT在插入时为省略的列等适用情况提供默认值，不能替代NOT NULL或其他有效性规则。默认值是生成候选值的规则，约束是判断候选值能否接纳的规则。",
+        "允许NULL的列若显式插入NULL，不会因为声明了DEFAULT 0就自动变成0。省略列时使用默认值，与写入一个缺失标记属于不同意图；原生MySQL还有表达式默认值等扩展。",
+        "平台支持与列类型一致的标量默认值，不执行所有原生表达式默认能力。下面按列清单比较省略与显式NULL；在本示例中，两个结果都合法但意义不同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE default_demo (id INT PRIMARY KEY, score INT DEFAULT 0);\nINSERT INTO default_demo (id) VALUES (1);\nINSERT INTO default_demo (id, score) VALUES (2, NULL);",
+        "description": "DEFAULT在插入时为省略的列等适用情况提供默认值，不能替代NOT NULL或其他有效性规则。",
+        "result": "新表中id1的score为0，id2的score为NULL；默认值不会覆盖显式NULL。",
+        "reason": "标量默认值和省略列插入在平台支持范围内；本节阅读两种输入的语义区别。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把score再声明NOT NULL后，id2那句会自动使用0吗？",
+        "answer": "不会。该句显式给NULL，应违反非空约束；要用默认值应按支持语法省略字段或明确给合法值。",
+        "hints": [
+          "先看INSERT有没有指定score。",
+          "默认值不负责修复非法显式值。",
+          "省略与NULL必须分别推导。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：数据类型默认值",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/data-type-defaults.html"
+        },
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.3.3",
+      "sourceNodeId": "mysql.source.5-3-3",
+      "number": "5.3.3",
+      "title": "设置表字段的唯一约束",
+      "parent": "mysql.lesson.5.3",
+      "depth": 3,
+      "order": 104,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 102,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "UNIQUE约束禁止重复键值，用于邮箱、外部编号等确实需要唯一的属性。它不同于主键：在MySQL中允许NULL的唯一列可以有多个NULL，而主键必须非空。",
+        "文本是否构成重复取决于排序规则等比较语义，不能简单按屏幕字形判断。原生常见不区分大小写排序规则可能把某些大小写形式视为相同；平台固定二进制比较语义并保留尾空格。",
+        "平台支持单列UNIQUE。它不支持复合唯一，不能把两个单列UNIQUE误写成“组合唯一”；后者只检查一对值，前者会分别禁止两列各自重复，约束更强。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE alias_demo (id INT PRIMARY KEY, alias VARCHAR(20) UNIQUE);\nINSERT INTO alias_demo (id, alias) VALUES (1, NULL), (2, NULL);",
+        "description": "UNIQUE约束禁止重复键值，用于邮箱、外部编号等确实需要唯一的属性。",
+        "result": "两条NULL别名可合法共存；若两条alias都为相同非NULL文本，则唯一约束拒绝该重复。",
+        "reason": "本节使用平台支持的单列唯一约束作阅读推导。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "UNIQUE允许多个NULL是否意味着也允许多个相同空串？",
+        "answer": "不是。空字符串是具体文本，两个相同空串会按该列比较规则构成重复；NULL有不同的唯一性处理。",
+        "hints": [
+          "空串属于非NULL值。",
+          "比较两个长度0的具体文本。",
+          "别把缺失标记规则套给空串。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.3.4",
+      "sourceNodeId": "mysql.source.5-3-4",
+      "number": "5.3.4",
+      "title": "设置表字段的主键约束",
+      "parent": "mysql.lesson.5.3",
+      "depth": 3,
+      "order": 105,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 103,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "主键在表内唯一且非空，用于稳定识别记录。主键可以是业务自然键或独立编号，选择时需评估是否会变化、是否足够简短，以及是否与真实行粒度一致。",
+        "每表只能有一个主键约束，但原生主键可由多个字段组成。所谓“多个主键字段”应理解为一个复合主键，不是给每个字段都独立声明PRIMARY KEY。",
+        "平台只支持单列主键，自动具有唯一与非空性质；表格中的隐藏逻辑行身份用于回放，不能冒充用户SQL字段或判分条件。下例把公开id和隐藏身份明确区分。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "CREATE TABLE tickets (id INT PRIMARY KEY, title VARCHAR(30));\n公开SQL字段：id，例如101。\n内部回放身份：由平台管理，不是额外可查询列。",
+        "description": "主键在表内唯一且非空，用于稳定识别记录。",
+        "result": "id重复或为NULL的插入被拒绝；隐藏身份不替代题目要求的主键字段。",
+        "reason": "主键定义属于平台支持范围；示意同时解释回放内部身份与SQL字段的区别。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "给name设主键能否适用于允许同名读者的表？",
+        "answer": "不能。主键要求唯一，同名读者合法时name不是合适唯一标识，应另选稳定编号。",
+        "hints": [
+          "考虑两个不同人恰好同名。",
+          "主键应区分实例。",
+          "业务合法状态不能被错误主键禁止。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.3.5",
+      "sourceNodeId": "mysql.source.5-3-5",
+      "number": "5.3.5",
+      "title": "设置表字段值自动增加",
+      "parent": "mysql.lesson.5.3",
+      "depth": 3,
+      "order": 106,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 105,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "AUTO_INCREMENT让原生MySQL为适用的整数键生成序列值，减少客户端竞争分配编号的工作。它解决生成候选身份的问题，并不承诺编号连续无缺口，也不代表按业务时间严格排序。",
+        "插入失败、回滚和并发等情况可能造成序列空缺，具体行为依引擎与配置。把“最大编号”等同于“总记录数”会在删除或空缺后出错，统计行数应使用查询聚合。",
+        "平台不执行自增，本课程练习显式提供id。原生阅读例省略id后由服务器生成，不能据此要求平台自动补号；实际生成值应从原生返回或查询确认。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE serial_demo (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(30));\nINSERT INTO serial_demo (title) VALUES ('第一项');",
+        "description": "AUTO_INCREMENT让原生MySQL为适用的整数键生成序列值，减少客户端竞争分配编号的工作。",
+        "result": "原生服务器可为id生成值；本例不承诺固定编号，也不以连续性作为正确标准。",
+        "reason": "AUTO_INCREMENT需要原生实现；平台要求显式id，不执行自增。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "发现id从8跳到10，能否断言丢失了一条业务记录？",
+        "answer": "不能。自增可能因失败或回滚等产生空缺，编号不是记录总数；应依据真实行与业务日志核查。",
+        "hints": [
+          "生成号码与成功保存不是完全同一事件。",
+          "回滚未必把号码重新交回。",
+          "用实际记录和事务证据判断。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：AUTO_INCREMENT",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/example-auto-increment.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.3.6",
+      "sourceNodeId": "mysql.source.5-3-6",
+      "number": "5.3.6",
+      "title": "设置表字段的外键约束",
+      "parent": "mysql.lesson.5.3",
+      "depth": 3,
+      "order": 107,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 106,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "外键把子表字段与父表有效键关联，由原生引擎检查引用完整性。它可阻止写入不存在的父对象，并按声明规则处理父对象的更新或删除；仅名称相似不会自动产生约束。",
+        "一对多关系中子表外键通常允许多次引用同一父键。外键列是否允许NULL、删除时RESTRICT还是CASCADE等，都属于业务政策，应结合可选性与数据生命周期决定。",
+        "MySQL原生InnoDB支持外键，字段类型、索引及引用要求需满足官方条件。平台不执行FOREIGN KEY，也不会因为students.dept_id可连接departments.id就自动阻止无匹配编号。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE teams (id INT PRIMARY KEY);\nCREATE TABLE members (\n id INT PRIMARY KEY, team_id INT,\n FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE RESTRICT\n);",
+        "description": "外键把子表字段与父表有效键关联，由原生引擎检查引用完整性。",
+        "result": "原生InnoDB下，非NULL team_id需有对应teams.id；有引用成员时删除该团队会受RESTRICT限制。",
+        "reason": "外键与引用动作需要原生InnoDB；平台不执行FOREIGN KEY。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "JOIN条件写对了，是否等于表已经有外键约束？",
+        "answer": "不等于。JOIN描述本次查询如何匹配，外键是写入与删除时执行的结构规则，需要显式定义和受支持引擎。",
+        "hints": [
+          "查询规则与数据完整性规则分开。",
+          "没有外键也可以连接字段。",
+          "查看真实表定义确认约束。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：外键约束",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.4",
+      "sourceNodeId": "mysql.source.5-4",
+      "number": "5.4",
+      "title": "索引操作",
+      "parent": "mysql.lesson.5",
+      "depth": 2,
+      "order": 108,
+      "group": 5,
+      "leaf": false,
+      "printedPage": 108,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "索引维护有序或其他专门组织，帮助服务器定位数据，也常为键约束提供支撑。它不是结果顺序的承诺，更不是任何查询都必须使用的通道。",
+        "本节从访问代价理解创建与删除索引：读可能获益，写和空间也会增加成本。平台不实现物理索引或执行计划，课程回放的扫描步骤不能当作原生优化器的实测计划。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：索引使用",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/mysql-indexes.html"
+        },
+        {
+          "title": "MySQL 8.0：CREATE INDEX",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-index.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.4.1",
+      "sourceNodeId": "mysql.source.5-4-1",
+      "number": "5.4.1",
+      "title": "索引概述",
+      "parent": "mysql.lesson.5.4",
+      "depth": 3,
+      "order": 109,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 108,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "索引帮助数据库用更小范围找到候选记录，例如按订单编号查一条而不检查全部行。常见B树结构支持相应范围和顺序访问，实际选择由优化器、统计和查询条件共同影响。",
+        "索引需要存储空间，每次相关写入也要维护。给每列都建索引会增加成本；多列索引的列顺序影响可利用条件，不能只数索引数量评价设计。",
+        "平台按支持语义计算真实结果，不模拟原生索引代价。阅读本例时只比较候选访问思路，不声称某个固定倍数的提速；真实优化需要执行计划与负载测量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "查询目标：orders中id=205的一行。\n无合适访问路径：可能扫描大量候选行。\n有合适索引：可沿索引定位候选，再取所需列。\n代价：索引空间 + 插入/更新/删除维护。",
+        "description": "索引帮助数据库用更小范围找到候选记录，例如按订单编号查一条而不检查全部行。",
+        "result": "这说明为何索引可能有用，而不证明优化器一定选择它或所有数据规模都更快。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "建索引后SELECT不写ORDER BY能保证输出按索引顺序吗？",
+        "answer": "不能。结果顺序必须由ORDER BY明确要求，访问路径可能变化。",
+        "hints": [
+          "索引解决访问，ORDER BY定义结果顺序。",
+          "优化器可以选择其他计划。",
+          "别把一次观察当输出契约。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：索引使用",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/mysql-indexes.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.4.2",
+      "sourceNodeId": "mysql.source.5-4-2",
+      "number": "5.4.2",
+      "title": "创建索引",
+      "parent": "mysql.lesson.5.4",
+      "depth": 3,
+      "order": 110,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 109,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "CREATE INDEX在已有表上建立索引，可为经常使用的筛选或连接字段提供访问路径。普通索引和唯一索引语义不同，UNIQUE会对现有及未来数据增加唯一性要求。",
+        "建立前要检查查询模式、列类型、已有索引和候选数据。若已有重复值，新增唯一索引会失败；若索引与已有前导列重复，也可能付出成本却没有预期收益。",
+        "原生建索引可能占用时间、空间和锁资源，应根据目标环境选择实施方式。平台不执行CREATE INDEX，下例仅表达为owner_id查询准备普通索引，不包含唯一性要求。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 前提：原生tasks表已有owner_id列\nCREATE INDEX idx_tasks_owner ON tasks (owner_id);",
+        "description": "CREATE INDEX在已有表上建立索引，可为经常使用的筛选或连接字段提供访问路径。",
+        "result": "成功后增加普通索引，仍允许多条任务有同一owner_id；是否用于特定查询需查看原生执行计划。",
+        "reason": "物理索引创建属于原生服务器能力，平台不执行CREATE INDEX。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把普通索引改成UNIQUE会改变哪些合法数据？",
+        "answer": "会禁止相同非NULL键值重复，可能不允许同一owner拥有多条任务；这不只是性能变化。",
+        "hints": [
+          "比较访问路径与完整性规则。",
+          "owner_id合法重复时不能任意唯一。",
+          "创建索引前先明确业务语义。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE INDEX",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-index.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.4.3",
+      "sourceNodeId": "mysql.source.5-4-3",
+      "number": "5.4.3",
+      "title": "删除索引",
+      "parent": "mysql.lesson.5.4",
+      "depth": 3,
+      "order": 111,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 111,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DROP INDEX删除指定表上的一个索引，通常不删除该表记录，但可能影响查询速度或解除相应唯一性约束。若索引承担外键等依赖，原生服务器可能要求保留必要访问路径或拒绝删除。",
+        "删除前区分普通索引、唯一索引和主键，并核对实际名称。主键有专门的ALTER TABLE语法，不应把任意索引名都当普通索引清理；“未观察到使用”也不等于永远无用。",
+        "平台不执行DROP INDEX，不能通过回放步数判断原生索引是否应删。本例假设目标为无依赖普通索引，阅读其对象范围，再计划真实环境中的性能回归。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DROP INDEX idx_tasks_owner ON tasks;",
+        "description": "DROP INDEX删除指定表上的一个索引，通常不删除该表记录，但可能影响查询速度或解除相应唯一性约束。",
+        "result": "在所述原生前提下只删除该索引，tasks表与行保留；相关查询可能改走其他计划。",
+        "reason": "DROP INDEX需要原生索引实现；平台不执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删掉普通索引后tasks变成空表吗？",
+        "answer": "不会。删除的是访问结构，记录仍在；应检查查询性能与依赖，而不是重插原数据。",
+        "hints": [
+          "先识别DROP的对象类型。",
+          "INDEX与TABLE是不同目标。",
+          "删除范围由语句对象决定。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：DROP INDEX",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/drop-index.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.5",
+      "sourceNodeId": "mysql.source.5-5",
+      "number": "5.5",
+      "title": "本章实战",
+      "parent": "mysql.lesson.5",
+      "depth": 2,
+      "order": 112,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 112,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章实战为小型借物站设计标签与物品表。要求物品有独立编号、名称必须填写、状态有默认值，并由标签表集中维护类别名称；先把规则写清，再决定哪些可由约束落实。",
+        "下面原生清单用InnoDB外键表达引用。执行前需空白命名空间、相应权限且无同名表；建完后要查看真实定义，分别测试重复主键、NULL名称和不存在类别等失败条件。",
+        "平台只支持本例中的INT/VARCHAR与单列约束，不执行ENGINE或FOREIGN KEY。本节以阅读设计与自检理解完整清单；平台建表练习使用notes表。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE categories (id INT PRIMARY KEY, title VARCHAR(30) NOT NULL) ENGINE=InnoDB;\nCREATE TABLE items (\n id INT PRIMARY KEY, name VARCHAR(60) NOT NULL,\n category_id INT, status INT DEFAULT 0,\n FOREIGN KEY (category_id) REFERENCES categories(id)\n) ENGINE=InnoDB;",
+        "description": "本章实战为小型借物站设计标签与物品表。",
+        "result": "原生定义完成后，items的非NULL类别必须有效；省略status时为0；category_id允许NULL表示暂未分类。",
+        "reason": "综合设计含原生ENGINE和外键，平台不执行整份清单；其中基本类型和单列约束受支持。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何category_id允许NULL不等于可以随意填999？",
+        "answer": "NULL表达没有类别，999是具体引用值，必须对应categories中的有效键。两种输入受不同规则判断。",
+        "hints": [
+          "分开缺失标记与实际编号。",
+          "外键检查非NULL引用。",
+          "先插入类别999才可能合法引用它。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        },
+        {
+          "title": "MySQL 8.0：外键约束",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.6",
+      "sourceNodeId": "mysql.source.5-6",
+      "number": "5.6",
+      "title": "本章小结",
+      "parent": "mysql.lesson.5",
+      "depth": 2,
+      "order": 113,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 116,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章从表对象生命周期走到类型、约束与索引。类型控制值的表示，约束控制合法状态，索引影响访问与维护成本；三者有关联但不可替代。",
+        "检查表设计时，不仅问“能否插入这条样本”，还要问哪些输入应失败、删除父对象如何处理、复制后规则是否仍在，以及改结构对旧数据有何影响。用反例能更清楚地验证规则。",
+        "平台运行的建表题要求保留既有数据库并新增严格结构，其他阅读清单覆盖原生能力。记住平台边界能准确解释不支持诊断，同时不缩减对MySQL完整概念的学习。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "复核清单：\n列：业务含义、类型、范围、单位\n规则：NULL、默认、主键、唯一、外键\n访问：常用条件、已有索引、维护成本\n变更：旧数据、依赖、实际定义、验证",
+        "description": "本章从表对象生命周期走到类型、约束与索引。",
+        "result": "每一项都对应可读定义或可验证行为，而不是仅靠一张网格截图。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "一列既有DEFAULT 0又有UNIQUE，能放心省略它给所有新行吗？",
+        "answer": "不能。省略会反复生成0，第二次相同非NULL值会触发唯一冲突；默认值也必须通过约束。",
+        "hints": [
+          "先求省略后的候选值。",
+          "再按唯一规则验证。",
+          "生成默认值与接纳合法行是两个阶段。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：数据类型默认值",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/data-type-defaults.html"
+        },
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.5.7",
+      "sourceNodeId": "mysql.source.5-7",
+      "number": "5.7",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.5",
+      "depth": 2,
+      "order": 114,
+      "group": 5,
+      "leaf": true,
+      "printedPage": 116,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章练习给出一张活动报名表，让学习者找出把单列唯一与组合唯一混淆造成的限制。不要只修改SQL到能运行，应先写出希望允许和禁止的具体记录组合。",
+        "若一人可报多项活动，一项活动也有多人参加，应允许participant_id和event_id分别重复，只禁止同一对重复。原生可用组合唯一或复合键；平台首版不支持这类组合声明，应在阅读方案中明确。",
+        "另外，名字不能随意充当主键，默认状态不保证状态值一定在业务枚举内。设计检查要覆盖身份、粒度和范围，而不只看是否写了PRIMARY KEY这几个词。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "错误方案：Signup(id PK, participant_id UNIQUE, event_id UNIQUE)\n希望允许：(id=1,p=8,e=20)、(id=2,p=8,e=21)、(id=3,p=9,e=20)\n希望拒绝：再次出现同一对(p=8,e=20)。",
+        "description": "本章练习给出一张活动报名表，让学习者找出把单列唯一与组合唯一混淆造成的限制。",
+        "result": "错误方案会分别禁止p8和e20再次出现；原生应使用组合唯一规则而非两个独立唯一。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "增加独立id主键就能自动防止同一人重复报同一活动吗？",
+        "answer": "不能。不同id仍可携带相同(participant_id,event_id)，需要额外组合唯一规则；平台对此只作阅读设计。",
+        "hints": [
+          "主键只检查id重复。",
+          "给重复报名换一个新id观察。",
+          "为业务唯一性单独声明正确的组合。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        },
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        }
+      ]
+    }
+  ]
+}

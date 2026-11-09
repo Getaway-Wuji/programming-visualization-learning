@@ -320,10 +320,15 @@ try {
             'javaDrafts',
             'cppActivities',
             'cppDrafts',
+            'rustActivities',
+            'rustDrafts',
+            'mysqlActivities',
+            'mysqlDrafts',
           ];
           const tx = db.transaction(names, 'readonly');
           return {
             version: db.version,
+            stores: [...db.objectStoreNames],
             counts: await Promise.all(
               names.map(
                 (name) =>
@@ -339,8 +344,9 @@ try {
           db.close();
         }
       });
-      assert.equal(learningRows.version, 13);
-      assert.deepEqual(learningRows.counts, Array(20).fill(0));
+      assert.equal(learningRows.version, 15);
+      assert.equal(learningRows.stores.length, 29);
+      assert.deepEqual(learningRows.counts, Array(24).fill(0));
       assert.deepEqual(pageErrors, []);
       assert.ok(requests.every((request) => request.origin === origin && request.method === 'GET'));
       await page.screenshot({

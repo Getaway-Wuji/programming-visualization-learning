@@ -78,8 +78,8 @@ test('published Python course loads one article, saves reading independently and
   await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read-today', 'true');
   await page.keyboard.press('End');
   const read = await archive(page);
-  expect(read.version).toBe(14);
-  expect(Object.keys(read.rows)).toHaveLength(27);
+  expect(read.version).toBe(15);
+  expect(Object.keys(read.rows)).toHaveLength(29);
   expect(read.rows.pythonActivities.values).toHaveLength(1);
   expect(
     read.rows.ledger.values.filter((row) => row.subjectId === greeting.platformRef.id),
@@ -236,7 +236,8 @@ test('native DB10 upgrade preserves real C exercise and C++ algorithm observatio
         !name.startsWith('python') &&
         !name.startsWith('java') &&
         !name.startsWith('cpp') &&
-        !name.startsWith('rust'),
+        !name.startsWith('rust') &&
+        !name.startsWith('mysql'),
     ),
   );
   prior.meta.values[0] = {
@@ -276,7 +277,7 @@ test('native DB10 upgrade preserves real C exercise and C++ algorithm observatio
       'ready',
     );
     const upgraded = await archive(migrated);
-    expect(upgraded.version).toBe(14);
+    expect(upgraded.version).toBe(15);
     expect(upgraded.rows.pythonActivities.values).toEqual([]);
     expect(upgraded.rows.pythonDrafts.values).toEqual([]);
     for (const [name, rows] of Object.entries(prior)) {
@@ -285,9 +286,9 @@ test('native DB10 upgrade preserves real C exercise and C++ algorithm observatio
     }
     expect(upgraded.rows.meta.values[0]).toMatchObject({
       ...prior.meta.values[0],
-      dbVersion: 14,
-      schemaVersion: '14.0.0',
-      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp-rust', version: '1.0.0' },
+      dbVersion: 15,
+      schemaVersion: '15.0.0',
+      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp-rust-mysql', version: '1.0.0' },
     });
     const readingEnd = migrated.getByTestId('reading-end');
     await expect(readingEnd).toBeAttached();

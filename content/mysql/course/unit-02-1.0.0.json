@@ -1,0 +1,827 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 2,
+  "nodes": [
+    {
+      "id": "mysql.lesson.2",
+      "sourceNodeId": "mysql.source.chapter-2",
+      "number": "2",
+      "title": "初识MySQL",
+      "parent": null,
+      "depth": 1,
+      "order": 22,
+      "group": 2,
+      "leaf": false,
+      "printedPage": 15,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章区分MySQL软件、服务器服务、客户端和连接配置，再阅读Windows与Linux的安装路径。安装是部署一套原生数据库环境；平台内的SQL学习不要求在本机完成这些管理操作。",
+        "安装界面、支持系统和下载页可能随维护版本变化，阅读时重点核对版本、软件包来源、服务名和连接参数，而不机械寻找某个按钮坐标。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：Windows安装",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/windows-installation.html"
+        },
+        {
+          "title": "MySQL 8.0：Linux安装",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/linux-installation.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.1",
+      "sourceNodeId": "mysql.source.2-1",
+      "number": "2.1",
+      "title": "MySQL概述",
+      "parent": "mysql.lesson.2",
+      "depth": 2,
+      "order": 23,
+      "group": 2,
+      "leaf": false,
+      "printedPage": 15,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "理解MySQL要同时看关系模型与工程环境。它提供SQL接口，并把查询处理、事务和存储等能力组合成客户端与服务器系统；不同版本、产品版和存储引擎的能力不应混为一谈。",
+        "本节从发展、优势、部署环境和8.0变化建立版本意识。选用工具时先写明“服务器是什么版本、客户端是什么工具”，再讨论兼容性；客户端界面新不表示服务器语法也自动升级。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：What is MySQL?",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/what-is-mysql.html"
+        },
+        {
+          "title": "MySQL 8.0：MySQL 8.0新增特性",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/mysql-nutshell.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.1.1",
+      "sourceNodeId": "mysql.source.2-1-1",
+      "number": "2.1.1",
+      "title": "MySQL的发展史",
+      "parent": "mysql.lesson.2.1",
+      "depth": 3,
+      "order": 24,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 15,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL的发展从早期公开发布、社区与商业使用，走到Oracle维护下的持续演进。对学习者更重要的是版本会改变默认值、可用语法和兼容行为，而不是只背公司更替的年份。",
+        "同一套应用升级服务器前，需要查看目标版本的新增、移除和行为变化。例如8.0的数据字典与旧版本不同，不能直接照搬旧版本复制系统文件的做法；升级应沿官方支持路径验证。",
+        "本课程参考8.0语义并执行明确子集。线上下载页可能优先提供其他系列，安装时必须核对版本；“最新”不是重现教材实验的充分条件，历史教程的默认密码和目录也不应当作当前事实。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "版本记录示例：\n课程参考：MySQL 8.0\n原生实验记录：服务器完整版本 + 客户端版本 + 操作系统\n升级检查：已弃用功能 → 行为差异 → 备份恢复演练 → 应用验证",
+        "description": "MySQL的发展从早期公开发布、社区与商业使用，走到Oracle维护下的持续演进。",
+        "result": "清楚记录版本后才能解释同一SQL为何在另一套环境中表现不同；本例为学习记录格式。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只记录“用的是MySQL”能否复现实验？",
+        "answer": "不能。还需具体服务器版本、关键配置和数据。客户端版本也应记录，避免把连接工具差异误判成SQL差异。",
+        "hints": [
+          "版本属于实验输入的一部分。",
+          "想想8.0与旧系列的系统表差别。",
+          "先记录完整版本，再讨论迁移与兼容。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：MySQL历史",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/history.html"
+        },
+        {
+          "title": "MySQL 8.0：MySQL 8.0新增特性",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/mysql-nutshell.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.1.2",
+      "sourceNodeId": "mysql.source.2-1-2",
+      "number": "2.1.2",
+      "title": "MySQL的优势",
+      "parent": "mysql.lesson.2.1",
+      "depth": 3,
+      "order": 25,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 16,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL提供关系查询、事务、索引和多种连接接口，可服务于从单机应用到网络服务的不同需求。开源社区版便于学习与检查实现，商业产品另有许可和功能范围，不能将两者笼统等同。",
+        "评估优势应转成可以测量的问题：写入是否需要事务、查询能否利用合适索引、备份是否能按目标恢复。性能取决于数据模型、负载与配置，“速度快”本身不是可以验收的需求。",
+        "对小规模课程练习，关系约束和可读SQL尤其有用；生产选型还要考虑运维与许可。平台的教学执行器不提供MySQL服务器的网络、复制和物理存储性能，不能用课程回放速度推断原生服务吞吐量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "需求：报名记录与剩余名额必须同时更新。\n评估点：事务原子性、并发冲突处理、约束与恢复。\n需求：按日期和状态搜索订单。\n评估点：查询条件、索引、执行计划与真实数据量。",
+        "description": "MySQL提供关系查询、事务、索引和多种连接接口，可服务于从单机应用到网络服务的不同需求。",
+        "result": "优势需对应需求和验证指标，不能只比较软件名称或一次小样本用时。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "“有索引就一定更快”为什么不成立？",
+        "answer": "索引也占空间并增加写入维护成本；查询条件、选择性和数据规模影响是否获益，需要查看执行计划与测量。",
+        "hints": [
+          "读和写对索引的成本不同。",
+          "全表大比例读取不一定适合索引查找。",
+          "把结论落实到具体查询和负载。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：主要特性",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/features.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.1.3",
+      "sourceNodeId": "mysql.source.2-1-3",
+      "number": "2.1.3",
+      "title": "MySQL的应用环境",
+      "parent": "mysql.lesson.2.1",
+      "depth": 3,
+      "order": 26,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 16,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "典型应用通过驱动或客户端连接MySQL Server，服务器处理SQL并返回结果。Web系统中，浏览器通常访问业务服务，业务服务再通过受控数据库账号连接；浏览器不应直接拿到数据库管理凭据。",
+        "部署参数包括主机、端口、账号、认证与加密方式。127.0.0.1表示发起连接那台机器本身；应用放入另一台服务器或容器后，它未必仍指向原数据库，这是常见连接定位错误。",
+        "平台的SQL输入是在浏览器内隔离教学状态上执行，不访问任何原生地址。下面的原生架构示意用于认识组件；安装和联网实验应另有环境，不能把平台本地学习存档当作服务器数据文件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "浏览器 → HTTPS应用服务 → MySQL驱动 → MySQL Server\n管理终端 → 管理客户端 ──────────────┘\n连接示意：host=db.internal，port=3306，database=club",
+        "description": "典型应用通过驱动或客户端连接MySQL Server，服务器处理SQL并返回结果。",
+        "result": "应用服务与管理客户端可使用不同账号；服务器决定各自能访问哪些对象。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "应用搬到另一台主机后，host=127.0.0.1为何可能失效？",
+        "answer": "回环地址始终指向连接发起主机，新主机上若没有数据库服务就无法到达原服务器，需要配置正确可达地址。",
+        "hints": [
+          "先确定“谁”发起数据库连接。",
+          "回环地址不固定指向某台远程电脑。",
+          "网络地址与数据库名称是不同参数。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：连接和断开",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/connecting-disconnecting.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.1.4",
+      "sourceNodeId": "mysql.source.2-1-4",
+      "number": "2.1.4",
+      "title": "MySQL 8.0的新特性",
+      "parent": "mysql.lesson.2.1",
+      "depth": 3,
+      "order": 27,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 17,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL 8.0引入事务型数据字典、通用表表达式和窗口函数等能力，并改进字符集、JSON及安全相关行为。新增功能横跨SQL、元数据与管理，必须分别查看适用小版本和配置条件。",
+        "窗口函数可在不折叠每条明细的情况下计算分组名次，这与GROUP BY把多行归并成分组结果不同。看到8.0支持某功能，并不能推断任何基于8.0讲解的教学执行器都实现了它。",
+        "平台支持的连接、分组和聚合另有明确范围；窗口、CTE、JSON和服务器管理在这里作为阅读。下面根据给定数据推导名次，可在原生环境复现。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 原生MySQL 8.0阅读例：假设rank_demo为(1,'A',90),(2,'A',75)\nSELECT id, score,\n ROW_NUMBER() OVER (PARTITION BY team ORDER BY score DESC, id) AS rn\nFROM rank_demo;",
+        "description": "MySQL 8.0引入事务型数据字典、通用表表达式和窗口函数等能力，并改进字符集、JSON及安全相关行为。",
+        "result": "对给定A组两行，id1的rn为1、id2为2；若最终输出需要稳定行序，外层还应ORDER BY。",
+        "reason": "窗口函数需要原生MySQL 8.0；当前平台不执行OVER。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "ROW_NUMBER会像GROUP BY一样只保留每组一行吗？",
+        "answer": "不会。它为窗口中的每条输入行生成编号，仍保留明细；GROUP BY通常把组折叠成一条聚合结果。",
+        "hints": [
+          "数一数输入有几行。",
+          "窗口分组与聚合分组的输出粒度不同。",
+          "本例两条明细仍产生两条结果。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：MySQL 8.0新增特性",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/mysql-nutshell.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.2",
+      "sourceNodeId": "mysql.source.2-2",
+      "number": "2.2",
+      "title": "Windows平台下安装与配置MySQL",
+      "parent": "mysql.lesson.2",
+      "depth": 2,
+      "order": 28,
+      "group": 2,
+      "leaf": false,
+      "printedPage": 18,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "Windows部署先选择正确的服务器安装包，再通过安装与配置使服务器能够以服务方式运行。下载完成、程序文件存在、服务已启动和客户端能登录是四个需要分别验证的状态。",
+        "阅读安装流程时应记录软件包版本、安装目录、数据目录、服务名和监听端口。已有其他数据库实例的机器尤其要避免混淆实例；本课程只解释步骤，不在宿主上下载安装或改服务。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：Windows安装",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/windows-installation.html"
+        },
+        {
+          "title": "MySQL 8.0：MySQL Installer",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/mysql-installer.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.2.1",
+      "sourceNodeId": "mysql.source.2-2-1",
+      "number": "2.2.1",
+      "title": "MySQL服务器安装包的下载",
+      "parent": "mysql.lesson.2.2",
+      "depth": 3,
+      "order": 29,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 18,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "下载时首先区分MySQL Server、MySQL Installer及只包含客户端的工具。Installer负责组织安装与配置，服务器组件才是接收SQL请求的进程；安装一个图形客户端不会自动产生服务器。",
+        "从官方入口选择Windows、目标版本和匹配架构，再核对文件名、签名或官方校验信息。网络安装包与完整离线包的差别主要在组件何时下载，不应把包体积直接当作功能多少。",
+        "若课程需要8.0，应核对官方存档与目标小版本，而不是接受下载页默认系列。安装前也需检查官方列出的系统和运行库要求；本节不会把某个当前下载文件名写成永久固定步骤。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "下载清单：\n[ ] 产品为MySQL Server或可安装Server的Installer\n[ ] 系列与实验约定一致\n[ ] 操作系统/架构匹配\n[ ] 文件来源与校验可信\n[ ] 已明确在线包还是离线包",
+        "description": "下载时首先区分MySQL Server、MySQL Installer及只包含客户端的工具。",
+        "result": "清单齐备说明选择过程可复核，不表示已经安装或成功启动服务。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只下载MySQL Workbench是否能接受来自应用的数据库连接？",
+        "answer": "不能据此认定有服务器。Workbench是客户端工具，必须另有可连接的MySQL Server实例。",
+        "hints": [
+          "分清管理界面与服务器组件。",
+          "下载包的产品名是关键线索。",
+          "服务器进程负责监听连接请求。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：Windows安装",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/windows-installation.html"
+        },
+        {
+          "title": "MySQL 8.0：MySQL Installer",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/mysql-installer.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.2.2",
+      "sourceNodeId": "mysql.source.2-2-2",
+      "number": "2.2.2",
+      "title": "MySQL服务器的安装",
+      "parent": "mysql.lesson.2.2",
+      "depth": 3,
+      "order": 30,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 20,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "安装服务器通常包括写入程序文件和初始化/配置实例两部分。配置会决定数据目录、端口、服务名、认证账号等；程序安装成功而配置失败时，服务器可能仍不能启动。",
+        "选择服务名时需要与其他实例区分，选择端口时确认无冲突。数据目录保存实际数据库状态，卸载程序与处理数据目录不是同一个动作；对已有数据的环境应遵循专门迁移流程。",
+        "管理账号在初始配置阶段设定，不能把教程截图中的密码当作通用密码。完成后先检查服务状态，再用客户端验证；只看到“安装完成”窗口不足以证明整个连接链路正常。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "配置记录示例（非真实凭据）：\n实例：本机教学实例\n服务名：MySQL80（以实际配置为准）\n端口：3306（以实际配置为准）\n数据目录：记录实际位置\n验证顺序：服务状态 → 客户端连接 → 简单查询",
+        "description": "安装服务器通常包括写入程序文件和初始化/配置实例两部分。",
+        "result": "记录的是核对项目，未对本机做安装；不同安装方式的界面和路径可能不同。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "安装后连接提示拒绝连接，应该先怀疑SQL语句吗？",
+        "answer": "应先检查服务是否运行、地址端口是否正确和网络是否可达；尚未建立连接时SQL还没有送到服务器。",
+        "hints": [
+          "拒绝连接发生在发送业务查询之前。",
+          "从服务状态向客户端逐段检查。",
+          "认证错误和连接拒绝属于不同阶段。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：MySQL Installer",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/mysql-installer.html"
+        },
+        {
+          "title": "MySQL 8.0：Windows服务",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/windows-start-service.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.3",
+      "sourceNodeId": "mysql.source.2-3",
+      "number": "2.3",
+      "title": "启动服务器并登录MySQL服务器",
+      "parent": "mysql.lesson.2",
+      "depth": 2,
+      "order": 31,
+      "group": 2,
+      "leaf": false,
+      "printedPage": 28,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "服务器启动后，客户端还需要能找到可执行文件并用正确参数建立会话。Path解决的是命令定位，服务状态解决的是服务器是否运行，账号和认证解决的是能否登录，三者相互独立。",
+        "本节按路径、服务、连接和命令行入口阅读整个过程。示例命令只是原生环境操作说明，不会在平台执行；遇到错误应先判断错误发生在哪一层，再修改对应设置。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：Windows服务",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/windows-start-service.html"
+        },
+        {
+          "title": "MySQL 8.0：连接和断开",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/connecting-disconnecting.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.3.1",
+      "sourceNodeId": "mysql.source.2-3-1",
+      "number": "2.3.1",
+      "title": "配置Path变量",
+      "parent": "mysql.lesson.2.3",
+      "depth": 3,
+      "order": 32,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 28,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "Path是操作系统查找可执行程序的路径列表。把MySQL的bin目录加入后，终端可直接找到mysql客户端；这不会改变服务器的数据目录，也不会自动启动任何服务。",
+        "应加入包含mysql.exe的目录，而不是把可执行文件本身当作目录。已有多个版本时，Path先后顺序影响实际命中的程序，新打开的终端才通常读取更新后的环境。下面的带引号路径调用使用Windows命令提示符cmd.exe语法。",
+        "可以用完整路径调用客户端来排除Path问题，再检查版本与连接。密码不应写在命令参数里；本阅读例保留-p让客户端交互询问，避免凭据进入命令历史。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "\"C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysql.exe\" --version\nmysql --version",
+        "description": "Path是操作系统查找可执行程序的路径列表。",
+        "result": "在确实存在所示路径的Windows环境，前者指定程序，后者依赖Path；版本输出反映客户端版本，不等于已登录服务器。",
+        "reason": "Windows路径和环境变量属于原生操作系统知识；平台SQL区不执行这些命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "mysql --version成功能否证明服务器服务正在运行？",
+        "answer": "不能。它只调用本地客户端读取版本，不需要连接服务器。",
+        "hints": [
+          "命令没有主机、账号或查询。",
+          "程序存在与服务运行是两个条件。",
+          "验证服务器需要另行建立连接。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：mysql客户端",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/mysql.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.3.2",
+      "sourceNodeId": "mysql.source.2-3-2",
+      "number": "2.3.2",
+      "title": "启动和停止MySQL",
+      "parent": "mysql.lesson.2.3",
+      "depth": 3,
+      "order": 33,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 30,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "Windows服务管理器可以启动或停止作为服务注册的MySQL实例。服务名由安装配置决定，MySQL80只是常见示例；命令必须指向实际实例，不能因命令成功就认定操作的是目标数据库。",
+        "启动失败时应查看实例错误日志及配置，典型原因有端口占用、目录权限或配置错误。停止服务会结束其连接能力，和在客户端执行退出命令有完全不同的影响。",
+        "管理服务通常需要相应权限。本节仅阅读命令含义，不替学习者改变本机服务；实际实验前应确认该实例是否供其他应用使用，避免把共享服务当练习开关。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "net start MySQL80\nnet stop MySQL80",
+        "description": "Windows服务管理器可以启动或停止作为服务注册的MySQL实例。",
+        "result": "在Windows且确有该服务与足够权限时，分别请求启动和停止；具体输出依赖服务真实状态。",
+        "reason": "服务控制需要真实Windows服务和管理权限；命令仅供阅读，不在宿主执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "退出mysql客户端为何不等于net stop？",
+        "answer": "退出只结束该客户端会话，服务器仍可处理其他连接；net stop针对整个服务实例。",
+        "hints": [
+          "关注命令的操作对象。",
+          "同一服务器可以同时有多个客户端。",
+          "会话生命周期短于或独立于服务生命周期。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：Windows服务",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/windows-start-service.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.3.3",
+      "sourceNodeId": "mysql.source.2-3-3",
+      "number": "2.3.3",
+      "title": "连接和断开MySQL",
+      "parent": "mysql.lesson.2.3",
+      "depth": 3,
+      "order": 34,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 31,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "连接需要确定服务器地址、端口、账号以及认证方式。mysql客户端的-h选择主机，-P选择TCP端口，-u选择用户名，-p单独使用时提示输入密码；大小写不同的选项不能随意替换。",
+        "连接成功后形成一个会话，当前默认数据库、事务等会话状态并不自动共享给另一个客户端。正常断开可输入QUIT；网络断开与服务器重启同样会结束会话，但原因不同。",
+        "访问被拒绝应检查账号与授权主机等认证信息；无法连接应检查地址、端口和服务。平台不接收原生账号密码，下例也不使用任何真实凭据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "mysql -h 127.0.0.1 -P 3306 -u learner -p\n-- 登录后的mysql提示符中：\nQUIT;",
+        "description": "连接需要确定服务器地址、端口、账号以及认证方式。",
+        "result": "原生环境中连接成功会出现客户端提示符；只有服务器存在且账号获准时才会成功。",
+        "reason": "此连接命令需要原生服务器及有效账号；平台不会建立网络数据库连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "-P与-p分别表示什么？",
+        "answer": "-P后指定端口；-p启用密码提示。把端口写到-p后会误作密码相关参数，不是指定端口。",
+        "hints": [
+          "命令选项区分大小写。",
+          "看本例3306跟在哪个字母后。",
+          "密码提示无需把密码直接写入命令。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：连接和断开",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/connecting-disconnecting.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.3.4",
+      "sourceNodeId": "mysql.source.2-3-4",
+      "number": "2.3.4",
+      "title": "打开MySQL 8.0 Command Line Client",
+      "parent": "mysql.lesson.2.3",
+      "depth": 3,
+      "order": 35,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 32,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "Windows的MySQL命令行客户端入口本质上启动mysql程序并使用某些预设连接参数。打开入口只提供终端界面，后续仍需服务器运行和认证通过；快捷方式不是独立的数据库实例。",
+        "看到mysql>提示符后才能输入SQL；操作系统命令应留在系统终端执行。分号结束SQL，未结束的语句可能显示续行提示，不能据此判断服务器卡死；可用客户端取消输入命令重新开始。",
+        "快捷方式是否存在与安装方式有关。若没有该入口，可在终端使用明确参数连接；不要为了找到同名快捷方式重复安装一个新实例。下面用客户端自身帮助认识环境。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "-- 以下位于已经连接的mysql客户端内\nhelp\nSELECT 2 + 3;\nQUIT;",
+        "description": "Windows的MySQL命令行客户端入口本质上启动mysql程序并使用某些预设连接参数。",
+        "result": "help显示客户端帮助，SELECT返回5，QUIT结束当前连接；实际帮助文本随客户端版本变化。",
+        "reason": "阅读的是原生mysql客户端入口及其命令；其中标量SELECT属于平台支持语法，但help和QUIT是客户端控制命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把net start直接输入mysql>为什么不合适？",
+        "answer": "mysql>接受SQL和客户端命令，net start属于Windows终端命令，应在相应操作系统环境中使用。",
+        "hints": [
+          "先读当前提示符。",
+          "系统服务管理与SQL查询属于不同接口。",
+          "同一窗口都显示文字，不表示使用同一种语言。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：mysql客户端",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/mysql.html"
+        },
+        {
+          "title": "MySQL 8.0：连接和断开",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/connecting-disconnecting.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.4",
+      "sourceNodeId": "mysql.source.2-4",
+      "number": "2.4",
+      "title": "Linux平台下安装和配置MySQL",
+      "parent": "mysql.lesson.2",
+      "depth": 2,
+      "order": 36,
+      "group": 2,
+      "leaf": false,
+      "printedPage": 32,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "Linux安装可以通过发行版软件包、MySQL官方仓库或其他官方分发方式完成。选择前应核对发行版、版本、体系架构和已安装的数据库包，避免把不同来源的包混成一套实例。",
+        "本节先了解包与服务，再阅读APT安装步骤。包管理器、systemd和SQL客户端分别处理软件、进程与连接；平台不执行sudo、apt或服务变更。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：Linux安装",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/linux-installation.html"
+        },
+        {
+          "title": "MySQL 8.0：APT仓库安装",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/linux-installation-apt-repo.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.4.1",
+      "sourceNodeId": "mysql.source.2-4-1",
+      "number": "2.4.1",
+      "title": "下载并安装MySQL",
+      "parent": "mysql.lesson.2.4",
+      "depth": 3,
+      "order": 37,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 33,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "Linux软件包会按照发行版约定布置程序、配置和服务文件。MySQL官方文档为不同包格式和发行版提供不同安装路线，不能把一种系统的命令直接套到所有Linux环境。",
+        "安装前先确定是否已有数据库服务与数据目录，再核对包来源和版本。包名包含mysql不代表一定是Oracle发行的同一产品，发行版默认兼容包也应查看实际说明。",
+        "安装完成后需要分别确认服务状态、初始账号处理和客户端连接。初始化步骤依分发方式而定，已初始化的数据目录不能再次当空目录处理；本例只是流程示意，不运行管理命令。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "识别发行版与架构\n→ 核对现有软件包/实例/数据\n→ 选择官方支持的分发方式\n→ 安装与初始化（依官方流程）\n→ 检查服务和日志\n→ 用客户端确认连接与版本",
+        "description": "Linux软件包会按照发行版约定布置程序、配置和服务文件。",
+        "result": "每一步留下明确结果，才能在失败时定位是包、服务还是连接问题。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "软件包安装成功但连接失败，是否应立即删除数据目录重装？",
+        "answer": "不应。应先检查服务日志、地址端口和认证；删除数据目录不能替代诊断，还可能损失已有数据。",
+        "hints": [
+          "把安装、服务、连接分开验证。",
+          "日志可能直接说明配置或权限问题。",
+          "确认现有数据用途后才能制定恢复方案。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：Linux安装",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/linux-installation.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.4.2",
+      "sourceNodeId": "mysql.source.2-4-2",
+      "number": "2.4.2",
+      "title": "通过apt安装MySQL服务",
+      "parent": "mysql.lesson.2.4",
+      "depth": 3,
+      "order": 38,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 34,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL APT仓库为适用的Debian或Ubuntu环境提供软件包。启用仓库时需要选择目标MySQL系列并使用官方签名信任配置；具体支持发行版和引导包名称应以官方当期说明为准。",
+        "典型顺序是配置仓库、更新包索引、安装服务器，再由服务管理器检查状态。apt update更新的是包索引，不是直接升级服务器；安装命令最终选中的版本受仓库配置和已有包影响。",
+        "执行这些命令会修改原生系统，本课程仅阅读含义。下例假定已按官方步骤启用正确仓库；真实实验还要处理初始认证、已有安装兼容以及服务名差异，不能只复制三行就认定完成。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "sudo apt update\nsudo apt install mysql-server\nsystemctl status mysql",
+        "description": "MySQL APT仓库为适用的Debian或Ubuntu环境提供软件包。",
+        "result": "在受支持且仓库配置正确的系统上，前两步更新索引并安装包，第三步查看服务；真实输出依环境而定。",
+        "reason": "APT和systemctl是Linux管理命令，需要原生系统与权限；示例不在宿主执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "apt update能否独自完成MySQL服务器安装？",
+        "answer": "不能。它刷新软件源索引；实际安装由apt install等后续操作完成。",
+        "hints": [
+          "分别观察update和install两个动词。",
+          "索引描述可用包，不是包的程序文件本身。",
+          "最后仍需检查服务与连接。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：APT仓库安装",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/linux-installation-apt-repo.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.5",
+      "sourceNodeId": "mysql.source.2-5",
+      "number": "2.5",
+      "title": "如何学好MySQL",
+      "parent": "mysql.lesson.2",
+      "depth": 2,
+      "order": 39,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 35,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "学习MySQL可按“提出问题、写SQL、预测结果、验证状态、解释差异”的循环推进。先用少量有意设计的数据测试规则，比在大表上反复猜测更容易理解语义。",
+        "测试数据应包含边界：重复姓名、NULL成绩、空表、没有匹配对象的引用。查询若依赖顺序就显式排序；修改语句先用相同条件查看目标，再验证无关记录没有受影响。",
+        "课程的阅读活动和运行题相互补充。阅读安装、权限和优化不代表平台能管理原生服务；运行题只在受支持子集上产生真实状态。学习时应分别记录“我理解了概念”和“我已实际验证了行为”。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "练习记录：\n问题：哪些成绩至少70？\n数据：70、69、NULL\n预测：70保留，69排除，NULL排除\n验证点：边界值、未知值、输出列与排序",
+        "description": "学习MySQL可按“提出问题、写SQL、预测结果、验证状态、解释差异”的循环推进。",
+        "result": "三个数据点分别检查阈值和三值逻辑，比只用80分更容易发现错误。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只用80分测试score>=70会漏掉什么？",
+        "answer": "会漏掉70这个等号边界、低于70的反例和NULL的未知行为，也可能漏掉错误地写成>70的实现。",
+        "hints": [
+          "一个正例不能区分>=与>。",
+          "加入恰好70分。",
+          "再加入69和NULL观察排除原因。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：入门教程",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/tutorial.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.6",
+      "sourceNodeId": "mysql.source.2-6",
+      "number": "2.6",
+      "title": "本章小结",
+      "parent": "mysql.lesson.2",
+      "depth": 2,
+      "order": 40,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 36,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章建立了软件包、服务器实例、服务、客户端和连接的区别。安装流程是否完成，要靠真实服务与连接结果判断，不能只凭桌面多了一个图标。",
+        "Windows路径影响命令定位，服务名定位运行实例；Linux包来源与仓库选择影响可安装版本；连接参数进一步定位地址、端口和账号。每层问题都应使用对应信息验证。",
+        "进入SQL操作前，能解释错误发生在“找不到程序、服务未起、网络不通、认证失败、SQL失败”的哪一层，就能避免大量无效重装。平台学习环境不要求管理这些原生组件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "故障：mysql命令找不到 → 检查程序位置/Path\n故障：连接被拒绝 → 检查服务/地址/端口\n故障：Access denied → 检查账号认证和授权\n故障：Unknown table → 连接后检查数据库与对象",
+        "description": "本章建立了软件包、服务器实例、服务、客户端和连接的区别。",
+        "result": "相似的“不能用”来自不同阶段，排查顺序由实际错误决定。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "表不存在错误能说明客户端已经找到了程序且完成连接吗？",
+        "answer": "在正常原生交互中，它说明SQL请求已到服务器并进入对象解析阶段；应检查当前数据库和表名，而非优先改Path。",
+        "hints": [
+          "错误已涉及数据库对象。",
+          "对象检查发生在连接建立之后。",
+          "定位当前数据库与表身份。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：连接和断开",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/connecting-disconnecting.html"
+        },
+        {
+          "title": "MySQL 8.0：入门教程",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/tutorial.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.2.7",
+      "sourceNodeId": "mysql.source.2-7",
+      "number": "2.7",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.2",
+      "depth": 2,
+      "order": 41,
+      "group": 2,
+      "leaf": true,
+      "printedPage": 36,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章练习要求设计一份可复核的原生环境检查单，不要求实际改动计算机。给定“Windows已装客户端，但应用连接失败”，请按组件列出应收集的证据。",
+        "先问客户端能否启动及其版本，再确认目标服务器实例、服务状态与地址端口，最后查看认证和具体错误。不要收集明文密码；记录错误类别和必要参数即可区分问题。",
+        "如果同一台机器有两套MySQL，必须把服务名、端口、数据目录和连接目标对应起来。只说“本机已启动MySQL”仍不足以证明应用访问了正确实例。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "实例A：服务MySQL80_A，端口3306\n实例B：服务MySQL80_B，端口3307\n应用配置：127.0.0.1:3307\n已知证据：仅确认A运行，B状态未知",
+        "description": "本章练习要求设计一份可复核的原生环境检查单，不要求实际改动计算机。",
+        "result": "应用目标是B，A运行不能证明B可达；应检查B的真实状态和错误。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "下一步检查哪个实例，为什么？",
+        "answer": "检查B。应用明确连3307，对应B；不能把3306上A的成功当作目标实例成功。",
+        "hints": [
+          "先从应用实际参数出发。",
+          "将端口映射回服务名。",
+          "始终沿同一目标实例验证完整链路。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：连接和断开",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/connecting-disconnecting.html"
+        },
+        {
+          "title": "MySQL 8.0：Windows服务",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/windows-start-service.html"
+        }
+      ]
+    }
+  ]
+}

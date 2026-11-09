@@ -1,7 +1,8 @@
+import { assertActiveCourseMeta, MYSQL_DB_VERSION } from './mysql-meta';
 import { courseTransaction, type CourseState, type CourseRecipe } from './c6-course';
 import { JAVA_DB_VERSION, JAVA_STORES } from './java-meta';
 import { CPP_DB_VERSION, CPP_STORES } from './cpp-course-meta';
-import { assertActiveCourseMeta, RUST_DB_VERSION, RUST_STORES } from './rust2018-meta';
+import { RUST_DB_VERSION, RUST_STORES } from './rust2018-meta';
 import {
   isRustDocument,
   isRustLesson,
@@ -164,7 +165,7 @@ export function javaCourseTransaction(
   factory: IDBFactory,
   options?: { generation?: string; revision?: number; prepare?: PrepareJavaCourse },
 ) {
-  if (![JAVA_DB_VERSION, CPP_DB_VERSION, RUST_DB_VERSION].includes(db.version))
+  if (![JAVA_DB_VERSION, CPP_DB_VERSION, RUST_DB_VERSION, MYSQL_DB_VERSION].includes(db.version))
     throw new StorageError('S_CONTENT_INCOMPATIBLE');
   return courseTransaction(db, factory, JAVA_STORES, assertTextCourseState, options);
 }
@@ -174,7 +175,7 @@ export function cppCourseTransaction(
   factory: IDBFactory,
   options?: { generation?: string; revision?: number; prepare?: PrepareJavaCourse },
 ) {
-  if (![CPP_DB_VERSION, RUST_DB_VERSION].includes(db.version))
+  if (![CPP_DB_VERSION, RUST_DB_VERSION, MYSQL_DB_VERSION].includes(db.version))
     throw new StorageError('S_CONTENT_INCOMPATIBLE');
   return courseTransaction(
     db,
@@ -190,7 +191,8 @@ export function rustCourseTransaction(
   factory: IDBFactory,
   options?: { generation?: string; revision?: number; prepare?: PrepareJavaCourse },
 ) {
-  if (db.version !== RUST_DB_VERSION) throw new StorageError('S_CONTENT_INCOMPATIBLE');
+  if (![RUST_DB_VERSION, MYSQL_DB_VERSION].includes(db.version))
+    throw new StorageError('S_CONTENT_INCOMPATIBLE');
   return courseTransaction(
     db,
     factory,
@@ -206,9 +208,9 @@ export function readJavaUpgradeRows(
   snapshot: JavaCourseState['snapshot'],
   ready: () => void,
   fail: (error: unknown) => void,
-  language: 'java' | 'cpp' = 'java',
+  language: 'java' | 'cpp' | 'rust' = 'java',
 ) {
-  const stores = language === 'cpp' ? CPP_STORES : JAVA_STORES;
+  const stores = language === 'rust' ? RUST_STORES : language === 'cpp' ? CPP_STORES : JAVA_STORES;
   const [activities, drafts] = stores.map((name) => tx.objectStore(name));
   const activityRows = activities.getAll();
   const activityKeys = activities.getAllKeys();

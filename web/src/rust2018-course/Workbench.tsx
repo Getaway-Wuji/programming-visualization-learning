@@ -471,7 +471,8 @@ const loadTarget = async (key: string, signal: AbortSignal): Promise<Target> => 
 function LoadedEditor({ target }: { target: Target }) {
   const { service, state } = useLearning();
   const epoch = state.sessionEpoch;
-  const writable = state.snapshot?.meta.dbVersion === 14 && state.recovery?.writable !== false;
+  const writable =
+    [14, 15].includes(state.snapshot?.meta.dbVersion ?? 0) && state.recovery?.writable !== false;
   const load = useCallback(
     async (id: string) => {
       if (!writable || target.example) return { draft: null };

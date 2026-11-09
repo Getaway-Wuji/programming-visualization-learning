@@ -1,7 +1,8 @@
+import { assertActiveCourseMeta, MYSQL_DB_VERSION } from './mysql-meta';
 import { courseTransaction, type CourseState, type CourseRecipe } from './c6-course';
 import { PYTHON_DB_VERSION, PYTHON_STORES } from './python3-meta';
 import { CPP_DB_VERSION } from './cpp-course-meta';
-import { assertActiveCourseMeta, RUST_DB_VERSION } from './rust2018-meta';
+import { RUST_DB_VERSION } from './rust2018-meta';
 import { JAVA_DB_VERSION } from './java-meta';
 import {
   isPythonDocument,
@@ -155,7 +156,15 @@ export function pythonCourseTransaction(
   factory: IDBFactory,
   options?: { generation?: string; revision?: number; prepare?: PreparePythonCourse },
 ) {
-  if (![PYTHON_DB_VERSION, JAVA_DB_VERSION, CPP_DB_VERSION, RUST_DB_VERSION].includes(db.version))
+  if (
+    ![
+      PYTHON_DB_VERSION,
+      JAVA_DB_VERSION,
+      CPP_DB_VERSION,
+      RUST_DB_VERSION,
+      MYSQL_DB_VERSION,
+    ].includes(db.version)
+  )
     throw new StorageError('S_CONTENT_INCOMPATIBLE');
   return courseTransaction(db, factory, PYTHON_STORES, assertPythonCourseState, options);
 }

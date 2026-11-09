@@ -70,9 +70,10 @@ export function assertActiveCourseMeta(
 }
 
 export function queueRustStores(db: IDBDatabase, tx: IDBTransaction, meta: CppMeta) {
-  if (db.version !== RUST_DB_VERSION || tx.mode !== 'versionchange')
+  if (![RUST_DB_VERSION, 15].includes(db.version) || tx.mode !== 'versionchange')
     throw new StorageError('S_MIGRATION_UNSUPPORTED');
   const next = toRustMeta(meta);
   for (const name of RUST_STORES) db.createObjectStore(name);
   tx.objectStore('meta').put(next, 'current');
+  return next;
 }

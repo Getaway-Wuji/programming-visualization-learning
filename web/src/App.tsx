@@ -77,6 +77,9 @@ const JavaReviewPage = lazy(() => import('./java/ReviewPage'));
 const RustCoursePage = lazy(() => import('./rust2018-course/CoursePage'));
 const RustWorkbench = lazy(() => import('./rust2018-course/Workbench'));
 const RustReviewPage = lazy(() => import('./rust2018-course/ReviewPage'));
+const MysqlCoursePage = lazy(() => import('./mysql-course/CoursePage'));
+const MysqlWorkbench = lazy(() => import('./mysql-course/Workbench'));
+const MysqlReviewPage = lazy(() => import('./mysql-course/ReviewPage'));
 const CppCoursePage = lazy(() => import('./cpp-course/CoursePage'));
 const CppWorkbench = lazy(() => import('./cpp-course/Workbench'));
 const CppReviewPage = lazy(() => import('./cpp-course/ReviewPage'));
@@ -160,6 +163,12 @@ function AppRoutes() {
             <Route path="/rust/example/:lessonId" element={<RustWorkbench />} />
             <Route path="/rust/practice/:profileId" element={<RustWorkbench />} />
             <Route path="/rust/review" element={<RustReviewPage />} />
+            <Route path="/mysql" element={<MysqlCoursePage />} />
+            <Route path="/mysql/lesson/:lessonId" element={<MysqlCoursePage />} />
+            <Route path="/mysql/workbench" element={<MysqlWorkbench />} />
+            <Route path="/mysql/example/:lessonId" element={<MysqlWorkbench />} />
+            <Route path="/mysql/practice/:profileId" element={<MysqlWorkbench />} />
+            <Route path="/mysql/review" element={<MysqlReviewPage />} />
             <Route path="/cpp" element={<CppCoursePage />} />
             <Route path="/cpp/lesson/:lessonId" element={<CppCoursePage />} />
             <Route path="/cpp/workbench" element={<CppWorkbench />} />

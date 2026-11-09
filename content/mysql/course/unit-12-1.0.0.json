@@ -1,0 +1,481 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 12,
+  "nodes": [
+    {
+      "id": "mysql.lesson.12",
+      "sourceNodeId": "mysql.source.chapter-12",
+      "number": "12",
+      "title": "触发器",
+      "parent": null,
+      "depth": 1,
+      "order": 253,
+      "group": 12,
+      "leaf": false,
+      "printedPage": 247,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "触发器把表上INSERT、UPDATE或DELETE事件与服务器中的动作关联。阅读时先辨认触发时机BEFORE或AFTER、逐行事件及OLD/NEW，再追踪原语句与附带写入的关系，而不是把触发器当手动调用的过程。",
+        "本章均为原生MySQL 8.0阅读；建表例假设处于可写测试库且对象名未占用。平台不执行触发器、SIGNAL或元数据管理，示例按给定输入推导规则与结果。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · trigger syntax",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/trigger-syntax.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.1",
+      "sourceNodeId": "mysql.source.12-1",
+      "number": "12.1",
+      "title": "创建触发器",
+      "parent": "mysql.lesson.12",
+      "depth": 2,
+      "order": 254,
+      "group": 12,
+      "leaf": false,
+      "printedPage": 247,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "创建触发器需要指定唯一名称、时机、事件和目标表。FOR EACH ROW意味着一次语句影响几行，就会逐行激活相应动作；SELECT读取表不会产生插入、更新或删除事件。",
+        "单语句动作可直接接在定义后，多语句动作放入BEGIN...END。mysql命令行客户端的DELIMITER帮助完整发送定义，它不是服务器SQL，也不改变触发器的逐行性质。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · trigger syntax",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/trigger-syntax.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.1.1",
+      "sourceNodeId": "mysql.source.12-1-1",
+      "number": "12.1.1",
+      "title": "创建只有一个执行语句的触发器",
+      "parent": "mysql.lesson.12.1",
+      "depth": 3,
+      "order": 255,
+      "group": 12,
+      "leaf": true,
+      "printedPage": 247,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "只有一个动作的触发器适合简单规范化。BEFORE INSERT时NEW表示待插入行，可对允许修改的NEW列赋值；此时没有该行的OLD版本。",
+        "例子为缺省数量补零。CREATE TRIGGER只保存规则，真正INSERT时才执行SET；显式给定3保持3，传NULL被转换为0，两行使用同一条触发规则。",
+        "这个规则会把未知数量转换成已知零，属于业务选择，不能到处套用。若NULL表示未盘点，保留NULL比自动补零更准确；触发器应先由数据含义决定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE trigger_stock(id INT PRIMARY KEY, qty INT);\nCREATE TRIGGER stock_fill BEFORE INSERT ON trigger_stock\nFOR EACH ROW SET NEW.qty=IFNULL(NEW.qty,0);\nINSERT INTO trigger_stock VALUES(1,NULL),(2,3);\nSELECT id,qty FROM trigger_stock ORDER BY id;",
+        "description": "例子为缺省数量补零。CREATE TRIGGER只保存规则，真正INSERT时才执行SET；显式给定3保持3，传NULL被转换为0，两行使用同一条触发规则。",
+        "result": "原生定义及插入成功时得到(1,0)、(2,3)。定义本身不插入行。",
+        "reason": "本例是原生MySQL 8.0触发器阅读推导；平台教学执行器不创建、调用或查询服务器触发器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果NULL表示尚未清点，能直接使用这个触发器吗？",
+        "answer": "不宜直接使用，它抹掉未知与零库存的区别；应先确定是否允许把NULL转换为0。",
+        "hints": [
+          "先解释NULL的业务含义。",
+          "比较未知数量与确认数量为0。",
+          "检查SET是否损失了这一区别。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · trigger syntax",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/trigger-syntax.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.1.2",
+      "sourceNodeId": "mysql.source.12-1-2",
+      "number": "12.1.2",
+      "title": "创建有多个执行语句的触发器",
+      "parent": "mysql.lesson.12.1",
+      "depth": 3,
+      "order": 256,
+      "group": 12,
+      "leaf": true,
+      "printedPage": 248,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "复合触发器可先校验再赋值，BEGIN...END中每条语句用分号结束。条件分支应与业务不变量对应，而不是把所有输入异常悄悄改成合法值。",
+        "例子拒绝负库存，并为缺失的说明补文字。SIGNAL产生用户定义异常；在InnoDB表上，触发器失败会使触发它的语句失败，不能报告该次写入成功。",
+        "mysql客户端临时使用双斜线作为定义终止符，结束后恢复分号。这里的IF和SIGNAL属于存储程序语法，平台支持普通INSERT不意味着支持这些动作。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE trigger_checked(id INT PRIMARY KEY,qty INT,note VARCHAR(20)) ENGINE=InnoDB;\nDELIMITER //\nCREATE TRIGGER stock_check BEFORE INSERT ON trigger_checked\nFOR EACH ROW\nBEGIN\n IF NEW.qty<0 THEN\n  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='negative stock';\n END IF;\n SET NEW.note=IFNULL(NEW.note,'待盘点');\nEND//\nDELIMITER ;\nINSERT INTO trigger_checked VALUES(1,3,NULL);\nSELECT id,qty,note FROM trigger_checked;",
+        "description": "例子拒绝负库存，并为缺失的说明补文字。SIGNAL产生用户定义异常；在InnoDB表上，触发器失败会使触发它的语句失败，不能报告该次写入成功。",
+        "result": "原生成功时得到(1,3,待盘点)；把输入数量改为-1会触发异常而不插入该行。",
+        "reason": "本例是原生MySQL 8.0触发器阅读推导；平台教学执行器不创建、调用或查询服务器触发器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能把DELIMITER当成触发器体的一条SQL？",
+        "answer": "它由mysql客户端解释，用于决定何时把整段定义发给服务器，不是触发器运行中的动作。",
+        "hints": [
+          "区分发送定义和执行定义。",
+          "BEGIN内部已有分号。",
+          "终止符调整发生在客户端。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · trigger syntax",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/trigger-syntax.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.2",
+      "sourceNodeId": "mysql.source.12-2",
+      "number": "12.2",
+      "title": "查看触发器",
+      "parent": "mysql.lesson.12",
+      "depth": 2,
+      "order": 257,
+      "group": 12,
+      "leaf": false,
+      "printedPage": 250,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "查看触发器先确认当前库与可见权限。名称、目标表、事件、时机和动作体共同确定规则，仅看到一个名称不足以判断它何时执行。",
+        "SHOW TRIGGERS适合交互检查，INFORMATION_SCHEMA.TRIGGERS适合用SELECT过滤与整理。两种途径都受元数据可见性限制，查询结果为空需要结合库名与权限解释。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · show triggers",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-triggers.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · information schema triggers table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/information-schema-triggers-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.2.1",
+      "sourceNodeId": "mysql.source.12-2-1",
+      "number": "12.2.1",
+      "title": "使用SHOW TRIGGERS语句查看触发器",
+      "parent": "mysql.lesson.12.2",
+      "depth": 3,
+      "order": 258,
+      "group": 12,
+      "leaf": true,
+      "printedPage": 250,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SHOW TRIGGERS列出当前库或指定库中可见的触发器。结果的Table指目标表，Trigger指规则名称，两者承担不同角色。",
+        "LIKE模式匹配表名而不是触发器名。例子用WHERE精确限定目标表，避免LIKE中下划线等模式字符扩大匹配，再读取Event和Timing判断事件与时机。",
+        "结果为空并不能直接证明整个实例没有触发器：可能查错库，目标表名不匹配，或当前账户缺少相应TRIGGER权限。检查结论应写出观察范围。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW TRIGGERS WHERE `Table`='trigger_stock';",
+        "description": "LIKE模式匹配表名而不是触发器名。例子用WHERE精确限定目标表，避免LIKE中下划线等模式字符扩大匹配，再读取Event和Timing判断事件与时机。",
+        "result": "如果当前库有12.1.1的stock_fill且账户可见，会出现其INSERT、BEFORE及目标表信息；否则可能为零行。",
+        "reason": "本例是原生MySQL 8.0触发器阅读推导；平台教学执行器不创建、调用或查询服务器触发器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把LIKE后面写stock_fill能可靠按触发器名查到规则吗？",
+        "answer": "不能，SHOW TRIGGERS的LIKE匹配目标表名；按触发器名过滤可用WHERE或元数据表。",
+        "hints": [
+          "先找结果中的Table列。",
+          "查清LIKE限定的对象。",
+          "规则名称与目标表名称并不相同。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · show triggers",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-triggers.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.2.2",
+      "sourceNodeId": "mysql.source.12-2-2",
+      "number": "12.2.2",
+      "title": "在triggers表中查看触发器信息",
+      "parent": "mysql.lesson.12.2",
+      "depth": 3,
+      "order": 259,
+      "group": 12,
+      "leaf": true,
+      "printedPage": 252,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "INFORMATION_SCHEMA.TRIGGERS把触发器元数据表示成可查询的行，TRIGGER_SCHEMA限定所属库，EVENT_OBJECT_TABLE表示关联表。",
+        "例子明确投影名称、事件和时机，并以当前库过滤。排序使核对清单稳定；不选择ACTION_STATEMENT时只能看到接口，不能据此判断动作体是否安全。",
+        "表中的ACTION_ORIENTATION为ROW，说明MySQL触发器按行激活。读取元数据不执行触发器；可见行还受到当前账户对目标表的TRIGGER权限约束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT TRIGGER_NAME,EVENT_OBJECT_TABLE,EVENT_MANIPULATION,ACTION_TIMING\nFROM INFORMATION_SCHEMA.TRIGGERS\nWHERE TRIGGER_SCHEMA=DATABASE()\nORDER BY EVENT_OBJECT_TABLE,TRIGGER_NAME;",
+        "description": "例子明确投影名称、事件和时机，并以当前库过滤。排序使核对清单稳定；不选择ACTION_STATEMENT时只能看到接口，不能据此判断动作体是否安全。",
+        "result": "返回当前库中账户可见的规则清单，每行对应一个触发器；没有可见规则时返回空集。",
+        "reason": "本例是原生MySQL 8.0触发器阅读推导；平台教学执行器不创建、调用或查询服务器触发器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "查询这些元数据行会执行ACTION_STATEMENT吗？",
+        "answer": "不会，查询读取定义信息，只有目标表上对应事件才可能激活动作。",
+        "hints": [
+          "先区分定义文本与执行事件。",
+          "本例FROM的是元数据表。",
+          "没有向目标业务表发出DML。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · information schema triggers table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/information-schema-triggers-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.3",
+      "sourceNodeId": "mysql.source.12-3",
+      "number": "12.3",
+      "title": "触发器的使用",
+      "parent": "mysql.lesson.12",
+      "depth": 2,
+      "order": 260,
+      "group": 12,
+      "leaf": true,
+      "printedPage": 253,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "UPDATE触发器可以同时读取OLD和NEW，分别表示更新前后行；INSERT只有NEW，DELETE只有OLD。值的来源决定能否计算差额或保存旧值。",
+        "下面用AFTER UPDATE把数量变化写入另一张InnoDB表。IF NOT(OLD.qty<=>NEW.qty)使用NULL安全相等判断，避免普通不等比较在NULL参与时得到未知。",
+        "一条UPDATE可能激活多次。触发器不能修改正在被触发语句使用的同一张表；TRUNCATE也不等同逐行DELETE，不会激活DELETE触发器。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE stock_use(id INT PRIMARY KEY,qty INT) ENGINE=InnoDB;\nCREATE TABLE stock_log(id INT,old_qty INT,new_qty INT) ENGINE=InnoDB;\nINSERT INTO stock_use VALUES(1,5);\nDELIMITER //\nCREATE TRIGGER stock_audit AFTER UPDATE ON stock_use FOR EACH ROW\nBEGIN\n IF NOT(OLD.qty<=>NEW.qty) THEN\n  INSERT INTO stock_log VALUES(NEW.id,OLD.qty,NEW.qty);\n END IF;\nEND//\nDELIMITER ;\nUPDATE stock_use SET qty=4 WHERE id=1;\nSELECT * FROM stock_log;",
+        "description": "下面用AFTER UPDATE把数量变化写入另一张InnoDB表。IF NOT(OLD.qty<=>NEW.qty)使用NULL安全相等判断，避免普通不等比较在NULL参与时得到未知。",
+        "result": "原生成功后日志有一行(1,5,4)。再次把qty设为4不会通过差异分支，不会新增该日志。",
+        "reason": "本例是原生MySQL 8.0触发器阅读推导；平台教学执行器不创建、调用或查询服务器触发器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "同值UPDATE一定会向这个日志表写一行吗？",
+        "answer": "不会。虽然UPDATE事件可以激活触发器，动作中的NULL安全差异条件会阻止同值记录。",
+        "hints": [
+          "区分激活规则与执行分支。",
+          "计算OLD.qty与NEW.qty是否相等。",
+          "相等时NOT(<=>)为假。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · trigger syntax",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/trigger-syntax.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.4",
+      "sourceNodeId": "mysql.source.12-4",
+      "number": "12.4",
+      "title": "删除触发器",
+      "parent": "mysql.lesson.12",
+      "depth": 2,
+      "order": 261,
+      "group": 12,
+      "leaf": true,
+      "printedPage": 254,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DROP TRIGGER删除服务器中保存的规则定义。它不会撤销触发器曾经造成的历史写入，也不会自动删除独立的审计表。",
+        "例子先建立规则再删除，用IF EXISTS处理规则已不存在的情况。删除后新的插入不再经过该规则，NULL便按表自身约束保留。",
+        "删除对象要明确所属库，避免在错误的当前库操作。原生删除表也会删除其触发器，因此表迁移与规则迁移需要一起审核，不能只看业务行。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE stock_drop(id INT PRIMARY KEY,qty INT);\nCREATE TRIGGER drop_fill BEFORE INSERT ON stock_drop\nFOR EACH ROW SET NEW.qty=IFNULL(NEW.qty,0);\nDROP TRIGGER IF EXISTS drop_fill;\nINSERT INTO stock_drop VALUES(1,NULL);\nSELECT qty FROM stock_drop WHERE id=1;",
+        "description": "例子先建立规则再删除，用IF EXISTS处理规则已不存在的情况。删除后新的插入不再经过该规则，NULL便按表自身约束保留。",
+        "result": "原生最后qty为NULL；规则被删除后不会再把新输入转换为0。",
+        "reason": "本例是原生MySQL 8.0触发器阅读推导；平台教学执行器不创建、调用或查询服务器触发器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删除触发器会把以前补成0的行自动还原成NULL吗？",
+        "answer": "不会，DROP删除定义，不追溯撤销既有数据；要修复历史数据需另有依据与明确写入。",
+        "hints": [
+          "找出DROP的对象。",
+          "定义与历史行分开保存。",
+          "删除规则不会记录原输入。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · trigger syntax",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/trigger-syntax.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.5",
+      "sourceNodeId": "mysql.source.12-5",
+      "number": "12.5",
+      "title": "本章实战",
+      "parent": "mysql.lesson.12",
+      "depth": 2,
+      "order": 262,
+      "group": 12,
+      "leaf": true,
+      "printedPage": 254,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "库存审计实战先确定两条事实：业务表记录当前数量，审计表保存发生过的变更。更新与审计在事务表上共同成功或失败，才能避免只改库存而漏记操作。",
+        "例子使用单动作AFTER UPDATE保存旧值与新值。没有差异过滤时，同值更新也可能留下记录，这是规则设计的一部分，应与12.3的条件版本比较。",
+        "审计表并非不可篡改的安全系统。若账户能随意修改它，记录可信度有限；生产设计还需审视权限、操作者标识与保留策略，本例只说明数据关联。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE warehouse(id INT PRIMARY KEY,qty INT) ENGINE=InnoDB;\nCREATE TABLE warehouse_audit(item_id INT,old_qty INT,new_qty INT) ENGINE=InnoDB;\nINSERT INTO warehouse VALUES(8,10);\nCREATE TRIGGER warehouse_changed AFTER UPDATE ON warehouse\nFOR EACH ROW INSERT INTO warehouse_audit VALUES(NEW.id,OLD.qty,NEW.qty);\nUPDATE warehouse SET qty=qty-2 WHERE id=8;\nSELECT item_id,old_qty,new_qty FROM warehouse_audit;",
+        "description": "例子使用单动作AFTER UPDATE保存旧值与新值。没有差异过滤时，同值更新也可能留下记录，这是规则设计的一部分，应与12.3的条件版本比较。",
+        "result": "原生库存变成8，审计产生(8,10,8)；这里没有操作者身份和时间字段，不能宣称完整生产审计。",
+        "reason": "本例是原生MySQL 8.0触发器阅读推导；平台教学执行器不创建、调用或查询服务器触发器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只允许写业务表，却给同一账户任意删除审计记录的权限，有何问题？",
+        "answer": "账户可以抹去变更证据；审计用途需要配合更窄权限与独立保留策略。",
+        "hints": [
+          "先看谁能改变证据。",
+          "触发器只能写记录。",
+          "记录可信度还依赖权限。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · trigger syntax",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/trigger-syntax.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · privileges provided",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/privileges-provided.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.6",
+      "sourceNodeId": "mysql.source.12-6",
+      "number": "12.6",
+      "title": "本章小结",
+      "parent": "mysql.lesson.12",
+      "depth": 2,
+      "order": 263,
+      "group": 12,
+      "leaf": true,
+      "printedPage": 255,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "触发器可以沿定义、事件、逐行动作、事务结果四层理解。读定义时先找目标表，再用事件与时机解释OLD/NEW，最后分析动作的副作用。",
+        "小结用两行插入对照规则激活次数。触发器不是语句级只执行一次，也不会在创建时扫一遍旧数据；历史行与新增行必须分开考虑。",
+        "维护时同时核查定义、依赖表与权限。复杂业务藏在触发器里会增加排查成本，因此应保留可解释的规则，并为正常、边界和失败输入分别设计检查。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "已有两行旧数据\n创建BEFORE INSERT触发器\n一条INSERT新增3行\n查询元数据确认定义\n删除触发器",
+        "description": "小结用两行插入对照规则激活次数。触发器不是语句级只执行一次，也不会在创建时扫一遍旧数据；历史行与新增行必须分开考虑。",
+        "result": "创建时旧行不被补处理；该INSERT逐行激活3次；元数据查询不激活动作，删除只移除未来规则。",
+        "reason": "本例是原生MySQL 8.0触发器阅读推导；平台教学执行器不创建、调用或查询服务器触发器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "创建INSERT触发器会自动处理表中原有两行吗？",
+        "answer": "不会，触发器响应后续对应事件，不在创建时回填历史行。",
+        "hints": [
+          "找到真正的INSERT事件。",
+          "CREATE保存规则。",
+          "旧行未被该INSERT新增。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · trigger syntax",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/trigger-syntax.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.12.7",
+      "sourceNodeId": "mysql.source.12-7",
+      "number": "12.7",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.12",
+      "depth": 2,
+      "order": 264,
+      "group": 12,
+      "leaf": true,
+      "printedPage": 256,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "综合练习先写出事件数量，再推导每行动作，最后判断事务边界。对一次影响多行的语句，只看SQL文本有几个分号会误算激活次数。",
+        "例子把两个账户标记统一更新，并通过触发器逐行记下id。查询显式排序，只用于稳定阅读结果；日志行自身并没有天然顺序保证。",
+        "若第二行因约束失败，InnoDB下不能把第一行已暂时产生的审计当作最终提交。本节要求区分成功推导与失败语句，不能忽略存储引擎。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE trigger_task(id INT PRIMARY KEY,flag INT) ENGINE=InnoDB;\nCREATE TABLE task_audit(id INT) ENGINE=InnoDB;\nINSERT INTO trigger_task VALUES(1,0),(2,0);\nCREATE TRIGGER task_mark AFTER UPDATE ON trigger_task\nFOR EACH ROW INSERT INTO task_audit VALUES(NEW.id);\nUPDATE trigger_task SET flag=1;\nSELECT id FROM task_audit ORDER BY id;",
+        "description": "例子把两个账户标记统一更新，并通过触发器逐行记下id。查询显式排序，只用于稳定阅读结果；日志行自身并没有天然顺序保证。",
+        "result": "原生成功时审计有id=1和id=2两行，UPDATE虽是一条语句，触发动作执行两次。",
+        "reason": "本例是原生MySQL 8.0触发器阅读推导；平台教学执行器不创建、调用或查询服务器触发器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么只有一条UPDATE却有两行审计？",
+        "answer": "FOR EACH ROW按受影响的每行激活；本例匹配两行业务数据，每行插入一条审计。",
+        "hints": [
+          "数出匹配行数。",
+          "读取FOR EACH ROW。",
+          "每次动作插入一条记录。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · trigger syntax",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/trigger-syntax.html"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,577 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 6,
+  "nodes": [
+    {
+      "id": "mysql.lesson.6",
+      "sourceNodeId": "mysql.source.chapter-6",
+      "number": "6",
+      "title": "数据记录操作",
+      "parent": null,
+      "depth": 1,
+      "order": 115,
+      "group": 6,
+      "leaf": false,
+      "printedPage": 117,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "记录操作改变表中的行而不重新定义每列。INSERT增加实例，UPDATE修改现有实例，DELETE移除符合条件的实例；每种操作都要通过已有类型与约束检查，并验证没有改变无关数据。",
+        "本章在多行插入、按条件更新和删除节点提供运行练习与四组判题，其他叶保留完整阅读示例与自检。运行使用真实当前SQL和隔离教学数据库，阅读例用于预测结果，运行练习以当前SQL产生的结果与状态为准。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：INSERT",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/insert.html"
+        },
+        {
+          "title": "MySQL 8.0：UPDATE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/update.html"
+        },
+        {
+          "title": "MySQL 8.0：DELETE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/delete.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.1",
+      "sourceNodeId": "mysql.source.6-1",
+      "number": "6.1",
+      "title": "插入数据记录",
+      "parent": "mysql.lesson.6",
+      "depth": 2,
+      "order": 116,
+      "group": 6,
+      "leaf": false,
+      "printedPage": 117,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "插入前明确目标表、字段清单和每行值的对应关系。值的数量、顺序、类型以及省略字段的默认规则共同决定候选行；省略字段不是让数据库任意猜测业务含义。",
+        "本节从单行到多行，再阅读INSERT SELECT和REPLACE。后两者与普通VALUES有不同来源或冲突语义，平台不执行它们；多行VALUES则进入真实判题，所有行要在同一语句原子边界内通过检查。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：INSERT",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/insert.html"
+        },
+        {
+          "title": "MySQL 8.0：INSERT SELECT",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/insert-select.html"
+        },
+        {
+          "title": "MySQL 8.0：REPLACE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/replace.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.1.1",
+      "sourceNodeId": "mysql.source.6-1-1",
+      "number": "6.1.1",
+      "title": "使用INSERT...VALUES语句插入单条记录",
+      "parent": "mysql.lesson.6.1",
+      "depth": 3,
+      "order": 117,
+      "group": 6,
+      "leaf": true,
+      "printedPage": 117,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "INSERT INTO ... VALUES向表添加一条候选记录，显式列清单使每个值的用途清楚。列清单可以与建表顺序不同，但VALUES必须按该清单对应，不能按界面显示位置自行重排。",
+        "省略字段时按默认值和可空规则处理，显式NULL则是另一个值。字符串用单引号，文本中的单引号可重复写成两个单引号；不能把所有值统一加引号后依赖平台隐式类型转换。",
+        "平台支持单行VALUES插入。本节点作为语法阅读，不独立判题；使用独立新表保证例子自足，若重复执行建表或同键插入，结果会与首次执行不同，应明确初始状态。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE one_badge (id INT PRIMARY KEY, label VARCHAR(24) NOT NULL);\nINSERT INTO one_badge (label, id) VALUES ('新手', 12);\nSELECT id, label FROM one_badge WHERE id = 12;",
+        "description": "INSERT INTO ... VALUES向表添加一条候选记录，显式列清单使每个值的用途清楚。",
+        "result": "在该表原先不存在的前提下，得到id=12、label=新手的一行；列清单(label,id)决定了输入值对应顺序。",
+        "reason": "基本INSERT VALUES受平台支持；本节点用阅读例理解列清单，多行节点再进行真实判题。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "VALUES中写成(12,'新手')而列清单不改，能得到同样结果吗？",
+        "answer": "不能。12会送入label，新手送入id，类型或值对应错误；平台不通过隐式文本数值转换补救。",
+        "hints": [
+          "按列清单从左到右配对。",
+          "第一值对应label而非建表第一列。",
+          "显式清单与VALUES必须同步。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：INSERT",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/insert.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.1.2",
+      "sourceNodeId": "mysql.source.6-1-2",
+      "number": "6.1.2",
+      "title": "使用INSERT...VALUES语句插入多条记录",
+      "parent": "mysql.lesson.6.1",
+      "depth": 3,
+      "order": 118,
+      "group": 6,
+      "leaf": true,
+      "printedPage": 120,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "多行INSERT在一个VALUES列表中用逗号分隔多个括号，每个括号提供一行，且均按同一字段清单对应。它减少重复语句，但并不放松主键、非空和类型检查。",
+        "本题向students添加id90的郑溪和id91的蒋宁，字段顺序为id、name、dept_id、score。第一行院系1、成绩86，第二行院系和成绩均为NULL；NULL不加引号，不能写成字符串“NULL”或空串。",
+        "平台先暂存并验证整条写入，任一候选行违反约束都不发布本语句的部分变更。四组判题独立重置，并检查原始记录与departments未被改动；工作台重跑同一插入可能出现重复键，应理解当前会话与判题起点不同。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "INSERT INTO students (id, name, dept_id, score) VALUES (90, '郑溪', 1, 86), (91, '蒋宁', NULL, NULL);",
+        "description": "插入多条记录",
+        "result": "每组新增两条指定学生：90/郑溪/1/86与91/蒋宁/NULL/NULL，原有行和其他表保持；结果计数为实际接纳的写入，任一约束失败时整句不插入。",
+        "profile": "mysql.exercise.insert",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.insert",
+        "prompt": "一次插入id为90和91的两条指定记录。第二条记录的院系和成绩为NULL，保留原记录。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：INSERT",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/insert.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.1.3",
+      "sourceNodeId": "mysql.source.6-1-3",
+      "number": "6.1.3",
+      "title": "使用INSERT...SELECT语句插入结果集",
+      "parent": "mysql.lesson.6.1",
+      "depth": 3,
+      "order": 119,
+      "group": 6,
+      "leaf": true,
+      "printedPage": 120,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "INSERT ... SELECT把查询结果作为候选插入行，适合把满足条件的数据转入另一张表。查询负责产生列与行，目标列清单负责解释每列，仍需经过目标类型、键和非空等规则。",
+        "源查询列数与目标列数要对应，重复主键等问题不会因为来源是SELECT就被忽略。数据源可能为空，此时没有新增行，但仍要保证结构与字段引用合法。",
+        "平台不执行INSERT SELECT，以下原生清单用两个独立表给出完整来源和目标。条件筛选、列投影和普通VALUES本身属于平台支持范围，限制来自把查询作为写入来源的这种组合。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE candidate_badges (id INT PRIMARY KEY, label VARCHAR(24), enabled INT);\nCREATE TABLE chosen_badges (id INT PRIMARY KEY, label VARCHAR(24));\nINSERT INTO candidate_badges VALUES (1,'晨读',1),(2,'夜读',0);\nINSERT INTO chosen_badges (id, label)\n SELECT id, label FROM candidate_badges WHERE enabled = 1;",
+        "description": "INSERT ... SELECT把查询结果作为候选插入行，适合把满足条件的数据转入另一张表。",
+        "result": "在新表前提下，chosen_badges最终只含(1,晨读)；candidate_badges保留两条源行，插入不自动删除来源。",
+        "reason": "需要原生INSERT SELECT；平台不执行该写入来源形式。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "复制一条源记录到目标后，源记录会被自动移走吗？",
+        "answer": "不会。INSERT SELECT读取源并新增目标记录，不是移动操作；要删除来源需另有明确语句与事务方案。",
+        "hints": [
+          "只出现INSERT和SELECT，没有DELETE。",
+          "读源与写目标是不同动作。",
+          "复制不等于搬移。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：INSERT SELECT",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/insert-select.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.1.4",
+      "sourceNodeId": "mysql.source.6-1-4",
+      "number": "6.1.4",
+      "title": "使用REPLACE语句插入新数据记录",
+      "parent": "mysql.lesson.6.1",
+      "depth": 3,
+      "order": 120,
+      "group": 6,
+      "leaf": true,
+      "printedPage": 122,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "REPLACE在原生MySQL中按插入尝试，遇到适用主键或唯一键冲突时具有删除冲突旧行再插入新行的语义。它不是只覆盖指定列的UPDATE，未给出的列会按新插入的默认规则处理。",
+        "若想保留旧行的备注等字段，仅REPLACE部分列可能丢失旧值。多个唯一键还可能使冲突范围更复杂，触发器、引用和受影响行计数也需要按原生语义理解，不能当普通更新缩写。",
+        "平台不执行REPLACE。下面原生例子展示省略字段后默认值取代旧值，结果按给定初始数据推导。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE replace_demo (id INT PRIMARY KEY, label VARCHAR(24), remark VARCHAR(24) DEFAULT '未备注');\nINSERT INTO replace_demo VALUES (1,'旧标签','人工备注');\nREPLACE INTO replace_demo (id, label) VALUES (1,'新标签');",
+        "description": "REPLACE在原生MySQL中按插入尝试，遇到适用主键或唯一键冲突时具有删除冲突旧行再插入新行的语义。",
+        "result": "在所述新表前提下，id1最终label为新标签，remark为默认值未备注，原人工备注不保留；原生实现的逻辑等价性不要求物理上必须逐字执行两条独立语句。",
+        "reason": "REPLACE为原生MySQL写入语法，平台不执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想只改label并保留remark，为什么优先考虑UPDATE？",
+        "answer": "UPDATE可以只赋值label并保留未赋值字段；REPLACE按新插入处理省略列，可能重置remark。",
+        "hints": [
+          "比较旧行部分赋值与新建候选行。",
+          "省略列在INSERT语义下走默认规则。",
+          "先确定要保留什么再选语句。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：REPLACE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/replace.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.2",
+      "sourceNodeId": "mysql.source.6-2",
+      "number": "6.2",
+      "title": "修改数据记录",
+      "parent": "mysql.lesson.6",
+      "depth": 2,
+      "order": 121,
+      "group": 6,
+      "leaf": true,
+      "printedPage": 123,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "UPDATE在已有行上计算新值，WHERE限定目标集合。本题只给score不低于70的学生加5，不改姓名、院系或其他行，也没有100分封顶；不要自行加入题目未要求的规则。",
+        "score = score + 5使用每行原有成绩计算，NULL比较不会得到真，因此无成绩者不匹配；恰好70分应变为75。无WHERE会针对整表，错误地写成>70则遗漏边界。",
+        "平台记录matchedRows与实际变化数，并在整条语句验证通过后原子发布。多个SET项按MySQL单表赋值从左到右求值，不能假定同时读取同一个旧快照；本题只有一个赋值，重点检查条件与未涉字段的保留。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "UPDATE students SET score = score + 5 WHERE score >= 70;",
+        "description": "按条件更新记录",
+        "result": "每组中原score>=70的记录增加5，其他成绩及NULL不变，id/name/dept_id和其他表保持。空表不会造出新行；整数越界等违规写入按真实诊断失败。",
+        "profile": "mysql.exercise.update",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.update",
+        "prompt": "将成绩不低于70的记录加5，保留其余记录和字段。本题不设置100分上限。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：UPDATE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/update.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.3",
+      "sourceNodeId": "mysql.source.6-3",
+      "number": "6.3",
+      "title": "删除表记录",
+      "parent": "mysql.lesson.6",
+      "depth": 2,
+      "order": 122,
+      "group": 6,
+      "leaf": false,
+      "printedPage": 124,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DELETE按条件删除行，TRUNCATE以清空整张表为目标。它们都保留表结构，但原生事务、权限、自增和依赖等行为不同；“清空”不是“删除表对象”的同义词。",
+        "本节先用成绩条件进行真实DELETE，再阅读TRUNCATE与原生DDL边界。对任何删除都应说明目标和保留集合，并用NULL、边界值和空表检查条件，而不是只看删除计数。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：DELETE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/delete.html"
+        },
+        {
+          "title": "MySQL 8.0：TRUNCATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/truncate-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.3.1",
+      "sourceNodeId": "mysql.source.6-3-1",
+      "number": "6.3.1",
+      "title": "使用DELETE语句删除表记录",
+      "parent": "mysql.lesson.6.3",
+      "depth": 3,
+      "order": 123,
+      "group": 6,
+      "leaf": true,
+      "printedPage": 124,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DELETE FROM表名加WHERE条件，删除满足条件的记录而保留列与约束。本题要求删除成绩低于60或尚无成绩的学生，因此必须同时覆盖score < 60和score IS NULL。",
+        "不能写score = NULL判断缺失，因为与NULL的普通比较产生未知，WHERE只保留真。60分正好达标，应保留；用<=60会误删边界，省略WHERE则会删除所有学生。",
+        "平台在完整候选结果通过约束与预算后原子发布删除，之后表格与回放对应真实保留行。四组判题检查剩余全部记录及其他表，空表也要合法完成；计数相同并不代表删的是正确对象。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "DELETE FROM students WHERE score < 60 OR score IS NULL;",
+        "description": "按条件删除记录",
+        "result": "每组删去score为NULL或小于60的行，保留60及以上成绩行和完整表结构，departments等未涉及数据保持。",
+        "profile": "mysql.exercise.delete",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.delete",
+        "prompt": "删除成绩低于60或尚无成绩的记录，保留所有其他记录和表结构。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：DELETE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/delete.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.3.2",
+      "sourceNodeId": "mysql.source.6-3-2",
+      "number": "6.3.2",
+      "title": "使用TRUNCATE语句清空表记录",
+      "parent": "mysql.lesson.6.3",
+      "depth": 3,
+      "order": 124,
+      "group": 6,
+      "leaf": true,
+      "printedPage": 125,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "TRUNCATE TABLE清空整张表，语法没有WHERE筛选。原生MySQL将它视为DDL，常以重建存储对象的方式实现，涉及隐式提交、自增重置及外键引用等规则，不能视为可回滚DELETE的纯速度替换。",
+        "DELETE FROM表名可在适用InnoDB事务中撤销，TRUNCATE不能依赖同样的ROLLBACK恢复。它不等于DROP TABLE：成功清空后表定义仍在，下一次合法INSERT不需要先重新创建表。",
+        "平台支持事务外TRUNCATE并保留表定义，活动事务中则明确拒绝DDL；不模拟原生自增、外键或物理重建。下面完整SQL用于比较行与结构，不把原生受影响行计数等同于逐行删除数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE clear_demo (id INT PRIMARY KEY, label VARCHAR(20));\nINSERT INTO clear_demo VALUES (1,'临时'),(2,'待清');\nTRUNCATE TABLE clear_demo;\nSELECT id, label FROM clear_demo;",
+        "description": "TRUNCATE TABLE清空整张表，语法没有WHERE筛选。",
+        "result": "在新表且事务外的前提下，最后返回两列零行，表和主键仍存在；不能写TRUNCATE ... WHERE。",
+        "reason": "平台支持事务外TRUNCATE；本节阅读完整清单与原生DDL差别，不执行外键、自增或物理存储行为。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只想删除id1，能给TRUNCATE加WHERE吗？",
+        "answer": "不能。需要DELETE ... WHERE id=1；TRUNCATE按整表清空定义，没有条件筛选。",
+        "hints": [
+          "先看操作目标是全表还是行集合。",
+          "TRUNCATE语法没有WHERE。",
+          "选择能准确表达目标范围的语句。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：TRUNCATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/truncate-table.html"
+        },
+        {
+          "title": "MySQL 8.0：隐式提交",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.4",
+      "sourceNodeId": "mysql.source.6-4",
+      "number": "6.4",
+      "title": "本章实战",
+      "parent": "mysql.lesson.6",
+      "depth": 2,
+      "order": 125,
+      "group": 6,
+      "leaf": true,
+      "printedPage": 125,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章实战把增、改、删放入一个有明确初态的流程。先预测每步目标，再核对终态；中间语句成功并不保证最后数据库符合任务，顺序与条件同样重要。",
+        "下例使用独立score_practice表：先加分再删除，因此原先55分会变60并保留。若先删除再加分，它会先被删掉，结果不同；这说明DML序列需要按业务意图安排。",
+        "该清单只用平台已支持的基本SQL，本节以阅读推导检查流程。运行students判题练习时，每组会从各自的固定初始数据库开始，score_practice表不属于题目初态。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE score_practice (id INT PRIMARY KEY, score INT);\nINSERT INTO score_practice VALUES (1,55),(2,70),(3,NULL);\nUPDATE score_practice SET score = score + 5 WHERE score IS NOT NULL;\nDELETE FROM score_practice WHERE score < 60 OR score IS NULL;\nSELECT id, score FROM score_practice ORDER BY id;",
+        "description": "本章实战把增、改、删放入一个有明确初态的流程。",
+        "result": "在新表前提下最终为(1,60)、(2,75)；id3因NULL被删，表结构保留。",
+        "reason": "本节阅读综合推演，清单的基本类型、VALUES、UPDATE、DELETE和排序均受平台支持；不另设运行题。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若交换UPDATE和DELETE，最终哪条记录会不同？",
+        "answer": "id1会先以55分被删除，之后无法再加到60；最终只剩id2=75。语句顺序改变了后续可操作集合。",
+        "hints": [
+          "逐步写出每步后的三条记录。",
+          "DELETE依据执行当时的成绩判断。",
+          "被删行不会被后续UPDATE重新创建。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：INSERT",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/insert.html"
+        },
+        {
+          "title": "MySQL 8.0：UPDATE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/update.html"
+        },
+        {
+          "title": "MySQL 8.0：DELETE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/delete.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.5",
+      "sourceNodeId": "mysql.source.6-5",
+      "number": "6.5",
+      "title": "本章小结",
+      "parent": "mysql.lesson.6",
+      "depth": 2,
+      "order": 126,
+      "group": 6,
+      "leaf": true,
+      "printedPage": 129,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章的核心是精确描述改变哪些行、生成哪些值以及保留哪些事实。INSERT要匹配列和值，UPDATE要有正确条件和赋值，DELETE要区分边界与NULL；约束始终检查候选状态。",
+        "操作计数只说明数量，不能代替内容核对。错误地删掉另一条记录可能得到相同计数，更新匹配两行也不代表两行值都发生变化；应同时查看目标键、字段值与无关表。",
+        "平台写入按单条语句原子发布，失败保留先前已完成语句，活动事务另有起点可回滚。原生INSERT SELECT、REPLACE和DDL细节分别作为阅读，不能把平台边界归纳成所有MySQL都如此。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "复核：\n新增：新键、新值、旧行保留\n更新：匹配集合、变化字段、边界与NULL\n删除：被删集合、剩余集合、结构保持\n失败：当前语句无部分写入，先前完成语句是否保留按事务边界判断",
+        "description": "本章的核心是精确描述改变哪些行、生成哪些值以及保留哪些事实。",
+        "result": "同一行数可对应多种状态，必须按真实终态判断任务是否达成。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "UPDATE把score设成原值，匹配行数与变化行数一定相等吗？",
+        "answer": "不一定。行满足WHERE可计为匹配，但值未变则不是实际变化；平台分别记录两者。",
+        "hints": [
+          "匹配判断先于比较新旧值。",
+          "SET score=score可匹配但不改变。",
+          "区分目标数量与改动数量。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：UPDATE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/update.html"
+        },
+        {
+          "title": "MySQL 8.0：DELETE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/delete.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.6.6",
+      "sourceNodeId": "mysql.source.6-6",
+      "number": "6.6",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.6",
+      "depth": 2,
+      "order": 127,
+      "group": 6,
+      "leaf": true,
+      "printedPage": 129,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "综合练习提供有重复成绩、边界和NULL的数据，请先不运行，手工写出两条写入后的数据库。练习目标是逐步追踪状态，而不是直接从最后一句猜结果。",
+        "原表成绩为59、60、NULL、75，先对不低于60者加5，再删除低于60或NULL者。每步都按当时状态应用条件；IS NULL必须单列判断，不能被普通比较覆盖。",
+        "将推导用于设计测试时，还应加入空表和不同物理行序。对于不需要有序展示的数据库内容，不应把隐藏行身份或当前表格位置当作SQL业务正确性条件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "初态(id,score)：(1,59),(2,60),(3,NULL),(4,75)\n步骤1：UPDATE ... SET score=score+5 WHERE score>=60\n步骤2：DELETE ... WHERE score<60 OR score IS NULL\n按id写终态。",
+        "description": "综合练习提供有重复成绩、边界和NULL的数据，请先不运行，手工写出两条写入后的数据库。",
+        "result": "步骤1后为59、65、NULL、80；步骤2后只保留(2,65)、(4,80)。这是给定数据的逻辑推导，不是实际运行证据。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把步骤2条件改成score=NULL OR score<60，会遗漏谁？",
+        "answer": "遗漏id3。NULL等值比较为未知，另一项score<60对NULL也未知，OR仍非真，WHERE不会选中它。",
+        "hints": [
+          "分别计算NULL两项条件的真值。",
+          "未知OR未知仍是未知。",
+          "要匹配缺失值应写IS NULL。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：UPDATE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/update.html"
+        },
+        {
+          "title": "MySQL 8.0：DELETE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/delete.html"
+        }
+      ]
+    }
+  ]
+}

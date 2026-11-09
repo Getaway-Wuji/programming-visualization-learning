@@ -1,0 +1,1301 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 8,
+  "nodes": [
+    {
+      "id": "mysql.lesson.8",
+      "sourceNodeId": "mysql.source.chapter-8",
+      "number": "8",
+      "title": "MySQL函数",
+      "parent": null,
+      "depth": 1,
+      "order": 172,
+      "group": 8,
+      "leaf": false,
+      "printedPage": 159,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "函数把值或一组行转换成有含义的结果。本章从数值与文本走向日期、条件、系统信息和窗口统计，重点检查输入类型、输出类型、NULL和环境依赖，而不是只记函数名。",
+        "原生MySQL的函数库远大于当前平台执行子集。平台支持ABS、同类型IFNULL/COALESCE、文本CONCAT、LENGTH及CHAR_LENGTH；其他函数在各节用阅读例解释。日期例采用明确时间与时区假设，系统信息例说明应在目标原生服务器上查询的内容。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · numeric functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/numeric-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · string functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/string-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.1",
+      "sourceNodeId": "mysql.source.8-1",
+      "number": "8.1",
+      "title": "MySQL函数简介",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 173,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 159,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "函数调用通常写成名称加括号与参数，返回值可以成为SELECT结果列，也可在合法位置参加条件。ABS(-8)把负值变成绝对值，CONCAT把文本连接起来；每个函数有自己的参数及NULL规则。",
+        "标量函数通常对每行计算一个结果，聚合函数对一组输入汇总，窗口函数则在保留各行时参考相关行。三者的结果粒度不同，不能因为都写成函数调用就任意替换。",
+        "检查函数时应记录输入类型、输出类型、是否确定以及是否受时区等环境影响。平台支持名称白名单中的函数，阅读型活动也可能使用支持的表达式；活动形式不等于整节语法都不能运行。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT ABS(-8) AS distance_value, CONCAT('数','据') AS word;",
+        "description": "函数调用通常写成名称加括号与参数，返回值可以成为SELECT结果列，也可在合法位置参加条件。ABS(-8)把负值变成绝对值，CONCAT把文本连接起来；每个函数有自己的参数及NULL规则。",
+        "result": "得到一行distance_value=8、word='数据'；两个表达式都无需表。",
+        "reason": "通过两个可支持标量表达式阅读函数调用，本节不分配判题。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "ABS(score)与AVG(score)是否都对每个学生单独计算？",
+        "answer": "不是。ABS通常逐行取绝对值，AVG聚合一组非空成绩，改变统计粒度。",
+        "hints": [
+          "先看参数如何被收集。",
+          "ABS接收当前行值。",
+          "AVG需要整组值及非空数量。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · numeric functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/numeric-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · string functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/string-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.2",
+      "sourceNodeId": "mysql.source.8-2",
+      "number": "8.2",
+      "title": "数学函数",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 174,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 159,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "数学函数处理数值的大小、舍入、方向或变换。ABS取绝对值，CEIL向正无穷取整，FLOOR向负无穷取整，ROUND按指定位数舍入；对负数尤其不能把它们都理解成去掉小数。",
+        "例如-2.4向上取整是-2，向下取整是-3。精确DECIMAL与近似浮点数的舍入行为应区别，不能把某个二进制浮点的显示结果当作所有数值类型的通则。",
+        "本版执行ABS及受限整数表达式，不支持十进制字面量、CEIL、FLOOR或ROUND。原生函数与数值范围仍按本节阅读；绝对值也要检查输入和中间结果范围，并非所有整数取反都能落回原类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT ABS(-12) AS a, CEIL(-2.4) AS c, FLOOR(-2.4) AS f, ROUND(2.46,1) AS r;",
+        "description": "数学函数处理数值的大小、舍入、方向或变换。ABS取绝对值，CEIL向正无穷取整，FLOOR向负无穷取整，ROUND按指定位数舍入；对负数尤其不能把它们都理解成去掉小数。",
+        "result": "按精确字面量推导a=12、c=-2、f=-3、r=2.5。",
+        "reason": "CEIL/FLOOR/ROUND与小数字面量超出平台子集，按原生精确数值阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "FLOOR(-2.4)为何不是-2？",
+        "answer": "FLOOR要求不大于原值的最大整数；-2比-2.4大，所以应为-3。",
+        "hints": [
+          "先画出-3、-2.4、-2的位置。",
+          "下取整朝负无穷方向。",
+          "-3才在原值下方。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · numeric functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/numeric-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.3",
+      "sourceNodeId": "mysql.source.8-3",
+      "number": "8.3",
+      "title": "字符串函数",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 175,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 161,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "字符串函数处理文本的连接、长度、截取和大小写。CONCAT按参数顺序连接，任一参数为NULL时通常返回NULL；IFNULL可按业务把缺失文本替换为已知文本。",
+        "LENGTH返回字节数，CHAR_LENGTH返回字符数。在utf8mb4中“学A”有两个字符、4个UTF-8字节，字符数不能当作字节预算。SUBSTRING位置从1开始，原生还提供TRIM、REPLACE等函数。",
+        "平台文本函数不执行数值到文本的隐式转换，CONCAT参数应为文本或NULL。它支持LENGTH和CHAR_LENGTH，截取、替换等函数归阅读；组合字符与字形也不能简单等同为用户视觉上的一个字符。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT CONCAT('学','A') AS label, LENGTH('学A') AS bytes_total, CHAR_LENGTH('学A') AS chars_total;",
+        "description": "字符串函数处理文本的连接、长度、截取和大小写。CONCAT按参数顺序连接，任一参数为NULL时通常返回NULL；IFNULL可按业务把缺失文本替换为已知文本。",
+        "result": "UTF-8教学环境下label为学A、bytes_total=4、chars_total=2。",
+        "reason": "阅读UTF-8长度差异；示例三种函数属于当前支持范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么两个字符可以占4个字节？",
+        "answer": "A占1个UTF-8字节，“学”占3个；CHAR_LENGTH计字符，LENGTH计字节。",
+        "hints": [
+          "分别数中文与ASCII字符。",
+          "编码字节长度与字符数量是两种度量。",
+          "3+1=4字节，但共2字符。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · string functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/string-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4",
+      "sourceNodeId": "mysql.source.8-4",
+      "number": "8.4",
+      "title": "日期和时间函数",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 176,
+      "group": 8,
+      "leaf": false,
+      "printedPage": 169,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "日期时间函数首先需要明确值表示日期、一天中的时刻、持续时长还是绝对时间点。提取年月日与计算时差的单位不同，当前日期类函数还依赖会话时区。",
+        "本节所有日期函数按原生MySQL 8.0教学。平台数据库列类型限INT与VARCHAR，不提供日期类型、时区表或真实服务器时钟；涉及当前时刻的阅读例会显式给定假设，固定日期例则直接推导。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.1",
+      "sourceNodeId": "mysql.source.8-4-1",
+      "number": "8.4.1",
+      "title": "获取当前日期的函数和获取当前时间的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 177,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 169,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "CURDATE或CURRENT_DATE取得当前会话日期，CURTIME或CURRENT_TIME取得当前会话时间。两者通常不需要参数，但可以给时间函数指定小数秒精度。",
+        "假设语句开始时会话当地时间为2026-11-08 09:15:30，则日期部分为2026-11-08、时间部分为09:15:30。换时区后同一个瞬间的日期可能改变，不能把客户端电脑时钟当作数据库会话时区。",
+        "这些当前日期时间函数在同一语句中以语句开始时刻为基准。下面的结果是明确时间假设下的阅读推导，本平台没有借此读取MySQL服务器当前时间。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT CURRENT_DATE() AS today, CURRENT_TIME() AS clock_time;",
+        "description": "CURDATE或CURRENT_DATE取得当前会话日期，CURTIME或CURRENT_TIME取得当前会话时间。两者通常不需要参数，但可以给时间函数指定小数秒精度。",
+        "result": "假设会话语句开始时间为2026-11-08 09:15:30且默认秒精度，today=2026-11-08，clock_time=09:15:30。",
+        "reason": "需要原生会话时钟与时区，结果是给定时间假设下的阅读示意。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "同一瞬间，不同时区的CURRENT_DATE一定相同吗？",
+        "answer": "不一定，跨过当地午夜时可能处于不同日历日期。",
+        "hints": [
+          "区分瞬间与本地日历表示。",
+          "一个时区可能已过午夜。",
+          "因此日期可以相差一天。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.2",
+      "sourceNodeId": "mysql.source.8-4-2",
+      "number": "8.4.2",
+      "title": "获取当前日期和时间的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 178,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 169,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "NOW和CURRENT_TIMESTAMP返回会话当前日期与时间，适合记录语句发生时刻。NOW(3)请求毫秒精度，NOW(6)请求微秒精度；显示位数不等于测量设备一定有相同真实精度。",
+        "同一条语句里多次NOW以语句开始时刻为基准，因此两次调用相等。SYSDATE通常表示执行函数当时的时刻，和NOW的基准不同，也受服务器相关设置影响。",
+        "存储时间点时还要区分DATETIME和TIMESTAMP的语义，不能仅凭输出都像年月日时分秒就认为相同。平台没有这些原生时间类型，下面只检验NOW在同语句内的一致性。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT NOW() = NOW() AS same_statement_time;",
+        "description": "NOW和CURRENT_TIMESTAMP返回会话当前日期与时间，适合记录语句发生时刻。NOW(3)请求毫秒精度，NOW(6)请求微秒精度；显示位数不等于测量设备一定有相同真实精度。",
+        "result": "在原生MySQL的一次普通语句中结果为1；未声称获取当前具体日期。",
+        "reason": "NOW属于原生时钟函数，本版不执行；示例只推导同语句一致性。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "一次语句里的NOW会随每一行的处理时间不断变化吗？",
+        "answer": "不会，NOW使用该语句开始时刻；若需要执行时刻函数要另看SYSDATE的语义及设置。",
+        "hints": [
+          "把语句开始与逐行处理分开。",
+          "NOW属于前者。",
+          "一次语句中的多次调用共享基准。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.3",
+      "sourceNodeId": "mysql.source.8-4-3",
+      "number": "8.4.3",
+      "title": "UNIX时间戳函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 179,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 170,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "UNIX时间戳通常用自UTC纪元起的秒数表示时间点。UNIX_TIMESTAMP()可取当前秒数，带日期参数时按会话时区解释该日期；FROM_UNIXTIME则把秒数转成会话当地日期时间。",
+        "1704067200表示2024-01-01 00:00:00 UTC。在+08:00会话中转回日期时间会显示08:00:00；数值本身与当地显示不是同一层概念。",
+        "不要混淆秒与毫秒，13位毫秒数不能直接当作秒喂给函数。时区中的夏令时可能让本地日期与秒数往返不一一对应；原生有效范围也不是无限大，本版不执行时间戳转换。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SET time_zone = '+00:00';\nSELECT UNIX_TIMESTAMP('2024-01-01 00:00:00') AS epoch_seconds, FROM_UNIXTIME(1704067200) AS utc_display;",
+        "description": "UNIX时间戳通常用自UTC纪元起的秒数表示时间点。UNIX_TIMESTAMP()可取当前秒数，带日期参数时按会话时区解释该日期；FROM_UNIXTIME则把秒数转成会话当地日期时间。",
+        "result": "原生UTC会话推导epoch_seconds=1704067200，utc_display=2024-01-01 00:00:00。",
+        "reason": "依赖原生SET时区与日期转换，属于原生MySQL阅读范围；平台不执行该清单。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把会话时区改为+08:00，同一1704067200的显示会怎样？",
+        "answer": "FROM_UNIXTIME显示2024-01-01 08:00:00；绝对秒数仍是1704067200。",
+        "hints": [
+          "秒数固定同一瞬间。",
+          "+08:00当地时间比UTC快8小时。",
+          "变化的是显示，不是纪元秒数。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.4",
+      "sourceNodeId": "mysql.source.8-4-4",
+      "number": "8.4.4",
+      "title": "返回UTC日期的函数和返回UTC时间的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 180,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 171,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "UTC_DATE、UTC_TIME和UTC_TIMESTAMP使用UTC日期与时间，不随会话当地时区改成别的日历表示。它们适合比较不同地区系统共同约定的时间基准。",
+        "例如某瞬间UTC为2026-11-07 23:30:00，+08:00会话已到2026-11-08 07:30:00。此时CURRENT_DATE为11月8日，而UTC_DATE仍为11月7日。",
+        "UTC不是给输出文本自动附加时区标签。拿到不带标签的年月日时分秒仍需在接口约定其含义；本例的具体结果来自给定瞬间，不是从运行环境读取的时间。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT UTC_DATE() AS utc_day, UTC_TIME() AS utc_clock, UTC_TIMESTAMP() AS utc_stamp;",
+        "description": "UTC_DATE、UTC_TIME和UTC_TIMESTAMP使用UTC日期与时间，不随会话当地时区改成别的日历表示。它们适合比较不同地区系统共同约定的时间基准。",
+        "result": "假定UTC瞬间为2026-11-07 23:30:00：utc_day=2026-11-07，utc_clock=23:30:00，utc_stamp=2026-11-07 23:30:00。",
+        "reason": "UTC函数需要原生时钟，本例以指定瞬间作阅读推导。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "UTC_DATE是否会因会话改为+08:00而自动加一天？",
+        "answer": "不会；它按UTC日期计算。CURRENT_DATE才依赖会话时区的当地日期。",
+        "hints": [
+          "先看函数名中的UTC。",
+          "它明确指定统一时间基准。",
+          "会话当地日期变化不改变此函数的基准。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.5",
+      "sourceNodeId": "mysql.source.8-4-5",
+      "number": "8.4.5",
+      "title": "获取月份的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 181,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 171,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MONTH从日期中提取月份数，完整合法日期通常得到1到12。MONTHNAME返回月份名称，文字随lc_time_names语言环境变化，适合显示而非直接做稳定的跨语言分组键。",
+        "从2025-02-14提取月份得到2，而不是日期中的14。年度报表若只按MONTH分组，会把不同年份的同月混在一起，应同时保留年份或明确业务范围。",
+        "原生MySQL对零日期、无效日期的处理受函数及SQL模式影响；本课示例只用合法完整日期，平台不执行日期函数，不把这些字符串当作已支持的日期列。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT MONTH('2025-02-14') AS month_no;",
+        "description": "MONTH从日期中提取月份数，完整合法日期通常得到1到12。MONTHNAME返回月份名称，文字随lc_time_names语言环境变化，适合显示而非直接做稳定的跨语言分组键。",
+        "result": "month_no为2。若lc_time_names='en_US'，MONTHNAME同一日期会是February，但本例不依赖名称输出。",
+        "reason": "原生日期提取阅读，使用固定合法日期避免时钟与语言环境漂移。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "统计跨两年的每月销售时，只GROUP BY MONTH(date)有什么问题？",
+        "answer": "会把两年相同月份合并，应按年份与月份共同分组或先限定单一年份。",
+        "hints": [
+          "MONTH只保留1到12。",
+          "2024年2月与2025年2月都变为2。",
+          "加入YEAR才能保留所属年度。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.6",
+      "sourceNodeId": "mysql.source.8-4-6",
+      "number": "8.4.6",
+      "title": "获取星期的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 182,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 171,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DAYOFWEEK与WEEKDAY都能提取星期编号，但起点不同。DAYOFWEEK把周日作为1、周一作为2；WEEKDAY把周一作为0、周日作为6。",
+        "2025-01-06为周一，因此两个函数分别返回2与0。DAYNAME则返回星期名称，受语言环境影响；判断工作日时应先明确编号体系再设条件。",
+        "不要把两个函数的结果直接套同一组数值。若工作日定义为周一到周五，WEEKDAY值0到4符合通常口径，但节假日调休仍需要独立业务日历，不能靠星期函数完整判断。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT DAYOFWEEK('2025-01-06') AS sunday_based, WEEKDAY('2025-01-06') AS monday_based;",
+        "description": "DAYOFWEEK与WEEKDAY都能提取星期编号，但起点不同。DAYOFWEEK把周日作为1、周一作为2；WEEKDAY把周一作为0、周日作为6。",
+        "result": "周一的sunday_based=2，monday_based=0。",
+        "reason": "两个原生星期函数不在平台子集，阅读对照编号。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "WEEKDAY返回6表示哪一天？",
+        "answer": "周日。WEEKDAY从周一0开始计数。",
+        "hints": [
+          "列出周一0、周二1。",
+          "依次到周六5。",
+          "最后周日为6。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.7",
+      "sourceNodeId": "mysql.source.8-4-7",
+      "number": "8.4.7",
+      "title": "获取星期数的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 183,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 172,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "WEEK返回一年中的周编号，mode参数控制周从哪天开始、编号是否允许0以及第一周的判定。省略模式可能依赖配置，跨系统报表应显式约定。",
+        "常见ISO周口径用模式3：周一开周、第一周至少含四天。2024-12-30虽然日历年份为2024，却属于2025年的第1周；YEARWEEK(date,3)可把所属周年和周号一起返回。",
+        "不能用YEAR(date)与WEEK(date,3)随意拼接，年末年初可能拼出错误的周年。业务报表需写清口径，平台不执行这些原生日期函数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT WEEK('2024-12-30',3) AS week_no, YEARWEEK('2024-12-30',3) AS week_year_no;",
+        "description": "WEEK返回一年中的周编号，mode参数控制周从哪天开始、编号是否允许0以及第一周的判定。省略模式可能依赖配置，跨系统报表应显式约定。",
+        "result": "原生按模式3推导week_no=1，week_year_no=202501。",
+        "reason": "原生周编号阅读，显式指定模式3以固定口径。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何2024-12-30的ISO周年不是2024？",
+        "answer": "这一周的周四在2025年，按ISO第一周规则属于2025年第1周；日历年与周年不同。",
+        "hints": [
+          "观察该周周一到周四跨年。",
+          "周四为2025-01-02。",
+          "因此该周归入2025的ISO周年。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.8",
+      "sourceNodeId": "mysql.source.8-4-8",
+      "number": "8.4.8",
+      "title": "获取天数的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 184,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 173,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "“天数”有多种含义：DAYOFMONTH是月内第几天，DAYOFYEAR是年内第几天，TO_DAYS是日期转换的日序号。应根据问题选择，不能只凭函数名带DAY就互换。",
+        "对2024-03-01，月内天数为1，年内天数为61，因为2024为闰年，1月31天加2月29天再加1天。DATEDIFF更适合求两日期相差多少日历天。",
+        "TO_DAYS不是UNIX秒数，且历史日期范围和历法变更需要按原生文档处理。本课使用现代合法日期，平台仍把相关日期转换作为阅读，不执行日期类型。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT DAYOFMONTH('2024-03-01') AS day_in_month, DAYOFYEAR('2024-03-01') AS day_in_year;",
+        "description": "“天数”有多种含义：DAYOFMONTH是月内第几天，DAYOFYEAR是年内第几天，TO_DAYS是日期转换的日序号。应根据问题选择，不能只凭函数名带DAY就互换。",
+        "result": "day_in_month=1，day_in_year=61。",
+        "reason": "固定合法日期的原生阅读示例，突出不同天数口径。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "2025-03-01的DAYOFYEAR为何比2024-03-01少1？",
+        "answer": "2025不是闰年，2月28天，所以是60；2024为61。",
+        "hints": [
+          "比较两年的2月天数。",
+          "1月均为31天。",
+          "31+28+1=60，闰年则加1。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.9",
+      "sourceNodeId": "mysql.source.8-4-9",
+      "number": "8.4.9",
+      "title": "获取年份、季度、小时、分钟和秒钟的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 185,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 174,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "YEAR、QUARTER、HOUR、MINUTE、SECOND分别从时间值中取出年份、季度、小时、分钟和秒。季度按月份分成1到4：1到3月为第1季度，10到12月为第4季度。",
+        "对2025-10-09 14:26:38，得到2025、4、14、26、38。它们返回的是组成部分，不是从某个基准累计到现在的总年数、总小时数或总秒数。",
+        "HOUR对原生TIME持续时长可能超过23，而普通DATETIME小时在0到23之间。处理小数秒要用相应MICROSECOND等函数，不要误以为SECOND包含完整小数秒精度。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT YEAR('2025-10-09 14:26:38') AS y, QUARTER('2025-10-09') AS q, HOUR('2025-10-09 14:26:38') AS h, MINUTE('2025-10-09 14:26:38') AS m, SECOND('2025-10-09 14:26:38') AS s;",
+        "description": "YEAR、QUARTER、HOUR、MINUTE、SECOND分别从时间值中取出年份、季度、小时、分钟和秒。季度按月份分成1到4：1到3月为第1季度，10到12月为第4季度。",
+        "result": "一行结果(y,q,h,m,s)=(2025,4,14,26,38)。",
+        "reason": "原生时间分量提取阅读，不把日期字符串冒充支持的时间类型。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "SECOND返回38，是否表示该时间距午夜只有38秒？",
+        "answer": "不是，只是秒分量；总秒数还要计入小时和分钟。",
+        "hints": [
+          "先区分分量与累计量。",
+          "14小时与26分钟也贡献秒数。",
+          "SECOND只取最后的秒部分。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.10",
+      "sourceNodeId": "mysql.source.8-4-10",
+      "number": "8.4.10",
+      "title": "获取日期的指定值的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 186,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 175,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "EXTRACT(unit FROM value)用统一形式提取指定日期时间部分，例如YEAR、MONTH或YEAR_MONTH。单单位提取与对应YEAR、MONTH函数类似，复合单位可能把多个部分编码成一个数值。",
+        "对2025-07-16 08:09:10，EXTRACT(YEAR_MONTH...)给出202507，EXTRACT(DAY...)给出16。FROM属于函数语法的一部分，不是外层查询的来源表关键字。",
+        "复合编码不适合作普通数值时间运算：202501减202412不等于相差月数。需要月份差应采用正确日期运算；平台不执行EXTRACT，原生完整单位及返回范围需按文档选择。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT EXTRACT(YEAR_MONTH FROM '2025-07-16 08:09:10') AS ym, EXTRACT(DAY FROM '2025-07-16 08:09:10') AS d;",
+        "description": "EXTRACT(unit FROM value)用统一形式提取指定日期时间部分，例如YEAR、MONTH或YEAR_MONTH。单单位提取与对应YEAR、MONTH函数类似，复合单位可能把多个部分编码成一个数值。",
+        "result": "ym=202507，d=16。",
+        "reason": "EXTRACT与日期单位语法为原生阅读范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能否用202501-202412计算相差月份？",
+        "answer": "不能，编码相减得到89而非1个月；需要日期差或月份专用函数。",
+        "hints": [
+          "年月编码包含十进制进位。",
+          "12月到1月不是简单个位增1。",
+          "把它作为标识显示，月差用日期算法。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.11",
+      "sourceNodeId": "mysql.source.8-4-11",
+      "number": "8.4.11",
+      "title": "时间和秒钟转换的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 187,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 175,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "TIME_TO_SEC把时间或持续时长转换为秒，SEC_TO_TIME把秒数转换为原生TIME表示。先统一单位再求和，比把hh:mm:ss文本直接相加可靠。",
+        "01:02:03包含1小时、2分钟、3秒，因此秒数是3600+120+3=3723；反向转换应回到01:02:03。负时长与超过24小时的时长也要按TIME范围理解。",
+        "TIME不等同于一天中的时刻：持续时间可以超过23小时，但原生TIME仍有有限范围。函数结果是否保留小数秒也与输入精度有关，本例选整数秒，平台不执行时间转换。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT TIME_TO_SEC('01:02:03') AS seconds_total, SEC_TO_TIME(3723) AS duration;",
+        "description": "TIME_TO_SEC把时间或持续时长转换为秒，SEC_TO_TIME把秒数转换为原生TIME表示。先统一单位再求和，比把hh:mm:ss文本直接相加可靠。",
+        "result": "seconds_total=3723，duration=01:02:03。",
+        "reason": "原生TIME与秒转换不在平台子集，明确单位后阅读演算。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把01:30:00转换为秒后应是多少？",
+        "answer": "5400秒，1×3600+30×60。",
+        "hints": [
+          "一小时为3600秒。",
+          "30分钟为1800秒。",
+          "合计5400秒。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.12",
+      "sourceNodeId": "mysql.source.8-4-12",
+      "number": "8.4.12",
+      "title": "计算日期和时间的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 188,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 176,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DATE_ADD和DATE_SUB按指定INTERVAL单位加减日期，DATEDIFF比较两个日期的日历天差，TIMESTAMPDIFF则按指定单位求第二个时间减第一个时间。参数方向和单位应写在口径中。",
+        "2025-01-31加一个月会调整到2025-02-28，因为目标月没有31日。一个月并不总是30天，日期不能通过把年月日当整数加减来可靠计算。",
+        "DATEDIFF忽略时间部分，TIMESTAMPDIFF按单位计算完整差值。NULL、无效日期和极值都要考虑；本版无日期运算执行，下面按合法原生日期推导。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT DATE_ADD('2025-01-31', INTERVAL 1 MONTH) AS next_month, DATEDIFF('2025-03-03','2025-03-01') AS gap_days;",
+        "description": "DATE_ADD和DATE_SUB按指定INTERVAL单位加减日期，DATEDIFF比较两个日期的日历天差，TIMESTAMPDIFF则按指定单位求第二个时间减第一个时间。参数方向和单位应写在口径中。",
+        "result": "next_month=2025-02-28，gap_days=2。",
+        "reason": "本版未执行日期运算，结果由给定原生日期规则推导。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "DATE_ADD加1个月与加30天总相同吗？",
+        "answer": "不相同。月份长短不同；2025-01-31加1个月为2月28日，加30天为3月2日。",
+        "hints": [
+          "分别按日历月和连续天数计算。",
+          "2025年2月有28天。",
+          "两种单位承诺的跨度不同。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.4.13",
+      "sourceNodeId": "mysql.source.8-4-13",
+      "number": "8.4.13",
+      "title": "将日期和时间格式化的函数",
+      "parent": "mysql.lesson.8.4",
+      "depth": 3,
+      "order": 189,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 178,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DATE_FORMAT将日期时间转成指定显示文本，TIME_FORMAT用于时间格式，STR_TO_DATE按格式尝试解析文本。格式化是表现层处理，不会把存储类型永久改成显示样式。",
+        "格式串%Y为四位年，%m为月，%d为日，%H为24小时，%i为分钟，%s为秒。分钟不能误写%m，否则会显示月份，且可能形成看似合理的错误报表。",
+        "格式化结果是文本，排序和比较时不应默认仍有日期语义。涉及月份或星期名称时结果还受语言环境影响；本例只用数字格式，平台不执行这些原生函数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT DATE_FORMAT('2025-07-16 08:09:10','%Y/%m/%d %H:%i:%s') AS display_time;",
+        "description": "DATE_FORMAT将日期时间转成指定显示文本，TIME_FORMAT用于时间格式，STR_TO_DATE按格式尝试解析文本。格式化是表现层处理，不会把存储类型永久改成显示样式。",
+        "result": "display_time为2025/07/16 08:09:10。",
+        "reason": "原生日期格式化阅读，用纯数字格式避免语言名称依赖。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "格式串中的%i和%m分别表示什么？",
+        "answer": "%i是分钟，%m是月份。",
+        "hints": [
+          "对照时间08:09和日期07月。",
+          "分钟应显示09。",
+          "月份应显示07，二者不能替换。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · date and time functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/date-and-time-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.5",
+      "sourceNodeId": "mysql.source.8-5",
+      "number": "8.5",
+      "title": "条件判断函数",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 190,
+      "group": 8,
+      "leaf": false,
+      "printedPage": 181,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "条件判断函数在一条表达式中选择返回值，用于状态标签、缺失值替代和分类。IF是二选一，IFNULL仅针对缺失，CASE适合多分支，三者解决的问题不同。",
+        "设计分支时同时检查条件中NULL的行为和所有分支的结果类型。平台当前支持同类型IFNULL/COALESCE，IF与CASE仍按原生阅读；存储程序中的IF语句、CASE语句将在第11章另外解释。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · flow control functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/flow-control-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.5.1",
+      "sourceNodeId": "mysql.source.8-5-1",
+      "number": "8.5.1",
+      "title": "IF(expr,v1,v2)函数",
+      "parent": "mysql.lesson.8.5",
+      "depth": 3,
+      "order": 191,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 181,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "IF(expr,v1,v2)在expr为真时返回v1，否则返回v2。原生MySQL将非0且非NULL的条件看作真，因此未知条件会走第二个返回分支。",
+        "例如IF(72>=60,'通过','待补')返回通过，IF(NULL,'通过','待补')返回待补。第二个例子体现的是选择规则，不意味着NULL在所有SQL逻辑中都等于假。",
+        "两个分支的类型会共同影响结果类型，数字与文本混合可能转换。为可读性使用同类型分支；平台本版不执行IF函数，也不把它与存储程序IF...THEN...END IF混为一种语法。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT IF(72 >= 60,'通过','待补') AS a, IF(NULL,'通过','待补') AS b;",
+        "description": "IF(expr,v1,v2)在expr为真时返回v1，否则返回v2。原生MySQL将非0且非NULL的条件看作真，因此未知条件会走第二个返回分支。",
+        "result": "原生推导a='通过'，b='待补'。",
+        "reason": "原生IF函数为阅读范围，NULL分支行为单独解释。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "IF(NULL,1,2)返回NULL还是2？",
+        "answer": "返回2，条件NULL不满足为真。",
+        "hints": [
+          "按IF的两个分支规则判断。",
+          "只有真条件取第一个分支。",
+          "NULL走第二个分支2。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · flow control functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/flow-control-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.5.2",
+      "sourceNodeId": "mysql.source.8-5-2",
+      "number": "8.5.2",
+      "title": "IFNULL(v1,v2)函数",
+      "parent": "mysql.lesson.8.5",
+      "depth": 3,
+      "order": 192,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 182,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "IFNULL(v1,v2)在v1非NULL时返回v1，仅在它为NULL时返回v2。它检测缺失，不检测0、空字符串或逻辑假；因此可以在展示层给未知成绩一个特定占位值。",
+        "IFNULL(NULL,0)为0，IFNULL(0,9)仍为0，IFNULL('','未填')仍为空串。替代不会自动修改数据库原值，统计时是否把未知当0应先由业务口径决定。",
+        "原生MySQL可合并不同类型分支，本版则要求同类型IFNULL/COALESCE，NULL可配兼容的目标类型。平台支持此函数不代表可以任意混合整数与文本，比如把成绩和'缺考'混为一种执行结果。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT IFNULL(NULL,0) AS a, IFNULL(0,9) AS b, IFNULL('','未填') AS c;",
+        "description": "IFNULL(v1,v2)在v1非NULL时返回v1，仅在它为NULL时返回v2。它检测缺失，不检测0、空字符串或逻辑假；因此可以在展示层给未知成绩一个特定占位值。",
+        "result": "a=0，b=0，c为空字符串。",
+        "reason": "示例为同类型IFNULL，位于平台子集但本节使用阅读自检。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "IFNULL(score,0)会直接把表里的NULL成绩改写为0吗？",
+        "answer": "不会，它只是查询表达式返回替代值；修改原表要显式UPDATE。",
+        "hints": [
+          "区分SELECT结果与持久数据。",
+          "函数作用在表达式求值。",
+          "没有UPDATE，就没有写回表。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · flow control functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/flow-control-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.5.3",
+      "sourceNodeId": "mysql.source.8-5-3",
+      "number": "8.5.3",
+      "title": "CASE函数",
+      "parent": "mysql.lesson.8.5",
+      "depth": 3,
+      "order": 193,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 182,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "查询中的CASE是条件表达式。简单CASE比较一个值与多个候选，搜索CASE则依次判断多个条件，返回第一个为真的分支。",
+        "分类成绩时应先写缺失分支，再写由高到低的分段条件，最后用ELSE兜底。若先判断score>=60，优秀成绩也会提前落入及格分支；顺序本身决定分类。",
+        "无分支为真且没有ELSE时结果为NULL。简单CASE的WHEN NULL不能充当IS NULL测试；存储程序CASE语句以END CASE结束，查询CASE表达式以END结束。平台本版不执行CASE。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT CASE WHEN NULL IS NULL THEN '待录入' WHEN 88 >= 90 THEN '优秀' ELSE '其他' END AS label;",
+        "description": "查询中的CASE是条件表达式。简单CASE比较一个值与多个候选，搜索CASE则依次判断多个条件，返回第一个为真的分支。",
+        "result": "原生结果label='待录入'，因为第一个条件已为真，后续分支不决定返回值。",
+        "reason": "CASE表达式超出平台子集，阅读说明分支与NULL。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "CASE score WHEN NULL THEN...能正确匹配缺成绩吗？",
+        "answer": "不能依赖它检测NULL；应写CASE WHEN score IS NULL THEN...。",
+        "hints": [
+          "简单CASE使用等值比较。",
+          "NULL普通等值比较为未知。",
+          "检测缺失用搜索CASE和IS NULL。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · flow control functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/flow-control-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.6",
+      "sourceNodeId": "mysql.source.8-6",
+      "number": "8.6",
+      "title": "系统信息函数",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 194,
+      "group": 8,
+      "leaf": false,
+      "printedPage": 183,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "系统信息函数描述当前原生服务器或连接，例如版本、用户与表达式字符集。它们回答环境是什么，不能替代业务数据查询，也不能从教学执行器身份推断出真实MySQL服务状态。",
+        "本节对会话相关输出采用条件说明或显式字符集字面量。平台没有原生账号和服务器进程；VERSION等信息应在目标原生连接中查询，课程参考MySQL 8.0也不代表某个具体补丁版本。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · information functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/information-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.6.1",
+      "sourceNodeId": "mysql.source.8-6-1",
+      "number": "8.6.1",
+      "title": "获取MySQL版本号",
+      "parent": "mysql.lesson.8.6",
+      "depth": 3,
+      "order": 195,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 183,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "VERSION()返回连接到的MySQL服务器版本字符串，包含具体主次版本及可能的发行后缀。它描述的是服务端，不是mysql命令行客户端版本，也不是驱动库版本。",
+        "排查语法差异时应先确认实际服务端版本，再查对应手册。仅看字符串以8.0开头还不足以判断所有补丁期新增特性，测试和部署应记录完整版本。",
+        "当前平台是按8.0教学子集实现的Rust/WASM执行器，没有伪装成原生MySQL服务器。下例只说明原生查询方法，不给出虚构的本机版本号。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT VERSION() AS server_version;",
+        "description": "VERSION()返回连接到的MySQL服务器版本字符串，包含具体主次版本及可能的发行后缀。它描述的是服务端，不是mysql命令行客户端版本，也不是驱动库版本。",
+        "result": "原生结果是一行实际服务器的版本文本，例如格式为8.0.x及发行后缀；具体值依被连接服务，不是本平台实测值。",
+        "reason": "读取真实原生服务器版本需要目标服务连接；平台不连接原生服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "客户端显示mysql 8.0是否足以证明远程服务器也是同一版本？",
+        "answer": "不足以；客户端与服务端可以不同，须在目标连接上查询VERSION或相应服务信息。",
+        "hints": [
+          "先区分运行SQL的服务器与发命令的工具。",
+          "工具有自己的版本。",
+          "VERSION回答服务端版本。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · information functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/information-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.6.2",
+      "sourceNodeId": "mysql.source.8-6-2",
+      "number": "8.6.2",
+      "title": "获取用户名的函数",
+      "parent": "mysql.lesson.8.6",
+      "depth": 3,
+      "order": 196,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 185,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "USER()表示客户端提交的用户名及来源主机，CURRENT_USER()表示服务器实际用于权限检查的认证账号，两者可能不同。SESSION_USER和SYSTEM_USER在MySQL中是USER的同义形式。",
+        "例如使用匿名账号匹配或定义者权限的存储对象时，当前有效权限身份不一定与登录时填的名字相同。检查权限问题时应同时看连接身份、有效身份和对象安全上下文。",
+        "这些函数返回数据库账号文本，不是应用用户昵称或操作系统当前用户。平台不实现账号登录，也不读取宿主用户；下面只展示原生排查方法，不能据此推断本机身份。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT USER() AS submitted_identity, CURRENT_USER() AS effective_identity;",
+        "description": "USER()表示客户端提交的用户名及来源主机，CURRENT_USER()表示服务器实际用于权限检查的认证账号，两者可能不同。SESSION_USER和SYSTEM_USER在MySQL中是USER的同义形式。",
+        "result": "原生返回两列账号@主机形式的文本；可能相同，也可能因账号匹配或安全上下文不同而不同。",
+        "reason": "账号身份函数依赖原生认证环境，作为阅读，不访问本机账号。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "USER与CURRENT_USER不同是否必然是错误？",
+        "answer": "不是。它们描述不同身份，应按认证匹配和执行上下文解释。",
+        "hints": [
+          "一个是客户端提交身份。",
+          "另一个是权限采用身份。",
+          "先查上下文，再判断差异是否符合配置。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · information functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/information-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.6.3",
+      "sourceNodeId": "mysql.source.8-6-3",
+      "number": "8.6.3",
+      "title": "获取字符串的字符集和排序方式的函数",
+      "parent": "mysql.lesson.8.6",
+      "depth": 3,
+      "order": 197,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 185,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "CHARSET(expr)查看字符串表达式的字符集，COLLATION(expr)查看它的排序规则。字符集规定如何编码字符，排序规则规定文本如何比较和排序；同一字符集可以有多种排序规则。",
+        "给字面量显式指定_utf8mb4并COLLATE utf8mb4_0900_bin，可以得到明确的环境独立示例。0900_bin的NO PAD意味着尾空格参与比较，但不是所有带_bin名称的规则都采用相同填充属性。",
+        "本平台固定教学文本规则，不执行CHARSET、COLLATION或任意COLLATE设置。原生默认规则还受服务器、数据库、表、列和连接影响，不能因教学用固定规则就推断所有原生库也如此。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT CHARSET(_utf8mb4'A') AS cs, COLLATION(_utf8mb4'A' COLLATE utf8mb4_0900_bin) AS co;",
+        "description": "CHARSET(expr)查看字符串表达式的字符集，COLLATION(expr)查看它的排序规则。字符集规定如何编码字符，排序规则规定文本如何比较和排序；同一字符集可以有多种排序规则。",
+        "result": "原生推导cs='utf8mb4'，co='utf8mb4_0900_bin'。",
+        "reason": "原生元信息函数及COLLATE为阅读；固定教学规则另由平台契约确定。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "同为utf8mb4的两个列，比较大小写的方式一定相同吗？",
+        "answer": "不一定。它们可以选不同排序规则，字符集相同不代表比较规则相同。",
+        "hints": [
+          "字符集负责表示字符。",
+          "排序规则负责比较字符。",
+          "检查COLLATION，不能只看CHARSET。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · information functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/information-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · charset binary collations",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/charset-binary-collations.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.7",
+      "sourceNodeId": "mysql.source.8-7",
+      "number": "8.7",
+      "title": "加密函数",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 198,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 186,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "数据库手册把加密、摘要和压缩函数放在相邻类别，但用途不同。AES_ENCRYPT/AES_DECRYPT是带密钥的可逆加解密，SHA2是单向摘要，压缩或Base64编码都不等于保密。",
+        "SHA2(text,256)返回SHA-256的十六进制摘要文本，通常64个字符。同一字节输入得到同一摘要，可用于校验变化；摘要不是原文，也不能通过“解密SHA2”直接取回原文。",
+        "真实密钥、传输和日志处理需要单独设计，快速摘要也不能直接替代专用密码存储方案。平台不执行加密函数、不保管密钥，本例仅对无敏感内容的固定文本验证摘要性质。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT CHAR_LENGTH(SHA2('course-demo',256)) AS hex_chars, SHA2('course-demo',256)=SHA2('course-demo',256) AS same_input;",
+        "description": "数据库手册把加密、摘要和压缩函数放在相邻类别，但用途不同。AES_ENCRYPT/AES_DECRYPT是带密钥的可逆加解密，SHA2是单向摘要，压缩或Base64编码都不等于保密。",
+        "result": "原生SHA2可用时，hex_chars=64，same_input=1；这是性质推导，不是实际生成或保存密钥。",
+        "reason": "本版不提供加密/摘要及密钥环境，阅读非敏感固定文本。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把文本Base64编码后，是否就获得与加密相同的保密性？",
+        "answer": "没有。编码便于表示数据，持有编码文本者可按公开规则还原；加密需要适当密钥与安全设计。",
+        "hints": [
+          "区分编码、摘要、加密的目标。",
+          "Base64没有保密密钥。",
+          "公开解码就能恢复，所以不能当作加密。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · encryption functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/encryption-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.8",
+      "sourceNodeId": "mysql.source.8-8",
+      "number": "8.8",
+      "title": "窗口函数",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 199,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 187,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "窗口函数在保留每条结果行的同时参考相关行。OVER(PARTITION BY...)规定分区，窗口ORDER BY规定区内顺序，帧可进一步限制当前行附近参与计算的范围；它不同于把每组压成一行的GROUP BY。",
+        "排名中ROW_NUMBER给每行不同序号，RANK允许并列且跳号，DENSE_RANK允许并列但不跳号。两名90分、一名70分，RANK为1、1、3；若把唯一id也放进排名键，会改变并列定义。",
+        "窗口ORDER BY与最终输出ORDER BY用途不同，前者决定窗口计算，后者决定展示。本版不执行窗口、CTE或UNION，本例完整原生查询用三行常量构造数据，按固定数据推导并列排名。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "WITH score_data AS (SELECT 1 AS id,90 AS score UNION ALL SELECT 2,90 UNION ALL SELECT 3,70)\nSELECT id,score,RANK() OVER(ORDER BY score DESC) AS rank_no\nFROM score_data ORDER BY id;",
+        "description": "窗口函数在保留每条结果行的同时参考相关行。OVER(PARTITION BY...)规定分区，窗口ORDER BY规定区内顺序，帧可进一步限制当前行附近参与计算的范围；它不同于把每组压成一行的GROUP BY。",
+        "result": "原生推导输出(1,90,1)、(2,90,1)、(3,70,3)，仍保留三条明细行。",
+        "reason": "窗口、CTE与集合合并均为本版原生阅读范围，平台不执行这些结构。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若想并列为1、1，下一名为2，应选RANK还是DENSE_RANK？",
+        "answer": "DENSE_RANK；RANK会跳过并列占用的位置而给下一名3。",
+        "hints": [
+          "先写三人成绩90、90、70。",
+          "两种函数都保留并列。",
+          "是否跳号是它们的差别。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · window functions usage",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/window-functions-usage.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.9",
+      "sourceNodeId": "mysql.source.8-9",
+      "number": "8.9",
+      "title": "MySQL函数的使用示例",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 200,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 188,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "组合函数前先把业务口径拆成几步：缺失值怎样显示、文本怎样拼接、长度按字节还是字符计。每一步都需要明确输入类型，避免把格式化文本重新用于数值计算。",
+        "例如给学生显示“姓名（成绩状态）”，可以先把可空的状态文本替换，再CONCAT形成标签。只需显示未知的占位词时，不必把整数成绩与文本混合，保持类型更容易推理。",
+        "本例只使用平台支持的同类型IFNULL、文本CONCAT与字符长度，仍以阅读活动检查构成。和日期、窗口组合的更广函数查询需按原生范围阅读，不能因有一个支持函数就宣称整个表达式可执行。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT CONCAT('周岚','：',IFNULL(NULL,'待录入')) AS label, CHAR_LENGTH(CONCAT('周岚','：','待录入')) AS label_chars;",
+        "description": "组合函数前先把业务口径拆成几步：缺失值怎样显示、文本怎样拼接、长度按字节还是字符计。每一步都需要明确输入类型，避免把格式化文本重新用于数值计算。",
+        "result": "label为周岚：待录入，label_chars=6（周、岚、：、待、录、入）。",
+        "reason": "示例使用支持的文本组合；本节阅读检验类型与字符计数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不要直接在平台写CONCAT(name,score)把整数成绩接到姓名后？",
+        "answer": "平台文本CONCAT拒绝数值到文本的隐式转换；应按支持范围选同类型表达，原生则要明确转换和格式口径。",
+        "hints": [
+          "检查每个实参类型。",
+          "score是INT而不是文本。",
+          "不能用原生隐式转换能力推定教学子集也支持。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · string functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/string-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · flow control functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/flow-control-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.10",
+      "sourceNodeId": "mysql.source.8-10",
+      "number": "8.10",
+      "title": "本章小结",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 201,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 192,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "函数选择可以整理为输入、转换、输出三步。数学函数改变数值，字符串函数处理文本，日期函数需要时间口径，条件函数选择分支，窗口函数还要声明关联行和顺序。",
+        "NULL规则不是所有函数完全一致：CONCAT遇到NULL会返回NULL，IFNULL专门替换NULL，COUNT(expr)跳过NULL。理解规则后才能在组合表达式中定位结果为何变空。",
+        "环境依赖要随示例说明：日期看会话时区，名称看语言设置，系统信息看目标服务器，文本比较看排序规则。平台执行白名单应与原生手册能力分开记录，阅读完成也不表示真实判题已通过。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT CONCAT('A',NULL) AS without_default, CONCAT('A',IFNULL(NULL,'')) AS with_default;",
+        "description": "函数选择可以整理为输入、转换、输出三步。数学函数改变数值，字符串函数处理文本，日期函数需要时间口径，条件函数选择分支，窗口函数还要声明关联行和顺序。",
+        "result": "without_default为NULL，with_default为'A'。补空串发生在拼接之前，改变了NULL传播。",
+        "reason": "使用支持的文本与NULL规则做章节复盘。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两条表达式的差别发生在CONCAT前还是后？",
+        "answer": "在前。IFNULL先把NULL替换为空串，CONCAT因此收到两个非NULL文本。",
+        "hints": [
+          "从最内层函数开始求值。",
+          "先算IFNULL(NULL,'')。",
+          "得到空串后再与A连接。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · string functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/string-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · flow control functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/flow-control-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.8.11",
+      "sourceNodeId": "mysql.source.8-11",
+      "number": "8.11",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.8",
+      "depth": 2,
+      "order": 202,
+      "group": 8,
+      "leaf": true,
+      "printedPage": 192,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章练习把单位、NULL和条件顺序放到同一个审查中。写任何函数前先说明结果含义，再给一个正常输入和一个能暴露错误的边界输入。",
+        "对文本“甲A”，字符数是2而UTF-8字节数是4；对缺失文本NULL，长度函数通常返回NULL。如果业务需要显示0，应明确先替代缺失还是替代长度结果，不要悄悄把未知当作真实空文本。",
+        "本节自检使用同类型替代和长度函数，结果按UTF-8与NULL规则推导。先区分未知文本和已知空文本，再检查替代发生在长度计算之前还是之后。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT CHAR_LENGTH(IFNULL(NULL,'')) AS empty_length, LENGTH('甲A') AS byte_length;",
+        "description": "本章练习把单位、NULL和条件顺序放到同一个审查中。写任何函数前先说明结果含义，再给一个正常输入和一个能暴露错误的边界输入。",
+        "result": "empty_length=0，byte_length=4。第一个0来自明确替换为空串，第二个4来自UTF-8编码。",
+        "reason": "阅读自检，聚焦空串与NULL，示例在支持函数范围内。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把IFNULL(NULL,'')改成NULL后，CHAR_LENGTH结果仍是0吗？",
+        "answer": "不是，会是NULL；未知文本与已知空文本不同。",
+        "hints": [
+          "先看参数是否还有已知文本值。",
+          "空串的长度是已知0。",
+          "NULL参数的长度仍未知。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · string functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/string-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · flow control functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/flow-control-functions.html"
+        }
+      ]
+    }
+  ]
+}

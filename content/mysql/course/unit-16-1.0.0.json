@@ -1,0 +1,970 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 16,
+  "nodes": [
+    {
+      "id": "mysql.lesson.16",
+      "sourceNodeId": "mysql.source.chapter-16",
+      "number": "16",
+      "title": "性能优化",
+      "parent": null,
+      "depth": 1,
+      "order": 338,
+      "group": 16,
+      "leaf": false,
+      "printedPage": 322,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "性能优化先定义需要改善的请求、数据量和负载，再测量、解释与复验。查询、索引、表结构和服务器资源互相影响，不能靠“加索引”或“调大内存”两个口号覆盖所有瓶颈。",
+        "原生MySQL优化器、物理索引、表空间和服务参数仅作阅读；平台受支持子集的逻辑执行预算不等于真实服务器性能。例子使用独立测试对象且按结果与计划解释优化假设。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize overview",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-overview.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · explain",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/explain.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.1",
+      "sourceNodeId": "mysql.source.16-1",
+      "number": "16.1",
+      "title": "优化简介",
+      "parent": "mysql.lesson.16",
+      "depth": 2,
+      "order": 339,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 322,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "优化目标应具体到延迟、吞吐、资源或稳定性，并写明负载。单次查询很快不表示高并发下仍快，一次热缓存结果也不能替代冷启动行为。",
+        "阅读例要求固定查询参数、数据分布和并发，再比较改动前后。除了耗时还记录结果一致性，避免以少返回数据或漏掉条件的方式“优化”。",
+        "先改最有证据的瓶颈，每次尽量控制变化，才便于解释收益。没有测量数据时只能提出假设，不应在教学文字里宣布百分比提升。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "待优化：按部门检索最近订单\n固定：数据规模、参数分布、并发与缓存条件\n观察：耗时分布、扫描规模、资源及结果\n改动：一个候选索引\n复验：相同条件下比较并记录回退方式",
+        "description": "阅读例要求固定查询参数、数据分布和并发，再比较改动前后。除了耗时还记录结果一致性，避免以少返回数据或漏掉条件的方式“优化”。",
+        "result": "这是实验设计，没有填造耗时；候选改动可能有利、无效或增加写入成本。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "少返回一半记录后查询变快，能证明等价优化成功吗？",
+        "answer": "不能，先证明结果满足同一业务语义，再比较性能；删掉需要的数据不是等价优化。",
+        "hints": [
+          "先检查正确性。",
+          "比较改动前后结果集合。",
+          "语义一致后再解释耗时。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize overview",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-overview.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.2",
+      "sourceNodeId": "mysql.source.16-2",
+      "number": "16.2",
+      "title": "优化查询",
+      "parent": "mysql.lesson.16",
+      "depth": 2,
+      "order": 340,
+      "group": 16,
+      "leaf": false,
+      "printedPage": 323,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "查询优化先看结果语义与执行计划，再考虑访问路径。WHERE、连接条件、分组、排序和返回列决定服务器要处理哪些中间数据，最终只返回少量行也可能扫描很多行。",
+        "EXPLAIN给出计划与估计，EXPLAIN ANALYZE还会实际执行。使用时应清楚工具的观测边界，并把统计信息、参数与实际数据分布纳入判断。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · explain",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/explain.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · mysql indexes",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysql-indexes.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · subquery optimization",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/subquery-optimization.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.2.1",
+      "sourceNodeId": "mysql.source.16-2-1",
+      "number": "16.2.1",
+      "title": "分析查询语句",
+      "parent": "mysql.lesson.16.2",
+      "depth": 3,
+      "order": 341,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 323,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "EXPLAIN展示优化器选择的访问与连接策略，rows等通常是估计，不能直接当成已测量扫描次数。计划中的possible_keys与实际key含义也不同。",
+        "例子先建一个小表再查看筛选计划。数据很少时优化器可能选择全表扫描，这是成本选择，并不自动意味着索引功能失效。",
+        "EXPLAIN ANALYZE在支持版本中会执行查询并显示实际信息，因此分析昂贵查询也会产生真实负载。普通计划分析与实际执行测量应明确标注。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE perf_plan(id INT PRIMARY KEY,dept_id INT,score INT);\nINSERT INTO perf_plan VALUES(1,10,80),(2,20,90),(3,10,70);\nEXPLAIN SELECT id,score FROM perf_plan WHERE dept_id=10;",
+        "description": "例子先建一个小表再查看筛选计划。数据很少时优化器可能选择全表扫描，这是成本选择，并不自动意味着索引功能失效。",
+        "result": "原生返回计划而非普通数据结果；估计行数和访问类型依版本、统计及数据改变，不固定断言某个值。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "EXPLAIN中的rows可以直接当作真实执行计数吗？",
+        "answer": "不可以，它通常是优化器估计；实际计数需要相应执行观察，并清楚执行工具的影响。",
+        "hints": [
+          "先辨别估计与实际。",
+          "看使用的是EXPLAIN还是ANALYZE。",
+          "记录数据与统计条件。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · explain",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/explain.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.2.2",
+      "sourceNodeId": "mysql.source.16-2-2",
+      "number": "16.2.2",
+      "title": "索引对查询速度的影响",
+      "parent": "mysql.lesson.16.2",
+      "depth": 3,
+      "order": 342,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 325,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "索引可以减少定位特定值所需的访问，但需要额外存储与写入维护。读收益、选择性、缓存和更新频率应一起考虑，不能为每列无条件增加索引。",
+        "例子在dept_id上建索引后查看筛选计划。只有三行的测试表不适合用来宣称生产加速，优化器也可能认为全扫更便宜。",
+        "索引不会改变查询应返回哪些行，却可能改变未排序结果的物理顺序。若业务要求稳定顺序，仍要使用ORDER BY，不能依赖某次索引访问的偶然排列。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE perf_index(id INT PRIMARY KEY,dept_id INT,score INT);\nINSERT INTO perf_index VALUES(1,10,80),(2,20,90),(3,10,70);\nCREATE INDEX ix_perf_dept ON perf_index(dept_id);\nEXPLAIN SELECT id,score FROM perf_index WHERE dept_id=10;",
+        "description": "例子在dept_id上建索引后查看筛选计划。只有三行的测试表不适合用来宣称生产加速，优化器也可能认为全扫更便宜。",
+        "result": "建立索引并输出原生候选计划；不承诺一定使用该索引，也不产生可据以宣传的测速结果。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "索引建立成功却未被这条小表查询采用，一定是错误吗？",
+        "answer": "不一定，优化器根据成本估计选择路径，小表全扫可能更合算。",
+        "hints": [
+          "区分可用路径与被选路径。",
+          "考虑数据量与选择性。",
+          "用计划和实测分析成本。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · mysql indexes",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysql-indexes.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · explain",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/explain.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.2.3",
+      "sourceNodeId": "mysql.source.16-2-3",
+      "number": "16.2.3",
+      "title": "使用索引查询",
+      "parent": "mysql.lesson.16.2",
+      "depth": 3,
+      "order": 343,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 326,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "复合索引按列顺序组织，多列等值与范围条件应结合左侧前缀分析。索引(a,b)可以支持a及(a,b)等访问，但不能直接假定只按b过滤就有同样效果。",
+        "例子建立(dept_id,score)索引，再比较两种过滤计划。第一个有部门等值再有分数范围，第二个只有分数条件；实际选择仍交由版本与成本判断。",
+        "MySQL还存在跳跃扫描等特定优化，不能把前缀原则夸成绝无例外的语法禁令。写索引建议时应说明查询形态，并通过计划验证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE perf_multi(id INT PRIMARY KEY,dept_id INT,score INT);\nCREATE INDEX ix_dept_score ON perf_multi(dept_id,score);\nEXPLAIN SELECT id FROM perf_multi WHERE dept_id=10 AND score>=80;\nEXPLAIN SELECT id FROM perf_multi WHERE score>=80;",
+        "description": "例子建立(dept_id,score)索引，再比较两种过滤计划。第一个有部门等值再有分数范围，第二个只有分数条件；实际选择仍交由版本与成本判断。",
+        "result": "两条计划可能不同；第一条与左前缀形态匹配，第二条不能据此承诺同等访问效率。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "索引(dept_id,score)与(score,dept_id)可以无条件互换吗？",
+        "answer": "不能，列顺序影响可利用的前缀和查询访问形态，应按主要条件与计划选择。",
+        "hints": [
+          "先看最左列。",
+          "对照经常使用的过滤条件。",
+          "比较不同列顺序的计划。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · multiple column indexes",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/multiple-column-indexes.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · explain",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/explain.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.2.4",
+      "sourceNodeId": "mysql.source.16-2-4",
+      "number": "16.2.4",
+      "title": "优化子查询",
+      "parent": "mysql.lesson.16.2",
+      "depth": 3,
+      "order": 344,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 328,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "优化器可对某些IN与EXISTS子查询采用半连接或物化等策略。不能一概认为子查询逐行执行且必然比JOIN慢，应先检查真实计划。",
+        "例子中部门id为主键，按活跃部门筛选职工。因为每个部门最多一行，改成等值内连接不会因部门重复而复制职工行；若去掉唯一性，这个推导需要重做。",
+        "改写时还要检查NULL和重复值语义，特别是NOT IN与NOT EXISTS的区别。证明等价后再比较测量，语句变短不代表执行变快。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE perf_dept(id INT PRIMARY KEY,active INT);\nCREATE TABLE perf_worker(id INT PRIMARY KEY,dept_id INT);\nINSERT INTO perf_dept VALUES(10,1),(20,0);\nINSERT INTO perf_worker VALUES(1,10),(2,20);\nSELECT id FROM perf_worker WHERE dept_id IN(SELECT id FROM perf_dept WHERE active=1);\nSELECT w.id FROM perf_worker AS w JOIN perf_dept AS d ON w.dept_id=d.id WHERE d.active=1;",
+        "description": "例子中部门id为主键，按活跃部门筛选职工。因为每个部门最多一行，改成等值内连接不会因部门重复而复制职工行；若去掉唯一性，这个推导需要重做。",
+        "result": "在给定数据与部门主键条件下两条都返回id=1；没有据此断言JOIN一定更快。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果被连接部门表可出现同id多行，直接JOIN还一定与IN等价吗？",
+        "answer": "不一定，JOIN可能复制职工结果，而IN是成员判断；需要处理唯一性或改用适当半连接语义。",
+        "hints": [
+          "先数每个职工匹配几行。",
+          "比较成员测试与连接展开。",
+          "验证重复值而不是只测单行。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · subquery optimization",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/subquery-optimization.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · multiple column indexes",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/multiple-column-indexes.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.3",
+      "sourceNodeId": "mysql.source.16-3",
+      "number": "16.3",
+      "title": "优化数据库结构",
+      "parent": "mysql.lesson.16",
+      "depth": 2,
+      "order": 345,
+      "group": 16,
+      "leaf": false,
+      "printedPage": 329,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "结构优化包括缩小频繁访问的行、拆分冷热字段、预计算和有控制的冗余。每种方案都把某些读取成本转移到写入、维护或一致性管理上，需要明确收益与代价。",
+        "先保留主键、关系与约束语义，再改变存储和访问方式。表变少、字段变少或查询变短都不是独立目标，必须与真实业务负载及数据正确性相联系。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · data size",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/data-size.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize overview",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-overview.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.3.1",
+      "sourceNodeId": "mysql.source.16-3-1",
+      "number": "16.3.1",
+      "title": "将字段很多的表分解成多个表",
+      "parent": "mysql.lesson.16.3",
+      "depth": 3,
+      "order": 346,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 329,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "垂直拆分把很少读取的大字段放到另一张以同一主键关联的表，减少常用查询携带的字段。它不等于按行水平分片，也不意味着所有宽表都该拆。",
+        "例子把图书标题与长说明分开，说明表以book_id作主键与外键。查询常用列表只读基础表，需要说明时LEFT JOIN可保留尚无说明的图书。",
+        "拆分增加连接与写入协调成本；若两个部分总是一起使用，收益可能很小。外键约束、可选关系与删除规则应在设计时明确，而非仅凭列数决定。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE slim_books(id INT PRIMARY KEY,title VARCHAR(80)) ENGINE=InnoDB;\nCREATE TABLE book_details(book_id INT PRIMARY KEY,detail TEXT,FOREIGN KEY(book_id) REFERENCES slim_books(id)) ENGINE=InnoDB;\nINSERT INTO slim_books VALUES(1,'数据库练习');\nSELECT b.id,b.title,d.detail FROM slim_books b LEFT JOIN book_details d ON b.id=d.book_id;",
+        "description": "例子把图书标题与长说明分开，说明表以book_id作主键与外键。查询常用列表只读基础表，需要说明时LEFT JOIN可保留尚无说明的图书。",
+        "result": "原生得到id=1、指定标题及NULL说明；LEFT JOIN保留没有详情的基础行，TEXT和外键仅作阅读。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么详情可选时用INNER JOIN可能丢掉列表中的书？",
+        "answer": "没有匹配详情的书会被内连接过滤；左连接可以保留基础书行并以NULL表示缺失详情。",
+        "hints": [
+          "先找可选关系。",
+          "检查无匹配行的连接规则。",
+          "对照列表需要保留哪些书。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · data size",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/data-size.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · create table foreign keys",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table-foreign-keys.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.3.2",
+      "sourceNodeId": "mysql.source.16-3-2",
+      "number": "16.3.2",
+      "title": "增加中间表",
+      "parent": "mysql.lesson.16.3",
+      "depth": 3,
+      "order": 347,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 330,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "中间表可以是业务关系表，也可以是预计算结果；性能场景应明确它缓存什么、何时更新和允许多旧。本节讨论汇总中间结果，不把所有中间表都称为优化。",
+        "例子一次性按部门汇总人数，保存为普通表。后续读汇总表可能少做聚合，但源表增加职工时它不会自动刷新。",
+        "刷新需要考虑原子替换、并发读取与失败恢复。若业务要求实时准确，陈旧中间表可能给出错误决策；不能以更快读到旧值冒充等价优化。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE source_members(id INT PRIMARY KEY,dept_id INT);\nINSERT INTO source_members VALUES(1,10),(2,10),(3,20);\nCREATE TABLE dept_snapshot AS SELECT dept_id,COUNT(*) AS total FROM source_members GROUP BY dept_id;\nINSERT INTO source_members VALUES(4,10);\nSELECT dept_id,total FROM dept_snapshot ORDER BY dept_id;",
+        "description": "例子一次性按部门汇总人数，保存为普通表。后续读汇总表可能少做聚合，但源表增加职工时它不会自动刷新。",
+        "result": "快照仍为(10,2)、(20,1)，不会自动变成部门10有3人；它体现缓存时效问题。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "源表新增一行后，中间汇总为什么没有同步变化？",
+        "answer": "它是一次CREATE TABLE...SELECT生成的普通表，没有定义自动刷新机制。",
+        "hints": [
+          "找到创建快照的时点。",
+          "普通表不会追踪源查询。",
+          "需要明确刷新责任与策略。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize overview",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-overview.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · data size",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/data-size.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.3.3",
+      "sourceNodeId": "mysql.source.16-3-3",
+      "number": "16.3.3",
+      "title": "增加冗余字段",
+      "parent": "mysql.lesson.16.3",
+      "depth": 3,
+      "order": 348,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 331,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "冗余字段保存可由其他数据算出的值，例如订单金额缓存。它可以减少重复聚合，但也引入两份事实不同步的风险，因此应指定唯一维护路径和对账方式。",
+        "阅读情境中两行明细为1200分与800分，缓存总额2000分；删除800分明细而不改缓存，就会使两者矛盾。单位以整数分表示，避免无意混用元与分。",
+        "需要在事务内协调相关更新，并处理失败和并发重试；也可选择查询时计算而不缓存。是否值得冗余，要看读写比例与维护成本，而非一味追求少一次SUM。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "明细A：1200分\n明细B：800分\n缓存总额：2000分\n错误变更：删除B但保留缓存2000分\n核对：明细合计现在1200分，与缓存差800分",
+        "description": "阅读情境中两行明细为1200分与800分，缓存总额2000分；删除800分明细而不改缓存，就会使两者矛盾。单位以整数分表示，避免无意混用元与分。",
+        "result": "这个例子展示一致性错误，没有声称缓存方案已经实现；正确策略必须明确维护与校验。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把缓存总额建立普通索引能修复这800分差异吗？",
+        "answer": "不能，索引改变访问路径，不会推导并修复与明细不一致的业务值。",
+        "hints": [
+          "先辨认问题是值还是访问速度。",
+          "索引不自动重算业务合计。",
+          "修复应遵守事实来源与事务策略。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize overview",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-overview.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.3.4",
+      "sourceNodeId": "mysql.source.16-3-4",
+      "number": "16.3.4",
+      "title": "优化插入记录的速度",
+      "parent": "mysql.lesson.16.3",
+      "depth": 3,
+      "order": 349,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 331,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "批量插入可以减少往返与逐条提交开销，但批次过大会增加锁持有、日志压力与失败恢复成本。应按数据量和环境测量，而不是把所有导入堆进无限大事务。",
+        "例子把三条值放进一条INSERT并在明确事务中提交。InnoDB保证事务语义；这份小数据用于解释边界，不能证明比任意其他写法快多少。",
+        "批量导入不应轻易关闭约束或持久性保障来换速度。主键顺序、索引数量和已有数据也影响成本，优化报告应说明改变了哪些正确性与可靠性条件。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE batch_rows(id INT PRIMARY KEY,amount INT) ENGINE=InnoDB;\nSTART TRANSACTION;\nINSERT INTO batch_rows VALUES(1,10),(2,20),(3,30);\nCOMMIT;\nSELECT COUNT(*) AS total,SUM(amount) AS amount FROM batch_rows;",
+        "description": "例子把三条值放进一条INSERT并在明确事务中提交。InnoDB保证事务语义；这份小数据用于解释边界，不能证明比任意其他写法快多少。",
+        "result": "原生成功后total=3、amount=60；这是结果推导，没有原生耗时测量或批量速度结论。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "事务越大就一定越快吗？",
+        "answer": "不一定，过大批次可能增加锁、资源与恢复成本，需要在相同可靠性条件下测量合适大小。",
+        "hints": [
+          "先列批量减少的开销。",
+          "再列持有资源的成本。",
+          "用测量决定批次边界。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · optimizing innodb bulk data loading",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimizing-innodb-bulk-data-loading.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.3.5",
+      "sourceNodeId": "mysql.source.16-3-5",
+      "number": "16.3.5",
+      "title": "分析表、检查表和优化表",
+      "parent": "mysql.lesson.16.3",
+      "depth": 3,
+      "order": 350,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 333,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "ANALYZE TABLE更新统计信息供优化器估计，CHECK TABLE检查对象错误，OPTIMIZE TABLE按引擎重组或重建。三个名字相近，职责和代价却不同。",
+        "例子针对空的小型InnoDB测试表依次展示语句。OPTIMIZE对InnoDB可能以重建与分析方式实现，并可能需要额外空间与锁协调，不能视作无成本的万能加速。",
+        "检查返回状态应按具体语句解释。统计更新不等于修复物理损坏，检查成功也不等于查询计划最佳；维护必须有明确问题和验证标准。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE maintenance_demo(id INT PRIMARY KEY,value INT) ENGINE=InnoDB;\nANALYZE TABLE maintenance_demo;\nCHECK TABLE maintenance_demo;\nOPTIMIZE TABLE maintenance_demo;",
+        "description": "例子针对空的小型InnoDB测试表依次展示语句。OPTIMIZE对InnoDB可能以重建与分析方式实现，并可能需要额外空间与锁协调，不能视作无成本的万能加速。",
+        "result": "原生返回各自维护状态；具体Msg_text依引擎与版本，不能固定承诺耗时或速度收益。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想修正优化器过时统计，应该把ANALYZE理解为修复损坏表吗？",
+        "answer": "不应，ANALYZE重点更新统计，检查与修复是其他职责，不能混为一谈。",
+        "hints": [
+          "先对应每个命令的目标。",
+          "统计估计不同于物理完整性。",
+          "按问题选择维护操作。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · analyze table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/analyze-table.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · check table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/check-table.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.4",
+      "sourceNodeId": "mysql.source.16-4",
+      "number": "16.4",
+      "title": "优化MySQL服务器",
+      "parent": "mysql.lesson.16",
+      "depth": 2,
+      "order": 351,
+      "group": 16,
+      "leaf": false,
+      "printedPage": 335,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "服务器优化把SQL所需工作与CPU、内存、磁盘和并发能力匹配。先找瓶颈，再选择硬件或参数变化，否则可能花钱增加了并不短缺的资源。",
+        "配置评估还包括可靠性与资源上界。全局缓存和按连接分配的内存不同，持久性相关参数也会改变故障风险，不能只凭单次耗时挑选设置。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize overview",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-overview.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · memory use",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/memory-use.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · optimizing innodb configuration variables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimizing-innodb-configuration-variables.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.4.1",
+      "sourceNodeId": "mysql.source.16-4-1",
+      "number": "16.4.1",
+      "title": "优化服务器硬件",
+      "parent": "mysql.lesson.16.4",
+      "depth": 3,
+      "order": 352,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 335,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "硬件优化先区分计算、内存与I/O瓶颈。更快磁盘可能改善随机读取或刷写，但不会自动解决错误连接条件导致的组合爆炸，也不能修复锁竞争的业务设计。",
+        "阅读例列出同一慢查询的三类观测，而不虚构某台机器的百分比。只有结合等待、缓存命中与CPU利用等证据，才能判断应先查索引还是评估资源。",
+        "容量、延迟、吞吐与可靠性都是不同指标。应在代表性负载下测量，并确保升级不降低备份与故障恢复保障；平台浏览器执行速度不作为服务器选型依据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "观测A：读取等待明显，工作集超出缓存 -> 检查访问路径与存储\n观测B：CPU繁忙而I/O不高 -> 检查计算与执行计划\n观测C：大量锁等待 -> 检查事务范围与并发冲突",
+        "description": "阅读例列出同一慢查询的三类观测，而不虚构某台机器的百分比。只有结合等待、缓存命中与CPU利用等证据，才能判断应先查索引还是评估资源。",
+        "result": "这些是定位假设，不是实机观测或硬件购买建议；每种假设都需要进一步测量验证。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "大量锁等待时直接换更快磁盘能保证解决吗？",
+        "answer": "不能保证，锁等待可能来自长事务或冲突设计，应先分析持锁与访问顺序。",
+        "hints": [
+          "先找等待的对象。",
+          "I/O慢与锁冲突不同。",
+          "让资源变化对应已证实瓶颈。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize overview",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-overview.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · disk issues",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/disk-issues.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.4.2",
+      "sourceNodeId": "mysql.source.16-4-2",
+      "number": "16.4.2",
+      "title": "优化MySQL的参数",
+      "parent": "mysql.lesson.16.4",
+      "depth": 3,
+      "order": 353,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 335,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "innodb_buffer_pool_size影响缓存容量，但服务器还需要连接缓冲、临时表、日志与操作系统内存。把所有可用内存都给一个缓存可能造成交换或资源不足。",
+        "例子只读取配置，不提供可直接套用的机器数值。参数是否动态、作用域与持久化方式应依据目标8.0小版本核查，并记录旧值与回退条件。",
+        "优化时同时观察负载和可靠性，不应为跑分随意降低事务持久性。改变一个参数后要重新测量代表性请求和整体资源，不能只看参数成功设置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW GLOBAL VARIABLES LIKE 'innodb_buffer_pool_size';\nSHOW GLOBAL VARIABLES LIKE 'max_connections';\nSHOW GLOBAL VARIABLES LIKE 'sort_buffer_size';\nSHOW GLOBAL VARIABLES LIKE 'tmp_table_size';",
+        "description": "例子只读取配置，不提供可直接套用的机器数值。参数是否动态、作用域与持久化方式应依据目标8.0小版本核查，并记录旧值与回退条件。",
+        "result": "显示当前配置值；这些值不是统一最佳实践，也不能把各连接所有上限都等同为已立即分配的内存。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么buffer pool不能无条件设为机器全部内存？",
+        "answer": "因为操作系统、全局结构以及并发连接的按需内存也需要空间，耗尽内存可能使性能与稳定性恶化。",
+        "hints": [
+          "先列缓存以外的使用者。",
+          "考虑并发而非单连接。",
+          "保留系统与负载峰值余量。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · memory use",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/memory-use.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · optimizing innodb configuration variables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimizing-innodb-configuration-variables.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · server system variables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/server-system-variables.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.5",
+      "sourceNodeId": "mysql.source.16-5",
+      "number": "16.5",
+      "title": "临时表性能优化",
+      "parent": "mysql.lesson.16",
+      "depth": 2,
+      "order": 354,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 336,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "内部临时表由优化器为分组、去重或派生结果等需要创建，不等于用户显式CREATE TEMPORARY TABLE。内存与磁盘策略随8.0小版本和引擎配置变化。",
+        "例子在同一会话中查看临时表计数，再分析分组查询。应比较前后差值并了解统计覆盖范围，不能把累计值直接归给最后一条查询。",
+        "TempTable在8.0.28起还受到单表tmp_table_size限制，并有共享内存等其他阈值。盲目加大某一个参数不保证所有临时表都留在内存，应先减少不必要的中间数据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE temp_probe(id INT PRIMARY KEY,category INT);\nINSERT INTO temp_probe VALUES(1,10),(2,10),(3,20);\nSHOW SESSION STATUS LIKE 'Created_tmp%';\nEXPLAIN SELECT category,COUNT(*) AS total FROM temp_probe GROUP BY category;\nSELECT category,COUNT(*) AS total FROM temp_probe GROUP BY category;\nSHOW SESSION STATUS LIKE 'Created_tmp%';",
+        "description": "例子在同一会话中查看临时表计数，再分析分组查询。应比较前后差值并了解统计覆盖范围，不能把累计值直接归给最后一条查询。",
+        "result": "分组结果为类别10有2行、类别20有1行；是否创建何种临时表由实际计划与版本决定，不固定计数增量。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "查询后Created_tmp_tables为12，能说这一条查询创建了12张吗？",
+        "answer": "不能，它是会话累计计数，需要比较前值并了解期间其他操作与计数范围。",
+        "hints": [
+          "找到前一次读数。",
+          "累计值不等于本次增量。",
+          "保持观察窗口内负载可解释。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · internal temporary tables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/internal-temporary-tables.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.6",
+      "sourceNodeId": "mysql.source.16-6",
+      "number": "16.6",
+      "title": "服务器语句超时处理",
+      "parent": "mysql.lesson.16",
+      "depth": 2,
+      "order": 355,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 338,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "max_execution_time对符合条件的只读SELECT设置执行超时，单位毫秒，0表示不启用。它不覆盖任意UPDATE、DELETE或存储程序中的SELECT。",
+        "例子设置当前会话1000毫秒并执行一个很短的标量查询。查询正常结束说明没有触发超时，不说明服务器承诺所有请求都在一秒内完成。",
+        "超时保护不是查询优化，也不等于客户端端到端截止。平台自身的请求预算另有定义，不应把原生这个参数写成平台支持的SQL配置能力。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SET SESSION max_execution_time=1000;\nSELECT 1 AS probe;\nSET SESSION max_execution_time=0;",
+        "description": "例子设置当前会话1000毫秒并执行一个很短的标量查询。查询正常结束说明没有触发超时，不说明服务器承诺所有请求都在一秒内完成。",
+        "result": "原生符合条件的会话中probe通常正常返回1，随后取消该会话SELECT超时设置；这不是故意超时实测。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "设置max_execution_time=1000能保证UPDATE一秒被取消吗？",
+        "answer": "不能，它针对规定范围的只读SELECT，不是所有SQL通用超时开关。",
+        "hints": [
+          "先确认单位为毫秒。",
+          "再确认适用语句类型。",
+          "UPDATE不在该SELECT范围内。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · server system variables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/server-system-variables.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.7",
+      "sourceNodeId": "mysql.source.16-7",
+      "number": "16.7",
+      "title": "创建全局通用表空间",
+      "parent": "mysql.lesson.16",
+      "depth": 2,
+      "order": 356,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 338,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "InnoDB通用表空间是可容纳多张表的共享表空间，通过CREATE TABLESPACE创建。标题中的“全局通用”不意味着它是全局临时表或向所有账户自动授权。",
+        "例子先创建通用空间，再把新表放入该空间。数据文件路径、引擎、权限及对象名称须满足原生要求，平台没有物理表空间或创建文件的接口。",
+        "共享空间可以减少某些元数据开销并集中管理，但删除其中一张表通常不把文件直接缩小归还操作系统。选型还要考虑迁移、维护与文件保留，不能只看表能否创建。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLESPACE course_shared ADD DATAFILE 'course_shared.ibd' ENGINE=InnoDB;\nCREATE TABLE shared_demo(id INT PRIMARY KEY,value INT) TABLESPACE course_shared ENGINE=InnoDB;\nSHOW CREATE TABLE shared_demo;",
+        "description": "例子先创建通用空间，再把新表放入该空间。数据文件路径、引擎、权限及对象名称须满足原生要求，平台没有物理表空间或创建文件的接口。",
+        "result": "原生前置成立时建立表空间与表，SHOW展示TABLESPACE等定义；没有实机空间占用或性能测量。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "DROP其中一张表就能保证共享.ibd文件马上缩小吗？",
+        "answer": "不能，共享表空间中的空闲空间通常供内部复用，不等同于单表删除立即回收文件到操作系统。",
+        "hints": [
+          "区分逻辑空闲与文件大小。",
+          "多表共享同一空间。",
+          "检查空间回收的原生限制。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · general tablespaces",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/general-tablespaces.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.8",
+      "sourceNodeId": "mysql.source.16-8",
+      "number": "16.8",
+      "title": "本章实战",
+      "parent": "mysql.lesson.16",
+      "depth": 2,
+      "order": 357,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 339,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "性能实战把一个候选索引作为受控改动。先保留基准查询与结果，再记录计划与负载条件，最后对同样数据和参数复验。",
+        "情境中的查询按部门筛选并按分数排序，可以考虑(dept_id,score)索引，但是否改善取决于选择性和真实请求。写入成本也应纳入对比，而非只测一条SELECT。",
+        "最终记录应允许收益为零甚至负值。只有真实测量才能形成结论，本节提供验证步骤而不填造“提升几倍”的结果。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "原查询：按dept_id筛选后按score排序\n候选：复合索引(dept_id,score)\n前测：结果、计划、延迟分布与写入成本\n后测：保持数据、参数、负载与缓存条件可比\n决策：保留或回退，并记录证据",
+        "description": "情境中的查询按部门筛选并按分数排序，可以考虑(dept_id,score)索引，但是否改善取决于选择性和真实请求。写入成本也应纳入对比，而非只测一条SELECT。",
+        "result": "候选方案尚无实测收益；索引列顺序有合理依据，但不能替代计划与负载测试。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只报告读查询变快而不提频繁写入变慢，有何缺陷？",
+        "answer": "遗漏索引维护代价，无法判断整体业务负载是否受益，需要同时评估读写影响。",
+        "hints": [
+          "找索引带来的额外写工作。",
+          "按真实读写比例比较。",
+          "报告收益与成本。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · multiple column indexes",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/multiple-column-indexes.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize overview",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-overview.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.9",
+      "sourceNodeId": "mysql.source.16-9",
+      "number": "16.9",
+      "title": "本章小结",
+      "parent": "mysql.lesson.16",
+      "depth": 2,
+      "order": 358,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 341,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "优化可以按查询工作量、数据组织、访问路径与服务器资源四层复盘。最先保证语义正确，再以计划和测量判断成本，最后考虑配置与硬件。",
+        "ANALYZE、CHECK、OPTIMIZE属于不同维护职责；临时表、超时和通用表空间也各有作用范围。名称里有“优化”并不意味着对所有数据都更快。",
+        "对版本差异和未测边界应如实记录。没有原生服务器实验时，本章只有阅读推导，不将受限教学引擎的运行时间替代为MySQL 8.0优化结论。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "正确性 -> 查询计划 -> 可比测量 -> 有控制改动 -> 回归\n同时记录：版本、数据分布、参数、并发、缓存、资源与失败情况",
+        "description": "ANALYZE、CHECK、OPTIMIZE属于不同维护职责；临时表、超时和通用表空间也各有作用范围。名称里有“优化”并不意味着对所有数据都更快。",
+        "result": "这是一条优化证据链；任何环节缺失都应限制结论，而不是用工具名称替代验证。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么“执行了OPTIMIZE TABLE”不等于“所有查询已提速”？",
+        "answer": "它执行特定存储维护，实际查询成本还依赖语义、索引、统计、数据和负载，需重新测量。",
+        "hints": [
+          "查命令的具体作用。",
+          "列出仍未改变的查询因素。",
+          "用结果与耗时证据下结论。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize overview",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-overview.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.16.10",
+      "sourceNodeId": "mysql.source.16-10",
+      "number": "16.10",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.16",
+      "depth": 2,
+      "order": 359,
+      "group": 16,
+      "leaf": true,
+      "printedPage": 341,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "综合题训练识别不充分结论。性能比较若改变了数据规模、查询条件、并发或缓存，就不能把差值全部归给索引或某个参数。",
+        "阅读场景中A在百万行冷缓存测试，B在一百行热缓存测试，即使B耗时更少，也没有隔离候选改动的作用。需要重新固定条件并收集分布。",
+        "正确性回归同样必要：连接改写可能改变重复行，汇总缓存可能变旧。优化报告应同时回答是否正确、是否改善、代价是什么以及哪些环境未测。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "试验A：百万行、冷缓存、原查询\n试验B：一百行、热缓存、增加索引\n观察：B更快\n问题：数据规模与缓存同时改变，不能单独归因于索引",
+        "description": "阅读场景中A在百万行冷缓存测试，B在一百行热缓存测试，即使B耗时更少，也没有隔离候选改动的作用。需要重新固定条件并收集分布。",
+        "result": "此比较不能支持索引提升的因果结论，应保持可比条件重测，同时验证返回结果。",
+        "reason": "本例属于原生MySQL 8.0性能与运维阅读；平台不模拟服务器优化器、物理索引、磁盘或服务参数。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "最少应修正哪两类条件才能让这个对比更可解释？",
+        "answer": "保持代表性数据规模与分布一致，并控制或分别记录缓存条件；还应固定参数、并发和语义。",
+        "hints": [
+          "找A与B不止一个变化。",
+          "先统一数据。",
+          "再控制缓存并记录其他负载。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · optimize overview",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimize-overview.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · explain",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/explain.html"
+        }
+      ]
+    }
+  ]
+}

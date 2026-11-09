@@ -7,7 +7,8 @@ import { rustExercise } from './identities';
 
 export default function RustReviewPage() {
   const { service, state } = useLearning();
-  const enabled = state.snapshot?.meta.dbVersion === 14 && state.recovery?.writable !== false;
+  const enabled =
+    [14, 15].includes(state.snapshot?.meta.dbVersion ?? 0) && state.recovery?.writable !== false;
   const epoch = state.sessionEpoch;
   const load = useCallback(
     async () => (enabled ? (await service.readRustCourse(epoch)).activities : []),

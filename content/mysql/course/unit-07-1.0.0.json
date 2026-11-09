@@ -1,0 +1,1864 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 7,
+  "nodes": [
+    {
+      "id": "mysql.lesson.7",
+      "sourceNodeId": "mysql.source.chapter-7",
+      "number": "7",
+      "title": "数据查询",
+      "parent": null,
+      "depth": 1,
+      "order": 128,
+      "group": 7,
+      "leaf": false,
+      "printedPage": 130,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "查询把已经存入表的数据组织成回答问题的结果。先确定结果每一行表示什么，再选择字段、行条件、分组、连接与排序；不要只按界面当前显示顺序猜答案。本章从一张学生表走向跨表统计，也保留子查询、集合合并及正则的原生MySQL阅读教学。",
+        "教学表students的字段为id、name、dept_id、score，departments为id、name。示范初始学生是(1,林安,1,88)、(2,陈禾,2,72)、(3,周岚,NULL,NULL)、(4,苏宁,99,59)；院系是(1,计算机)、(2,数学)、(3,设计)。其他组会更换数据或为空，必须以对应数据库表格为准。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.1",
+      "sourceNodeId": "mysql.source.7-1",
+      "number": "7.1",
+      "title": "基本查询",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 129,
+      "group": 7,
+      "leaf": false,
+      "printedPage": 130,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "基本查询先解决数据来自哪里、返回哪些列以及选哪些行。SELECT列表决定结果的列，FROM指定来源，WHERE限制行；查询结果与原表分开，读取不会因为隐藏某列就删除表里的数据。",
+        "学习时先写出结果列名，再手工圈出符合条件的记录。星号适合探索小表，固定报表应写明字段；稳定展示还需要ORDER BY。本节的运行练习只投影指定字段，其余例子用于比较和自检。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.1.1",
+      "sourceNodeId": "mysql.source.7-1-1",
+      "number": "7.1.1",
+      "title": "SELECT语句",
+      "parent": "mysql.lesson.7.1",
+      "depth": 3,
+      "order": 130,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 130,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SELECT是声明要获取什么结果的查询语句。没有FROM时也能计算标量表达式，例如两整数相加；带FROM时则对来源行求值，通常每个来源行形成一个结果行。",
+        "常用书写顺序是SELECT、FROM、WHERE、GROUP BY、HAVING、ORDER BY、LIMIT。理解时可以先找来源和行条件，再看分组与投影，最后看排序和截取；这是一种逻辑理解方式，不是承诺服务器的物理执行顺序。",
+        "把查询语句与修改语句分清：SELECT返回结果，不会把计算列自动保存回表。平台支持部分SELECT语法；MySQL原生还支持本章后面介绍的子查询等更广语法，范围拒绝不代表原生语法无效。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT 8 + 5 AS total;",
+        "description": "SELECT是声明要获取什么结果的查询语句。没有FROM时也能计算标量表达式，例如两整数相加；带FROM时则对来源行求值，通常每个来源行形成一个结果行。",
+        "result": "结果只有一列total、一行13；不需要创建表。",
+        "reason": "用无表标量例阅读SELECT骨架；本节不分配判题。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若去掉FROM，SELECT是否一定错误？",
+        "answer": "不一定。SELECT 8 + 5 AS total是合法标量查询，返回13。",
+        "hints": [
+          "先看表达式是否引用表列。",
+          "这里两个操作数都是字面量。",
+          "无需来源行即可得到一行标量结果。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.1.2",
+      "sourceNodeId": "mysql.source.7-1-2",
+      "number": "7.1.2",
+      "title": "查询所有字段",
+      "parent": "mysql.lesson.7.1",
+      "depth": 3,
+      "order": 131,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 132,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SELECT *表示展开来源表的所有可见字段。对教学students，它依次包含id、name、dept_id、score，返回的是字段值，不是表结构定义。",
+        "星号适合先观察教学库有哪些数据。生产接口若依赖固定列序，应逐列列出；以后表新增字段，星号结果会改变，显式字段清单更便于检查和维护。",
+        "全部字段不等于全部行：仍可配合WHERE筛选。没有ORDER BY时不保证行序，界面恰好按插入顺序展示也不能形成SQL承诺；原生MySQL的不可见列也不会被普通星号自动包含。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT * FROM students ORDER BY id;",
+        "description": "SELECT *表示展开来源表的所有可见字段。对教学students，它依次包含id、name、dept_id、score，返回的是字段值，不是表结构定义。",
+        "result": "以本章初始数据得到4行、4列，id依次1、2、3、4；第三行dept_id和score为NULL。",
+        "reason": "阅读全部字段与显式投影的差别；SQL所用基本查询属于平台子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "表新增email可见列后，SELECT *的列数是否仍为4？",
+        "answer": "会增加为5；星号会展开新增的可见字段。",
+        "hints": [
+          "星号不是写死的字段清单。",
+          "先区分字段增加与行增加。",
+          "可见列增加一项，查询结果也增加一列。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.1.3",
+      "sourceNodeId": "mysql.source.7-1-3",
+      "number": "7.1.3",
+      "title": "查询指定字段",
+      "parent": "mysql.lesson.7.1",
+      "depth": 3,
+      "order": 132,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 133,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "投影是从来源行选出指定字段或表达式。SELECT id,name,score把每条学生记录变成三列，dept_id仍保存在数据库，只是不进入这次结果。字段清单的先后顺序就是结果列的先后顺序。",
+        "本题将id作为排序键，所以输出不随表格当前物理行序改变。score可以为NULL，投影应原样保留；不要把未知成绩换成0，也不要因同名就合并学生。",
+        "四组题库会覆盖空表、不同次序、Unicode姓名和缺成绩。SQL列名、列序、NULL及完整结果都参与题目要求；结果为空时仍有id、name、score这三个结果列。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "SELECT id, name, score FROM students ORDER BY id;",
+        "description": "从students投影三个指定字段并按id排序，原表保持不变。",
+        "result": "首组按id输出(1,林安,88)、(2,陈禾,72)、(3,周岚,NULL)、(4,苏宁,59)；其他组以各自独立数据库为准。",
+        "profile": "mysql.exercise.projection",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.projection",
+        "prompt": "查询id、name和score三个字段，按id升序输出，保留NULL。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.1.4",
+      "sourceNodeId": "mysql.source.7-1-4",
+      "number": "7.1.4",
+      "title": "查询指定数据",
+      "parent": "mysql.lesson.7.1",
+      "depth": 3,
+      "order": 133,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 133,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "查询指定数据时，WHERE针对每一行判断条件，只有条件为真才保留。按主键定位一名学生，例如id=2，比依赖“表格第二行”可靠，因为存储行序不等于身份。",
+        "SELECT选择列，WHERE选择行。可以只显示name和score，却用未显示的id作为筛选条件；字段不出现在结果中不妨碍它参与普通行筛选。",
+        "条件比较遇到NULL通常产生未知，WHERE不会保留未知。把数值id写成整数更明确；原生MySQL可能做隐式类型转换，而平台教学子集拒绝文本与数值隐式混比。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT name, score FROM students WHERE id = 2;",
+        "description": "查询指定数据时，WHERE针对每一行判断条件，只有条件为真才保留。按主键定位一名学生，例如id=2，比依赖“表格第二行”可靠，因为存储行序不等于身份。",
+        "result": "本章初始数据只得到(陈禾,72)。若没有id=2则返回零行，不返回一行NULL。",
+        "reason": "通过已知主键说明行筛选；本节采用阅读活动。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "查不到id=200时，结果是一行全NULL还是零行？",
+        "answer": "零行；筛选未命中不会制造一条记录。",
+        "hints": [
+          "先看是否存在满足id=200的来源行。",
+          "WHERE只保留已有的命中行。",
+          "未命中得到空结果，但结果列仍是name、score。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.2",
+      "sourceNodeId": "mysql.source.7-2",
+      "number": "7.2",
+      "title": "按条件查询",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 134,
+      "group": 7,
+      "leaf": false,
+      "printedPage": 134,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "条件查询把自然语言限制翻译成能逐行判断的表达式。比较、集合、区间、模式和逻辑连接分别回答不同问题；先明确等号、边界和NULL，再决定用哪种写法。",
+        "本节特别区分未知值与空字符串，并保留重复行的概念。教学文本固定utf8mb4_0900_bin与NO PAD，大小写和尾空格会影响比较；这是此教学环境的约定，不能概括所有MySQL安装的默认排序规则。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · working with null",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/working-with-null.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · charset binary collations",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/charset-binary-collations.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.2.1",
+      "sourceNodeId": "mysql.source.7-2-1",
+      "number": "7.2.1",
+      "title": "带关系运算符的查询",
+      "parent": "mysql.lesson.7.2",
+      "depth": 3,
+      "order": 135,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 134,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "关系运算符=、<>、<、<=、>、>=比较两个值。score>=72包含恰好72的成绩，score>72则不包含；翻译“不低于”“超过”时最容易把边界写错。",
+        "WHERE只保留真值。NULL>=72为未知，因此缺成绩的行不属于及格、优秀或不优秀中的任意一个已知数值区间；是否单独纳入缺失值要明确写IS NULL。",
+        "平台要求兼容类型比较，整数与文本混比会诊断。原生MySQL可以发生隐式转换，但容易产生非预期结果；本课比较成绩时始终使用整数，比较姓名时使用文本字面量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, score FROM students WHERE score >= 72 ORDER BY id;",
+        "description": "关系运算符=、<>、<、<=、>、>=比较两个值。score>=72包含恰好72的成绩，score>72则不包含；翻译“不低于”“超过”时最容易把边界写错。",
+        "result": "初始数据返回(1,88)、(2,72)；NULL和59不保留。",
+        "reason": "阅读比较边界；示例查询本身位于平台支持范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把>=72改成>72后，哪一行消失？",
+        "answer": "id=2、score=72的行消失。",
+        "hints": [
+          "关注区间端点72。",
+          ">=包含端点，>不包含。",
+          "88仍通过，72不再通过。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.2.2",
+      "sourceNodeId": "mysql.source.7-2-2",
+      "number": "7.2.2",
+      "title": "带IN关键字的查询",
+      "parent": "mysql.lesson.7.2",
+      "depth": 3,
+      "order": 136,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 134,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "IN把一个值与一个候选列表比较，命中任意相等项就为真。dept_id IN (1,2)表达属于两个目标院系之一，比反复写同一字段的OR更清晰。",
+        "候选列表不是连接表，也不会因为列表写了重复的1而复制结果行。若没有命中且候选含NULL，比较结果可能是未知；NOT IN含NULL尤其需要谨慎。",
+        "IN字面量列表在平台范围内，IN(SELECT...)则是MySQL原生子查询，本版作为阅读。本节统一使用整数列表，避免原生隐式转换给集合比较带来混淆。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id FROM students WHERE dept_id IN (1, 2, 1) ORDER BY id;",
+        "description": "IN把一个值与一个候选列表比较，命中任意相等项就为真。dept_id IN (1,2)表达属于两个目标院系之一，比反复写同一字段的OR更清晰。",
+        "result": "初始数据输出id为1、2，各出现一次。列表重复1不会把id=1复制。",
+        "reason": "用字面量列表训练集合判断；与后面阅读型子查询分开。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "对dept_id=99判断NOT IN (1,NULL)，能否确定为真？",
+        "answer": "不能。99=1为假，99=NULL为未知，IN为未知，NOT后仍未知。",
+        "hints": [
+          "逐项考虑等值比较。",
+          "没有命中，但NULL使“全部不相等”无法确认。",
+          "WHERE不会保留未知结果。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.2.3",
+      "sourceNodeId": "mysql.source.7-2-3",
+      "number": "7.2.3",
+      "title": "带BETWEEN AND关键字的查询",
+      "parent": "mysql.lesson.7.2",
+      "depth": 3,
+      "order": 137,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 135,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "BETWEEN low AND high判断是否位于闭区间，两端都包含。score BETWEEN 59 AND 72相当于score>=59 AND score<=72，适合写连续数值范围。",
+        "low和high不应写反；BETWEEN不会自动把两端交换。日期时间原生查询还要考虑时分秒，所以整天范围常改用下界包含、次日上界不包含；该日期类型不属于本版执行列类型。",
+        "NULL端点或未知被比较值会按三值逻辑传播，不应把未知当作区间外已知值。此处使用同类型整数，平台不执行日期与文本到数值的隐式转换。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, score FROM students WHERE score BETWEEN 59 AND 72 ORDER BY id;",
+        "description": "BETWEEN low AND high判断是否位于闭区间，两端都包含。score BETWEEN 59 AND 72相当于score>=59 AND score<=72，适合写连续数值范围。",
+        "result": "初始数据输出(2,72)、(4,59)，两个端点都被包含。",
+        "reason": "阅读区间及端点；示例使用可支持的整数比较。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "score=59是否满足BETWEEN 59 AND 72？",
+        "answer": "满足，BETWEEN包含下端点和上端点。",
+        "hints": [
+          "把BETWEEN展开成两个比较。",
+          "59>=59为真，59<=72也为真。",
+          "真AND真，所以保留该行。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.2.4",
+      "sourceNodeId": "mysql.source.7-2-4",
+      "number": "7.2.4",
+      "title": "空值查询",
+      "parent": "mysql.lesson.7.2",
+      "depth": 3,
+      "order": 138,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 135,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "NULL表示缺失或未知，不是数字0，也不是长度为0的字符串。未知成绩不能通过score=NULL识别，因为与NULL的普通等值比较仍得到未知。",
+        "检测缺失应写IS NULL或IS NOT NULL，它们返回明确的真或假。空字符串则用name=''比较；若name允许NULL，name=''不会把NULL当成空串。",
+        "本章初始周岚的成绩未知，苏宁的59是已知成绩；不能用“不是及格”自动代表缺成绩。本版完整保留NULL单元，表格中的NULL标记也不同于用户输入的文本'NULL'。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT NULL IS NULL AS missing, '' IS NULL AS empty_missing, NULL = NULL AS eq;",
+        "description": "NULL表示缺失或未知，不是数字0，也不是长度为0的字符串。未知成绩不能通过score=NULL识别，因为与NULL的普通等值比较仍得到未知。",
+        "result": "missing为1，empty_missing为0，eq为NULL；三个表达式说明缺失、空串与等值比较的区别。",
+        "reason": "本例通过标量结果对照NULL和空字符串，不分配判题。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么WHERE score=NULL查不出周岚？",
+        "answer": "该比较为未知，WHERE只保留真；应改成score IS NULL。",
+        "hints": [
+          "看NULL参与普通等号的结果。",
+          "未知不是WHERE要保留的真。",
+          "IS NULL才是专门的缺失测试。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · working with null",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/working-with-null.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.2.5",
+      "sourceNodeId": "mysql.source.7-2-5",
+      "number": "7.2.5",
+      "title": "用关键字DISTINCT去除结果中的重复行",
+      "parent": "mysql.lesson.7.2",
+      "depth": 3,
+      "order": 139,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 137,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DISTINCT去除结果中的重复行，判断对象是整个SELECT列表。只选dept_id时同院系会合并；同时选id后，每个学生id不同，通常不会合并。",
+        "去重发生在投影结果层面，不修改原表。多个NULL在DISTINCT中归为一个去重值，这与NULL=NULL返回未知属于不同语境，不能互相套用。",
+        "普通SELECT保留重复行。DISTINCT本身不保证排序，要求稳定显示时另写ORDER BY；教学文本按固定0900_bin NO PAD比较，因此'夏禾'和'夏禾 '不同，这不是所有原生库的默认行为。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT DISTINCT dept_id FROM students ORDER BY dept_id;",
+        "description": "DISTINCT去除结果中的重复行，判断对象是整个SELECT列表。只选dept_id时同院系会合并；同时选id后，每个学生id不同，通常不会合并。",
+        "result": "初始数据依次输出NULL、1、2、99。若追加一名dept_id=1的学生，结果仍只保留一个1。",
+        "reason": "阅读去重对象，7.3.3再把去重、排序和截取组合为运行题。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "SELECT DISTINCT id,dept_id能否保证每个院系只出现一次？",
+        "answer": "不能；DISTINCT比较整行，id不同的两行仍不同。",
+        "hints": [
+          "先写出投影后的二元组。",
+          "比较的不仅是dept_id。",
+          "不同id使整行不同，所以都保留。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · working with null",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/working-with-null.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · charset binary collations",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/charset-binary-collations.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.2.6",
+      "sourceNodeId": "mysql.source.7-2-6",
+      "number": "7.2.6",
+      "title": "带LIKE关键字的查询",
+      "parent": "mysql.lesson.7.2",
+      "depth": 3,
+      "order": 140,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 138,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "LIKE用简单模式匹配文本。百分号%匹配零个或多个字符，下划线_匹配恰好一个字符；LIKE不是用正则表达式，也不能用星号代替百分号。",
+        "例如name LIKE '林%'寻找以林开头的姓名，name LIKE '_禾'要求姓名恰有两个字符且末字为禾。字符串中的中文按字符匹配，而不是按UTF-8字节数拆分。",
+        "NULL LIKE模式仍为未知。大小写是否敏感依赖排序规则；平台固定0900_bin。转义百分号、下划线及ESCAPE完整形式应按原生文档阅读，本版示例限普通%和_模式，不使用反斜杠字符串转义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, name FROM students WHERE name LIKE '_禾' ORDER BY id;",
+        "description": "LIKE用简单模式匹配文本。百分号%匹配零个或多个字符，下划线_匹配恰好一个字符；LIKE不是用正则表达式，也不能用星号代替百分号。",
+        "result": "初始数据只有(2,陈禾)匹配；下划线匹配“陈”一个字符。",
+        "reason": "阅读Unicode字符模式；完整转义语法另按原生文档阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "LIKE '林%'是否能匹配单字姓名“林”？",
+        "answer": "能；%可以匹配零个字符。",
+        "hints": [
+          "先区分%与_的长度要求。",
+          "%允许剩余部分长度为0。",
+          "因此“林”本身符合林%。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · string comparison functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/string-comparison-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.2.7",
+      "sourceNodeId": "mysql.source.7-2-7",
+      "number": "7.2.7",
+      "title": "带AND关键字的多条件查询",
+      "parent": "mysql.lesson.7.2",
+      "depth": 3,
+      "order": 141,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 138,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "AND要求两个条件同时成立，适合表达“院系为1并且成绩不低于70”。逐行先确认dept_id=1，再确认score>=70；两者都为真时才输出id与姓名。",
+        "三值逻辑中真AND未知为未知，假AND未知为假，所以缺成绩不会被成绩下限条件选中。这里无需额外写IS NOT NULL也会排除NULL，但业务要统计缺失时应另写明确分支。",
+        "AND优先于OR，混合条件应加括号呈现业务分组。本题只要求两个条件交集，别把AND换成OR扩大结果；按id排序保证四组物理行次序变化后仍输出正确序列。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "SELECT id, name FROM students WHERE dept_id = 1 AND score >= 70 ORDER BY id;",
+        "description": "同时筛选目标院系与成绩下限，排序后输出两个字段。",
+        "result": "首组仅输出(1,林安)。四组独立数据还会检查NULL、刚好边界及不同院系。",
+        "profile": "mysql.exercise.filter",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.filter",
+        "prompt": "查询院系为1且成绩不低于70的学生id和姓名，按id升序输出。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · logical operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/logical-operators.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.2.8",
+      "sourceNodeId": "mysql.source.7-2-8",
+      "number": "7.2.8",
+      "title": "带OR关键字的多条件查询",
+      "parent": "mysql.lesson.7.2",
+      "depth": 3,
+      "order": 142,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 139,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "OR表达满足至少一个条件，适合“低于60分或者成绩缺失”的补录名单。行同时符合两个分支也只输出一次，OR不会像UNION ALL那样复制来源行。",
+        "三值逻辑里真OR未知为真，假OR未知为未知。写score<60 OR score IS NULL能把低分和缺成绩都纳入，单写score<60则只纳入已知低分。",
+        "AND比OR结合得紧。若要在某院系内部找低分或缺成绩，应写dept_id=1 AND (score<60 OR score IS NULL)，不加括号会把其他院系缺成绩的行也纳入。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, score FROM students WHERE score < 60 OR score IS NULL ORDER BY id;",
+        "description": "OR表达满足至少一个条件，适合“低于60分或者成绩缺失”的补录名单。行同时符合两个分支也只输出一次，OR不会像UNION ALL那样复制来源行。",
+        "result": "初始数据输出(3,NULL)、(4,59)。NULL通过第二个分支而保留。",
+        "reason": "阅读OR与缺失值交互；平台支持该基本条件。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何不能用score<60 OR score=NULL筛选缺成绩？",
+        "answer": "score=NULL为未知，缺成绩行的两个普通比较都未知，OR后仍未知。",
+        "hints": [
+          "将缺失行代入两个分支。",
+          "NULL<60与NULL=NULL都不是真。",
+          "把第二分支改成score IS NULL。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · logical operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/logical-operators.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · working with null",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/working-with-null.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.3",
+      "sourceNodeId": "mysql.source.7-3",
+      "number": "7.3",
+      "title": "高级查询",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 143,
+      "group": 7,
+      "leaf": false,
+      "printedPage": 140,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "高级查询把满足行条件的数据整理成可读报告。排序规定先后，分组改变结果粒度，LIMIT只截取最后的行数；这三步分别解决顺序、统计单位和规模。",
+        "本节把排序和分页放在同一思路下检查：先确定唯一、稳定的排序键，再取一页。分组则必须先说清每一行代表哪个组，不能把随意一个学生姓名混入院系统计。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · group by handling",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/group-by-handling.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.3.1",
+      "sourceNodeId": "mysql.source.7-3-1",
+      "number": "7.3.1",
+      "title": "对查询结果排序",
+      "parent": "mysql.lesson.7.3",
+      "depth": 3,
+      "order": 144,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 140,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "ORDER BY定义结果顺序，ASC为升序且可以省略，DESC为降序。多个排序键从左到右使用，前一个键相同时再比较后一个键。",
+        "成绩排行榜可先按score DESC，再按id ASC打破同分；没有第二键时同分者的相对顺序没有保证。MySQL升序时NULL在前，降序时NULL在后，NULL不是自动当作0排序。",
+        "没有ORDER BY就没有结果行序承诺，GROUP BY也不负责替代排序。平台支持列、别名与序号排序；DISTINCT查询须使用结果中的排序表达式，AVG参与ORDER BY本版归阅读。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, score FROM students ORDER BY score DESC, id ASC;",
+        "description": "ORDER BY定义结果顺序，ASC为升序且可以省略，DESC为降序。多个排序键从左到右使用，前一个键相同时再比较后一个键。",
+        "result": "初始数据id顺序为1、2、4、3，对应88、72、59、NULL。",
+        "reason": "阅读多键排序与NULL位置，避免依赖物理行序。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若两人成绩同为88，如何保证较小id先显示？",
+        "answer": "ORDER BY score DESC, id ASC。",
+        "hints": [
+          "第一个键完成成绩从高到低。",
+          "同分要继续比较第二个键。",
+          "id升序为同分提供稳定先后。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.3.2",
+      "sourceNodeId": "mysql.source.7-3-2",
+      "number": "7.3.2",
+      "title": "分组查询",
+      "parent": "mysql.lesson.7.3",
+      "depth": 3,
+      "order": 145,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 140,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "GROUP BY把相同院系号的来源行放在一组，结果每行表示一个院系组。NULL院系也形成一组；COUNT(*)统计该组行数，SUM(score)只累加非空成绩。",
+        "WHERE在分组前筛来源行，HAVING在聚合后筛组。本题HAVING COUNT(*)>=1保留所有实际存在的组；它不能凭空生成没有学生的院系，想显示这些院系应从院系表左连接开始。",
+        "平台要求非聚合输出明确列在分组键中，不做MySQL原生的函数依赖推导。SUM(INT)在线协议为零位DECIMAL精确字符串；全NULL组的SUM为NULL而非0，分组键也不自动排序，故末尾显式ORDER BY。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "SELECT dept_id, COUNT(*) AS total, SUM(score) AS sum_score FROM students GROUP BY dept_id HAVING COUNT(*) >= 1 ORDER BY dept_id;",
+        "description": "按dept_id分组，返回行数和非空成绩之和。",
+        "result": "首组结果为(NULL,1,NULL)、(1,1,88)、(2,1,72)、(99,1,59)。SUM的88、72、59为零位DECIMAL，空表分组查询为零组。",
+        "profile": "mysql.exercise.group",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.group",
+        "prompt": "按院系分组，输出dept_id、记录总数total与非空成绩之和sum_score，按院系升序。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · group by handling",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/group-by-handling.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · aggregate functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/aggregate-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.3.3",
+      "sourceNodeId": "mysql.source.7-3-3",
+      "number": "7.3.3",
+      "title": "使用LIMIT限制查询结果数量",
+      "parent": "mysql.lesson.7.3",
+      "depth": 3,
+      "order": 146,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 142,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "LIMIT count限制最终返回的行数，LIMIT count OFFSET offset先跳过offset行再取count行，偏移从0开始。要分页一致，前面应有稳定排序；LIMIT不会自动寻找最高或最低值。",
+        "本节运行例把DISTINCT和ORDER BY作为平台补充组合：先将score投影去重，再按score升序，最后取前两项。多个NULL只保留一个，升序时排在非空数值前；不足两项就返回现有项。",
+        "LIMIT约束的是结果行数，并不等于读取来源的行数或成本。分页排序键重复时应补唯一键；本题投影去重后按同一列排序，满足DISTINCT查询的排序范围约束。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "SELECT DISTINCT score FROM students ORDER BY score LIMIT 2;",
+        "description": "平台扩展示例：对成绩去重、升序排序，再取前两项。",
+        "result": "首组结果为NULL、59两项；空表仍返回score列且零行。这里取的是最低两项去重值，并非两名学生。",
+        "profile": "mysql.exercise.distinct-limit",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.distinct-limit",
+        "prompt": "对成绩去重，按升序取前两项。NULL按MySQL升序规则排在前面。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · working with null",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/working-with-null.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.4",
+      "sourceNodeId": "mysql.source.7-4",
+      "number": "7.4",
+      "title": "聚合函数查询",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 147,
+      "group": 7,
+      "leaf": false,
+      "printedPage": 142,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "聚合函数把多行压缩成统计量。COUNT数行或非空值，SUM和AVG处理数值，MAX与MIN找边界；先明确参与统计的行和NULL规则，才能解释结果。",
+        "无GROUP BY时把全体输入看作一组，即使输入空集也会产生一行聚合结果：COUNT为0，其余本节聚合为NULL。带GROUP BY且没有输入行则没有组，返回零行。这两种空结果不能混淆。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · aggregate functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/aggregate-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.4.1",
+      "sourceNodeId": "mysql.source.7-4-1",
+      "number": "7.4.1",
+      "title": "COUNT函数",
+      "parent": "mysql.lesson.7.4",
+      "depth": 3,
+      "order": 148,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 142,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "COUNT(*)统计输入行数，某行即使score为NULL也计数；COUNT(score)只统计score非空的行。查询缺失情况时两个计数之差就是成绩缺失的行数。",
+        "初始4名学生中3人成绩已知，因此COUNT(*)=4、COUNT(score)=3。COUNT返回整数0表示没有符合统计口径的数据，不会因为输入为空返回NULL。",
+        "COUNT(DISTINCT score)在原生MySQL可用于非空去重计数，但本版基本COUNT活动不扩展到该语法。不要写COUNT(0)来表达零条记录，它仍是对每行非空常量计数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT COUNT(*) AS students_total, COUNT(score) AS known_scores FROM students;",
+        "description": "COUNT(*)统计输入行数，某行即使score为NULL也计数；COUNT(score)只统计score非空的行。查询缺失情况时两个计数之差就是成绩缺失的行数。",
+        "result": "初始数据得到一行(4,3)；空表得到一行(0,0)。",
+        "reason": "比较行数与非空值计数；活动采用阅读，不意味着基本COUNT不可运行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "COUNT(0)会恒为0吗？",
+        "answer": "不会。常量0非NULL，每个来源行都会被计数；初始数据结果是4。",
+        "hints": [
+          "COUNT(expr)只跳过NULL。",
+          "0是已知整数，不是NULL。",
+          "有4个来源行便贡献4次计数。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · aggregate functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/aggregate-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.4.2",
+      "sourceNodeId": "mysql.source.7-4-2",
+      "number": "7.4.2",
+      "title": "SUM函数",
+      "parent": "mysql.lesson.7.4",
+      "depth": 3,
+      "order": 149,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 143,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SUM把组内非NULL数值相加。初始已知成绩88、72、59相加为219，未知成绩不参与累加；这并不意味着未知成绩在数据库中变成了0。",
+        "对整数或DECIMAL这类精确输入，MySQL的SUM返回DECIMAL。平台INT列求和也以零位DECIMAL传输，保留精确整数值，界面显示219而不是浮点近似数。",
+        "空集或全NULL集合的SUM为NULL，若业务确实定义空合计为0，可在原生SQL按类型明确补默认值。平台只支持同类型IFNULL/COALESCE，不把混合类型兜底当成普遍可执行形式。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT SUM(score) AS total_score FROM students;",
+        "description": "SUM把组内非NULL数值相加。初始已知成绩88、72、59相加为219，未知成绩不参与累加；这并不意味着未知成绩在数据库中变成了0。",
+        "result": "初始数据得到219（零位DECIMAL）；若所有score为NULL或表为空，得到一行NULL。",
+        "reason": "阅读精确合计及空集约定，不使用浮点模拟。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "SUM没有可相加的非空值时，为何不能推断它一定是0？",
+        "answer": "SQL定义此时返回NULL，用它区分没有已知贡献值与已知和为0。",
+        "hints": [
+          "先区分“没有非空项”和“非空项相消”。",
+          "例如5与-5的和确实是0。",
+          "没有项的SUM按定义是NULL。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · aggregate functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/aggregate-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.4.3",
+      "sourceNodeId": "mysql.source.7-4-3",
+      "number": "7.4.3",
+      "title": "AVG函数",
+      "parent": "mysql.lesson.7.4",
+      "depth": 3,
+      "order": 150,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 143,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "AVG计算非NULL值的总和除以非NULL值个数。初始成绩219除以3等于73；若错误地除以学生总数4，会得到54.75，改变了“已知成绩平均值”的口径。",
+        "MySQL对精确整数输入产生DECIMAL；教学环境固定默认精度增量4，AVG(INT)显示四位小数，按HALF_UP显示舍入。比如1/32显示0.0313，不能把显示值当作服务器内部全部精度。",
+        "本版AVG仅作直接投影，可按普通键分组；AVG参与HAVING、ORDER BY、DISTINCT、比较或其他表达式时归阅读。原生MySQL支持相应组合，平台边界是为了避免显示舍入值误当内部精度。空集和全NULL平均值均为NULL。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "SELECT AVG(score) AS average_score FROM students;",
+        "description": "统计所有非空成绩的平均值，结果列名为average_score。",
+        "result": "首组得到average_score=73.0000；空表组得到一行NULL。其他组由非空成绩的精确总和及数量确定。",
+        "profile": "mysql.exercise.average",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.average",
+        "prompt": "计算所有非空成绩的平均值，列名为average_score。空集合结果为NULL。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · aggregate functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/aggregate-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.4.4",
+      "sourceNodeId": "mysql.source.7-4-4",
+      "number": "7.4.4",
+      "title": "MAX函数",
+      "parent": "mysql.lesson.7.4",
+      "depth": 3,
+      "order": 151,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 144,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MAX返回一组非NULL值里的最大值。数值列适合找最高成绩，文本列则按照它的排序规则比较，不能把字符串最大值理解为最长字符串。",
+        "MAX(score)只给出数值，不自动告诉你是哪位学生取得最高分。若同时随便投影name，会破坏聚合粒度；原生可用子查询或窗口找并列最高者，本版相关高级写法为阅读。",
+        "没有非空值时MAX为NULL。并列最大值不会让聚合结果变成多行；若要完整保留并列学生，需要另构造筛选查询，而不是在聚合旁加LIMIT 1。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT MAX(score) AS highest FROM students;",
+        "description": "MAX返回一组非NULL值里的最大值。数值列适合找最高成绩，文本列则按照它的排序规则比较，不能把字符串最大值理解为最长字符串。",
+        "result": "初始结果一行highest=88；即使新增另一个88，仍是一行88。",
+        "reason": "聚焦聚合值与对应来源行的区别，最高者的高级查询另读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "SELECT MAX(score)能直接给出最高分学生姓名吗？",
+        "answer": "不能。它只返回最大成绩；姓名需要符合分组语义的额外查询。",
+        "hints": [
+          "看SELECT列表究竟计算了什么。",
+          "MAX只汇总score值。",
+          "它没有携带“产生该值的整条来源行”。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · aggregate functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/aggregate-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · group by handling",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/group-by-handling.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.4.5",
+      "sourceNodeId": "mysql.source.7-4-5",
+      "number": "7.4.5",
+      "title": "MIN函数",
+      "parent": "mysql.lesson.7.4",
+      "depth": 3,
+      "order": 152,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 144,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MIN返回组内非NULL最小值，例如最低已知成绩。NULL不参与最小值竞争，因此有未知成绩并不会使MIN自动为NULL。",
+        "初始score集合为88、72、NULL、59，MIN为59。对文本求MIN时应核查排序规则；教学环境的0900_bin次序既不是拼音顺序，也不代表所有MySQL数据库的默认排序。",
+        "空集与全NULL集合才没有可选非空值，此时MIN为NULL。数值0和负数都是真实值，若数据允许它们，必须参与比较，不能按业务直觉当作缺失。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT MIN(score) AS lowest FROM students;",
+        "description": "MIN返回组内非NULL最小值，例如最低已知成绩。NULL不参与最小值竞争，因此有未知成绩并不会使MIN自动为NULL。",
+        "result": "初始lowest=59；若加入score=0，最低值变0，加入-5则变-5。",
+        "reason": "阅读最小值、NULL和有效零值的区别。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "含NULL、0、12三项时MIN为多少？",
+        "answer": "0；NULL忽略，0是有效数值。",
+        "hints": [
+          "先移去不参与聚合的NULL。",
+          "比较剩下0与12。",
+          "最小的已知值是0。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · aggregate functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/aggregate-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · charset binary collations",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/charset-binary-collations.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.5",
+      "sourceNodeId": "mysql.source.7-5",
+      "number": "7.5",
+      "title": "连接查询",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 153,
+      "group": 7,
+      "leaf": false,
+      "printedPage": 144,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "连接把两张表中的相关行组合在同一结果中。先明确关联键和期望保留哪一边，再决定内连接或外连接；字段同名本身并不会自动建立业务关联。",
+        "教学库用students.dept_id对应departments.id。真实数据可能没有匹配、包含NULL或一对多；连接输出应按逐对匹配推导。本版执行INNER、LEFT、CROSS及明确ON，原生RIGHT、NATURAL与USING仍有阅读价值但不在当前子集。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · join",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/join.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.5.1",
+      "sourceNodeId": "mysql.source.7-5-1",
+      "number": "7.5.1",
+      "title": "内连接查询",
+      "parent": "mysql.lesson.7.5",
+      "depth": 3,
+      "order": 154,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 144,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "INNER JOIN只保留ON条件为真的配对。学生的dept_id等于院系id时把两行连接起来，输出学生id、姓名以及院系name；表别名s与d让同名字段来源清楚。",
+        "初始周岚的dept_id为NULL，无法通过等值关联；苏宁的99没有院系记录，两人都不会出现在内连接结果。内连接并不会删除他们在students中的原记录。",
+        "若右表关联键不唯一，同一学生可能匹配多个右行，结果也就多行；不能不加分析地用DISTINCT掩盖连接条件错误。本题departments.id为主键，最多匹配一项，末尾按s.id排序。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "SELECT s.id, s.name, d.name AS department FROM students AS s INNER JOIN departments AS d ON s.dept_id = d.id ORDER BY s.id;",
+        "description": "按学生院系号与院系主键连接，仅保留成功配对的学生。",
+        "result": "首组输出(1,林安,计算机)、(2,陈禾,数学)。学生表及院系表保持原样。",
+        "profile": "mysql.exercise.inner-join",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.inner-join",
+        "prompt": "通过院系id内连接，查询学生id、姓名和院系名department，按学生id升序。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · join",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/join.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.5.2",
+      "sourceNodeId": "mysql.source.7-5-2",
+      "number": "7.5.2",
+      "title": "外连接查询",
+      "parent": "mysql.lesson.7.5",
+      "depth": 3,
+      "order": 155,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 146,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "LEFT JOIN以左表为保留对象。有ON匹配时输出配对行，没有匹配时仍输出左行，右侧所有列补NULL；LEFT OUTER JOIN里的OUTER可以省略。",
+        "本题students放左侧，因此4名学生都保留。dept_id缺失和dept_id=99无匹配都会使department为NULL，但左侧原有dept_id仍可区分两种原因；补出的NULL不是写入院系表的新数据。",
+        "把右侧限制写到WHERE可能过滤补NULL行，使保留效果消失；希望仍保留所有学生时应检查条件是否属于ON。原生MySQL还支持RIGHT外连接，本版可执行外连接限LEFT，不把范围限制说成原生不支持。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "SELECT s.id, s.name, d.name AS department FROM students AS s LEFT JOIN departments AS d ON s.dept_id = d.id ORDER BY s.id;",
+        "description": "以students为左表，保留所有学生并显示可匹配的院系名。",
+        "result": "首组输出(1,林安,计算机)、(2,陈禾,数学)、(3,周岚,NULL)、(4,苏宁,NULL)。",
+        "profile": "mysql.exercise.left-join",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.left-join",
+        "prompt": "保留所有学生，左连接院系表，无匹配院系时输出NULL，按学生id升序。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · join",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/join.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.5.3",
+      "sourceNodeId": "mysql.source.7-5-3",
+      "number": "7.5.3",
+      "title": "复合条件连接查询",
+      "parent": "mysql.lesson.7.5",
+      "depth": 3,
+      "order": 156,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 148,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "连接条件可以由多个比较组成，例如院系号相等并且只匹配高分学生。这时先区分“决定能否配对”的ON条件和“筛掉最终结果行”的WHERE条件。",
+        "在LEFT JOIN中，将s.score>=80放在ON里不会删去低分学生，而是让他们不能配对右表；放在WHERE里则会删除低分或未知成绩的最终行。这是外连接教学最关键的条件位置差别。",
+        "多表字段应加别名前缀，避免id或name歧义。复合条件不是复合键约束；本版能求值支持范围内的AND等ON条件，但不据此提供外键维护或原生优化器计划。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT s.id, d.name AS department\nFROM students AS s LEFT JOIN departments AS d\nON s.dept_id = d.id AND s.score >= 80\nORDER BY s.id;",
+        "description": "连接条件可以由多个比较组成，例如院系号相等并且只匹配高分学生。这时先区分“决定能否配对”的ON条件和“筛掉最终结果行”的WHERE条件。",
+        "result": "初始4名学生都出现，仅id=1显示计算机，id=2、3、4的department均为NULL。",
+        "reason": "阅读复合条件的位置影响；SQL使用支持的LEFT和AND。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把s.score>=80从ON移到WHERE后，还剩几名学生？",
+        "answer": "初始数据只剩id=1；其他学生被WHERE过滤。",
+        "hints": [
+          "先判断LEFT JOIN保留发生在哪个阶段。",
+          "ON限制配对，WHERE筛最终行。",
+          "只有88满足最终成绩下限。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · join",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/join.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.6",
+      "sourceNodeId": "mysql.source.7-6",
+      "number": "7.6",
+      "title": "子查询",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 157,
+      "group": 7,
+      "leaf": false,
+      "printedPage": 149,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "子查询是嵌在另一条语句中的SELECT。它可以提供一个标量、一列候选值，或者仅回答是否存在行；选择形式前应先预判子查询返回几行几列。",
+        "以下例子按MySQL 8.0原生语义推导。当前浏览器教学执行子集明确不执行子查询，因此阅读例与自检不能标作已真实运行；同样不能据此误认为MySQL本身缺少这些查询能力。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · subqueries",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/subqueries.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.6.1",
+      "sourceNodeId": "mysql.source.7-6-1",
+      "number": "7.6.1",
+      "title": "带IN关键字的子查询",
+      "parent": "mysql.lesson.7.6",
+      "depth": 3,
+      "order": 158,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 149,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "IN子查询用内层返回的一列作为外层候选集合。它适合先从院系表选出目标院系号，再筛选属于这些院系的学生，比把可能变化的编号手写进列表更能表达业务含义。",
+        "内层可以返回多行但应只有一列，重复编号不会复制外层学生。先独立检查内层结果，再代入外层判断，有助于区分“没有候选”与“候选含NULL”。",
+        "IN遇NULL的未知规则仍成立，NOT IN含NULL容易把本想保留的行排除。原生MySQL支持该语法，本版子查询活动为阅读；字面量IN列表的可执行范围与这里不同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, name FROM students\nWHERE dept_id IN (SELECT id FROM departments WHERE name = '数学')\nORDER BY id;",
+        "description": "IN子查询用内层返回的一列作为外层候选集合。它适合先从院系表选出目标院系号，再筛选属于这些院系的学生，比把可能变化的编号手写进列表更能表达业务含义。",
+        "result": "初始内层返回2，外层得到(2,陈禾)。这是按已给数据推导的原生结果。",
+        "reason": "本版不执行IN子查询；使用MySQL原生语义阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "内层重复返回两次2，会让陈禾出现两次吗？",
+        "answer": "不会。IN是成员判断，不是把内层行与外层做逐对连接。",
+        "hints": [
+          "关注IN回答的是真假。",
+          "同一候选重复不会改变是否命中。",
+          "外层原来的每条学生行最多因该条件保留一次。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · any in some subqueries",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/any-in-some-subqueries.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.6.2",
+      "sourceNodeId": "mysql.source.7-6-2",
+      "number": "7.6.2",
+      "title": "带比较运算符的子查询",
+      "parent": "mysql.lesson.7.6",
+      "depth": 3,
+      "order": 159,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 150,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "比较运算符右侧的标量子查询应产生一列且至多一行。可先计算全体已知成绩平均值，再筛选高于平均值的学生；这种写法把统计口径与逐行筛选分开。",
+        "内层AVG无GROUP BY会产生一行，初始值为73；外层88高于73，72和59不高于，NULL比较未知。不要直接把AVG(score)塞进WHERE，WHERE阶段没有相应的组结果。",
+        "标量子查询零行时标量值为NULL，多行时通常报错，不能随便取第一行。原生MySQL支持该写法；本版既不执行子查询，也不执行AVG参与比较，阅读推导仍按未先舍入的原生聚合语义理解。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, name FROM students\nWHERE score > (SELECT AVG(score) FROM students)\nORDER BY id;",
+        "description": "比较运算符右侧的标量子查询应产生一列且至多一行。可先计算全体已知成绩平均值，再筛选高于平均值的学生；这种写法把统计口径与逐行筛选分开。",
+        "result": "初始内层均值73，外层仅输出(1,林安)。",
+        "reason": "子查询及AVG比较超出本版子集；本节完整解释原生语义。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若把内层改成SELECT score FROM students而返回4行，会怎样？",
+        "answer": "这不是合法的单值结果，会产生子查询返回多行的错误，不能当作任取一分数。",
+        "hints": [
+          "看>右侧需要一个值还是一个集合。",
+          "普通标量比较需要单值。",
+          "多行应改用合适的IN、ANY、ALL或聚合，不能默认取首行。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · subqueries",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/subqueries.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · aggregate functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/aggregate-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.6.3",
+      "sourceNodeId": "mysql.source.7-6-3",
+      "number": "7.6.3",
+      "title": "带EXISTS关键字的子查询",
+      "parent": "mysql.lesson.7.6",
+      "depth": 3,
+      "order": 160,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 150,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "EXISTS只判断子查询是否至少产生一行，不关心SELECT列表显示什么。相关子查询在内层引用当前外层行，从而对每个院系检查有没有学生归属。",
+        "用d.id关联s.dept_id时，院系1和2能找到学生，设计院系3找不到。SELECT 1是表达存在性的一种清晰习惯，不是要求内层必须读取某个数值为1的字段。",
+        "即使返回行中所选值全为NULL，EXISTS仍为真；行存在与值非空是两回事。NOT EXISTS适合表达无匹配关系，避免把它与NOT IN的NULL传播简单等同。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT d.id, d.name FROM departments AS d\nWHERE EXISTS (SELECT 1 FROM students AS s WHERE s.dept_id = d.id)\nORDER BY d.id;",
+        "description": "EXISTS只判断子查询是否至少产生一行，不关心SELECT列表显示什么。相关子查询在内层引用当前外层行，从而对每个院系检查有没有学生归属。",
+        "result": "原生推导得到(1,计算机)、(2,数学)；id=3没有相关学生而被排除。",
+        "reason": "本版不执行相关子查询，例子按原生逐行存在性解释。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "将SELECT 1改成SELECT NULL，相关匹配仍存在时EXISTS会为假吗？",
+        "answer": "不会，仍为真；它只看是否有行。",
+        "hints": [
+          "先区分结果行是否存在与行内值是否NULL。",
+          "SELECT NULL可返回含NULL的一行。",
+          "有任何一行就满足EXISTS。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · exists and not exists subqueries",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/exists-and-not-exists-subqueries.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.6.4",
+      "sourceNodeId": "mysql.source.7-6-4",
+      "number": "7.6.4",
+      "title": "带ANY关键字的子查询",
+      "parent": "mysql.lesson.7.6",
+      "depth": 3,
+      "order": 161,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 151,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "ANY表示与子查询返回的某一个值比较成立即可，SOME是同义形式。score>ANY(目标组成绩)意为至少高于该组一个成绩，不等于高于该组最高成绩。",
+        "若目标成绩是72和59，88满足>ANY，72也满足（大于59），59不满足。面对NULL时先看是否已有一个真比较；有真即可确定为真，否则可能未知。",
+        "子查询空集时ANY为假。IN子查询可以理解为=ANY，但NOT IN不能理解为<>ANY；它对应<>ALL。ANY属于原生阅读范围，本版不会把它降级成固定答案执行。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, score FROM students\nWHERE score > ANY (SELECT score FROM students WHERE id IN (2,4))\nORDER BY id;",
+        "description": "ANY表示与子查询返回的某一个值比较成立即可，SOME是同义形式。score>ANY(目标组成绩)意为至少高于该组一个成绩，不等于高于该组最高成绩。",
+        "result": "内层为72、59；原生推导输出(1,88)、(2,72)。",
+        "reason": "本版不执行ANY子查询，活动训练量词和边界。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若内层返回零行，>ANY的判断是真还是假？",
+        "answer": "为假，没有任何候选能使比较成立。",
+        "hints": [
+          "ANY寻找至少一个成立见证。",
+          "空集没有见证。",
+          "所以即使外层值很大，也不满足空集ANY。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · any in some subqueries",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/any-in-some-subqueries.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.6.5",
+      "sourceNodeId": "mysql.source.7-6-5",
+      "number": "7.6.5",
+      "title": "带ALL关键字的子查询",
+      "parent": "mysql.lesson.7.6",
+      "depth": 3,
+      "order": 162,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 152,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "ALL要求与子查询中的每一个值比较都成立。score>ALL(目标组成绩)表示严格高于所有目标成绩；相等最大值仍不能通过严格大于。",
+        "内层为72和59时，88满足，72因不大于72而失败。若没有假比较但存在与NULL比较的未知，总体仍未知；出现一个假就足以判定ALL为假。",
+        "原生SQL对空集的ALL定义为真，因为没有反例；这与标量子查询空集变NULL不同。MAX聚合即使输入空集也返回一行NULL，因此>ALL(SELECT MAX(...))与直接对空行集使用ALL并不等价。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, score FROM students\nWHERE score > ALL (SELECT score FROM students WHERE id IN (2,4))\nORDER BY id;",
+        "description": "ALL要求与子查询中的每一个值比较都成立。score>ALL(目标组成绩)表示严格高于所有目标成绩；相等最大值仍不能通过严格大于。",
+        "result": "目标为72、59，原生推导只输出(1,88)。",
+        "reason": "本版不执行ALL子查询；保留原生空集与NULL的准确语义。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": ">ALL(空子查询)与>(空标量子查询)是否相同？",
+        "answer": "不同。前者为真，后者右侧是NULL而比较未知。",
+        "hints": [
+          "ALL检验是否有反例。",
+          "标量空结果按NULL处理。",
+          "因此空集合量词和缺失标量不能混同。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · all subqueries",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/all-subqueries.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.7",
+      "sourceNodeId": "mysql.source.7-7",
+      "number": "7.7",
+      "title": "合并查询结果",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 163,
+      "group": 7,
+      "leaf": false,
+      "printedPage": 153,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "合并查询把多个具有相同列数的结果纵向接在一起，区别于JOIN横向配对字段。先对齐每列的业务含义和兼容类型，再选择是否保留重复行。",
+        "UNION默认去重，UNION ALL保留每一次出现。最终顺序要由整体ORDER BY确定，不能把第一个分支输出在前当作承诺。本版集合合并归阅读，原生MySQL支持两种形式。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · union",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/union.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.7.1",
+      "sourceNodeId": "mysql.source.7-7-1",
+      "number": "7.7.1",
+      "title": "使用UNION关键字",
+      "parent": "mysql.lesson.7.7",
+      "depth": 3,
+      "order": 164,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 153,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "UNION将两个查询结果合并并默认去除重复整行。合并按列的位置对应，列名通常取第一个查询块；列数不同会失败，兼容类型合并也应事先核对业务含义。",
+        "从两个来源收集院系列表时，同一院系出现多次仍只需要一次，可使用UNION。去重对象是整行，不是某个单独字段；加入来源标签会使原本相同的两行不再相同。",
+        "UNION不负责排序，整体ORDER BY才决定最终结果次序。原生MySQL还有不同版本增补的集合操作，本节限定UNION概念，不将它们混为平台当前可执行语法。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT 2 AS dept_id UNION SELECT 1 UNION SELECT 2 ORDER BY dept_id;",
+        "description": "UNION将两个查询结果合并并默认去除重复整行。合并按列的位置对应，列名通常取第一个查询块；列数不同会失败，兼容类型合并也应事先核对业务含义。",
+        "result": "原生结果为两行dept_id=1、2，第二次出现的2被去掉。",
+        "reason": "UNION不在本版执行子集；采用无表常量例阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若两个分支分别返回(2,甲)与(2,乙)，UNION会只保留一行吗？",
+        "answer": "不会。两列组成的整行不同，两行都会保留。",
+        "hints": [
+          "先把整行写成二元组。",
+          "第一列相同不代表整行相同。",
+          "标签甲和乙不同，去重后仍两行。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · union",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/union.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.7.2",
+      "sourceNodeId": "mysql.source.7-7-2",
+      "number": "7.7.2",
+      "title": "使用UNION ALL关键字",
+      "parent": "mysql.lesson.7.7",
+      "depth": 3,
+      "order": 165,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 154,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "UNION ALL直接保留各查询结果中的每一行，包括重复值。它适合汇总多批事件或交易，因为重复的数值可能代表不同真实事件，不能先去重。",
+        "和UNION一样，分支需要列数对应且类型可兼容。结果保留重复行不意味着承诺分支处理或输出的物理顺序，整体排序仍需明确写出。",
+        "选择ALL首先是语义决定：如果两次值为2分别代表两笔记录，UNION会丢掉一次计数。性能上ALL通常省去去重工作，但不能为了快就改变题目要求。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT 2 AS dept_id UNION ALL SELECT 1 UNION ALL SELECT 2 ORDER BY dept_id;",
+        "description": "UNION ALL直接保留各查询结果中的每一行，包括重复值。它适合汇总多批事件或交易，因为重复的数值可能代表不同真实事件，不能先去重。",
+        "result": "原生结果为1、2、2，共3行；两次2全部保留。",
+        "reason": "本版集合合并为阅读，例子强调多重集保留重复。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "合并两个月交易明细时，金额相同的两笔应不应该自动去重？",
+        "answer": "通常不应；金额相同不代表同一交易，应保留明细身份并按业务选UNION ALL。",
+        "hints": [
+          "先判断重复值是否表示同一事件。",
+          "不同交易可能有相同金额。",
+          "单按投影值去重可能漏算真实记录。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · union",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/union.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.8",
+      "sourceNodeId": "mysql.source.7-8",
+      "number": "7.8",
+      "title": "定义表和字段的别名",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 166,
+      "group": 7,
+      "leaf": false,
+      "printedPage": 154,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "别名为当前查询中的表引用或结果表达式提供易读名字。表别名解决来源定位，字段别名解决结果含义；二者都不是修改数据库对象本名。",
+        "使用别名时应让生命周期和作用域清楚：一条查询里的s只是students的一次引用，AS total是本次结果列。避免取与其他字段冲突的名字，并注意WHERE不能引用同层新定义的结果别名。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · problems with alias",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/problems-with-alias.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · join",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/join.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.8.1",
+      "sourceNodeId": "mysql.source.7-8-1",
+      "number": "7.8.1",
+      "title": "为表取别名",
+      "parent": "mysql.lesson.7.8",
+      "depth": 3,
+      "order": 167,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 154,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "FROM students AS s给本次表引用起名s。此后用s.id和s.name指向该引用的字段，连接中可以清楚区分学生id与院系id。",
+        "同一物理表可在原生自连接中引用两次，每次使用不同别名表示不同角色。别名一旦定义，应在该查询范围内统一使用，不把原表名和新别名交替当作同一引用。",
+        "别名不重命名真实表，也不产生一张副本。平台可执行别名使用ASCII标识规则，名字长度不超过64；原生更广标识写法应依原生文档处理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT s.id, s.name FROM students AS s WHERE s.id = 1;",
+        "description": "FROM students AS s给本次表引用起名s。此后用s.id和s.name指向该引用的字段，连接中可以清楚区分学生id与院系id。",
+        "result": "初始得到(1,林安)，数据库中表名仍是students。",
+        "reason": "阅读表别名作用域，基本别名SQL位于平台子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "执行此SELECT后，能否在下一条语句直接FROM s？",
+        "answer": "不能。s只属于当前查询作用域，不是新建的持久表。",
+        "hints": [
+          "看AS位于FROM的查询上下文。",
+          "它没有CREATE TABLE。",
+          "下一条独立语句需要重新指定students或重新声明别名。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · join",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/join.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.8.2",
+      "sourceNodeId": "mysql.source.7-8-2",
+      "number": "7.8.2",
+      "title": "为字段取别名",
+      "parent": "mysql.lesson.7.8",
+      "depth": 3,
+      "order": 168,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 155,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "字段别名给结果列起名字，例如score+5 AS adjusted表示计算后的展示列。原始score不会修改，别名也不会成为students表的新字段。",
+        "ORDER BY可引用同层结果别名，WHERE通常不能引用同层新别名，因为行筛选先于该投影的逻辑形成。需要筛选时可重复合法表达式，或在原生MySQL通过外层查询处理。",
+        "别名应能解释单位和口径。平台为判题可能要求固定列名，所以AVG题的average_score不能随意改写；引用标识使用反引号，单引号主要表示字符串，ORDER BY 'alias'会变成常量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, score + 5 AS adjusted FROM students WHERE score >= 70 ORDER BY adjusted DESC;",
+        "description": "字段别名给结果列起名字，例如score+5 AS adjusted表示计算后的展示列。原始score不会修改，别名也不会成为students表的新字段。",
+        "result": "初始输出(1,93)、(2,77)，结果列名adjusted；原表score仍为88和72。",
+        "reason": "阅读结果别名及作用域；不使用平台未支持的外层子查询。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么WHERE adjusted>=75在同层不可靠？",
+        "answer": "adjusted是本层SELECT新定义的别名，WHERE不能依赖尚未形成的投影列；可写WHERE score+5>=75。",
+        "hints": [
+          "找别名定义的位置。",
+          "WHERE作用于来源行。",
+          "在WHERE使用来源字段构成的表达式，或原生外层查询。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · problems with alias",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/problems-with-alias.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.9",
+      "sourceNodeId": "mysql.source.7-9",
+      "number": "7.9",
+      "title": "使用正则表达式查询",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 169,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 155,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "正则表达式表达比LIKE更复杂的文本模式。MySQL 8.0使用ICU正则，REGEXP_LIKE可检测匹配，^和$限定开头与结尾，字符类和重复次数描述格式。",
+        "例如学号格式S后接恰好三位数字，可以写^S[0-9]{3}$。没有首尾锚点时只要文本某一片段匹配也可能成功；正则中的点号与LIKE里的下划线不是同一种语法。",
+        "大小写、字符集及转义会影响结果，不能把程序语言正则字符串不加分析地粘贴进SQL。本版不执行正则函数，阅读结果使用明确的ASCII样本推导，原生资源限制另按服务器配置处理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT REGEXP_LIKE('S204', '^S[0-9]{3}$', 'c') AS valid,\n       REGEXP_LIKE('XS204', '^S[0-9]{3}$', 'c') AS invalid;",
+        "description": "正则表达式表达比LIKE更复杂的文本模式。MySQL 8.0使用ICU正则，REGEXP_LIKE可检测匹配，^和$限定开头与结尾，字符类和重复次数描述格式。",
+        "result": "原生推导valid=1、invalid=0；第二个文本多出开头X，不符合整串格式。",
+        "reason": "REGEXP及ICU运行不在本版子集，采用明确样本阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "去掉^和$后，XS204是否可能匹配？",
+        "answer": "会匹配其中的S204片段；锚点负责要求整串。",
+        "hints": [
+          "正则默认可以寻找子串。",
+          "XS204内含S204。",
+          "要验证完整格式，保留首尾锚点。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · regexp",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/regexp.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.10",
+      "sourceNodeId": "mysql.source.7-10",
+      "number": "7.10",
+      "title": "本章小结",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 170,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 158,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "回顾一条查询时，应依次回答来源、行筛选、结果粒度、结果列、排序和截取。WHERE筛行，HAVING筛组；DISTINCT对投影整行去重，JOIN按配对关系扩展行。",
+        "NULL在普通比较里带来未知，在分组与去重里又有专门归组规则。聚合忽略NULL，COUNT空集为0而SUM、AVG、MIN、MAX为空值；不能把这些规则机械套成“NULL都等于0”。",
+        "检验查询要准备能暴露错误的数据：同分、同名、空表、无匹配院系和尾空格。MySQL原生支持子查询、集合操作与正则，本版以阅读讲解其语义；当前所有活动都使用SQL文本或阅读自检，不使用积木。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT dept_id, COUNT(*) AS total FROM students\nWHERE score IS NOT NULL GROUP BY dept_id ORDER BY dept_id;",
+        "description": "回顾一条查询时，应依次回答来源、行筛选、结果粒度、结果列、排序和截取。WHERE筛行，HAVING筛组；DISTINCT对投影整行去重，JOIN按配对关系扩展行。",
+        "result": "初始只有院系1、2、99三个组，各total=1；未知成绩行在分组前已排除。",
+        "reason": "用已有子集组合复盘查询阶段，结果按初始表推导。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把WHERE score IS NOT NULL删掉后，哪一组会新增？",
+        "answer": "新增dept_id=NULL、total=1的组，来自周岚。",
+        "hints": [
+          "先找唯一成绩缺失行。",
+          "删去WHERE后该行进入GROUP BY。",
+          "它的NULL院系单独归为一组。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · aggregate functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/aggregate-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · working with null",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/working-with-null.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.7.11",
+      "sourceNodeId": "mysql.source.7-11",
+      "number": "7.11",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.7",
+      "depth": 2,
+      "order": 171,
+      "group": 7,
+      "leaf": true,
+      "printedPage": 158,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章练习要求先写结果预期，再写SQL。若想找“没有匹配院系的学生”，应保留所有学生，再检查右表主键是否补成NULL；内连接无法保留需要寻找的缺配行。",
+        "初始数据含两种缺配：dept_id本身为NULL和dept_id=99没有院系。它们都属于缺配名单，但修复方式不同，输出原dept_id能帮助诊断原因。",
+        "验算要逐行走ON匹配和WHERE筛选，不能只看最终人数。本节以阅读自检寻找缺配记录，观察LEFT JOIN如何保留来源行，再用非空主键识别右侧补出的NULL。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT s.id, s.dept_id FROM students AS s\nLEFT JOIN departments AS d ON s.dept_id = d.id\nWHERE d.id IS NULL ORDER BY s.id;",
+        "description": "本章练习要求先写结果预期，再写SQL。若想找“没有匹配院系的学生”，应保留所有学生，再检查右表主键是否补成NULL；内连接无法保留需要寻找的缺配行。",
+        "result": "初始缺配名单为(3,NULL)、(4,99)。院系表主键非空，d.id IS NULL可识别补NULL的无匹配行。",
+        "reason": "综合阅读自检，SQL使用支持的LEFT JOIN和缺失测试。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何用d.id IS NULL识别无匹配，比d.name IS NULL更稳妥？",
+        "answer": "已知d.id是非空主键，匹配行不会真有NULL；若名称允许NULL，d.name IS NULL可能把已有匹配但名称缺失的行也选入。",
+        "hints": [
+          "先看右表字段的非空约束。",
+          "需要选择匹配成功时一定非NULL的字段。",
+          "主键满足该条件，普通可空字段未必满足。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · join",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/join.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · working with null",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/working-with-null.html"
+        }
+      ]
+    }
+  ]
+}

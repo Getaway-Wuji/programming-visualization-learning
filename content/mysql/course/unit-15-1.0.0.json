@@ -1,0 +1,984 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 15,
+  "nodes": [
+    {
+      "id": "mysql.lesson.15",
+      "sourceNodeId": "mysql.source.chapter-15",
+      "number": "15",
+      "title": "MySQL日志",
+      "parent": null,
+      "depth": 1,
+      "order": 315,
+      "group": 15,
+      "leaf": false,
+      "printedPage": 306,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "日志分别回答服务为何异常、客户端发过什么、哪些语句较慢以及哪些变更可用于复制恢复。先区分日志目的，再学习启用、读取、轮换和恢复，避免把所有文本记录都当成可重放备份。",
+        "本章均为原生MySQL 8.0阅读。日志文件、管理权限与真实实例配置不在平台执行范围内；配置例假设管理员先核对测试环境，示意时间与位置用于推导日志含义。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · binary log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/binary-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · error log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/error-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/query-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · slow query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/slow-query-log.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.1",
+      "sourceNodeId": "mysql.source.15-1",
+      "number": "15.1",
+      "title": "日志简介",
+      "parent": "mysql.lesson.15",
+      "depth": 2,
+      "order": 316,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 306,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "错误日志关注启动、关闭与运行诊断；通用查询日志记录客户端活动；慢查询日志筛出满足配置条件的语句；二进制日志主要记录数据变更事件。",
+        "先将问题分配给合适的日志。排查启动失败通常先看错误日志，检查应用发送的SQL可考虑通用日志，恢复已提交变更要考虑全量备份与二进制日志链。",
+        "日志也有开销与敏感内容风险，应限定开启范围、保留时间与访问者。日志缺项可能来自未启用、过滤或输出目的地设置，并不自动证明事件没有发生。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "启动异常 -> 错误日志\n客户端究竟发送了什么 -> 通用查询日志\n哪些查询满足慢条件 -> 慢查询日志\n备份后发生了哪些可恢复变更 -> 二进制日志",
+        "description": "先将问题分配给合适的日志。排查启动失败通常先看错误日志，检查应用发送的SQL可考虑通用日志，恢复已提交变更要考虑全量备份与二进制日志链。",
+        "result": "四种日志职责不同；通用查询日志不是可靠的事务恢复替代品。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想从全量备份恢复到误删之前，应优先保留哪一条日志链？",
+        "answer": "保留与备份位置衔接的完整二进制日志链，而不是只保存通用查询日志。",
+        "hints": [
+          "先判断目标是诊断还是恢复。",
+          "恢复需要提交与事件顺序信息。",
+          "把全量基线与binlog相连接。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · binary log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/binary-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · error log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/error-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/query-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · slow query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/slow-query-log.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.2",
+      "sourceNodeId": "mysql.source.15-2",
+      "number": "15.2",
+      "title": "二进制日志",
+      "parent": "mysql.lesson.15",
+      "depth": 2,
+      "order": 317,
+      "group": 15,
+      "leaf": false,
+      "printedPage": 307,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "二进制日志以服务器事件格式记录可用于复制和时间点恢复的信息，可能是语句或行事件。它与InnoDB内部redo不是同一个东西，也不负责把任意查询都保存下来。",
+        "管理时同时保护日志文件与索引，记录全量备份对应的日志位置或GTID条件。清理前需确认恢复保留期和副本需求，不能仅因文件较旧就从文件系统直接删除。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · binary log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/binary-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · purge binary logs",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/purge-binary-logs.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.2.1",
+      "sourceNodeId": "mysql.source.15-2-1",
+      "number": "15.2.1",
+      "title": "启动和设置二进制日志",
+      "parent": "mysql.lesson.15.2",
+      "depth": 3,
+      "order": 318,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 307,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL 8.0正常初始化的服务器默认开启二进制日志，可在启动配置中调整名称等选项。仅写一段配置不表示正在运行的实例已经采用它，必须核对实际变量。",
+        "例子先读取log_bin和binlog_format，再列文件。ROW表示按行事件记录，并不意味着能用普通文本编辑器把二进制文件当完整SQL脚本阅读。",
+        "是否持久生效取决于变量与配置方式。log_bin启停属于启动层面的设置，不能把SET GLOBAL log_bin当成通用动态开关；副本与恢复方案也应一起检查。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW GLOBAL VARIABLES LIKE 'log_bin';\nSHOW GLOBAL VARIABLES LIKE 'binlog_format';\nSHOW BINARY LOGS;",
+        "description": "例子先读取log_bin和binlog_format，再列文件。ROW表示按行事件记录，并不意味着能用普通文本编辑器把二进制文件当完整SQL脚本阅读。",
+        "result": "在目标原生实例查询时，可看到二进制日志是否启用、日志格式及可见文件清单；未启用时，SHOW BINARY LOGS可能报错，文件名以实例实际返回为准。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想临时关闭某个会话记录，能直接SET GLOBAL log_bin=OFF吗？",
+        "answer": "不能把它当动态全局开关；log_bin由启动配置决定，会话控制另有sql_log_bin且受权限和上下文限制。",
+        "hints": [
+          "区分启动变量与会话变量。",
+          "先读实际变量作用域。",
+          "寻找专门的会话记录控制。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · binary log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/binary-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · set sql log bin",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/set-sql-log-bin.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.2.2",
+      "sourceNodeId": "mysql.source.15-2-2",
+      "number": "15.2.2",
+      "title": "查看二进制日志",
+      "parent": "mysql.lesson.15.2",
+      "depth": 3,
+      "order": 319,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 308,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SHOW BINARY LOGS查看文件清单，mysqlbinlog解码具体事件。行模式日志中包含行变化事件，解码输出与原始客户端SQL不一定一一对应。",
+        "阅读命令使用--base64-output=DECODE-ROWS和--verbose生成便于理解的行事件注释。这个查看形式侧重解释，不应未经审核便作为完整可执行恢复输入。",
+        "文件位置和事件边界来自真实日志，不能凭行号猜测。加密、压缩与工具版本也影响读取方式；例如加密binlog不能简单由本地文件直接解码。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "# 仅查看原生未加密且受支持版本的日志文件\nmysqlbinlog --base64-output=DECODE-ROWS --verbose /backup/binlog.000012",
+        "description": "阅读命令使用--base64-output=DECODE-ROWS和--verbose生成便于理解的行事件注释。这个查看形式侧重解释，不应未经审核便作为完整可执行恢复输入。",
+        "result": "条件满足时显示事件位置及可读行变化注释，内容由文件决定；--verbose的注释不是原始SQL实录。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "解码看到的###行注释可以直接当INSERT语句执行吗？",
+        "answer": "不可以，它是解释行事件的注释形式；恢复应使用符合官方要求的可执行mysqlbinlog输出。",
+        "hints": [
+          "先辨认注释与SQL。",
+          "查看选项是面向阅读还是恢复。",
+          "保留正确的事件编码与边界。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · mysqlbinlog",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysqlbinlog.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.2.3",
+      "sourceNodeId": "mysql.source.15-2-3",
+      "number": "15.2.3",
+      "title": "删除二进制日志",
+      "parent": "mysql.lesson.15.2",
+      "depth": 3,
+      "order": 320,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 309,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "PURGE BINARY LOGS用于受管理地清理日志，服务器会同时更新日志索引。直接删除文件可能造成索引不一致，也可能破坏副本读取与恢复链。",
+        "TO指定的文件本身保留，只删除它之前的日志。例子中的目标名是假设已查到的保留边界，操作前必须确认所有副本和恢复方案都不再需要更早文件。",
+        "离线副本可能仍需要旧日志，即使在线副本已经追上也不能忽略。备份保留策略、日志过期配置与副本最大延迟应协调，清理成功不代表未来仍可回到任意时间点。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 原生阅读前置：binlog.000012存在，且更早日志已确认不再需要\nPURGE BINARY LOGS TO 'binlog.000012';\nSHOW BINARY LOGS;",
+        "description": "TO指定的文件本身保留，只删除它之前的日志。例子中的目标名是假设已查到的保留边界，操作前必须确认所有副本和恢复方案都不再需要更早文件。",
+        "result": "有权且前置满足时尝试清理000012之前的文件，000012被保留；实际结果还受正在读取的副本等条件影响。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "PURGE ... TO binlog.000012会把000012也删除吗？",
+        "answer": "不会，TO边界文件本身保留，删除范围是它之前的日志。",
+        "hints": [
+          "注意prior to这一边界含义。",
+          "把目标文件当作第一份保留文件。",
+          "清理后仍需检查日志清单。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · purge binary logs",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/purge-binary-logs.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.2.4",
+      "sourceNodeId": "mysql.source.15-2-4",
+      "number": "15.2.4",
+      "title": "使用二进制日志恢复数据库",
+      "parent": "mysql.lesson.15.2",
+      "depth": 3,
+      "order": 321,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 310,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "时间点恢复通常先恢复全量备份，再从备份对应位置连续应用binlog，停在目标事务边界。只拿某个最新日志文件不一定能补齐中间丢失的变更。",
+        "例子以文字说明审核边界后输出恢复片段。起止位置必须来自真实事件与事务核查，任意数字可能截断事务或包含误操作，不能直接把教材位置用于真实恢复。",
+        "恢复应在隔离目标先演练并核对结果，处理GTID与重复应用等条件。时间筛选适合定位，精确恢复仍应检查事件位置、事务完整性及备份基线。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "全量备份对应位置P0\n日志链连续覆盖P0之后的变更\n审核确认正常事务T1、T2已完整提交\n误删事务T3开始之前设停止边界\n在隔离目标恢复基线，再仅应用T1和T2",
+        "description": "例子以文字说明审核边界后输出恢复片段。起止位置必须来自真实事件与事务核查，任意数字可能截断事务或包含误操作，不能直接把教材位置用于真实恢复。",
+        "result": "在上述前提下目标包含T1、T2而不含T3；这是恢复方案推导，不是实际已恢复数据库。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "缺少P0到T1之间一段日志，能否保证无损恢复到T2？",
+        "answer": "不能，日志链有缺口就无法保证完整重放基线之后的全部变更。",
+        "hints": [
+          "先画连续日志区间。",
+          "检查每个区间是否存在。",
+          "缺失区间不能靠后续日志自动补全。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · point in time recovery binlog",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/point-in-time-recovery-binlog.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · point in time recovery positions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/point-in-time-recovery-positions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.2.5",
+      "sourceNodeId": "mysql.source.15-2-5",
+      "number": "15.2.5",
+      "title": "暂时停止二进制日志功能",
+      "parent": "mysql.lesson.15.2",
+      "depth": 3,
+      "order": 322,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 311,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "sql_log_bin控制当前会话是否把其变更写入已启用的binlog。它不关闭其他会话的记录，也不等于关闭整个服务器的二进制日志功能。",
+        "例子在没有活动事务的受控会话中保存原值、临时关闭、读取状态再恢复。这里不执行数据写入，重点是观察作用域和恢复配置。",
+        "该操作受限制权限约束，不能在事务或某些其他上下文中任意设置。若关闭期间写入业务数据，会影响复制和时间点恢复，因此需要明确目的而不能作为常规提速技巧。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 前置：受控管理员会话，无活动事务\nSET @saved_sql_log_bin=@@SESSION.sql_log_bin;\nSET SESSION sql_log_bin=OFF;\nSELECT @@SESSION.sql_log_bin AS session_logging;\nSET SESSION sql_log_bin=@saved_sql_log_bin;",
+        "description": "例子在没有活动事务的受控会话中保存原值、临时关闭、读取状态再恢复。这里不执行数据写入，重点是观察作用域和恢复配置。",
+        "result": "有权且上下文允许时中间查询显示0，最后恢复该会话原值；其他会话的设置不因这几句而改变。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "关闭这个会话的sql_log_bin会使所有连接都停止记binlog吗？",
+        "answer": "不会，它是当前会话控制；服务器log_bin以及其他会话的配置仍独立存在。",
+        "hints": [
+          "确认SESSION作用域。",
+          "比较会话开关与启动选项。",
+          "其他连接没有执行本例设置。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · set sql log bin",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/set-sql-log-bin.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.3",
+      "sourceNodeId": "mysql.source.15-3",
+      "number": "15.3",
+      "title": "错误日志",
+      "parent": "mysql.lesson.15",
+      "depth": 2,
+      "order": 323,
+      "group": 15,
+      "leaf": false,
+      "printedPage": 311,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "错误日志用于理解服务启动、关闭及运行中的诊断。它不是所有SQL错误的逐条审计，也不是恢复业务事务的可重放输入。",
+        "MySQL 8.0错误日志由组件组成过滤与输出流水线。配置时先确认输出端和过滤级别，查看与轮换时再按文件、系统日志或其他实际目的地分别处理。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · error log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/error-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · error log configuration",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/error-log-configuration.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.3.1",
+      "sourceNodeId": "mysql.source.15-3-1",
+      "number": "15.3.1",
+      "title": "启动和设置错误日志",
+      "parent": "mysql.lesson.15.3",
+      "depth": 3,
+      "order": 324,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 311,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "错误日志的输出目的地与过滤设置共同决定能看到哪些诊断。MySQL 8.0采用组件式错误日志，不能用通用查询日志的general_log开关控制它。",
+        "例子先检查log_error与log_error_services，再读取verbosity。观察实际配置后才能判断应从文件、系统日志还是相应接收端获取记录，不预设所有机器同一路径。",
+        "调整过滤级别可能减少信息或增加日志量；应围绕排查问题限定变更。配置成功只说明参数被接受，是否收到预期诊断仍要按实际输出核对。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW GLOBAL VARIABLES LIKE 'log_error';\nSHOW GLOBAL VARIABLES LIKE 'log_error_services';\nSHOW GLOBAL VARIABLES LIKE 'log_error_verbosity';",
+        "description": "例子先检查log_error与log_error_services，再读取verbosity。观察实际配置后才能判断应从文件、系统日志还是相应接收端获取记录，不预设所有机器同一路径。",
+        "result": "显示实例当前目的地、组件及过滤配置；具体字符串依安装和配置，不等于本课程生成了一条错误事件。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "SET GLOBAL general_log=ON会开启错误日志吗？",
+        "answer": "不会，它控制通用查询日志；错误日志有独立组件和输出配置。",
+        "hints": [
+          "先辨认日志类型。",
+          "对照变量名称。",
+          "错误诊断与客户端查询记录分开。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · error log configuration",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/error-log-configuration.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.3.2",
+      "sourceNodeId": "mysql.source.15-3-2",
+      "number": "15.3.2",
+      "title": "查看错误日志",
+      "parent": "mysql.lesson.15.3",
+      "depth": 3,
+      "order": 325,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 312,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "查看错误日志先从实际配置找到输出端，再围绕问题发生时间读取相邻诊断。单独摘出最后一行，可能遗漏前面的根本原因和版本信息。",
+        "阅读例用自拟事件时间线解释启动失败排查：先出现配置读取，再出现目录不可写诊断，最后进程退出。应先处理前因，而不是只把退出一行当根因。",
+        "示例不是宿主运行日志，真实诊断字段与格式由组件决定。还要核对时间戳时区，避免把应用时间与服务器日志时间错位。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "教学自拟事件时间线，非实际日志：\n08:00:00 开始初始化\n08:00:01 诊断：目标日志目录不可写\n08:00:01 初始化终止\n检查顺序：实际配置路径 -> 目录访问权限 -> 重新验证启动诊断",
+        "description": "阅读例用自拟事件时间线解释启动失败排查：先出现配置读取，再出现目录不可写诊断，最后进程退出。应先处理前因，而不是只把退出一行当根因。",
+        "result": "这个情境的首要排查线索是目录与访问权限；仅看到“初始化终止”不足以定位原因。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么要读退出事件之前的几条诊断？",
+        "answer": "退出通常是后果，前面的配置或资源错误可能解释真正原因。",
+        "hints": [
+          "按时间排序观察。",
+          "区分原因与结果。",
+          "把相邻上下文一起保留。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · error log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/error-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · error log configuration",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/error-log-configuration.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.3.3",
+      "sourceNodeId": "mysql.source.15-3-3",
+      "number": "15.3.3",
+      "title": "删除错误日志",
+      "parent": "mysql.lesson.15.3",
+      "depth": 3,
+      "order": 326,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 312,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "错误日志维护优先考虑轮换、归档与保留期。删除正在写的文件不一定释放预期空间，还可能让新诊断继续写入旧文件句柄。",
+        "官方文件轮换思路是先按操作系统规则重命名旧文件，再让服务器刷新并重新打开原路径。FLUSH ERROR LOGS本身只关闭并重新打开，不自动删除或归档旧记录。",
+        "若输出到系统日志或其他接收端，应按那个系统的维护方式处理。清理前先保留故障所需证据，并检查新文件确实接收记录，不能把清空诊断当成修复故障。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "前提：错误日志输出为普通文件\n按操作系统规则将旧文件改名归档\n由有权管理员执行FLUSH ERROR LOGS\n确认原路径出现可写的新日志\n按保留政策处理归档副本",
+        "description": "官方文件轮换思路是先按操作系统规则重命名旧文件，再让服务器刷新并重新打开原路径。FLUSH ERROR LOGS本身只关闭并重新打开，不自动删除或归档旧记录。",
+        "result": "这是文件轮换流程；FLUSH不等于清空所有旧日志，系统日志输出也不能照搬文件步骤。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只执行FLUSH ERROR LOGS会自动删除昨天的错误日志吗？",
+        "answer": "不会，它关闭并重新打开日志文件，旧文件归档与删除需按实际轮换流程处理。",
+        "hints": [
+          "查清FLUSH的直接作用。",
+          "关闭/重开不是删除。",
+          "旧文件由保留策略管理。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · error log rotation",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/error-log-rotation.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.4",
+      "sourceNodeId": "mysql.source.15-4",
+      "number": "15.4",
+      "title": "通用查询日志",
+      "parent": "mysql.lesson.15",
+      "depth": 2,
+      "order": 327,
+      "group": 15,
+      "leaf": false,
+      "printedPage": 313,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "通用查询日志适合核对客户端连接与发送请求，可能包含只读SELECT。它按收到请求的顺序记录，不是事务提交顺序，不能承担binlog的恢复职责。",
+        "开启前明确诊断时间段与输出目的地，并保护SQL参数可能含有的敏感数据。FILE与TABLE由log_output选择，这个变量也影响慢查询日志，应检查共享配置影响。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/query-log.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.4.1",
+      "sourceNodeId": "mysql.source.15-4-1",
+      "number": "15.4.1",
+      "title": "启动通用查询日志",
+      "parent": "mysql.lesson.15.4",
+      "depth": 3,
+      "order": 328,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 313,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "通用查询日志默认关闭，general_log控制开启状态，log_output指定文件或表等目的地。只设置文件名而未选择FILE输出，不保证查询会写到那个文件。",
+        "例子在测试实例先查看原值，再选择TABLE并开启。由于这是全局配置，其他连接的日志也可能被记录；不能把它当成只观察当前一条查询的局部选项。",
+        "诊断结束应按变更前记录恢复配置。通用日志可能增加开销，且默认密码改写并不意味着所有业务敏感字段都能被自动隐藏。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW GLOBAL VARIABLES LIKE 'general_log';\nSHOW GLOBAL VARIABLES LIKE 'log_output';\n-- 已记录原设置并确认测试范围后，阅读以下变更\nSET GLOBAL log_output='TABLE';\nSET GLOBAL general_log=ON;",
+        "description": "例子在测试实例先查看原值，再选择TABLE并开启。由于这是全局配置，其他连接的日志也可能被记录；不能把它当成只观察当前一条查询的局部选项。",
+        "result": "有权时开启表目的地的通用日志；log_output同时影响相关日志输出，不应无记录地覆盖原配置。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "general_log为ON但log_output为NONE，会记录查询到文件吗？",
+        "answer": "不会，输出目的地为NONE时不会写查询到文件；开启状态和输出选择需共同检查。",
+        "hints": [
+          "找记录开关。",
+          "再找输出目的地。",
+          "ON不等于FILE。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/query-log.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.4.2",
+      "sourceNodeId": "mysql.source.15-4-2",
+      "number": "15.4.2",
+      "title": "查看通用查询日志",
+      "parent": "mysql.lesson.15.4",
+      "depth": 3,
+      "order": 329,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 313,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "TABLE目的地的通用日志可从mysql.general_log读取，常见字段包括事件时间、连接标识、命令类型与参数。FILE目的地则需要读取服务器对应文件。",
+        "例子读取最近五条表日志，并明确排序。参数文本可用于核对应用真正提交了哪些语句，但不应把它公开粘贴到共享材料，尤其要检查业务值。",
+        "日志记录收到请求的顺序，不保证同样顺序提交；默认密码改写还会影响显示文本。缺少某条语句也可能来自配置与解析限制，不能据此直接证明客户端没有尝试。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 前置：已启用TABLE目的地且当前账户允许读取日志表\nSELECT event_time,thread_id,command_type,argument\nFROM mysql.general_log ORDER BY event_time DESC LIMIT 5;",
+        "description": "例子读取最近五条表日志，并明确排序。参数文本可用于核对应用真正提交了哪些语句，但不应把它公开粘贴到共享材料，尤其要检查业务值。",
+        "result": "返回实际最近可见的最多五条记录；结果随实例活动改变，本查询自身也可能进入通用日志。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能按通用日志出现顺序断言并发事务提交顺序吗？",
+        "answer": "不能，通用日志主要按收到请求的顺序记录，接收与执行提交顺序可能不同。",
+        "hints": [
+          "区分接收与提交。",
+          "考虑并发等待。",
+          "恢复应使用适合事务事件的依据。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/query-log.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.4.3",
+      "sourceNodeId": "mysql.source.15-4-3",
+      "number": "15.4.3",
+      "title": "删除通用查询日志",
+      "parent": "mysql.lesson.15.4",
+      "depth": 3,
+      "order": 330,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 314,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "通用日志的清理路径取决于输出是文件还是表。文件应轮换重开，日志表可在停止相应记录后按允许方式维护，二者不能混用。",
+        "阅读流程先记录开关和目的地、关闭对应记录、保存需要的证据，再处理指定旧产物，最后按原计划恢复并检查新记录。避免在仍持续写入时想当然清理。",
+        "TRUNCATE日志表不删除文件日志，移走文件也不清空TABLE记录。全局log_output可能同时服务慢查询日志，因此维护前要核查另一日志的影响。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "确认general_log与log_output原值\n限定维护窗口并关闭通用查询记录\n归档需要保留的诊断\n按FILE或TABLE分别轮换/清理\n恢复原计划配置并检查后续记录",
+        "description": "阅读流程先记录开关和目的地、关闭对应记录、保存需要的证据，再处理指定旧产物，最后按原计划恢复并检查新记录。避免在仍持续写入时想当然清理。",
+        "result": "维护必须针对实际输出；不能把清空mysql.general_log当作同时清除了磁盘文件。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "清空mysql.general_log表后，FILE目的地旧日志会同步消失吗？",
+        "answer": "不会，它们是不同输出产物，需要分别按实际保留策略维护。",
+        "hints": [
+          "列出两个输出位置。",
+          "识别此次清理的对象。",
+          "另一份产物没有被同一操作处理。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/query-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · log file maintenance",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/log-file-maintenance.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.5",
+      "sourceNodeId": "mysql.source.15-5",
+      "number": "15.5",
+      "title": "慢查询日志",
+      "parent": "mysql.lesson.15",
+      "depth": 2,
+      "order": 331,
+      "group": 15,
+      "leaf": false,
+      "printedPage": 314,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "慢查询日志按阈值与筛选条件保存性能排查线索。long_query_time表示秒，min_examined_row_limit限制考察行数，其他开关还会影响是否记录管理语句或未使用索引的语句。",
+        "慢日志能发现候选问题，但不能直接证明根因。读取时要结合扫描行、返回行、等待和执行计划；优化后仍需在可比较负载中重新测量。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · slow query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/slow-query-log.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.5.1",
+      "sourceNodeId": "mysql.source.15-5-1",
+      "number": "15.5.1",
+      "title": "启动和设置慢查询日志",
+      "parent": "mysql.lesson.15.5",
+      "depth": 3,
+      "order": 332,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 314,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "slow_query_log控制慢日志记录，long_query_time是执行时间阈值，并非让查询自动超时。超过阈值通常记录诊断，不因这一参数就被取消。",
+        "例子设置当前会话阈值为0.5秒与最低扫描行数0，同时由管理员开启全局慢日志。GLOBAL与SESSION作用域不同，给全局阈值赋值通常不会替换所有既有会话的会话值。",
+        "实际是否记录还取决于目的地及其他筛选条件。不要用刻意拖慢生产查询的方法验证，应在可控测试负载中检查日志与配置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW GLOBAL VARIABLES LIKE 'log_output';\nSET GLOBAL slow_query_log=ON;\nSET SESSION long_query_time=0.5;\nSET SESSION min_examined_row_limit=0;\nSELECT @@SESSION.long_query_time AS threshold_seconds;",
+        "description": "例子设置当前会话阈值为0.5秒与最低扫描行数0，同时由管理员开启全局慢日志。GLOBAL与SESSION作用域不同，给全局阈值赋值通常不会替换所有既有会话的会话值。",
+        "result": "有权且配置可用时当前会话阈值显示0.5秒；不会承诺每条超过半秒的所有类型语句都无条件记录。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把long_query_time设为0.5就会中断超过半秒的SELECT吗？",
+        "answer": "不会，它是日志筛选阈值，不是执行超时机制。",
+        "hints": [
+          "先看变量属于日志还是执行器。",
+          "记录慢语句与终止语句不同。",
+          "超时控制需要独立机制。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · slow query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/slow-query-log.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.5.2",
+      "sourceNodeId": "mysql.source.15-5-2",
+      "number": "15.5.2",
+      "title": "查看慢查询日志",
+      "parent": "mysql.lesson.15.5",
+      "depth": 3,
+      "order": 333,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 315,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "TABLE目的地的mysql.slow_log包含耗时、锁等待、考察行数和SQL文本等线索。先按时间定位，再比较扫描与返回规模，比只看最慢一条更容易找到重复性问题。",
+        "例子查询最近五条记录。表里的Query_time是观测结果，不应当作未来每次执行必然相同；缓存、并发、参数与数据分布都会改变测量。",
+        "日志阈值和过滤可能使某类问题没有进入清单。慢日志也不等于完整请求时延，排查应明确它覆盖的计时范围，并辅以执行计划和应用侧测量。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 前置：慢日志选择TABLE且当前账户可读\nSELECT start_time,query_time,lock_time,rows_sent,rows_examined,sql_text\nFROM mysql.slow_log ORDER BY start_time DESC LIMIT 5;",
+        "description": "例子查询最近五条记录。表里的Query_time是观测结果，不应当作未来每次执行必然相同；缓存、并发、参数与数据分布都会改变测量。",
+        "result": "返回实际最多五条慢记录或空集；空集也可能表示尚未启用、未满足筛选或没有可见记录。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "rows_examined远大于rows_sent一定说明必须加索引吗？",
+        "answer": "它提示大量考察值得分析，但仍需结合查询语义、数据分布和执行计划，不能直接下定论。",
+        "hints": [
+          "先把它当线索。",
+          "检查筛选和连接过程。",
+          "通过计划与可比测量验证改动。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · slow query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/slow-query-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · explain",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/explain.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.5.3",
+      "sourceNodeId": "mysql.source.15-5-3",
+      "number": "15.5.3",
+      "title": "删除慢查询日志",
+      "parent": "mysql.lesson.15.5",
+      "depth": 3,
+      "order": 334,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 315,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "慢日志也需要轮换和保留策略，避免长期占满存储。先区分FILE与TABLE输出，再选择对应维护方式；清理不会自动改善慢查询本身。",
+        "文件维护应保存必要样本并刷新重开正确日志，表维护应先停止对应记录再处理表。记录恢复后要确认阈值与目的地仍符合原排查目标。",
+        "性能分析需要保留时间窗口与配置上下文。只留下SQL文本而丢弃耗时、扫描行数和采样条件，会让后续对比失去依据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "保存慢记录及当时阈值\n确认FILE或TABLE实际目的地\n按对应方式停止/轮换/归档\n恢复记录设置并确认新记录可见\n继续检查导致慢查询的执行计划",
+        "description": "文件维护应保存必要样本并刷新重开正确日志，表维护应先停止对应记录再处理表。记录恢复后要确认阈值与目的地仍符合原排查目标。",
+        "result": "这是一份慢日志维护计划；轮换文件与优化SQL是不同工作，日志变小不证明数据库变快。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "删除慢日志后文件变小，能证明查询性能已改善吗？",
+        "answer": "不能，存储清理没有改变原查询的计划或负载，需要重新测量执行表现。",
+        "hints": [
+          "区分日志体积与查询耗时。",
+          "找实际查询是否改变。",
+          "用同条件测量判断性能。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · slow query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/slow-query-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · log file maintenance",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/log-file-maintenance.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.6",
+      "sourceNodeId": "mysql.source.15-6",
+      "number": "15.6",
+      "title": "本章实战",
+      "parent": "mysql.lesson.15",
+      "depth": 2,
+      "order": 335,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 315,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "日志实战围绕一次问题建立证据链：服务异常查诊断，客户端错误查请求，性能问题查慢日志，误写恢复则保护备份与binlog。",
+        "阅读场景中，管理员发现误删后应先保护日志与当前状态，确认基线和误删事务位置，在隔离环境恢复到此前边界。直接继续执行恢复语句可能扩大影响。",
+        "恢复成功还要核对业务对象与数据，再按变更流程切换。通用日志中的一条DELETE文本只能提供线索，不能自动还原删除前每行值和完整事务上下文。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "事故：误删订单\n保护：备份、连续binlog与当前实例状态\n定位：误删事务及前一个完整提交边界\n演练：隔离目标恢复全量后重放正常增量\n核对：订单及关联行、约束、目标时间点",
+        "description": "阅读场景中，管理员发现误删后应先保护日志与当前状态，确认基线和误删事务位置，在隔离环境恢复到此前边界。直接继续执行恢复语句可能扩大影响。",
+        "result": "该流程以binlog与全量为恢复依据；没有把通用查询日志当作撤销脚本，也没有实际恢复外部数据库。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能只把DELETE反写成INSERT就完成恢复？",
+        "answer": "删除前的完整行值、关联事务和约束未必在DELETE文本中，需要可靠备份与变更记录恢复真实状态。",
+        "hints": [
+          "WHERE条件不包含全部旧列值。",
+          "一个事务可能修改多个对象。",
+          "恢复需要基线与完整事件。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · point in time recovery binlog",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/point-in-time-recovery-binlog.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/query-log.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.7",
+      "sourceNodeId": "mysql.source.15-7",
+      "number": "15.7",
+      "title": "本章小结",
+      "parent": "mysql.lesson.15",
+      "depth": 2,
+      "order": 336,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 321,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章小结先按目的区分四种日志，再按配置判断是否记录和写到哪里。输出为空不等同于从未发生过事件，日志文件存在也不等同于保留了完整恢复链。",
+        "轮换强调旧记录归档和新记录可写，清理强调满足恢复与副本保留要求。二进制日志尤其要使用服务器管理操作，不能像任意临时文件一样处理。",
+        "日志是诊断与恢复工具，也会暴露业务内容并消耗资源。应保留最需要的上下文，结束临时排查后恢复经过记录的配置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "问题 -> 类型 -> 输出与保留\n服务异常 -> error -> 实际组件接收端\n请求核对 -> general -> FILE/TABLE\n性能候选 -> slow -> 阈值、FILE/TABLE\n复制与恢复 -> binlog -> 连续事件与安全清理",
+        "description": "轮换强调旧记录归档和新记录可写，清理强调满足恢复与副本保留要求。二进制日志尤其要使用服务器管理操作，不能像任意临时文件一样处理。",
+        "result": "四类日志分别管理；任何一种“开关为ON”都还需结合输出与筛选条件解释。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么慢日志为空不能直接断言系统没有性能问题？",
+        "answer": "可能未启用、输出目的地不符或筛选未命中，且应用耗时不完全等同于慢日志计时范围。",
+        "hints": [
+          "先检查配置而非直接下结论。",
+          "列出过滤条件。",
+          "比较服务器与应用计时范围。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · binary log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/binary-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · error log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/error-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/query-log.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · slow query log",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/slow-query-log.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.15.8",
+      "sourceNodeId": "mysql.source.15-8",
+      "number": "15.8",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.15",
+      "depth": 2,
+      "order": 337,
+      "group": 15,
+      "leaf": true,
+      "printedPage": 321,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "综合题把全量基线、正常事务和误操作按顺序排开。目标是恢复到误操作之前的完整提交状态，边界不能落在事务中间。",
+        "情境用T1、T2、T3表示已核实事务：全量在T1之前，T1与T2正常，T3误删。只重放T1会漏数据，重放到T3之后又会保留误删。",
+        "真实日志位置必须通过工具检查，并考虑跨文件与GTID等条件。本节符号只训练边界推导，不是可以直接用于mysqlbinlog的数值参数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "基线B -> T1提交 -> T2提交 -> T3误删提交\n目标：T2提交后、T3开始前\n所需：基线B及从B连续覆盖T1、T2的事件\n停止：T3之前的完整事务边界",
+        "description": "情境用T1、T2、T3表示已核实事务：全量在T1之前，T1与T2正常，T3误删。只重放T1会漏数据，重放到T3之后又会保留误删。",
+        "result": "正确目标包括T1与T2，不包括T3；所需连续事件缺失时不能保证恢复到该状态。",
+        "reason": "本例属于原生MySQL 8.0日志管理阅读；平台没有服务器日志文件、日志管理权限或外部恢复命令。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果停止点截在T2事务中间，为什么不符合目标？",
+        "answer": "目标要求完整提交状态，截断事务无法证明T2的所有变更都正确且一致地应用。",
+        "hints": [
+          "先确定目标包含哪些事务。",
+          "把每个事务当完整边界。",
+          "不能用任意字节位置代替提交边界。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · point in time recovery positions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/point-in-time-recovery-positions.html"
+        }
+      ]
+    }
+  ]
+}

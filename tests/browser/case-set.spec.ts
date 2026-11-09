@@ -617,6 +617,8 @@ async function saveCapture(
     'knowledgeMarks',
     'ledger',
     'meta',
+    'mysqlActivities',
+    'mysqlDrafts',
     'progress',
     'pythonActivities',
     'pythonDrafts',
@@ -629,7 +631,7 @@ async function saveCapture(
   ]);
   expect(before.database).toEqual({
     name: 'c-viz-learning',
-    version: 14,
+    version: 15,
     storeNames: Object.keys(before.stores).sort(),
   });
   expect(Object.keys(before.storeKeys).sort()).toEqual(before.database.storeNames);

@@ -70,7 +70,7 @@ export function assertActiveCourseMeta(
 }
 
 export function queueCppStores(db: IDBDatabase, tx: IDBTransaction, meta: JavaMeta) {
-  if (![CPP_DB_VERSION, 14].includes(db.version) || tx.mode !== 'versionchange')
+  if (![CPP_DB_VERSION, 14, 15].includes(db.version) || tx.mode !== 'versionchange')
     throw new StorageError('S_MIGRATION_UNSUPPORTED');
   const next = toCppMeta(meta);
   for (const name of CPP_STORES) db.createObjectStore(name);

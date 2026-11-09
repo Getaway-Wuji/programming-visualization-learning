@@ -50,6 +50,9 @@ await build({
             "export {MemoryPlayer} from '/web/src/engine/memory-player.ts';",
             "export {engineBuild as memoryBuild} from '/web/src/generated/memory/engine-build.ts';",
             "export {engineBuild as c6BuildInfo} from '/web/src/generated/c6-teaching/engine-build.ts';",
+            "export {decodeMysqlResponse} from '/web/src/engine/mysql-protocol.ts';",
+            "export {MysqlPlayer} from '/web/src/engine/mysql-player.ts';",
+            "export {mysqlBuild} from '/web/src/generated/mysql/engine-build.ts';",
           ].join('\n');
       },
     },
@@ -70,6 +73,9 @@ const {
   MemoryPlayer,
   memoryBuild,
   c6BuildInfo,
+  decodeMysqlResponse,
+  MysqlPlayer,
+  mysqlBuild,
 } = await import(pathToFileURL(join(output, 'decoder/decoder.mjs')).href);
 const programs = read('tests/fixtures/c6-current-browser-programs.json');
 const exercises = read('content/c/primer6-teaching/source-2.0.0.json').chapters.flatMap(
@@ -106,6 +112,8 @@ const expectedStores = [
   'cppDrafts',
   'rustActivities',
   'rustDrafts',
+  'mysqlActivities',
+  'mysqlDrafts',
 ];
 const report = {
   label,
@@ -195,7 +203,7 @@ async function snapshot(name) {
     Buffer.from(await wd(route + '/screenshot'), 'base64'),
   );
 }
-async function archive(version = 14) {
+async function archive(version = 15) {
   const data = await wd(route + '/execute/async', 'POST', {
     args: [],
     script: `
@@ -221,6 +229,7 @@ async function archive(version = 14) {
       .filter((name) => version >= 12 || !name.startsWith('java'))
       .filter((name) => version >= 13 || !name.startsWith('cpp'))
       .filter((name) => version >= 14 || !name.startsWith('rust'))
+      .filter((name) => version >= 15 || !name.startsWith('mysql'))
       .toSorted(),
   );
   return data;
@@ -612,7 +621,7 @@ async function runPython(legacy) {
       keys.appearanceAssets=[[meta.generation,'background']];
       const request=indexedDB.open('c-viz-learning',10);
       request.onupgradeneeded=()=>{
-        for(const name of names.filter(n=>!n.startsWith('python')&&!n.startsWith('java')&&!n.startsWith('cpp')&&!n.startsWith('rust'))){
+        for(const name of names.filter(n=>!n.startsWith('python')&&!n.startsWith('java')&&!n.startsWith('cpp')&&!n.startsWith('rust')&&!n.startsWith('mysql'))){
           const store=request.result.createObjectStore(name);
           rows[name].forEach((value,i)=>store.add(value,keys[name][i]));
         }
@@ -629,7 +638,7 @@ async function runPython(legacy) {
   await wait(
     () =>
       js('return document.querySelector(".app-shell")?.dataset.learningStorageStatus==="ready"'),
-    'Native DB14 did not open',
+    'Native DB15 did not open',
   );
   const migrated = await archive();
   for (const name of prior.names) {
@@ -639,9 +648,9 @@ async function runPython(legacy) {
   assert.deepEqual(migrated.rows.meta, [
     {
       ...prior.rows.meta[0],
-      dbVersion: 14,
-      schemaVersion: '14.0.0',
-      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp-rust', version: '1.0.0' },
+      dbVersion: 15,
+      schemaVersion: '15.0.0',
+      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp-rust-mysql', version: '1.0.0' },
     },
   ]);
   for (const name of ['pythonActivities', 'pythonDrafts', 'javaActivities', 'javaDrafts'])
@@ -753,7 +762,7 @@ async function runPython(legacy) {
     JSON.stringify({ prior, migrated, saved }, null, 2),
   );
   report.results.push({
-    id: 'native-python-db10-to-14-edit-cancel-judge-and-exports',
+    id: 'native-python-db10-to-15-edit-cancel-judge-and-exports',
     passed: true,
     cancelled,
     files: files.map((path) => ({
@@ -797,7 +806,7 @@ async function migrateNativeArchive(legacy, language, version, catalogId, exclud
   await wait(
     () =>
       js('return document.querySelector(".app-shell")?.dataset.learningStorageStatus==="ready"'),
-    'Native DB14 did not open',
+    'Native DB15 did not open',
   );
   const migrated = await archive();
   for (const name of prior.names) {
@@ -817,7 +826,7 @@ async function runJava(legacy) {
     'java',
     11,
     'catalog-set.c-python',
-    ['java', 'cpp', 'rust'],
+    ['java', 'cpp', 'rust', 'mysql'],
   );
   assert.equal(prior.rows.pythonActivities.length, 1);
   assert.equal(prior.rows.pythonDrafts.length, 1);
@@ -931,7 +940,7 @@ async function runJava(legacy) {
     JSON.stringify({ prior, migrated, saved }, null, 2),
   );
   report.results.push({
-    id: 'native-java-db11-to-14-edit-cancel-judge-and-exports',
+    id: 'native-java-db11-to-15-edit-cancel-judge-and-exports',
     passed: true,
     cancelled,
     files: files.map((path) => ({
@@ -951,7 +960,7 @@ async function runCppCourse(legacy) {
     'cpp',
     12,
     'catalog-set.c-python-java',
-    ['cpp', 'rust'],
+    ['cpp', 'rust', 'mysql'],
   );
   assert(prior.rows.courseActivities.length > 0);
   assert(prior.rows.pythonActivities.length > 0);
@@ -1069,7 +1078,7 @@ async function runCppCourse(legacy) {
     JSON.stringify({ prior, migrated, saved }, null, 2),
   );
   report.results.push({
-    id: 'native-cpp-db12-to-14-edit-cancel-judge-and-exports',
+    id: 'native-cpp-db12-to-15-edit-cancel-judge-and-exports',
     passed: true,
     cancelled,
     files: files.map((path) => ({
@@ -1089,7 +1098,7 @@ async function runRustCourse(legacy) {
     'rust',
     13,
     'catalog-set.c-python-java-cpp',
-    ['rust'],
+    ['rust', 'mysql'],
   );
   for (const name of ['courseActivities', 'pythonActivities', 'javaActivities', 'cppActivities'])
     assert(prior.rows[name].length > 0, name);
@@ -1373,10 +1382,589 @@ async function runRustCourse(legacy) {
     assert.deepEqual(saved.rows[name], prior.rows[name], name + ' original records');
   }
   writeFileSync(
-    join(output, 'rust-native-db13-to-14.json'),
+    join(output, 'rust-native-db13-to-15.json'),
     JSON.stringify({ prior, migrated, reading, accepted, saved }, null, 2),
   );
-  checkpoint('native-rust-db13-to-14-four-language-Blob-draft-judge-review-dedup');
+  checkpoint('native-rust-db13-to-15-four-language-Blob-draft-judge-review-dedup');
+  return saved;
+}
+
+// Preparation only. Insert before the runner's final try block after root review.
+// Uses native W3C input/click/download and passive copies of actual browser IPC.
+async function runMysqlCourse(legacy, observer) {
+  const checkpoint = (id, extra = {}) => {
+    report.results.push({ id, passed: true, ...extra });
+    save();
+    console.log('PASS actual Firefox', id);
+  };
+  const { prior, migrated } = await migrateNativeArchive(
+    legacy,
+    'mysql',
+    14,
+    'catalog-set.c-python-java-cpp-rust',
+    ['mysql'],
+  );
+  assert.equal(prior.names.length, 27);
+  assert.equal(migrated.names.length, 29);
+  for (const name of [
+    'courseActivities',
+    'pythonActivities',
+    'javaActivities',
+    'cppActivities',
+    'rustActivities',
+    'pythonDrafts',
+    'javaDrafts',
+    'cppDrafts',
+    'rustDrafts',
+  ])
+    assert(prior.rows[name].length > 0, name + ' must contain actual earlier native learning');
+  assert(prior.rows.appearanceAssets[0].blob.bytes.length > 0);
+  assert.deepEqual(migrated.rows.mysqlActivities, []);
+  assert.deepEqual(migrated.rows.mysqlDrafts, []);
+  // migrateNativeArchive already checks every old key and row, including Blob bytes.
+  checkpoint('native-mysql-db14-to-15-all-27-stores-five-languages-Blob');
+
+  const editor = 'textarea[aria-label="SQL 源码"]';
+  const trace = '[data-testid="mysql-trace"]';
+  const result = '[data-testid="mysql-result"]';
+  const database = '[data-testid="mysql-database"]';
+  const profiles = read('content/mysql/course/exercises-1.0.0.json');
+  const projection = profiles.find((p) => p.id === 'mysql.exercise.projection');
+  assert(projection);
+  const textVisible = (text) =>
+    wait(
+      () => js('return document.querySelector("main")?.textContent.includes(arguments[0])', [text]),
+      'Missing native MySQL text: ' + text,
+    );
+  const cells = () =>
+    js(
+      'return [...document.querySelectorAll(arguments[0]+" tbody tr")].map(r=>[...r.querySelectorAll("td")].map(c=>c.textContent))',
+      [result],
+    );
+  const traceExists = () => js('return !!document.querySelector(arguments[0])', [trace]);
+  const assertNoProof = async () => {
+    assert.equal(await traceExists(), false);
+    assert.equal(
+      await js(
+        'return [...document.querySelectorAll("main button")].filter(b=>b.textContent.trim()==="导出 JSON").length',
+      ),
+      0,
+    );
+    await textVisible('运行 SQL 后显示此步骤的真实结果。');
+  };
+  const score = async (expected) =>
+    assert.equal(
+      await js(
+        'return [...document.querySelectorAll(arguments[0]+" tbody tr")].find(r=>r.textContent.includes("林安"))?.querySelectorAll("td")[3]?.textContent',
+        [database],
+      ),
+      expected,
+    );
+  const rawEvidence = [];
+  const observe = () => js('(' + observer + ')()');
+  const verifyPacket = async (start, source, status = 'completed') => {
+    const packets = (await packetsSince(start)).filter((packet) => packet.request);
+    assert.equal(packets.length, 1, 'one actual native MySQL Worker request');
+    const packet = packets[0];
+    assert.equal(packet.moduleSeen, true);
+    assert(packet.response, 'actual native Worker response bytes');
+    const request = JSON.parse(Buffer.from(packet.request, 'base64').toString('utf8'));
+    assert.equal(request.language, 'mysql');
+    assert.equal(request.source, source);
+    const responseBytes = Uint8Array.from(Buffer.from(packet.response, 'base64'));
+    // Passive strict validation and replay projection, never execute SQL in Node.
+    const response = await decodeMysqlResponse(
+      responseBytes.buffer,
+      request,
+      mysqlBuild.wasmSha256,
+      () => {},
+    );
+    assert.equal(response.status, status);
+    assert.equal(response.identity.runId, request.runId);
+    assert.equal(response.identity.sourceRevision, request.sourceRevision);
+    const player = response.replay ? new MysqlPlayer(response.replay) : null;
+    const end = player ? structuredClone(player.seek(player.length)) : null;
+    if (player) {
+      for (let cursor = player.length; cursor >= 0; cursor--) player.seek(cursor);
+      assert.deepEqual(player.state, response.replay.trace.initialState);
+      for (let cursor = 0; cursor <= player.length; cursor++) player.seek(cursor);
+      assert.deepEqual(player.state, end);
+    }
+    rawEvidence.push({
+      ...packet,
+      decodedRequest: request,
+      status,
+      steps: player?.length ?? 0,
+      end,
+    });
+    writeFileSync(
+      join(output, 'mysql-native-real-packets.json'),
+      JSON.stringify(rawEvidence, null, 2),
+    );
+    return { request, response, end };
+  };
+  const run = async (source, status = 'completed') => {
+    await fill(editor, source);
+    const start = await js('return window.c6CurrentPackets.length');
+    await button('运行 SQL');
+    await nativeElement(trace);
+    await wait(
+      () =>
+        js(
+          'const e=document.querySelector(arguments[0]);return e&&e.dataset.cursor===e.dataset.length',
+          [trace],
+        ),
+      'Native MySQL did not publish the accepted end cursor',
+    );
+    return verifyPacket(start, source, status);
+  };
+  const expectedCells = (group) =>
+    group.expectedResult.rows.map((row) =>
+      row.map((cell) => {
+        if (cell.kind === 'null') return 'NULL';
+        if (cell.kind !== 'text') return String(cell.value);
+        return cell.value === '' ||
+          /^\s|\s$/u.test(cell.value) ||
+          [...cell.value].some((ch) => ch.codePointAt(0) < 32 || ch.codePointAt(0) === 127)
+          ? JSON.stringify(cell.value)
+          : cell.value;
+      }),
+    );
+
+  await navigate('#/mysql');
+  const manifest = read('content/mysql/course/manifest-1.0.0.json');
+  await wait(
+    () =>
+      js(
+        `return document.querySelectorAll('section[aria-label="教材目录"] a[href^="#/mysql/lesson/"]').length===374`,
+      ),
+    'Native MySQL catalog incomplete',
+  );
+  assert.deepEqual(
+    await js(
+      `return [...document.querySelectorAll('section[aria-label="教材目录"] a[href^="#/mysql/lesson/"]')].map(e=>e.getAttribute("href"))`,
+    ),
+    manifest.catalog.map((n) => '#/mysql/lesson/' + n.id),
+  );
+  await navigate('#/mysql/lesson/mysql.lesson.1.1.1');
+  await textVisible('理解自检');
+  await click('main summary', '核对答案');
+  await js('document.querySelector("[data-testid=reading-end]").scrollIntoView({block:"end"})');
+  await wait(
+    () =>
+      js('return document.querySelector("[data-testid=reading-end]")?.dataset.readToday==="true"'),
+    'Native MySQL automatic reading did not save',
+  );
+  const reading = await archive();
+  assert.equal(reading.rows.mysqlActivities.length, 1);
+  assert.equal(reading.rows.mysqlActivities[0].kind, 'lesson');
+  await wd(route + '/refresh', 'POST', {});
+  await textVisible('理解自检');
+  await js('document.querySelector("[data-testid=reading-end]").scrollIntoView({block:"end"})');
+  await wait(
+    () =>
+      js('return document.querySelector("[data-testid=reading-end]")?.dataset.readToday==="true"'),
+    'Native MySQL reading reload missing',
+  );
+  assert.deepEqual((await archive()).rows.mysqlActivities, reading.rows.mysqlActivities);
+  assert.deepEqual((await archive()).rows.ledger, reading.rows.ledger);
+  checkpoint('native-mysql-catalog-374-reading-self-check-dedup');
+
+  await navigate('#/mysql/workbench');
+  await nativeElement(editor);
+  await observe();
+  await run(
+    "SELECT NULL AS missing, 0 AS zero_value, '' AS empty_text, '夏禾 ' AS trailing_space, '夏禾' AS ordinary_text, AVG(score) AS average_score FROM students;",
+  );
+  assert.deepEqual(await cells(), [['NULL', '0', '""', '"夏禾 "', '夏禾', '73.0000']]);
+  assert.equal(await js('return document.querySelectorAll(".blocklySvg").length'), 0);
+  assert.equal(
+    await js('return performance.getEntriesByType("resource").some(e=>/blockly/iu.test(e.name))'),
+    false,
+  );
+  checkpoint('native-mysql-real-SQL-NULL-zero-empty-whitespace-exact-decimal-no-Blockly');
+
+  const source =
+    '-- 字🙂，原始 SQL\nUPDATE students SET score = 0 WHERE id = 1;\nSELECT id, score FROM students ORDER BY id;';
+  const updated = await run(source);
+  assert.deepEqual(await cells(), [
+    ['1', '0'],
+    ['2', '72'],
+    ['3', 'NULL'],
+    ['4', '59'],
+  ]);
+  await score('0');
+  await button('回到开头', trace);
+  await score('88');
+  await textVisible('运行 SQL 后显示此步骤的真实结果。');
+  assert.equal(
+    await js(
+      'return [...document.querySelectorAll("main button")].find(b=>b.textContent.trim()==="运行 SQL")?.disabled',
+    ),
+    true,
+  );
+  await button('下一步', trace);
+  await button('定位第 1 行，第 1 列', trace);
+  assert.deepEqual(
+    await js(
+      'const e=document.querySelector(arguments[0]);return {text:e.value.slice(e.selectionStart,e.selectionEnd),before:e.value.slice(0,e.selectionStart)}',
+      [editor],
+    ),
+    { text: source.split(';')[0], before: '' },
+  );
+  await button('回到当前数据库', trace);
+  await button('定位第 3 行，第 1 列', trace);
+  assert.deepEqual(
+    await js(
+      'const e=document.querySelector(arguments[0]);return {text:e.value.slice(e.selectionStart,e.selectionEnd),before:e.value.slice(0,e.selectionStart)}',
+      [editor],
+    ),
+    {
+      text: 'SELECT id, score FROM students ORDER BY id',
+      before: source.slice(0, source.indexOf('SELECT')),
+    },
+  );
+  await score('0');
+  assert.equal(
+    updated.end.session.database.tables
+      .find((t) => t.name === 'students')
+      .rows.find((row) => row.values[0].value === 1).values[3].value,
+    0,
+  );
+  await fill(editor, 'SELECT score FROM students WHERE id=1;');
+  await assertNoProof();
+  await run('SELECT score FROM students WHERE id=1;');
+  assert.deepEqual(await cells(), [['0']]);
+  const failed = await run(
+    "UPDATE students SET score=9 WHERE id=1; INSERT INTO students (id,name) VALUES (1,'重复');",
+    'error',
+  );
+  assert.equal(failed.response.diagnostic.code, 'E_CONSTRAINT');
+  await score('9');
+  await button('回到开头', trace);
+  await score('0');
+  await button('回到当前数据库', trace);
+  await button('重置数据库');
+  await score('88');
+  checkpoint('native-mysql-current-history-complete-reverse-UTF8-range-atomic-prefix');
+
+  const transactionSource = 'BEGIN; UPDATE students SET score = 0 WHERE id=1;';
+  await run(transactionSource);
+  await textVisible('事务进行中');
+  await button('保存草稿');
+  await textVisible('SQL 和数据库草稿已保存到此浏览器。');
+  const transactionDraft = await archive();
+  assert.equal(transactionDraft.rows.mysqlDrafts.length, 1);
+  assert.equal(transactionDraft.rows.mysqlDrafts[0].source, transactionSource);
+  assert.equal(transactionDraft.rows.mysqlDrafts[0].session.transaction.active, true);
+  assert(transactionDraft.rows.mysqlDrafts[0].session.transaction.base);
+  await wd(route + '/refresh', 'POST', {});
+  await nativeElement(editor);
+  await wait(
+    () =>
+      js('return document.querySelector(arguments[0])?.value===arguments[1]', [
+        editor,
+        transactionSource,
+      ]),
+    'Native SQL/session draft did not refresh',
+  );
+  await textVisible('事务进行中');
+  await score('0');
+  await assertNoProof();
+  await observe();
+  await run('ROLLBACK; SELECT score FROM students WHERE id=1;');
+  assert.deepEqual(await cells(), [['88']]);
+  await textVisible('当前无活动事务');
+  checkpoint('native-mysql-cross-request-transaction-atomic-draft-refresh-rollback-no-proof');
+
+  const exportSource =
+    '-- 字🙂，SQL逐字保存\nBEGIN;\nUPDATE students SET score=0 WHERE id=1;\nSELECT AVG(score) AS average_score FROM students;';
+  const exporting = await run(exportSource);
+  const files = [];
+  for (const [format, extension] of [
+    ['JSON', '.json'],
+    ['Markdown', '.md'],
+    ['PNG', '.png'],
+    ['ZIP', '.zip'],
+  ])
+    files.push(await download(() => button('导出 ' + format), extension));
+  const exported = read(files[0]);
+  assert.equal(exported.language, 'mysql');
+  assert.equal(exported.dialect, '8.0');
+  assert.equal(exported.source.text, exportSource);
+  assert.equal(exported.source.sha256, sha(exportSource));
+  assert.equal(exported.source.revision, exporting.request.sourceRevision);
+  assert.deepEqual(exported.identity, exporting.response.identity);
+  assert.equal(exported.engine.sha256, mysqlBuild.wasmSha256);
+  assert.deepEqual(exported.initialSession, exporting.response.replay.trace.initialState.session);
+  assert.deepEqual(exported.state, exporting.end);
+  assert.equal(exported.position.cursor, exporting.response.replay.trace.steps.length);
+  assert.equal(exported.position.length, exported.position.cursor);
+  assert.deepEqual(exported.state.result.rows, [[{ kind: 'decimal', value: '43.6667' }]]);
+  assert.equal(exported.state.session.transaction.active, true);
+  await snapshot('mysql-transaction-export');
+  checkpoint('native-mysql-four-exports-exact-Unicode-source-session-state-transaction', {
+    files: files.map((path) => ({
+      path,
+      sha256: sha(readFileSync(path)),
+      bytes: statSync(path).size,
+    })),
+  });
+
+  await navigate('#/mysql/practice/' + projection.id);
+  await run('DELETE FROM students;');
+  await fill(editor, projection.referenceSource);
+  await button('保存草稿');
+  await textVisible('SQL 和数据库草稿已保存到此浏览器。');
+  let start = await js('return window.c6CurrentPackets.length');
+  await button('提交判题');
+  await textVisible('判题结果已记入本地复盘。');
+  await textVisible('四组均通过');
+  let judge = await verifyPacket(start, projection.referenceSource);
+  assert.equal(judge.response.judgement.complete, true);
+  assert.equal(judge.response.judgement.passed, true);
+  assert.equal(judge.response.judgement.cases.length, 4);
+  assert(judge.response.judgement.cases.every((group) => group.passed));
+  assert.deepEqual(await cells(), expectedCells(projection.cases[0]));
+  const accepted = await archive();
+  assert.equal(accepted.rows.mysqlActivities.length, 2);
+  assert.equal(accepted.rows.ledger.filter((row) => row.subjectId === projection.id).length, 1);
+  start = await js('return window.c6CurrentPackets.length');
+  await button('复盘第 4 组');
+  await nativeElement(trace);
+  await wait(
+    async () =>
+      JSON.stringify(await cells()) === JSON.stringify(expectedCells(projection.cases[3])),
+    'Native MySQL selected group was not projected',
+  );
+  judge = await verifyPacket(start, projection.referenceSource);
+  assert.equal(judge.response.judgement.reviewCase, 3);
+  assert.deepEqual(judge.response.replay.trace.initialState.session, projection.cases[3].session);
+  assert.deepEqual((await archive()).rows.mysqlActivities, accepted.rows.mysqlActivities);
+  assert.deepEqual((await archive()).rows.ledger, accepted.rows.ledger);
+  start = await js('return window.c6CurrentPackets.length');
+  await button('提交判题');
+  await textVisible('判题结果已记入本地复盘。');
+  await nativeElement(trace);
+  await verifyPacket(start, projection.referenceSource);
+  assert.deepEqual((await archive()).rows.ledger, accepted.rows.ledger);
+  await snapshot('mysql-four-groups');
+  await click('main a', '本地判题记录');
+  const reviewPrompt = await wd(route + '/alert/text').catch(() => null);
+  if (reviewPrompt) {
+    assert.match(reviewPrompt, /未保存/);
+    await wd(route + '/alert/accept', 'POST', {});
+  }
+  await wait(
+    () =>
+      js(
+        'return location.hash==="#/mysql/review"&&document.querySelector("main h1")?.textContent==="MySQL 判题复盘"',
+      ),
+    'Native MySQL review navigation did not settle before refresh',
+  );
+  await wd(route + '/refresh', 'POST', {});
+  await textVisible('四组均通过');
+  await textVisible('已有首次通过记录');
+  await navigate('#/mysql/practice/' + projection.id);
+  await nativeElement(editor);
+  await wait(
+    () =>
+      js('return document.querySelector(arguments[0])?.value===arguments[1]', [
+        editor,
+        projection.referenceSource,
+      ]),
+    'Native MySQL exercise draft missing',
+  );
+  const saved = await archive();
+  for (const name of [
+    'courseActivities',
+    'courseDrafts',
+    'pythonActivities',
+    'pythonDrafts',
+    'javaActivities',
+    'javaDrafts',
+    'cppActivities',
+    'cppDrafts',
+    'rustActivities',
+    'rustDrafts',
+    'appearance',
+    'appearanceAssets',
+  ]) {
+    assert.deepEqual(saved.keys[name], prior.keys[name], name + ' old keys');
+    assert.deepEqual(saved.rows[name], prior.rows[name], name + ' old records');
+  }
+  writeFileSync(
+    join(output, 'mysql-native-db14-to-15.json'),
+    JSON.stringify({ prior, migrated, reading, transactionDraft, accepted, saved }, null, 2),
+  );
+  checkpoint(
+    'native-mysql-judge-four-isolated-groups-review-draft-refresh-dedup-five-language-preservation',
+  );
+
+  await observe();
+  await button('重置数据库');
+  await run('UPDATE students SET score=7 WHERE id=1;');
+  await js(`
+    window.mysqlCancelProof={posted:false,terminated:false,received:false};
+    const Original=window.Worker;
+    window.Worker=class extends Original {
+      postMessage(...args){
+        window.mysqlCancelProof.posted=true;
+        this.addEventListener('message',()=>{window.mysqlCancelProof.received=true});
+        setTimeout(()=>{if(!window.mysqlCancelProof.terminated)super.postMessage(...args)},650);
+      }
+      terminate(){window.mysqlCancelProof.terminated=true;window.Worker=Original;super.terminate()}
+    };
+  `);
+  await fill(editor, 'DELETE FROM students;');
+  await button('运行 SQL');
+  await wait(
+    () => js('return window.mysqlCancelProof.posted'),
+    'No actual native MySQL Worker to cancel',
+  );
+  await button('取消', '.mysql-editor-panel');
+  const cancelled = await js('return window.mysqlCancelProof');
+  assert.deepEqual(cancelled, { posted: true, terminated: true, received: false });
+  await assertNoProof();
+  await score('7');
+  await run('SELECT score FROM students WHERE id=1;');
+  assert.deepEqual(await cells(), [['7']]);
+
+  // Open the real Settings page in a second native tab. Hold delivery of an
+  // actual WASM response, then clear; release the same native event afterward.
+  const oldHandle = await wd(route + '/window');
+  const { handle: settingsHandle } = await wd(route + '/window/new', 'POST', { type: 'tab' });
+  await wd(route + '/window', 'POST', { handle: settingsHandle });
+  await wd(route + '/url', 'POST', { url: 'http://127.0.0.1:4212/#/settings?panel=data' });
+  await button('清除本地数据');
+  await nativeElement('dialog[open]');
+  await wd(route + '/window', 'POST', { handle: oldHandle });
+  await fill(editor, projection.referenceSource);
+  const clearBefore = await archive();
+  const heldStart = await js('return window.c6CurrentPackets.length');
+  await js(`
+    window.mysqlHoldProof={received:false,released:false,terminated:false,deadlineTimersScheduled:0,deadlineTimersFired:0,deadlineStartedAt:null,terminatedAt:null};
+    const Original=window.Worker;
+    const NativeTimeout=window.setTimeout;
+    window.setTimeout=function(handler,delay,...args){
+      const deadline=delay===1000&&typeof handler==='function'&&Function.prototype.toString.call(handler).includes('E_DEADLINE');
+      if(!deadline)return NativeTimeout.call(window,handler,delay,...args);
+      window.mysqlHoldProof.deadlineTimersScheduled++;
+      window.mysqlHoldProof.deadlineStartedAt=performance.now();
+      return NativeTimeout.call(window,function(...values){
+        window.mysqlHoldProof.deadlineTimersFired++;
+        return Reflect.apply(handler,this,values);
+      },delay,...args);
+    };
+    window.Worker=class extends Original {
+      set onmessage(handler){
+        super.onmessage=event=>{
+          if(handler&&typeof event.data?.buffer?.byteLength==='number'){
+            window.mysqlHoldProof.received=true;
+            window.mysqlReleaseHeld=()=>{window.mysqlHoldProof.released=true;handler.call(this,event)};
+          }else handler?.call(this,event);
+        };
+      }
+      get onmessage(){return super.onmessage}
+      terminate(){
+        window.mysqlHoldProof.terminated=true;
+        window.mysqlHoldProof.terminatedAt=performance.now();
+        window.setTimeout=NativeTimeout;
+        window.Worker=Original;
+        super.terminate();
+      }
+    };
+  `);
+  await button('提交判题');
+  await wait(
+    () => js('return window.mysqlHoldProof.received'),
+    'No actual native SQL response was held',
+  );
+  assert.deepEqual(
+    await js(
+      'return {scheduled:window.mysqlHoldProof.deadlineTimersScheduled,fired:window.mysqlHoldProof.deadlineTimersFired,terminated:window.mysqlHoldProof.terminated,pending:[...document.querySelectorAll("main [role=status]")].some(e=>e.textContent==="正在提交判题…")}',
+    ),
+    { scheduled: 1, fired: 0, terminated: false, pending: true },
+  );
+  await wd(route + '/window', 'POST', { handle: settingsHandle });
+  await button('确认清除', 'dialog[open]');
+  await wd(route + '/window', 'POST', { handle: oldHandle });
+  await wait(
+    async () => (await archive()).rows.meta[0].generation !== clearBefore.rows.meta[0].generation,
+    'Native MySQL clear generation did not change',
+  );
+  await wait(
+    () =>
+      js('return document.querySelector(arguments[0])?.value===arguments[1]', [
+        editor,
+        projection.starter,
+      ]),
+    'Native MySQL clear did not restore starter',
+  );
+  await js('window.mysqlReleaseHeld();');
+  await wd(route + '/execute/async', 'POST', {
+    args: [],
+    script:
+      'const done=arguments[arguments.length-1];requestAnimationFrame(()=>requestAnimationFrame(()=>done(true)));',
+  });
+  await assertNoProof();
+  const clearAfter = await archive();
+  // Independently decode the same withheld native response after the clear.
+  const held = await verifyPacket(heldStart, projection.referenceSource);
+  assert.equal(held.response.judgement.passed, true);
+  const heldProof = await js('return window.mysqlHoldProof');
+  assert.deepEqual(
+    {
+      received: heldProof.received,
+      released: heldProof.released,
+      terminated: heldProof.terminated,
+      scheduled: heldProof.deadlineTimersScheduled,
+      fired: heldProof.deadlineTimersFired,
+    },
+    { received: true, released: true, terminated: true, scheduled: 1, fired: 0 },
+  );
+  assert(
+    heldProof.terminatedAt >= heldProof.deadlineStartedAt &&
+      heldProof.terminatedAt - heldProof.deadlineStartedAt < 1000,
+    'Clear must invalidate the actual pending client before its unchanged 1000ms deadline',
+  );
+  const resetStores = clearAfter.names.filter(
+    (name) => !['meta', 'settings', 'avatar', 'appearance', 'appearanceAssets'].includes(name),
+  );
+  assert.equal(resetStores.length, 24);
+  for (const name of resetStores) assert.deepEqual(clearAfter.rows[name], [], name);
+  assert(clearBefore.rows.appearanceAssets[0].blob.bytes.length > 0);
+  assert.deepEqual(clearAfter.rows.appearanceAssets, []);
+  assert.equal(clearAfter.rows.appearance.length, 1);
+  assert.equal(clearAfter.rows.appearance[0].preset, 'minimal');
+  assert.deepEqual(clearAfter.rows.appearance[0].background, {
+    assetId: null,
+    visible: false,
+    fit: 'cover',
+    position: 'center',
+    overlayOpacity: 75,
+  });
+  writeFileSync(
+    join(output, 'mysql-native-clear-late-actual-result.json'),
+    JSON.stringify(
+      {
+        cancelled,
+        heldProof,
+        clearBefore,
+        clearAfter,
+        actualHeldRequest: held.request,
+        actualHeldJudgement: held.response.judgement,
+      },
+      null,
+      2,
+    ),
+  );
+  await snapshot('mysql-clear-barrier');
+  await wd(route + '/window', 'POST', { handle: settingsHandle });
+  await wd(route + '/window', 'DELETE');
+  await wd(route + '/window', 'POST', { handle: oldHandle });
+  checkpoint('native-mysql-cancel-retains-live-database-clear-discards-late-real-judge');
+  return clearAfter;
 }
 
 try {
@@ -1502,19 +2090,20 @@ try {
   const actualLearning = cleared.names.filter(
     (n) => !['meta', 'settings', 'avatar', 'appearance', 'appearanceAssets'].includes(n),
   );
-  assert.equal(actualLearning.length, 22);
+  assert.equal(actualLearning.length, 24);
   report.actualResetStores = actualLearning;
   for (const name of actualLearning) assert.deepEqual(cleared.rows[name], [], name);
   writeFileSync(
     join(output, 'native-save-reload-clear.json'),
     JSON.stringify({ initial, durable, reloaded, cleared }, null, 2),
   );
-  report.results.push({ id: 'native-db14-save-refresh-cancel-and-clear', passed: true });
+  report.results.push({ id: 'native-db15-save-refresh-cancel-and-clear', passed: true });
   const pythonSaved = await runPython(durable);
   const javaSaved = await runJava(pythonSaved);
   const cppSaved = await runCppCourse(javaSaved);
-  await runRustCourse(cppSaved);
-  assert.equal(report.results.length, programs.length + cppQuestions.length + 13);
+  const rustSaved = await runRustCourse(cppSaved);
+  await runMysqlCourse(rustSaved, observer);
+  assert.equal(report.results.length, programs.length + cppQuestions.length + 21);
   assert.equal(sha(readFileSync('content/build/source-lock.json')), sourceLockBefore);
   verifyBuildInputs();
   report.passed = true;

@@ -1,0 +1,922 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 4,
+  "nodes": [
+    {
+      "id": "mysql.lesson.4",
+      "sourceNodeId": "mysql.source.chapter-4",
+      "number": "4",
+      "title": "数据库操作",
+      "parent": null,
+      "depth": 1,
+      "order": 67,
+      "group": 4,
+      "leaf": false,
+      "printedPage": 71,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "数据库操作围绕命名空间、对象和存储引擎展开。数据库是逻辑容器，表保存记录，视图等对象提供不同接口；原生MySQL还包含系统库，支撑权限、元数据与运行观察。",
+        "平台不执行建库、系统库访问或切换引擎，但在InnoDB小节补充真实事务运行题，用隔离数据观察写入与回滚。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE DATABASE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-database.html"
+        },
+        {
+          "title": "MySQL 8.0：存储引擎",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/storage-engines.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.1",
+      "sourceNodeId": "mysql.source.4-1",
+      "number": "4.1",
+      "title": "关系数据库简介",
+      "parent": "mysql.lesson.4",
+      "depth": 2,
+      "order": 68,
+      "group": 4,
+      "leaf": false,
+      "printedPage": 71,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "关系数据库用表、键与查询组织事实，不把界面上的显示位置当作永久记录身份。MySQL又把这些对象放进数据库命名空间中，帮助区分同名表与访问范围。",
+        "本节先复核表和关系，再认识常见对象与系统库。理解元数据与业务数据的区别后，查看表结构和分析运行状态就不会误把系统对象当成自己创建的教学表。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：What is MySQL?",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/what-is-mysql.html"
+        },
+        {
+          "title": "MySQL 8.0：mysql系统数据库",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/system-schema.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.1.1",
+      "sourceNodeId": "mysql.source.4-1-1",
+      "number": "4.1.1",
+      "title": "关系数据库基础知识",
+      "parent": "mysql.lesson.4.1",
+      "depth": 3,
+      "order": 69,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 71,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "关系表以固定列描述记录，行数可变；主键把实例区分开，关联字段让查询能够连接不同表。SQL结果也可以呈表格形态，但一次查询的结果不是自动持久化的新业务表。",
+        "例如学生表与院系表各保存一类事实，查询按院系编号连接才能取得院系名称。只有名称相同不构成稳定关联，重名或改名会使文字关联产生错误。",
+        "关系理论中的集合概念与SQL默认结果要区别：SQL可保留重复行，SELECT并不自动去重；没有ORDER BY时也不应依赖屏幕当前行序。这些规则在后面查询章节继续验证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "Student(id PK, name, dept_id)\nDepartment(id PK, name)\n关系示意：Student.dept_id → Department.id\n查询结果：同一院系名可能因多位学生而出现多行。",
+        "description": "关系表以固定列描述记录，行数可变；主键把实例区分开，关联字段让查询能够连接不同表。",
+        "result": "重复的院系名可代表不同学生对应的合法结果，不能仅凭相同文字删除行。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只查询院系名称时会自动每院系只剩一行吗？",
+        "answer": "不会。普通SELECT保留各输入匹配的结果，若要去重需明确DISTINCT等处理。",
+        "hints": [
+          "输出列变少不等于行自动合并。",
+          "同院系两名学生仍贡献两行。",
+          "区分投影与去重。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：What is MySQL?",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/what-is-mysql.html"
+        },
+        {
+          "title": "MySQL 8.0：入门教程",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/tutorial.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.1.2",
+      "sourceNodeId": "mysql.source.4-1-2",
+      "number": "4.1.2",
+      "title": "数据库常用对象",
+      "parent": "mysql.lesson.4.1",
+      "depth": 3,
+      "order": 70,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 72,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL常见对象包括表、视图、索引、存储程序、触发器和事件。表保存基础记录，视图保存查询定义，索引提供访问与约束支持；它们的作用与生命周期不相同。",
+        "对象通常归属数据库，但并非所有服务器管理对象都等价于库内业务表。例如用户账号由服务器权限体系管理，不应当作应用的普通“用户列表表”来随便删除或复制。",
+        "当前平台执行表和查询的受支持子集，视图、索引、程序、触发器及事件作为阅读。认识名称不等于支持创建这些对象；讨论原生对象时应说明权限、依赖和版本。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "表：orders，保存订单记录\n视图：open_orders，定义未完成订单查询\n索引：idx_orders_created，帮助按日期查找\n触发器：在表事件发生时执行受约束的逻辑",
+        "description": "MySQL常见对象包括表、视图、索引、存储程序、触发器和事件。",
+        "result": "删除视图不等于删除基础订单；删除基础表则可能使依赖它的视图失效。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "视图里显示10行能否证明它单独保存了10条独立记录？",
+        "answer": "不能。普通视图是查询定义，看到的是对基础对象查询得到的结果。",
+        "hints": [
+          "辨别“存定义”与“存行数据”。",
+          "基础表变化可能改变视图结果。",
+          "不要把普通视图当数据副本。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：存储对象",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/stored-objects.html"
+        },
+        {
+          "title": "MySQL 8.0：CREATE VIEW",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.1.3",
+      "sourceNodeId": "mysql.source.4-1-3",
+      "number": "4.1.3",
+      "title": "系统数据库",
+      "parent": "mysql.lesson.4.1",
+      "depth": 3,
+      "order": 71,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 72,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL的mysql系统库保存权限等系统信息，information_schema提供对象元数据，performance_schema用于运行时监测，sys提供便于查看的汇总视图与过程。它们用途不同，不能统称为业务库。",
+        "查看列名、类型和约束属于查询元数据；统计等待、语句与连接属于观察服务器运行。可见信息受权限和相关配置影响，不能因某张观察表为空就认定系统没有活动。",
+        "系统对象应通过官方接口理解和管理，不能把删除系统库当作“清理空库”。平台不模拟这些系统库，表格里只展示隔离教学数据；下面的清单是原生环境知识。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "mysql：服务器权限及系统信息\ninformation_schema：数据库/表/列等元数据接口\nperformance_schema：运行性能与事件观测\nsys：对观测信息的便捷整理",
+        "description": "MySQL的mysql系统库保存权限等系统信息，information_schema提供对象元数据，performance_schema用于运行时监测，sys提供便于查看的汇总视图与过程。",
+        "result": "四类名称对应不同职责；它们不是教材要求用户自己创建的四个业务数据库。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想知道业务表有哪些列，优先关注哪类信息？",
+        "answer": "元数据，可用information_schema或原生SHOW/DESCRIBE等接口；不是从普通业务行内容猜结构。",
+        "hints": [
+          "结构描述属于数据的描述。",
+          "区分列定义与列值。",
+          "选择元数据接口。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：mysql系统数据库",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/system-schema.html"
+        },
+        {
+          "title": "MySQL 8.0：INFORMATION_SCHEMA元数据",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/information-schema.html"
+        },
+        {
+          "title": "MySQL 8.0：Performance Schema",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/performance-schema.html"
+        },
+        {
+          "title": "MySQL 8.0：sys系统数据库",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/sys-schema.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.2",
+      "sourceNodeId": "mysql.source.4-2",
+      "number": "4.2",
+      "title": "操作数据库",
+      "parent": "mysql.lesson.4",
+      "depth": 2,
+      "order": 72,
+      "group": 4,
+      "leaf": false,
+      "printedPage": 73,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "原生数据库管理通常是创建、查看、选择、调整默认属性和删除。每步作用范围不同：USE影响当前会话的默认命名空间，ALTER DATABASE调整属性，DROP DATABASE则移除对象容器及其中对象。",
+        "平台隔离教学会话已有数据库状态，不提供这些服务器命名空间操作。本节保留完整语法阅读与自检，用明确的练习库名推导行为，避免把原生管理能力混入平台支持声明。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE DATABASE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-database.html"
+        },
+        {
+          "title": "MySQL 8.0：USE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/use.html"
+        },
+        {
+          "title": "MySQL 8.0：DROP DATABASE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/drop-database.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.2.1",
+      "sourceNodeId": "mysql.source.4-2-1",
+      "number": "4.2.1",
+      "title": "创建数据库",
+      "parent": "mysql.lesson.4.2",
+      "depth": 3,
+      "order": 73,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 73,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "CREATE DATABASE在服务器中建立命名空间，可指定默认字符集与排序规则。创建数据库不会自动定义业务表，之后还需CREATE TABLE；权限不足或同名已存在时需按实际错误处理。",
+        "IF NOT EXISTS使同名已存在时不按普通重复创建错误处理，但并不把已有库改造成声明的属性，也不能证明其中对象符合需求。应查看实际元数据确认。",
+        "原生数据库默认属性为后续对象提供缺省值；不应把它当成自动转换已有数据的命令。平台不执行CREATE DATABASE，阅读例假设在可管理的原生练习服务器上执行。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE DATABASE reading_club\n CHARACTER SET utf8mb4\n COLLATE utf8mb4_0900_bin;",
+        "description": "CREATE DATABASE在服务器中建立命名空间，可指定默认字符集与排序规则。",
+        "result": "原生执行成功会创建空库，其默认字符集与排序规则如声明；未自动创建任何表。",
+        "reason": "CREATE DATABASE需要原生服务器命名空间与权限，当前平台不执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "加IF NOT EXISTS会把已有库的编码改成声明值吗？",
+        "answer": "不会。它只改变同名存在时的处理方式，实际属性要查询并另行调整。",
+        "hints": [
+          "判断是创建分支还是已存在分支。",
+          "已存在对象并未重建。",
+          "不能把幂等保护当作属性迁移。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE DATABASE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-database.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.2.2",
+      "sourceNodeId": "mysql.source.4-2-2",
+      "number": "4.2.2",
+      "title": "查看数据库",
+      "parent": "mysql.lesson.4.2",
+      "depth": 3,
+      "order": 74,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 76,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SHOW DATABASES列出当前账号可见的数据库，结果受权限等规则影响。列表不出现某库，可能是不存在，也可能是账号没有可见权限，不能只凭一次列表给出全部服务器结论。",
+        "可以按名称模式筛选列表，再结合SHOW CREATE DATABASE等元数据确认属性。LIKE中的百分号代表任意长度字符，下划线也有模式含义；精确识别名称时应注意转义与匹配语义。",
+        "查看操作是只读，但元数据也有访问边界。平台不执行原生SHOW，本节着重理解可见性与存在性的区别，不用虚构本机库列表作为输出。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW DATABASES;\nSHOW DATABASES LIKE 'reading%';",
+        "description": "SHOW DATABASES列出当前账号可见的数据库，结果受权限等规则影响。",
+        "result": "原生结果由真实对象与权限决定；第二句只保留匹配名称模式的可见库，不预设具体行数。",
+        "reason": "SHOW DATABASES属于原生服务器元数据接口，平台不模拟其结果。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "SHOW DATABASES中没有warehouse就能证明它不存在吗？",
+        "answer": "不能直接证明。还需考虑当前账号的可见权限与实际目标服务器，应由适当权限的接口核实。",
+        "hints": [
+          "列表以当前账号为观察者。",
+          "同一服务器上不同账号可能看到不同范围。",
+          "区分未看到与不存在。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：SHOW DATABASES",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/show-databases.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.2.3",
+      "sourceNodeId": "mysql.source.4-2-3",
+      "number": "4.2.3",
+      "title": "选择数据库",
+      "parent": "mysql.lesson.4.2",
+      "depth": 3,
+      "order": 75,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 77,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "USE为当前连接设置默认数据库，使未带库名前缀的表名在该命名空间中解析。它不复制数据、不改变另一个连接的默认库，也不授予额外权限。",
+        "同名表分别位于club_a和club_b时，切换默认库后SELECT tags指向的对象可能改变。需要消除歧义时可在原生SQL使用库名限定表；具体权限仍单独验证。",
+        "平台一份隔离会话内直接管理教学表，不执行USE或多数据库限定名。下面展示的是原生会话解析规则，重点是避免把切换显示位置当作移动数据。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "USE club_a;\nSELECT id, name FROM tags;\n-- 第二条语句解析为club_a中的tags，不移动其他库的数据。",
+        "description": "USE为当前连接设置默认数据库，使未带库名前缀的表名在该命名空间中解析。",
+        "result": "若club_a.tags存在且有权限则读取它；换到另一个连接，其默认库不会因此改变。",
+        "reason": "USE与多数据库命名解析属于原生MySQL；平台只执行单份教学数据库。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "在客户端A执行USE club_a后，客户端B也自动切换吗？",
+        "answer": "不会。默认数据库属于连接会话状态，B有自己的会话。",
+        "hints": [
+          "看命令作用在哪个连接上。",
+          "多个连接可以同时使用不同默认库。",
+          "不要把客户端导航选择当全服务器设置。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：USE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/use.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.2.4",
+      "sourceNodeId": "mysql.source.4-2-4",
+      "number": "4.2.4",
+      "title": "修改数据库",
+      "parent": "mysql.lesson.4.2",
+      "depth": 3,
+      "order": 76,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 77,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "ALTER DATABASE可以调整数据库默认字符集、排序规则等支持属性。默认属性主要供之后未指定属性的对象继承，不会把全部已有表列自动逐一转换。",
+        "若要改变已有文本列的字符集，需要另行规划表/列转换，验证值能否表示及比较规则是否变化。排序规则变化可能改变大小写等比较结果，从而影响唯一性，不能只看中文是否正常显示。",
+        "修改前先读取当前定义，再区分默认设置和数据转换。平台文本语义固定，不能通过ALTER DATABASE切换；本节只阅读原生默认属性调整。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "ALTER DATABASE reading_club\n CHARACTER SET utf8mb4\n COLLATE utf8mb4_0900_bin;",
+        "description": "ALTER DATABASE可以调整数据库默认字符集、排序规则等支持属性。",
+        "result": "原生成功后调整库的默认属性；已有列的实际字符集与排序规则需单独查看，不能由该语句推断已全部转换。",
+        "reason": "ALTER DATABASE是原生管理语句；平台不执行编码或命名空间变更。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "想把已有latin1列转成utf8mb4，仅执行ALTER DATABASE够吗？",
+        "answer": "不够。它改变库默认值，已有列转换需独立操作并验证实际内容与类型。",
+        "hints": [
+          "先区分模板默认与已建列定义。",
+          "查看目标列自身属性。",
+          "迁移计划必须覆盖已有数据。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：ALTER DATABASE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/alter-database.html"
+        },
+        {
+          "title": "MySQL 8.0：连接字符集",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/charset-connection.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.2.5",
+      "sourceNodeId": "mysql.source.4-2-5",
+      "number": "4.2.5",
+      "title": "删除数据库",
+      "parent": "mysql.lesson.4.2",
+      "depth": 3,
+      "order": 77,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 78,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DROP DATABASE移除指定数据库及其对象，属于原生DDL。它不同于断开连接，也不同于仅清空某张表的记录，操作范围可以覆盖许多相互依赖的对象。",
+        "IF EXISTS改变目标不存在时的处理，不能限制真实存在库的删除范围。执行前应明确完整目标与恢复安排；DROP不会自动替你生成可恢复备份。",
+        "MySQL原生DDL通常有隐式提交规则，不应假定在BEGIN中DROP后总能ROLLBACK恢复。平台没有DROP DATABASE；这里通过对象范围自检理解原生语义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 仅供原生语义阅读，不在本机执行\nDROP DATABASE IF EXISTS disposable_demo;",
+        "description": "DROP DATABASE移除指定数据库及其对象，属于原生DDL。",
+        "result": "若目标存在且权限足够，将删除该库及其中对象；若不存在，IF EXISTS按原生规则处理。",
+        "reason": "DROP DATABASE与原生DDL管理属于阅读；平台不执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "IF EXISTS能保证删除可逆吗？",
+        "answer": "不能。它只处理不存在情形，不提供回收站或事务回滚保障；DDL隐式提交应另行理解。",
+        "hints": [
+          "条件判断针对目标是否存在。",
+          "并未声明保存原对象。",
+          "删除与恢复是两项不同能力。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：DROP DATABASE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/drop-database.html"
+        },
+        {
+          "title": "MySQL 8.0：隐式提交",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.3",
+      "sourceNodeId": "mysql.source.4-3",
+      "number": "4.3",
+      "title": "存储引擎",
+      "parent": "mysql.lesson.4",
+      "depth": 2,
+      "order": 78,
+      "group": 4,
+      "leaf": false,
+      "printedPage": 79,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "存储引擎负责表的数据存取实现与相关能力，影响事务、锁、恢复和索引等行为。SQL接口相似不等于所有引擎都支持同样的事务与约束。",
+        "本节比较InnoDB、MyISAM与MEMORY的适用条件，并解释设置引擎的原生操作。平台不是这三种引擎之一；在InnoDB节点补充的事务题只演示已声明的事务状态语义，不模拟磁盘页、并发锁或宕机恢复。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：存储引擎",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/storage-engines.html"
+        },
+        {
+          "title": "MySQL 8.0：InnoDB",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.3.1",
+      "sourceNodeId": "mysql.source.4-3-1",
+      "number": "4.3.1",
+      "title": "MySQL存储引擎的概念",
+      "parent": "mysql.lesson.4.3",
+      "depth": 3,
+      "order": 79,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 79,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL采用可插拔存储引擎体系，服务器层解析和协调SQL，存储引擎管理具体表数据访问等工作。存储引擎不等同于客户端，也不等同于数据库字符集。",
+        "同一个服务器可有不同引擎的表，但支持能力、事务行为和运维方式可能不同。设计多表更新时要先确认所有相关表的引擎与事务支持，不能只因为服务器叫MySQL就假定全可回滚。",
+        "平台保存逻辑表状态，没有真实存储引擎插件、文件或锁管理。阅读这些概念有助于理解原生系统的边界，但平台运行结果不构成对原生引擎性能或持久性测试。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "服务器层：解析、权限、查询协调\n表A → InnoDB\n表B → MyISAM\n表C → MEMORY\n每张表的ENGINE属性决定具体实现。",
+        "description": "MySQL采用可插拔存储引擎体系，服务器层解析和协调SQL，存储引擎管理具体表数据访问等工作。",
+        "result": "引擎属于表的存储选择，同一数据库中的不同表未必使用同一种。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "修改客户端主题会改变表的存储引擎吗？",
+        "answer": "不会。主题是界面设置，存储引擎由服务器表定义等设置决定。",
+        "hints": [
+          "先定位属性属于哪一层。",
+          "客户端外观不参与服务器存储。",
+          "查看原生表定义确认ENGINE。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：存储引擎",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/storage-engines.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.3.2",
+      "sourceNodeId": "mysql.source.4-3-2",
+      "number": "4.3.2",
+      "title": "MySQL支持的存储引擎",
+      "parent": "mysql.lesson.4.3",
+      "depth": 3,
+      "order": 80,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 80,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "原生SHOW ENGINES可查看服务器认识的引擎及其支持状态、事务等能力。列表中的可用、默认、禁用等状态需要逐项阅读，不能把列出的所有名称都当当前可建表使用。",
+        "插件与构建配置影响可用引擎，默认引擎也可由配置改变。比较实验应记录具体表的ENGINE和服务器版本，而不是只记录全局默认值。",
+        "平台不提供引擎插件或SHOW ENGINES。本节阅读官方输出的字段含义；实际列表与默认值取决于所连接服务器的配置。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW ENGINES;\n-- 关注Engine、Support、Transactions、XA、Savepoints等列。\n-- Support标注DEFAULT的引擎是当前默认选择。",
+        "description": "原生SHOW ENGINES可查看服务器认识的引擎及其支持状态、事务等能力。",
+        "result": "真实行由服务器配置决定；能否事务与是否默认是两项不同属性。",
+        "reason": "SHOW ENGINES需要原生MySQL服务器，平台不执行引擎查询。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "某引擎出现在列表中，就一定处于可用状态吗？",
+        "answer": "不一定，还要看Support等状态。被禁用或不可用的引擎不能按普通可用引擎处理。",
+        "hints": [
+          "名称列只是标识。",
+          "状态列决定当前支持情况。",
+          "同时核对默认值与事务能力。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：SHOW ENGINES",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/show-engines.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.3.3",
+      "sourceNodeId": "mysql.source.4-3-3",
+      "number": "4.3.3",
+      "title": "InnoDB存储引擎",
+      "parent": "mysql.lesson.4.3",
+      "depth": 3,
+      "order": 81,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 81,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "InnoDB为MySQL提供事务、崩溃恢复、行级并发控制与外键等能力。事务把一组数据操作作为提交或撤销的工作单元，但并发隔离、锁和持久化需要原生服务器环境才能完整观察。",
+        "平台补充扩展：本节安排真实事务题。START TRANSACTION记录教学数据库起点；UPDATE只修改score不低于70的记录；ROLLBACK恢复起点；最后SELECT按id查看原始成绩。NULL不满足比较条件，不参与加分。",
+        "平台事务可跨连续运行延续，但事务内只执行查询与DML，不执行DDL，也不模拟并发隔离和保存点。原生MySQL的DDL存在隐式提交规则，不能把平台拒绝DDL的行为解释为原生InnoDB也没有DDL。非空判题组要求事务内确有写入再回滚。"
+      ],
+      "example": {
+        "mode": "wasm",
+        "language": "sql",
+        "source": "START TRANSACTION;\nUPDATE students SET score = score + 5 WHERE score >= 70;\nROLLBACK;\nSELECT id, score FROM students ORDER BY id;",
+        "description": "事务内写入与回滚",
+        "result": "UPDATE的暂时加分在ROLLBACK后全部撤销，最终每组数据库与初始相同；最后结果按id列出原始score，NULL仍为NULL。空组没有数据变化。",
+        "profile": "mysql.exercise.transaction",
+        "caseIndices": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "activity": {
+        "mode": "judge",
+        "profile": "mysql.exercise.transaction",
+        "prompt": "在事务中给达到70分的成绩加5，再回滚，最后按id查询原始成绩。使用一次事务内实际写入和ROLLBACK。",
+        "starter": "-- 在这里输入 SQL\n",
+        "hints": [
+          "先核对右侧数据表的字段、NULL和约束。",
+          "依据题目选择语句和条件，注意结果是否需要排序。",
+          "运行检查当前数据，再提交全部四组独立数据库。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：START TRANSACTION / COMMIT / ROLLBACK",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.3.4",
+      "sourceNodeId": "mysql.source.4-3-4",
+      "number": "4.3.4",
+      "title": "MyISAM存储引擎",
+      "parent": "mysql.lesson.4.3",
+      "depth": 3,
+      "order": 82,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 82,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MyISAM是MySQL支持的一种非事务型存储引擎，使用表级锁等机制，不能把InnoDB的事务和外键保障直接套用给它。BEGIN之后写入非事务表不意味着这些变化可以ROLLBACK撤销。",
+        "比较引擎时应考虑业务是否要求多步更新原子性、并发模式和恢复要求。读取较多也不自动推出必须用MyISAM，应基于真实数据和官方能力评估。",
+        "平台不实现MyISAM；本节按原生MyISAM表的前提推导ROLLBACK限制，平台教学事务的回滚结果不适用于MyISAM表。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "前提：legacy_counts是一张原生MyISAM表。\nSTART TRANSACTION;\nUPDATE legacy_counts SET total = total + 1 WHERE id = 1;\nROLLBACK;",
+        "description": "MyISAM是MySQL支持的一种非事务型存储引擎，使用表级锁等机制，不能把InnoDB的事务和外键保障直接套用给它。",
+        "result": "由于表非事务型，不能依赖ROLLBACK撤销已成功的MyISAM写入；这与平台事务题不是相同引擎条件。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何同样写了ROLLBACK却不能保证恢复MyISAM数据？",
+        "answer": "事务能力依赖表所用引擎，非事务表的写入不由InnoDB事务机制提供回滚保障。",
+        "hints": [
+          "先检查表引擎而非只看SQL文本。",
+          "语句出现不等于底层支持撤销。",
+          "引擎能力是推导前提。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：MyISAM",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/myisam-storage-engine.html"
+        },
+        {
+          "title": "MySQL 8.0：START TRANSACTION / COMMIT / ROLLBACK",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.3.5",
+      "sourceNodeId": "mysql.source.4-3-5",
+      "number": "4.3.5",
+      "title": "MEMORY存储引擎",
+      "parent": "mysql.lesson.4.3",
+      "depth": 3,
+      "order": 83,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 83,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MEMORY把表数据保存在内存中，适合可以重新生成且能接受重启丢失的场景。原生服务器重启后，表定义与行数据的保留行为不同，不能把它当持久化业务数据的通用替代。",
+        "MEMORY不是“服务器缓冲区”的同义词。InnoDB也使用内存缓存但仍有自己的持久化机制；MEMORY表的数据生命周期是显式的引擎选择，需要考虑容量限制及类型限制。",
+        "平台数据库状态和本地学习保存采用自己的教学协议，不是原生MEMORY引擎。下例只讨论重启前后预期，不执行重启或创建真实内存表。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "原生表：temp_lookup ENGINE=MEMORY\n重启前：表定义存在，行(id=1,label=临时项)存在。\n重启后：表定义仍可存在，原来的MEMORY行数据不保留。",
+        "description": "MEMORY把表数据保存在内存中，适合可以重新生成且能接受重启丢失的场景。",
+        "result": "业务若需要这些行，应有可靠的重新装载来源；本例不代表平台刷新后的草稿规则。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "“运行在内存里”是否意味着一定有宕机持久性？",
+        "answer": "不是。持久性需要专门机制与存储保障，MEMORY表不能以在内存中运行证明行数据重启后存在。",
+        "hints": [
+          "分别思考运行位置和持久保存。",
+          "缓存与持久层也不是同一概念。",
+          "检查引擎声明的数据生命周期。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：MEMORY",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/memory-storage-engine.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.3.6",
+      "sourceNodeId": "mysql.source.4-3-6",
+      "number": "4.3.6",
+      "title": "如何选择存储引擎",
+      "parent": "mysql.lesson.4.3",
+      "depth": 3,
+      "order": 84,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 84,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "选择存储引擎先列必须满足的能力：事务原子性、引用完整性、并发读写、恢复目标、数据类型和持久性。满足硬要求后再测量性能，避免为了一个简单速度结论牺牲必要语义。",
+        "订单扣库存和写订单需要一致提交，通常会优先考察InnoDB；可重建的短期查找数据可能评估MEMORY。即便场景类似，也需检查内存上限、重启行为和维护方案。",
+        "引擎选择不是平台切换开关，教学执行器只提供同一受限逻辑模型。原生项目中记录选择理由和未满足条件，才能在需求变化时重新评估，而不是按“读多写少”一句话决定全部。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "需求A：付款与订单更新必须原子提交 → 事务能力为硬要求。\n需求B：进程重启后数据必须保留 → 纯MEMORY行不满足。\n需求C：可重建字典查询 → 再评估容量与访问模式。",
+        "description": "选择存储引擎先列必须满足的能力：事务原子性、引用完整性、并发读写、恢复目标、数据类型和持久性。",
+        "result": "先淘汰不满足语义的选项，再做基于真实负载的比较。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只因某表查询很多，就能断言选MyISAM优于InnoDB吗？",
+        "answer": "不能。还需事务、恢复、锁和真实负载等条件；访问频率只是一个输入，不能代替整体能力评估。",
+        "hints": [
+          "列出除了读取速度之外的约束。",
+          "写入一致性可能是不可让步的要求。",
+          "用能力与测量支持选择。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：存储引擎",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/storage-engines.html"
+        },
+        {
+          "title": "MySQL 8.0：InnoDB",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html"
+        },
+        {
+          "title": "MySQL 8.0：MEMORY",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/memory-storage-engine.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.3.7",
+      "sourceNodeId": "mysql.source.4-3-7",
+      "number": "4.3.7",
+      "title": "设置存储引擎",
+      "parent": "mysql.lesson.4.3",
+      "depth": 3,
+      "order": 85,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 84,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "原生建表可用ENGINE指定存储引擎，ALTER TABLE也可请求改变已有表的引擎。转换可能重建数据并影响锁、耗时和能力，应先检查目标引擎对现有定义的支持。",
+        "服务器默认引擎只影响未显式指定的新表，不会自动把所有旧表转换。转换后应读取SHOW CREATE TABLE等实际定义，确认服务器接纳结果，而不是只看客户端选框。",
+        "平台不接受ENGINE选项或引擎转换，也不模拟物理重建。下面是原生阅读语法；其中INT和VARCHAR本身属于平台支持类型，限制来自ENGINE管理选项及转换行为。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE engine_demo (id INT PRIMARY KEY) ENGINE=InnoDB;\nALTER TABLE engine_demo ENGINE=InnoDB;",
+        "description": "原生建表可用ENGINE指定存储引擎，ALTER TABLE也可请求改变已有表的引擎。",
+        "result": "原生且权限、引擎可用时，声明或转换为InnoDB；耗时与具体重建策略由服务器条件决定。",
+        "reason": "ENGINE声明与ALTER转换需要原生存储引擎实现；平台不执行这些选项。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "修改default_storage_engine会把现有MyISAM表都改成InnoDB吗？",
+        "answer": "不会。它影响后续默认建表选择，旧表需要显式转换并验证。",
+        "hints": [
+          "默认配置和已有对象分开。",
+          "检查旧表自身ENGINE属性。",
+          "转换是独立DDL操作。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：设置存储引擎",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/storage-engine-setting.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.4",
+      "sourceNodeId": "mysql.source.4-4",
+      "number": "4.4",
+      "title": "本章小结",
+      "parent": "mysql.lesson.4",
+      "depth": 2,
+      "order": 86,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 86,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章区分了数据库容器、业务对象、系统库与表的存储引擎。创建与选择数据库管理命名空间，表定义确定结构与引擎；系统库提供服务器管理和观察信息。",
+        "事务回滚是有条件的能力：要明确引擎、语句类型和提交边界。平台的事务扩展题用真实逻辑状态验证DML回滚，原生MySQL还涉及DDL隐式提交、锁与并发等本章阅读边界。",
+        "管理动作应根据影响范围核查。没有看到库不等于不存在，改默认编码不等于转换已有列，改默认引擎不等于转换旧表，这些区别都来自对象状态与默认规则的分离。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "判断卡：\nUSE → 当前会话默认库\nALTER DATABASE → 库默认属性等\nENGINE=... → 表的存储实现\nROLLBACK → 在适用事务范围内撤销未提交变化",
+        "description": "本章区分了数据库容器、业务对象、系统库与表的存储引擎。",
+        "result": "同样是“改设置”，作用对象不同；不能互相替代。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么“默认值已改”不足以验收已有表完成迁移？",
+        "answer": "已有表有独立保存的属性，默认值主要供后续创建继承；需要检查各目标表和列的实际定义与数据。",
+        "hints": [
+          "确定默认值作用的时间。",
+          "旧对象不会因模板变化自动重建。",
+          "验收应读取目标对象实际状态。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：ALTER DATABASE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/alter-database.html"
+        },
+        {
+          "title": "MySQL 8.0：设置存储引擎",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/storage-engine-setting.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.4.5",
+      "sourceNodeId": "mysql.source.4-5",
+      "number": "4.5",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.4",
+      "depth": 2,
+      "order": 87,
+      "group": 4,
+      "leaf": true,
+      "printedPage": 86,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "综合练习考察操作范围与事务边界。假设某库有InnoDB订单表、MyISAM历史计数表和MEMORY临时字典，不能用同一句“事务可以回滚”概括三张表的全部行为。",
+        "分析应按表引擎、语句类别和是否提交列出条件。若要求数据库默认编码更新，也要区分对新表和旧列的影响；这些判断可以先在纸面推演，再为原生实验制定验证方案。",
+        "本题不执行服务器管理。平台事务题只在隔离教学数据库验证支持的BEGIN/DML/ROLLBACK，并不为三个原生引擎产生测试结论。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "任务：\nA. 让后续未指定编码的新表继承utf8mb4。\nB. 确认已有订单表列也已转换。\nC. 确认事务内订单DML可撤销。\nD. 解释重启后MEMORY字典为空。",
+        "description": "综合练习考察操作范围与事务边界。",
+        "result": "A与B需不同证据；C要在适用引擎和未提交边界内验证；D符合MEMORY行生命周期。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "完成A能否同时宣布B和C通过？",
+        "answer": "不能。库默认属性不证明已有列已转换，也不证明事务行为；B需列元数据和内容核对，C需真实事务实验。",
+        "hints": [
+          "三个任务作用不同对象与语义。",
+          "先写每项所需证据。",
+          "不要用一个设置截图代替多个行为验证。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：ALTER DATABASE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/alter-database.html"
+        },
+        {
+          "title": "MySQL 8.0：START TRANSACTION / COMMIT / ROLLBACK",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/commit.html"
+        },
+        {
+          "title": "MySQL 8.0：MEMORY",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/memory-storage-engine.html"
+        }
+      ]
+    }
+  ]
+}

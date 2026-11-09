@@ -1,0 +1,953 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 14,
+  "nodes": [
+    {
+      "id": "mysql.lesson.14",
+      "sourceNodeId": "mysql.source.chapter-14",
+      "number": "14",
+      "title": "数据备份与恢复",
+      "parent": null,
+      "depth": 1,
+      "order": 293,
+      "group": 14,
+      "leaf": false,
+      "printedPage": 283,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "备份保存可恢复的数据库状态，恢复把它重新建立出来。逻辑备份保存对象定义与数据语句，物理备份保存受存储引擎管理的文件；选择方法先看一致性、恢复目标与实际环境。",
+        "本章均为原生运维阅读。文件路径用于区分服务器端与客户端位置；平台不运行外部命令或访问文件。mysqlhotcopy在MySQL 5.7已移除，本章解释其历史用途以及8.0可采用的备份方式。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · backup methods",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/backup-methods.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · mysqldump",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysqldump.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.1",
+      "sourceNodeId": "mysql.source.14-1",
+      "number": "14.1",
+      "title": "数据备份",
+      "parent": "mysql.lesson.14",
+      "depth": 2,
+      "order": 294,
+      "group": 14,
+      "leaf": false,
+      "printedPage": 283,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "备份前先确定对象范围和一致性边界：只有表数据，还是还包括结构、视图、触发器与例程。文件生成成功不保证它覆盖了所有需要恢复的对象。",
+        "InnoDB逻辑备份可利用一致性事务，非事务表及备份期间DDL则需要其他协调。物理方法必须遵守引擎和版本约束，直接拷一个库目录不能通用于所有MySQL数据库。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · backup methods",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/backup-methods.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · mysqldump",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysqldump.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.1.1",
+      "sourceNodeId": "mysql.source.14-1-1",
+      "number": "14.1.1",
+      "title": "使用MySQLdump命令备份",
+      "parent": "mysql.lesson.14.1",
+      "depth": 3,
+      "order": 295,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 283,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "mysqldump是外部客户端，输出可供mysql执行的逻辑SQL。--databases会包含建库与切库信息，--routines和--events用于显式包含对应对象，触发器也应在范围内核查。",
+        "例子针对已存在的library测试库，使用--single-transaction获得InnoDB一致性视图。--result-file避免依赖不同终端重定向的编码行为，文件名表示客户端本地路径。",
+        "备份期间仍应避免会改变被备份对象结构的DDL；混有非事务表时不能承诺整个库同一快照。GTID、权限与跨版本兼容需要单独审核，本例为独立测试恢复而关闭GTID集合输出。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "mysqldump --user=backup_reader --password --single-transaction --routines --events --triggers --no-tablespaces --set-gtid-purged=OFF --databases library --result-file=library.sql",
+        "description": "例子针对已存在的library测试库，使用--single-transaction获得InnoDB一致性视图。--result-file避免依赖不同终端重定向的编码行为，文件名表示客户端本地路径。",
+        "result": "原生工具、权限与对象满足时生成客户端library.sql逻辑备份；没有在本课程中实际导出，也不能仅据文件存在认定恢复成功。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么给InnoDB加--single-transaction仍不能随意并发ALTER TABLE？",
+        "answer": "一致性读不覆盖任意并发DDL的所有影响；备份时改变表定义可能使读取失败或失去预期一致性。",
+        "hints": [
+          "区分数据快照与结构变化。",
+          "找备份期间的DDL限制。",
+          "为结构变更安排协调窗口。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · mysqldump",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysqldump.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.1.2",
+      "sourceNodeId": "mysql.source.14-1-2",
+      "number": "14.1.2",
+      "title": "直接复制整个数据库目录",
+      "parent": "mysql.lesson.14.1",
+      "depth": 3,
+      "order": 296,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 288,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "文件备份必须区分整实例冷备与单表文件拷贝。InnoDB含数据字典、表空间与恢复相关文件，运行中拷贝一个库目录可能得到互不一致的文件组合。",
+        "完整冷备的阅读流程先正常停止实例，再按官方要求保存一致的全部必要文件和配置，并记录版本、目录布局及恢复步骤。不能把“没有业务写入”视为缓存已全部安全落盘。",
+        "MyISAM有其锁表与刷新后复制表文件的方法，但不能移用到InnoDB。需要在线物理备份时应采用与版本、引擎匹配的专用方法，而不是宣传普通复制命令就是热备。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "识别引擎与全部相关文件\n安排停机并正常关闭实例\n保存一致的完整冷备及必要配置\n记录版本、文件权限和目录布局\n在隔离环境按对应流程恢复并验证",
+        "description": "完整冷备的阅读流程先正常停止实例，再按官方要求保存一致的全部必要文件和配置，并记录版本、目录布局及恢复步骤。不能把“没有业务写入”视为缓存已全部安全落盘。",
+        "result": "这是冷备计划，不是可直接套用的逐库复制命令；若仅拷运行中的库目录，不能保证InnoDB可恢复。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "停止业务写入但服务器还在运行，是否就能随意复制InnoDB库目录？",
+        "answer": "不能，缓存、日志、数据字典和表空间的一致性仍需符合官方物理备份要求。",
+        "hints": [
+          "无业务写不等于无后台写。",
+          "列出库目录外的依赖。",
+          "按完整一致性备份流程处理。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · backup methods",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/backup-methods.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · innodb migration",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-migration.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.1.3",
+      "sourceNodeId": "mysql.source.14-1-3",
+      "number": "14.1.3",
+      "title": "使用MySQLhotcopy工具快速备份",
+      "parent": "mysql.lesson.14.1",
+      "depth": 3,
+      "order": 297,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 288,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "mysqlhotcopy是旧版本文件式备份工具，历史上用于MyISAM与ARCHIVE，而非InnoDB通用热备。MySQL 8.0不再自带该工具，阅读旧资料时需先核对版本。",
+        "官方移除记录说明它在5.6弃用、5.7移除。8.0环境应按需要选择mysqldump或适用的物理备份方案，不能通过安装另一产品的同名脚本来宣称原生8.0支持。",
+        "迁移旧运维文档时，要同时核对工具是否存在、引擎覆盖和一致性保障。只替换命令名称而不重新评估恢复链，仍然可能得到不可恢复的备份。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "旧方案名称：mysqlhotcopy\n历史适用：MyISAM / ARCHIVE的文件式备份\nMySQL版本变化：5.6弃用，5.7移除\n8.0改造：重新选择逻辑或受支持的物理方案，并演练恢复",
+        "description": "官方移除记录说明它在5.6弃用、5.7移除。8.0环境应按需要选择mysqldump或适用的物理备份方案，不能通过安装另一产品的同名脚本来宣称原生8.0支持。",
+        "result": "正确结论是8.0不提供该旧工具；这里不生成mysqlhotcopy可执行命令，也不声称已做备份。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "发现8.0部署文档仍写mysqlhotcopy，最先核查什么？",
+        "answer": "先核查官方版本移除与所用引擎，再重新选型并验证恢复，不能直接照抄旧命令。",
+        "hints": [
+          "先判断工具是否属于目标版本。",
+          "再检查表是否InnoDB。",
+          "工具替换必须连同恢复验证。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · backup methods",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/backup-methods.html"
+        },
+        {
+          "title": "MySQL Official Worklog WL#7854 · Deprecate and remove mysqlhotcopy",
+          "url": "https://dev.mysql.com/worklog/task/?id=7854"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.2",
+      "sourceNodeId": "mysql.source.14-2",
+      "number": "14.2",
+      "title": "数据恢复",
+      "parent": "mysql.lesson.14",
+      "depth": 2,
+      "order": 298,
+      "group": 14,
+      "leaf": false,
+      "printedPage": 289,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "恢复应在隔离目标上先验证备份可读、对象可建、数据和约束完整，再决定如何切换业务。恢复SQL脚本与恢复物理文件是不同路径，不能把文件类型混用。",
+        "恢复前明确目标时间点与可容许停机，并保护现有目标数据。全量备份恢复到备份时刻，之后的变更若要找回，还需要连续可靠的增量信息。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · recovery from backups",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/recovery-from-backups.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · innodb migration",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-migration.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.2.1",
+      "sourceNodeId": "mysql.source.14-2-1",
+      "number": "14.2.1",
+      "title": "使用MySQL命令恢复",
+      "parent": "mysql.lesson.14.2",
+      "depth": 3,
+      "order": 299,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 289,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "mysql可以读取mysqldump产生的SQL脚本，按其中语句重建对象和数据。脚本含CREATE DATABASE与USE时会操作其中指定库，恢复前应检查目标与同名对象。",
+        "例子在mysql交互客户端用SOURCE读取客户端可见文件。路径是客户端路径，区别于INTO OUTFILE由服务器写出的文件位置；用户仍需执行脚本中各语句的权限。",
+        "恢复期间出现错误不能忽略。导入完成后应核对表数、关键数据与约束，并根据需要验证视图、例程和触发器；只有导入提示不等于业务已经恢复。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 在原生mysql交互客户端中阅读；文件须为已审核的逻辑备份\nSOURCE /backup/library.sql;\nSELECT COUNT(*) AS books_count FROM library.books;",
+        "description": "例子在mysql交互客户端用SOURCE读取客户端可见文件。路径是客户端路径，区别于INTO OUTFILE由服务器写出的文件位置；用户仍需执行脚本中各语句的权限。",
+        "result": "备份、路径与权限满足时按脚本重建对象并可核对行数；实际数量由备份决定，本例不假定固定值。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "SOURCE的文件是在服务器路径中寻找的吗？",
+        "answer": "不是，SOURCE由mysql客户端读取其可访问的文件，再将SQL发送给服务器。",
+        "hints": [
+          "区分客户端命令和服务器SQL。",
+          "比较SOURCE与INTO OUTFILE。",
+          "文件首先要被客户端读到。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · mysql",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysql.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · recovery from backups",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/recovery-from-backups.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.2.2",
+      "sourceNodeId": "mysql.source.14-2-2",
+      "number": "14.2.2",
+      "title": "直接复制到数据库目录",
+      "parent": "mysql.lesson.14.2",
+      "depth": 3,
+      "order": 300,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 289,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "恢复物理文件不能简单把备份目录覆盖到运行中的实例。InnoDB需要匹配数据字典、表空间与恢复文件，单独放回一个库目录通常不构成完整恢复。",
+        "对一致的整实例冷备，应保持目标停止，按对应版本要求恢复全部必要文件、目录结构及访问权限，然后再启动并检查错误日志。特定单表传输有另外的导入表空间流程。",
+        "恢复的验收不止看服务进程能启动，还应核查表可读、关键数据与约束、应用兼容和预期时间点。目录文件存在不证明字典中的对象已经正确关联。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "前提：已验证的一致整实例冷备及匹配版本\n停止目标实例并保护原数据\n按官方冷备流程恢复必要文件与权限\n启动检查错误日志\n核对对象、数据和预期恢复时刻",
+        "description": "对一致的整实例冷备，应保持目标停止，按对应版本要求恢复全部必要文件、目录结构及访问权限，然后再启动并检查错误日志。特定单表传输有另外的导入表空间流程。",
+        "result": "只给出完整冷备恢复的决策顺序；没有把复制单库文件夹当成InnoDB恢复保证。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把旧库文件夹放入8.0数据目录后，看见文件就算恢复成功吗？",
+        "answer": "不算，必须满足字典与表空间等一致性要求，并实际验证对象与数据可用。",
+        "hints": [
+          "文件名不是字典注册证明。",
+          "检查版本与全部依赖。",
+          "以可读数据和约束验证结果。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · innodb migration",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-migration.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.2.3",
+      "sourceNodeId": "mysql.source.14-2-3",
+      "number": "14.2.3",
+      "title": "MySQLhotcopy快速恢复",
+      "parent": "mysql.lesson.14.2",
+      "depth": 3,
+      "order": 301,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 290,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "旧资料中的mysqlhotcopy恢复依赖其历史备份文件和对应旧引擎环境，不是MySQL 8.0恢复接口。8.0已没有该工具，不能继续给出“快速恢复命令”。",
+        "处理历史备份时先保留原件并识别版本、引擎、文件完整性；若需过渡恢复，应在兼容的隔离环境中采用匹配流程，再以可迁移方式导出并验证。",
+        "无法确认来源和一致性的文件包不能当成可靠恢复点。重新制定备份策略时，应从受支持8.0工具生成可验证的新备份，而不是只保留旧工具名称。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "历史文件包 -> 识别原版本与引擎 -> 在兼容隔离环境验证\n可读取的旧数据 -> 受审逻辑导出 -> 目标版本兼容性检查 -> 8.0隔离导入验证",
+        "description": "处理历史备份时先保留原件并识别版本、引擎、文件完整性；若需过渡恢复，应在兼容的隔离环境中采用匹配流程，再以可迁移方式导出并验证。",
+        "result": "这是历史资料处置思路，不承诺任意旧文件可恢复；mysqlhotcopy不是8.0工具。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "旧备份来自mysqlhotcopy，能直接套进运行中的8.0实例吗？",
+        "answer": "不能，需要先确认来源版本、引擎与一致性，采用受支持迁移路径并在隔离环境验证。",
+        "hints": [
+          "先还原备份的来源条件。",
+          "旧文件与新字典不能直接等同。",
+          "验证后再选择迁移路径。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · innodb migration",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-migration.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · upgrade paths",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/upgrade-paths.html"
+        },
+        {
+          "title": "MySQL Official Worklog WL#7854 · Deprecate and remove mysqlhotcopy",
+          "url": "https://dev.mysql.com/worklog/task/?id=7854"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.3",
+      "sourceNodeId": "mysql.source.14-3",
+      "number": "14.3",
+      "title": "数据库迁移",
+      "parent": "mysql.lesson.14",
+      "depth": 2,
+      "order": 302,
+      "group": 14,
+      "leaf": false,
+      "printedPage": 290,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "迁移把数据和对象带到另一个实例或数据库产品。相同版本也要检查字符集、排序规则、SQL模式与对象依赖；跨版本还需遵守官方升级路径与兼容限制。",
+        "迁移计划应包含切换前最后同步、校验与回退条件。跨数据库产品通常需要类型和SQL方言映射，不能把MySQL专用脚本直接视为通用SQL。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · copying databases",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/copying-databases.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · upgrade paths",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/upgrade-paths.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.3.1",
+      "sourceNodeId": "mysql.source.14-3-1",
+      "number": "14.3.1",
+      "title": "相同版本的MySQL数据库之间的迁移",
+      "parent": "mysql.lesson.14.3",
+      "depth": 3,
+      "order": 303,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 290,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "相同MySQL版本之间可用逻辑导出与导入搬迁。即便版本一致，源目标的字符集、排序规则、时区、SQL模式与权限配置也可能不同。",
+        "例子把library导出到文件，转移后由目标mysql客户端读取。命令使用预先配置的连接别名，不在脚本内写密码；源端与目标端必须明确，不能混用同名默认连接。",
+        "迁移验证不仅比较行数，还应抽查主键集合、关键字段、对象定义与应用查询。迁移期间若源库继续写入，需要另行安排增量同步或冻结窗口。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "# 原生工具阅读：source与target为预先配置的受控login-path\nmysqldump --login-path=source --single-transaction --no-tablespaces --set-gtid-purged=OFF --databases library --result-file=library-move.sql\n# 将已校验文件放到目标客户端后，在目标mysql交互会话中执行SOURCE library-move.sql",
+        "description": "例子把library导出到文件，转移后由目标mysql客户端读取。命令使用预先配置的连接别名，不在脚本内写密码；源端与目标端必须明确，不能混用同名默认连接。",
+        "result": "条件满足时目标可重建导出的库状态；源导出后的新增写入不会自动进入这份文件，连接别名必须预先配置。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "源库导出后又新增一行，目标仅导入旧文件会有这一行吗？",
+        "answer": "不会，文件表示导出所覆盖的状态，需要另行同步后续变更。",
+        "hints": [
+          "找到导出快照的时间界限。",
+          "静态文件不会自行更新。",
+          "安排冻结或增量同步。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · copying databases",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/copying-databases.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · mysqldump",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysqldump.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.3.2",
+      "sourceNodeId": "mysql.source.14-3-2",
+      "number": "14.3.2",
+      "title": "不同版本的MySQL数据库之间的迁移",
+      "parent": "mysql.lesson.14.3",
+      "depth": 3,
+      "order": 304,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 291,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "跨版本迁移先查支持路径，再检查目标不再支持的语法、数据类型、认证与系统表变化。升级整个实例与逻辑迁移一个业务库也有不同前提。",
+        "官方8.0升级路径支持由5.7的GA版本升级，不支持直接跳过5.7把5.6实例原地升级到8.0。路径检查应明确源版本与目标版本，不能只写“升级最新”。",
+        "逻辑导入也不自动消除兼容问题。应在隔离环境检查导出脚本、排序规则和对象定义，并完成业务验证；不要把旧版本mysql系统表直接覆盖新版本。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "源：MySQL 5.6实例\n目标：MySQL 8.0实例\n错误计划：跳过5.7直接做受支持原地升级\n修正：按官方升级路径规划中间版本及每阶段验证；业务库逻辑迁移另评兼容性",
+        "description": "官方8.0升级路径支持由5.7的GA版本升级，不支持直接跳过5.7把5.6实例原地升级到8.0。路径检查应明确源版本与目标版本，不能只写“升级最新”。",
+        "result": "该直接跳版本原地升级不在8.0官方支持路径内；不能把读到新版本能启动当成兼容证明。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能否把5.6的mysql权限表原样覆盖到8.0解决账号迁移？",
+        "answer": "不能，系统表结构和管理机制随版本变化，应按支持升级或账户管理迁移流程处理。",
+        "hints": [
+          "区分业务数据与系统表。",
+          "检查目标版本表结构变化。",
+          "按官方路径处理账户与升级。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · upgrade paths",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/upgrade-paths.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · mysql nutshell",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysql-nutshell.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.3.3",
+      "sourceNodeId": "mysql.source.14-3-3",
+      "number": "14.3.3",
+      "title": "不同数据库之间的迁移",
+      "parent": "mysql.lesson.14.3",
+      "depth": 3,
+      "order": 305,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 291,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "不同数据库产品之间迁移需要转换语法和数据语义。例如MySQL自增、无符号整数和排序规则不一定在目标数据库里有完全相同的表达。",
+        "阅读例把金额以整数分、主键以明确整数表示，先建立字段映射，再处理NULL、编码和约束。这样能发现源值超出目标范围或排序比较发生变化的问题。",
+        "导出成CSV或TSV只携带值，不会自动转移索引、外键、触发器或事务逻辑。迁移验收要同时检查值、结构和典型查询结果，不能只看文件可打开。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "源字段 id INT -> 目标整数主键，核对范围\n源字段 title VARCHAR(80) utf8mb4 -> 目标Unicode文本，核对长度与排序\n源字段 price_cents INT -> 目标精确整数，保留“分”单位\nNULL -> 目标真正空值，不转成字符串NULL",
+        "description": "阅读例把金额以整数分、主键以明确整数表示，先建立字段映射，再处理NULL、编码和约束。这样能发现源值超出目标范围或排序比较发生变化的问题。",
+        "result": "这是一份语义映射示例，目标类型须按实际数据库官方文档确认；MySQL专用DDL未被直接复用。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "导出三列文本成功，是否说明外键和触发器已迁移？",
+        "answer": "不是，普通分隔文本不包含这些对象定义和行为，需要独立转换、创建和验证。",
+        "hints": [
+          "区分值文件与结构定义。",
+          "枚举文件中没有表达的约束。",
+          "再规划目标对象验证。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · copying databases",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/copying-databases.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · backup methods",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/backup-methods.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.4",
+      "sourceNodeId": "mysql.source.14-4",
+      "number": "14.4",
+      "title": "表的导出和导入",
+      "parent": "mysql.lesson.14",
+      "depth": 2,
+      "order": 306,
+      "group": 14,
+      "leaf": false,
+      "printedPage": 291,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "表导入导出先明确文件在哪里读写：INTO OUTFILE由服务器写，普通mysql查询输出由客户端写，LOAD DATA是否LOCAL决定文件来源。位置不同，所需权限和风险也不同。",
+        "交换格式还包括编码、列顺序、分隔符、引号、转义、换行与NULL表示。输出能被文本编辑器打开只是第一步，必须用匹配设置读回并核对特殊值。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select into",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select-into.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · load data",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/load-data.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · mysqlimport",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysqlimport.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.4.1",
+      "sourceNodeId": "mysql.source.14-4-1",
+      "number": "14.4.1",
+      "title": "使用SELECT...INTO OUTFILE导出文本文件",
+      "parent": "mysql.lesson.14.4",
+      "depth": 3,
+      "order": 307,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 292,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SELECT...INTO OUTFILE把查询结果写到服务器主机，通常需要FILE权限并受secure_file_priv约束。输出文件不能预先存在，避免以此覆盖任意已有文件。",
+        "例子导出一个有两列的结果，以UTF-8、多字节文本、制表符分列和换行分行明确格式。路径只是原生示例，实际许可目录应由管理员核对。",
+        "该语句保存数据而不保存表结构，也不是客户端下载按钮。查询包含敏感字段时，文件的后续访问权限与清理责任同样需要明确。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT 1 AS id,'云目录' AS title\nINTO OUTFILE '/var/lib/mysql-files/books.tsv'\nCHARACTER SET utf8mb4\nFIELDS TERMINATED BY '\\t'\nLINES TERMINATED BY '\\n';",
+        "description": "例子导出一个有两列的结果，以UTF-8、多字节文本、制表符分列和换行分行明确格式。路径只是原生示例，实际许可目录应由管理员核对。",
+        "result": "目录受允许、文件不存在且有权限时，服务器创建含一条两字段记录的文件；不会在浏览器下载同名文件。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么浏览器所在电脑不一定能找到这个路径的文件？",
+        "answer": "因为OUTFILE在MySQL服务器主机写文件，客户端和服务器可以是不同机器。",
+        "hints": [
+          "定位执行写文件的一端。",
+          "区别SQL发送者与服务器主机。",
+          "核查服务器目录与权限。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · select into",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select-into.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.4.2",
+      "sourceNodeId": "mysql.source.14-4-2",
+      "number": "14.4.2",
+      "title": "使用MySQLdump导出文本文件",
+      "parent": "mysql.lesson.14.4",
+      "depth": 3,
+      "order": 308,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 295,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "mysqldump --tab把表结构SQL与分隔文本分开输出。它需要客户端与服务器对指定目录有适当访问条件，不能把--tab看成普通远程客户端下载。",
+        "例子只导出library.books，指定utf8mb4与分隔符。结构通常写入.sql，数据写入.txt；选择目录时要同时核对服务器文件权限和客户端输出权限。",
+        "此模式与默认产生INSERT语句的逻辑SQL文件不同。恢复时应先建表，再按一致格式加载数据；不应把纯文本数据直接交给mysql当SQL执行。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "mysqldump --user=backup_reader --password --no-tablespaces --default-character-set=utf8mb4 --tab=/var/lib/mysql-files --fields-terminated-by='|' --lines-terminated-by='\\n' library books",
+        "description": "例子只导出library.books，指定utf8mb4与分隔符。结构通常写入.sql，数据写入.txt；选择目录时要同时核对服务器文件权限和客户端输出权限。",
+        "result": "在同机目录与权限条件满足时输出结构文件及数据文件；目录许可与同名文件冲突可能使操作失败。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "--tab产生的books.txt应该直接SOURCE执行吗？",
+        "answer": "不应，它是数据文本而非SQL；先执行结构SQL，再以匹配分隔格式加载文本。",
+        "hints": [
+          "检查两个输出文件的用途。",
+          "辨认SQL语句与行数据。",
+          "选择LOAD DATA等数据导入路径。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · mysqldump",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysqldump.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · load data",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/load-data.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.4.3",
+      "sourceNodeId": "mysql.source.14-4-3",
+      "number": "14.4.3",
+      "title": "使用MySQL导出文本文件",
+      "parent": "mysql.lesson.14.4",
+      "depth": 3,
+      "order": 309,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 297,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "mysql客户端的批处理输出适合把查询结果保存到客户端文件。与OUTFILE不同，SQL本身只产生结果集，重定向发生在客户端终端。",
+        "例子明确按POSIX终端阅读，--batch使用制表分隔并对特殊字符进行转义，--skip-column-names不输出列名。选择固定列和排序，使文件内容便于比较。",
+        "终端和编码会影响重定向结果，不能把该写法无条件复制到不同PowerShell版本。文件里的反斜杠转义与真实换行还应在导入配置中核对。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "# POSIX终端阅读；library.books须含id与title\nmysql --user=export_reader --password --default-character-set=utf8mb4 --batch --skip-column-names --execute='SELECT id,title FROM library.books ORDER BY id' > books-client.tsv",
+        "description": "例子明确按POSIX终端阅读，--batch使用制表分隔并对特殊字符进行转义，--skip-column-names不输出列名。选择固定列和排序，使文件内容便于比较。",
+        "result": "成功时客户端终端生成不含标题的查询输出；结果依表数据，未在课程宿主执行该命令。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "这个导出必须给账户FILE权限吗？",
+        "answer": "仅把普通SELECT结果在客户端重定向不因这一步要求服务器FILE权限，但仍需相应查询权限及客户端文件写权限。",
+        "hints": [
+          "SQL是否包含INTO OUTFILE。",
+          "判断真正写文件的进程。",
+          "把查询权限与本地文件权限分开。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · mysql",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysql.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · select into",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select-into.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.4.4",
+      "sourceNodeId": "mysql.source.14-4-4",
+      "number": "14.4.4",
+      "title": "使用LOAD DATA INFILE方式导入文本文件",
+      "parent": "mysql.lesson.14.4",
+      "depth": 3,
+      "order": 310,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 299,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "LOAD DATA INFILE读取服务器端文本并装入既有表；LOCAL则表示客户端读文件后传输。两者权限、启用条件和错误处理有差异，不能随意互换。",
+        "例子假设服务器许可目录中已有UTF-8文件，两行是1与云、2与海，各列以制表符分隔。导入明确列顺序、字符集与换行，避免把标题行当数据。",
+        "实际导入还要核对NULL、转义、重复键、警告和受影响行。导入成功提示不表示每个原值都无损，尤其不能忽略字符集转换与字段长度问题。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 前置：服务器books-load.tsv为两行 1<TAB>云 与 2<TAB>海，LF换行\nCREATE TABLE books_load(id INT PRIMARY KEY,title VARCHAR(20));\nLOAD DATA INFILE '/var/lib/mysql-files/books-load.tsv'\nINTO TABLE books_load CHARACTER SET utf8mb4\nFIELDS TERMINATED BY '\\t' LINES TERMINATED BY '\\n' (id,title);\nSELECT id,title FROM books_load ORDER BY id;",
+        "description": "例子假设服务器许可目录中已有UTF-8文件，两行是1与云、2与海，各列以制表符分隔。导入明确列顺序、字符集与换行，避免把标题行当数据。",
+        "result": "文件、权限与格式成立且无警告时得到(1,云)、(2,海)；平台不读取此路径或执行LOAD DATA。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把INFILE改为LOCAL INFILE只会改变速度吗？",
+        "answer": "不只如此，它改变文件来源，并涉及客户端/服务器启用条件及部分错误处理规则。",
+        "hints": [
+          "先确定谁读取文件。",
+          "检查LOCAL的启用与权限。",
+          "再比较错误和警告语义。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · load data",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/load-data.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.4.5",
+      "sourceNodeId": "mysql.source.14-4-5",
+      "number": "14.4.5",
+      "title": "使用MySQLimport导入文本文件",
+      "parent": "mysql.lesson.14.4",
+      "depth": 3,
+      "order": 311,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 300,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "mysqlimport是发送LOAD DATA语句的客户端工具，不是读取任意SQL备份的程序。它通常根据文件基本名选择目标表，文件books_load.tsv对应books_load表。",
+        "例子用--local读取客户端文件，并明确列顺序与分隔格式。既有表结构必须已经建立；LOCAL相关开关与连接安全条件也要符合实际部署。",
+        "文件名正确不代表列值正确。导入后应查看工具统计与服务器警告，再抽查数据；编码、转义和重复键策略仍然由对应LOAD DATA行为约束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "mysqlimport --user=import_reader --password --local --default-character-set=utf8mb4 --fields-terminated-by='\\t' --lines-terminated-by='\\n' --columns=id,title library books_load.tsv",
+        "description": "例子用--local读取客户端文件，并明确列顺序与分隔格式。既有表结构必须已经建立；LOCAL相关开关与连接安全条件也要符合实际部署。",
+        "result": "原生工具与LOCAL条件满足时把客户端文件导入library.books_load；不会自动创建目标表或把文本当SQL脚本。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么文件改名为archive.tsv后可能导入失败或写错表？",
+        "answer": "mysqlimport依据去掉扩展名的基本名选择表，改名会把目标变为archive。",
+        "hints": [
+          "先找工具如何选择表。",
+          "去掉文件扩展名。",
+          "比较基本名与预期表名。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · mysqlimport",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysqlimport.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · load data",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/load-data.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.5",
+      "sourceNodeId": "mysql.source.14-5",
+      "number": "14.5",
+      "title": "本章实战",
+      "parent": "mysql.lesson.14",
+      "depth": 2,
+      "order": 312,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 301,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "备份实战以“能在隔离目标恢复并核对”为完成条件。先记录源对象和行数，再导出，再导入目标，最后核对关键数据与对象行为，而非只检查压缩包大小。",
+        "下面为小型InnoDB业务库拟定验证单。表行数相同只能排除一类错误，还要检查主键、NULL、特殊字符及约束；若包含视图或例程，应另列相应对象检查。",
+        "备份时间点与业务切换时间不同。源库在导出后继续写入时，需要后续同步或明确可接受的数据缺口，不能在记录中称为无损迁移。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "1. 记录library各表结构、行数和关键主键\n2. 以一致方式生成并保护library.sql\n3. 在隔离目标审核脚本并导入\n4. 核对结构、行数、关键值、NULL及Unicode\n5. 检查对象与业务查询，记录恢复时间点与失败项",
+        "description": "下面为小型InnoDB业务库拟定验证单。表行数相同只能排除一类错误，还要检查主键、NULL、特殊字符及约束；若包含视图或例程，应另列相应对象检查。",
+        "result": "这份阅读清单规定了备份、隔离导入与数据核对的步骤；实际演练应记录恢复时间点及失败项，并据结构、关键值与业务查询判断恢复是否正确。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "如果行数一样但书名中汉字乱码，能算恢复通过吗？",
+        "answer": "不能，行数不验证值与编码，需要核对字符集和关键字段的实际内容。",
+        "hints": [
+          "行数只反映数量。",
+          "选取含多字节字符的样本。",
+          "比较原值与恢复值。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · mysqldump",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysqldump.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · recovery from backups",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/recovery-from-backups.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.6",
+      "sourceNodeId": "mysql.source.14-6",
+      "number": "14.6",
+      "title": "本章小结",
+      "parent": "mysql.lesson.14",
+      "depth": 2,
+      "order": 313,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 305,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章把逻辑SQL、分隔文本与物理文件分开。SQL备份通过执行定义和写入重建，文本通常先要建表并约定格式，物理恢复则必须满足引擎的一致性条件。",
+        "同一个“导出”词可能表示服务器OUTFILE，也可能表示客户端批处理输出。判断文件在哪一端产生，才能确定所需权限与后续传递方式。",
+        "可靠备份还包含来源、版本、时间点、对象范围和恢复验证记录。8.0不再提供mysqlhotcopy这一事实应进入旧文档更新，不能只保留旧操作步骤。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "SQL备份 -> mysql读取SQL\n分隔文本 -> 先建表，再用匹配LOAD DATA设置\n物理文件 -> 匹配版本与一致性恢复流程\nOUTFILE -> 服务器文件\n客户端重定向 -> 客户端文件",
+        "description": "同一个“导出”词可能表示服务器OUTFILE，也可能表示客户端批处理输出。判断文件在哪一端产生，才能确定所需权限与后续传递方式。",
+        "result": "三类产物对应不同恢复路径，文件扩展名本身不是内容与一致性的证明。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "一个叫backup.sql的文件只有制表分隔数据，应怎样判断恢复方式？",
+        "answer": "先检查实际内容，它是数据文本就需要表结构和文本加载流程，不能只看.sql扩展名。",
+        "hints": [
+          "扩展名可以被随意修改。",
+          "确认文件是否含SQL语句。",
+          "按内容选择恢复路径。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · backup methods",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/backup-methods.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · select into",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/select-into.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · load data",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/load-data.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.14.7",
+      "sourceNodeId": "mysql.source.14-7",
+      "number": "14.7",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.14",
+      "depth": 2,
+      "order": 314,
+      "group": 14,
+      "leaf": true,
+      "printedPage": 305,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "综合练习应从恢复目标反推需要保留的资料。只留一份周日全量备份，无法自动找回周日之后的全部事务；后续恢复依赖完整增量链。",
+        "情境假设周日12点完成全量备份，周一有新借阅，周二磁盘损坏。若没有可用后续日志或其他增量，恢复全量只能回到周日状态。",
+        "备份与数据库放在同一故障域可能同时丢失。保护副本、记录位置和演练恢复是可恢复性的组成部分，不能用一次成功导出代替长期策略。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "全量备份：周日12:00\n新增借阅：周一09:00\n故障：周二08:00\n可用资料：仅周日全量，无后续可用增量\n预期恢复边界：周日12:00对应状态",
+        "description": "情境假设周日12点完成全量备份，周一有新借阅，周二磁盘损坏。若没有可用后续日志或其他增量，恢复全量只能回到周日状态。",
+        "result": "无法仅凭这份全量恢复周一新增借阅；若需要更近时间点，必须有正确连续的增量依据。",
+        "reason": "本例属于原生数据库备份与文件交换阅读；平台不访问宿主文件、不运行外部客户端或备份工具。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么不能从周日全量中推算出周一新增借阅？",
+        "answer": "备份没有记录未来发生的事实；需要事后日志、增量备份或其他可靠业务记录。",
+        "hints": [
+          "确定备份时间点。",
+          "列出之后才发生的事务。",
+          "检查是否有后续记录来源。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · recovery from backups",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/recovery-from-backups.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · point in time recovery",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/point-in-time-recovery.html"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,704 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 11,
+  "nodes": [
+    {
+      "id": "mysql.lesson.11",
+      "sourceNodeId": "mysql.source.chapter-11",
+      "number": "11",
+      "title": "存储程序",
+      "parent": null,
+      "depth": 1,
+      "order": 236,
+      "group": 11,
+      "leaf": false,
+      "printedPage": 226,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "存储程序把一组操作保存在原生MySQL服务器内，调用时按参数和流程执行。本章主要学习存储过程与存储函数，随后解释变量、条件处理、光标、控制流和例程维护，最后区分服务器全局变量持久化。",
+        "所有例程示例属于原生MySQL 8.0阅读，需要具备相应权限、当前库及未冲突的例程名；涉及students时沿用id、name、dept_id、score与初始四名学生。示例中的DELIMITER是mysql命令行客户端指令，不是SQL语句。平台只执行受支持的SQL子集，不执行服务器例程或宿主程序。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-procedure.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.1",
+      "sourceNodeId": "mysql.source.11-1",
+      "number": "11.1",
+      "title": "创建、调用存储过程和函数",
+      "parent": "mysql.lesson.11",
+      "depth": 2,
+      "order": 237,
+      "group": 11,
+      "leaf": false,
+      "printedPage": 226,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "先明确过程与函数的接口。过程用CALL调用，可使用IN、OUT、INOUT参数并可返回结果集；函数在表达式中调用，必须声明返回类型并返回一个值。二者都不是把任意客户端代码交给服务器执行。",
+        "多语句程序体用BEGIN...END组织，其中局部声明要放在可执行语句之前。这个BEGIN是复合语句结构，不等于自动开启事务；如果过程需要事务边界，必须根据原生限制和调用场景明确设计。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-procedure.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.1.1",
+      "sourceNodeId": "mysql.source.11-1-1",
+      "number": "11.1.1",
+      "title": "创建和调用存储过程",
+      "parent": "mysql.lesson.11.1",
+      "depth": 3,
+      "order": 238,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 226,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "存储过程由CREATE PROCEDURE定义，以CALL执行。IN参数把输入带入，OUT参数把结果带出，INOUT两方向都用；不声明模式时通常按IN理解，接口应尽量显式写清。",
+        "下面过程用COUNT(*)把学生数写入OUT参数。mysql客户端需要临时更换语句终止符，才能把含内部分号的BEGIN...END整体发给服务器；过程定义完成后再恢复分号。",
+        "定义成功不等于过程已经调用，CALL也不自动保证所有语句共同回滚。创建和调用受到权限及服务器配置约束，平台没有存储程序环境，本例输出是对四行初始表的阅读推导。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DELIMITER //\nCREATE PROCEDURE p_student_count(OUT p_total INT)\nREADS SQL DATA\nBEGIN\n  SELECT COUNT(*) INTO p_total FROM students;\nEND//\nDELIMITER ;\nCALL p_student_count(@total);\nSELECT @total AS total;",
+        "description": "存储过程由CREATE PROCEDURE定义，以CALL执行。IN参数把输入带入，OUT参数把结果带出，INOUT两方向都用；不声明模式时通常按IN理解，接口应尽量显式写清。",
+        "result": "原生具备创建与执行权限时，初始四行students使最后total=4；空表会得到0。",
+        "reason": "服务器过程、CALL、用户变量及DELIMITER不在本版执行范围。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只执行CREATE PROCEDURE而不CALL，会不会自动产生一次统计结果？",
+        "answer": "不会。CREATE保存定义，CALL才执行过程体；OUT结果在调用之后读取。",
+        "hints": [
+          "区分定义阶段与调用阶段。",
+          "定义中保存SELECT逻辑。",
+          "没有CALL就没有该次过程执行。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-procedure.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.1.2",
+      "sourceNodeId": "mysql.source.11-1-2",
+      "number": "11.1.2",
+      "title": "创建和调用存储函数",
+      "parent": "mysql.lesson.11.1",
+      "depth": 3,
+      "order": 239,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 231,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "存储函数由CREATE FUNCTION定义，必须声明RETURNS类型，并用RETURN给调用表达式一个值。它与可返回多结果集的过程不同，不能使用CALL把存储函数当过程调用。",
+        "f_score_label只由输入成绩决定，因此声明DETERMINISTIC NO SQL：不读写表，NULL返回待录入，已知成绩按及格线分类。声明应符合真实行为，不能只为绕过创建检查而虚写特性。",
+        "原生函数创建还受权限、二进制日志及相关设置限制；存储函数内部也有事务和语句使用限制。平台不执行用户自定义函数，下面的IF组合是原生阅读例，不是引擎新增函数。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE FUNCTION f_score_label(p_score INT) RETURNS VARCHAR(12)\nDETERMINISTIC NO SQL\nRETURN IF(p_score IS NULL,'待录入',IF(p_score>=60,'通过','待补'));\nSELECT f_score_label(72) AS a, f_score_label(NULL) AS b;",
+        "description": "存储函数由CREATE FUNCTION定义，必须声明RETURNS类型，并用RETURN给调用表达式一个值。它与可返回多结果集的过程不同，不能使用CALL把存储函数当过程调用。",
+        "result": "原生定义及调用成功的条件下，a='通过'、b='待录入'。",
+        "reason": "用户存储函数与IF函数都作为原生阅读，平台不执行用户存储函数或IF。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "存储函数能省略RETURNS，只在调用时猜返回类型吗？",
+        "answer": "不能，函数定义需要明确返回类型，并通过RETURN返回值。",
+        "hints": [
+          "过程与函数的接口不同。",
+          "函数要放进表达式。",
+          "表达式类型需要在定义中声明。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-procedure.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · flow control functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/flow-control-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.1.3",
+      "sourceNodeId": "mysql.source.11-1-3",
+      "number": "11.1.3",
+      "title": "变量的使用",
+      "parent": "mysql.lesson.11.1",
+      "depth": 3,
+      "order": 240,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 232,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "局部变量用DECLARE在BEGIN...END块内声明，作用域受所在块限制，可给DEFAULT初始值。若未指定默认值，通常初始为NULL，随后可用SET或SELECT...INTO赋值。",
+        "参数、局部变量、@会话用户变量和@@系统变量不是同一类。示例中p_input是输入参数，v_next是局部变量，p_result是OUT参数，@answer是调用者会话变量，名称前缀帮助区分角色。",
+        "局部声明必须位于可执行语句前；变量及条件声明在光标之前，光标声明在处理程序之前。避免变量名与列名相同，防止名称解析把原本要读的列解释成局部值。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DELIMITER //\nCREATE PROCEDURE p_next_value(IN p_input INT,OUT p_result INT)\nCONTAINS SQL\nBEGIN\n  DECLARE v_next INT DEFAULT 0;\n  SET v_next=p_input+1;\n  SET p_result=v_next;\nEND//\nDELIMITER ;\nCALL p_next_value(4,@answer);\nSELECT @answer AS answer;",
+        "description": "局部变量用DECLARE在BEGIN...END块内声明，作用域受所在块限制，可给DEFAULT初始值。若未指定默认值，通常初始为NULL，随后可用SET或SELECT...INTO赋值。",
+        "result": "在小整数输入4下，原生最后answer=5；局部v_next离开过程块后不能由外部直接读取。",
+        "reason": "局部DECLARE、SET与参数调用为原生例程阅读。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "过程结束后能否在外部直接SELECT v_next读取那个局部变量？",
+        "answer": "不能，它只在声明块作用域内有效；若要对外提供结果，应使用OUT参数或允许的结果集。",
+        "hints": [
+          "先找DECLARE所在块。",
+          "局部变量不等同于@会话变量。",
+          "通过明确接口把需要的结果传出。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · stored program variables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/stored-program-variables.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-procedure.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.1.4",
+      "sourceNodeId": "mysql.source.11-1-4",
+      "number": "11.1.4",
+      "title": "定义条件和处理程序",
+      "parent": "mysql.lesson.11.1",
+      "depth": 3,
+      "order": 241,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 233,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "条件与处理程序让存储程序明确应对无数据、重复键或其他异常。DECLARE CONDITION可给SQLSTATE或错误码起名，DECLARE HANDLER则指定遇到相应条件时做什么。",
+        "CONTINUE处理后继续后续语句，EXIT处理后退出定义处理程序的块；两者并不等于“自动提交”和“自动回滚”。下面为查询无行的SQLSTATE 02000命名，并把缺失标志设真后继续分支判断。",
+        "处理程序也有作用域和优先级，不能用吞掉所有异常来掩盖数据错误。SELECT...INTO零行与多行是不同情形，NOT FOUND处理程序不会把多行结果自动改成单行；本版不执行这些服务器机制。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DELIMITER //\nCREATE PROCEDURE p_find_name(IN p_id INT,OUT p_name VARCHAR(64))\nREADS SQL DATA\nBEGIN\n  DECLARE v_missing BOOLEAN DEFAULT FALSE;\n  DECLARE v_name VARCHAR(64);\n  DECLARE no_row CONDITION FOR SQLSTATE '02000';\n  DECLARE CONTINUE HANDLER FOR no_row SET v_missing=TRUE;\n  SELECT name INTO v_name FROM students WHERE id=p_id;\n  IF v_missing THEN SET p_name='未找到'; ELSE SET p_name=v_name; END IF;\nEND//\nDELIMITER ;\nCALL p_find_name(-1,@found_name);\nSELECT @found_name AS result_name;",
+        "description": "条件与处理程序让存储程序明确应对无数据、重复键或其他异常。DECLARE CONDITION可给SQLSTATE或错误码起名，DECLARE HANDLER则指定遇到相应条件时做什么。",
+        "result": "原生初始表无id=-1，处理程序将v_missing置真并继续，最后result_name='未找到'。",
+        "reason": "命名条件、SQLSTATE及HANDLER均为原生阅读，未运行异常处理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "CONTINUE HANDLER是否意味着遇错前的所有写入自动回滚？",
+        "answer": "不是。它规定控制流继续位置，事务回滚必须结合错误种类、事务状态和显式逻辑判断。",
+        "hints": [
+          "区分控制流与数据事务。",
+          "CONTINUE描述处理后继续执行。",
+          "它不是ROLLBACK语句。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · condition handling",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/condition-handling.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-procedure.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.1.5",
+      "sourceNodeId": "mysql.source.11-1-5",
+      "number": "11.1.5",
+      "title": "光标的使用",
+      "parent": "mysql.lesson.11.1",
+      "depth": 3,
+      "order": 242,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 236,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "光标把查询结果逐行交给程序处理，常用于确实需要逐条状态逻辑的任务。原生存储程序光标通常只读、不支持任意滚动；若一条集合SQL就能完成统计，应优先考虑更简单的集合表达式。",
+        "常见生命周期是DECLARE、OPEN、FETCH循环、CLOSE。变量先声明，光标声明在处理程序之前；FETCH耗尽会触发NOT FOUND，结束标志必须在FETCH之后检查，防止重复处理上一次值。",
+        "示例跳过NULL成绩并用过程累计，初始结果219。它有意把空输入合计初始化为0，所以空集结果与原生SUM的NULL不同；真实大数据还要检查累计类型范围，平台不执行光标。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DELIMITER //\nCREATE PROCEDURE p_cursor_total(OUT p_total INT)\nREADS SQL DATA\nBEGIN\n  DECLARE v_done BOOLEAN DEFAULT FALSE;\n  DECLARE v_score INT;\n  DECLARE cur CURSOR FOR SELECT score FROM students WHERE score IS NOT NULL;\n  DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done=TRUE;\n  SET p_total=0;\n  OPEN cur;\n  read_loop: LOOP\n    FETCH cur INTO v_score;\n    IF v_done THEN LEAVE read_loop; END IF;\n    SET p_total=p_total+v_score;\n  END LOOP;\n  CLOSE cur;\nEND//\nDELIMITER ;\nCALL p_cursor_total(@score_total);\nSELECT @score_total AS total;",
+        "description": "光标把查询结果逐行交给程序处理，常用于确实需要逐条状态逻辑的任务。原生存储程序光标通常只读、不支持任意滚动；若一条集合SQL就能完成统计，应优先考虑更简单的集合表达式。",
+        "result": "按初始88、72、59三项推导total=219。若没有非空成绩，程序自己的初值使total=0，这不是SUM空集规则。",
+        "reason": "原生光标、循环与处理程序为阅读；仅小固定数据演算，结果按给定输入推导。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么必须在FETCH后、累加前检查结束标志？",
+        "answer": "耗尽时FETCH没有新的有效行；若先累加，可能错误使用上次保留的v_score再加一次。",
+        "hints": [
+          "最后一次FETCH不再产生新成绩。",
+          "NOT FOUND只设置结束标志。",
+          "先LEAVE才能避免重复处理旧变量。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · cursors",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/cursors.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · condition handling",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/condition-handling.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.1.6",
+      "sourceNodeId": "mysql.source.11-1-6",
+      "number": "11.1.6",
+      "title": "流程控制的使用",
+      "parent": "mysql.lesson.11.1",
+      "depth": 3,
+      "order": 243,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 237,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "存储程序控制流包括IF、CASE语句、WHILE、REPEAT和LOOP。WHILE先判条件，REPEAT先执行后判断UNTIL，LOOP通常配合LEAVE或ITERATE明确退出或进入下一次。",
+        "下面用WHILE求1到p_n的和。循环变量v_i每次递减，p_n=3时依次加3、2、1，共6；若忘记更新v_i，正数输入就可能无法终止。",
+        "程序体IF...END IF与SELECT里的IF函数不同，程序CASE以END CASE结束，也不同于CASE表达式。循环不自动开启事务，性能与终止条件也必须单独考虑；本版不执行服务器流程控制。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DELIMITER //\nCREATE PROCEDURE p_sum_to(IN p_n INT,OUT p_sum INT)\nCONTAINS SQL\nBEGIN\n  DECLARE v_i INT;\n  SET v_i=p_n;\n  SET p_sum=0;\n  WHILE v_i>0 DO\n    SET p_sum=p_sum+v_i;\n    SET v_i=v_i-1;\n  END WHILE;\nEND//\nDELIMITER ;\nCALL p_sum_to(3,@sum_value);\nSELECT @sum_value AS total;",
+        "description": "存储程序控制流包括IF、CASE语句、WHILE、REPEAT和LOOP。WHILE先判条件，REPEAT先执行后判断UNTIL，LOOP通常配合LEAVE或ITERATE明确退出或进入下一次。",
+        "result": "原生小整数输入3时total=6；输入0时循环体不执行，total=0。",
+        "reason": "原生流程控制为阅读，未在平台添加循环执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把WHILE改为REPEAT却不改条件位置，是否一定保持输入0的行为？",
+        "answer": "不一定。REPEAT至少执行一次，WHILE可一次也不执行，需要重新设计循环条件和边界。",
+        "hints": [
+          "比较判断发生在循环前还是后。",
+          "0让WHILE初始条件为假。",
+          "REPEAT会先进入一次循环体。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-procedure.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.2",
+      "sourceNodeId": "mysql.source.11-2",
+      "number": "11.2",
+      "title": "查看存储过程和函数",
+      "parent": "mysql.lesson.11",
+      "depth": 2,
+      "order": 244,
+      "group": 11,
+      "leaf": false,
+      "printedPage": 241,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "查看例程时要区分对象目录、完整定义和结构化元数据。SHOW PROCEDURE/FUNCTION STATUS用于列出例程概况，SHOW CREATE用于审查定义，information_schema.ROUTINES用于按条件查询属性。",
+        "这些入口看到的是有权限访问的对象，不是所有服务器对象的无条件清单。例程不存在、位于其他库和定义查看权限不足需要分别诊断，不要把空列表直接当成运行失败。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-procedure.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.2.1",
+      "sourceNodeId": "mysql.source.11-2-1",
+      "number": "11.2.1",
+      "title": "使用SHOW STATUS语句查看存储过程和函数的状态",
+      "parent": "mysql.lesson.11.2",
+      "depth": 3,
+      "order": 245,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 241,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本节标题的SHOW STATUS指例程状态语句，准确语法是SHOW PROCEDURE STATUS与SHOW FUNCTION STATUS。单独SHOW STATUS主要显示服务器或会话状态变量，不能代替例程目录。",
+        "状态结果包含Db、Name、Type、Definer、创建及修改时间、Security_type等。可用WHERE限定当前数据库，避免把同名但属于其他库的例程混在一起。",
+        "过程与函数分别查询，目录里有对象也不证明程序体按预期工作。实际定义与调用仍需核对；平台不提供原生例程元数据，实际创建时间与定义者应在目标连接中查看。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW PROCEDURE STATUS WHERE Db=DATABASE();\nSHOW FUNCTION STATUS WHERE Db=DATABASE();",
+        "description": "本节标题的SHOW STATUS指例程状态语句，准确语法是SHOW PROCEDURE STATUS与SHOW FUNCTION STATUS。单独SHOW STATUS主要显示服务器或会话状态变量，不能代替例程目录。",
+        "result": "原生返回当前库可见过程与函数的概况行；若前文定义已成功建立，可分别找到p_student_count及f_score_label，具体时间和账号依环境。",
+        "reason": "原生例程状态元数据为阅读，对象是否存在取决于目标服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么直接SHOW STATUS不能准确列出存储过程？",
+        "answer": "它查询运行状态变量，不是过程目录；应使用SHOW PROCEDURE STATUS。",
+        "hints": [
+          "看是否包含PROCEDURE关键字。",
+          "普通STATUS与例程STATUS用途不同。",
+          "完整语句名称决定查询对象。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · show procedure status",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-procedure-status.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.2.2",
+      "sourceNodeId": "mysql.source.11-2-2",
+      "number": "11.2.2",
+      "title": "使用SHOW CREATE语句查看存储过程和函数的定义",
+      "parent": "mysql.lesson.11.2",
+      "depth": 3,
+      "order": 246,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 241,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SHOW CREATE PROCEDURE和SHOW CREATE FUNCTION显示例程创建定义，适合核对参数、返回类型、特性和程序体。它们不是执行过程或函数，也不会凭查看定义完成业务处理。",
+        "原生输出还包含创建时SQL模式及字符集等上下文。比较部署差异时应看这些属性，而不能只抽取BEGIN到END的文字；服务器也可能规范化显示形式。",
+        "查看完整定义需要相应权限，有时能看到对象概况却看不到主体。平台不读取服务器元数据，以下两条只说明原生查看方式，示例账号、补丁版本和时间均不虚构。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW CREATE PROCEDURE p_student_count;\nSHOW CREATE FUNCTION f_score_label;",
+        "description": "SHOW CREATE PROCEDURE和SHOW CREATE FUNCTION显示例程创建定义，适合核对参数、返回类型、特性和程序体。它们不是执行过程或函数，也不会凭查看定义完成业务处理。",
+        "result": "在对象存在且有充分查看权限时，原生分别返回保存的CREATE定义及相关环境元信息；不会调用统计或分类逻辑。",
+        "reason": "原生SHOW CREATE例程只阅读，未访问真实服务器定义。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "SHOW CREATE FUNCTION会执行函数里的RETURN表达式吗？",
+        "answer": "不会，它读取定义元数据；执行函数需要在表达式中调用它。",
+        "hints": [
+          "区分查看与调用。",
+          "SHOW CREATE返回程序文本及属性。",
+          "SELECT f_score_label(72)才是一次函数调用。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · show create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-create-procedure.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.2.3",
+      "sourceNodeId": "mysql.source.11-2-3",
+      "number": "11.2.3",
+      "title": "从information_schema.Routines表中查看存储过程和函数的信息",
+      "parent": "mysql.lesson.11.2",
+      "depth": 3,
+      "order": 247,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 242,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "information_schema.ROUTINES提供例程的结构化元信息，如ROUTINE_SCHEMA、ROUTINE_NAME、ROUTINE_TYPE、DATA_TYPE、SQL_DATA_ACCESS与SECURITY_TYPE。它便于按库、种类或名字批量审查。",
+        "函数有明确返回类型，过程的接口则要另结合参数元数据或完整定义。ROUTINE_DEFINITION不包含完整CREATE前缀及所有属性，不能只复制这一列就认为能重建对象。",
+        "可见行和定义内容受权限影响，定义为NULL不等于程序体为空。限定当前库和目标名称后再解释结果；平台没有information_schema原生服务，本节仅阅读。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT ROUTINE_NAME,ROUTINE_TYPE,SQL_DATA_ACCESS,SECURITY_TYPE\nFROM information_schema.ROUTINES\nWHERE ROUTINE_SCHEMA=DATABASE() AND ROUTINE_NAME IN ('p_student_count','f_score_label')\nORDER BY ROUTINE_NAME;",
+        "description": "information_schema.ROUTINES提供例程的结构化元信息，如ROUTINE_SCHEMA、ROUTINE_NAME、ROUTINE_TYPE、DATA_TYPE、SQL_DATA_ACCESS与SECURITY_TYPE。它便于按库、种类或名字批量审查。",
+        "result": "原生可见对象存在时，两行分别对应FUNCTION与PROCEDURE；f_score_label为NO SQL，p_student_count为READS SQL DATA，其安全属性以实际定义为准。",
+        "reason": "原生ROUTINES元数据库阅读，平台不提供例程元数据。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "ROUTINE_DEFINITION为NULL是否足以说明函数没有RETURN？",
+        "answer": "不是。可能是查看权限限制；要结合对象类型、权限和SHOW CREATE等信息判断。",
+        "hints": [
+          "元数据可见性也受权限约束。",
+          "NULL不总等于内容不存在。",
+          "确认查看权限再审查定义。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · information schema routines table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/information-schema-routines-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.3",
+      "sourceNodeId": "mysql.source.11-3",
+      "number": "11.3",
+      "title": "修改存储过程和函数",
+      "parent": "mysql.lesson.11",
+      "depth": 2,
+      "order": 248,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 243,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "ALTER PROCEDURE与ALTER FUNCTION修改例程的特性，例如注释或SQL SECURITY。它们不用于原地替换参数列表或整个程序体；更改主体通常需要经过依赖审查后删除并重新创建。",
+        "示例给统计过程加说明并采用INVOKER安全上下文。这样可能改变底层权限检查使用谁的权限，不能只把它看成一条无影响的文本备注。",
+        "修改前后应查看完整定义、调用接口及权限。ALTER例程不是UPDATE业务表，也不是程序执行；平台不实施这些原生DDL，不把本节阅读动作当作真正修改。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "ALTER PROCEDURE p_student_count COMMENT '统计学生行数' SQL SECURITY INVOKER;\nSHOW CREATE PROCEDURE p_student_count;",
+        "description": "ALTER PROCEDURE与ALTER FUNCTION修改例程的特性，例如注释或SQL SECURITY。它们不用于原地替换参数列表或整个程序体；更改主体通常需要经过依赖审查后删除并重新创建。",
+        "result": "原生有权限且对象存在时，特性更新，COUNT主体和OUT参数接口不因这条ALTER而改变。",
+        "reason": "原生例程ALTER为阅读，未改变目标库或权限。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能否用ALTER PROCEDURE直接把OUT参数从INT改成VARCHAR？",
+        "answer": "不能。ALTER只支持规定的例程特性；参数和主体变化需要按原生部署方式重建并处理依赖。",
+        "hints": [
+          "先查ALTER支持的修改项。",
+          "参数签名不是注释或安全特性。",
+          "接口变更需要重新定义例程。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · alter procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/alter-procedure.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.4",
+      "sourceNodeId": "mysql.source.11-4",
+      "number": "11.4",
+      "title": "删除存储过程和函数",
+      "parent": "mysql.lesson.11",
+      "depth": 2,
+      "order": 249,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 244,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DROP PROCEDURE与DROP FUNCTION分别删除存储过程和存储函数定义。IF EXISTS可在对象缺失时避免通常的不存在错误；名称后不写调用参数，因为删除的是整个例程对象。",
+        "删除过程不会自动删除它曾读取的students表，也不撤销此前调用已提交的数据变化。之后再CALL或在SELECT中使用该函数会因对象不存在而失败。",
+        "维护前应核对调用方、视图和其他例程的依赖，函数与过程也要选对删除语句。平台不执行服务器例程删除，本例仅比较定义生命周期与业务数据生命周期。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DROP PROCEDURE IF EXISTS p_student_count;\nDROP FUNCTION IF EXISTS f_score_label;",
+        "description": "DROP PROCEDURE与DROP FUNCTION分别删除存储过程和存储函数定义。IF EXISTS可在对象缺失时避免通常的不存在错误；名称后不写调用参数，因为删除的是整个例程对象。",
+        "result": "原生成功后相应例程定义不存在；students基表及原记录不因这两条语句被删除。",
+        "reason": "原生DROP例程阅读，不操作真实服务或已有定义。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "DROP FUNCTION f_score_label后，过去已保存的成绩标签会自动恢复原样吗？",
+        "answer": "不会。删除函数定义不反向撤销过去已提交的业务数据变化；历史存储值需按业务另处理。",
+        "hints": [
+          "删除定义发生在当前时刻。",
+          "过去写入属于独立数据变化。",
+          "定义删除不是历史事务回滚。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · stored routines syntax",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/stored-routines-syntax.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.5",
+      "sourceNodeId": "mysql.source.11-5",
+      "number": "11.5",
+      "title": "MySQL 8.0的全局变量的持久化",
+      "parent": "mysql.lesson.11",
+      "depth": 2,
+      "order": 250,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 245,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL 8.0的SET PERSIST把支持的全局系统变量设置持久化，通常同时改变当前运行值并记录到mysqld-auto.cnf，使后续启动可加载。它与只影响当前运行的SET GLOBAL不同。",
+        "SET PERSIST_ONLY只写持久化配置而不改当前运行值，适用于相应变量与权限条件。RESET PERSIST移除持久化项，但不会自动把当前内存中的变量值恢复成修改前值。",
+        "这是原生服务器管理能力，需要相应系统变量管理权限和有效配置，不能当作普通课程用户的会话赋值。平台无宿主配置文件访问，也不执行全局变量管理；下面只给出语法与状态推导，不作实际配置建议。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SET PERSIST max_connections=200;\nSELECT @@GLOBAL.max_connections AS current_limit;\nRESET PERSIST IF EXISTS max_connections;",
+        "description": "MySQL 8.0的SET PERSIST把支持的全局系统变量设置持久化，通常同时改变当前运行值并记录到mysqld-auto.cnf，使后续启动可加载。它与只影响当前运行的SET GLOBAL不同。",
+        "result": "若原生权限、变量及服务器条件均允许，第一条使当前值和持久化项为200；RESET PERSIST删除该持久化项，但当前值仍为200，直到另行改变或按配置重启。",
+        "reason": "全局持久化变量属于原生服务器管理阅读，不访问宿主文件或配置。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "RESET PERSIST会自动把当前max_connections恢复为原值吗？",
+        "answer": "不会。它移除持久化配置，不等于回退当前全局运行值。",
+        "hints": [
+          "分开看内存值和持久化配置项。",
+          "RESET作用于后者。",
+          "当前值要用相应管理动作另改。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · persisted system variables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/persisted-system-variables.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.6",
+      "sourceNodeId": "mysql.source.11-6",
+      "number": "11.6",
+      "title": "本章小结",
+      "parent": "mysql.lesson.11",
+      "depth": 2,
+      "order": 251,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 246,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "存储程序知识可以沿接口、局部状态、控制流和维护四条线复盘。过程用CALL，函数返回表达式值；局部变量与会话变量分域；条件处理与光标负责特定流程，而不是替代集合SQL。",
+        "BEGIN...END只把语句组成块，创建过程也只是保存定义。事务边界必须按原生规则显式设计，存储函数及其他存储对象还有额外限制；不能把程序块、调用和事务视作同义词。",
+        "平台的BEGIN/COMMIT/ROLLBACK属于教学会话事务，不代表已实现存储程序。阅读例的标签、计数和循环结果都是按固定输入推导，只有真实WASM判题活动才可能形成平台执行事实。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE FUNCTION f_double_small(p_value INT) RETURNS INT DETERMINISTIC NO SQL RETURN p_value*2;\nSELECT f_double_small(6) AS doubled;",
+        "description": "存储程序知识可以沿接口、局部状态、控制流和维护四条线复盘。过程用CALL，函数返回表达式值；局部变量与会话变量分域；条件处理与光标负责特定流程，而不是替代集合SQL。",
+        "result": "原生在定义与权限成立时得到doubled=12；未修改students或开启事务。",
+        "reason": "原生函数复盘阅读，区分程序定义与平台事务。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "看到BEGIN...END程序块，能否断言发生了事务BEGIN？",
+        "answer": "不能。它是复合语句语法；事务开始通常需START TRANSACTION等明确语义。",
+        "hints": [
+          "语法位置决定BEGIN的含义。",
+          "程序体需要块结构。",
+          "块结构不自动提供事务原子性。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-procedure.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.11.7",
+      "sourceNodeId": "mysql.source.11-7",
+      "number": "11.7",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.11",
+      "depth": 2,
+      "order": 252,
+      "group": 11,
+      "leaf": true,
+      "printedPage": 246,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章练习关注变量初始化和NULL传播。构造过程时先写输出参数的初值，再推导每次循环后变量关系，而不是只看最后一条SELECT。",
+        "示例累计1到3，循环变量每次先加1再累加，输出应为6。若忘记把OUT参数p_total设为0，它在过程开始通常为NULL，NULL加整数仍是NULL，后续循环再正确也得不到预期总和。",
+        "检查输入0时循环不执行，输出也应有明确初值；还要考虑输入NULL和类型范围。本例以原生小整数输入推导OUT参数和NULL传播；当前平台不执行存储过程。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DELIMITER //\nCREATE PROCEDURE p_total_demo(IN p_n INT,OUT p_total INT)\nCONTAINS SQL\nBEGIN\n  DECLARE v_i INT DEFAULT 0;\n  SET p_total=0;\n  WHILE v_i<p_n DO\n    SET v_i=v_i+1;\n    SET p_total=p_total+v_i;\n  END WHILE;\nEND//\nDELIMITER ;\nCALL p_total_demo(3,@demo_total);\nSELECT @demo_total AS total;",
+        "description": "本章练习关注变量初始化和NULL传播。构造过程时先写输出参数的初值，再推导每次循环后变量关系，而不是只看最后一条SELECT。",
+        "result": "原生小输入3时total=6，输入0时total=0。删去SET p_total=0会因初始NULL传播使结果保持NULL。",
+        "reason": "OUT与NULL边界阅读自检；未执行原生例程。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "调用前把@demo_total设成100，是否可以替代OUT参数在过程内部的初始化？",
+        "answer": "不能。OUT参数进入过程时初值为NULL，不读取调用者旧值；若确需输入旧值，应使用INOUT并明确接口。",
+        "hints": [
+          "区分OUT与INOUT。",
+          "OUT不是把调用者旧值作为输入。",
+          "本例仍需SET p_total=0。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create procedure",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-procedure.html"
+        }
+      ]
+    }
+  ]
+}

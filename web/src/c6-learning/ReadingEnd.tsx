@@ -10,7 +10,7 @@ export function ReadingEnd({
 }: {
   lessonId: string;
   knowledgeId?: string;
-  language?: 'c' | 'python' | 'java' | 'cpp' | 'rust';
+  language?: 'c' | 'python' | 'java' | 'cpp' | 'rust' | 'mysql';
 }) {
   const { state, service } = useLearning();
   const end = useRef<HTMLDivElement>(null);
@@ -50,15 +50,17 @@ export function ReadingEnd({
         return;
       pending.current = true;
       const record =
-        language === 'rust'
-          ? service.recordRustLesson(lessonId, state.sessionEpoch)
-          : language === 'cpp'
-            ? service.recordCppLesson(lessonId, state.sessionEpoch)
-            : language === 'java'
-              ? service.recordJavaLesson(lessonId, state.sessionEpoch)
-              : language === 'python'
-                ? service.recordPythonLesson(lessonId, state.sessionEpoch)
-                : service.recordLesson(lessonId, true, state.sessionEpoch);
+        language === 'mysql'
+          ? service.recordMysqlLesson(lessonId, state.sessionEpoch)
+          : language === 'rust'
+            ? service.recordRustLesson(lessonId, state.sessionEpoch)
+            : language === 'cpp'
+              ? service.recordCppLesson(lessonId, state.sessionEpoch)
+              : language === 'java'
+                ? service.recordJavaLesson(lessonId, state.sessionEpoch)
+                : language === 'python'
+                  ? service.recordPythonLesson(lessonId, state.sessionEpoch)
+                  : service.recordLesson(lessonId, true, state.sessionEpoch);
       void record
         .catch(() => {
           if (active) setFailed(true);

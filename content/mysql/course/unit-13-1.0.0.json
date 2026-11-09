@@ -1,0 +1,1214 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 13,
+  "nodes": [
+    {
+      "id": "mysql.lesson.13",
+      "sourceNodeId": "mysql.source.chapter-13",
+      "number": "13",
+      "title": "MySQL权限与安全管理",
+      "parent": null,
+      "depth": 1,
+      "order": 265,
+      "group": 13,
+      "leaf": false,
+      "printedPage": 257,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "权限管理回答谁能从哪里连接、能对哪些对象执行哪些动作。先理解授权表的作用范围，再学习账户、授权与角色，才能把连接成功和业务操作成功分开检查。",
+        "所有账户与安全示例均为原生MySQL 8.0阅读，假设由有权管理员在隔离测试实例审核；RANDOM PASSWORD例要求8.0.18及以上。平台不创建服务器或用户，也不读取真实系统表与密码。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · grant tables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/grant-tables.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · privileges provided",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/privileges-provided.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.1",
+      "sourceNodeId": "mysql.source.13-1",
+      "number": "13.1",
+      "title": "权限表",
+      "parent": "mysql.lesson.13",
+      "depth": 2,
+      "order": 266,
+      "group": 13,
+      "leaf": false,
+      "printedPage": 257,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "mysql系统库中的授权表保存账户和不同层级的权限信息。user、db、tables_priv、columns_priv和procs_priv对应的范围不同，动态全局权限还涉及global_grants，不能只检查一张表就概括所有权限。",
+        "理解表结构用于解释服务器行为，常规修改应使用CREATE USER、GRANT、REVOKE等管理语句。直接改授权表容易破坏结构或内存状态的一致性，也不是MySQL 8.0推荐的管理路径。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · grant tables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/grant-tables.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.1.1",
+      "sourceNodeId": "mysql.source.13-1-1",
+      "number": "13.1.1",
+      "title": "user表",
+      "parent": "mysql.lesson.13.1",
+      "depth": 3,
+      "order": 267,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 257,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "mysql.user中的User与Host一起标识账户。相同用户名配不同Host是不同账户；只看User会把本地管理账户和远程业务账户混在一起。",
+        "只投影账户名、认证插件和锁定状态即可检查账户接口，不需要向普通学习者暴露认证字符串。plugin决定认证方式，account_locked表示锁定状态，二者不能互相替代。",
+        "user中的静态全局权限也不是全部授权事实。动态权限、库表授权与激活角色需要另外检查；查询这个系统表本身还要求相应读取权限。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT User,Host,plugin,account_locked\nFROM mysql.user ORDER BY User,Host;",
+        "description": "只投影账户名、认证插件和锁定状态即可检查账户接口，不需要向普通学习者暴露认证字符串。plugin决定认证方式，account_locked表示锁定状态，二者不能互相替代。",
+        "result": "有权限时返回实例实际账户行；列值依安装而变，不能保证只有一个root或某种固定认证插件。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "reader@localhost和reader@127.0.0.1可以当作同一个账户吗？",
+        "answer": "不能，账户标识由用户名与Host共同组成，连接协议与匹配规则还决定实际使用哪一个。",
+        "hints": [
+          "先找账户标识的两个部分。",
+          "同名不代表同一Host。",
+          "比较完整的user@host。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · grant tables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/grant-tables.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · connection access",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/connection-access.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.1.2",
+      "sourceNodeId": "mysql.source.13-1-2",
+      "number": "13.1.2",
+      "title": "db表",
+      "parent": "mysql.lesson.13.1",
+      "depth": 3,
+      "order": 268,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 259,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "mysql.db保存数据库级权限，Db限定范围，Select_priv等列描述允许的动作。当前默认库不是授权边界，显式访问另一库仍按其对象权限核实。",
+        "例子检查reader在localhost上的库级读写权限。若查不到行，只能说明没有这里对应的直接库级记录，不能据此排除全局权限、表权限或角色带来的许可。",
+        "库级授权比全局授权更窄，但仍覆盖指定库内的相应对象。若业务只读一张报表，按整个库授权可能超出需要，应进一步评估表级或视图级接口。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT Host,Db,User,Select_priv,Insert_priv,Update_priv\nFROM mysql.db\nWHERE User='reader' AND Host='localhost' ORDER BY Db;",
+        "description": "例子检查reader在localhost上的库级读写权限。若查不到行，只能说明没有这里对应的直接库级记录，不能据此排除全局权限、表权限或角色带来的许可。",
+        "result": "管理员可看到该账户的库级记录及Y/N标记；零行不等于账户没有任何读取能力。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "mysql.db中没有reader行，能直接断言它不能SELECT吗？",
+        "answer": "不能，还需检查全局、表列与角色等其他来源的有效权限。",
+        "hints": [
+          "定位这张表负责的层级。",
+          "权限可能来自别处。",
+          "把其他授权来源一并核对。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · grant tables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/grant-tables.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · request access",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/request-access.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.1.3",
+      "sourceNodeId": "mysql.source.13-1-3",
+      "number": "13.1.3",
+      "title": "tables_priv表和columns_priv表",
+      "parent": "mysql.lesson.13.1",
+      "depth": 3,
+      "order": 269,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 261,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "tables_priv记录表级授权，columns_priv进一步细分到列。表级SELECT与只允许SELECT(title)不同，后者不能自然扩展为读取同表中的所有敏感列。",
+        "例子分别列出两类记录，以Db、Table_name和Column_name定位范围。不能把tables_priv中的Column_priv汇总信息误当成每一列都具备相同权限。",
+        "列级限制需要与应用查询一致：SELECT *会请求全部列，可能因未授权列而失败。数据库权限保护对象访问，业务层仍要限制用户能请求的具体记录。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT Db,Table_name,Table_priv,Column_priv\nFROM mysql.tables_priv WHERE User='reader' AND Host='localhost';\nSELECT Db,Table_name,Column_name,Column_priv\nFROM mysql.columns_priv WHERE User='reader' AND Host='localhost';",
+        "description": "例子分别列出两类记录，以Db、Table_name和Column_name定位范围。不能把tables_priv中的Column_priv汇总信息误当成每一列都具备相同权限。",
+        "result": "有权限时得到表级集合及逐列授权记录；具体行依已有授权，不产生业务数据修改。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只有title列的SELECT权限，为什么SELECT *可能失败？",
+        "answer": "星号还包含其他列，而列级title授权不覆盖它们；应明确投影已授权列。",
+        "hints": [
+          "展开星号涉及哪些列。",
+          "定位授权的Column_name。",
+          "比较请求列集合与许可集合。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · grant tables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/grant-tables.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · grant",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/grant.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.1.4",
+      "sourceNodeId": "mysql.source.13-1-4",
+      "number": "13.1.4",
+      "title": "procs_priv表",
+      "parent": "mysql.lesson.13.1",
+      "depth": 3,
+      "order": 270,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 261,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "procs_priv保存存储过程与存储函数的例程级权限。Routine_type用于区别过程和函数，Execute允许调用，Alter Routine涉及例程维护，不能只根据名称判断权限。",
+        "例子把库、例程名称、类型及Proc_priv一起投影。对某个过程有EXECUTE不表示能直接读取它内部用到的全部表，例程执行还与SQL SECURITY安全上下文有关。",
+        "例程权限与表权限属于不同对象层级。修改权限前应先确认目标是PROCEDURE还是FUNCTION，避免把同名的不同接口当作一个对象。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT Db,Routine_name,Routine_type,Proc_priv\nFROM mysql.procs_priv\nWHERE User='reader' AND Host='localhost'\nORDER BY Db,Routine_name,Routine_type;",
+        "description": "例子把库、例程名称、类型及Proc_priv一起投影。对某个过程有EXECUTE不表示能直接读取它内部用到的全部表，例程执行还与SQL SECURITY安全上下文有关。",
+        "result": "返回可见的例程级授权记录，不调用任何过程或函数；没有记录还需结合全局和库级权限解释。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "EXECUTE某过程能否直接推导出可SELECT过程引用的所有表？",
+        "answer": "不能，直接表访问与过程执行分开授权；过程内部访问还取决于其安全上下文。",
+        "hints": [
+          "先辨认授权对象。",
+          "调用权限不是直接表权限。",
+          "检查例程的SQL SECURITY。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · grant tables",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/grant-tables.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · privileges provided",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/privileges-provided.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.2",
+      "sourceNodeId": "mysql.source.13-2",
+      "number": "13.2",
+      "title": "账户管理",
+      "parent": "mysql.lesson.13",
+      "depth": 2,
+      "order": 271,
+      "group": 13,
+      "leaf": false,
+      "printedPage": 262,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "账户管理把创建、身份验证、密码生命周期和删除串成一条维护流程。先确认完整user@host与认证插件，再执行管理语句，能减少改错同名账户的风险。",
+        "新建账户默认没有业务对象权限，需要另行授权。删除账户也不是删除其创建的全部业务数据；涉及DEFINER依赖和存量连接时，应分别检查对象与会话。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-user.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · alter user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/alter-user.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · drop user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/drop-user.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.2.1",
+      "sourceNodeId": "mysql.source.13-2-1",
+      "number": "13.2.1",
+      "title": "登录和退出MySQL服务器",
+      "parent": "mysql.lesson.13.2",
+      "depth": 3,
+      "order": 272,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 262,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "mysql命令行客户端通过指定主机、用户名和认证选项发起连接。--password不在命令行直接给值时会提示输入，避免把口令明文拼进命令历史。",
+        "连接后查询CURRENT_USER()可核对服务器实际选中的认证账户。提示输入的用户名和最终匹配账户可能需要进一步对照，尤其是在多个Host规则并存时。",
+        "QUIT退出当前客户端会话，不删除账户或数据库。连接失败与SQL权限失败要分开定位：前者可能是认证、主机匹配或锁定，后者发生在连接已建立之后。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "# 在操作系统终端中阅读这一连接命令\nmysql --host=localhost --user=reader --password\n# 成功进入mysql提示符后输入\nSELECT CURRENT_USER();\nQUIT;",
+        "description": "连接后查询CURRENT_USER()可核对服务器实际选中的认证账户。提示输入的用户名和最终匹配账户可能需要进一步对照，尤其是在多个Host规则并存时。",
+        "result": "具备可用服务与账户时会提示认证，查询显示实际user@host，QUIT结束会话；本课程未执行连接。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "QUIT之后reader账户是否从服务器消失？",
+        "answer": "不会，QUIT只结束这次客户端会话；删除账户需要管理员执行DROP USER。",
+        "hints": [
+          "区分会话与账户。",
+          "退出不等于删除定义。",
+          "寻找真正的账户删除语句。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · mysql",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysql.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · connection access",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/connection-access.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.2.2",
+      "sourceNodeId": "mysql.source.13-2-2",
+      "number": "13.2.2",
+      "title": "新建普通用户",
+      "parent": "mysql.lesson.13.2",
+      "depth": 3,
+      "order": 273,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 263,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "CREATE USER建立身份，不自动赋予业务表读写权。Host应与预期连接来源一致，示例限定localhost，避免为了连接方便就扩大到任意来源。",
+        "RANDOM PASSWORD让服务器生成新密码，返回值属于敏感凭据，应在受控渠道保存和分发。本例采用8.0.18及以上语法，不把生成值写进教材或日志。",
+        "创建成功后还需按业务授予最少权限并验证连接。若同名完整账户已存在，常规CREATE会报错；不要用忽略错误掩盖账户配置与期望不一致。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE USER 'catalog_reader'@'localhost' IDENTIFIED BY RANDOM PASSWORD;\nSHOW GRANTS FOR 'catalog_reader'@'localhost';",
+        "description": "RANDOM PASSWORD让服务器生成新密码，返回值属于敏感凭据，应在受控渠道保存和分发。本例采用8.0.18及以上语法，不把生成值写进教材或日志。",
+        "result": "管理员执行成功会得到生成凭据；新账户只有USAGE等账户基础信息，不因创建就取得业务SELECT。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "创建成功就能查询library.books吗？",
+        "answer": "不能直接这样判断，需要另有覆盖目标表的SELECT授权与正常连接条件。",
+        "hints": [
+          "创建解决身份问题。",
+          "业务权限需要独立授予。",
+          "查看SHOW GRANTS的实际范围。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-user.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · show grants",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-grants.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.2.3",
+      "sourceNodeId": "mysql.source.13-2-3",
+      "number": "13.2.3",
+      "title": "删除普通用户",
+      "parent": "mysql.lesson.13.2",
+      "depth": 3,
+      "order": 274,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 265,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "DROP USER移除账户及其授权记录，操作对象是完整user@host。它不会自动删除这个账户曾经创建的普通业务表，也不能当成数据清理命令。",
+        "IF EXISTS把不存在的账户转为提示信息，但不跳过其他权限与依赖检查。MySQL 8.0.22起，删除作为存储对象DEFINER的账户会受到额外保护与权限约束。",
+        "删除账户不自动强制关闭其已有会话。交接时应把撤销新连接能力、处置存量会话和检查DEFINER依赖分开，不能只凭DROP成功就宣称全部访问已经终止。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "DROP USER IF EXISTS 'retired_reader'@'localhost';",
+        "description": "IF EXISTS把不存在的账户转为提示信息，但不跳过其他权限与依赖检查。MySQL 8.0.22起，删除作为存储对象DEFINER的账户会受到额外保护与权限约束。",
+        "result": "有权且满足依赖条件时移除该账户；若原本不存在产生提示，不删除业务数据库，也不自动关闭已有连接。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "DROP USER之后是否可以假设旧连接马上全部断开？",
+        "answer": "不可以，DROP USER不会自动关闭打开的用户会话，应另行处理与核实会话。",
+        "hints": [
+          "账户定义和会话有不同生命周期。",
+          "阅读DROP USER对已连接会话的限制。",
+          "停用验证要覆盖新连接与存量连接。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · drop user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/drop-user.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.2.4",
+      "sourceNodeId": "mysql.source.13-2-4",
+      "number": "13.2.4",
+      "title": "root用户修改自己的密码",
+      "parent": "mysql.lesson.13.2",
+      "depth": 3,
+      "order": 275,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 266,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "root只是常见管理账户名，完整身份仍要包括Host。修改自己的密码前先用CURRENT_USER()核对实际账户，防止修改另一个同名root。",
+        "例子明确假设当前账户就是root@localhost，再用ALTER USER生成新凭据。随机密码语法要求8.0.18及以上；认证插件与组织策略可能影响允许的修改路径。",
+        "密码变更不等于新凭据已经被所有客户端采用。应保护生成结果，在可控会话验证新连接，并按实际账户管理流程更新依赖配置，避免把密码粘进共享材料。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT CURRENT_USER();\n-- 仅在确认当前身份为root@localhost且已准备凭据接管时阅读下一句\nALTER USER 'root'@'localhost' IDENTIFIED BY RANDOM PASSWORD;",
+        "description": "例子明确假设当前账户就是root@localhost，再用ALTER USER生成新凭据。随机密码语法要求8.0.18及以上；认证插件与组织策略可能影响允许的修改路径。",
+        "result": "条件成立且操作成功时返回新凭据并改变该账户后续认证；不会输出本课程预先固定的密码。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么改密码前先查CURRENT_USER()？",
+        "answer": "因为用户名相同而Host不同是不同账户，需要确认即将修改的确实是当前认证账户。",
+        "hints": [
+          "展开完整账户标识。",
+          "比较localhost与其他Host。",
+          "把身份确认放在变更之前。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · alter user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/alter-user.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · password management",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/password-management.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.2.5",
+      "sourceNodeId": "mysql.source.13-2-5",
+      "number": "13.2.5",
+      "title": "root用户修改普通用户密码",
+      "parent": "mysql.lesson.13.2",
+      "depth": 3,
+      "order": 276,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 266,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "有权限的管理员可以为普通账户重设密码。管理员替别人更换凭据与用户自行证明旧密码不是同一流程，允许的操作依账户权限和认证插件确定。",
+        "例子给既有reporter@localhost生成新密码，并设置90天的密码期限。期限控制和新凭据产生是两项配置，不能把PASSWORD EXPIRE的到期标记误认为新密码。",
+        "变更后需要协调应用使用新凭据。生产轮换可能利用双密码等机制降低中断风险，但本例没有启用双密码，也不承诺旧连接立即失效。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "ALTER USER 'reporter'@'localhost'\nIDENTIFIED BY RANDOM PASSWORD PASSWORD EXPIRE INTERVAL 90 DAY;",
+        "description": "例子给既有reporter@localhost生成新密码，并设置90天的密码期限。期限控制和新凭据产生是两项配置，不能把PASSWORD EXPIRE的到期标记误认为新密码。",
+        "result": "8.0.18及以上且账户存在、权限允许时，生成新密码并设置该账户90天期限；具体认证结果需独立验证。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "PASSWORD EXPIRE INTERVAL 90 DAY会自动替应用填好新密码吗？",
+        "answer": "不会，它只设置账户密码期限；应用配置更新和新连接验证需要独立完成。",
+        "hints": [
+          "区分策略与凭据。",
+          "数据库不直接修改应用配置。",
+          "轮换后仍需验证依赖客户端。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · alter user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/alter-user.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · password management",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/password-management.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.3",
+      "sourceNodeId": "mysql.source.13-3",
+      "number": "13.3",
+      "title": "权限管理",
+      "parent": "mysql.lesson.13",
+      "depth": 2,
+      "order": 277,
+      "group": 13,
+      "leaf": false,
+      "printedPage": 267,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "授权把动作、范围和接受者组合起来：SELECT是动作，library.books是对象，reader@localhost是接受者。写GRANT前先列业务需要，再选择最小覆盖范围。",
+        "REVOKE只撤去指定来源与层级的授权；其他直接授权或角色可能仍提供同类能力。SHOW GRANTS提供检查依据，最终还应以目标账户对实际请求的允许与拒绝进行验证。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · grant",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/grant.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · revoke",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/revoke.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · show grants",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-grants.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.3.1",
+      "sourceNodeId": "mysql.source.13-3-1",
+      "number": "13.3.1",
+      "title": "MySQL的各种权限",
+      "parent": "mysql.lesson.13.3",
+      "depth": 3,
+      "order": 278,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 267,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "MySQL权限既有SELECT、INSERT等对象动作，也有管理实例的权限。静态权限与动态管理权限的授予范围不同，不能把ALL理解成任何未来能力都无条件包含。",
+        "用业务动作清单映射权限，比直接给全局ALL更可审查。报表只读需要SELECT，录入需要INSERT；删除记录和删除表分别涉及DELETE与DROP。",
+        "权限多寡与能连接到服务器是不同问题。即使密码正确、账户未锁，服务器仍会核实该请求所需的动作与对象范围。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "业务需求 -> 所需对象动作\n读取library.books -> SELECT\n新增library.books行 -> INSERT\n删除其中某行 -> DELETE\n删除整张library.books表 -> DROP",
+        "description": "用业务动作清单映射权限，比直接给全局ALL更可审查。报表只读需要SELECT，录入需要INSERT；删除记录和删除表分别涉及DELETE与DROP。",
+        "result": "DELETE与DROP保护不同操作；登录成功不替代以上对象权限。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "允许DELETE就一定允许DROP TABLE吗？",
+        "answer": "不允许这样推导，DELETE针对记录，DROP针对对象定义，需要分别具备对应权限。",
+        "hints": [
+          "先区别行与表定义。",
+          "找两个动作对应的权限名。",
+          "不要把更危险的动作隐含进去。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · privileges provided",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/privileges-provided.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.3.2",
+      "sourceNodeId": "mysql.source.13-3-2",
+      "number": "13.3.2",
+      "title": "授权",
+      "parent": "mysql.lesson.13.3",
+      "depth": 3,
+      "order": 279,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 269,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "GRANT授予已经存在的用户或角色权限。MySQL 8.0不能依赖旧式GRANT顺便创建用户并设置密码，应将CREATE USER与GRANT分开。",
+        "例子只允许read_catalog读取library.books。没有WITH GRANT OPTION，因此这条授权不会同时赋予把SELECT再转授给别人的能力。",
+        "表级SELECT覆盖该表所有列；若只需公开字段，可以考虑列级许可或精心设计的视图。最少权限需要跟随业务变化持续复核，不能一次授权后永久不查。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 前置：library.books存在；read_catalog@localhost已建立\nGRANT SELECT ON library.books TO 'read_catalog'@'localhost';\nSHOW GRANTS FOR 'read_catalog'@'localhost';",
+        "description": "例子只允许read_catalog读取library.books。没有WITH GRANT OPTION，因此这条授权不会同时赋予把SELECT再转授给别人的能力。",
+        "result": "有权管理员成功后可看到该表SELECT授权；这条语句本身不授予INSERT、DROP或转授权能力。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "这条GRANT会同时给新用户生成密码吗？",
+        "answer": "不会，账户创建与认证配置应使用CREATE USER或ALTER USER，GRANT负责权限。",
+        "hints": [
+          "找出GRANT的动作与对象。",
+          "语句中没有账户创建。",
+          "将身份配置与授权分开。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · grant",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/grant.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · create user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-user.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.3.3",
+      "sourceNodeId": "mysql.source.13-3-3",
+      "number": "13.3.3",
+      "title": "收回权限",
+      "parent": "mysql.lesson.13.3",
+      "depth": 3,
+      "order": 280,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 271,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "REVOKE撤回指定权限，不等于删除账户。撤销时要与原来授予的层级对应，库级SELECT与表级SELECT属于不同授权来源。",
+        "例子回收曾直接授予的表级INSERT。若同一账户通过激活角色或更宽范围仍有INSERT，撤去这一条并不能使业务写入必然失败。",
+        "撤权后应重新查看有效来源，并用适当新会话验证目标请求。角色、代理与权限生效时点有各自规则，不能把一条REVOKE的成功消息当成全面停权证明。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 前置：该账户确有此表级INSERT直接授权\nREVOKE INSERT ON library.books FROM 'catalog_writer'@'localhost';\nSHOW GRANTS FOR 'catalog_writer'@'localhost';",
+        "description": "例子回收曾直接授予的表级INSERT。若同一账户通过激活角色或更宽范围仍有INSERT，撤去这一条并不能使业务写入必然失败。",
+        "result": "成功会移除该直接表级INSERT；其他层级与角色提供的权限仍需核查，账户仍然存在。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "撤去一个表级INSERT后用户仍可写入，应先检查什么？",
+        "answer": "检查库级或全局INSERT以及激活角色等其他权限来源，而不是重复执行同一撤销语句。",
+        "hints": [
+          "权限可能有多条来源。",
+          "撤销只针对指定层级。",
+          "检查更宽范围与角色。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · revoke",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/revoke.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · roles",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/roles.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.3.4",
+      "sourceNodeId": "mysql.source.13-3-4",
+      "number": "13.3.4",
+      "title": "查看权限",
+      "parent": "mysql.lesson.13.3",
+      "depth": 3,
+      "order": 281,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 272,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "SHOW GRANTS显示账户被赋予的权限和角色，是核对授权变更的直接入口。检查当前用户可省略FOR，检查其他账户通常需要额外权限。",
+        "例子先看当前会话账户授权，再查看明确的业务账户。角色授予记录与角色在当前会话激活不是同一件事，可结合CURRENT_ROLE()和USING展开检查。",
+        "授权清单应与目标操作一一对照。仅看见USAGE不能认定拥有表读写权；看见某角色名称，也要确认它具有哪些权限、是否被激活。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SHOW GRANTS;\nSHOW GRANTS FOR 'read_catalog'@'localhost';\nSELECT CURRENT_ROLE();",
+        "description": "例子先看当前会话账户授权，再查看明确的业务账户。角色授予记录与角色在当前会话激活不是同一件事，可结合CURRENT_ROLE()和USING展开检查。",
+        "result": "返回实际授权语句与当前激活角色信息；结果随账户、角色及会话改变，没有统一固定清单。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "SHOW GRANTS列出某角色，是否表示所有会话都已激活它？",
+        "answer": "不是，角色被授予与被激活分开；需检查默认角色或当前会话CURRENT_ROLE()。",
+        "hints": [
+          "区分分配与启用。",
+          "检查会话角色状态。",
+          "必要时展开角色所含权限。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · show grants",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-grants.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · roles",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/roles.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.4",
+      "sourceNodeId": "mysql.source.13-4",
+      "number": "13.4",
+      "title": "访问控制",
+      "parent": "mysql.lesson.13",
+      "depth": 2,
+      "order": 282,
+      "group": 13,
+      "leaf": false,
+      "printedPage": 273,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "访问控制先决定是否接纳连接，再判断每次请求是否被允许。两阶段使用的证据不同，诊断时应先确定失败发生在哪个阶段。",
+        "连接阶段关注user@host匹配、认证与锁定；请求阶段关注具体动作和对象的有效权限。能建立连接却无法UPDATE是可预期的最少权限结果，而非一定是数据库连接故障。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · connection access",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/connection-access.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · request access",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/request-access.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.4.1",
+      "sourceNodeId": "mysql.source.13-4-1",
+      "number": "13.4.1",
+      "title": "连接核实阶段",
+      "parent": "mysql.lesson.13.4",
+      "depth": 3,
+      "order": 283,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 273,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "连接核实先根据客户端来源和用户名匹配账户，再按认证插件验证凭据并检查锁定。多个规则可能匹配时，服务器按规定的具体程度选择，不简单地把同名账户合并。",
+        "例子先由管理员查看两个同名账户的Host与锁定状态，再由实际连接会话确认CURRENT_USER()。这两种观察分别解释配置与最终选中的身份。",
+        "Host不是客户端随意声明即可获得的权限标签；连接协议、名称解析与来源共同影响匹配。排查时应记录完整账户与实际连接方式，避免只重置密码却不检查Host。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 管理员检查配置\nSELECT User,Host,account_locked FROM mysql.user WHERE User='reader';\n-- 在实际业务连接会话中检查所选账户\nSELECT CURRENT_USER();",
+        "description": "例子先由管理员查看两个同名账户的Host与锁定状态，再由实际连接会话确认CURRENT_USER()。这两种观察分别解释配置与最终选中的身份。",
+        "result": "配置查询可能返回多个reader；CURRENT_USER()只表示该会话实际认证账户，具体值取决于连接匹配。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "同名账户有多行时会把它们的密码都依次尝试吗？",
+        "answer": "不能这样理解，服务器先按匹配规则选定账户行，再验证该账户凭据与锁定状态。",
+        "hints": [
+          "先选择账户行。",
+          "再执行该行的认证方式。",
+          "用户名相同不意味着合并认证。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · connection access",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/connection-access.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.4.2",
+      "sourceNodeId": "mysql.source.13-4-2",
+      "number": "13.4.2",
+      "title": "请求核实阶段",
+      "parent": "mysql.lesson.13.4",
+      "depth": 3,
+      "order": 284,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 273,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "请求核实发生在连接成功之后。一次请求可能需要多个权限，例如INSERT...SELECT既要对目标写入，也要对来源读取。",
+        "例子为已连接的报表账户安排两种请求：读取允许，修改拒绝，前提是它只有目标表SELECT且无其他写授权。这种差异说明权限正在发挥作用。",
+        "全局、库、表列以及角色等来源需综合考虑。把默认库换成其他名称不会把权限自动迁移，显式指定对象仍应检查那个对象的访问范围。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "-- 前置：当前账户仅有library.books的SELECT，无其他写入授权\nSELECT id,title FROM library.books ORDER BY id;\nUPDATE library.books SET title='改名' WHERE id=1;",
+        "description": "例子为已连接的报表账户安排两种请求：读取允许，修改拒绝，前提是它只有目标表SELECT且无其他写授权。这种差异说明权限正在发挥作用。",
+        "result": "在前置权限与表结构成立时查询可成功，UPDATE因缺少对应许可而被拒绝；不应记录为连接断开。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么同一连接中SELECT成功而UPDATE失败？",
+        "answer": "两种请求要求不同动作权限，连接认证成功并不赋予表写入能力。",
+        "hints": [
+          "把连接阶段先排除。",
+          "比较SELECT与UPDATE权限。",
+          "核对对象与动作的组合。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · request access",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/request-access.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.5",
+      "sourceNodeId": "mysql.source.13-5",
+      "number": "13.5",
+      "title": "提升安全性的措施",
+      "parent": "mysql.lesson.13",
+      "depth": 2,
+      "order": 285,
+      "group": 13,
+      "leaf": false,
+      "printedPage": 274,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "安全措施需要覆盖传输、凭据、权限和安装配置。数据字段加密解决的是某些存储泄露问题，TLS解决传输链路问题，密码策略和账户权限又是不同层面。",
+        "本节介绍AES 256、密码到期与安全初始化。示例只用于辨认原生功能和配置影响；不能把运行一次工具或使用一个加密函数当成完整安全证明。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · encryption functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/encryption-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · password management",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/password-management.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · mysql secure installation",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysql-secure-installation.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.5.1",
+      "sourceNodeId": "mysql.source.13-5-1",
+      "number": "13.5.1",
+      "title": "AES 256加密",
+      "parent": "mysql.lesson.13.5",
+      "depth": 3,
+      "order": 286,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 274,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "AES是可逆对称加密，AES-256表示使用256位密钥，不表示数据库账户密码也应该以可逆形式保存。MySQL AES函数默认模式不是256位，需要明确模式。",
+        "阅读例使用aes-256-cbc以及随机密钥和16字节IV，在同一会话中加密再解密。每次密文可不同，结果应核对恢复出的明文，不应固定断言某串密文。",
+        "CBC密文本身不提供完整的篡改认证保障；密钥保护、IV保存、权限和TLS仍需设计。加密参数若经不安全连接或日志泄露，字段加密也不能补救；本例只说明函数往返。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SET SESSION block_encryption_mode='aes-256-cbc';\nSET @k=RANDOM_BYTES(32);\nSET @iv=RANDOM_BYTES(16);\nSET @cipher=AES_ENCRYPT('catalog note',@k,@iv);\nSELECT CAST(AES_DECRYPT(@cipher,@k,@iv) AS CHAR CHARACTER SET utf8mb4) AS plain;",
+        "description": "阅读例使用aes-256-cbc以及随机密钥和16字节IV，在同一会话中加密再解密。每次密文可不同，结果应核对恢复出的明文，不应固定断言某串密文。",
+        "result": "原生支持相应算法且同会话参数保持一致时plain为catalog note；密钥与IV随机，密文不是固定文本。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只保存密文而丢失密钥，可以保证以后解密吗？",
+        "answer": "不可以，解密需要正确密钥以及对应模式和IV；密钥管理是独立且必要的工作。",
+        "hints": [
+          "加密与解密必须使用匹配参数。",
+          "密文不包含可直接恢复的秘密密钥。",
+          "检查密钥、模式和IV是否仍可获得。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · encryption functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/encryption-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.5.2",
+      "sourceNodeId": "mysql.source.13-5-2",
+      "number": "13.5.2",
+      "title": "密码到期更换策略",
+      "parent": "mysql.lesson.13.5",
+      "depth": 3,
+      "order": 287,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 276,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "密码到期策略设置可用期限，不是自动替用户生成和分发新密码。账户可使用全局默认策略，也可配置自己的期限或立即到期。",
+        "例子先把reporter期限设为60天，再强制当前密码到期。立即到期后的客户端行为取决于其处理过期密码的能力，通常需通过允许的改密流程恢复常规使用。",
+        "密码强度、重用限制与到期是不同机制。到期并不说明旧密码强度够高，也不证明依赖应用已完成轮换；策略应与应用运维安排一致。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "ALTER USER 'reporter'@'localhost' PASSWORD EXPIRE INTERVAL 60 DAY;\nALTER USER 'reporter'@'localhost' PASSWORD EXPIRE;",
+        "description": "例子先把reporter期限设为60天，再强制当前密码到期。立即到期后的客户端行为取决于其处理过期密码的能力，通常需通过允许的改密流程恢复常规使用。",
+        "result": "有权限且账户存在时，先设60天期限，再将现有密码标记立即过期；没有自动产生可交付的新密码。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "PASSWORD EXPIRE会把新密码发给应用吗？",
+        "answer": "不会，它设置过期状态，应用或用户仍需按认证和策略要求完成改密。",
+        "hints": [
+          "状态变化不是凭据分发。",
+          "寻找IDENTIFIED BY是否出现。",
+          "规划明确的改密步骤。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · password management",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/password-management.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · alter user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/alter-user.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.5.3",
+      "sourceNodeId": "mysql.source.13-5-3",
+      "number": "13.5.3",
+      "title": "安全模式安装",
+      "parent": "mysql.lesson.13.5",
+      "depth": 3,
+      "order": 288,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 278,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "安全初始化是对真实安装的配置检查，不是启动一个特殊SQL语法模式。mysql_secure_installation可协助处理初始root密码、匿名账户、远程root与测试库等事项。",
+        "工具会交互询问是否执行各项变更，应先确认目标实例和现有使用情况。阅读命令不给出自动全选参数，避免把不同安装环境强行视为相同。",
+        "初始化工具不能替代后续最少权限、补丁、备份与传输配置。完成后应检查实际账户和授权，而不是仅凭程序退出码宣称不存在所有安全问题。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "shell",
+        "source": "# 仅阅读：对已准备好的原生测试安装进行交互安全检查\nmysql_secure_installation\n# 按实际提示审核每一项；随后由管理员在mysql中核对账户与授权",
+        "description": "工具会交互询问是否执行各项变更，应先确认目标实例和现有使用情况。阅读命令不给出自动全选参数，避免把不同安装环境强行视为相同。",
+        "result": "在受支持安装中启动交互式检查；提示与最终修改依现有安装和选择而定，不保证固定删除清单。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "运行一次这个工具能证明以后所有业务账号都符合最少权限吗？",
+        "answer": "不能，它主要处理安装初始安全事项；后续业务账户及权限仍要独立审查。",
+        "hints": [
+          "区分初始化与长期维护。",
+          "看工具具体处理哪些事项。",
+          "把业务授权列入后续核查。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · mysql secure installation",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/mysql-secure-installation.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.6",
+      "sourceNodeId": "mysql.source.13-6",
+      "number": "13.6",
+      "title": "管理角色",
+      "parent": "mysql.lesson.13",
+      "depth": 2,
+      "order": 289,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 278,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "角色是命名的权限集合，便于把同一种工作职责赋给多个账户。角色获得权限、账户获得角色、角色在会话中激活是三个不同动作。",
+        "例子建立只读角色，给它一个表的SELECT，再分配给既有reader并设置默认角色。设置默认影响后续会话的自动激活，当前会话状态仍应单独检查。",
+        "收回角色或调整角色内部权限会影响依赖它的账户。角色管理应围绕职责边界组织，避免层层叠加后看不清某个危险权限的来源。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE ROLE 'catalog_read';\nGRANT SELECT ON library.books TO 'catalog_read';\nGRANT 'catalog_read' TO 'reader'@'localhost';\nSET DEFAULT ROLE 'catalog_read' TO 'reader'@'localhost';\nSHOW GRANTS FOR 'reader'@'localhost' USING 'catalog_read';",
+        "description": "例子建立只读角色，给它一个表的SELECT，再分配给既有reader并设置默认角色。设置默认影响后续会话的自动激活，当前会话状态仍应单独检查。",
+        "result": "管理员执行成功后reader拥有该角色且把它设为默认；USING展示角色展开后的授权，实际登录仍需合法凭据。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "GRANT角色之后为什么还要考虑激活？",
+        "answer": "被授予的角色不一定自动在会话中生效；需设置默认或在会话中SET ROLE，并检查CURRENT_ROLE()。",
+        "hints": [
+          "把分配与激活分成两步。",
+          "默认角色影响新会话。",
+          "当前角色由会话状态决定。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · roles",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/roles.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · show grants",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/show-grants.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.7",
+      "sourceNodeId": "mysql.source.13-7",
+      "number": "13.7",
+      "title": "本章实战",
+      "parent": "mysql.lesson.13",
+      "depth": 2,
+      "order": 290,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 279,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "权限实战先把维护者和报表读取者分开。报表账户只需查询指定表，不应因开发方便而拿到全局写入或转授权能力。",
+        "例子建立锁定的新账户后分配表级读取，再解锁供后续验证。先锁定可以让身份准备与权限审核分步完成，凭据仍须受控保存。",
+        "验收应包含允许的查询与禁止的更新，且检查角色或其他宽范围权限是否意外补足写能力。这里只给原生阅读流程，不实际创建用户或暴露生成密码。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE USER 'audit_report'@'localhost' IDENTIFIED BY RANDOM PASSWORD ACCOUNT LOCK;\nGRANT SELECT ON library.books TO 'audit_report'@'localhost';\nSHOW GRANTS FOR 'audit_report'@'localhost';\nALTER USER 'audit_report'@'localhost' ACCOUNT UNLOCK;",
+        "description": "例子建立锁定的新账户后分配表级读取，再解锁供后续验证。先锁定可以让身份准备与权限审核分步完成，凭据仍须受控保存。",
+        "result": "8.0.18及以上且权限和对象满足时，准备一个只读表授权账户；是否可用仍需凭据、连接与请求核实。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么只测试SELECT成功还不够？",
+        "answer": "还要确认不需要的UPDATE、DROP等动作被拒绝，才能验证权限边界没有被其他来源扩大。",
+        "hints": [
+          "成功路径证明可用。",
+          "拒绝路径证明边界。",
+          "检查其他直接授权或角色。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-user.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · grant",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/grant.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · alter user",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/alter-user.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.8",
+      "sourceNodeId": "mysql.source.13-8",
+      "number": "13.8",
+      "title": "本章小结",
+      "parent": "mysql.lesson.13",
+      "depth": 2,
+      "order": 291,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 282,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章可按身份、连接、请求、生命周期四张清单复盘。完整账户包含Host，连接要认证和未锁定，请求要动作权限，生命周期还要处理轮换与退役。",
+        "以下小结把同名账户、只读表授权与角色激活放在一起。它们解释为什么同一用户名在不同来源或会话里可能表现不同，不能靠用户名一项推断。",
+        "数据加密、传输保护和授权互不替代。拥有解密权限的账户仍须按职责使用；一个安全初始化工具也不会自动维护以后新增账户的全部权限。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "身份：reader@localhost\n连接：凭据正确且账户未锁\n请求：library.books的SELECT\n角色：已分配的角色还需确认激活\n退役：处理定义、依赖与存量会话",
+        "description": "以下小结把同名账户、只读表授权与角色激活放在一起。它们解释为什么同一用户名在不同来源或会话里可能表现不同，不能靠用户名一项推断。",
+        "result": "这份清单区分五类检查，没有把登录成功等同于所有SQL被允许。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "一个连接成功的只读账户不能DROP表，属于哪阶段的限制？",
+        "answer": "属于请求核实阶段，DROP是对象管理动作，连接成功不提供该权限。",
+        "hints": [
+          "先看连接是否建立。",
+          "再看具体SQL动作。",
+          "定位请求所需权限。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · connection access",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/connection-access.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · request access",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/request-access.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · roles",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/roles.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.13.9",
+      "sourceNodeId": "mysql.source.13-9",
+      "number": "13.9",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.13",
+      "depth": 2,
+      "order": 292,
+      "group": 13,
+      "leaf": true,
+      "printedPage": 282,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "综合题应同时分析直接授权与角色。撤去一个来源后，另一个来源还在时，实际权限可能保持不变；回答必须列出剩余路径。",
+        "阅读情境中，reader既直接拥有SELECT，又被授予只读角色。回收直接授权后，激活角色仍可提供读取，因此不能把REVOKE成功等同于读取失败。",
+        "若目标是彻底停止某项能力，应继续检查所有相关层级、角色和会话，并采用明确的变更计划。账户停用也不能靠删除业务表来代替。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "已知：reader直接有library.books的SELECT\n已知：catalog_read角色也有该SELECT，reader已获并激活此角色\n变化：撤去reader的直接表级SELECT\n问题：是否仍可能读取library.books？",
+        "description": "阅读情境中，reader既直接拥有SELECT，又被授予只读角色。回收直接授权后，激活角色仍可提供读取，因此不能把REVOKE成功等同于读取失败。",
+        "result": "仍可能读取，因为激活角色保留同一SELECT来源；这里没有证明所有权限都被回收。",
+        "reason": "本例属于原生MySQL 8.0账户与安全管理阅读；平台不连接服务器，也不执行账户、权限或加密管理。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "若要证明读取已被回收，除了直接GRANT还要查什么？",
+        "answer": "检查角色、全局或库级与其他相关授权，并在适当会话核实目标查询被拒绝。",
+        "hints": [
+          "列出每个许可来源。",
+          "只删除其中一项。",
+          "检查剩余来源及会话激活状态。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · revoke",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/revoke.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · roles",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/roles.html"
+        }
+      ]
+    }
+  ]
+}

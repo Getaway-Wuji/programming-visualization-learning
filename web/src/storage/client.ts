@@ -52,7 +52,15 @@ import {
   queueCppStores,
   toCppMeta,
 } from './cpp-course-meta';
-import { RUST_DB_VERSION, RUST_STORES, queueRustStores, toRustMeta } from './rust2018-meta';
+import {
+  assertRustMeta,
+  RUST_DB_VERSION,
+  RUST_STORES,
+  queueRustStores,
+  toRustMeta,
+} from './rust2018-meta';
+import { MYSQL_DB_VERSION, MYSQL_STORES, queueMysqlStores, toMysqlMeta } from './mysql-meta';
+import { mysqlCourseTransaction, type PrepareMysqlCourse } from './mysql-course';
 import {
   cppCourseTransaction,
   rustCourseTransaction,
@@ -158,6 +166,7 @@ export interface OpenStorageOptions {
   enableJava?: boolean;
   enableCpp?: boolean;
   enableRust?: boolean;
+  enableMysql?: boolean;
   signal?: AbortSignal;
   onBlocked?: () => void;
   // Dependency injection is internal; the public entry point fixes the production DB.
@@ -168,6 +177,15 @@ export interface OpenStorageOptions {
 }
 
 function physicalStores(db: IDBDatabase): readonly string[] {
+  if (db.version === MYSQL_DB_VERSION)
+    return [
+      ...C6_RESET_STORES,
+      ...PYTHON_STORES,
+      ...JAVA_STORES,
+      ...CPP_STORES,
+      ...RUST_STORES,
+      ...MYSQL_STORES,
+    ];
   if (db.version === RUST_DB_VERSION)
     return [...C6_RESET_STORES, ...PYTHON_STORES, ...JAVA_STORES, ...CPP_STORES, ...RUST_STORES];
   if (db.version === CPP_DB_VERSION)
@@ -213,7 +231,8 @@ function checkedMeta(value: unknown): asserts value is Meta {
     value.schemaVersion !== '11.0.0' &&
     value.schemaVersion !== '12.0.0' &&
     value.schemaVersion !== '13.0.0' &&
-    value.schemaVersion !== '14.0.0'
+    value.schemaVersion !== '14.0.0' &&
+    value.schemaVersion !== '15.0.0'
   ) {
     throw new StorageError(
       value.schemaVersion === '0.9.0' ? 'S_MIGRATION_UNSUPPORTED' : 'S_VERSION_UNKNOWN',
@@ -233,9 +252,15 @@ export function readTransaction(
   c6Index?: C6LearningIndex,
 ): void {
   if (
-    ![DB_VERSION, 10, PYTHON_DB_VERSION, JAVA_DB_VERSION, CPP_DB_VERSION, RUST_DB_VERSION].includes(
-      expectedDbVersion,
-    )
+    ![
+      DB_VERSION,
+      10,
+      PYTHON_DB_VERSION,
+      JAVA_DB_VERSION,
+      CPP_DB_VERSION,
+      RUST_DB_VERSION,
+      MYSQL_DB_VERSION,
+    ].includes(expectedDbVersion)
   ) {
     fail(new StorageError('S_VERSION_UNKNOWN'));
     return;
@@ -521,6 +546,18 @@ export class StorageClient {
     if (!result.saved.replayed) this.broadcast(result.state.snapshot.meta);
     return result.saved;
   }
+  async readMysqlCourse() {
+    return (await mysqlCourseTransaction(this.connection(), this.factory)).state;
+  }
+  async commitMysqlCourse(generation: string, revision: number, prepare: PrepareMysqlCourse) {
+    const result = await mysqlCourseTransaction(this.connection(), this.factory, {
+      generation,
+      revision,
+      prepare,
+    });
+    if (!result.saved.replayed) this.broadcast(result.state.snapshot.meta);
+    return result.saved;
+  }
   async readRustCourse() {
     return (await rustCourseTransaction(this.connection(), this.factory)).state;
   }
@@ -619,9 +656,14 @@ export class StorageClient {
           if (!sameRecoveryValue(cpp.snapshot.meta, recovery.snapshot.meta))
             return this.readRecovery();
         }
-        if (this.connection().version === RUST_DB_VERSION) {
+        if (this.connection().version >= RUST_DB_VERSION) {
           const rust = await this.readRustCourse();
           if (!sameRecoveryValue(rust.snapshot.meta, recovery.snapshot.meta))
+            return this.readRecovery();
+        }
+        if (this.connection().version >= MYSQL_DB_VERSION) {
+          const mysql = await this.readMysqlCourse();
+          if (!sameRecoveryValue(mysql.snapshot.meta, recovery.snapshot.meta))
             return this.readRecovery();
         }
       } catch (error) {
@@ -671,7 +713,9 @@ export class StorageClient {
     if (meta.dbVersion === 10 && version >= PYTHON_DB_VERSION) meta = toPythonMeta(meta);
     if (meta.dbVersion === PYTHON_DB_VERSION && version >= JAVA_DB_VERSION) meta = toJavaMeta(meta);
     if (meta.dbVersion === JAVA_DB_VERSION && version >= CPP_DB_VERSION) meta = toCppMeta(meta);
-    if (meta.dbVersion === CPP_DB_VERSION && version === RUST_DB_VERSION) meta = toRustMeta(meta);
+    if (meta.dbVersion === CPP_DB_VERSION && version >= RUST_DB_VERSION) meta = toRustMeta(meta);
+    if (meta.dbVersion === RUST_DB_VERSION && version === MYSQL_DB_VERSION)
+      meta = toMysqlMeta(meta);
     assertRecord('meta', meta);
     if (meta.generation === rawGeneration(confirmation.raw.meta))
       throw new StorageError('S_RECORD_INVALID');
@@ -1192,20 +1236,23 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
       (options.enablePython && !index) ||
       (options.enableJava && !options.enablePython) ||
       (options.enableCpp && !options.enableJava) ||
-      (options.enableRust && !options.enableCpp)
+      (options.enableRust && !options.enableCpp) ||
+      (options.enableMysql && !options.enableRust)
     )
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
-    const targetVersion = options.enableRust
-      ? RUST_DB_VERSION
-      : options.enableCpp
-        ? CPP_DB_VERSION
-        : options.enableJava
-          ? JAVA_DB_VERSION
-          : index
-            ? options.enablePython
-              ? PYTHON_DB_VERSION
-              : 10
-            : DB_VERSION;
+    const targetVersion = options.enableMysql
+      ? MYSQL_DB_VERSION
+      : options.enableRust
+        ? RUST_DB_VERSION
+        : options.enableCpp
+          ? CPP_DB_VERSION
+          : options.enableJava
+            ? JAVA_DB_VERSION
+            : index
+              ? options.enablePython
+                ? PYTHON_DB_VERSION
+                : 10
+              : DB_VERSION;
     const activePackageRef = { ...options.activePackageRef };
     if (activePackageRef.id === 'content.c.primer6' && !index)
       throw new StorageError('S_CONTENT_INCOMPATIBLE');
@@ -1272,7 +1319,10 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
             const afterJava = (value: ReturnType<typeof toJavaMeta>) => {
               if (!options.enableCpp) return;
               const cpp = queueCppStores(db, tx, value);
-              if (options.enableRust) queueRustStores(db, tx, cpp);
+              if (options.enableRust) {
+                const rust = queueRustStores(db, tx, cpp);
+                if (options.enableMysql) queueMysqlStores(db, tx, rust);
+              }
             };
             const afterPython = (value: ReturnType<typeof toPythonMeta>) => {
               if (!options.enableJava) return;
@@ -1283,18 +1333,14 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
               const python = queuePythonStores(db, tx, value);
               afterPython(python);
             };
-            if (
-              (options.enablePython && event.oldVersion === 10) ||
-              (options.enableJava && event.oldVersion === PYTHON_DB_VERSION) ||
-              (options.enableCpp && event.oldVersion === JAVA_DB_VERSION) ||
-              (options.enableRust && event.oldVersion === CPP_DB_VERSION)
-            ) {
+            if (event.oldVersion >= 10 && event.oldVersion < targetVersion) {
               const oldVersion = event.oldVersion;
               const names = [
                 ...C6_RESET_STORES,
                 ...(oldVersion >= PYTHON_DB_VERSION ? PYTHON_STORES : []),
                 ...(oldVersion >= JAVA_DB_VERSION ? JAVA_STORES : []),
                 ...(oldVersion >= CPP_DB_VERSION ? CPP_STORES : []),
+                ...(oldVersion >= RUST_DB_VERSION ? RUST_STORES : []),
               ];
               if (
                 db.objectStoreNames.length !== names.length ||
@@ -1313,43 +1359,46 @@ export async function openStorage(options: OpenStorageOptions): Promise<StorageC
                 tx,
                 (snapshot) => {
                   try {
-                    if (oldVersion === 10) {
-                      assertC6Meta(snapshot.meta);
-                      afterC6(snapshot.meta);
-                    } else if (oldVersion === PYTHON_DB_VERSION) {
-                      const meta = snapshot.meta;
-                      assertPythonMeta(meta);
-                      readPythonUpgradeRows(tx, factory, snapshot, () => afterPython(meta), fail);
-                    } else {
-                      const meta = snapshot.meta;
-                      if (oldVersion === JAVA_DB_VERSION) assertJavaMeta(meta);
-                      else assertCppMeta(meta);
-                      readPythonUpgradeRows(
+                    const meta = snapshot.meta;
+                    if (oldVersion === 10) assertC6Meta(meta);
+                    else if (oldVersion === PYTHON_DB_VERSION) assertPythonMeta(meta);
+                    else if (oldVersion === JAVA_DB_VERSION) assertJavaMeta(meta);
+                    else if (oldVersion === CPP_DB_VERSION) assertCppMeta(meta);
+                    else if (oldVersion === RUST_DB_VERSION) assertRustMeta(meta);
+                    else throw new StorageError('S_MIGRATION_UNSUPPORTED');
+                    const upgrade = () => {
+                      let next: Meta = meta;
+                      if (next.dbVersion === 10 && options.enablePython)
+                        next = queuePythonStores(db, tx, next);
+                      if (next.dbVersion === PYTHON_DB_VERSION && options.enableJava)
+                        next = queueJavaStores(db, tx, next);
+                      if (next.dbVersion === JAVA_DB_VERSION && options.enableCpp)
+                        next = queueCppStores(db, tx, next);
+                      if (next.dbVersion === CPP_DB_VERSION && options.enableRust)
+                        next = queueRustStores(db, tx, next);
+                      if (next.dbVersion === RUST_DB_VERSION && options.enableMysql)
+                        queueMysqlStores(db, tx, next);
+                    };
+                    const languages = (['java', 'cpp', 'rust'] as const).filter(
+                      (_, i) => oldVersion >= 12 + i,
+                    );
+                    const validateNext = (index: number) => {
+                      if (index === languages.length) {
+                        upgrade();
+                        return;
+                      }
+                      readJavaUpgradeRows(
                         tx,
                         factory,
                         snapshot,
-                        () =>
-                          readJavaUpgradeRows(
-                            tx,
-                            factory,
-                            snapshot,
-                            () => {
-                              if (meta.dbVersion === JAVA_DB_VERSION) afterJava(meta);
-                              else
-                                readJavaUpgradeRows(
-                                  tx,
-                                  factory,
-                                  snapshot,
-                                  () => queueRustStores(db, tx, meta),
-                                  fail,
-                                  'cpp',
-                                );
-                            },
-                            fail,
-                          ),
+                        () => validateNext(index + 1),
                         fail,
+                        languages[index],
                       );
-                    }
+                    };
+                    if (oldVersion >= PYTHON_DB_VERSION)
+                      readPythonUpgradeRows(tx, factory, snapshot, () => validateNext(0), fail);
+                    else upgrade();
                   } catch (error) {
                     fail(error);
                   }

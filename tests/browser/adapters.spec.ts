@@ -264,6 +264,8 @@ async function noLearningWrites(page: Page) {
         'cppDrafts',
         'rustActivities',
         'rustDrafts',
+        'mysqlActivities',
+        'mysqlDrafts',
       ].filter((name) => db.objectStoreNames.contains(name));
       const tx = db.transaction(names, 'readonly');
       const businessCounts = await Promise.all(
@@ -285,7 +287,7 @@ async function noLearningWrites(page: Page) {
       db.close();
     }
   });
-  expect([9, 10, 11, 12, 13, 14]).toContain(counts.version);
+  expect([9, 10, 11, 12, 13, 14, 15]).toContain(counts.version);
   expect(counts.storeNames).toEqual(
     [
       'achievements',
@@ -306,6 +308,8 @@ async function noLearningWrites(page: Page) {
       'knowledgeMarks',
       'ledger',
       'meta',
+      'mysqlActivities',
+      'mysqlDrafts',
       'progress',
       'pythonActivities',
       'pythonDrafts',
@@ -321,7 +325,8 @@ async function noLearningWrites(page: Page) {
         (counts.version >= 11 || !['pythonActivities', 'pythonDrafts'].includes(name)) &&
         (counts.version >= 12 || !['javaActivities', 'javaDrafts'].includes(name)) &&
         (counts.version >= 13 || !['cppActivities', 'cppDrafts'].includes(name)) &&
-        (counts.version >= 14 || !['rustActivities', 'rustDrafts'].includes(name)),
+        (counts.version >= 14 || !['rustActivities', 'rustDrafts'].includes(name)) &&
+        (counts.version >= 15 || !['mysqlActivities', 'mysqlDrafts'].includes(name)),
     ),
   );
   expect(counts.businessCounts).toEqual(Array(12 + 2 * (counts.version - 9)).fill(0));

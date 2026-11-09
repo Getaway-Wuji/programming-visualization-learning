@@ -1,0 +1,1963 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "seedProfiles": "题目与四组预期.json",
+  "count": 77,
+  "vectors": [
+    {
+      "id": "mysql.semantic.01",
+      "topic": "integer-expression",
+      "source": "SELECT 1 + 2 * 3 AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 7
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.02",
+      "topic": "sql-boolean-values",
+      "source": "SELECT TRUE AS a, FALSE AS b;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 1
+          },
+          {
+            "kind": "int",
+            "value": 0
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.03",
+      "topic": "utf8-scalar",
+      "source": "SELECT '欧阳🌱' AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "text",
+            "value": "欧阳🌱"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.04",
+      "topic": "quote-doubling",
+      "source": "SELECT 'O''Brien' AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "text",
+            "value": "O'Brien"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.05",
+      "topic": "null-arithmetic",
+      "source": "SELECT NULL + 1 AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.06",
+      "topic": "null-equality",
+      "source": "SELECT NULL = NULL AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.07",
+      "topic": "is-null",
+      "source": "SELECT NULL IS NULL AS a, 0 IS NOT NULL AS b;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 1
+          },
+          {
+            "kind": "int",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.08",
+      "topic": "three-valued-and-false",
+      "source": "SELECT NULL AND 0 AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 0
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.09",
+      "topic": "three-valued-and-true",
+      "source": "SELECT NULL AND 1 AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.10",
+      "topic": "three-valued-or-true",
+      "source": "SELECT NULL OR 1 AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.11",
+      "topic": "three-valued-or-false",
+      "source": "SELECT NULL OR 0 AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.12",
+      "topic": "three-valued-not",
+      "source": "SELECT NOT NULL AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.13",
+      "topic": "in-null-with-match",
+      "source": "SELECT 1 IN (1, NULL) AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.14",
+      "topic": "not-in-null-without-match",
+      "source": "SELECT 1 NOT IN (2, NULL) AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.15",
+      "topic": "inclusive-between",
+      "source": "SELECT 2 BETWEEN 2 AND 3 AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.16",
+      "topic": "unicode-like-one-character",
+      "source": "SELECT '甲🌱' LIKE '甲_' AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.17",
+      "topic": "no-pad-collation",
+      "source": "SELECT 'a' = 'a ' AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 0
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.18",
+      "topic": "null-and-empty-text",
+      "source": "SELECT '' IS NULL AS a, NULL IS NULL AS b;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 0
+          },
+          {
+            "kind": "int",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.19",
+      "topic": "ifnull",
+      "source": "SELECT IFNULL(NULL, 5) AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 5
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.20",
+      "topic": "coalesce",
+      "source": "SELECT COALESCE(NULL, NULL, 7) AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 7
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.21",
+      "topic": "utf8-byte-and-character-length",
+      "source": "SELECT LENGTH('🌱') AS a, CHAR_LENGTH('🌱') AS b;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 4
+          },
+          {
+            "kind": "int",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.22",
+      "topic": "concat",
+      "source": "SELECT CONCAT('甲', '乙') AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "text",
+            "value": "甲乙"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.23",
+      "topic": "concat-propagates-null",
+      "source": "SELECT CONCAT('甲', NULL) AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.24",
+      "topic": "abs",
+      "source": "SELECT ABS(-9) AS x;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 9
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.25",
+      "topic": "count-star-versus-column",
+      "source": "SELECT COUNT(*) AS a, COUNT(score) AS b FROM students;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 4
+          },
+          {
+            "kind": "int",
+            "value": 3
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.26",
+      "topic": "exact-integer-sum",
+      "source": "SELECT SUM(score) AS x FROM students;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "decimal",
+            "value": "219"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.27",
+      "topic": "exact-average",
+      "source": "SELECT AVG(score) AS x FROM students;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "decimal",
+            "value": "73.0000"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.28",
+      "topic": "min-max",
+      "source": "SELECT MIN(score) AS a, MAX(score) AS b FROM students;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 59
+          },
+          {
+            "kind": "int",
+            "value": 88
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.29",
+      "topic": "empty-aggregate",
+      "source": "SELECT COUNT(*) AS a, SUM(score) AS b, AVG(score) AS c FROM students;",
+      "seed": 2,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 0
+          },
+          {
+            "kind": "null"
+          },
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.30",
+      "topic": "all-null-aggregate",
+      "source": "SELECT COUNT(score) AS a, SUM(score) AS b FROM students WHERE score IS NULL;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 0
+          },
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.31",
+      "topic": "ascending-null-first",
+      "source": "SELECT score FROM students ORDER BY score;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "null"
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 59
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 72
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 88
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.32",
+      "topic": "descending-null-last",
+      "source": "SELECT score FROM students ORDER BY score DESC;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 88
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 72
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 59
+          }
+        ],
+        [
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.33",
+      "topic": "distinct-null-once",
+      "source": "SELECT DISTINCT dept_id FROM students ORDER BY dept_id;",
+      "seed": 1,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "null"
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 1
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 2
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.34",
+      "topic": "limit-offset",
+      "source": "SELECT id FROM students ORDER BY id LIMIT 1 OFFSET 1;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 2
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.35",
+      "topic": "unordered-duplicate-retention",
+      "source": "SELECT name FROM students WHERE name = '何川';",
+      "seed": 1,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "text",
+            "value": "何川"
+          }
+        ],
+        [
+          {
+            "kind": "text",
+            "value": "何川"
+          }
+        ]
+      ],
+      "ordered": false
+    },
+    {
+      "id": "mysql.semantic.36",
+      "topic": "group-having",
+      "source": "SELECT dept_id, COUNT(*) AS n FROM students GROUP BY dept_id HAVING COUNT(*) >= 2 ORDER BY dept_id;",
+      "seed": 1,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 1
+          },
+          {
+            "kind": "int",
+            "value": 2
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 2
+          },
+          {
+            "kind": "int",
+            "value": 2
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.37",
+      "topic": "inner-join-omits-unmatched",
+      "source": "SELECT s.id, d.name FROM students AS s INNER JOIN departments AS d ON s.dept_id = d.id ORDER BY s.id;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 1
+          },
+          {
+            "kind": "text",
+            "value": "计算机"
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 2
+          },
+          {
+            "kind": "text",
+            "value": "数学"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.38",
+      "topic": "left-join-null-extension",
+      "source": "SELECT s.id, d.name FROM students AS s LEFT JOIN departments AS d ON s.dept_id = d.id ORDER BY s.id;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 1
+          },
+          {
+            "kind": "text",
+            "value": "计算机"
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 2
+          },
+          {
+            "kind": "text",
+            "value": "数学"
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 3
+          },
+          {
+            "kind": "null"
+          }
+        ],
+        [
+          {
+            "kind": "int",
+            "value": 4
+          },
+          {
+            "kind": "null"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "mysql.semantic.39",
+      "topic": "update-left-to-right",
+      "source": "CREATE TABLE t (a INT, b INT); INSERT INTO t VALUES (1, 0); UPDATE t SET a = a + 1, b = a; SELECT a, b FROM t;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 2
+          },
+          {
+            "kind": "int",
+            "value": 2
+          }
+        ]
+      ],
+      "changesDatabase": true
+    },
+    {
+      "id": "mysql.semantic.40",
+      "topic": "update-matched-versus-changed",
+      "source": "UPDATE students SET score = score;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [],
+      "expectedAffectedRows": 0,
+      "expectedMatchedRows": 4,
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.41",
+      "topic": "duplicate-primary-key-atomic",
+      "source": "INSERT INTO students (id, name) VALUES (90, '新记录'), (1, '重复');",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_CONSTRAINT",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.42",
+      "topic": "not-null-constraint",
+      "source": "INSERT INTO students (id, name) VALUES (90, NULL);",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_CONSTRAINT",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.43",
+      "topic": "unique-allows-multiple-null",
+      "source": "CREATE TABLE t (a INT UNIQUE); INSERT INTO t VALUES (NULL), (NULL); SELECT COUNT(*) AS n FROM t;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 2
+          }
+        ]
+      ],
+      "changesDatabase": true
+    },
+    {
+      "id": "mysql.semantic.44",
+      "topic": "statement-rollback-keeps-earlier-commit",
+      "source": "UPDATE students SET score = 90 WHERE id = 1; INSERT INTO students (id, name) VALUES (1, '重复');",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_CONSTRAINT",
+      "expectedScoreById": {
+        "1": 90
+      }
+    },
+    {
+      "id": "mysql.semantic.45",
+      "topic": "rollback-restores-data",
+      "source": "START TRANSACTION; UPDATE students SET score = 90 WHERE id = 1; ROLLBACK; SELECT score FROM students WHERE id = 1;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 88
+          }
+        ]
+      ],
+      "unchangedDatabase": true,
+      "expectedTransactionActive": false
+    },
+    {
+      "id": "mysql.semantic.46",
+      "topic": "commit-preserves-data",
+      "source": "START TRANSACTION; UPDATE students SET score = 90 WHERE id = 1; COMMIT; SELECT score FROM students WHERE id = 1;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 90
+          }
+        ]
+      ],
+      "expectedScoreById": {
+        "1": 90
+      },
+      "expectedTransactionActive": false
+    },
+    {
+      "id": "mysql.semantic.47",
+      "topic": "transaction-resumes-across-requests",
+      "source": "ROLLBACK; SELECT score FROM students WHERE id = 1;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "int",
+            "value": 88
+          }
+        ]
+      ],
+      "sessionOverride": {
+        "database": {
+          "tables": [
+            {
+              "name": "students",
+              "columns": [
+                {
+                  "name": "id",
+                  "type": "int",
+                  "length": null,
+                  "nullable": false,
+                  "primaryKey": true,
+                  "unique": true,
+                  "defaultValue": null
+                },
+                {
+                  "name": "name",
+                  "type": "varchar",
+                  "length": 64,
+                  "nullable": false,
+                  "primaryKey": false,
+                  "unique": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "dept_id",
+                  "type": "int",
+                  "length": null,
+                  "nullable": true,
+                  "primaryKey": false,
+                  "unique": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "score",
+                  "type": "int",
+                  "length": null,
+                  "nullable": true,
+                  "primaryKey": false,
+                  "unique": false,
+                  "defaultValue": null
+                }
+              ],
+              "rows": [
+                {
+                  "id": 1,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 3
+                    },
+                    {
+                      "kind": "text",
+                      "value": "周岚"
+                    },
+                    {
+                      "kind": "null"
+                    },
+                    {
+                      "kind": "null"
+                    }
+                  ]
+                },
+                {
+                  "id": 2,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 1
+                    },
+                    {
+                      "kind": "text",
+                      "value": "林安"
+                    },
+                    {
+                      "kind": "int",
+                      "value": 1
+                    },
+                    {
+                      "kind": "int",
+                      "value": 99
+                    }
+                  ]
+                },
+                {
+                  "id": 3,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 4
+                    },
+                    {
+                      "kind": "text",
+                      "value": "苏宁"
+                    },
+                    {
+                      "kind": "int",
+                      "value": 99
+                    },
+                    {
+                      "kind": "int",
+                      "value": 59
+                    }
+                  ]
+                },
+                {
+                  "id": 4,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 2
+                    },
+                    {
+                      "kind": "text",
+                      "value": "陈禾"
+                    },
+                    {
+                      "kind": "int",
+                      "value": 2
+                    },
+                    {
+                      "kind": "int",
+                      "value": 72
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "departments",
+              "columns": [
+                {
+                  "name": "id",
+                  "type": "int",
+                  "length": null,
+                  "nullable": false,
+                  "primaryKey": true,
+                  "unique": true,
+                  "defaultValue": null
+                },
+                {
+                  "name": "name",
+                  "type": "varchar",
+                  "length": 64,
+                  "nullable": false,
+                  "primaryKey": false,
+                  "unique": false,
+                  "defaultValue": null
+                }
+              ],
+              "rows": [
+                {
+                  "id": 5,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 3
+                    },
+                    {
+                      "kind": "text",
+                      "value": "设计"
+                    }
+                  ]
+                },
+                {
+                  "id": 6,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 1
+                    },
+                    {
+                      "kind": "text",
+                      "value": "计算机"
+                    }
+                  ]
+                },
+                {
+                  "id": 7,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 2
+                    },
+                    {
+                      "kind": "text",
+                      "value": "数学"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "nextRowId": 8
+        },
+        "transaction": {
+          "active": true,
+          "base": {
+            "tables": [
+              {
+                "name": "students",
+                "columns": [
+                  {
+                    "name": "id",
+                    "type": "int",
+                    "length": null,
+                    "nullable": false,
+                    "primaryKey": true,
+                    "unique": true,
+                    "defaultValue": null
+                  },
+                  {
+                    "name": "name",
+                    "type": "varchar",
+                    "length": 64,
+                    "nullable": false,
+                    "primaryKey": false,
+                    "unique": false,
+                    "defaultValue": null
+                  },
+                  {
+                    "name": "dept_id",
+                    "type": "int",
+                    "length": null,
+                    "nullable": true,
+                    "primaryKey": false,
+                    "unique": false,
+                    "defaultValue": null
+                  },
+                  {
+                    "name": "score",
+                    "type": "int",
+                    "length": null,
+                    "nullable": true,
+                    "primaryKey": false,
+                    "unique": false,
+                    "defaultValue": null
+                  }
+                ],
+                "rows": [
+                  {
+                    "id": 1,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 3
+                      },
+                      {
+                        "kind": "text",
+                        "value": "周岚"
+                      },
+                      {
+                        "kind": "null"
+                      },
+                      {
+                        "kind": "null"
+                      }
+                    ]
+                  },
+                  {
+                    "id": 2,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 1
+                      },
+                      {
+                        "kind": "text",
+                        "value": "林安"
+                      },
+                      {
+                        "kind": "int",
+                        "value": 1
+                      },
+                      {
+                        "kind": "int",
+                        "value": 88
+                      }
+                    ]
+                  },
+                  {
+                    "id": 3,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 4
+                      },
+                      {
+                        "kind": "text",
+                        "value": "苏宁"
+                      },
+                      {
+                        "kind": "int",
+                        "value": 99
+                      },
+                      {
+                        "kind": "int",
+                        "value": 59
+                      }
+                    ]
+                  },
+                  {
+                    "id": 4,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 2
+                      },
+                      {
+                        "kind": "text",
+                        "value": "陈禾"
+                      },
+                      {
+                        "kind": "int",
+                        "value": 2
+                      },
+                      {
+                        "kind": "int",
+                        "value": 72
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "departments",
+                "columns": [
+                  {
+                    "name": "id",
+                    "type": "int",
+                    "length": null,
+                    "nullable": false,
+                    "primaryKey": true,
+                    "unique": true,
+                    "defaultValue": null
+                  },
+                  {
+                    "name": "name",
+                    "type": "varchar",
+                    "length": 64,
+                    "nullable": false,
+                    "primaryKey": false,
+                    "unique": false,
+                    "defaultValue": null
+                  }
+                ],
+                "rows": [
+                  {
+                    "id": 5,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 3
+                      },
+                      {
+                        "kind": "text",
+                        "value": "设计"
+                      }
+                    ]
+                  },
+                  {
+                    "id": 6,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 1
+                      },
+                      {
+                        "kind": "text",
+                        "value": "计算机"
+                      }
+                    ]
+                  },
+                  {
+                    "id": 7,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 2
+                      },
+                      {
+                        "kind": "text",
+                        "value": "数学"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "nextRowId": 8
+          }
+        }
+      },
+      "expectedTransactionActive": false
+    },
+    {
+      "id": "mysql.semantic.48",
+      "topic": "ddl-in-active-transaction-is-outside-subset",
+      "source": "CREATE TABLE t (a INT);",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "sessionOverride": {
+        "database": {
+          "tables": [
+            {
+              "name": "students",
+              "columns": [
+                {
+                  "name": "id",
+                  "type": "int",
+                  "length": null,
+                  "nullable": false,
+                  "primaryKey": true,
+                  "unique": true,
+                  "defaultValue": null
+                },
+                {
+                  "name": "name",
+                  "type": "varchar",
+                  "length": 64,
+                  "nullable": false,
+                  "primaryKey": false,
+                  "unique": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "dept_id",
+                  "type": "int",
+                  "length": null,
+                  "nullable": true,
+                  "primaryKey": false,
+                  "unique": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "score",
+                  "type": "int",
+                  "length": null,
+                  "nullable": true,
+                  "primaryKey": false,
+                  "unique": false,
+                  "defaultValue": null
+                }
+              ],
+              "rows": [
+                {
+                  "id": 1,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 3
+                    },
+                    {
+                      "kind": "text",
+                      "value": "周岚"
+                    },
+                    {
+                      "kind": "null"
+                    },
+                    {
+                      "kind": "null"
+                    }
+                  ]
+                },
+                {
+                  "id": 2,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 1
+                    },
+                    {
+                      "kind": "text",
+                      "value": "林安"
+                    },
+                    {
+                      "kind": "int",
+                      "value": 1
+                    },
+                    {
+                      "kind": "int",
+                      "value": 99
+                    }
+                  ]
+                },
+                {
+                  "id": 3,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 4
+                    },
+                    {
+                      "kind": "text",
+                      "value": "苏宁"
+                    },
+                    {
+                      "kind": "int",
+                      "value": 99
+                    },
+                    {
+                      "kind": "int",
+                      "value": 59
+                    }
+                  ]
+                },
+                {
+                  "id": 4,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 2
+                    },
+                    {
+                      "kind": "text",
+                      "value": "陈禾"
+                    },
+                    {
+                      "kind": "int",
+                      "value": 2
+                    },
+                    {
+                      "kind": "int",
+                      "value": 72
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "departments",
+              "columns": [
+                {
+                  "name": "id",
+                  "type": "int",
+                  "length": null,
+                  "nullable": false,
+                  "primaryKey": true,
+                  "unique": true,
+                  "defaultValue": null
+                },
+                {
+                  "name": "name",
+                  "type": "varchar",
+                  "length": 64,
+                  "nullable": false,
+                  "primaryKey": false,
+                  "unique": false,
+                  "defaultValue": null
+                }
+              ],
+              "rows": [
+                {
+                  "id": 5,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 3
+                    },
+                    {
+                      "kind": "text",
+                      "value": "设计"
+                    }
+                  ]
+                },
+                {
+                  "id": 6,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 1
+                    },
+                    {
+                      "kind": "text",
+                      "value": "计算机"
+                    }
+                  ]
+                },
+                {
+                  "id": 7,
+                  "values": [
+                    {
+                      "kind": "int",
+                      "value": 2
+                    },
+                    {
+                      "kind": "text",
+                      "value": "数学"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "nextRowId": 8
+        },
+        "transaction": {
+          "active": true,
+          "base": {
+            "tables": [
+              {
+                "name": "students",
+                "columns": [
+                  {
+                    "name": "id",
+                    "type": "int",
+                    "length": null,
+                    "nullable": false,
+                    "primaryKey": true,
+                    "unique": true,
+                    "defaultValue": null
+                  },
+                  {
+                    "name": "name",
+                    "type": "varchar",
+                    "length": 64,
+                    "nullable": false,
+                    "primaryKey": false,
+                    "unique": false,
+                    "defaultValue": null
+                  },
+                  {
+                    "name": "dept_id",
+                    "type": "int",
+                    "length": null,
+                    "nullable": true,
+                    "primaryKey": false,
+                    "unique": false,
+                    "defaultValue": null
+                  },
+                  {
+                    "name": "score",
+                    "type": "int",
+                    "length": null,
+                    "nullable": true,
+                    "primaryKey": false,
+                    "unique": false,
+                    "defaultValue": null
+                  }
+                ],
+                "rows": [
+                  {
+                    "id": 1,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 3
+                      },
+                      {
+                        "kind": "text",
+                        "value": "周岚"
+                      },
+                      {
+                        "kind": "null"
+                      },
+                      {
+                        "kind": "null"
+                      }
+                    ]
+                  },
+                  {
+                    "id": 2,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 1
+                      },
+                      {
+                        "kind": "text",
+                        "value": "林安"
+                      },
+                      {
+                        "kind": "int",
+                        "value": 1
+                      },
+                      {
+                        "kind": "int",
+                        "value": 88
+                      }
+                    ]
+                  },
+                  {
+                    "id": 3,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 4
+                      },
+                      {
+                        "kind": "text",
+                        "value": "苏宁"
+                      },
+                      {
+                        "kind": "int",
+                        "value": 99
+                      },
+                      {
+                        "kind": "int",
+                        "value": 59
+                      }
+                    ]
+                  },
+                  {
+                    "id": 4,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 2
+                      },
+                      {
+                        "kind": "text",
+                        "value": "陈禾"
+                      },
+                      {
+                        "kind": "int",
+                        "value": 2
+                      },
+                      {
+                        "kind": "int",
+                        "value": 72
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "departments",
+                "columns": [
+                  {
+                    "name": "id",
+                    "type": "int",
+                    "length": null,
+                    "nullable": false,
+                    "primaryKey": true,
+                    "unique": true,
+                    "defaultValue": null
+                  },
+                  {
+                    "name": "name",
+                    "type": "varchar",
+                    "length": 64,
+                    "nullable": false,
+                    "primaryKey": false,
+                    "unique": false,
+                    "defaultValue": null
+                  }
+                ],
+                "rows": [
+                  {
+                    "id": 5,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 3
+                      },
+                      {
+                        "kind": "text",
+                        "value": "设计"
+                      }
+                    ]
+                  },
+                  {
+                    "id": 6,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 1
+                      },
+                      {
+                        "kind": "text",
+                        "value": "计算机"
+                      }
+                    ]
+                  },
+                  {
+                    "id": 7,
+                    "values": [
+                      {
+                        "kind": "int",
+                        "value": 2
+                      },
+                      {
+                        "kind": "text",
+                        "value": "数学"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "nextRowId": 8
+          }
+        }
+      },
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.49",
+      "topic": "average-positive-half-rounding",
+      "source": "CREATE TABLE t (a INT); INSERT INTO t VALUES (1),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0); SELECT AVG(a) AS x FROM t;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "decimal",
+            "value": "0.0313"
+          }
+        ]
+      ],
+      "changesDatabase": true,
+      "referenceNote": "Derived from official MySQL 8.0 AVG scale and decimal display HALF_UP source chain; not native-server measured."
+    },
+    {
+      "id": "mysql.semantic.50",
+      "topic": "average-negative-half-rounding",
+      "source": "CREATE TABLE t (a INT); INSERT INTO t VALUES (-1),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0),(0); SELECT AVG(a) AS x FROM t;",
+      "seed": 0,
+      "expectedStatus": "completed",
+      "expectedCode": null,
+      "expectedRows": [
+        [
+          {
+            "kind": "decimal",
+            "value": "-0.0313"
+          }
+        ]
+      ],
+      "changesDatabase": true,
+      "referenceNote": "Derived from official MySQL 8.0 AVG scale and decimal display HALF_UP source chain; not native-server measured."
+    },
+    {
+      "id": "mysql.semantic.51",
+      "topic": "unknown-table",
+      "source": "SELECT id FROM absent;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_TABLE_UNKNOWN",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.52",
+      "topic": "unknown-column",
+      "source": "SELECT absent FROM students;",
+      "seed": 2,
+      "expectedStatus": "error",
+      "expectedCode": "E_NAME",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.53",
+      "topic": "ambiguous-column",
+      "source": "SELECT id FROM students AS s INNER JOIN departments AS d ON s.dept_id = d.id;",
+      "seed": 2,
+      "expectedStatus": "error",
+      "expectedCode": "E_NAME",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.54",
+      "topic": "syntax-error",
+      "source": "SELECT FROM;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_SYNTAX",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.55",
+      "topic": "union-outside-subset",
+      "source": "SELECT 1 UNION SELECT 2;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.56",
+      "topic": "subquery-outside-subset",
+      "source": "SELECT id FROM students WHERE id IN (SELECT id FROM departments);",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.57",
+      "topic": "right-join-outside-subset",
+      "source": "SELECT s.id FROM students AS s RIGHT JOIN departments AS d ON s.dept_id = d.id;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.58",
+      "topic": "view-outside-subset",
+      "source": "CREATE VIEW v AS SELECT id FROM students;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.59",
+      "topic": "decimal-literal-outside-subset",
+      "source": "SELECT 1.5 AS x;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.60",
+      "topic": "division-outside-subset",
+      "source": "SELECT 4 / 2 AS x;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.61",
+      "topic": "no-implicit-text-number-conversion",
+      "source": "SELECT 1 + '2' AS x;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_TYPE",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.62",
+      "topic": "safe-integer-overflow",
+      "source": "SELECT 9007199254740991 + 1 AS x;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_OVERFLOW",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.63",
+      "topic": "int-column-overflow",
+      "source": "UPDATE students SET score = 2147483648 WHERE id = 1;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_OVERFLOW",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.64",
+      "topic": "source-byte-limit",
+      "source": "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ",
+      "seed": 0,
+      "expectedStatus": "rejected",
+      "expectedCode": "E_SOURCE_LIMIT",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.65",
+      "topic": "statement-count-limit",
+      "source": "SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;SELECT 1;",
+      "seed": 0,
+      "expectedStatus": "limited",
+      "expectedCode": "E_STATEMENT_LIMIT",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.66",
+      "topic": "token-limit",
+      "source": "SELECT 1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1;",
+      "seed": 0,
+      "expectedStatus": "limited",
+      "expectedCode": "E_TOKEN_LIMIT",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.67",
+      "topic": "parser-depth-limit",
+      "source": "SELECT ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((1))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));",
+      "seed": 0,
+      "expectedStatus": "limited",
+      "expectedCode": "E_DEPTH_LIMIT",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.68",
+      "topic": "result-column-limit",
+      "source": "SELECT 1 AS c0,1 AS c1,1 AS c2,1 AS c3,1 AS c4,1 AS c5,1 AS c6,1 AS c7,1 AS c8,1 AS c9,1 AS c10,1 AS c11,1 AS c12,1 AS c13,1 AS c14,1 AS c15,1 AS c16,1 AS c17,1 AS c18,1 AS c19,1 AS c20,1 AS c21,1 AS c22,1 AS c23,1 AS c24,1 AS c25,1 AS c26,1 AS c27,1 AS c28,1 AS c29,1 AS c30,1 AS c31,1 AS c32;",
+      "seed": 0,
+      "expectedStatus": "limited",
+      "expectedCode": "E_COLUMN_LIMIT",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.69",
+      "topic": "closed-request-shape",
+      "source": "SELECT 1;",
+      "seed": 0,
+      "expectedStatus": "rejected",
+      "expectedCode": "E_REQUEST_INVALID",
+      "requestMutation": "add-unknown-top-level-field"
+    },
+    {
+      "id": "mysql.semantic.70",
+      "topic": "invalid-session-shape",
+      "source": "SELECT 1;",
+      "seed": 0,
+      "expectedStatus": "rejected",
+      "expectedCode": "E_SESSION_INVALID",
+      "requestMutation": "duplicate-logical-row-id"
+    },
+    {
+      "id": "mysql.semantic.71",
+      "topic": "unknown-judge-profile",
+      "source": "SELECT 1;",
+      "seed": 0,
+      "expectedStatus": "rejected",
+      "expectedCode": "E_PROFILE_UNKNOWN",
+      "requestMutation": "unknown-judge-profile"
+    },
+    {
+      "id": "mysql.semantic.72",
+      "topic": "row-by-row-primary-key-check",
+      "source": "UPDATE students SET id = id + 1;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_CONSTRAINT",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.73",
+      "topic": "average-comparison-outside-subset",
+      "source": "SELECT AVG(score) > 70 AS x FROM students;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.74",
+      "topic": "average-order-alias-outside-subset",
+      "source": "SELECT dept_id, AVG(score) AS x FROM students GROUP BY dept_id ORDER BY x;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.75",
+      "topic": "average-distinct-outside-subset",
+      "source": "SELECT DISTINCT AVG(score) AS x FROM students;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.76",
+      "topic": "average-having-alias-outside-subset",
+      "source": "SELECT dept_id, AVG(score) AS x FROM students GROUP BY dept_id HAVING x > 70;",
+      "seed": 0,
+      "expectedStatus": "error",
+      "expectedCode": "E_UNSUPPORTED",
+      "unchangedDatabase": true
+    },
+    {
+      "id": "mysql.semantic.77",
+      "topic": "illegal-group-on-empty",
+      "source": "SELECT name, COUNT(*) AS n FROM students GROUP BY dept_id;",
+      "seed": 2,
+      "expectedStatus": "error",
+      "expectedCode": "E_GROUP",
+      "unchangedDatabase": true
+    }
+  ]
+}

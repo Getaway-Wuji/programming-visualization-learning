@@ -1,0 +1,866 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 1,
+  "nodes": [
+    {
+      "id": "mysql.lesson.1",
+      "sourceNodeId": "mysql.source.chapter-1",
+      "number": "1",
+      "title": "数据库基础",
+      "parent": null,
+      "depth": 1,
+      "order": 1,
+      "group": 1,
+      "leaf": false,
+      "printedPage": 1,
+      "physicalPage": 11,
+      "coverage": "body-present",
+      "body": [
+        "数据库学习首先要回答“保存什么事实、事实之间怎样关联”。本章从数据管理的发展走到关系设计，用借阅、选课等小场景区分记录、模式、约束和操作。概念模型帮助交流业务，关系模式把约定落实为可检查的表结构。",
+        "读完应能画出一对多、多对多关系，解释主键和外键的责任，并指出重复保存事实带来的更新问题；后面的SQL建立在这些判断上。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：What is MySQL?",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/what-is-mysql.html"
+        },
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.1",
+      "sourceNodeId": "mysql.source.1-1",
+      "number": "1.1",
+      "title": "数据库概述",
+      "parent": "mysql.lesson.1",
+      "depth": 2,
+      "order": 2,
+      "group": 1,
+      "leaf": false,
+      "printedPage": 1,
+      "physicalPage": 11,
+      "coverage": "body-present",
+      "body": [
+        "数据不是排成表格就自然可靠。数据库管理系统把存取、约束、共享和恢复放在一起处理，使多个应用能围绕同一批事实工作。本节先建立系统视角，再把关系模型和SQL放进这个整体中。",
+        "阅读时分别关注三个问题：数据由谁管理、结构由谁定义、请求由谁执行。文件、数据库、数据库管理系统和应用程序不是同一个概念，混淆它们会使后续安装和故障定位失去方向。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：What is MySQL?",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/what-is-mysql.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.1.1",
+      "sourceNodeId": "mysql.source.1-1-1",
+      "number": "1.1.1",
+      "title": "数据库技术的发展",
+      "parent": "mysql.lesson.1.1",
+      "depth": 3,
+      "order": 3,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 1,
+      "physicalPage": 11,
+      "coverage": "body-present",
+      "body": [
+        "数据管理经历了程序自行组织文件、专门的数据库管理系统，以及适应不同数据形态的多种模型。关键变化是让数据结构、共享规则和恢复机制逐渐脱离单个业务程序，而不是所有文件都被数据库替代。",
+        "假设两个程序各存一份会员地址，地址变更必须同步两份；若共同访问一个受控的会员表，修改入口和一致性检查便可以集中。数据库仍在磁盘上使用文件，但应用通常通过查询接口访问逻辑记录。",
+        "关系数据库适合字段和关联明确、需要一致更新的业务；日志文件与对象存储也各有用途。选择技术时应说明数据规模、查询和一致性要求，不能只按出现年代判断先进程度。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "文件方案：借阅程序.address.csv / 通知程序.address.csv\n共享方案：借阅程序 ─┐\n                 ├─ 数据库服务 ─ Members(member_id, address)\n       通知程序 ─┘",
+        "description": "数据管理经历了程序自行组织文件、专门的数据库管理系统，以及适应不同数据形态的多种模型。",
+        "result": "共享方案只需维护一份会员地址；是否可靠还取决于权限、约束和事务设计。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "两份地址文件为何可能给同一会员寄往不同地点？",
+        "answer": "独立副本会在修改或同步失败时分叉。集中管理减少重复事实，但仍需控制更新过程。",
+        "hints": [
+          "找出“同一事实”的两处副本。",
+          "设想只更新了借阅程序的文件。",
+          "说明共享数据库解决重复来源，并非自动纠正录入错误。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：What is MySQL?",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/what-is-mysql.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.1.2",
+      "sourceNodeId": "mysql.source.1-1-2",
+      "number": "1.1.2",
+      "title": "数据库系统的组成",
+      "parent": "mysql.lesson.1.1",
+      "depth": 3,
+      "order": 4,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 2,
+      "physicalPage": 12,
+      "coverage": "body-present",
+      "body": [
+        "数据库系统包括被保存的数据、管理数据的DBMS、调用它的应用及运行所需的软硬件与人员规则。MySQL Server负责接收请求和管理数据，mysql命令行、网页程序和图形客户端负责发出请求。",
+        "一次查看成绩可以沿“浏览器→应用→数据库连接→服务器→结果”追踪。客户端连接成功只说明通信和认证通过，查询是否成功还取决于表、字段、权限和SQL是否合法。",
+        "系统管理需要备份、权限和容量安排；业务开发关注数据模型和请求。教学平台的浏览器执行器只模拟明确的SQL语义，不安装或连接真实MySQL服务器，也不提供账号管理。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "学习者 → SQL输入区 → 浏览器内教学执行器 → 教学表格\n原生系统：客户端 → MySQL Server → 存储引擎 → 数据文件",
+        "description": "数据库系统包括被保存的数据、管理数据的DBMS、调用它的应用及运行所需的软硬件与人员规则。",
+        "result": "两条路径的执行环境不同；本课程SQL运行不会修改本机MySQL服务。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "关闭图形客户端等于删除数据库吗？",
+        "answer": "不等于。客户端是操作入口，服务器及其数据有独立生命周期；服务是否仍运行需单独检查。",
+        "hints": [
+          "把“发送请求”和“保存数据”分给两个组件。",
+          "想一想多个客户端同时连接的情况。",
+          "关闭一个连接不会发出DROP DATABASE。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：What is MySQL?",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/what-is-mysql.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.1.3",
+      "sourceNodeId": "mysql.source.1-1-3",
+      "number": "1.1.3",
+      "title": "数据模型与规范化",
+      "parent": "mysql.lesson.1.1",
+      "depth": 3,
+      "order": 5,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 2,
+      "physicalPage": 12,
+      "coverage": "body-present",
+      "body": [
+        "关系模型用表描述一类事实，行表示实例，列表示属性。规范化通过函数依赖检查事实归属：第一范式避免一个字段塞入重复组；第二范式排除非键属性对候选键真子集的依赖；第三范式还约束非键属性间不合适的传递依赖。",
+        "设选课的候选键是(student_id, course_id)，student_name只依赖student_id，course_name只依赖course_id。把姓名和课程名放在每条选课中会反复保存事实；拆成学生、课程和选课表，可分别维护名称和成绩。",
+        "规范化要依据业务依赖，不能只看当前样本有无重复。成绩依赖完整选课键，适合留在关联表；学生所属院系若有自己的名称，应由院系表保存。性能需要反规范化时，也必须说明副本怎样保持一致。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "原表 Enrollment(student_id, course_id, student_name, course_name, score)\n拆分 Student(student_id PK, student_name)\n     Course(course_id PK, course_name)\n     Enrollment(student_id FK, course_id FK, score; PK=(student_id,course_id))\n数据：Student(11,许澄)，Course(7,数据库)，Enrollment(11,7,88)",
+        "description": "关系模型用表描述一类事实，行表示实例，列表示属性。",
+        "result": "修改课程名只改Course中的一条事实；关联表通过两个编号找到名称，仍能记录88分。复合键和外键是原生设计知识，当前执行器不执行它们。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把course_name留在Enrollment，学生姓名移出后就达到第三范式了吗？",
+        "answer": "没有。course_name仍只依赖复合键的一部分course_id，应归Course。先消除这种部分依赖，再检查其他非键依赖。",
+        "hints": [
+          "列出候选键的两个组成字段。",
+          "只给course_id能否确定course_name？",
+          "同一课程被多人选中时名称会重复维护。"
+        ]
+      },
+      "references": [
+        {
+          "title": "Microsoft Learn：数据库规范化",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/troubleshoot/microsoft-365/microsoft-365-apps/access/database-normalization-description"
+        },
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.1.4",
+      "sourceNodeId": "mysql.source.1-1-4",
+      "number": "1.1.4",
+      "title": "结构化查询语言(SQL)",
+      "parent": "mysql.lesson.1.1",
+      "depth": 3,
+      "order": 6,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 7,
+      "physicalPage": 17,
+      "coverage": "body-present",
+      "body": [
+        "SQL是描述数据结构和数据操作的语言。SELECT提出要什么结果，CREATE TABLE定义结构，INSERT、UPDATE、DELETE修改记录；GRANT等语句管理权限。SQL中的同名关键词在不同数据库方言中可能有不同扩展。",
+        "一条查询由选择列、数据来源和筛选条件等部分构成，结尾的分号帮助客户端划分语句。文本值用单引号，数值不用引号；NULL表示缺失或未知，不能当作普通文字。",
+        "学习SQL应同时检查结果和数据库状态。下面是可阅读的原生SQL清单；其中INT和VARCHAR建表、插入与投影都在平台支持范围内，本节把它作为语言结构导览，正式判题稍后展开。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE badges (id INT PRIMARY KEY, label VARCHAR(20) NOT NULL);\nINSERT INTO badges (id, label) VALUES (1, '初学者');\nSELECT label FROM badges WHERE id = 1;",
+        "description": "SQL是描述数据结构和数据操作的语言。",
+        "result": "在空白同名表环境中顺序执行后，查询返回一列label、一行“初学者”；重复建表会报表已存在。",
+        "reason": "本节阅读完整清单以识别SQL的作用；其中支持的语法可在后续工作台中运行，不代表本节逐条判题。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "CREATE TABLE和SELECT分别改变什么？",
+        "answer": "CREATE TABLE创建表结构；SELECT返回结果集，不修改该表中的记录。INSERT才在本例中新增记录。",
+        "hints": [
+          "按语句观察“定义”“新增”“读取”。",
+          "区分表结构与查询结果。",
+          "执行SELECT不会再次插入“初学者”。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        },
+        {
+          "title": "MySQL 8.0：入门教程",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/tutorial.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.2",
+      "sourceNodeId": "mysql.source.1-2",
+      "number": "1.2",
+      "title": "数据库的体系结构",
+      "parent": "mysql.lesson.1",
+      "depth": 2,
+      "order": 7,
+      "group": 1,
+      "leaf": false,
+      "printedPage": 7,
+      "physicalPage": 17,
+      "coverage": "body-present",
+      "body": [
+        "数据库的外部视图、全局逻辑结构和物理存储回答不同层次的问题。业务使用者需要的列不一定等于底层完整表，逻辑上同一张表也不必对应一个可供用户直接读取的文件。",
+        "三级模式是理解数据独立性的抽象框架，不是要求在MySQL中创建三个同名数据库。本节用成绩发布的例子观察结构变化会影响谁，并把抽象模式与MySQL视图、索引等实现联系起来。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE VIEW",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-view.html"
+        },
+        {
+          "title": "MySQL 8.0：InnoDB磁盘结构",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/innodb-on-disk-structures.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.2.1",
+      "sourceNodeId": "mysql.source.1-2-1",
+      "number": "1.2.1",
+      "title": "数据库三级模式",
+      "parent": "mysql.lesson.1.2",
+      "depth": 3,
+      "order": 8,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 8,
+      "physicalPage": 18,
+      "coverage": "body-present",
+      "body": [
+        "外模式描述某类用户看见的数据，模式描述全库的逻辑结构，内模式描述数据怎样落在存储中。例如学生只看自己的成绩，教务员管理完整成绩表，存储层通过页和索引组织访问。",
+        "外模式可借助视图等接口实现，但“三级模式”比某一种SQL对象更抽象。建立视图只是保存查询定义；是否限制访问仍需结合账号权限，不能把隐藏列名等同于完成安全管理。",
+        "分层能让不同角色使用稳定接口。表有id、name、score等列时，公告只需姓名与成绩；身份证等字段即使存在也不应随意发布。当前平台不执行CREATE VIEW和权限语句，此处阅读其分层含义。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "外部：ScoreNotice(name, score)\n逻辑：Learner(id, name, contact, score)\n物理：数据页、主键索引、文件布局\n映射：公告.name ← Learner.name；公告.score ← Learner.score",
+        "description": "外模式描述某类用户看见的数据，模式描述全库的逻辑结构，内模式描述数据怎样落在存储中。",
+        "result": "公告接口可省去contact列；这仍需权限配合才能防止其他接口泄露。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "给表新增一个内部备注列，公告必须显示它吗？",
+        "answer": "不必。公告若显式选择name和score，外部接口可保持不变；SELECT *则可能把新增列暴露出去。",
+        "hints": [
+          "先确定公告外模式需要的字段。",
+          "考虑显式列清单与星号的差别。",
+          "外部接口有选择地映射全局逻辑结构。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE VIEW",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-view.html"
+        },
+        {
+          "title": "MySQL 8.0：InnoDB磁盘结构",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/innodb-on-disk-structures.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.2.2",
+      "sourceNodeId": "mysql.source.1-2-2",
+      "number": "1.2.2",
+      "title": "三级模式之间的映射",
+      "parent": "mysql.lesson.1.2",
+      "depth": 3,
+      "order": 9,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 8,
+      "physicalPage": 18,
+      "coverage": "body-present",
+      "body": [
+        "外模式与模式的映射把用户接口对应到全局结构；模式与内模式的映射把逻辑记录对应到存储组织。前者帮助维持逻辑数据独立性，后者帮助维持物理数据独立性，两者都依赖系统能保留相同语义的接口。",
+        "如果成绩表拆成学生与成绩两表，可用连接视图继续提供旧接口；这是逻辑结构变动后的适配。若只增加索引而表列不变，查询文本通常无需改写，这是物理组织变动带来的独立性。",
+        "独立性不是无条件兼容。改名、删除字段或改变值的含义，可能无法靠映射自动保持应用行为；索引也可能改变查询计划和速度，但不应被当成结果排序的保证。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "旧接口：Report(student_id, name, score)\n新逻辑：Student(student_id, name) + Mark(student_id, score)\n适配：按student_id连接，投影Report所需三列\n物理改动：给Mark.student_id增加索引，接口三列不变",
+        "description": "外模式与模式的映射把用户接口对应到全局结构；模式与内模式的映射把逻辑记录对应到存储组织。",
+        "result": "保留旧接口需要确认连接关系和缺失成绩的处理；仅“同名列”不能证明新旧结果相同。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把普通查询加快的索引属于哪一层改动？它能保证输出按索引顺序吗？",
+        "answer": "属于物理访问组织的改动，通常无需改变逻辑接口；没有ORDER BY时不能承诺输出顺序。",
+        "hints": [
+          "分清列结构变化和访问路径变化。",
+          "索引帮助寻找数据，不是输出契约。",
+          "需要稳定展示顺序时显式写ORDER BY。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE VIEW",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-view.html"
+        },
+        {
+          "title": "MySQL 8.0：InnoDB磁盘结构",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/innodb-on-disk-structures.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.3",
+      "sourceNodeId": "mysql.source.1-3",
+      "number": "1.3",
+      "title": "E-R图",
+      "parent": "mysql.lesson.1",
+      "depth": 2,
+      "order": 10,
+      "group": 1,
+      "leaf": false,
+      "printedPage": 9,
+      "physicalPage": 19,
+      "coverage": "body-present",
+      "body": [
+        "E-R图把需求中的对象、属性和联系画成可讨论的模型。本节先判断什么值得成为实体，再为联系标注基数与可选性，从而避免只画几个表框却未表达业务规则。",
+        "图可以从文本关系开始：一个社团有多名成员，一名成员可以参加多个活动。把这些句子问清楚后再选择记法；方框、连线或乌鸦脚本身不能替代对“是否允许零个”“是否可重复”的说明。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.3.1",
+      "sourceNodeId": "mysql.source.1-3-1",
+      "number": "1.3.1",
+      "title": "实体和属性",
+      "parent": "mysql.lesson.1.3",
+      "depth": 3,
+      "order": 11,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 9,
+      "physicalPage": 19,
+      "coverage": "body-present",
+      "body": [
+        "实体是需要独立识别的业务对象，属性描述对象的特征。实体类型概括一类对象，实体实例是某一个对象。例如“设备”是类型，编号D17的投影仪是实例，名称、购入日期是属性。",
+        "识别属性前应确定对象的粒度。设备型号与某台设备不同，多台设备可共享型号；若把型号当唯一编号，借出其中一台就无法区分实际归还的是哪一台。可用设备编号作为稳定标识。",
+        "属性是否拆成另一实体，取决于是否有独立生命周期和关联需求。厂商若需要地址、合同和多设备关联，应建厂商实体；只记录一次性备注时也可先用普通属性，避免机械拆表。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "Device(device_id, model_id, room)\n实例：(D17, M3, A201)、(D18, M3, B105)\nModel(model_id, label)\n实例：(M3, 高清投影仪)",
+        "description": "实体是需要独立识别的业务对象，属性描述对象的特征。",
+        "result": "D17与D18是两台设备，M3只表示共同型号；迁移D17的房间不改变D18。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "设备型号能否替代单台设备的主键？",
+        "answer": "通常不能。相同型号可有多台设备，主键必须在所建模的实例粒度上唯一。",
+        "hints": [
+          "比较示例中两条设备记录。",
+          "找出重复的model_id。",
+          "唯一标识应区分“同款”与“同一台”。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.3.2",
+      "sourceNodeId": "mysql.source.1-3-2",
+      "number": "1.3.2",
+      "title": "关系",
+      "parent": "mysql.lesson.1.3",
+      "depth": 3,
+      "order": 12,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 10,
+      "physicalPage": 20,
+      "coverage": "body-present",
+      "body": [
+        "概念模型中的联系表示实体实例之间的关联，常见基数是一对一、一对多和多对多。基数描述最多关联多少个，可选性描述最少是否为零；“一个订单属于一位客户”与“客户可以尚无订单”可以同时成立。",
+        "一对多在关系设计中常把一端的键放到多端；多对多通常引入关联表。联系还可能有自己的属性，例如选课时间与成绩依赖学生和课程的组合，不属于学生个人或课程本身。",
+        "联系应结合业务时点解释。“员工目前一个部门”不等于“员工整个职业生涯只在一个部门”；保存历史时需要任职记录及时间区间，而不是覆盖旧部门字段。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "Customer 1 ── 0..N Order\nStudent 0..N ── 0..N Course\nEnrollment(student_id, course_id, enrolled_at, score) 表示一次选课",
+        "description": "概念模型中的联系表示实体实例之间的关联，常见基数是一对一、一对多和多对多。",
+        "result": "客户可无订单，每单有一位客户；选课关联承载两端组合的事实。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "“每位员工当前最多负责一把钥匙”足以推出一对一吗？",
+        "answer": "不足。还要问每把钥匙最多归几位员工，并说明是否允许无人保管；两端上限和下限都需定义。",
+        "hints": [
+          "只给出了员工这一端的上限。",
+          "补问钥匙能否同时被多人负责。",
+          "一对一要求两端最大基数均为1。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.3.3",
+      "sourceNodeId": "mysql.source.1-3-3",
+      "number": "1.3.3",
+      "title": "E-R图设计原则",
+      "parent": "mysql.lesson.1.3",
+      "depth": 3,
+      "order": 13,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 10,
+      "physicalPage": 20,
+      "coverage": "body-present",
+      "body": [
+        "设计E-R图时先列业务事实，再划定实体边界和稳定标识，最后检查每条联系的名称、基数与可选性。不要因为页面上有一个输入框就创建一张表，也不要把所有名词都直接当实体。",
+        "可用具体业务事件验证模型：新社员未参加活动能否登记，活动取消是否误删成员，同一成员第二次报名怎样表示。若模型无法表达合法状态，应该修改约束或粒度，而非要求用户填假数据。",
+        "图中保留业务命名和图例，说明时间范围及唯一性。概念图不必立即写出所有索引和数据类型；这些实现选择在转成关系结构时补充，避免早期技术细节掩盖需求冲突。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "约定：Member可暂未报名；Event可暂无人报名。\nMember(member_id) 1 ── 0..N Signup\nEvent(event_id)   1 ── 0..N Signup\nSignup(member_id, event_id, joined_at)\n业务检查：取消一次报名，只删除Signup，不删除Member。",
+        "description": "设计E-R图时先列业务事实，再划定实体边界和稳定标识，最后检查每条联系的名称、基数与可选性。",
+        "result": "关联记录的生命周期独立于两端实体，允许空关联状态。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把“无报名者”的活动从模型中禁止，会导致什么问题？",
+        "answer": "活动无法先创建再开放报名，程序可能被迫虚构报名者。应允许活动对应零条报名记录。",
+        "hints": [
+          "考虑活动发布早于第一位报名者。",
+          "最小基数0代表合法的空关联。",
+          "检查合法业务过程是否被模型约束挡住。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.4",
+      "sourceNodeId": "mysql.source.1-4",
+      "number": "1.4",
+      "title": "数据库设计",
+      "parent": "mysql.lesson.1",
+      "depth": 2,
+      "order": 14,
+      "group": 1,
+      "leaf": false,
+      "printedPage": 11,
+      "physicalPage": 21,
+      "coverage": "body-present",
+      "body": [
+        "从E-R模型走向关系表时，要把实体的标识、联系的两端以及业务规则转成字段和约束。先确定每行代表什么，再选主键；多对多联系不能靠在一格写多个编号解决。",
+        "本节依次处理建表、主外键、关联表、数据类型和约束。阅读中的原生SQL可能包含平台尚未执行的外键、复合键或日期类型；概念理解与执行范围分别说明，不能把阅读示例当作全方言支持。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        },
+        {
+          "title": "MySQL 8.0：外键约束",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.4.1",
+      "sourceNodeId": "mysql.source.1-4-1",
+      "number": "1.4.1",
+      "title": "为实体建立数据表",
+      "parent": "mysql.lesson.1.4",
+      "depth": 3,
+      "order": 15,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 11,
+      "physicalPage": 21,
+      "coverage": "body-present",
+      "body": [
+        "实体转为表时，一行保存该实体的一次实例，列只保存属于该粒度的属性。以场馆为例，场馆编号、名称、所在城市属于场馆；每次预约的日期与人数属于预约，不能在场馆表中不断加“预约1”“预约2”。",
+        "建表前可写一条行语义：“Venue的每行是一处场馆”。然后用两个实例检查字段能否共存，字段是否需要重复组。名字可能重名或改名，应与稳定编号分开考虑。",
+        "表结构是可长期复用的约定，样本数据只是验证。若把一个场馆的预约串成逗号分隔文字，未来按日期筛选、检查人数和取消单次预约都会变得困难，应使用单独的预约表。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "Venue(venue_id PK, venue_name, city)\nVenue(21, 青禾馆, 杭州)\nBooking(booking_id PK, venue_id FK, use_date, attendees)\nBooking(301, 21, 2027-03-02, 18)",
+        "description": "实体转为表时，一行保存该实体的一次实例，列只保存属于该粒度的属性。",
+        "result": "同一场馆可对应多条Booking而不增加Venue的列数；此为关系模式示意，不是可执行SQL。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "新增第二次预约应该新增Venue的列还是Booking的行？",
+        "answer": "新增Booking行，因为变化的是预约实例数量，场馆的属性集合没有变化。",
+        "hints": [
+          "先复述两张表的行语义。",
+          "同一venue_id可以出现在多次预约中。",
+          "数量可变的一组事实用多行表达。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.4.2",
+      "sourceNodeId": "mysql.source.1-4-2",
+      "number": "1.4.2",
+      "title": "为表建立主键和外键",
+      "parent": "mysql.lesson.1.4",
+      "depth": 3,
+      "order": 16,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 11,
+      "physicalPage": 21,
+      "coverage": "body-present",
+      "body": [
+        "主键在一张表中唯一且非空地标识行；外键约束引用另一张表的有效键，防止引用不存在的对象。主键回答“我是谁”，外键回答“我引用谁”，两者的职责不能互换。",
+        "在场馆与预约设计中，booking_id标识预约，venue_id引用场馆。删除场馆时应事先决定拒绝删除、级联删除还是置空；不同动作代表不同业务政策，不应仅为了让删除成功就开启级联。",
+        "MySQL原生InnoDB可执行外键约束。当前教学执行器支持单列主键与唯一约束，但不执行FOREIGN KEY；students.dept_id是可用于连接的教学字段，不因此自动成为已执行的外键约束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE venues (id INT PRIMARY KEY);\nCREATE TABLE bookings (\n id INT PRIMARY KEY,\n venue_id INT,\n FOREIGN KEY (venue_id) REFERENCES venues(id)\n);",
+        "description": "主键在一张表中唯一且非空地标识行；外键约束引用另一张表的有效键，防止引用不存在的对象。",
+        "result": "在原生InnoDB并满足必要权限时，非NULL的venue_id必须引用已有venues.id；平台不执行此外键清单。",
+        "reason": "示例需要原生InnoDB的外键实现；教学平台不执行FOREIGN KEY。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "bookings.venue_id设为UNIQUE后，一座场馆还能有多次预约吗？",
+        "answer": "若每次预约一行且venue_id非NULL，UNIQUE会禁止重复场馆编号，错误地把一对多限制为最多一次；外键本身不要求子表引用列唯一。",
+        "hints": [
+          "区分被引用键与引用列。",
+          "两次预约可以有不同id、相同venue_id。",
+          "唯一约束施加在哪一列决定了被禁止的重复。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：外键约束",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.4.3",
+      "sourceNodeId": "mysql.source.1-4-3",
+      "number": "1.4.3",
+      "title": "为多对多关系建立数据表",
+      "parent": "mysql.lesson.1.4",
+      "depth": 3,
+      "order": 17,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 12,
+      "physicalPage": 22,
+      "coverage": "body-present",
+      "body": [
+        "多对多联系要转换为关联表，每行代表两端实体的一次关联。成员与活动是多对多，但Member到Signup、Event到Signup分别是一对多，这使每条报名能够独立增删并附带报名时间。",
+        "若业务规定每人每活动最多报名一次，可用(member_id,event_id)作为复合键，或使用独立signup_id并对两列组合设唯一。独立编号只提供行身份，不能自动防止同一对实体重复报名。",
+        "允许重复参与时应再明确次数或场次。课程重修便不能只按学生和课程唯一，还需学期或修读次数。当前执行器不支持复合键，本例用关系示意解释设计，不以单列UNIQUE冒充组合唯一。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "Member(member_id PK, name)\nEvent(event_id PK, title)\nSignup(member_id FK, event_id FK, signed_on; PK=(member_id,event_id))\nSignup: (1,8,2027-02-01), (1,9,2027-02-02), (2,8,2027-02-01)",
+        "description": "多对多联系要转换为关联表，每行代表两端实体的一次关联。",
+        "result": "成员1可参加8和9，活动8可有成员1和2；重复插入(1,8)应被组合唯一规则拒绝。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "能否分别给member_id和event_id加UNIQUE来代替组合唯一？",
+        "answer": "不能。分别唯一会让成员最多报一项、活动最多容一人；组合唯一只禁止同一对编号重复。",
+        "hints": [
+          "观察成员1和活动8都合法重复。",
+          "唯一判断的单位应是两列组成的一对值。",
+          "分别唯一比组合唯一限制更强且不符合需求。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        },
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.4.4",
+      "sourceNodeId": "mysql.source.1-4-4",
+      "number": "1.4.4",
+      "title": "为字段选择合适的数据类型",
+      "parent": "mysql.lesson.1.4",
+      "depth": 3,
+      "order": 18,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 12,
+      "physicalPage": 22,
+      "coverage": "body-present",
+      "body": [
+        "数据类型定义值的表达和可接受范围。编号中的前导零若有意义，应按字符保存；需要加减的数量适合整数；需要精确小数的金额在原生MySQL常用DECIMAL而非浮点数。类型应依据业务语义而不是当前样本外观选择。",
+        "长度和缺失规则也需要设计。VARCHAR(32)限定字符长度，不说明该列一定有值；NOT NULL才约束不能缺失。日期应以日期类型表达日历含义，而非凭一串“看起来像日期”的文字假定服务器会检查。",
+        "平台表列只执行有符号INT和VARCHAR(1—256)，长度按Unicode标量检查，文本比较固定为utf8mb4_0900_bin。DECIMAL、日期和其他原生类型属于阅读知识；金额可用整数分的教学模型，但必须说明单位。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "字段         建议原生类型         理由\npostal_code  VARCHAR(12)          保留前导零\nquantity     INT                  参与计数\nprice        DECIMAL(9,2)         金额精确到分\nvisit_date   DATE                 日历日期\n平台演示金额：price_cents INT（单位：分）",
+        "description": "数据类型定义值的表达和可接受范围。",
+        "result": "邮编001200不能因外观像数字就丢弃前导零；金额的整数分表示与原生DECIMAL不是同一种字段声明。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "VARCHAR(20)能否自动保证内容是有效日期？",
+        "answer": "不能。它只约束文本长度等属性，不验证日历日期。原生应选合适日期类型并确认SQL模式；平台不执行日期列。",
+        "hints": [
+          "先分开文本形状和日历语义。",
+          "2027-02-31也能满足10个字符长度。",
+          "字段类型应承担对应的值域检查。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：数据类型",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/data-types.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.4.5",
+      "sourceNodeId": "mysql.source.1-4-5",
+      "number": "1.4.5",
+      "title": "定义约束条件",
+      "parent": "mysql.lesson.1.4",
+      "depth": 3,
+      "order": 19,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 13,
+      "physicalPage": 23,
+      "coverage": "body-present",
+      "body": [
+        "约束把业务规则写成数据库能检查的条件。NOT NULL要求有值，UNIQUE禁止非NULL键值重复，PRIMARY KEY同时要求唯一与非空；外键检查引用，CHECK在原生支持版本中检查行条件。",
+        "约束与默认值不同：DEFAULT只在省略字段等适用场景提供候选值，不能替代非空约束；显式插入NULL不会自动变成任意默认值。违反约束的写入应该失败，应用仍需解释失败原因。",
+        "约束要与实际规则一致。学生姓名通常不能唯一，学号可以唯一；分数0表示已有零分，NULL表示尚未给分。当前执行器支持单列主键、唯一、非空和标量默认值，外键及CHECK只作阅读。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE TABLE labels (\n id INT PRIMARY KEY,\n code VARCHAR(16) UNIQUE,\n title VARCHAR(32) NOT NULL,\n priority INT DEFAULT 0\n);",
+        "description": "约束把业务规则写成数据库能检查的条件。",
+        "result": "合法行需要唯一非空id和非NULL标题；code可缺失，UNIQUE允许多个NULL；省略priority时使用0。此清单中的列约束属于平台支持范围。",
+        "reason": "本节以阅读分析约束组合，清单中的类型和单列约束在平台支持范围内；不在此节点安排独立运行题。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "title设NOT NULL后能阻止空字符串吗？",
+        "answer": "不能。空字符串是已给出的文本值，与NULL不同；若要禁止空串，需要额外业务规则或原生CHECK等机制。",
+        "hints": [
+          "NULL是缺失标记，不是长度为0的文本。",
+          "比较“未填值”和“填了空文本”。",
+          "NOT NULL仅拒绝NULL，未声明最小文本长度。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0：CREATE TABLE",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.5",
+      "sourceNodeId": "mysql.source.1-5",
+      "number": "1.5",
+      "title": "本章小结",
+      "parent": "mysql.lesson.1",
+      "depth": 2,
+      "order": 20,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 13,
+      "physicalPage": 23,
+      "coverage": "body-present",
+      "body": [
+        "本章把业务事实逐步转成关系结构：先确定对象和粒度，再标识实体，随后表达联系和可选性，最后选择字段、类型与约束。SQL是操作模型的语言，不能替代需求判断。",
+        "检查一个设计时，可沿“实体是否独立→键是否稳定→联系是否完整→事实是否重复”逐层询问。表格能容纳样本不代表设计正确，还要试试无记录、重名、修改名称和删除关联等状态。",
+        "三级模式帮助理解接口与存储的分离，规范化帮助减少重复事实，主外键帮助落实标识与引用。进入MySQL操作前，应能用自己的话解释这些目的，而不是只背术语顺序。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "需求：志愿者参加服务项目，每次参加记录工时。\nVolunteer(volunteer_id, name)\nProject(project_id, title)\nParticipation(volunteer_id, project_id, service_day, hours)\n粒度：某志愿者在某项目某一天的参与。",
+        "description": "本章把业务事实逐步转成关系结构：先确定对象和粒度，再标识实体，随后表达联系和可选性，最后选择字段、类型与约束。",
+        "result": "如果同一天允许多班次，当前粒度还要加入shift_id或独立参与编号；设计由业务规则决定。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "仅用(volunteer_id,project_id)作主键会丢失什么能力？",
+        "answer": "无法保存同一志愿者跨日参加同一项目的多次记录，需要把日期或参与次数纳入唯一性规则。",
+        "hints": [
+          "复述Participation的一行代表什么。",
+          "设想同一人连续两天参加。",
+          "主键需要区分所有合法实例，不只是当前样本。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        },
+        {
+          "title": "Microsoft Learn：数据库规范化",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/troubleshoot/microsoft-365/microsoft-365-apps/access/database-normalization-description"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.1.6",
+      "sourceNodeId": "mysql.source.1-6",
+      "number": "1.6",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.1",
+      "depth": 2,
+      "order": 21,
+      "group": 1,
+      "leaf": true,
+      "printedPage": 14,
+      "physicalPage": 24,
+      "coverage": "body-present",
+      "body": [
+        "综合练习要把规则落实到具体反例中。请为共享器材室设计器材、使用者和借用记录，要求能区分两台同型号器材，保存多次借还历史，并允许器材暂时没有借出。",
+        "分析时先说明每张表的一行含义，再写主键与引用。一次借用有借出和归还时间，归还前可以缺失；器材名称不应在每条借用记录中重复保存，除非业务明确要保存历史名称快照。",
+        "本题没有唯一表名答案，判断依据是事实归属与合法状态能否表达。若还要求同一器材同一时段不能被重复借走，普通外键并不足够，需要应用与事务配合处理时间区间冲突。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "Item(item_id PK, model, label)\nBorrower(borrower_id PK, name)\nLoan(loan_id PK, item_id FK, borrower_id FK, lent_at, returned_at NULL)\n示例：Loan(501,17,3,2027-04-02 09:00,NULL)",
+        "description": "综合练习要把规则落实到具体反例中。",
+        "result": "loan_id区分每次借用，item_id允许跨次重复，NULL归还时间表示尚未归还；这只是设计推导，未运行原生数据库。",
+        "reason": "本节以阅读示例和自检理解概念；不会连接外部服务器。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何不把item_id直接当Loan的唯一主键？",
+        "answer": "一台器材可以有多次借用历史，item_id唯一会禁止第二次借用。应为借用事件独立编号或采用能区分事件的复合候选键。",
+        "hints": [
+          "比较器材身份与借用事件身份。",
+          "同一台器材在不同日期被借两次是合法状态。",
+          "关联事件需要自己的粒度和唯一性定义。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL Workbench：EER关系建模",
+          "url": "https://dev.mysql.com/doc/workbench/en/wb-relationship-tools.html"
+        },
+        {
+          "title": "MySQL 8.0：外键约束",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html"
+        }
+      ]
+    }
+  ]
+}

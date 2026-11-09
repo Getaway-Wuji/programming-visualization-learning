@@ -1,0 +1,1037 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:c-viz:mysql:response:1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "language",
+    "dialect",
+    "operation",
+    "buildId",
+    "identity",
+    "status",
+    "diagnostic",
+    "nodeMap",
+    "judgement",
+    "replay",
+    "usage"
+  ],
+  "properties": {
+    "version": {
+      "const": "1.0.0"
+    },
+    "language": {
+      "const": "mysql"
+    },
+    "dialect": {
+      "const": "8.0"
+    },
+    "operation": {
+      "enum": [
+        "execute",
+        "judge"
+      ]
+    },
+    "buildId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runId",
+        "sourceRevision"
+      ],
+      "properties": {
+        "runId": {
+          "$ref": "#/$defs/Opaque"
+        },
+        "sourceRevision": {
+          "$ref": "#/$defs/Opaque"
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "error",
+        "limited"
+      ]
+    },
+    "diagnostic": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/Diagnostic"
+        }
+      ]
+    },
+    "nodeMap": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/Node"
+      }
+    },
+    "judgement": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/Judgement"
+        }
+      ]
+    },
+    "replay": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/Replay"
+        }
+      ]
+    },
+    "usage": {
+      "$ref": "#/$defs/Usage"
+    }
+  },
+  "$defs": {
+    "Opaque": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[\\x20-\\x7e]+$"
+    },
+    "Name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,63}$"
+    },
+    "CellNull": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "const": "null"
+        }
+      }
+    },
+    "CellInt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "int"
+        },
+        "value": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "CellText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "text"
+        },
+        "value": {
+          "type": "string",
+          "maxLength": 256
+        }
+      }
+    },
+    "CellDecimal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "decimal"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 24,
+          "pattern": "^(?!-0(?:\\.0000)?$)-?(?:0|[1-9][0-9]*)(?:\\.[0-9]{4})?$"
+        }
+      }
+    },
+    "StoredCell": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CellNull"
+        },
+        {
+          "$ref": "#/$defs/CellInt"
+        },
+        {
+          "$ref": "#/$defs/CellText"
+        }
+      ]
+    },
+    "Cell": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/CellNull"
+        },
+        {
+          "$ref": "#/$defs/CellInt"
+        },
+        {
+          "$ref": "#/$defs/CellText"
+        },
+        {
+          "$ref": "#/$defs/CellDecimal"
+        }
+      ]
+    },
+    "Column": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "type",
+            "length",
+            "nullable",
+            "primaryKey",
+            "unique",
+            "defaultValue"
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/Name"
+            },
+            "type": {
+              "const": "int"
+            },
+            "length": {
+              "type": "null"
+            },
+            "nullable": {
+              "type": "boolean"
+            },
+            "primaryKey": {
+              "type": "boolean"
+            },
+            "unique": {
+              "type": "boolean"
+            },
+            "defaultValue": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/$defs/StoredCell"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "type",
+            "length",
+            "nullable",
+            "primaryKey",
+            "unique",
+            "defaultValue"
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/Name"
+            },
+            "type": {
+              "const": "varchar"
+            },
+            "length": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 256
+            },
+            "nullable": {
+              "type": "boolean"
+            },
+            "primaryKey": {
+              "type": "boolean"
+            },
+            "unique": {
+              "type": "boolean"
+            },
+            "defaultValue": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/$defs/StoredCell"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "values"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/StoredCell"
+          }
+        }
+      }
+    },
+    "Table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "columns",
+        "rows"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/Name"
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/Column"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/Row"
+          }
+        }
+      }
+    },
+    "Database": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tables",
+        "nextRowId"
+      ],
+      "properties": {
+        "tables": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/Table"
+          }
+        },
+        "nextRowId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4097
+        }
+      }
+    },
+    "Transaction": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "active",
+            "base"
+          ],
+          "properties": {
+            "active": {
+              "const": false
+            },
+            "base": {
+              "type": "null"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "active",
+            "base"
+          ],
+          "properties": {
+            "active": {
+              "const": true
+            },
+            "base": {
+              "$ref": "#/$defs/Database"
+            }
+          }
+        }
+      ]
+    },
+    "Session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "database",
+        "transaction"
+      ],
+      "properties": {
+        "database": {
+          "$ref": "#/$defs/Database"
+        },
+        "transaction": {
+          "$ref": "#/$defs/Transaction"
+        }
+      }
+    },
+    "Result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "columns",
+        "rows",
+        "affectedRows",
+        "matchedRows"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "none",
+            "query",
+            "mutation",
+            "ddl",
+            "transaction"
+          ]
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
+          "items": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 32,
+            "items": {
+              "$ref": "#/$defs/Cell"
+            }
+          }
+        },
+        "affectedRows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        },
+        "matchedRows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        }
+      }
+    },
+    "Control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "phase",
+        "table",
+        "rowIds"
+      ],
+      "properties": {
+        "statement": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 32
+            }
+          ]
+        },
+        "phase": {
+          "enum": [
+            "ready",
+            "statement",
+            "scan",
+            "filter",
+            "join",
+            "group",
+            "project",
+            "distinct",
+            "order",
+            "limit",
+            "write",
+            "transaction",
+            "done"
+          ]
+        },
+        "table": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/Name"
+            }
+          ]
+        },
+        "rowIds": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4096
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "State": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "session",
+        "result",
+        "control"
+      ],
+      "properties": {
+        "session": {
+          "$ref": "#/$defs/Session"
+        },
+        "result": {
+          "$ref": "#/$defs/Result"
+        },
+        "control": {
+          "$ref": "#/$defs/Control"
+        }
+      }
+    },
+    "ByteRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32768
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32768
+        }
+      }
+    },
+    "Diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "byteRange"
+      ],
+      "properties": {
+        "code": {
+          "enum": [
+            "E_REQUEST_INVALID",
+            "E_VERSION_UNSUPPORTED",
+            "E_SESSION_INVALID",
+            "E_SOURCE_LIMIT",
+            "E_DATABASE_LIMIT",
+            "E_SYNTAX",
+            "E_UNSUPPORTED",
+            "E_NAME",
+            "E_TYPE",
+            "E_CONSTRAINT",
+            "E_TABLE_EXISTS",
+            "E_TABLE_UNKNOWN",
+            "E_TRANSACTION",
+            "E_OVERFLOW",
+            "E_DEPTH_LIMIT",
+            "E_FUEL_LIMIT",
+            "E_STEP_LIMIT",
+            "E_ROW_LIMIT",
+            "E_COLUMN_LIMIT",
+            "E_RESULT_LIMIT",
+            "E_MEMORY_LIMIT",
+            "E_DEADLINE",
+            "E_PROFILE_UNKNOWN",
+            "E_TEXT_LIMIT",
+            "E_TOKEN_LIMIT",
+            "E_STATEMENT_LIMIT",
+            "E_ROW_ID_LIMIT",
+            "E_GROUP"
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/ByteRange"
+        }
+      }
+    },
+    "Node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "byteRange"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32
+        },
+        "kind": {
+          "enum": [
+            "select",
+            "create",
+            "drop",
+            "truncate",
+            "insert",
+            "update",
+            "delete",
+            "begin",
+            "commit",
+            "rollback"
+          ]
+        },
+        "byteRange": {
+          "$ref": "#/$defs/ByteRange"
+        }
+      }
+    },
+    "Change": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "component",
+            "before",
+            "after"
+          ],
+          "properties": {
+            "component": {
+              "const": "session"
+            },
+            "before": {
+              "$ref": "#/$defs/Session"
+            },
+            "after": {
+              "$ref": "#/$defs/Session"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "component",
+            "before",
+            "after"
+          ],
+          "properties": {
+            "component": {
+              "const": "result"
+            },
+            "before": {
+              "$ref": "#/$defs/Result"
+            },
+            "after": {
+              "$ref": "#/$defs/Result"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "component",
+            "before",
+            "after"
+          ],
+          "properties": {
+            "component": {
+              "const": "control"
+            },
+            "before": {
+              "$ref": "#/$defs/Control"
+            },
+            "after": {
+              "$ref": "#/$defs/Control"
+            }
+          }
+        }
+      ]
+    },
+    "Step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seq",
+        "nodeId",
+        "event",
+        "changes"
+      ],
+      "properties": {
+        "seq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2048
+        },
+        "nodeId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32
+        },
+        "event": {
+          "enum": [
+            "statement",
+            "scan",
+            "filter",
+            "join",
+            "group",
+            "project",
+            "distinct",
+            "order",
+            "limit",
+            "insert",
+            "update",
+            "delete",
+            "create",
+            "drop",
+            "truncate",
+            "begin",
+            "commit",
+            "rollback",
+            "done"
+          ]
+        },
+        "changes": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/Change"
+          }
+        }
+      }
+    },
+    "Checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cursor",
+        "state"
+      ],
+      "properties": {
+        "cursor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2048
+        },
+        "state": {
+          "$ref": "#/$defs/State"
+        }
+      }
+    },
+    "Trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initialState",
+        "steps",
+        "checkpoints",
+        "completeness"
+      ],
+      "properties": {
+        "initialState": {
+          "$ref": "#/$defs/State"
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 2048,
+          "items": {
+            "$ref": "#/$defs/Step"
+          }
+        },
+        "checkpoints": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 17,
+          "items": {
+            "$ref": "#/$defs/Checkpoint"
+          }
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "prefix"
+          ]
+        }
+      }
+    },
+    "Terminal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "diagnostic",
+        "cursor"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "completed",
+            "error",
+            "limited"
+          ]
+        },
+        "diagnostic": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/Diagnostic"
+            }
+          ]
+        },
+        "cursor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2048
+        }
+      }
+    },
+    "Replay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "terminal",
+        "trace",
+        "features"
+      ],
+      "properties": {
+        "terminal": {
+          "$ref": "#/$defs/Terminal"
+        },
+        "trace": {
+          "$ref": "#/$defs/Trace"
+        },
+        "features": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 18,
+          "items": {
+            "enum": [
+              "select",
+              "projection",
+              "filter",
+              "distinct",
+              "order",
+              "limit",
+              "group",
+              "aggregate",
+              "inner-join",
+              "left-join",
+              "create",
+              "insert",
+              "update",
+              "delete",
+              "begin",
+              "commit",
+              "rollback",
+              "transaction-write"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "Case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "status",
+        "passed",
+        "reason",
+        "diagnostic"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "error",
+            "limited"
+          ]
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "reason": {
+          "enum": [
+            "passed",
+            "wrong-result",
+            "wrong-database",
+            "goal-unmet",
+            "program-error",
+            "limited"
+          ]
+        },
+        "diagnostic": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/Diagnostic"
+            }
+          ]
+        }
+      }
+    },
+    "Judgement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passed",
+        "reviewCase",
+        "complete",
+        "cases"
+      ],
+      "properties": {
+        "passed": {
+          "type": "boolean"
+        },
+        "reviewCase": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "cases": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/Case"
+          }
+        }
+      }
+    },
+    "Usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fuel",
+        "steps",
+        "rowsExamined",
+        "databaseBytes",
+        "resultBytes"
+      ],
+      "properties": {
+        "fuel": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2048
+        },
+        "rowsExamined": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "databaseBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65536
+        },
+        "resultBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16777216
+        }
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ import { native } from './scheduler-helpers';
 import { decodeResult, type ExecuteRequest } from '../../web/src/engine/protocol';
 import { PlayerModel } from '../../web/src/player/model';
 
-/** Current DB14 regression, separate from independent historical storage fixtures. */
+/** Current DB15 regression, separate from independent historical storage fixtures. */
 for (const id of caseSetIds) {
   test(`18.4 current archive and genuine C case remain reversible: ${id}`, async ({
     page,
@@ -26,7 +26,7 @@ for (const id of caseSetIds) {
       db.close();
       return value;
     });
-    expect(storage.version).toBe(14);
+    expect(storage.version).toBe(15);
     expect(storage.stores).toEqual([
       'achievements',
       'aliases',
@@ -46,6 +46,8 @@ for (const id of caseSetIds) {
       'knowledgeMarks',
       'ledger',
       'meta',
+      'mysqlActivities',
+      'mysqlDrafts',
       'progress',
       'pythonActivities',
       'pythonDrafts',

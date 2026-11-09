@@ -1,3 +1,4 @@
+import { mysqlExercise, mysqlPackageRef, isMysqlProgress } from '../mysql-course/identities';
 import { isJavaProgress, javaExercise, javaPackageRef } from '../java/identities';
 import { cppExercise, cppPackageRef, isCppProgress } from '../cpp-course/identities';
 import { rustExercise, rustPackageRef, isRustProgress } from '../rust2018-course/identities';
@@ -85,6 +86,7 @@ export function isCompatibleLearningHistory(
   if (current.ref.id.startsWith('py3.') && !isPythonProgress(progress)) return false;
   if (current.ref.id.startsWith('java.') && !isJavaProgress(progress)) return false;
   if (current.ref.id.startsWith('cpp.book.') && !isCppProgress(progress)) return false;
+  if (current.ref.id.startsWith('mysql.') && !isMysqlProgress(progress)) return false;
   if (current.ref.id.startsWith('rust.book.') && !isRustProgress(progress)) return false;
   if (
     /^(lesson|exercise)\.c6\./u.test(current.ref.id) &&
@@ -204,7 +206,17 @@ export function applyRustLearningEvent(snapshot: StorageSnapshot, command: Learn
   return applyTextCourseLearningEvent(snapshot, command, 'rust');
 }
 
+export function applyMysqlLearningEvent(snapshot: StorageSnapshot, command: LearningCommand) {
+  return applyTextCourseLearningEvent(snapshot, command, 'mysql');
+}
+
 const textCourses = {
+  mysql: {
+    db: 15,
+    progress: isMysqlProgress,
+    packageRef: mysqlPackageRef,
+    lesson: (id: string) => mysqlExercise(id)?.lesson,
+  },
   rust: {
     db: 14,
     progress: isRustProgress,

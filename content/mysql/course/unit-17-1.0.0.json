@@ -1,0 +1,710 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 17,
+  "nodes": [
+    {
+      "id": "mysql.lesson.17",
+      "sourceNodeId": "mysql.source.chapter-17",
+      "number": "17",
+      "title": "综合项目",
+      "parent": null,
+      "depth": 1,
+      "order": 360,
+      "group": 17,
+      "leaf": false,
+      "printedPage": 342,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "综合项目把需求、数据结构、SQL和事务连成可解释的流程。图书系统关注实体副本与借阅关系，购物系统关注库存、价格快照和订单；两者都要在失败与并发下守住不变量。",
+        "本章以原生MySQL 8.0及PHP阅读项目讲解业务流程，平台不执行服务器连接、PHP或外部网站部署。各例按给定数据推导结果；平台可运行SQL与原生完整功能分别说明。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.1",
+      "sourceNodeId": "mysql.source.17-1",
+      "number": "17.1",
+      "title": "图书管理系统",
+      "parent": "mysql.lesson.17",
+      "depth": 2,
+      "order": 361,
+      "group": 17,
+      "leaf": false,
+      "printedPage": 342,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "图书管理先区分书目与实体副本：两本同名书可以是两个可独立借出的对象。简化项目以每行代表一个副本，用独立读者表和借阅表保存关系，避免把读者姓名直接写进图书标题字段。",
+        "17.1.2给出本节共同结构及两本书、一名读者的初始数据，后续例明确依赖此结构。图书借还需要事务和受控写入口；外键保护引用，不能独自保证同一副本不会被重复借出。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create table foreign keys",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table-foreign-keys.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.1.1",
+      "sourceNodeId": "mysql.source.17-1-1",
+      "number": "17.1.1",
+      "title": "需求管理",
+      "parent": "mysql.lesson.17.1",
+      "depth": 3,
+      "order": 362,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 342,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "需求管理要把界面动作翻译成数据规则。借书意味着读者和副本存在、副本可借、借阅记录与副本状态共同更新，不能只描述“点击按钮后显示成功”。",
+        "阅读例把借阅成功、缺失读者与不可借副本列为三种情境。每个情境都有明确预期，才能在之后检查约束、事务和失败提示。",
+        "本简化项目不实现登录、隐私账户或多角色网站，但应在需求层承认真实系统仍需要认证与授权。教学结构中的读者记录是业务实体，不是数据库登录账户。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "情境A：副本12可借、读者7存在 -> 可创建一条借阅并改为不可借\n情境B：读者不存在 -> 不新增借阅且不改副本\n情境C：副本已经借出 -> 拒绝再次借阅\n共同要求：失败不留下半份业务变更",
+        "description": "阅读例把借阅成功、缺失读者与不可借副本列为三种情境。每个情境都有明确预期，才能在之后检查约束、事务和失败提示。",
+        "result": "这是需求与预期清单，尚未运行应用；它要求同时观察借阅行与副本状态。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "只检查借阅表增加了一行，为什么不能证明借书流程正确？",
+        "answer": "还要检查副本状态、读者和副本引用，以及失败和重复借阅是否保持一致。",
+        "hints": [
+          "列出一次借阅改变的对象。",
+          "检查对象间不变量。",
+          "把失败路径也纳入预期。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create table foreign keys",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table-foreign-keys.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.1.2",
+      "sourceNodeId": "mysql.source.17-1-2",
+      "number": "17.1.2",
+      "title": "创建数据库",
+      "parent": "mysql.lesson.17.1",
+      "depth": 3,
+      "order": 363,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 345,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "建库阶段先用正确类型表达主键、文本和时间，再建立关系。book_copies每行是一份实体副本，readers是读者，loans保存借阅事件与归还时间。",
+        "例子选择InnoDB以使用事务和外键，并为available限制0或1。CHECK约束实际执行要求MySQL 8.0.16及以上；初始化与业务事务分开，不把DDL放进后续借阅事务。",
+        "外键确保引用存在，但available与未归还借阅之间的一致性仍由受控事务流程维护。这里是可解释的最小业务结构，不宣称已经包含完整馆藏、罚款和账户功能。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE DATABASE library_demo CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;\nUSE library_demo;\nCREATE TABLE book_copies(id INT PRIMARY KEY,title VARCHAR(80) NOT NULL,available INT NOT NULL DEFAULT 1,CHECK(available IN(0,1))) ENGINE=InnoDB;\nCREATE TABLE readers(id INT PRIMARY KEY,name VARCHAR(40) NOT NULL) ENGINE=InnoDB;\nCREATE TABLE loans(id INT PRIMARY KEY,copy_id INT NOT NULL,reader_id INT NOT NULL,borrowed_at DATETIME NOT NULL,returned_at DATETIME NULL,FOREIGN KEY(copy_id) REFERENCES book_copies(id),FOREIGN KEY(reader_id) REFERENCES readers(id)) ENGINE=InnoDB;\nINSERT INTO book_copies VALUES(12,'数据库起点',1),(13,'SQL练习',1);\nINSERT INTO readers VALUES(7,'小林');",
+        "description": "例子选择InnoDB以使用事务和外键，并为available限制0或1。CHECK约束实际执行要求MySQL 8.0.16及以上；初始化与业务事务分开，不把DDL放进后续借阅事务。",
+        "result": "原生8.0.16及以上且新库名未占用时建立三表，副本12与13可借、读者7存在、借阅表为空；平台不建服务器数据库。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么外键存在仍需设计借阅事务？",
+        "answer": "外键只验证引用等约束，不自动把available更新与新增借阅绑定为一个业务动作。",
+        "hints": [
+          "先明确外键保护什么。",
+          "找一次业务要改的两张表。",
+          "用事务把相关写入组合起来。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create database",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-database.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · create table foreign keys",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table-foreign-keys.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · create table check constraints",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table-check-constraints.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.1.3",
+      "sourceNodeId": "mysql.source.17-1-3",
+      "number": "17.1.3",
+      "title": "图书管理",
+      "parent": "mysql.lesson.17.1",
+      "depth": 3,
+      "order": 364,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 349,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "图书管理区分新增副本、修改说明与删除实体。标题不是可靠身份，重名书仍由不同主键区分；按标题更新可能一次影响多个副本。",
+        "例子在共同初始数据上只修改副本13的标题，再按主键读取。WHERE限定身份，ORDER BY只控制展示顺序，不参与是否修改的判断。",
+        "已被借阅记录引用的副本不能随意物理删除，外键可能拒绝。真实业务可设计停用或历史保留规则，不能为了删除成功就先关闭引用约束。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "USE library_demo;\nUPDATE book_copies SET title='SQL练习·修订版' WHERE id=13;\nSELECT id,title,available FROM book_copies ORDER BY id;",
+        "description": "例子在共同初始数据上只修改副本13的标题，再按主键读取。WHERE限定身份，ORDER BY只控制展示顺序，不参与是否修改的判断。",
+        "result": "共同初态下副本12保持数据库起点，副本13标题变为SQL练习·修订版，两个available仍为1。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么更适合用id而不是title定位要编辑的副本？",
+        "answer": "标题可能重名或变化，主键稳定且唯一，可以明确限定单个实体。",
+        "hints": [
+          "先考虑两本同名书。",
+          "再考虑标题修改。",
+          "选择稳定唯一身份。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · update",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/update.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · create table foreign keys",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table-foreign-keys.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.1.4",
+      "sourceNodeId": "mysql.source.17-1-4",
+      "number": "17.1.4",
+      "title": "用户信息管理",
+      "parent": "mysql.lesson.17.1",
+      "depth": 3,
+      "order": 365,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 350,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "读者信息保存业务身份与必要资料，不等于创建MySQL登录账户。姓名可能重复，也可能更改，因此借阅记录应引用稳定的读者id。",
+        "例子新增读者8并修改其显示姓名，再按id查询；已有读者7及其历史引用不变。真实系统采集联系电话等字段前还应明确必要性与访问范围。",
+        "删除已有借阅历史的读者会涉及引用与历史保留政策。清空业务姓名与注销网站账户是两项不同操作；本例仅修改读者记录。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "USE library_demo;\nINSERT INTO readers VALUES(8,'阿禾');\nUPDATE readers SET name='阿禾同学' WHERE id=8;\nSELECT id,name FROM readers WHERE id IN(7,8) ORDER BY id;",
+        "description": "例子新增读者8并修改其显示姓名，再按id查询；已有读者7及其历史引用不变。真实系统采集联系电话等字段前还应明确必要性与访问范围。",
+        "result": "共同初态下得到(7,小林)、(8,阿禾同学)；没有创建数据库用户、密码或网站登录功能。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "修改读者姓名后应把loans中的reader_id也改成新姓名吗？",
+        "answer": "不应该，借阅表应继续引用稳定id，显示姓名通过关联读取。",
+        "hints": [
+          "借阅保存的是关系键。",
+          "姓名可变且不一定唯一。",
+          "用id关联最新或适当历史显示值。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create table foreign keys",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table-foreign-keys.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · update",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/update.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.1.5",
+      "sourceNodeId": "mysql.source.17-1-5",
+      "number": "17.1.5",
+      "title": "图书借阅管理",
+      "parent": "mysql.lesson.17.1",
+      "depth": 3,
+      "order": 366,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 351,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "借阅管理需要把状态检查、借阅写入和副本状态更新放在同一事务。原生InnoDB的FOR UPDATE让遵守同一访问协议的并发流程在同一副本上协调，而不是只靠页面按钮禁用。",
+        "PHP阅读例使用共同初态借出副本12给读者7。先锁定并检查副本，参数绑定写入借阅，再检查状态更新恰好影响一行，只有COMMIT返回成功后报告提交。",
+        "异常时回滚仍活动的事务；若连接在提交确认时中断，不能断言服务器一定没提交，应按稳定借阅id查明。代码只示范借阅路径，所有其他写入口也须遵守同一业务协议。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "php",
+        "source": "<?php\n// 原生PHP 8/PDO MySQL阅读；LIB_DSN含dbname=library_demo;charset=utf8mb4\n$db = null;\ntry {\n    $dsn = getenv('LIB_DSN');\n    $user = getenv('LIB_USER');\n    $pass = getenv('LIB_PASSWORD');\n    if ($dsn === false || $user === false || $pass === false) {\n        throw new RuntimeException('missing configuration');\n    }\n    $db = new PDO($dsn, $user, $pass, [\n        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,\n        PDO::ATTR_EMULATE_PREPARES => false\n    ]);\n    if (!$db->beginTransaction()) { throw new RuntimeException('transaction unavailable'); }\n    $q = $db->prepare('SELECT available FROM book_copies WHERE id=? FOR UPDATE');\n    $q->execute([12]);\n    $copy = $q->fetch(PDO::FETCH_ASSOC);\n    if ($copy === false || (int)$copy['available'] !== 1) {\n        throw new RuntimeException('copy unavailable');\n    }\n    $q = $db->prepare('INSERT INTO loans(id,copy_id,reader_id,borrowed_at) VALUES(?,?,?,?)');\n    $q->execute([501, 12, 7, '2026-11-08 10:00:00']);\n    $q = $db->prepare('UPDATE book_copies SET available=0 WHERE id=? AND available=1');\n    $q->execute([12]);\n    if ($q->rowCount() !== 1) { throw new RuntimeException('state conflict'); }\n    if (!$db->commit()) { throw new RuntimeException('commit not confirmed'); }\n    echo '借阅已提交';\n} catch (Throwable $e) {\n    if ($db !== null && $db->inTransaction()) { $db->rollBack(); }\n    echo '借阅未确认，请核对业务状态';\n}\n",
+        "description": "PHP阅读例使用共同初态借出副本12给读者7。先锁定并检查副本，参数绑定写入借阅，再检查状态更新恰好影响一行，只有COMMIT返回成功后报告提交。",
+        "result": "在全新共同初态与正常连接下，借阅501产生且副本12的available为0；缺读者、重复id或不可借时拒绝并回滚活动事务，提交确认丢失需再核实。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何在事务外先SELECT可借，再开始事务写入仍可能出错？",
+        "answer": "两个请求可能在写入前同时读到可借；应在受控事务中锁定检查并让所有写入口遵守一致协议。",
+        "hints": [
+          "考虑两个并发请求交错。",
+          "普通读取不预留副本。",
+          "把检查和写入放进锁定事务。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · innodb locking reads",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-locking-reads.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        },
+        {
+          "title": "PHP Manual · PDO::prepare",
+          "url": "https://www.php.net/manual/en/pdo.prepare.php"
+        },
+        {
+          "title": "PHP Manual · PDO::beginTransaction",
+          "url": "https://www.php.net/manual/en/pdo.begintransaction.php"
+        },
+        {
+          "title": "PHP Manual · PDOStatement::rowCount",
+          "url": "https://www.php.net/manual/en/pdostatement.rowcount.php"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.1.6",
+      "sourceNodeId": "mysql.source.17-1-6",
+      "number": "17.1.6",
+      "title": "视图管理",
+      "parent": "mysql.lesson.17.1",
+      "depth": 3,
+      "order": 367,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 352,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "视图把常用关联封装为命名查询，原生普通视图并不是自动保存的物化结果。查询视图时仍依其定义访问基础数据。",
+        "例子把未归还借阅与图书、读者名称关联，用SQL SECURITY INVOKER表达调用者权限上下文。它隐藏查询拼接细节，却不自动授予调用者全部基础对象权限。",
+        "视图定义显式列名，避免把新增敏感字段意外纳入接口。视图可更新性与安全上下文有原生规则，不能把任何关联视图都当成可直接编辑的表。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "USE library_demo;\nCREATE SQL SECURITY INVOKER VIEW open_loans AS\nSELECT l.id AS loan_id,b.title,r.name,l.borrowed_at\nFROM loans l JOIN book_copies b ON l.copy_id=b.id\nJOIN readers r ON l.reader_id=r.id\nWHERE l.returned_at IS NULL;\nSELECT loan_id,title,name FROM open_loans ORDER BY loan_id;",
+        "description": "例子把未归还借阅与图书、读者名称关联，用SQL SECURITY INVOKER表达调用者权限上下文。它隐藏查询拼接细节，却不自动授予调用者全部基础对象权限。",
+        "result": "共同初态为零行；若17.1.5正常成功且尚未归还，则显示借阅501、副本12标题和小林；结果随基础数据变化。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "基础表更新后必须手动刷新这个普通视图的缓存才能看到新值吗？",
+        "answer": "不需要按物化缓存理解，它保存查询定义，读取时依定义获得基础数据结果。",
+        "hints": [
+          "先辨认普通视图。",
+          "保存的是定义而非独立快照。",
+          "与16.3.2汇总普通表比较。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create view",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-view.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.2",
+      "sourceNodeId": "mysql.source.17-2",
+      "number": "17.2",
+      "title": "网上购物系统",
+      "parent": "mysql.lesson.17",
+      "depth": 2,
+      "order": 368,
+      "group": 17,
+      "leaf": false,
+      "printedPage": 354,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "购物系统需要把商品展示与下单状态分开。展示价格可以变更，已创建订单仍应保留当时的单价快照；库存扣减与订单写入要共同成功或失败。",
+        "本节缩小为单商品、整数分金额的订单阅读项目，17.2.2给出共同初态，17.2.3展示完整事务路径。它没有支付、配送、网站账户或线上运行能力，后续扩展须另定需求与验证。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · innodb locking reads",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-locking-reads.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.2.1",
+      "sourceNodeId": "mysql.source.17-2-1",
+      "number": "17.2.1",
+      "title": "系统功能描述",
+      "parent": "mysql.lesson.17.2",
+      "depth": 3,
+      "order": 369,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 354,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "功能描述先说明输入与结果：选择商品、给出数量、创建订单、查询订单状态。展示商品不预留库存，点击下单也不等于数据库已经成功提交。",
+        "阅读情境中商品11初始5件、单价1200分，购买2件应生成2400分订单并剩余3件；购买6件应拒绝且不写订单。这两个预期共同定义库存边界。",
+        "金额单位、数量范围和订单身份必须明确。重复提交与失败重试也属于流程要求，不能等到界面完成后才发现同一次购买扣了两次库存。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "商品11：库存5，单价1200分\n请求A：数量2 -> 总额2400分，提交后库存3\n请求B：数量6 -> 库存不足，库存保持5且无订单\n各场景均从独立初态开始",
+        "description": "阅读情境中商品11初始5件、单价1200分，购买2件应生成2400分订单并剩余3件；购买6件应拒绝且不写订单。这两个预期共同定义库存边界。",
+        "result": "这里是两个独立场景的预期，不把A之后的库存3再误当成B的初态；没有实际下单。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "展示页看到库存5，能否保证稍后购买2件必定成功？",
+        "answer": "不能，展示和提交之间可能有其他请求消耗库存，需要在下单事务内重新核实。",
+        "hints": [
+          "展示与提交存在时间差。",
+          "考虑其他并发购买。",
+          "下单阶段检查权威库存。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · innodb locking reads",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-locking-reads.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.2.2",
+      "sourceNodeId": "mysql.source.17-2-2",
+      "number": "17.2.2",
+      "title": "系统功能分析",
+      "parent": "mysql.lesson.17.2",
+      "depth": 3,
+      "order": 370,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 355,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "功能分析把商品和订单分成两张表。商品保存当前库存与当前价格，订单保存数量、成交单价和总额，避免商品改价后历史订单金额跟着变化。",
+        "例子按整数分建模，CHECK要求MySQL 8.0.16及以上。订单总额用BIGINT表达原生范围，外键保证商品引用；下单事务负责从服务器读取价格并核对计算。",
+        "这份最小结构只支持一单一种商品，不包含支付、购物车多行或收货地址。唯一订单主键能防同id重复写入，但成功重试的查询与返回策略还需应用明确设计。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "CREATE DATABASE shop_demo CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;\nUSE shop_demo;\nCREATE TABLE shop_products(id INT PRIMARY KEY,title VARCHAR(80) NOT NULL,stock INT NOT NULL CHECK(stock>=0),price_cents INT NOT NULL CHECK(price_cents>=0)) ENGINE=InnoDB;\nCREATE TABLE shop_orders(id INT PRIMARY KEY,product_id INT NOT NULL,qty INT NOT NULL CHECK(qty>0),unit_price_cents INT NOT NULL CHECK(unit_price_cents>=0),total_cents BIGINT NOT NULL CHECK(total_cents>=0),status VARCHAR(16) NOT NULL,FOREIGN KEY(product_id) REFERENCES shop_products(id)) ENGINE=InnoDB;\nINSERT INTO shop_products VALUES(11,'练习册',5,1200);",
+        "description": "例子按整数分建模，CHECK要求MySQL 8.0.16及以上。订单总额用BIGINT表达原生范围，外键保证商品引用；下单事务负责从服务器读取价格并核对计算。",
+        "result": "原生8.0.16及以上且对象名可用时建立两表：商品11有5件、单价1200分，订单表为空；BIGINT与CHECK属于阅读范围。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "订单为什么保留unit_price_cents而不是永远查商品当前价格？",
+        "answer": "订单需要反映成交时价格，商品未来改价不应改变已经记录的交易金额。",
+        "hints": [
+          "区分当前报价和历史事实。",
+          "假设明天商品涨价。",
+          "订单应保存当时价格快照。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create database",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-database.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · create table foreign keys",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table-foreign-keys.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · create table check constraints",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table-check-constraints.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.2.3",
+      "sourceNodeId": "mysql.source.17-2-3",
+      "number": "17.2.3",
+      "title": "代码实现",
+      "parent": "mysql.lesson.17.2",
+      "depth": 3,
+      "order": 371,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 357,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "代码实现必须从数据库读取价格，在事务内检查库存，并使用参数绑定。不能把客户端传入的总价直接当作成交额，也不能用字符串拼接把输入嵌入SQL。",
+        "完整PHP阅读例固定购买商品11的2件。FOR UPDATE协调同商品写入，带库存条件的UPDATE需恰好改一行，再插订单并提交；重复订单id或后续失败会回滚活动事务。",
+        "例子仅面向已给定的小金额与64位PHP，不是公开网站接口；真实系统仍要处理认证、授权、死锁重试和支付状态。若提交确认丢失，应按原订单号核实，不能断言失败后改新号再次扣库存。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "php",
+        "source": "<?php\n// 原生64位PHP 8/PDO MySQL阅读；SHOP_DSN含dbname=shop_demo;charset=utf8mb4\n// 固定教学请求，非公开HTTP接口；共同初态见17.2.2\n$db = null;\n$productId = 11;\n$quantity = 2;\n$orderId = 701;\ntry {\n    $dsn = getenv('SHOP_DSN');\n    $user = getenv('SHOP_USER');\n    $pass = getenv('SHOP_PASSWORD');\n    if ($dsn === false || $user === false || $pass === false) {\n        throw new RuntimeException('missing configuration');\n    }\n    if ($quantity < 1 || $quantity > 100) { throw new RuntimeException('invalid quantity'); }\n    $db = new PDO($dsn, $user, $pass, [\n        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,\n        PDO::ATTR_EMULATE_PREPARES => false\n    ]);\n    if (!$db->beginTransaction()) { throw new RuntimeException('transaction unavailable'); }\n    $q = $db->prepare('SELECT stock,price_cents FROM shop_products WHERE id=? FOR UPDATE');\n    $q->execute([$productId]);\n    $product = $q->fetch(PDO::FETCH_ASSOC);\n    if ($product === false || (int)$product['stock'] < $quantity) {\n        throw new RuntimeException('insufficient stock');\n    }\n    $unitPrice = (int)$product['price_cents'];\n    $total = $unitPrice * $quantity;\n    $q = $db->prepare('UPDATE shop_products SET stock=stock-? WHERE id=? AND stock>=?');\n    $q->execute([$quantity, $productId, $quantity]);\n    if ($q->rowCount() !== 1) { throw new RuntimeException('stock conflict'); }\n    $q = $db->prepare('INSERT INTO shop_orders(id,product_id,qty,unit_price_cents,total_cents,status) VALUES(?,?,?,?,?,?)');\n    $q->execute([$orderId, $productId, $quantity, $unitPrice, $total, 'created']);\n    if (!$db->commit()) { throw new RuntimeException('commit not confirmed'); }\n    echo '订单已提交';\n} catch (Throwable $e) {\n    if ($db !== null && $db->inTransaction()) { $db->rollBack(); }\n    echo '订单未确认，请按原订单号核对状态';\n}\n",
+        "description": "完整PHP阅读例固定购买商品11的2件。FOR UPDATE协调同商品写入，带库存条件的UPDATE需恰好改一行，再插订单并提交；重复订单id或后续失败会回滚活动事务。",
+        "result": "共同初态且正常提交时，商品库存3、订单701数量2、单价1200分、总额2400分；异常不报告已成功，提交结果不明确时需查询原订单状态。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么INSERT订单失败时还需要回滚前面成功的库存扣减？",
+        "answer": "两者属于一个业务事务，只扣库存而没有订单会破坏一致性，回滚活动事务可撤销该次未提交扣减。",
+        "hints": [
+          "先找两个业务写入。",
+          "把它们放在一个提交边界内。",
+          "后一步失败不等于前一步可保留。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · innodb locking reads",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-locking-reads.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · update",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/update.html"
+        },
+        {
+          "title": "PHP Manual · PDO::prepare",
+          "url": "https://www.php.net/manual/en/pdo.prepare.php"
+        },
+        {
+          "title": "PHP Manual · PDO::beginTransaction",
+          "url": "https://www.php.net/manual/en/pdo.begintransaction.php"
+        },
+        {
+          "title": "PHP Manual · PDOStatement::rowCount",
+          "url": "https://www.php.net/manual/en/pdostatement.rowcount.php"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.2.4",
+      "sourceNodeId": "mysql.source.17-2-4",
+      "number": "17.2.4",
+      "title": "程序运行",
+      "parent": "mysql.lesson.17.2",
+      "depth": 3,
+      "order": 372,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 367,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "程序运行验证应从独立初始库开始，并同时观察返回信息、库存与订单。只看到“订单已提交”文字不足以证明原生数据库状态和预期一致。",
+        "阅读验证单包含正常购买、库存不足、重复id和后段失败。每种情况都要清楚重置初态，避免前一个测试消耗库存造成后一个预期错误。",
+        "运行环境需要PHP的PDO MySQL驱动、原生MySQL服务与适当最少权限连接。下列情境用于预测正常与失败结果，应在独立测试库逐项验证库存和订单。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "独立初态：商品11库存5、1200分，订单为空\nA：买2件 -> 库存3、订单701总额2400\nB：买6件 -> 拒绝、库存5、无订单\nC：先成功701再重复701 -> 仅一单，第二次未提交扣减回滚\nD：在扣库存后、提交前制造可控异常 -> 库存和订单回到该事务起点",
+        "description": "阅读验证单包含正常购买、库存不足、重复id和后段失败。每种情况都要清楚重置初态，避免前一个测试消耗库存造成后一个预期错误。",
+        "result": "这些是待在隔离原生环境验证的预期。已提交后的连接中断另属不确定结果，需按订单号核查。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "在扣库存后主动抛异常，正确测试应观察哪些数据？",
+        "answer": "应确认该次活动事务回滚，库存恢复事务前数值且没有该次新订单，而不只检查页面提示失败。",
+        "hints": [
+          "错误提示不是数据库状态。",
+          "列出事务中已写对象。",
+          "同时核对库存与订单。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · innodb locking reads",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-locking-reads.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.3",
+      "sourceNodeId": "mysql.source.17-3",
+      "number": "17.3",
+      "title": "本章小结",
+      "parent": "mysql.lesson.17",
+      "depth": 2,
+      "order": 373,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 369,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "两个项目都把稳定身份、约束与事务作为核心。图书副本与商品库存的外观不同，但都要防止并发请求在检查之后争用同一资源。",
+        "小结把主键、外键、参数绑定、锁定读取与提交确认各自职责列开。任何一项都不能代替其他项，例如参数绑定不负责授权，外键也不会自动完成库存扣减。",
+        "本章以原生项目阅读与自检理解业务流程；平台仍只执行已列出的SQL支持范围，不执行原生外键、CHECK、视图、PHP或服务器锁。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "主键 -> 稳定业务身份与重复键保护\n外键 -> 关联对象存在性\n参数绑定 -> 值与SQL结构分离\n锁与事务 -> 协调相关写入及并发\n提交确认与核查 -> 判断实际业务结果",
+        "description": "小结把主键、外键、参数绑定、锁定读取与提交确认各自职责列开。任何一项都不能代替其他项，例如参数绑定不负责授权，外键也不会自动完成库存扣减。",
+        "result": "这份职责图解释两项目的共同设计；没有宣称任一机制单独完成了完整业务或安全系统。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "使用参数绑定之后是否可以省去用户授权检查？",
+        "answer": "不能，参数绑定防止把值当SQL结构，但是否允许这个人操作该业务对象仍需独立授权。",
+        "hints": [
+          "先看绑定解决的问题。",
+          "再问谁有权操作对象。",
+          "语法结构安全与业务许可不同。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · create table foreign keys",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table-foreign-keys.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · innodb locking reads",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/innodb-locking-reads.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        },
+        {
+          "title": "PHP Manual · PDO::prepare",
+          "url": "https://www.php.net/manual/en/pdo.prepare.php"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.17.4",
+      "sourceNodeId": "mysql.source.17-4",
+      "number": "17.4",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.17",
+      "depth": 2,
+      "order": 374,
+      "group": 17,
+      "leaf": true,
+      "printedPage": 369,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "综合练习分析重复请求时，要区分稳定请求身份与重新生成的业务动作。相同订单id被主键拒绝时，后续处理应核查原订单，而不是盲目生成新号再次尝试购买。",
+        "假设17.2.3第一次701已成功，第二次仍用701并在事务内先扣库存后插单。插入遇重复键，异常处理回滚第二次未提交写入，因此不应累计扣两次。",
+        "网络故障导致客户端没收到提交确认时，服务器可能已经提交。可靠重试需要按原身份查询并判断状态，本例拒绝重复写入只是基础保护，不宣称已完成支付幂等系统。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "text",
+        "source": "初始库存5\n请求701买2件并提交 -> 库存3，一条订单\n重复701再次尝试 -> INSERT重复键，活动事务回滚\n正常可核实结果 -> 库存仍3，订单仍一条\n若提交确认丢失 -> 查询701，不能凭失败提示另建702",
+        "description": "假设17.2.3第一次701已成功，第二次仍用701并在事务内先扣库存后插单。插入遇重复键，异常处理回滚第二次未提交写入，因此不应累计扣两次。",
+        "result": "在约定事务代码与正常错误处理下，重复id不会保留第二次扣减；结果不确定时必须查明，不能猜测。",
+        "reason": "本例为完整项目的阅读材料；平台仅执行已列出的SQL子集，不提供原生服务、网站后端、账户或网络连接。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "第一次提交确认丢失后直接换702重试，为什么可能再次扣库存？",
+        "answer": "701可能已在服务器成功提交，新id702会被当成另一笔订单，主键无法识别它其实是同一次请求。",
+        "hints": [
+          "先考虑服务器已提交的可能。",
+          "新id会绕过旧id重复保护。",
+          "保留稳定请求身份并核对旧结果。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · commit",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/commit.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · create table",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-table.html"
+        }
+      ]
+    }
+  ]
+}

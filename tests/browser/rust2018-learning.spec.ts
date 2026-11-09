@@ -165,7 +165,7 @@ test('Rust reading, actual four-group judgement, selected replay and refreshed r
   await expect(page.getByText(judged)).toBeVisible();
   await expect(page.getByText('四组均通过', { exact: true })).toBeVisible();
   const accepted = await archive(page);
-  expect(accepted.version).toBe(14);
+  expect(accepted.version).toBe(15);
   expect(accepted.rows.rustActivities.values).toHaveLength(2);
   expect(accepted.rows.rustDrafts.values[0].source).toBe(formatted.source);
   expect(accepted.rows.ledger.values.filter((row) => row.subjectId === formatted.id)).toHaveLength(
@@ -604,7 +604,9 @@ test('native DB13 upgrade preserves actual four-language records, original keys 
     expect(original.rows[name].values.length, name).toBeGreaterThan(0);
   expect(JSON.stringify(original.rows.achievements.values)).toContain('observation.stack.hanoi');
   const prior = Object.fromEntries(
-    Object.entries(original.rows).filter(([name]) => !name.startsWith('rust')),
+    Object.entries(original.rows).filter(
+      ([name]) => !name.startsWith('rust') && !name.startsWith('mysql'),
+    ),
   );
   prior.meta.values[0] = {
     ...prior.meta.values[0],
@@ -666,14 +668,14 @@ test('native DB13 upgrade preserves actual four-language records, original keys 
     await migrated.goto('/#/rust/lesson/' + formatted.lesson);
     await ready(migrated);
     const upgraded = await archive(migrated);
-    expect(upgraded.version).toBe(14);
+    expect(upgraded.version).toBe(15);
     for (const [name, table] of Object.entries(before.rows))
       if (name !== 'meta') expect(upgraded.rows[name], name).toEqual(table);
     expect(upgraded.rows.meta.values[0]).toEqual({
       ...before.rows.meta.values[0],
-      dbVersion: 14,
-      schemaVersion: '14.0.0',
-      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp-rust', version: '1.0.0' },
+      dbVersion: 15,
+      schemaVersion: '15.0.0',
+      activeCatalogSetRef: { id: 'catalog-set.c-python-java-cpp-rust-mysql', version: '1.0.0' },
     });
     expect(upgraded.rows.rustDrafts.values).toEqual([]);
     expect(upgraded.rows.rustActivities.values).toEqual([]);
@@ -699,7 +701,7 @@ test('native DB13 upgrade preserves actual four-language records, original keys 
       'appearanceAssets',
     ])
       expect(final.rows[name], name).toEqual(before.rows[name]);
-    await info.attach('native-DB13-to-DB14-four-language-and-Blob', {
+    await info.attach('native-DB13-to-DB15-four-language-and-Blob', {
       body: JSON.stringify({ before, upgraded, final }),
       contentType: 'application/json',
     });

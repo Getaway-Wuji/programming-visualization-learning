@@ -1,3 +1,4 @@
+import { isMysqlProgress } from '../mysql-course/identities';
 import {
   createContext,
   useCallback,
@@ -246,6 +247,24 @@ export function subjectLearningText(
 ): string {
   if (!state.projection) return '学习记录尚未读取';
   if (state.temporary) return '当前临时学习记录尚未保存，关闭或刷新页面后会丢失。';
+  if (id.startsWith('mysql.') && kind !== 'case') {
+    const history =
+      state.snapshot?.progress.filter((row) => isMysqlProgress(row) && row.subjectRef.id === id) ??
+      [];
+    if (
+      history.some(
+        (row) => row.eventType === (kind === 'lesson' ? 'lesson.completed' : 'exercise.passed'),
+      )
+    )
+      return kind === 'lesson'
+        ? '当前内容兼容的历史记录：小节已完成'
+        : '当前内容兼容的历史记录：练习已通过';
+    if (history.length)
+      return kind === 'lesson'
+        ? '当前内容兼容的历史记录：已确认学习'
+        : '已有当前内容兼容的历史尝试记录';
+    return '尚无已保存的学习记录';
+  }
   if (kind === 'lesson') {
     const item = state.projection.lessons.find((value) => value.id === id);
     if (item?.completed) return '当前内容兼容的历史记录：小节已完成';

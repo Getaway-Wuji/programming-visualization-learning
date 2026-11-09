@@ -172,6 +172,26 @@ function Home() {
           </p>
         </div>
       </div>
+      <section className="card c6-course-switcher" aria-label="其他课程">
+        <h2>其他课程</h2>
+        <div className="inline-actions">
+          <Link className="text-link" to="/python">
+            Python
+          </Link>
+          <Link className="text-link" to="/java">
+            Java
+          </Link>
+          <Link className="text-link" to="/cpp">
+            C++
+          </Link>
+          <Link className="text-link" to="/rust">
+            Rust
+          </Link>
+          <Link className="text-link" to="/mysql">
+            MySQL · SQL 与数据表
+          </Link>
+        </div>
+      </section>
       <C6KnowledgeOverview />
       <LearningSaveStatus />
       {panel && (

@@ -128,7 +128,7 @@ export function sameRecoveryValue(first: unknown, second: unknown): boolean {
 export function hasUnknownRecoveryVersion(
   raw: RawStorageRows,
   expectedSchemaVersion:
-    '9.0.0' | '10.0.0' | '11.0.0' | '12.0.0' | '13.0.0' | '14.0.0' = SCHEMA_VERSION,
+    '9.0.0' | '10.0.0' | '11.0.0' | '12.0.0' | '13.0.0' | '14.0.0' | '15.0.0' = SCHEMA_VERSION,
 ): boolean {
   return raw.meta.values.some((value) => {
     if (value === null || typeof value !== 'object') return false;
@@ -141,15 +141,17 @@ export function hasUnknownRecoveryVersion(
     ) {
       for (const [field, expectedId, expectedVersion] of [
         ['activePackageRef', 'content.c.primer6', '2.0.0'],
-        expectedSchemaVersion === '14.0.0'
-          ? ['activeCatalogSetRef', 'catalog-set.c-python-java-cpp-rust', '1.0.0']
-          : expectedSchemaVersion === '13.0.0'
-            ? ['activeCatalogSetRef', 'catalog-set.c-python-java-cpp', '1.0.0']
-            : expectedSchemaVersion === '12.0.0'
-              ? ['activeCatalogSetRef', 'catalog-set.c-python-java', '1.0.0']
-              : expectedSchemaVersion === '11.0.0'
-                ? ['activeCatalogSetRef', 'catalog-set.c-python', '1.0.0']
-                : ['activeCatalogSetRef', 'catalog-set.c.primer6', '2.0.0'],
+        expectedSchemaVersion === '15.0.0'
+          ? ['activeCatalogSetRef', 'catalog-set.c-python-java-cpp-rust-mysql', '1.0.0']
+          : expectedSchemaVersion === '14.0.0'
+            ? ['activeCatalogSetRef', 'catalog-set.c-python-java-cpp-rust', '1.0.0']
+            : expectedSchemaVersion === '13.0.0'
+              ? ['activeCatalogSetRef', 'catalog-set.c-python-java-cpp', '1.0.0']
+              : expectedSchemaVersion === '12.0.0'
+                ? ['activeCatalogSetRef', 'catalog-set.c-python-java', '1.0.0']
+                : expectedSchemaVersion === '11.0.0'
+                  ? ['activeCatalogSetRef', 'catalog-set.c-python', '1.0.0']
+                  : ['activeCatalogSetRef', 'catalog-set.c.primer6', '2.0.0'],
       ] as const) {
         const outer = Object.getOwnPropertyDescriptor(value, field);
         if (!outer || !('value' in outer) || !outer.value || typeof outer.value !== 'object')
@@ -183,7 +185,7 @@ export function hasUnknownRecoveryVersion(
 export function unknownRecoveryVersionCode(
   raw: RawStorageRows,
   expectedSchemaVersion:
-    '9.0.0' | '10.0.0' | '11.0.0' | '12.0.0' | '13.0.0' | '14.0.0' = SCHEMA_VERSION,
+    '9.0.0' | '10.0.0' | '11.0.0' | '12.0.0' | '13.0.0' | '14.0.0' | '15.0.0' = SCHEMA_VERSION,
 ): RecoveryErrorCode | null {
   if (!hasUnknownRecoveryVersion(raw, expectedSchemaVersion)) return null;
   const legacyOnly = raw.meta.values.every((value) => {
@@ -209,7 +211,7 @@ export function inspectRecoveryRows(
   raw: RawStorageRows,
   compare: KeyCompare,
   expectedSchemaVersion:
-    '9.0.0' | '10.0.0' | '11.0.0' | '12.0.0' | '13.0.0' | '14.0.0' = SCHEMA_VERSION,
+    '9.0.0' | '10.0.0' | '11.0.0' | '12.0.0' | '13.0.0' | '14.0.0' | '15.0.0' = SCHEMA_VERSION,
 ): Omit<RecoveryRead, 'guard'> {
   const issueCounts = new Map<StoreName | 'layout', number>();
   let errorCode = unknownRecoveryVersionCode(raw, expectedSchemaVersion);

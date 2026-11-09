@@ -1,0 +1,522 @@
+{
+  "version": "1.0.0",
+  "language": "mysql",
+  "dialect": "8.0",
+  "group": 9,
+  "nodes": [
+    {
+      "id": "mysql.lesson.9",
+      "sourceNodeId": "mysql.source.chapter-9",
+      "number": "9",
+      "title": "运算符",
+      "parent": null,
+      "depth": 1,
+      "order": 203,
+      "group": 9,
+      "leaf": false,
+      "printedPage": 193,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "运算符把值连接成表达式，是SELECT计算、WHERE筛选、ON关联和HAVING筛组的共同基础。本章按算术、比较、逻辑与位操作分别推导，再检查优先级，避免把自然语言条件直接堆成一串符号。",
+        "原生MySQL有更多运算符、类型转换和SQL模式选项。平台执行整数加减乘与一元负号、受支持的比较及三值逻辑；除法、取模、位运算和未列入的特殊比较按原生阅读。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · numeric functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/numeric-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.1",
+      "sourceNodeId": "mysql.source.9-1",
+      "number": "9.1",
+      "title": "运算符概述",
+      "parent": "mysql.lesson.9",
+      "depth": 2,
+      "order": 204,
+      "group": 9,
+      "leaf": true,
+      "printedPage": 193,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "运算符规定如何把一个或多个操作数转换成结果。一元负号只作用于一个值，加号等二元符号作用于两个值；同一符号在不同位置可能有不同角色。",
+        "表达式不一定返回数值，比较和逻辑表达式通常返回1、0或NULL。把它们投影到SELECT中，有助于观察条件为何能或不能被WHERE保留。",
+        "求值前还应检查类型与范围，不能因表达式在纸上有数学结果就忽略数据库溢出或未知值。平台不允许通过文本隐式转成整数绕过类型，原生隐式转换能力也应谨慎理解。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT -5 AS negative_value, 3 + 4 AS total, 3 < 4 AS ordered;",
+        "description": "运算符规定如何把一个或多个操作数转换成结果。一元负号只作用于一个值，加号等二元符号作用于两个值；同一符号在不同位置可能有不同角色。",
+        "result": "一行结果为negative_value=-5、total=7、ordered=1。",
+        "reason": "阅读标量运算及真值表示，基本表达式在平台子集。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "3<4得到的1是从表里查出来的吗？",
+        "answer": "不是，它是比较表达式求值的真值表示；此SELECT无FROM也能产生一行。",
+        "hints": [
+          "看表达式是否引用表。",
+          "3和4都是字面量。",
+          "结果由比较运算产生。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · numeric functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/numeric-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.2",
+      "sourceNodeId": "mysql.source.9-2",
+      "number": "9.2",
+      "title": "算术运算符",
+      "parent": "mysql.lesson.9",
+      "depth": 2,
+      "order": 205,
+      "group": 9,
+      "leaf": true,
+      "printedPage": 194,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "算术运算符包括加、减、乘、除、整数除和余数。原生7/2是普通除法，7 DIV 2取整数商，7%2取余数，不能把三者当成同一个“除”。",
+        "精确数与近似数的结果类型和小数精度不同。平台列仅有有符号INT，支持加减乘及一元负号，并检查中间安全整数与列写入范围；不是任意长度的数学整数。",
+        "平台将十进制字面量、除法、DIV和取模归阅读。原生除零还会受语句上下文与SQL模式影响，可能产生NULL、警告或错误，不应把某次观察泛化为所有环境。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT 7 / 2 AS quotient, 7 DIV 2 AS integer_quotient, 7 % 2 AS remainder;",
+        "description": "算术运算符包括加、减、乘、除、整数除和余数。原生7/2是普通除法，7 DIV 2取整数商，7%2取余数，不能把三者当成同一个“除”。",
+        "result": "原生默认div_precision_increment=4且整数精确输入时，quotient显示3.5000、integer_quotient=3、remainder=1。",
+        "reason": "/、DIV、%超出平台子集，按原生默认精度推导。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "需要余数来判断奇偶时，应使用/还是MOD或%？",
+        "answer": "使用MOD或%；/返回商，不能直接代表余数。本版相关余数语法仅阅读。",
+        "hints": [
+          "把7分成2×3+1。",
+          "最后的1才是余数。",
+          "选表达余数的操作。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · numeric functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/numeric-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.3",
+      "sourceNodeId": "mysql.source.9-3",
+      "number": "9.3",
+      "title": "比较运算符",
+      "parent": "mysql.lesson.9",
+      "depth": 2,
+      "order": 206,
+      "group": 9,
+      "leaf": false,
+      "printedPage": 196,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "比较运算符回答值之间是否具有某种关系。普通等值与大小比较遇NULL通常变未知，IS NULL专门检测缺失，区间、成员与模式则把常见关系表达得更清楚。",
+        "比较前先对齐类型和排序规则。数字文本、尾空格与大小写可能让原生转换或排序规则介入；平台固定严格类型与0900_bin，必须区分教学环境约定和原生默认配置。"
+      ],
+      "example": null,
+      "activity": null,
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · charset binary collations",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/charset-binary-collations.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.3.1",
+      "sourceNodeId": "mysql.source.9-3-1",
+      "number": "9.3.1",
+      "title": "常用的比较运算符",
+      "parent": "mysql.lesson.9.3",
+      "depth": 3,
+      "order": 207,
+      "group": 9,
+      "leaf": true,
+      "printedPage": 197,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "普通比较包括=、<>或!=、<、<=、>、>=。它们比较值，不执行赋值；UPDATE SET中的等号处在赋值语法位置，不能与条件等号混为一件事。",
+        "两个已知整数可以直接比较边界，NULL与任何值普通比较通常为NULL，连NULL=NULL也不是1。WHERE只保留真，因此“既非大于也非小于”不能用来证明未知值相等。",
+        "文本比较取决于排序规则，平台固定0900_bin NO PAD，因此'A'与'a'不同，'A'与'A '也不同。原生MySQL常见默认规则可能忽略大小写或具有别的填充属性，不能照搬本环境结论。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT 5 >= 5 AS inclusive, 5 <> 5 AS different, NULL = NULL AS unknown_equal;",
+        "description": "普通比较包括=、<>或!=、<、<=、>、>=。它们比较值，不执行赋值；UPDATE SET中的等号处在赋值语法位置，不能与条件等号混为一件事。",
+        "result": "inclusive=1、different=0、unknown_equal=NULL。",
+        "reason": "阅读普通比较与NULL；平台拒绝文本数值隐式混比。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "NULL<>5为真还是未知？",
+        "answer": "未知；缺失值不能通过普通不等号断言与5不同。",
+        "hints": [
+          "NULL不是一个已知特殊数字。",
+          "普通比较需要可确定的值。",
+          "因此结果仍为NULL。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · charset binary collations",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/charset-binary-collations.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.3.2",
+      "sourceNodeId": "mysql.source.9-3-2",
+      "number": "9.3.2",
+      "title": "特殊功能的比较运算符",
+      "parent": "mysql.lesson.9.3",
+      "depth": 3,
+      "order": 208,
+      "group": 9,
+      "leaf": true,
+      "printedPage": 199,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "特殊比较把常用关系写成专门语法：IS NULL检测缺失，IN判断成员，BETWEEN判断闭区间，LIKE判断简单模式。它们的NULL行为应分别理解，不能把所有结果都当成二值逻辑。",
+        "原生MySQL还有NULL安全等号<=>：两个NULL得到1，仅一边NULL得到0。它不同于普通等号，也不是把NULL存成某个数；适合需要显式把两个缺失视为相同的比较场景。",
+        "本版执行受支持的IS NULL、字面量IN、BETWEEN与普通LIKE；<=>等未列入子集的形式按原生阅读。运算符在手册存在，不保证当前教学执行器全部实现。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT NULL <=> NULL AS both_missing, 4 <=> NULL AS one_missing, 4 BETWEEN 2 AND 4 AS in_range;",
+        "description": "特殊比较把常用关系写成专门语法：IS NULL检测缺失，IN判断成员，BETWEEN判断闭区间，LIKE判断简单模式。它们的NULL行为应分别理解，不能把所有结果都当成二值逻辑。",
+        "result": "原生推导both_missing=1、one_missing=0、in_range=1。",
+        "reason": "<=>在本节按原生阅读，平台不执行<=>。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为什么<=>与=不能随意互换？",
+        "answer": "它们处理NULL的规则不同。NULL=NULL为未知，NULL<=>NULL为真，可能改变筛选结果。",
+        "hints": [
+          "分别代入两个NULL。",
+          "普通等号传播未知。",
+          "NULL安全等号明确认为两边同为缺失。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.4",
+      "sourceNodeId": "mysql.source.9-4",
+      "number": "9.4",
+      "title": "逻辑运算符",
+      "parent": "mysql.lesson.9",
+      "depth": 2,
+      "order": 209,
+      "group": 9,
+      "leaf": true,
+      "printedPage": 203,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "逻辑AND、OR、NOT把条件组合成更复杂的条件。AND需要两边都真，OR至少一边真，NOT反转真与假；遇未知时使用SQL三值逻辑。",
+        "假AND未知为假，真AND未知为未知；真OR未知为真，假OR未知为未知；NOT未知仍未知。这些规则来自能否确定整体条件，不是把NULL统一替换成0。",
+        "平台使用上述三值逻辑。原生还存在XOR及符号形式，部分符号受SQL模式影响，本版不据此开放所有变体；清晰写AND/OR/NOT并加括号更便于讲解。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT (NULL AND 0) AS a, (NULL OR 1) AS b, (NOT NULL) AS c;",
+        "description": "逻辑AND、OR、NOT把条件组合成更复杂的条件。AND需要两边都真，OR至少一边真，NOT反转真与假；遇未知时使用SQL三值逻辑。",
+        "result": "原生三值逻辑推导a=0、b=1、c=NULL。",
+        "reason": "阅读三值真值演算；平台支持基本三值逻辑。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "为何真OR未知可以确定为真？",
+        "answer": "因为至少一个真分支已满足OR，不论未知分支实际是什么，整体都成立。",
+        "hints": [
+          "OR只需要一个成立分支。",
+          "已知真分支已经足够。",
+          "未知不影响已确定的整体真值。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · logical operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/logical-operators.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.5",
+      "sourceNodeId": "mysql.source.9-5",
+      "number": "9.5",
+      "title": "位运算符",
+      "parent": "mysql.lesson.9",
+      "depth": 2,
+      "order": 210,
+      "group": 9,
+      "leaf": true,
+      "printedPage": 204,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "位运算对整数的二进制位或原生二进制字符串逐位操作，不是对条件真假的逻辑连接。按位与&、按位或及异或^可用于标志组合，移位则改变位的位置。",
+        "6写作二进制110，3写作011，按位与得到010即2；按位或得到111即7；异或在位不同处为1，得到101即5。先对齐位数再演算，比只背符号可靠。",
+        "MySQL 8.0原生按操作数类型区分数值与二进制字符串求值，结果长度和范围也不同。平台不执行位运算，本例只使用小非负整数，不把位掩码当成权限系统实现。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT 6 & 3 AS bit_and, 6 | 3 AS bit_or, 6 ^ 3 AS bit_xor, 1 << 3 AS shifted;",
+        "description": "位运算对整数的二进制位或原生二进制字符串逐位操作，不是对条件真假的逻辑连接。按位与&、按位或及异或^可用于标志组合，移位则改变位的位置。",
+        "result": "原生小整数推导bit_and=2、bit_or=7、bit_xor=5、shifted=8。",
+        "reason": "位运算属于原生阅读范围；没有在平台执行。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "6&3为什么不是逻辑真值1？",
+        "answer": "&逐位比较二进制110与011，交集为010即2；逻辑AND才回答条件是否都真。",
+        "hints": [
+          "把两个数转成三位二进制。",
+          "仅中间位同时为1。",
+          "结果010转十进制为2。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · bit functions",
+          "url": "https://dev.mysql.com/doc/refman/8.0/en/bit-functions.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.6",
+      "sourceNodeId": "mysql.source.9-6",
+      "number": "9.6",
+      "title": "运算符的优先级",
+      "parent": "mysql.lesson.9",
+      "depth": 2,
+      "order": 211,
+      "group": 9,
+      "leaf": true,
+      "printedPage": 206,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "优先级决定缺少括号时表达式如何分组，结合性决定同一级连续运算的结构。常见整数计算先乘后加，条件组合通常先比较、再NOT、再AND、最后OR。",
+        "括号用于直接表达业务意图，而不是要求读者记住全部优先级表。院系条件与“高分或缺失”的组合尤其应写清：dept_id=1 AND (score>=90 OR score IS NULL)。",
+        "原生SQL模式可影响部分符号含义及NOT相关优先级，不宜把所有符号形态的规则简化成一句话。本平台受支持子集只用明确逻辑关键字，下面先比较两种括号的整数结果。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT 2 + 3 * 4 AS default_order, (2 + 3) * 4 AS explicit_order;",
+        "description": "优先级决定缺少括号时表达式如何分组，结合性决定同一级连续运算的结构。常见整数计算先乘后加，条件组合通常先比较、再NOT、再AND、最后OR。",
+        "result": "default_order=14，explicit_order=20。",
+        "reason": "用已支持的算术括号阅读优先级，原生完整符号差异另按手册。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "a OR b AND c默认更接近a OR (b AND c)还是(a OR b) AND c？",
+        "answer": "a OR (b AND c)，AND优先于OR；若业务意图不同应显式括号。",
+        "hints": [
+          "比较AND与OR的结合紧密程度。",
+          "AND先形成子条件。",
+          "a与整个b AND c再作OR。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · numeric functions",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/numeric-functions.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.7",
+      "sourceNodeId": "mysql.source.9-7",
+      "number": "9.7",
+      "title": "运算符综合示例",
+      "parent": "mysql.lesson.9",
+      "depth": 2,
+      "order": 212,
+      "group": 9,
+      "leaf": true,
+      "printedPage": 207,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "综合条件应先写自然语言分组：目标院系里成绩不低于70的学生，或者任何成绩未录入的学生。这分成两个OR分支，第一分支内部再做AND。",
+        "初始林安、陈禾满足院系1或2且成绩达标，周岚通过缺成绩分支，苏宁两分支都不满足。NULL院系在第一分支产生未知，但第二分支为真时OR整体仍真。",
+        "筛选后再投影和排序，原表不会改变。若需求改成只在目标院系中寻找“达标或缺失”，应把缺失判断放进院系约束的括号内部，这会改变周岚是否保留。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT id, name FROM students\nWHERE (dept_id IN (1,2) AND score >= 70) OR score IS NULL\nORDER BY id;",
+        "description": "综合条件应先写自然语言分组：目标院系里成绩不低于70的学生，或者任何成绩未录入的学生。这分成两个OR分支，第一分支内部再做AND。",
+        "result": "使用第7章初始students时输出(1,林安)、(2,陈禾)、(3,周岚)。",
+        "reason": "综合阅读可支持的比较及逻辑；输入明确沿用教学初始表。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把条件改成dept_id IN(1,2) AND (score>=70 OR score IS NULL)，周岚还会保留吗？",
+        "answer": "不会。周岚dept_id为NULL，成员判断未知，与真结合仍未知，WHERE不保留。",
+        "hints": [
+          "先代入周岚的两个NULL字段。",
+          "括号内因IS NULL为真。",
+          "外层院系条件未知，未知AND真仍未知。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · working with null",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/working-with-null.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.8",
+      "sourceNodeId": "mysql.source.9-8",
+      "number": "9.8",
+      "title": "本章小结",
+      "parent": "mysql.lesson.9",
+      "depth": 2,
+      "order": 213,
+      "group": 9,
+      "leaf": true,
+      "printedPage": 209,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章运算可以按三个问题复核：操作数类型是否符合要求，NULL是否使结果未知，括号是否表达了真正的业务分组。数值结果还要检查范围，不能只看数学上是否算得出来。",
+        "比较产生的真值可以直接展示，也可以放进WHERE，但未知不会被WHERE保留。IS NULL是缺失测试，COUNT等聚合对NULL有自己的规则，不能拿普通等值逻辑替代。",
+        "原生MySQL的除法、位操作、隐式转换和更多比较形式仍是完整阅读教学，平台仅承诺受支持子集。判断一段SQL能否运行应看整段所有结构，而不是只看它是否以SELECT开头。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT (3 * 4 > 10) AND (NULL IS NULL) AS admitted;",
+        "description": "本章运算可以按三个问题复核：操作数类型是否符合要求，NULL是否使结果未知，括号是否表达了真正的业务分组。数值结果还要检查范围，不能只看数学上是否算得出来。",
+        "result": "3*4为12，12>10为真，NULL IS NULL也为真，因此admitted=1。",
+        "reason": "用基本运算与缺失测试复盘，结果按给定值推导。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "把NULL IS NULL换成NULL=NULL，整体结果会怎样？",
+        "answer": "变为NULL；第一个分支为真，真AND未知仍未知。",
+        "hints": [
+          "先计算普通等号部分。",
+          "NULL=NULL为未知。",
+          "真AND未知无法确定为真。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · working with null",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/working-with-null.html"
+        }
+      ]
+    },
+    {
+      "id": "mysql.lesson.9.9",
+      "sourceNodeId": "mysql.source.9-9",
+      "number": "9.9",
+      "title": "思考与练习",
+      "parent": "mysql.lesson.9",
+      "depth": 2,
+      "order": 214,
+      "group": 9,
+      "leaf": true,
+      "printedPage": 210,
+      "physicalPage": null,
+      "coverage": "toc-only",
+      "body": [
+        "本章练习用反例检查区间与否定。要求“不在60到80之间”时，应先说明60、80是否排除，以及缺成绩是否单列，而不是直接写一个NOT就认为覆盖所有行。",
+        "NOT(score BETWEEN 60 AND 80)选出已知区间外的值，NULL仍是未知。若要把缺失也纳入，需要OR score IS NULL；这是业务定义新增分支，不是NOT的自动效果。",
+        "自检时至少代入59、60、80、81、NULL五项。端点用于暴露开闭区间错误，NULL用于暴露二值逻辑误判。"
+      ],
+      "example": {
+        "mode": "reading",
+        "language": "sql",
+        "source": "SELECT 59 NOT BETWEEN 60 AND 80 AS below, 60 NOT BETWEEN 60 AND 80 AS boundary, NULL NOT BETWEEN 60 AND 80 AS missing;",
+        "description": "本章练习用反例检查区间与否定。要求“不在60到80之间”时，应先说明60、80是否排除，以及缺成绩是否单列，而不是直接写一个NOT就认为覆盖所有行。",
+        "result": "below=1，boundary=0，missing=NULL；80同样为0，81为1。",
+        "reason": "边界演算自检，示例为支持的区间与NOT。"
+      },
+      "activity": {
+        "mode": "self-check",
+        "prompt": "“区间外或缺失”的WHERE应如何写？",
+        "answer": "WHERE score NOT BETWEEN 60 AND 80 OR score IS NULL；必要时再给整体条件加括号与其他业务限制组合。",
+        "hints": [
+          "先表达已知数值的区间外。",
+          "再单独加缺失分支。",
+          "OR让两类情况都能保留。"
+        ]
+      },
+      "references": [
+        {
+          "title": "MySQL 8.0 Reference Manual · comparison operators",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/comparison-operators.html"
+        },
+        {
+          "title": "MySQL 8.0 Reference Manual · working with null",
+          "url": "https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/working-with-null.html"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+import { useMemo, useState } from 'react';
+import { Link, useParams } from 'react-router';
+import { ReadingEnd } from '../c6-learning/ReadingEnd';
+import { useLearning } from '../learning/react';
+import { useJavaResource } from '../java/use-resource';
+import { isMysqlProgress, mysqlExercises } from './identities';
+import {
+  loadMysqlLesson,
+  loadMysqlManifest,
+  type MysqlCatalogEntry,
+  type MysqlManifest,
+} from './repository';
+import './mysql.css';
+
+const lessonPath = (id: string) => '/mysql/lesson/' + id;
+const numbered = (node: MysqlCatalogEntry) => node.number + ' ' + node.title;
+const loadIndex = (_: null, signal: AbortSignal) => loadMysqlManifest(signal);
+export function MysqlNav() {
+  return (
+    <nav className="mysql-nav" aria-label="MySQL 学习">
+      <Link to="/mysql">MySQL 目录</Link>
+      <Link to="/mysql/workbench">SQL 工作台</Link>
+      <Link to="/mysql/review">判题复盘</Link>
+    </nav>
+  );
+}
+export function MysqlLoadState({ failed, retry }: { failed: boolean; retry: () => void }) {
+  return failed ? (
+    <p role="alert">
+      暂时无法读取 MySQL 学习资料。 <button onClick={retry}>重试</button>
+    </p>
+  ) : (
+    <p role="status">正在读取 MySQL 学习资料…</p>
+  );
+}
+export function MysqlText({ text }: { text: string }) {
+  return (
+    <>
+      {text.split('`').map((part, index) => (index % 2 ? <code key={index}>{part}</code> : part))}
+    </>
+  );
+}
+function SourceNote({ node }: { node: MysqlCatalogEntry }) {
+  return (
+    <span>
+      教材印刷页 {node.printedPage} ·{' '}
+      {node.physicalPage === null
+        ? '所附 PDF 仅含本节目录'
+        : `PDF 第 ${node.physicalPage} 页有正文`}
+    </span>
+  );
+}
+function BookCatalog({ index }: { index: MysqlManifest }) {
+  const [query, setQuery] = useState('');
+  const term = query.trim().toLowerCase();
+  const byParent = useMemo(() => {
+    const map = new Map<string | null, MysqlCatalogEntry[]>();
+    for (const node of index.catalog) {
+      const siblings = map.get(node.parent) ?? [];
+      siblings.push(node);
+      map.set(node.parent, siblings);
+    }
+    return map;
+  }, [index]);
+  const rows = (parent: string | null) => (
+    <ul className="mysql-tree">
+      {byParent.get(parent)?.map((node) => (
+        <li key={node.id}>
+          {node.leaf ? (
+            <Link to={lessonPath(node.id)}>{numbered(node)}</Link>
+          ) : (
+            <details open={node.order === 1 ? true : undefined}>
+              <summary>{numbered(node)}</summary>
+              <Link to={lessonPath(node.id)}>阅读导读</Link>
+              {rows(node.id)}
+            </details>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+  const matches = term
+    ? index.catalog.filter((node) => (node.number + ' ' + node.title).toLowerCase().includes(term))
+    : [];
+  return (
+    <section className="mysql-sheet" aria-label="教材目录">
+      <h2>教材目录</h2>
+      <label className="mysql-search">
+        搜索目录
+        <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} />
+      </label>
+      {term ? (
+        matches.length ? (
+          <ul className="mysql-tree">
+            {matches.map((node) => (
+              <li key={node.id}>
+                <Link to={lessonPath(node.id)}>{numbered(node)}</Link>
+                <p className="mysql-muted">
+                  <SourceNote node={node} />
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p role="status">没有匹配的小节。</p>
+        )
+      ) : (
+        rows(null)
+      )}
+    </section>
+  );
+}
+function Catalog() {
+  const { state } = useLearning();
+  const resource = useJavaResource(null, loadIndex);
+  const count =
+    state.snapshot?.progress.filter(
+      (row) => row.eventType === 'lesson.completed' && isMysqlProgress(row),
+    ).length ?? 0;
+  const index = resource.value;
+  return (
+    <>
+      <header className="mysql-title">
+        <div>
+          <h1>MySQL 课程</h1>
+          <p>从关系与表结构，到查询、数据变更和事务。</p>
+        </div>
+        <Link className="button" to="/mysql/workbench">
+          打开 SQL 工作台
+        </Link>
+      </header>
+      {index ? (
+        <>
+          <div className="mysql-progress">
+            <span>
+              已读 {count} / {index.counts.leaves} 小节
+            </span>
+            <progress value={count} max={index.counts.leaves} aria-label="MySQL 阅读进度" />
+          </div>
+          <div className="mysql-catalog-grid">
+            <BookCatalog index={index} />
+            <aside className="mysql-sheet">
+              <h2>课程练习</h2>
+              <p>每题用四组独立数据库验证当前 SQL。</p>
+              <ul className="mysql-tree">
+                {Object.entries(mysqlExercises).map(([id, profile]) => (
+                  <li key={id}>
+                    <Link to={'/mysql/practice/' + id}>{profile.title}</Link>
+                  </li>
+                ))}
+              </ul>
+              <p className="mysql-muted">阅读与练习分别记录，可随时回来复习。</p>
+            </aside>
+          </div>
+          <section className="mysql-sheet">
+            <h2>课程来源</h2>
+            <p>
+              目录依据《{index.source.title}》，{index.source.author} 著，{index.source.publisher}，
+              {index.source.edition}。讲解和练习为平台原创。
+            </p>
+            <p>{index.coverage.note}</p>
+            <p className="mysql-muted">
+              第 2—17 章按教材目录组织，并用每节列出的一手资料补充核对；不将目录页当作教材正文页。
+            </p>
+          </section>
+        </>
+      ) : (
+        <MysqlLoadState failed={resource.failed} retry={resource.retry} />
+      )}
+    </>
+  );
+}
+function Lesson({ id }: { id: string }) {
+  const resource = useJavaResource(id, loadMysqlLesson);
+  if (!resource.value) return <MysqlLoadState failed={resource.failed} retry={resource.retry} />;
+  const { index, lesson } = resource.value;
+  const parent = index.catalog.find((node) => node.id === lesson.parent);
+  const children = index.catalog.filter((node) => node.parent === id);
+  const previous = index.catalog[lesson.order - 2],
+    next = index.catalog[lesson.order];
+  const example = lesson.example,
+    activity = lesson.activity;
+  return (
+    <article className="mysql-sheet mysql-reading">
+      <p className="mysql-muted">
+        {parent && (
+          <>
+            <Link to={lessonPath(parent.id)}>{numbered(parent)}</Link> ·{' '}
+          </>
+        )}
+        <SourceNote node={lesson} />
+      </p>
+      <h1>{numbered(lesson)}</h1>
+      {lesson.body.map((text) => (
+        <p key={text}>
+          <MysqlText text={text} />
+        </p>
+      ))}
+      {children.length > 0 && (
+        <ul className="mysql-tree">
+          {children.map((child) => (
+            <li key={child.id}>
+              <Link to={lessonPath(child.id)}>{numbered(child)}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
+      {example && (
+        <section className="mysql-section">
+          <h2>{example.mode === 'wasm' ? '可运行示例' : '阅读示例'}</h2>
+          <p>
+            <MysqlText text={example.description} />
+          </p>
+          {example.mode === 'reading' && <p className="mysql-muted">{example.reason}</p>}
+          <pre>
+            <code>{example.source}</code>
+          </pre>
+          <p>
+            <MysqlText text={example.result} />
+          </p>
+          {example.mode === 'wasm' && (
+            <Link to={'/mysql/example/' + lesson.id}>运行并观察数据库</Link>
+          )}
+        </section>
+      )}
+      {activity && (
+        <section className="mysql-section">
+          <h2>{activity.mode === 'judge' ? '动手练习' : '理解自检'}</h2>
+          <p>
+            <MysqlText text={activity.prompt} />
+          </p>
+          {activity.mode === 'judge' ? (
+            <Link className="button" to={'/mysql/practice/' + activity.profile}>
+              打开练习
+            </Link>
+          ) : (
+            <details>
+              <summary>核对答案</summary>
+              <p>
+                <MysqlText text={activity.answer} />
+              </p>
+            </details>
+          )}
+          <details>
+            <summary>逐层提示</summary>
+            {activity.hints.map((hint, at) => (
+              <details key={hint}>
+                <summary>提示 {at + 1}</summary>
+                <p>
+                  <MysqlText text={hint} />
+                </p>
+              </details>
+            ))}
+          </details>
+        </section>
+      )}
+      <section className="mysql-section">
+        <h2>来源与补充参考</h2>
+        <p className="mysql-muted">
+          <SourceNote node={lesson} />
+        </p>
+        <ul>
+          {lesson.references.map((ref) => (
+            <li key={ref.url}>
+              <a href={ref.url} target="_blank" rel="noreferrer">
+                {ref.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+      {lesson.leaf && <ReadingEnd lessonId={lesson.id} language="mysql" />}
+      <nav className="mysql-page-turn" aria-label="相邻章节">
+        {previous && <Link to={lessonPath(previous.id)}>上一节 · {numbered(previous)}</Link>}
+        {next && <Link to={lessonPath(next.id)}>下一节 · {numbered(next)}</Link>}
+      </nav>
+    </article>
+  );
+}
+export default function MysqlCoursePage() {
+  const { lessonId } = useParams();
+  return (
+    <div className="mysql-screen">
+      <MysqlNav />
+      {lessonId ? <Lesson key={lessonId} id={lessonId} /> : <Catalog />}
+    </div>
+  );
+}

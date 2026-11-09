@@ -326,7 +326,7 @@ test('19.2 formal empty evidence and whole keyed DB stay unchanged by transient 
   await expect(page.getByTestId('generated-recommendation')).toHaveAttribute('data-state', 'ready');
   await expect(page.getByTestId('generated-recommendation')).toContainText('暂无待复习');
   const before = await stores(page);
-  expect(before).toHaveLength(27);
+  expect(before).toHaveLength(29);
   await gen(page);
   await reference(page);
   await page.getByRole('button', { name: '提交', exact: true }).click();

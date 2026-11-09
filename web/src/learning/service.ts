@@ -1,3 +1,4 @@
+import { MysqlLearningSession } from './mysql-session';
 import { c6ReviewSources, deriveC6Weaknesses, c6ExerciseEvents } from '../c6-learning/review';
 import { activateC6IndependentCases } from '../c6-learning/cases';
 import {
@@ -155,6 +156,7 @@ interface ServiceOptions {
   enableJava?: boolean;
   enableCpp?: boolean;
   enableRust?: boolean;
+  enableMysql?: boolean;
   clock?: () => string;
   id?: () => string;
 }
@@ -247,6 +249,17 @@ export class LearningService {
   private readonly pythonSession = new PythonLearningSession(this.courseHooks());
   private readonly javaSession = new JavaLearningSession(this.courseHooks());
   private readonly cppSession = new JavaLearningSession(this.courseHooks(), 'cpp');
+  private readonly mysqlSession = new MysqlLearningSession(this.courseHooks());
+  readMysqlActivities = (...args: Parameters<MysqlLearningSession['readActivities']>) =>
+    this.mysqlSession.readActivities(...args);
+  readMysqlDraft = (...args: Parameters<MysqlLearningSession['readDraft']>) =>
+    this.mysqlSession.readDraft(...args);
+  saveMysqlDraft = (...args: Parameters<MysqlLearningSession['saveDraft']>) =>
+    this.mysqlSession.saveDraft(...args);
+  recordMysqlLesson = (...args: Parameters<MysqlLearningSession['recordLesson']>) =>
+    this.mysqlSession.recordLesson(...args);
+  recordMysqlJudge = (...args: Parameters<MysqlLearningSession['recordJudge']>) =>
+    this.mysqlSession.recordJudge(...args);
   private readonly rustSession = new RustLearningSession(this.courseHooks());
   readRustCourse = (...args: Parameters<RustLearningSession['read']>) =>
     this.rustSession.read(...args);
@@ -986,6 +999,7 @@ export class LearningService {
           enableJava: this.options.enableJava,
           enableCpp: this.options.enableCpp,
           enableRust: this.options.enableRust,
+          enableMysql: this.options.enableMysql,
           recovery: true,
         }));
       if (this.disposed) {
@@ -2325,6 +2339,7 @@ export function createLearningService() {
     enableJava: true,
     enableCpp: true,
     enableRust: true,
+    enableMysql: true,
   });
   // Deliberately no raw command, trusted authority, DB name or fixture options.
   return {
@@ -2336,6 +2351,11 @@ export function createLearningService() {
     recordJavaLesson: service.recordJavaLesson,
     recordJavaJudge: service.recordJavaJudge,
     saveJavaDraft: service.saveJavaDraft,
+    readMysqlActivities: service.readMysqlActivities,
+    readMysqlDraft: service.readMysqlDraft,
+    saveMysqlDraft: service.saveMysqlDraft,
+    recordMysqlLesson: service.recordMysqlLesson,
+    recordMysqlJudge: service.recordMysqlJudge,
     readRustCourse: service.readRustCourse,
     recordRustLesson: service.recordRustLesson,
     recordRustJudge: service.recordRustJudge,
