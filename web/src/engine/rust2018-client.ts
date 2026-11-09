@@ -14,6 +14,7 @@ const store = new ModuleStore(
   {},
   { url: wasmUrl, bytes: rust2018Build.wasmBytes, sha256: rust2018Build.wasmSha256 },
 );
+export { store as rust2018ModuleStore };
 const accepted = new WeakMap<
   RustResponse,
   { request: RustRequest; wasmPages: number; current: () => boolean }

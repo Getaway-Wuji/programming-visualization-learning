@@ -17,6 +17,7 @@ const store = new ModuleStore(
     sha256: python3Build.wasmSha256,
   },
 );
+export { store as python3ModuleStore };
 const accepted = new WeakMap<
   PythonResponse,
   {

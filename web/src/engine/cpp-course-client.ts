@@ -15,6 +15,7 @@ const store = new ModuleStore(
   {},
   { url: wasmUrl, bytes: cppCourseBuild.wasmBytes, sha256: cppCourseBuild.wasmSha256 },
 );
+export { store as cppCourseModuleStore };
 const receipts = new WeakMap<
   CppCourseResponse,
   { request: CppCourseRequest; wasmPages: number; current: () => boolean }

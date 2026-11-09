@@ -13,8 +13,8 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
-    # Leave room for cold Windows builds, the full Rust suite and all language workflows.
-    timeout-minutes: 45
+    # Cold Windows tools/builds and the full Rust/browser suite can take over 43 minutes.
+    timeout-minutes: 60
     env:
       # Preserve the compiler dependency path used by the supported WASM build.
       CARGO_HOME: 'C:\Users\Spring\.cargo'

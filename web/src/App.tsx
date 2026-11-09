@@ -10,6 +10,9 @@ import {
 } from 'react-router';
 import { Layout } from './components/Layout';
 import { MissingPage, StatePanel } from './components/Ui';
+import { EnginePreparationGate } from './components/EnginePreparationGate';
+import { PreparationAdmissionProvider } from './components/engine-preparation-state';
+import type { PreparationEngine } from './engine/preparation';
 const HomePage = lazy(() =>
   import('./c6-learning/CoursePages').then((module) => ({ default: module.C6HomePage })),
 );
@@ -85,13 +88,21 @@ const CppWorkbench = lazy(() => import('./cpp-course/Workbench'));
 const CppReviewPage = lazy(() => import('./cpp-course/ReviewPage'));
 import { bugQuestions } from './bugs/content';
 import { useParams } from 'react-router';
+function preparedPage(engine: PreparationEngine, page: ReactNode, label?: string) {
+  return (
+    <EnginePreparationGate engine={engine} label={label}>
+      {page}
+    </EnginePreparationGate>
+  );
+}
 function PracticeRoute({ review = false }: { review?: boolean }) {
   const { exerciseId } = useParams();
-  return bugQuestions.some((q) => q.exerciseRef.id === exerciseId) ? (
-    <IndependentPracticePage review={review} />
-  ) : (
-    <PracticePage />
-  );
+  if (bugQuestions.some((q) => q.exerciseRef.id === exerciseId)) {
+    const page = <IndependentPracticePage review={review} />;
+    return review ? page : preparedPage('c', page, 'C 练习');
+  }
+  // This legacy /review alias still renders the executable C6 workspace.
+  return preparedPage('c6', <PracticePage />);
 }
 
 class PageBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
@@ -147,69 +158,123 @@ function AppRoutes() {
             <Route path="/courses/:chapterId" element={<CoursePage />} />
             <Route path="/python" element={<PythonCoursePage />} />
             <Route path="/python/article/:order/:section?" element={<PythonCoursePage />} />
-            <Route path="/python/workbench" element={<PythonWorkbench />} />
-            <Route path="/python/example/:order/:section" element={<PythonWorkbench />} />
-            <Route path="/python/practice/:exerciseId" element={<PythonWorkbench />} />
+            <Route path="/python/workbench" element={preparedPage('python', <PythonWorkbench />)} />
+            <Route
+              path="/python/example/:order/:section"
+              element={preparedPage('python', <PythonWorkbench />)}
+            />
+            <Route
+              path="/python/practice/:exerciseId"
+              element={preparedPage('python', <PythonWorkbench />)}
+            />
             <Route path="/python/review" element={<PythonReviewPage />} />
             <Route path="/java" element={<JavaCoursePage />} />
             <Route path="/java/article/:order/:section?" element={<JavaCoursePage />} />
-            <Route path="/java/workbench" element={<JavaWorkbench />} />
-            <Route path="/java/example/:order/:section" element={<JavaWorkbench />} />
-            <Route path="/java/practice/:exerciseId" element={<JavaWorkbench />} />
+            <Route path="/java/workbench" element={preparedPage('java', <JavaWorkbench />)} />
+            <Route
+              path="/java/example/:order/:section"
+              element={preparedPage('java', <JavaWorkbench />)}
+            />
+            <Route
+              path="/java/practice/:exerciseId"
+              element={preparedPage('java', <JavaWorkbench />)}
+            />
             <Route path="/java/review" element={<JavaReviewPage />} />
             <Route path="/rust" element={<RustCoursePage />} />
             <Route path="/rust/lesson/:lessonId" element={<RustCoursePage />} />
-            <Route path="/rust/workbench" element={<RustWorkbench />} />
-            <Route path="/rust/example/:lessonId" element={<RustWorkbench />} />
-            <Route path="/rust/practice/:profileId" element={<RustWorkbench />} />
+            <Route path="/rust/workbench" element={preparedPage('rust', <RustWorkbench />)} />
+            <Route
+              path="/rust/example/:lessonId"
+              element={preparedPage('rust', <RustWorkbench />)}
+            />
+            <Route
+              path="/rust/practice/:profileId"
+              element={preparedPage('rust', <RustWorkbench />)}
+            />
             <Route path="/rust/review" element={<RustReviewPage />} />
             <Route path="/mysql" element={<MysqlCoursePage />} />
             <Route path="/mysql/lesson/:lessonId" element={<MysqlCoursePage />} />
-            <Route path="/mysql/workbench" element={<MysqlWorkbench />} />
-            <Route path="/mysql/example/:lessonId" element={<MysqlWorkbench />} />
-            <Route path="/mysql/practice/:profileId" element={<MysqlWorkbench />} />
+            <Route path="/mysql/workbench" element={preparedPage('mysql', <MysqlWorkbench />)} />
+            <Route
+              path="/mysql/example/:lessonId"
+              element={preparedPage('mysql', <MysqlWorkbench />)}
+            />
+            <Route
+              path="/mysql/practice/:profileId"
+              element={preparedPage('mysql', <MysqlWorkbench />)}
+            />
             <Route path="/mysql/review" element={<MysqlReviewPage />} />
             <Route path="/cpp" element={<CppCoursePage />} />
             <Route path="/cpp/lesson/:lessonId" element={<CppCoursePage />} />
-            <Route path="/cpp/workbench" element={<CppWorkbench />} />
-            <Route path="/cpp/example/:lessonId" element={<CppWorkbench />} />
-            <Route path="/cpp/practice/:profileId" element={<CppWorkbench />} />
+            <Route path="/cpp/workbench" element={preparedPage('cpp', <CppWorkbench />)} />
+            <Route path="/cpp/example/:lessonId" element={preparedPage('cpp', <CppWorkbench />)} />
+            <Route
+              path="/cpp/practice/:profileId"
+              element={preparedPage('cpp', <CppWorkbench />)}
+            />
             <Route path="/cpp/review" element={<CppReviewPage />} />
             <Route path="/advanced" element={<AdvancedCoursePage />} />
             <Route path="/advanced/migration" element={<LanguageMigrationPage />} />
             <Route path="/advanced/examples" element={<ExamplePage />} />
             <Route path="/advanced/algorithms" element={<AdvancedAlgorithmPage />} />
-            <Route path="/advanced/algorithms/case.cpp.kmp" element={<KmpPage />} />
-            <Route path="/advanced/algorithms/:caseId" element={<AdvancedAlgorithmPage />} />
-            <Route path="/advanced/examples/:exampleId" element={<ExamplePage />} />
+            <Route
+              path="/advanced/algorithms/case.cpp.kmp"
+              element={preparedPage('advanced', <KmpPage />, 'C++')}
+            />
+            <Route
+              path="/advanced/algorithms/:caseId"
+              element={preparedPage('advanced', <AdvancedAlgorithmPage />, 'C++')}
+            />
+            <Route
+              path="/advanced/examples/:exampleId"
+              element={preparedPage('advanced', <ExamplePage />, 'C++')}
+            />
             <Route
               path="/advanced/examples/:exampleId/compare"
-              element={<ExampleComparisonPage />}
+              element={preparedPage('advanced', <ExampleComparisonPage />, 'C++')}
             />
             <Route path="/advanced/:lessonId" element={<AdvancedCoursePage />} />
             <Route path="/lessons/:lessonId" element={<LessonPage />} />
             <Route path="/practice/:exerciseId" element={<PracticeRoute />} />
             <Route path="/practice" element={<PracticeCatalog />} />
             <Route path="/practice/:exerciseId/review" element={<PracticeRoute review />} />
-            <Route path="/c6/program/:programId" element={<C6ProgramPage />} />
+            <Route path="/c6/program/:programId" element={preparedPage('c6', <C6ProgramPage />)} />
             <Route path="/cases" element={<CasesPage />} />
-            <Route path="/compare" element={<ComparisonPage />} />
-            <Route path="/algorithms/:algorithmId" element={<AlgorithmPage />} />
-            <Route path="/algorithms/lab/:slug" element={<VisualLab />} />
-            <Route path="/structures/:structureId" element={<StructurePage />} />
-            <Route path="/nodes/:nodeCaseId" element={<NodeCasePage />} />
-            <Route path="/classics/:classicId" element={<ClassicPage />} />
-            <Route path="/custom-code" element={<CustomCodePage />} />
-            <Route path="/memory" element={<MemoryPage />} />
+            <Route path="/compare" element={preparedPage('c', <ComparisonPage />)} />
+            <Route
+              path="/algorithms/:algorithmId"
+              element={preparedPage('algorithm', <AlgorithmPage />)}
+            />
+            <Route
+              path="/algorithms/lab/:slug"
+              element={preparedPage('advanced', <VisualLab />, 'C++')}
+            />
+            <Route
+              path="/structures/:structureId"
+              element={preparedPage('algorithm', <StructurePage />)}
+            />
+            <Route path="/nodes/:nodeCaseId" element={preparedPage('memory', <NodeCasePage />)} />
+            <Route path="/classics/:classicId" element={preparedPage('memory', <ClassicPage />)} />
+            <Route
+              path="/custom-code"
+              element={preparedPage('advanced', <CustomCodePage />, 'C')}
+            />
+            <Route path="/memory" element={preparedPage('memory', <MemoryPage />)} />
             <Route path="/compilation" element={<CompilationPage />} />
             <Route path="/bugs" element={<BugPage />} />
-            <Route path="/bugs/memory/:exerciseId" element={<MemoryBugPage />} />
-            <Route path="/visualize/:caseId" element={<VisualizePage />} />
+            <Route
+              path="/bugs/memory/:exerciseId"
+              element={preparedPage('memory', <MemoryBugPage />)}
+            />
+            <Route path="/visualize/:caseId" element={preparedPage('c', <VisualizePage />)} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/notebook" element={<NotebookPage />} />
             <Route path="/study-notes" element={<NotesPage />} />
             <Route path="/weaknesses" element={<WeaknessPage />} />
-            <Route path="/generated-practice" element={<GeneratedPracticePage />} />
+            <Route
+              path="/generated-practice"
+              element={preparedPage('practice', <GeneratedPracticePage />)}
+            />
             <Route path="/reviews" element={<Navigate to="/notebook" replace />} />
             <Route path="/achievements" element={<AchievementsPage />} />
             <Route path="*" element={<MissingPage />} />
@@ -220,6 +285,25 @@ function AppRoutes() {
   );
 }
 
+function PreparedApplication() {
+  const { pathname } = useLocation();
+  const { state } = useLearning();
+  const scope = JSON.stringify([
+    pathname,
+    state.sessionEpoch,
+    state.snapshot?.meta.generation ?? null,
+  ]);
+  return (
+    <PreparationAdmissionProvider scope={scope}>
+      <PracticeProvider>
+        <NotesProvider>
+          <AppRoutes />
+        </NotesProvider>
+      </PracticeProvider>
+    </PreparationAdmissionProvider>
+  );
+}
+
 export function App() {
   const [router] = useState(() =>
     createHashRouter([
@@ -227,11 +311,7 @@ export function App() {
         path: '*',
         element: (
           <AiProvider>
-            <PracticeProvider>
-              <NotesProvider>
-                <AppRoutes />
-              </NotesProvider>
-            </PracticeProvider>
+            <PreparedApplication />
           </AiProvider>
         ),
       },

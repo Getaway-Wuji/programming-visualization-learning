@@ -12,6 +12,7 @@ const store = new ModuleStore(
     sha256: javaBuild.wasmSha256,
   },
 );
+export { store as javaModuleStore };
 const accepted = new WeakMap<
   JavaResponse,
   {

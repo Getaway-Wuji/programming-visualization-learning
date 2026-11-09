@@ -17,6 +17,7 @@ const defaultAsset: ModuleAsset = {
   sha256: engineBuild.wasmSha256,
 };
 let compiledOwner: ModuleStore | undefined;
+let compiledLoad: object | undefined;
 
 // Only immutable compiled code is shared. Instances and running data never are.
 export class ModuleStore {
@@ -28,12 +29,20 @@ export class ModuleStore {
 
   async load(signal: AbortSignal, guard: () => void): Promise<WebAssembly.Module> {
     guard();
+    if (signal.aborted) throw new Error('E_CANCELLED');
+    const load = {};
+    compiledLoad = load;
     if (compiledOwner !== this) {
       if (compiledOwner) compiledOwner.module = undefined;
       // A single explicit owner releases the other engine's compiled cache.
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       compiledOwner = this;
     }
+    const current = () => {
+      guard();
+      if (signal.aborted || compiledOwner !== this || compiledLoad !== load)
+        throw new Error('E_CANCELLED');
+    };
     if (this.module) return this.module;
     const fetcher = this.dependencies.fetcher ?? globalThis.fetch;
     const response = await fetcher(this.asset.url, {
@@ -42,7 +51,7 @@ export class ModuleStore {
       redirect: 'error',
       referrerPolicy: 'no-referrer',
     });
-    guard();
+    current();
     if (
       !response.ok ||
       response.redirected ||
@@ -56,7 +65,7 @@ export class ModuleStore {
     try {
       while (true) {
         const { done, value } = await reader.read();
-        guard();
+        current();
         if (done) break;
         if (offset + value.byteLength > bytes.length) throw new Error('E_MODULE_LOAD');
         bytes.set(value, offset);
@@ -69,13 +78,13 @@ export class ModuleStore {
     const digest = await (
       this.dependencies.digest ?? ((value) => crypto.subtle.digest('SHA-256', value))
     )(bytes);
-    guard();
+    current();
     const hash = Array.from(new Uint8Array(digest), (byte) =>
       byte.toString(16).padStart(2, '0'),
     ).join('');
     if (hash !== this.asset.sha256) throw new Error('E_MODULE_LOAD');
     const module = await (this.dependencies.compile ?? WebAssembly.compile)(bytes);
-    guard();
+    current();
     this.module ??= module;
     return this.module;
   }

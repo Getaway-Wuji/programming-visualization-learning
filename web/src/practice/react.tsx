@@ -14,12 +14,14 @@ import { useLearning } from '../learning/react';
 import { PracticeSession } from './session';
 import { resolveBlockAccess } from '../blocks/permissions';
 import { bugQuestions } from '../bugs/content';
+import { usePreparationAdmission } from '../components/engine-preparation-state';
 const Context = createContext<PracticeSession | null>(null);
 export function PracticeProvider({ children }: { children: ReactNode }) {
   const { service, state } = useLearning();
   const isC6 = !!state.c6;
   const archiveGeneration = state.snapshot?.meta.generation;
   const currentCourseReady = state.c6?.status === 'ready';
+  const admission = usePreparationAdmission();
   const [session] = useState(
     () =>
       new PracticeSession(
@@ -50,7 +52,15 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
   );
   const location = useLocation();
   const lifecycle = useRef({ token: 0 });
+  const archiveOwner = useRef({ epoch: state.sessionEpoch, generation: archiveGeneration });
   useLayoutEffect(() => {
+    if (
+      archiveOwner.current.epoch !== state.sessionEpoch ||
+      archiveOwner.current.generation !== archiveGeneration
+    ) {
+      session.close('本地数据已变更，本次提交失效。');
+      archiveOwner.current = { epoch: state.sessionEpoch, generation: archiveGeneration };
+    }
     // Bind editor history to the real archive generation before a fast analysis
     // creates the initial draft, including on refresh.
     if (isC6 && (!archiveGeneration || !currentCourseReady)) return;
@@ -59,14 +69,31 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
     // while its view is hidden. Storage generation/epoch invalidation still
     // closes the session through the existing subscription below.
     if (location.pathname === '/settings') {
+      if (session.getSnapshot().phase === 'loading') session.close();
+      else session.cancel();
       session.player.pause();
       return;
     }
     const match = /^\/practice\/([^/]+)(\/review)?$/.exec(location.pathname);
     const independent = !isC6 || bugQuestions.some((q) => q.exerciseRef.id === match?.[1]);
+    const review = Boolean(match?.[2]);
+    if (independent && match && !review && admission?.readyEngine !== 'c') {
+      const previous = session.getSnapshot();
+      if (previous.exerciseId !== match[1] || previous.phase === 'loading') session.close();
+      else {
+        session.cancel();
+        session.player.pause();
+      }
+      return;
+    }
+    if (review) {
+      // A retained review never starts background preparation or analysis.
+      if (session.getSnapshot().phase === 'loading') session.close();
+      else session.cancel();
+    }
     session.enter(
       independent ? match?.[1] : undefined,
-      Boolean(match?.[2]),
+      review,
       new URLSearchParams(location.search).get('mode') === 'reconstruction'
         ? 'reconstruction'
         : undefined,
@@ -79,6 +106,8 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
     isC6,
     archiveGeneration,
     currentCourseReady,
+    admission?.scope,
+    admission?.readyEngine,
   ]);
   useEffect(() => {
     const lease = lifecycle.current;

@@ -15,6 +15,7 @@ const store = new ModuleStore(
   {},
   { url: wasmUrl, bytes: mysqlBuild.wasmBytes, sha256: mysqlBuild.wasmSha256 },
 );
+export { store as mysqlModuleStore };
 const accepted = new WeakMap<
   MysqlResponse,
   { request: MysqlRequest; wasmPages: number; current: () => boolean }

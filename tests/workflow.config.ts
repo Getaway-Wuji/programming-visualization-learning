@@ -7,6 +7,7 @@ export default defineConfig({
     'learning-workflow.spec.ts',
     'language-workflow.spec.ts',
     'six-language-editor.spec.ts',
+    'engine-preparation.spec.ts',
     'course-navigation.spec.ts',
     'local-backup.spec.ts',
     'local-backup-ui.spec.ts',

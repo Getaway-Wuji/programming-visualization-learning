@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { expectEditorValue } from './editor-value';
+import { waitForEnginePreparation } from './engine-preparation-helpers';
 
 const workbenches = [
   {
@@ -86,6 +87,7 @@ for (const workbench of workbenches) {
     page,
   }) => {
     await page.goto('/#' + workbench.path);
+    await waitForEnginePreparation(page);
     const code = page.getByRole('textbox', { name: workbench.label, exact: true });
     await expect(code).toBeEditable();
     await storageReady(page);
@@ -109,6 +111,7 @@ for (const workbench of workbenches) {
     await page.getByRole('button', { name: '保存草稿', exact: true }).click();
     await expect(page.getByText(workbench.saved, { exact: true })).toBeVisible();
     await page.reload();
+    await waitForEnginePreparation(page);
     await expectEditorValue(code, workbench.source);
     await storageReady(page);
     if (workbench.language !== 'C') await expect(page.getByTestId(workbench.trace)).toHaveCount(0);
@@ -211,6 +214,7 @@ test('cold and warm in-app workbench routes focus every heading while initial do
           })
           .click();
       }
+      await waitForEnginePreparation(page);
       await expect(
         page.getByRole('textbox', { name: workbench.label, exact: true }),
       ).toBeEditable();
@@ -230,6 +234,7 @@ test('cold and warm in-app workbench routes focus every heading while initial do
     const initial = await context.newPage();
     try {
       await initial.goto('/#' + workbench.path);
+      await waitForEnginePreparation(initial);
       const code = initial.getByRole('textbox', { name: workbench.label, exact: true });
       await expect(code).toBeEditable();
       await expect(

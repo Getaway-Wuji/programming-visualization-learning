@@ -13,6 +13,7 @@ import {
   type MemoryResult,
 } from '../engine/memory-protocol';
 import { precheckJson } from '../engine/execution-json';
+import { memoryModuleStore } from '../engine/memory-module';
 import { memoryBugQuestion, memoryBugRegistry, type MemoryBugQuestion } from './content';
 
 export interface MemoryBugRequest extends MemoryRequest {
@@ -163,6 +164,7 @@ export class MemoryBugClient {
   private readonly client: MemoryExecutionClient;
   constructor(dependencies: MemoryDependencies = {}) {
     this.client = new MemoryExecutionClient({
+      moduleStore: Object.keys(dependencies).length ? undefined : memoryModuleStore,
       encode: encodeBugRequest,
       decode: decodeBugResult,
       createWorker: () => new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' }),

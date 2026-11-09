@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { editorValue, expectEditorValue } from './editor-value';
+import { waitForEnginePreparation } from './engine-preparation-helpers';
 
 const cases = [
   {
@@ -71,6 +72,7 @@ for (const scenario of cases) {
       });
     });
     await page.goto('/#' + scenario.path);
+    await waitForEnginePreparation(page);
     const code = page.getByRole('textbox', { name: scenario.label, exact: true });
     await expect(code).toBeEditable();
     await code.fill(scenario.source);

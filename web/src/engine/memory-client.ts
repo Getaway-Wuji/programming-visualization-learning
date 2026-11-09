@@ -10,6 +10,7 @@ import {
 } from './memory-protocol';
 
 export interface MemoryDependencies extends ModuleDependencies {
+  moduleStore?: ModuleStore;
   now?: () => number;
   createWorker?: () => Worker;
   decode?: typeof decodeMemoryResult;
@@ -60,9 +61,11 @@ export class MemoryExecutionClient {
   private readonly now: () => number;
   private readonly createWorker: () => Worker;
   constructor(private readonly dependencies: MemoryDependencies = {}) {
-    this.store = Object.keys(dependencies).length
-      ? createMemoryModuleStore(dependencies)
-      : memoryModuleStore;
+    this.store =
+      dependencies.moduleStore ??
+      (Object.keys(dependencies).length
+        ? createMemoryModuleStore(dependencies)
+        : memoryModuleStore);
     this.now = dependencies.now ?? (() => performance.now());
     this.createWorker =
       dependencies.createWorker ??
