@@ -239,7 +239,6 @@ export function HomePage() {
             <div className="module-title">
               <h2 className="card-title">自己的学习空间</h2>
             </div>
-            <p className="muted">显示偏好与本地数据说明，集中在本地设置中。</p>
             <Link className="card-link" to="/settings?panel=display">
               显示设置
               <Icon name="arrow" />

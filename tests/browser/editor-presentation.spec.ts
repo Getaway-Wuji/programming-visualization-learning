@@ -410,7 +410,7 @@ test('invalid and unmapped code survives hide-show, settings return and mode swi
     expect(await counts(page)).toEqual(work);
     await page
       .getByRole('navigation', { name: '主导航', exact: true })
-      .getByRole('link', { name: '本地设置', exact: true })
+      .getByRole('link', { name: '设置', exact: true })
       .click();
     await page.getByRole('tab', { name: '显示设置', exact: true }).click();
     await choose(page, 'show');

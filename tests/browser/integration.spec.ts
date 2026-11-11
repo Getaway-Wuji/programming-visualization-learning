@@ -548,7 +548,7 @@ test('continuous public learning navigation integrates reviewed reading, validat
 
   await page
     .getByRole('navigation', { name: '主导航' })
-    .getByRole('link', { name: '本地设置' })
+    .getByRole('link', { name: '设置', exact: true })
     .click();
   await routeReady('PAGE-07', '/settings');
   await page.getByRole('tab', { name: '本地数据', exact: true }).click();

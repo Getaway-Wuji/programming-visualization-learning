@@ -98,7 +98,7 @@ test('public routes preserve content relationships, refresh and browser history'
   await expect(page.getByRole('heading', { name: '案例讲解', exact: true })).toBeVisible();
   await page
     .getByRole('navigation', { name: '主导航' })
-    .getByRole('link', { name: '本地设置' })
+    .getByRole('link', { name: '设置', exact: true })
     .click();
   await ready(page, 'PAGE-07');
   await expect(page.getByRole('link', { name: /登录|注册|排行榜/ })).toHaveCount(0);
@@ -335,15 +335,19 @@ test('desktop and narrower layouts avoid horizontal page overflow', async ({ pag
       await expect(page.getByRole('navigation', { name: '主导航' }).getByRole('link')).toHaveText([
         '学习首页',
         'C 语言课程',
+        'Python 课程',
+        'Java 课程',
+        'C++ 课程',
+        'Rust 课程',
+        'MySQL 课程',
         '练习',
         '进阶课程',
         '算法与演示',
         'C 代码工作台',
-        '编译流程',
         '错题与陌生点',
         '学习笔记',
         '学习成就',
-        '本地设置',
+        '设置',
       ]);
       await noHorizontalOverflow(page);
     }

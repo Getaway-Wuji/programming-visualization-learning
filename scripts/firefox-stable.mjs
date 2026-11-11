@@ -177,7 +177,7 @@ async function checkNavigation(route) {
     ['/#/cases', 'PAGE-05', '让数据变化，有迹可循。'],
     ['/#/visualize/case.c.bubble-sort', 'PAGE-06', '冒泡排序'],
     ['/#/practice/exercise.c.echo/review', 'PAGE-06', '输出输入变量 · 本次复盘'],
-    ['/#/settings?panel=data', 'PAGE-07', '本地设置'],
+    ['/#/settings?panel=data', 'PAGE-07', '设置'],
   ]) {
     await webdriver(`${route}/url`, 'POST', { url: `http://127.0.0.1:4178${path}` });
     await waitForUi(route, `[data-page-id="${pageId}"]`, heading);

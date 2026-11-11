@@ -174,7 +174,7 @@ export function HomePanel({
             <StatePanel
               kind="error"
               title="积分暂不可确认"
-              description="积分账本中有损坏或无法确认的记录。原账本已保留，相关写入已暂停，不会跳过这些记录显示缩水总分。请在本地设置中查看恢复选项。"
+              description="积分账本中有损坏或无法确认的记录。原账本已保留，相关写入已暂停，不会跳过这些记录显示缩水总分。请在设置中查看恢复选项。"
             />
           ) : projection?.ledger.history.length ? (
             <>

@@ -55,12 +55,12 @@ test('four stage simulation preserves inputs, progression, review and local reco
   await observeCaseSetExecution(page);
   await page.goto('/');
   await expect(page.locator('.app-shell')).toHaveAttribute('data-learning-storage-status', 'ready');
-  await page
-    .getByRole('navigation', { name: '主导航' })
-    .getByRole('link', { name: '编译流程', exact: true })
-    .click();
-  await ready(page);
-  await expect(page.locator('main h1')).toBeFocused();
+  await expect(
+    page
+      .getByRole('navigation', { name: '主导航' })
+      .getByRole('link', { name: '编译流程', exact: true }),
+  ).toHaveCount(0);
+  await open(page);
   const before = await record(page);
   await expect(page.getByRole('button', { name: '上一步', exact: true })).toBeDisabled();
   const titles = ['预处理', '编译', '汇编', '链接'];
@@ -159,10 +159,11 @@ test('keyboard, three widths, refresh and history keep the simulated state hones
   await ready(page);
   await expect(panel(page)).toHaveAttribute('data-completed', '0');
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.getByRole('link', { name: '本地设置', exact: true }).click();
+  await page.getByRole('link', { name: '设置', exact: true }).click();
   await expect(page).toHaveURL(/#\/settings$/);
   await page.goBack();
   await ready(page);
+  await expect(page.locator('main h1')).toBeFocused();
   await expect(panel(page)).toHaveAttribute('data-completed', '0');
 });
 

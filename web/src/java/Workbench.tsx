@@ -300,13 +300,6 @@ function Editor({
                 </button>
               </p>
             ))}
-            {target.sourceUrl && (
-              <p>
-                <a href={target.sourceUrl} rel="noreferrer">
-                  课程来源
-                </a>
-              </p>
-            )}
           </aside>
         )}
         <div className="python-work">

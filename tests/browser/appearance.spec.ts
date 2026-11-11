@@ -260,7 +260,7 @@ test('an actual Blockly draft survives settings theme changes and browser back w
   const before = await snapshot(page);
   await page
     .getByRole('navigation', { name: '主导航', exact: true })
-    .getByRole('link', { name: '本地设置', exact: true })
+    .getByRole('link', { name: '设置', exact: true })
     .click();
   await expect(page.getByTestId('appearance-settings')).toBeVisible();
   await choose(page, 'cute');
@@ -325,7 +325,7 @@ test('a real accepted Rust submission and player cursor survive appearance chang
   const before = await snapshot(page);
   await page
     .getByRole('navigation', { name: '主导航', exact: true })
-    .getByRole('link', { name: '本地设置', exact: true })
+    .getByRole('link', { name: '设置', exact: true })
     .click();
   await expect(page.getByTestId('appearance-settings')).toBeVisible();
   await choose(page, 'glass');

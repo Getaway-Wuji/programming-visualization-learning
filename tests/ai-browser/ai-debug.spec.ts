@@ -174,7 +174,7 @@ test('refresh and leaving the workbench discard all AI configuration', async ({ 
   const c = await instrumentation(page);
   await enable(page);
   await workbench(page, sources.loop);
-  await page.getByRole('link', { name: '本地设置', exact: true }).click();
+  await page.getByRole('link', { name: '设置', exact: true }).click();
   await page.getByRole('tab', { name: 'AI解释（可选）', exact: true }).click();
   await expect(page.getByRole('switch')).toHaveAttribute('aria-checked', 'false');
   await enable(page);
@@ -200,7 +200,7 @@ test('正式存储: AI configuration, real execution, simulated explanation and 
   await workbench(page, sources.loop);
   await send(page);
   await expect(page.locator('.ai-answer')).toBeVisible();
-  await page.getByRole('link', { name: '本地设置', exact: true }).click();
+  await page.getByRole('link', { name: '设置', exact: true }).click();
   await page.getByRole('tab', { name: 'AI解释（可选）', exact: true }).click();
   const after = await native(page);
   expect(after).toEqual(before);

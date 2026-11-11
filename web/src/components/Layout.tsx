@@ -22,16 +22,15 @@ const navigation = [
   { to: '/advanced', label: '进阶课程', icon: 'book' },
   { to: '/cases', label: '算法与演示', icon: 'chart' },
   { to: '/custom-code', label: 'C 代码工作台', icon: 'code' },
-  { to: '/compilation', label: '编译流程', icon: 'code' },
   { to: '/notebook', label: '错题与陌生点', icon: 'book' },
   { to: '/study-notes', label: '学习笔记', icon: 'book' },
   { to: '/achievements', label: '学习成就', icon: 'book' },
-  { to: '/settings', label: '本地设置', icon: 'settings' },
+  { to: '/settings', label: '设置', icon: 'settings' },
 ] as const;
 const navigationGroups = [
   { label: '课程学习', items: navigation.slice(0, 7) },
-  { label: '实践工具', items: navigation.slice(7, 12) },
-  { label: '我的学习', items: navigation.slice(12) },
+  { label: '实践工具', items: navigation.slice(7, 11) },
+  { label: '我的学习', items: navigation.slice(11) },
 ];
 
 export function Layout({ children }: { children: ReactNode }) {
@@ -224,14 +223,6 @@ export function Layout({ children }: { children: ReactNode }) {
             </div>
           ))}
         </nav>
-        <div className="sidebar-footer">
-          <Icon name="leaf" />
-          <strong>按自己的节奏学习</strong>
-          <p>学习记录将保存在当前浏览器，不跨设备同步。</p>
-          <Link to="/settings?panel=data">
-            了解本地数据 <Icon name="arrow" />
-          </Link>
-        </div>
       </aside>
       <div className="app-content" inert={menuOpen ? true : undefined}>
         <header className="topbar">

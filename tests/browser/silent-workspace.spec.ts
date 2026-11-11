@@ -105,7 +105,7 @@ test('silent native Blockly mounts and remounts without constructing AudioContex
 
   await page
     .getByRole('navigation', { name: '主导航', exact: true })
-    .getByRole('link', { name: '本地设置', exact: true })
+    .getByRole('link', { name: '设置', exact: true })
     .click();
   await page.getByTestId('theme-cute').click();
   await page.getByTestId('save-appearance').click();

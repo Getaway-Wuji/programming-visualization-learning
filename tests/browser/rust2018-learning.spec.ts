@@ -105,7 +105,7 @@ test('public Rust catalog preserves every book node, parent guides and independe
   expect(await links.evaluateAll((rows) => rows.map((row) => row.getAttribute('href')))).toEqual(
     manifest.catalog.map((node) => '#/rust/lesson/' + node.id),
   );
-  await expect(page.getByText(/目录来源为《Rust权威指南》/u)).toContainText('Steve Klabnik');
+  await expect(page.getByText(/目录来源为《Rust权威指南》/u)).toHaveCount(0);
   await expect(page.getByRole('progressbar', { name: 'Rust 阅读进度' })).toHaveAttribute(
     'max',
     '299',

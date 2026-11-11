@@ -111,13 +111,14 @@ function zipEntries(bytes: Buffer) {
   return files;
 }
 
-test('MySQL public catalog preserves all numbered nodes, parent guides, source distinctions and independent automatic reading', async ({
+test('MySQL public catalog preserves all numbered nodes, parent guides and independent automatic reading', async ({
   page,
 }) => {
   await page.goto('/#/');
   await ready(page);
   await page.getByRole('link', { name: 'MySQL 课程', exact: true }).first().click();
   await expect(page.getByRole('heading', { name: 'MySQL 课程', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '课程来源', exact: true })).toHaveCount(0);
   const catalog = page.getByRole('region', { name: '教材目录', exact: true });
   const links = catalog.locator('a[href^="#/mysql/lesson/"]');
   await expect(links).toHaveCount(374);
@@ -140,7 +141,7 @@ test('MySQL public catalog preserves all numbered nodes, parent guides, source d
   await expect(
     page.getByRole('heading', { name: parent.number + ' ' + parent.title, exact: true }),
   ).toBeVisible();
-  await expect(page.getByText('所附 PDF 仅含本节目录', { exact: false }).first()).toBeVisible();
+  await expect(page.getByText('所附 PDF 仅含本节目录')).toHaveCount(0);
   await expect(page.getByTestId('reading-end')).toHaveCount(0);
   const reading = manifest.catalog.find((node) => node.id === 'mysql.lesson.1.1.1')!;
   await page.goto('/#/mysql/lesson/' + reading.id);

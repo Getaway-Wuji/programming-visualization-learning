@@ -587,7 +587,7 @@ test('invalid code remains intact across editor folding, theme change, settings 
   expect(await count(page, 'analyze-code')).toBe(analyses);
   await page
     .getByRole('navigation', { name: '主导航', exact: true })
-    .getByRole('link', { name: '本地设置', exact: true })
+    .getByRole('link', { name: '设置', exact: true })
     .click();
   await expect(page.getByTestId('appearance-settings')).toBeVisible();
   await page.getByTestId('theme-cute').click();

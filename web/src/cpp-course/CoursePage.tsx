@@ -127,8 +127,7 @@ function BookCatalog({ index }: { index: CppManifest }) {
                     practice={runnableLessons.has(row.id)}
                     completed={completed.has(row.id)}
                   />
-                )}{' '}
-                <span className="cpp-muted">第 {row.printedPage} 页</span>
+                )}
               </li>
             ))}
           </ul>
@@ -198,10 +197,6 @@ function Catalog() {
               </ul>
             </aside>
           </div>
-          <p className="cpp-muted">
-            目录来源为《{index.source.title}》，{index.source.author} 编著，{index.source.publisher}
-            ，{index.source.year} 年。讲解和练习为平台原创。
-          </p>
         </>
       ) : (
         <CppLoadState failed={resource.failed} retry={resource.retry} />
@@ -222,14 +217,11 @@ function Lesson({ id }: { id: string }) {
   const activity = lesson.activity;
   return (
     <article className="cpp-sheet cpp-reading">
-      <p className="cpp-muted">
-        {parent && (
-          <>
-            <Link to={lessonPath(parent.id)}>{parent.title}</Link> ·{' '}
-          </>
-        )}
-        教材第 {lesson.printedPage} 页
-      </p>
+      {parent && (
+        <p className="cpp-muted">
+          <Link to={lessonPath(parent.id)}>{parent.title}</Link>
+        </p>
+      )}
       <h1 tabIndex={-1}>
         {lesson.number} {lesson.title}
       </h1>

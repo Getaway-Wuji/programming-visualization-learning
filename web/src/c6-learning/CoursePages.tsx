@@ -88,8 +88,7 @@ function NodeRows({ nodes }: { nodes: readonly C6NavigationNode[] }) {
                         ? '阅读中'
                         : lesson
                           ? '小节'
-                          : '展开阅读'}{' '}
-                · 书页 {node.physicalPage}
+                          : '展开阅读'}
               </span>
             </Link>
           </li>
@@ -135,7 +134,7 @@ function Home() {
         title={`继续学 ${selectedLanguage.label}`}
         description={
           selectedLanguage.id === 'c'
-            ? '按《C Primer Plus》第 6 版的章节顺序，阅读、运行，再动手练习。'
+            ? '按章节顺序阅读、运行，再动手练习。'
             : '接着最近的学习进度，阅读、自检，并在工作台观察真实执行。'
         }
       />
@@ -249,11 +248,7 @@ function Directory() {
   );
   return (
     <div className="c6-course-page">
-      <PageHeading
-        kicker="C 语言课程"
-        title="课程目录"
-        description="《C Primer Plus》第 6 版 · 17 章 · 404 个学习小节"
-      />
+      <PageHeading kicker="C 语言课程" title="课程目录" description="17 章 · 404 个学习小节" />
       <label className="c6-search">
         查找章节或主题
         <input
@@ -363,11 +358,8 @@ function SourcePage({ nodeId }: { nodeId: string }) {
         ]}
       />
       <PageHeading
-        kicker={
-          nav.chunkId === 'chA' || nav.chunkId === 'chB' ? '参考资料' : 'C Primer Plus · 第 6 版'
-        }
+        kicker={nav.chunkId === 'chA' || nav.chunkId === 'chB' ? '参考资料' : 'C 语言课程'}
         title={nav.titleDisplay}
-        description={`教材书页 ${nav.physicalPage}`}
       />
       {!node && (
         <StatePanel

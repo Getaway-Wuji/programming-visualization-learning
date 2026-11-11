@@ -15,9 +15,8 @@ test('production React entry renders without loading the engine', async ({
   expect(response?.headers()['cache-control']).toBe('no-cache');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('继续学 C');
   await expect(page.getByText('0 / 404 个小节已完成', { exact: true })).toBeVisible();
-  await expect(
-    page.getByText('学习记录将保存在当前浏览器，不跨设备同步。', { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByText('按自己的节奏学习', { exact: true })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: '了解本地数据', exact: true })).toHaveCount(0);
   await expect(page.getByRole('link', { name: /登录|注册/ })).toHaveCount(0);
   expect(engineRequests).toEqual([]);
   await testInfo.attach('browser-version', { body: browser.version(), contentType: 'text/plain' });

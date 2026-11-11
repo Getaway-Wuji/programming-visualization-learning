@@ -119,8 +119,7 @@ function BookCatalog({ index }: { index: RustManifest }) {
                     practice={runnableLessons.has(row.id)}
                     completed={completed.has(row.id)}
                   />
-                )}{' '}
-                <span className="rust-muted">PDF 第 {row.physicalPage} 页</span>
+                )}
               </li>
             ))}
           </ul>
@@ -188,13 +187,8 @@ function Catalog() {
                   </li>
                 ))}
               </ul>
-              <p className="rust-muted">阅读与练习分别记录。学过的小节也可以随时回来复习。</p>
             </section>
           </div>
-          <p className="rust-muted">
-            目录来源为《{index.source.title}》，{index.source.authors.join('、')} 著，
-            {index.source.publisher}，{index.source.edition}。讲解和练习为平台原创。
-          </p>
         </>
       ) : (
         <RustLoadState failed={resource.failed} retry={resource.retry} />
@@ -215,14 +209,11 @@ function Lesson({ id }: { id: string }) {
   const activity = lesson.activity;
   return (
     <article className="rust-sheet rust-reading">
-      <p className="rust-muted">
-        {parent && (
-          <>
-            <Link to={lessonPath(parent.id)}>{parent.title}</Link> ·{' '}
-          </>
-        )}
-        PDF 第 {lesson.physicalPage} 页
-      </p>
+      {parent && (
+        <p className="rust-muted">
+          <Link to={lessonPath(parent.id)}>{parent.title}</Link>
+        </p>
+      )}
       <h1 tabIndex={-1}>{lesson.title}</h1>
       <C6TeachingReading text={lesson.body.join('\n\n')} repeatedTitle={lesson.title} />
       {children.length > 0 && (

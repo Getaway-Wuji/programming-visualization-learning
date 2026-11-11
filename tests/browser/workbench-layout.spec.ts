@@ -203,17 +203,21 @@ test('selected themes use the available workbench width and keep the collapsible
       await expect(links).toHaveText([
         '学习首页',
         'C 语言课程',
+        'Python 课程',
+        'Java 课程',
+        'C++ 课程',
+        'Rust 课程',
+        'MySQL 课程',
         '练习',
         '进阶课程',
         '算法与演示',
         'C 代码工作台',
-        '编译流程',
         '错题与陌生点',
         '学习笔记',
         '学习成就',
-        '本地设置',
+        '设置',
       ]);
-      for (const name of ['学习首页', 'C 语言课程', '算法与演示', '编译流程', '本地设置'])
+      for (const name of ['学习首页', 'C 语言课程', '算法与演示', '设置'])
         await expect(
           page
             .getByRole('navigation', { name: '主导航', exact: true })

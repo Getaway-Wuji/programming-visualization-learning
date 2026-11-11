@@ -139,9 +139,7 @@
   letter-spacing: -0.035em;
 }
 [data-appearance] .brand-text small,
-[data-appearance] .sidebar-note,
-[data-appearance] .sidebar-footer,
-[data-appearance] .sidebar-footer p {
+[data-appearance] .sidebar-note {
   color: var(--p05-muted);
 }
 [data-appearance] .brand-text small {
@@ -157,10 +155,6 @@
   color: var(--p05-accent);
   background: var(--p05-active);
   border-color: transparent;
-}
-[data-appearance] .sidebar-footer {
-  border-color: var(--p05-border);
-  font-size: 12px;
 }
 [data-appearance] .topbar {
   height: 68px;
@@ -793,11 +787,6 @@
   background: transparent;
   padding: 0;
 }
-[data-appearance] .sidebar-footer strong,
-[data-appearance] .sidebar-footer a,
-[data-appearance] .sidebar-footer svg {
-  color: var(--p05-muted);
-}
 .home-heading h1 {
   margin: 0 0 8px;
 }
@@ -1089,8 +1078,7 @@
   box-shadow: inset -1px 0 0 #ffffff90;
 }
 [data-appearance='cute'] .sidebar > .brand,
-[data-appearance='cute'] .sidebar-note,
-[data-appearance='cute'] .sidebar-footer {
+[data-appearance='cute'] .sidebar-note {
   display: none;
 }
 
@@ -1206,8 +1194,7 @@
     inset 1px 0 0 var(--relief-hi);
 }
 [data-appearance='soft'] .sidebar > .brand,
-[data-appearance='soft'] .sidebar-note,
-[data-appearance='soft'] .sidebar-footer {
+[data-appearance='soft'] .sidebar-note {
   display: none;
 }
 
@@ -1338,8 +1325,7 @@
   justify-content: center;
 }
 [data-appearance='tech'] .brand-text,
-[data-appearance='tech'] .sidebar-note,
-[data-appearance='tech'] .sidebar-footer {
+[data-appearance='tech'] .sidebar-note {
   display: none;
 }
 [data-appearance='tech'] .sidebar nav {
@@ -1545,8 +1531,7 @@
 :root[data-appearance] .p05-app .sidebar .brand-text {
   display: block;
 }
-:root[data-appearance] .p05-app .sidebar-note,
-:root[data-appearance] .p05-app .sidebar-footer {
+:root[data-appearance] .p05-app .sidebar-note {
   display: block;
 }
 :root[data-appearance] .p05-app .sidebar nav {
@@ -1636,8 +1621,7 @@
     margin: 0;
   }
   [data-appearance] .sidebar > .brand,
-  [data-appearance] .sidebar-note,
-  [data-appearance] .sidebar-footer {
+  [data-appearance] .sidebar-note {
     display: none;
   }
   [data-appearance] .sidebar nav {

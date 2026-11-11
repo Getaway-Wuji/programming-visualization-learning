@@ -166,7 +166,7 @@ test('drawer close, backdrop, current-page navigation and viewport expansion rem
   await expectDrawerClosed(page);
 
   await menu(page).click();
-  await navigation(page).getByRole('link', { name: '本地设置', exact: true }).click();
+  await navigation(page).getByRole('link', { name: '设置', exact: true }).click();
   await expectDrawerClosed(page);
   await expect(page.getByTestId('appearance-settings')).toBeVisible();
 

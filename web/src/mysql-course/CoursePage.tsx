@@ -54,16 +54,6 @@ export function MysqlText({ text }: { text: string }) {
     </>
   );
 }
-function SourceNote({ node }: { node: MysqlCatalogEntry }) {
-  return (
-    <span>
-      教材印刷页 {node.printedPage} ·{' '}
-      {node.physicalPage === null
-        ? '所附 PDF 仅含本节目录'
-        : `PDF 第 ${node.physicalPage} 页有正文`}
-    </span>
-  );
-}
 const runnableLessons = new Set(Object.values(mysqlExercises).map((profile) => profile.lesson));
 
 function BookCatalog({ index }: { index: MysqlManifest }) {
@@ -128,9 +118,6 @@ function BookCatalog({ index }: { index: MysqlManifest }) {
                     completed={completed.has(node.id)}
                   />
                 )}
-                <p className="mysql-muted">
-                  <SourceNote node={node} />
-                </p>
               </li>
             ))}
           </ul>
@@ -197,20 +184,8 @@ function Catalog() {
                   </li>
                 ))}
               </ul>
-              <p className="mysql-muted">阅读与练习分别记录，可随时回来复习。</p>
             </aside>
           </div>
-          <section className="mysql-sheet">
-            <h2>课程来源</h2>
-            <p>
-              目录依据《{index.source.title}》，{index.source.author} 著，{index.source.publisher}，
-              {index.source.edition}。讲解和练习为平台原创。
-            </p>
-            <p>{index.coverage.note}</p>
-            <p className="mysql-muted">
-              第 2—17 章按教材目录组织，并用每节列出的一手资料补充核对；不将目录页当作教材正文页。
-            </p>
-          </section>
         </>
       ) : (
         <MysqlLoadState failed={resource.failed} retry={resource.retry} />
@@ -230,14 +205,11 @@ function Lesson({ id }: { id: string }) {
     activity = lesson.activity;
   return (
     <article className="mysql-sheet mysql-reading">
-      <p className="mysql-muted">
-        {parent && (
-          <>
-            <Link to={lessonPath(parent.id)}>{numbered(parent)}</Link> ·{' '}
-          </>
-        )}
-        <SourceNote node={lesson} />
-      </p>
+      {parent && (
+        <p className="mysql-muted">
+          <Link to={lessonPath(parent.id)}>{numbered(parent)}</Link>
+        </p>
+      )}
       <h1 tabIndex={-1}>{numbered(lesson)}</h1>
       <C6TeachingReading text={lesson.body.join('\n\n')} repeatedTitle={lesson.title} />
       {children.length > 0 && (
@@ -298,12 +270,6 @@ function Lesson({ id }: { id: string }) {
           </details>
         </section>
       )}
-      <section className="mysql-section">
-        <h2>来源与补充参考</h2>
-        <p className="mysql-muted">
-          <SourceNote node={lesson} />
-        </p>
-      </section>
       {lesson.leaf && <ReadingEnd lessonId={lesson.id} language="mysql" />}
       <CourseReturn path="/mysql" />
       <nav className="mysql-page-turn" aria-label="相邻章节">

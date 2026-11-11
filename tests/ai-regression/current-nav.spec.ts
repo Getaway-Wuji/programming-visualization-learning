@@ -1,10 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { native } from '../ai-browser/helpers';
+import { openIndependentEchoRepair } from '../browser/current-course-helpers';
 
-test('current ten navigation entries and original workbench width/collapse behavior at four desktop widths', async ({
+test('current navigation entries and original workbench width/collapse behavior at four desktop widths', async ({
   page,
 }, info) => {
-  await page.goto('/#/practice/exercise.c.echo');
+  await openIndependentEchoRepair(page);
   await expect(page.getByTestId('practice-execution')).toHaveAttribute('data-state', 'ready');
   const before = await native(page);
   const samples = [];
@@ -42,14 +43,19 @@ test('current ten navigation entries and original workbench width/collapse behav
     await expect(links).toHaveText([
       '学习首页',
       'C 语言课程',
+      'Python 课程',
+      'Java 课程',
+      'C++ 课程',
+      'Rust 课程',
+      'MySQL 课程',
+      '练习',
       '进阶课程',
       '算法与演示',
       'C 代码工作台',
-      '编译流程',
       '错题与陌生点',
-      '今日复习',
+      '学习笔记',
       '学习成就',
-      '本地设置',
+      '设置',
     ]);
     for (const link of await links.all()) await expect(link).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(

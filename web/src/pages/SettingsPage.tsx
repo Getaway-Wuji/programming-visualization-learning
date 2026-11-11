@@ -178,10 +178,10 @@ function SettingsContent() {
   };
   return (
     <div data-page-id="PAGE-07">
-      <Breadcrumbs items={[{ label: '学习首页', to: '/' }, { label: '本地设置' }]} />
+      <Breadcrumbs items={[{ label: '学习首页', to: '/' }, { label: '设置' }]} />
       <PageHeading
         kicker="你的浏览器，你的学习空间"
-        title="本地设置"
+        title="设置"
         description="学习档案保存在当前浏览器，不跨设备同步。存储不可用时仅临时使用，未保存内容会在关闭或刷新后丢失。"
       />
       <LearningSaveStatus onRefresh={() => void refresh()} dirty={displayDraft !== null} />
