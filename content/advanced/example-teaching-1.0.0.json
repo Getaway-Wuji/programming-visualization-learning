@@ -1,0 +1,83 @@
+{
+  "formatVersion": 1,
+  "entries": [
+    {
+      "caseId": "example.cpp.two-sum",
+      "title": "两数之和",
+      "exampleInput": {
+        "values": [
+          4,
+          1,
+          8,
+          6
+        ],
+        "target": 9
+      },
+      "programSources": [
+        {
+          "file": "content/advanced/example-two-sum-1.0.0.cpp",
+          "sha256": "08cd8547429e73ef6e4f0fe106613ce3ec6101029cbfcdbe2e5578e808a69cc1"
+        },
+        {
+          "file": "content/advanced/example-two-sum-merge-pointers-1.0.0.cpp",
+          "sha256": "c5803d77e5341d69395c7ff00134e0d03d18263bfbbb0b7288829c2d7738c256"
+        }
+      ],
+      "body": [
+        "### 排的是下标，答案仍指向原位置\n\n用默认 `[4,1,8,6]`、目标9，双重枚举会检查6个不同位置对，只在下标1和2遇到1+8。它继续检查余下组合，确认总共只有一组，再输出 `1 2`。\n\n归并方案保持原values不动，把order排成 `[1,0,3,2]`，对应值 `[1,4,6,8]`。左右先取1和8，和为9，各端都只有一个同值项，pairs增加1。边界缩到4和6，和10偏大，右边向左收缩到相遇；最终也输出原下标 `1 2`。不能输出排序后的位置0和3。\n\n若用 `[1,1,8,8]` 和目标9，左右两个同值段各长2，能组成2×2=4个不同下标对。程序应打印 `INVALID_INPUT` 并返回1，而不是挑第一对作唯一答案。相等的两端若来自同一值段，要在该段内选两个不同位置，组合数为m(m−1)/2。\n\n两种实现都核验唯一性。归并加线性扫描降低大规模的渐进比较量，但需要order与scratch；本页小输入上的实际步数或写次数，不一定由渐进复杂度单独决定。"
+      ]
+    },
+    {
+      "caseId": "example.cpp.move-zeroes",
+      "title": "移动零",
+      "exampleInput": {
+        "values": [
+          0,
+          4,
+          -2,
+          0,
+          4
+        ]
+      },
+      "programSources": [
+        {
+          "file": "content/advanced/example-move-zeroes-1.0.0.cpp",
+          "sha256": "3128e881c7cae81b5ea6fd07497385629200885f6811c0ea6a5ac73968bba0eb"
+        },
+        {
+          "file": "content/advanced/example-move-zeroes-swap-1.0.0.cpp",
+          "sha256": "d22d281588ed11594f8a305497cbedb8fcc55ed118bb06412b59872f09cd4eb7"
+        }
+      ],
+      "body": [
+        "### 相同结果，核心写入次数可以不同\n\n默认 `[0,4,-2,0,4]`。压缩版按扫描顺序把4、−2、4写到前三格，再补两格0，一共5次数组写。写到前面时，尾部可能暂时还留着原值；直到补零阶段完成，才得到 `[4,-2,4,0,0]`。\n\n交换版先跳过读到的0。读到第一个4时，与前面的零格交换为 `[4,0,-2,0,4]`；读到−2时变成 `[4,-2,0,0,4]`；读到最后的4时变成 `[4,-2,4,0,0]`。每次交换有两次数组赋值，按源码手算是3次交换、6次核心数组写。界面的交换数字只统计引擎标记的步骤，本实现没有相应标记，应结合数组写观察；界面总量还可能包含输入与初始化。\n\n若输入原本没有0，交换版始终read==write，会跳过同位置交换，核心数组写为0；压缩版仍会执行n次同位置写。选择时要看需要保留的稳定顺序、数据分布和写入成本，两者的渐进时间仍都是O(n)，都用常数额外标量。"
+      ]
+    },
+    {
+      "caseId": "example.cpp.search-insert",
+      "title": "搜索插入位置",
+      "exampleInput": {
+        "values": [
+          -5,
+          0,
+          7,
+          11
+        ],
+        "target": 3
+      },
+      "programSources": [
+        {
+          "file": "content/advanced/example-search-insert-1.0.0.cpp",
+          "sha256": "5213bda0e6bfdae78908648376a4b0c895487e8eb40784280f96cce6f0d3d4ba"
+        },
+        {
+          "file": "content/advanced/example-search-insert-closed-1.0.0.cpp",
+          "sha256": "4ed491af41b60d3221ab7d272da0537da28ccbeb94944ba30641f11e775c9bee"
+        }
+      ],
+      "body": [
+        "### 两种区间写法，怎样在同一位置停下来\n\n默认 `[-5,0,7,11]`、目标3。正确的插入位置是下标2：它之前的−5、0都小于3，7是第一个不小于3的值。没有恰好等于3的元素，仍然有插入位置。\n\n|方案|第1轮|第2轮|结束时保存的答案|\n|---|---|---|---|\n|半开[0,4)|mid=2，7≥3，right=2|mid=1，0<3，left=2|left=right=2，输出2|\n|闭区间[0,3]|middle=1，0<3，left=2|middle=2，7≥3，answer=2，right=1|left>right，输出answer即2|\n\n半开写法把可行边界留在right，结束时left就是结果；闭区间会把已检查的中点移出候选区间，所以必须先保存answer。若目标比全部元素都大，半开left推进到n，闭区间answer保留初始n，都能表示尾部插入。\n\n先决定区间包含哪些端点，再写循环条件与更新式。把半开方案的right=mid直接抄到闭区间里可能不收缩；把闭区间的right=middle−1抄给半开方案则可能跳过正确边界。这里比较的是搜索核心，读完整输入还需O(n)。"
+      ]
+    }
+  ]
+}

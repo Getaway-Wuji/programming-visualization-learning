@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="700" viewBox="0 0 560 700" role="img" aria-labelledby="title desc">
+  <title id="title">两个Arc句柄共享同一个Mutex和整数</title>
+  <desc id="desc">Arc克隆只增加共享所有权入口；original与alias指向同一分配。alias加锁取得守卫，将8改为10，守卫结束释放锁，original再加锁读到10。</desc>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#6b4d7c" stroke-width="1.5"/></marker></defs>
+  <rect width="560" height="700" rx="18" fill="#faf8fb"/>
+  <g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" fill="#302038">
+    <text x="28" y="49" font-size="30" font-weight="700">克隆句柄，共享同一份数据</text>
+    <rect x="28" y="85" width="238" height="87" rx="12" fill="#fff" stroke="#ad96b6"/>
+    <rect x="294" y="85" width="238" height="87" rx="12" fill="#fff" stroke="#ad96b6"/>
+    <text x="59" y="121" font-size="27">original</text><text x="59" y="155" font-size="24">Arc 句柄</text>
+    <text x="325" y="121" font-size="27">alias</text><text x="325" y="155" font-size="24">Arc::clone</text>
+    <path d="M147 173V205L235 246" fill="none" stroke="#6b4d7c" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M413 173V205L325 246" fill="none" stroke="#6b4d7c" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="91" y="253" width="378" height="117" rx="12" fill="#eee4f2" stroke="#ad96b6"/>
+    <text x="121" y="298" font-size="27" font-weight="700">同一个 Mutex&lt;i32&gt;</text>
+    <text x="121" y="342" font-size="27">内部整数：8 → 10</text>
+    <text x="28" y="417" font-size="26">① alias.lock() 取得守卫</text>
+    <text x="28" y="466" font-size="26">② 持锁修改：*guard += 2</text>
+    <text x="28" y="515" font-size="26">③ 作用域结束，守卫释放锁</text>
+    <text x="28" y="564" font-size="26">④ original 再锁定，读到 10</text>
+    <rect x="28" y="602" width="504" height="69" rx="12" fill="#eee4f2"/>
+    <text x="46" y="645" font-size="25">Arc 管共享所有权；Mutex 管互斥访问。</text>
+  </g>
+</svg>

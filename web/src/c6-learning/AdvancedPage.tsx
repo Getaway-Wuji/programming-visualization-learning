@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { CaseWalkthrough } from '../components/CaseWalkthrough';
 import { advancedCourse } from '../advanced-course/model';
 import { allSortCases, prepareSort } from '../algorithms/content';
 import { useLearning } from '../learning/react';
@@ -72,6 +73,7 @@ export function C6AdvancedPage({ lessonId }: { lessonId?: string }) {
                 {entry.explanation.map((p) => (
                   <p key={p}>{p}</p>
                 ))}
+                <CaseWalkthrough caseId={entry.caseRef.id} returnTo="/advanced" />
                 <h2>复杂度为何如此</h2>
                 <p>
                   <strong>{entry.complexity}</strong>

@@ -11,6 +11,7 @@ export function parsePython3CourseManifest(
     manifestFile: string;
     manifestBytes: number;
     manifestSha256: string;
+    editorialRef?: { id: string; version: string };
   },
 ): Promise<PythonManifest>;
 export function parsePython3CourseChunk(

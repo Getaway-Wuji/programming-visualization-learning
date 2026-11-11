@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { Breadcrumbs, MissingPage } from '../components/Ui';
+import { CaseWalkthrough } from '../components/CaseWalkthrough';
 import { useLearning } from '../learning/react';
 import { examples, findExample, parseExampleInput, type ExampleSpec } from '../examples/content';
 import { CustomViews } from '../custom-code/Views';
@@ -464,6 +465,7 @@ function Workspace({ spec }: { spec: ExampleSpec }) {
         本页不保存输入或轨迹，不计题目通过或积分。
         <Link to={`/advanced/examples/${spec.id}`}>查看原例题讲解、来源与基础复习</Link>
       </p>
+      <CaseWalkthrough caseId={spec.id} returnTo="/advanced" />
       <nav className="advanced-bottom" aria-label="同题对比导航">
         <Link to="/advanced/examples">返回经典例题</Link>
         <Link to="/advanced">返回进阶课程</Link>

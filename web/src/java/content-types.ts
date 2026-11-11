@@ -1,6 +1,7 @@
 import type { JavaRef } from '../engine/java-types';
 
 export interface JavaArticleEntry {
+  editorialRef?: { id: string; version: string };
   articleSourceOrder: number;
   sourceNodeId: string;
   platformRef: JavaRef;
@@ -13,6 +14,15 @@ export interface JavaArticleEntry {
 }
 
 export interface JavaManifest {
+  editorialRef?: { id: string; version: string };
+  media?: { file: string; bytes: number; sha256: string }[];
+  teachingSources?: {
+    kind: 'user-supplied-pdf';
+    title: string;
+    sha256: string;
+    physicalPageRanges: [number, number][];
+    articleOrders: number[];
+  }[];
   engine: { buildSha256: string };
   packageRef: JavaRef;
   chunks: JavaArticleEntry[];
@@ -69,6 +79,7 @@ export type JavaActivity =
     };
 
 export interface JavaArticle {
+  editorialRef?: { id: string; version: string };
   rootNodeId: string;
   nodes: JavaCourseNode[];
   examples: JavaExample[];

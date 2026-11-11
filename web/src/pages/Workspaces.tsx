@@ -6,6 +6,7 @@ import { cases, lessons, paths } from '../navigation';
 import { CaseSample } from '../components/ContentSample';
 import { PracticeExecution } from '../components/PracticeExecution';
 import { CaseExecution } from '../components/CaseExecution';
+import { CaseWalkthrough } from '../components/CaseWalkthrough';
 import { SubjectLearningStatus, useLearning } from '../learning/react';
 import { bugQuestions } from '../bugs/content';
 
@@ -192,10 +193,8 @@ export function VisualizePage() {
       <CaseExecution key={item.id} id={item.id}>
         <TraceWorkspace review={false} />
       </CaseExecution>
+      <CaseWalkthrough caseId={item.id} />
       <div className="inline-actions">
-        <Link className="text-link" to="/cases">
-          返回案例目录
-        </Link>
         <Link className="text-link" to={paths.lesson(lesson.id)}>
           关联小节：{lesson.title}
           <Icon name="arrow" />

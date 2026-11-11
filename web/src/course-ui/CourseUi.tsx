@@ -13,13 +13,15 @@ export function CourseNav({ language, path }: { language: string; path: string }
   const work = ['workbench', 'example', 'practice'].some((part) =>
     pathname.startsWith(`${path}/${part}`),
   );
+  const catalog = pathname === path || pathname === `${path}/`;
   return (
     <nav className="course-nav" aria-label={`${language} 学习`}>
       <Link
         to={path}
-        aria-current={!work && !pathname.startsWith(`${path}/review`) ? 'page' : undefined}
+        className={catalog ? undefined : 'course-return'}
+        aria-current={catalog ? 'page' : undefined}
       >
-        {language} 目录
+        {catalog ? `${language} 目录` : `← 返回 ${language} 课程目录`}
       </Link>
       <Link to={`${path}/workbench`} aria-current={work ? 'page' : undefined}>
         {language === 'MySQL' ? 'SQL 工作台' : '工作台'}
@@ -29,6 +31,16 @@ export function CourseNav({ language, path }: { language: string; path: string }
         aria-current={pathname.startsWith(`${path}/review`) ? 'page' : undefined}
       >
         判题复盘
+      </Link>
+    </nav>
+  );
+}
+
+export function CourseReturn({ path }: { path: string }) {
+  return (
+    <nav className="course-reading-return" aria-label="返回课程">
+      <Link className="button button-secondary" to={path}>
+        ← 返回课程目录
       </Link>
     </nav>
   );

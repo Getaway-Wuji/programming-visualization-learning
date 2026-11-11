@@ -5,6 +5,17 @@ import type { JavaArticle } from '../../web/src/java/content-types';
 import { openCurrentAnswer, submitCurrent } from './current-course-helpers';
 import { watch } from './achievement-helpers';
 
+const activeRelease = JSON.parse(
+  readFileSync(
+    'content/build/' +
+      JSON.parse(readFileSync('content/build/java-course-current.json', 'utf8')).releaseFile,
+    'utf8',
+  ),
+) as { manifestFile: string };
+const activeManifest = JSON.parse(
+  readFileSync('content/java/course/' + activeRelease.manifestFile, 'utf8'),
+) as { chunks: { articleSourceOrder: number; file: string }[] };
+
 const course = JSON.parse(
   readFileSync('content/java/course/article-17-1.0.0.json', 'utf8'),
 ) as JavaArticle;
@@ -72,20 +83,26 @@ test('course assets load lazily and reading, judge, review and draft persist ind
 }) => {
   const assets: string[] = [];
   page.on('request', (request) => {
-    if (request.url().includes('/content/java/course/'))
+    if (
+      request.url().includes('/content/java/course/') &&
+      new URL(request.url()).pathname.endsWith('.json')
+    )
       assets.push(new URL(request.url()).pathname.split('/').at(-1)!);
   });
   await page.goto('/#/');
   await page.getByRole('link', { name: 'Java 课程', exact: true }).first().click();
   await expect(page.getByRole('heading', { name: 'Java 课程', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Java 测验（来源参考）' })).toHaveCount(1);
-  expect(assets).toEqual(['manifest-1.0.0.json']);
+  expect(assets).toEqual([activeRelease.manifestFile]);
   await page.getByRole('link', { name: 'Java String 类', exact: true }).click();
   await page.getByRole('link', { name: section.titleDisplay, exact: true }).first().click();
   await expect(
     page.getByRole('heading', { name: section.titleDisplay, exact: true, level: 1 }),
   ).toBeVisible();
-  expect(assets).toEqual(['manifest-1.0.0.json', 'article-17-1.0.0.json']);
+  expect(assets).toEqual([
+    activeRelease.manifestFile,
+    activeManifest.chunks.find((entry) => entry.articleSourceOrder === 17)!.file,
+  ]);
   await page.keyboard.press('End');
   await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read-today', 'true');
   await page.keyboard.press('End');

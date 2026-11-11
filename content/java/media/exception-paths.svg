@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="690" viewBox="0 0 1260 690" role="img" aria-labelledby="title desc">
+  <title id="title">执行finally不等于异常已经处理</title>
+  <desc id="desc">三条基本路径分别是try正常结束、异常被catch处理、异常没有匹配catch。三条路径都经过finally；只有前两条在相应块正常结束后继续普通后续，第三条继续向外传播异常。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#425267"/></marker>
+    <style>text{font-family:"Microsoft YaHei","Noto Sans SC",sans-serif;fill:#182b42}.title{font-size:29px;font-weight:700}.head{font-size:25px;font-weight:700}.label{font-size:22px}.note{font-size:20px;fill:#425267}.box{fill:#fff;stroke:#a7b7ca;stroke-width:2}.clean{fill:#e7effb;stroke:#88a2c6;stroke-width:2}.next{fill:#e2f1e9;stroke:#7b9e8b;stroke-width:2}.propagate{fill:#fbf0dc;stroke:#c7a96d;stroke-width:2}.line{stroke:#425267;stroke-width:3;marker-end:url(#arrow)}</style>
+  </defs>
+  <rect width="1260" height="690" rx="16" fill="#f7f9fc"/>
+  <text x="40" y="52" class="title">清理路径与恢复路径，分别判断</text>
+  <path d="M420 98V604M840 98V604" stroke="#d1dce8" stroke-width="2"/>
+  <g text-anchor="middle">
+    <text x="210" y="116" class="head">没有发生异常</text>
+    <rect x="55" y="150" width="310" height="65" rx="11" class="box"/><text x="210" y="191" class="label">try 正常结束</text>
+    <path d="M210 215V259" class="line"/>
+    <rect x="55" y="260" width="310" height="65" rx="11" class="box"/><text x="210" y="301" class="label">跳过 catch</text>
+    <path d="M210 325V369" class="line"/>
+    <rect x="55" y="370" width="310" height="65" rx="11" class="clean"/><text x="210" y="411" class="label">执行 finally</text>
+    <path d="M210 435V479" class="line"/>
+    <rect x="55" y="480" width="310" height="65" rx="11" class="next"/><text x="210" y="521" class="label">继续后续普通语句</text>
+
+    <text x="630" y="116" class="head">异常得到匹配处理</text>
+    <rect x="475" y="150" width="310" height="65" rx="11" class="box"/><text x="630" y="191" class="label">try 抛出异常</text>
+    <path d="M630 215V259" class="line"/>
+    <rect x="475" y="260" width="310" height="65" rx="11" class="box"/><text x="630" y="301" class="label">匹配的 catch 正常结束</text>
+    <path d="M630 325V369" class="line"/>
+    <rect x="475" y="370" width="310" height="65" rx="11" class="clean"/><text x="630" y="411" class="label">执行 finally</text>
+    <path d="M630 435V479" class="line"/>
+    <rect x="475" y="480" width="310" height="65" rx="11" class="next"/><text x="630" y="521" class="label">继续后续普通语句</text>
+
+    <text x="1050" y="116" class="head">异常没有匹配处理</text>
+    <rect x="895" y="150" width="310" height="65" rx="11" class="box"/><text x="1050" y="191" class="label">try 抛出异常</text>
+    <path d="M1050 215V259" class="line"/>
+    <rect x="895" y="260" width="310" height="65" rx="11" class="box"/><text x="1050" y="301" class="label">没有匹配的 catch</text>
+    <path d="M1050 325V369" class="line"/>
+    <rect x="895" y="370" width="310" height="65" rx="11" class="clean"/><text x="1050" y="411" class="label">执行 finally</text>
+    <path d="M1050 435V479" class="line"/>
+    <rect x="895" y="480" width="310" height="65" rx="11" class="propagate"/><text x="1050" y="521" class="label">继续向外传播异常</text>
+  </g>
+  <text x="40" y="614" class="note">图示相关处理块与 finally 均正常完成的基本路径。</text>
+  <text x="40" y="650" class="note">若块内另行 return 或 throw，应按对应的新出口分析；清理不会自动消除待传播异常。</text>
+</svg>

@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Link, useParams } from 'react-router';
 import { MissingPage } from '../components/Ui';
 import { DebugSource } from '../debug/DebugSource';
+import { C6TeachingReading } from '../components/C6TeachingReading';
+import teaching from '../../../content/algorithms/visual-lab/teaching-1.0.0.json';
 import { CustomCodeController } from '../custom-code/controller';
 import { visualModules, type VisualSpec } from './catalog';
 import { parseVisualInput, type VisualDraft } from './input';
@@ -28,6 +30,7 @@ function Lab({ spec }: { spec: VisualSpec }) {
   const [draft, setDraft] = useState<VisualDraft>(() => ({ ...spec.defaults }));
   const source = sources[`../../../content/algorithms/visual-lab/${spec.slug}.cpp`];
   const parsed = useMemo(() => parseVisualInput(spec, draft), [spec, draft]);
+  const guide = teaching.entries.find((entry) => entry.slug === spec.slug);
   const busy = snap.status === 'running';
   useEffect(() => {
     const input = parseVisualInput(spec, spec.defaults);
@@ -212,6 +215,19 @@ function Lab({ spec }: { spec: VisualSpec }) {
           </Link>
           <h1>{spec.title}</h1>
           <p>{spec.description}</p>
+          {guide && (
+            <button
+              className="button lab-reading-link"
+              type="button"
+              onClick={() => {
+                const heading = document.getElementById('algorithm-reading');
+                heading?.focus();
+                heading?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            >
+              阅读过程讲解
+            </button>
+          )}
         </div>
         <span className="muted">{spec.complexity}</span>
       </div>
@@ -409,6 +425,20 @@ function Lab({ spec }: { spec: VisualSpec }) {
           />
         </section>
       </div>
+      {guide && (
+        <section className="card lab-teaching" aria-labelledby="algorithm-reading">
+          <h2 id="algorithm-reading" tabIndex={-1}>
+            {spec.title}：过程与结果
+          </h2>
+          <p>以下推演对应文中写明的输入；修改输入后，请结合本次运行的状态、源码和输出观察变化。</p>
+          <C6TeachingReading text={guide.body.join('\n\n')} />
+          <p>
+            <Link className="text-link" to="/cases">
+              返回算法目录
+            </Link>
+          </p>
+        </section>
+      )}
     </div>
   );
 }

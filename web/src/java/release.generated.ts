@@ -1,8 +1,9 @@
 export const javaCourseRelease = {
   packageRef: { id: 'content.java.runoob', version: '1.0.0' },
-  manifestFile: 'manifest-1.0.0.json',
-  manifestBytes: 21312,
-  manifestSha256: '8939d11e91b598631b62b520206b34e02aac977eeb9d162f6a834ccf60a1e727',
+  editorialRef: { id: 'editorial.java.runoob', version: '1.9.0' },
+  manifestFile: 'manifest-1.0.0-editorial-1.9.0.json',
+  manifestBytes: 27593,
+  manifestSha256: '6fe8a5717c9ec32d8d9a1b99cc1b640bb6cd0f419515cc9b1b0bf78afdd887fd',
 } as const;
 export const javaLessonIds = [
   'java.lesson.fdcafb4be8b3f3d73d65',

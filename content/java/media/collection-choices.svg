@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="650" viewBox="0 0 1260 650" role="img" aria-labelledby="title desc">
+  <title id="title">Java集合的常见入口与选择</title>
+  <desc id="desc">Collection下面按需求理解List、Set与Queue或Deque；Map是独立映射分支。此图是功能示意，省略中间接口，不表示每条线都是直接继承。</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#466877"/></marker></defs>
+  <rect width="1260" height="650" rx="18" fill="#f8fafb"/>
+  <g font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif" fill="#173343">
+    <text x="48" y="55" font-size="32" font-weight="700">集合的选择，先看需要保留什么信息</text>
+    <text x="48" y="91" font-size="21" fill="#526875">功能示意：省略中间接口；连接线不表示全部为直接 extends</text>
+    <rect x="48" y="126" width="800" height="108" rx="12" fill="#e8f2f5" stroke="#91b2bf"/>
+    <text x="76" y="168" font-size="28" font-weight="700">Collection&lt;E&gt;</text>
+    <text x="76" y="206" font-size="22">共同入口：数量、成员查询与遍历；修改能力要看具体对象</text>
+    <g stroke="#466877" stroke-width="3" fill="none" marker-end="url(#arrow)">
+      <path d="M448 234V258H171V286"/><path d="M448 234V286"/><path d="M448 234V258H725V286"/>
+    </g>
+    <g fill="white" stroke="#b5c8d0"><rect x="48" y="292" width="246" height="218" rx="12"/><rect x="325" y="292" width="246" height="218" rx="12"/><rect x="602" y="292" width="246" height="218" rx="12"/></g>
+    <text x="70" y="332" font-size="28" font-weight="700">List</text>
+    <text x="70" y="372" font-size="22">保留位置和重复</text>
+    <text x="70" y="406" font-size="21">[B, A, B]</text>
+    <text x="70" y="450" font-size="21">ArrayList</text><text x="70" y="483" font-size="21">LinkedList</text>
+    <text x="347" y="332" font-size="28" font-weight="700">Set</text>
+    <text x="347" y="372" font-size="22">管理唯一成员</text>
+    <text x="347" y="406" font-size="21">顺序由实现约定</text>
+    <text x="347" y="450" font-size="21">HashSet / TreeSet</text><text x="347" y="483" font-size="21">LinkedHashSet</text>
+    <text x="624" y="332" font-size="26" font-weight="700">Queue / Deque</text>
+    <text x="624" y="372" font-size="22">安排待处理元素</text>
+    <text x="624" y="406" font-size="21">Deque 可操作两端</text>
+    <text x="624" y="450" font-size="21">ArrayDeque</text><text x="624" y="483" font-size="21">PriorityQueue 等</text>
+    <rect x="898" y="126" width="314" height="384" rx="12" fill="#f7efe4" stroke="#c8b498"/>
+    <text x="923" y="168" font-size="28" font-weight="700">Map&lt;K, V&gt;</text>
+    <text x="923" y="208" font-size="23">独立的键 → 值分支</text>
+    <text x="923" y="259" font-size="22">{B=2, A=1}</text>
+    <text x="923" y="305" font-size="22">一个键关联一个值</text>
+    <text x="923" y="341" font-size="22">值可以重复</text>
+    <text x="923" y="403" font-size="22">HashMap</text><text x="923" y="440" font-size="22">LinkedHashMap</text><text x="923" y="477" font-size="22">TreeMap</text>
+    <rect x="48" y="548" width="1164" height="62" rx="9" fill="#eaf0f3"/>
+    <text x="70" y="587" font-size="22">分别判断：重复？位置？遍历顺序？可修改？null？并发？接口名称不能替你回答全部问题。</text>
+  </g>
+</svg>

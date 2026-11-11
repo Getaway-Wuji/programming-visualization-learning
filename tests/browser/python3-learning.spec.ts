@@ -5,6 +5,17 @@ import type { PythonArticle } from '../../web/src/python3/content-types';
 import { openCurrentAnswer, submitCurrent } from './current-course-helpers';
 import { watch } from './achievement-helpers';
 
+const activeRelease = JSON.parse(
+  readFileSync(
+    'content/build/' +
+      JSON.parse(readFileSync('content/build/python3-course-current.json', 'utf8')).releaseFile,
+    'utf8',
+  ),
+) as { manifestFile: string };
+const activeManifest = JSON.parse(
+  readFileSync('content/python3/course/' + activeRelease.manifestFile, 'utf8'),
+) as { chunks: { articleSourceOrder: number; file: string }[] };
+
 const course = JSON.parse(
   readFileSync('content/python3/course/article-01-1.0.0.json', 'utf8'),
 ) as PythonArticle;
@@ -61,20 +72,26 @@ test('published Python course loads one article, saves reading independently and
 }) => {
   const assets: string[] = [];
   page.on('request', (request) => {
-    if (request.url().includes('/content/python3/course/'))
+    if (
+      request.url().includes('/content/python3/course/') &&
+      new URL(request.url()).pathname.endsWith('.json')
+    )
       assets.push(new URL(request.url()).pathname.split('/').at(-1)!);
   });
   await page.goto('/#/');
   await page.getByRole('link', { name: 'Python 课程', exact: true }).first().click();
   await expect(page.getByRole('heading', { name: 'Python 3 课程', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Python 测验（来源参考）' })).toHaveCount(1);
-  expect(assets).toEqual(['manifest-1.0.0.json']);
+  expect(assets).toEqual([activeRelease.manifestFile]);
   await page.getByRole('link', { name: 'Python 3 教程', exact: true }).click();
   await page.getByRole('link', { name: greeting.titleDisplay, exact: true }).first().click();
   await expect(
     page.getByRole('heading', { name: greeting.titleDisplay, exact: true }),
   ).toBeVisible();
-  expect(assets).toEqual(['manifest-1.0.0.json', 'article-01-1.0.0.json']);
+  expect(assets).toEqual([
+    activeRelease.manifestFile,
+    activeManifest.chunks.find((entry) => entry.articleSourceOrder === 1)!.file,
+  ]);
   await page.keyboard.press('End');
   await expect(page.getByTestId('reading-end')).toHaveAttribute('data-read-today', 'true');
   await page.keyboard.press('End');

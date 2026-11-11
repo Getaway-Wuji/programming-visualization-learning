@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="750" viewBox="0 0 1120 750" role="img" aria-labelledby="title desc">
+  <title id="title">同一组数据的总体方差与样本方差</title>
+  <desc id="desc">三项观察值2、4、6的均值为4，偏差平方和为8。把它们视为所研究的全部总体，pvariance除以3得到8/3；按常见样本方差估计，variance除以3减1得到4。选择取决于研究口径与抽样假设。</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#466877"/></marker></defs>
+  <rect width="1120" height="750" rx="18" fill="#f8fafb"/>
+  <g font-family="'Microsoft YaHei', 'Noto Sans SC', sans-serif" fill="#173343">
+    <text x="42" y="55" font-size="30" font-weight="700">先算同一份偏差，再决定统计口径</text>
+    <text x="42" y="94" font-size="21" fill="#526875">观察值 [2, 4, 6]，数量 n = 3；均值 = (2 + 4 + 6) / 3 = 4</text>
+    <g fill="#fff" stroke="#a8c1ca" stroke-width="2">
+      <rect x="60" y="135" width="290" height="175" rx="12"/>
+      <rect x="415" y="135" width="290" height="175" rx="12"/>
+      <rect x="770" y="135" width="290" height="175" rx="12"/>
+    </g>
+    <text x="85" y="180" font-size="28" font-weight="700">数值 2</text>
+    <text x="85" y="227" font-size="23">偏差：2 − 4 = −2</text>
+    <text x="85" y="273" font-size="23">偏差平方：(−2)² = 4</text>
+    <text x="440" y="180" font-size="28" font-weight="700">数值 4</text>
+    <text x="440" y="227" font-size="23">偏差：4 − 4 = 0</text>
+    <text x="440" y="273" font-size="23">偏差平方：0² = 0</text>
+    <text x="795" y="180" font-size="28" font-weight="700">数值 6</text>
+    <text x="795" y="227" font-size="23">偏差：6 − 4 = 2</text>
+    <text x="795" y="273" font-size="23">偏差平方：2² = 4</text>
+    <g fill="none" stroke="#466877" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M205 310V332H500V362"/>
+      <path d="M560 310V362"/>
+      <path d="M915 310V332H620V362"/>
+    </g>
+    <rect x="285" y="370" width="550" height="66" rx="12" fill="#e8f2f5" stroke="#91b2bf"/>
+    <text x="325" y="413" font-size="28" font-weight="700">偏差平方和 = 4 + 0 + 4 = 8</text>
+    <g fill="none" stroke="#466877" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M500 436V460H305V486"/>
+      <path d="M620 436V460H815V486"/>
+    </g>
+    <rect x="50" y="495" width="500" height="172" rx="12" fill="#eaf2f6" stroke="#91b2bf"/>
+    <text x="75" y="533" font-size="24" font-weight="700">把这三项视为所研究的全部总体</text>
+    <text x="75" y="576" font-size="25">pvariance：8 / n = 8 / 3</text>
+    <text x="75" y="622" font-size="21">描述这整个总体的离散程度</text>
+    <rect x="590" y="495" width="480" height="172" rx="12" fill="#f7efe4" stroke="#c8b498"/>
+    <text x="615" y="533" font-size="24" font-weight="700">用这三项作常见样本方差估计</text>
+    <text x="615" y="576" font-size="25">variance：8 / (n − 1) = 4</text>
+    <text x="615" y="622" font-size="21">推断更大总体时，还须核对抽样假设</text>
+    <text x="42" y="715" font-size="20" fill="#526875">n − 1 不修复选择偏差；方差的单位是原单位的平方。</text>
+  </g>
+</svg>

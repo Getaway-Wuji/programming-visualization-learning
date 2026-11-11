@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="620" viewBox="0 0 1260 620" role="img" aria-labelledby="title desc">
+  <title id="title">浏览器、Web服务器和CGI程序之间的数据流</title>
+  <desc id="desc">浏览器向服务器发HTTP请求。服务器按CGI协议把元信息和请求体交给程序，程序向标准输出写响应头、空行与正文，服务器再返回HTTP响应。Python3.13移除cgi模块不等于移除CGI协议。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#425267"/></marker>
+    <style>text{font-family:"Microsoft YaHei","Noto Sans SC",sans-serif;fill:#182b42}.title{font-size:30px;font-weight:700}.heading{font-size:28px;font-weight:700}.label{font-size:23px}.note{font-size:21px;fill:#425267}.link{font-size:20px;fill:#425267}.line{fill:none;stroke:#425267;stroke-width:3;marker-end:url(#arrow)}</style>
+  </defs>
+  <rect width="1260" height="620" rx="18" fill="#f7f9fc"/>
+  <text x="35" y="54" class="title">请求与响应经过不同的接口</text>
+  <text x="35" y="95" class="note">浏览器使用HTTP；Web服务器与脚本之间按CGI约定传递数据。</text>
+  <rect x="30" y="155" width="320" height="315" rx="15" fill="#fff" stroke="#a7b7ca" stroke-width="2"/>
+  <rect x="470" y="155" width="320" height="315" rx="15" fill="#e9f3ff" stroke="#6991bd" stroke-width="2"/>
+  <rect x="910" y="155" width="320" height="315" rx="15" fill="#eaf4e8" stroke="#72966b" stroke-width="2"/>
+  <g text-anchor="middle">
+    <text x="190" y="204" class="heading">浏览器</text>
+    <text x="190" y="264" class="label">形成URL与表单请求</text>
+    <text x="190" y="314" class="label">接收HTTP响应</text>
+    <text x="190" y="364" class="label">按类型显示或下载</text>
+    <text x="190" y="427" class="note">不会执行服务器端Python</text>
+    <text x="630" y="204" class="heading">Web服务器</text>
+    <text x="630" y="264" class="label">按路由调用CGI程序</text>
+    <text x="630" y="314" class="label">构造元信息与输入流</text>
+    <text x="630" y="364" class="label">解释脚本响应头</text>
+    <text x="630" y="427" class="note">再组成发给浏览器的响应</text>
+    <text x="1070" y="204" class="heading">CGI程序</text>
+    <text x="1070" y="264" class="label">读取环境与stdin</text>
+    <text x="1070" y="314" class="label">解析、校验、处理数据</text>
+    <text x="1070" y="364" class="label">输出头部、空行与正文</text>
+    <text x="1070" y="427" class="note">诊断写stderr，不混入正文</text>
+    <text x="410" y="254" class="link">HTTP请求</text>
+    <text x="850" y="242" class="link">环境变量</text>
+    <text x="850" y="271" class="link">＋stdin</text>
+    <text x="410" y="370" class="link">HTTP响应</text>
+    <text x="850" y="370" class="link">CGI响应</text>
+  </g>
+  <path d="M350 294H468" class="line"/>
+  <path d="M790 294H908" class="line"/>
+  <path d="M910 397H792" class="line"/>
+  <path d="M470 397H352" class="line"/>
+  <text x="35" y="531" class="note">请求体长度按字节解释；查询字符串、表单编码与HTML转义各有自己的规则。</text>
+  <text x="35" y="574" class="note">Python3.13已移除旧cgi模块；CGI协议与Python程序的标准输入输出仍是不同层次。</text>
+</svg>

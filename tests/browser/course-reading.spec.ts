@@ -196,6 +196,7 @@ test('a missing reading resource fails closed without learning writes and its vi
 }, info) => {
   await page.goto('/#/courses');
   await localReady(page);
+  await expect.poll(async () => (await snapshot(page)).settings.goalTemplate).not.toBeNull();
   const before = await snapshot(page);
   const resource = '**/content/c/primer6-teaching/ch02-2.0.0.json';
   await page.route(resource, (r) =>

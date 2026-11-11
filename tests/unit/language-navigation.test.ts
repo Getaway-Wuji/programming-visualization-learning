@@ -23,7 +23,13 @@ describe('the generated language navigation is an accurate projection of publish
     it(`${language} preserves every real teaching leaf, its source order, route and executable mode`, async () => {
       const navigation = await loadLanguageNavigation(language);
       const folder = `content/${language === 'python' ? 'python3' : language === 'rust' ? 'rust2018' : language}/course`;
-      const manifest = read(`${folder}/manifest-1.0.0.json`);
+      const descriptor =
+        language === 'java' || language === 'python'
+          ? read(
+              `content/build/${read(`content/build/${language === 'python' ? 'python3' : language}-course-current.json`).releaseFile}`,
+            )
+          : null;
+      const manifest = read(`${folder}/${descriptor?.manifestFile ?? 'manifest-1.0.0.json'}`);
       const expected: [string, string, string, string][] = [];
       for (const chunk of manifest.chunks) {
         const unit = read(`${folder}/${chunk.file}`);

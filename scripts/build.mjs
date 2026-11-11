@@ -32,6 +32,7 @@ runNode('scripts/build-java-content.mjs');
 runNode('scripts/build-cpp-course-content.mjs');
 runNode('scripts/build-rust2018-content.mjs');
 runNode('scripts/build-mysql-content.mjs');
+runNode('scripts/build-book-teaching.mjs');
 if (p05) {
   runNode('scripts/generate-execution-schema.mjs', ['--p05', '--check']);
   runNode('scripts/build-p05-course.mjs');

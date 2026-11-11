@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="650" viewBox="0 0 1120 650" role="img" aria-labelledby="title desc">
+  <title id="title">同样的到达顺序，栈与队列从不同位置取出</title>
+  <desc id="desc">A、B、C依次加入。列表末端作栈顶时，pop先取出C，剩下A、B；列表末端入队、首端出队时，pop(0)先取出A，剩下B、C。字母位置仅说明本例约定。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#425267"/></marker>
+    <style>text{font-family:"Microsoft YaHei","Noto Sans SC",sans-serif;fill:#182b42}.title{font-size:30px;font-weight:700}.heading{font-size:27px;font-weight:700}.label{font-size:23px}.note{font-size:21px;fill:#425267}.item{font-size:28px;font-weight:700}.line{fill:none;stroke:#425267;stroke-width:3;marker-end:url(#arrow)}.a{fill:#e5effc;stroke:#6991bd;stroke-width:2}.b{fill:#fff;stroke:#a7b7ca;stroke-width:2}.c{fill:#eaf4e8;stroke:#72966b;stroke-width:2}</style>
+  </defs>
+  <rect width="1120" height="650" rx="18" fill="#f7f9fc"/>
+  <text x="36" y="53" class="title">A → B → C 依次加入，然后取出一项</text>
+  <path d="M560 90V578" stroke="#d1dce8" stroke-width="2"/>
+  <g text-anchor="middle">
+    <text x="280" y="121" class="heading">栈：末端作为顶</text>
+    <text x="840" y="121" class="heading">队列：末端入，首端出</text>
+    <text x="280" y="165" class="note">后进先出 · LIFO</text>
+    <text x="840" y="165" class="note">先进先出 · FIFO</text>
+    <rect x="110" y="218" width="100" height="68" rx="9" class="a"/><text x="160" y="262" class="item">A</text>
+    <rect x="230" y="218" width="100" height="68" rx="9" class="b"/><text x="280" y="262" class="item">B</text>
+    <rect x="350" y="218" width="100" height="68" rx="9" class="c"/><text x="400" y="262" class="item">C</text>
+    <text x="160" y="321" class="note">底</text><text x="400" y="321" class="note">顶</text>
+    <rect x="670" y="218" width="100" height="68" rx="9" class="a"/><text x="720" y="262" class="item">A</text>
+    <rect x="790" y="218" width="100" height="68" rx="9" class="b"/><text x="840" y="262" class="item">B</text>
+    <rect x="910" y="218" width="100" height="68" rx="9" class="c"/><text x="960" y="262" class="item">C</text>
+    <text x="720" y="321" class="note">队首</text><text x="960" y="321" class="note">队尾</text>
+    <path d="M400 218V185H495V370H400V413" class="line"/>
+    <path d="M720 218V185H625V370H720V413" class="line"/>
+    <text x="280" y="383" class="label">pop() 取出 C</text>
+    <text x="840" y="383" class="label">pop(0) 取出 A</text>
+    <rect x="110" y="415" width="100" height="68" rx="9" class="a"/><text x="160" y="459" class="item">A</text>
+    <rect x="230" y="415" width="100" height="68" rx="9" class="b"/><text x="280" y="459" class="item">B</text>
+    <rect x="350" y="415" width="100" height="68" rx="9" class="c"/><text x="400" y="459" class="item">C</text>
+    <text x="220" y="526" class="note">栈中剩余 [A, B]</text><text x="400" y="526" class="note">已取出</text>
+    <rect x="670" y="415" width="100" height="68" rx="9" class="a"/><text x="720" y="459" class="item">A</text>
+    <rect x="790" y="415" width="100" height="68" rx="9" class="b"/><text x="840" y="459" class="item">B</text>
+    <rect x="910" y="415" width="100" height="68" rx="9" class="c"/><text x="960" y="459" class="item">C</text>
+    <text x="720" y="526" class="note">已取出</text><text x="900" y="526" class="note">队中剩余 [B, C]</text>
+  </g>
+  <path d="M100 496H340M780 496H1020" stroke="#425267" stroke-width="2"/>
+  <text x="36" y="593" class="note">列表允许多种增删；栈与队列由持续采用的操作约定决定。</text>
+  <text x="36" y="628" class="note">这里用列表解释队列次序；频繁首端出队可选择 deque.popleft()。</text>
+</svg>

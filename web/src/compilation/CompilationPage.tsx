@@ -5,6 +5,7 @@ import {
   compilationExample,
   compilationFaults,
   compilationScenarios,
+  compilationStageChange,
   compilationStages,
 } from './content';
 import './compilation.css';
@@ -166,7 +167,7 @@ export default function CompilationPage() {
             )}
           </section>
         </div>
-        <p>{stage.change}</p>
+        <p>{compilationStageChange(scenario, flow.index)}</p>
         <p className="muted">{stage.reminder}</p>
         <div className="compilation-actions">
           <button

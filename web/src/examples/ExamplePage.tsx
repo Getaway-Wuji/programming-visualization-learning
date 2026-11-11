@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Link, useParams } from 'react-router';
 import { Breadcrumbs, MissingPage } from '../components/Ui';
+import { CaseWalkthrough } from '../components/CaseWalkthrough';
 import { LearningSaveStatus, useLearning } from '../learning/react';
 import { lessonCompletionDetails } from '../learning/completion';
 import { KnowledgeMarkButton, KnowledgeMarksStatus } from '../review-notebook/marks';
@@ -439,6 +440,7 @@ function ExampleWorkspace({ spec }: { spec: ExampleSpec }) {
         }
       />
       <LearningSaveStatus />
+      <CaseWalkthrough caseId={spec.id} returnTo="/advanced" />
       <nav className="advanced-bottom" aria-label="例题导航">
         <Link to="/advanced/examples">返回经典例题</Link>
         <Link to="/advanced">返回进阶课程</Link>

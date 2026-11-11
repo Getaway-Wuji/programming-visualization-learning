@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="730" viewBox="0 0 560 730" role="img" aria-labelledby="title desc">
+  <title id="title">左外连接保留空院系，并将学生列补为NULL</title>
+  <desc id="desc">三个院系中院系1有学生11与12，院系2和3没有学生。左外连接返回四行；按院系分组，COUNT星号为2、1、1，COUNT学生id为2、0、0。</desc>
+  <rect width="560" height="730" rx="18" fill="#fbfaf7"/>
+  <g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" fill="#352d1f">
+    <text x="28" y="49" font-size="30" font-weight="700">LEFT JOIN：保留左端每一行</text>
+    <rect x="28" y="82" width="504" height="116" rx="12" fill="#fff" stroke="#b1a587"/>
+    <text x="46" y="122" font-size="25">左表院系：1 文史、2 理工、3 艺术</text>
+    <text x="46" y="166" font-size="25">右表学生：11、12 都属于院系 1</text>
+    <text x="28" y="243" font-size="26" font-weight="700">连接条件：学生.dept_id = 院系.id</text>
+    <rect x="28" y="267" width="504" height="250" rx="12" fill="#fff" stroke="#b1a587"/>
+    <path d="M28 317H532M28 367H532M28 417H532M28 467H532M210 267V517" fill="none" stroke="#d3cbbc"/>
+    <rect x="211" y="418" width="320" height="98" fill="#f5eacb"/>
+    <text x="62" y="302" font-size="25" font-weight="700">院系 id</text>
+    <text x="248" y="302" font-size="25" font-weight="700">学生 id</text>
+    <text x="108" y="352" font-size="26">1</text><text x="278" y="352" font-size="26">11</text>
+    <text x="108" y="402" font-size="26">1</text><text x="278" y="402" font-size="26">12</text>
+    <text x="108" y="452" font-size="26">2</text><text x="261" y="452" font-size="26">NULL</text>
+    <text x="108" y="502" font-size="26">3</text><text x="261" y="502" font-size="26">NULL</text>
+    <text x="28" y="561" font-size="25">补出两行，保留没有学生的院系。</text>
+    <text x="28" y="603" font-size="25">NULL 不是一个新学生。</text>
+    <rect x="28" y="628" width="504" height="74" rx="12" fill="#ece6d9"/>
+    <text x="46" y="658" font-size="24">按院系 1、2、3 分组：</text>
+    <text x="46" y="690" font-size="24">COUNT(*)：2/1/1；COUNT(s.id)：2/0/0</text>
+  </g>
+</svg>

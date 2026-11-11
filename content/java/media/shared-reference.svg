@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 300" role="img" aria-labelledby="title desc">
+  <title id="title">两个引用指向同一个对象</title>
+  <desc id="desc">original与alias各保存一个引用值，两条箭头指向同一个数组。经alias修改下标0为9，再经original读取该元素，也会得到9。</desc>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="#43576c"/></marker></defs>
+  <rect width="820" height="300" rx="12" fill="#f8fafc"/>
+  <g fill="#fff" stroke="#65778a" stroke-width="1.5">
+    <rect x="30" y="42" width="220" height="64" rx="7"/>
+    <rect x="30" y="162" width="220" height="64" rx="7"/>
+    <rect x="500" y="87" width="270" height="112" rx="7"/>
+    <path d="M635 87V199"/>
+  </g>
+  <g stroke="#43576c" stroke-width="2" fill="none" marker-end="url(#arrow)"><path d="M250 74H370L485 123"/><path d="M250 194H370L485 160"/></g>
+  <g font-family="Arial,Microsoft YaHei,sans-serif" text-anchor="middle" fill="#172b40">
+    <text x="140" y="82" font-size="21">original 的引用</text>
+    <text x="140" y="202" font-size="21">alias 的引用</text>
+    <text x="635" y="58" font-size="20">同一个数组对象</text>
+    <text x="567" y="126" font-size="16">下标 0</text><text x="702" y="126" font-size="16">下标 1</text>
+    <text x="567" y="173" font-size="28">9</text><text x="702" y="173" font-size="28">7</text>
+    <text x="410" y="270" font-size="18">复制引用值，不会自动复制整个数组</text>
+  </g>
+</svg>

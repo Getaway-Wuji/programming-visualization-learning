@@ -1,4 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
+import { CaseWalkthrough } from '../components/CaseWalkthrough';
 import { Link } from 'react-router';
 import { Breadcrumbs } from '../components/Ui';
 import { LearningSaveStatus, useLearning } from '../learning/react';
@@ -143,6 +144,7 @@ export default function KmpPage() {
         renderArrays={(state) => <KmpState state={state} />}
       />
       <LearningSaveStatus />
+      <CaseWalkthrough caseId={kmpSpec.id} />
       <nav className="advanced-bottom" aria-label="KMP导航">
         <Link to="/advanced/algorithms">筛法与序列</Link>
         <Link to="/cases">算法与演示</Link>

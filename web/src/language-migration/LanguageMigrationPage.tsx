@@ -1,5 +1,6 @@
 import { useEffect, useReducer } from 'react';
 import { Link } from 'react-router';
+import depth from '../../../content/advanced/language-migration-depth-1.0.0.json';
 import { Breadcrumbs } from '../components/Ui';
 import { useLearning, LearningSaveStatus } from '../learning/react';
 import { paths } from '../navigation';
@@ -14,10 +15,14 @@ import {
 import '../advanced-course/advanced-course.css';
 import './migration.css';
 
+const outcomes: Readonly<Record<string, string | undefined>> = depth.outcomes;
+const noteCorrection = depth.noteCorrection;
+
 export default function LanguageMigrationPage() {
   const { state: learning, service } = useLearning();
   const [state, dispatch] = useReducer(teachingReducer, initialTeachingState);
   const topic = migrationContent.topics.find((t) => t.id === state.topic)!;
+  const outcome = outcomes[topic.id];
   const lesson = availableMigrationLesson(topic, learning.reading);
   useEffect(() => {
     if (!state.playing) return;
@@ -189,13 +194,20 @@ export default function LanguageMigrationPage() {
                 </div>
                 <ul>
                   {snippet.notes.map((note) => (
-                    <li key={note}>{note}</li>
+                    <li key={note}>
+                      {topic.id === noteCorrection.topic &&
+                      id === noteCorrection.language &&
+                      note === noteCorrection.before
+                        ? noteCorrection.after
+                        : note}
+                    </li>
                   ))}
                 </ul>
               </article>
             );
           })}
         </div>
+        {outcome && <p data-testid="migration-example-outcome">{outcome}</p>}
         <p className="migration-caution">{topic.caution}</p>
       </section>
       <div className="migration-followup">

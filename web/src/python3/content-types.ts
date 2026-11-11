@@ -1,6 +1,7 @@
 import type { PythonRef } from '../engine/python3-types';
 
 export interface PythonArticleEntry {
+  editorialRef?: { id: string; version: string };
   articleSourceOrder: number;
   sourceNodeId: string;
   platformRef: PythonRef;
@@ -13,6 +14,15 @@ export interface PythonArticleEntry {
 }
 
 export interface PythonManifest {
+  editorialRef?: { id: string; version: string };
+  media?: { file: string; bytes: number; sha256: string }[];
+  teachingSources?: {
+    kind: 'user-supplied-pdf';
+    title: string;
+    sha256: string;
+    physicalPageRanges: [number, number][];
+    articleOrders: number[];
+  }[];
   engine: { buildSha256: string };
   packageRef: PythonRef;
   chunks: PythonArticleEntry[];
@@ -69,6 +79,7 @@ export type PythonActivity =
     };
 
 export interface PythonArticle {
+  editorialRef?: { id: string; version: string };
   rootNodeId: string;
   nodes: PythonCourseNode[];
   examples: PythonExample[];

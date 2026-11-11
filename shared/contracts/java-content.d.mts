@@ -11,6 +11,7 @@ export function parseJava3CourseManifest(
     manifestFile: string;
     manifestBytes: number;
     manifestSha256: string;
+    editorialRef?: { id: string; version: string };
   },
 ): Promise<JavaManifest>;
 export function parseJava3CourseChunk(

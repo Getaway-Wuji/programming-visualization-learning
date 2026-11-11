@@ -1,0 +1,19 @@
+{
+  "formatVersion": 1,
+  "baseline": {
+    "file": "content/advanced/language-migration-1.0.0.json",
+    "sha256": "cdb27ab156659d5b5570ba39c449e82ef4adb810914e0f58d0137cf169021642"
+  },
+  "outcomes": {
+    "conditions": "按原片段取x=2，先通过下界再通过上界，C的inside变为1，C++和Java变为true，Python变为True。若改成x=0，第一个比较就为假，上界不再检查，块内赋值不发生，inside保持初值。",
+    "loops": "从总和0开始，i=0、1、2三轮后的总和依次是0、1、3。第一轮总和没变，但累加语句确实执行了。C、C++和Java在下一次i<3检查失败后退出，循环头声明的i也离开作用域；Python的range不产生3，非空循环结束后i仍绑定最后取得的2。",
+    "functions": "四段都把4交给increment，返回5，再保存为next或next_value；外层original仍是4。片段没有打印这两个值，它们是按语句推得的最终状态。读带对象的调用时，还要分清“改形参所指的对象”与“给形参重新赋值”。"
+  },
+  "noteCorrection": {
+    "topic": "functions",
+    "language": "python",
+    "index": 0,
+    "before": "调用把局部形参名字绑定到传入对象；本例整数不可变，计算产生新整数。",
+    "after": "调用把局部形参名字绑定到传入对象；整数不可变，4加1得到整数值5。这个计算并不承诺一定为5新分配一个对象，程序也不应依赖小整数对象是否复用。"
+  }
+}

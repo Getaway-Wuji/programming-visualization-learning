@@ -1,4 +1,5 @@
 import { StepDetailControl } from '../components/StepDetailControl';
+import { CaseWalkthrough } from '../components/CaseWalkthrough';
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Link, useParams } from 'react-router';
 import { Breadcrumbs, MissingPage, PageHeading } from '../components/Ui';
@@ -388,6 +389,7 @@ function StructureWorkspace({ spec }: { spec: StructureCase }) {
           返回算法与演示 →
         </Link>
       </nav>
+      <CaseWalkthrough caseId={spec.id} />
     </div>
   );
 }

@@ -58,6 +58,21 @@ export const compilationScenarios = [
 ] as const;
 export type CompilationScenario = (typeof compilationScenarios)[number];
 
+export function compilationStageChange(scenario: CompilationScenario, index: number) {
+  if (scenario.id === 'symbol') {
+    if (index === 0) return '这里没有头文件或宏需要展开。helper 的声明原样传给下一阶段。';
+    if (index === 1)
+      return 'helper 的声明让编译阶段可以检查调用，并留下对外部函数的引用。函数体并未出现在当前这份源码中。';
+    if (index === 3)
+      return '链接时需要找到 helper 的定义来解决这个引用。输入只有调用方的目标文件，因此不会得到程序文件。';
+  }
+  if (scenario.id === 'header' && index === 0)
+    return '找不到 missing.h 就无法完成包含指令。此情景不会得到可送入下一阶段的展开源码。';
+  if (scenario.id === 'semicolon' && index === 1)
+    return '展开后的 return 仍然缺少分号，语法检查到此停止，不会得到本例的汇编示意。';
+  return compilationStages[index].change;
+}
+
 export function compilationExample(scenario: CompilationScenario) {
   let source = normalSource,
     expanded = normalExpanded,

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="660" viewBox="0 0 1260 660" role="img" aria-labelledby="title desc">
+  <title id="title">三种循环的条件与更新顺序</title>
+  <desc id="desc">while先测试，do while先执行循环体，经典for初始化一次后重复测试、循环体和更新。条件为false时退出。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#425267"/></marker>
+    <style>text{font-family:"Microsoft YaHei","Noto Sans SC",sans-serif;fill:#182b42} .heading{font-size:29px;font-weight:700} .label{font-size:23px} .note{font-size:20px;fill:#425267} .line{fill:none;stroke:#425267;stroke-width:3;marker-end:url(#arrow)} .box{fill:#fff;stroke:#a7b7ca;stroke-width:2} .test{fill:#e9f3ff;stroke:#2465a8;stroke-width:2} .end{fill:#f0f6ef;stroke:#6f8e6b;stroke-width:2}</style>
+  </defs>
+  <rect width="1260" height="660" rx="18" fill="#f7f9fc"/>
+  <path d="M420 34V620M840 34V620" stroke="#d1dce8" stroke-width="2"/>
+  <g text-anchor="middle">
+    <text x="210" y="55" class="heading">while：先检查</text>
+    <rect x="100" y="95" width="220" height="60" rx="12" class="box"/><text x="210" y="134" class="label">准备初始状态</text>
+    <path d="M210 155V199" class="line"/>
+    <path d="M210 200 320 255 210 310 100 255Z" class="test"/><text x="210" y="263" class="label">条件成立？</text>
+    <path d="M210 310V355" class="line"/><text x="235" y="339" class="note">是</text>
+    <rect x="100" y="355" width="220" height="60" rx="12" class="box"/><text x="210" y="394" class="label">执行循环体</text>
+    <path d="M210 415V453" class="line"/>
+    <rect x="100" y="453" width="220" height="60" rx="12" class="box"/><text x="210" y="492" class="label">体内推进状态</text>
+    <path d="M100 483H55V255H99" class="line"/>
+    <path d="M320 255H365V555H320" class="line"/><text x="345" y="238" class="note">否</text>
+    <rect x="100" y="525" width="220" height="60" rx="12" class="end"/><text x="210" y="564" class="label">循环之后</text>
+    <text x="210" y="625" class="note">可能一次循环体都不执行</text>
+
+    <text x="630" y="55" class="heading">do...while：先做一次</text>
+    <rect x="520" y="95" width="220" height="60" rx="12" class="box"/><text x="630" y="134" class="label">准备初始状态</text>
+    <path d="M630 155V199" class="line"/>
+    <rect x="520" y="200" width="220" height="60" rx="12" class="box"/><text x="630" y="239" class="label">执行循环体</text>
+    <path d="M630 260V299" class="line"/>
+    <rect x="520" y="300" width="220" height="60" rx="12" class="box"/><text x="630" y="339" class="label">体内推进状态</text>
+    <path d="M630 360V389" class="line"/>
+    <path d="M630 390 740 445 630 500 520 445Z" class="test"/><text x="630" y="453" class="label">条件成立？</text>
+    <path d="M520 445H475V230H519" class="line"/><text x="491" y="425" class="note">是</text>
+    <path d="M630 500V524" class="line"/><text x="655" y="519" class="note">否</text>
+    <rect x="520" y="525" width="220" height="60" rx="12" class="end"/><text x="630" y="564" class="label">循环之后</text>
+    <text x="630" y="625" class="note">条件在本轮执行之后检查</text>
+
+    <text x="1050" y="55" class="heading">for：集中管理计数</text>
+    <rect x="940" y="95" width="220" height="60" rx="12" class="box"/><text x="1050" y="134" class="label">初始化一次</text>
+    <path d="M1050 155V199" class="line"/>
+    <path d="M1050 200 1160 255 1050 310 940 255Z" class="test"/><text x="1050" y="263" class="label">条件成立？</text>
+    <path d="M1050 310V355" class="line"/><text x="1075" y="339" class="note">是</text>
+    <rect x="940" y="355" width="220" height="60" rx="12" class="box"/><text x="1050" y="394" class="label">执行循环体</text>
+    <path d="M1050 415V453" class="line"/>
+    <rect x="940" y="453" width="220" height="60" rx="12" class="box"/><text x="1050" y="492" class="label">执行更新部分</text>
+    <path d="M940 483H895V255H939" class="line"/>
+    <path d="M1160 255H1205V555H1160" class="line"/><text x="1185" y="238" class="note">否</text>
+    <rect x="940" y="525" width="220" height="60" rx="12" class="end"/><text x="1050" y="564" class="label">循环之后</text>
+    <text x="1050" y="625" class="note">更新发生在循环体之后</text>
+  </g>
+</svg>

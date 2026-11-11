@@ -99,7 +99,15 @@ export function prepareSort(spec: SortCase, values: readonly number[]) {
   const phases = [...source.matchAll(/^[ \t]*\/\/ @phase ([a-z]+)\r?$/gm)].map((match) => {
     const phase = spec.phases.find((phase) => phase.id === match[1]);
     if (!phase) throw Error('E_CONTENT_MISMATCH');
-    return { ...phase, start: new TextEncoder().encode(source.slice(0, match.index)).length };
+    const explanation =
+      spec.id === 'case.cpp.quick-sort' && phase.id === 'setup'
+        ? 'n为真实输入项数，values容量30。此原地分区不分配归并用的scratch数组；较短段递归使用实际调用帧。'
+        : phase.explanation;
+    return {
+      ...phase,
+      explanation,
+      start: new TextEncoder().encode(source.slice(0, match.index)).length,
+    };
   });
   if (phases.length !== spec.phases.length) throw Error('E_CONTENT_MISMATCH');
   return { source, input: [...values], phases };

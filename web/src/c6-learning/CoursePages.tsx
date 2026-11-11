@@ -3,6 +3,8 @@ import { Link, useParams, useSearchParams } from 'react-router';
 import { BugCatalogLink } from '../bugs/BugCatalogLink';
 import { Breadcrumbs, PageHeading, StatePanel } from '../components/Ui';
 import { C6TeachingReading } from '../components/C6TeachingReading';
+import { bookTeachingBody } from '../content/book-teaching';
+import { CourseReturn } from '../course-ui/CourseUi';
 import { LearningSaveStatus, useLearning } from '../learning/react';
 import { DailyGoalSummary } from '../learning/goal-components';
 import { HomePanel, homePanels } from '../learning/HomePanel';
@@ -315,11 +317,19 @@ function SourcePage({ nodeId }: { nodeId: string }) {
     void service
       .courseRepository()
       .loadChunk(nav.chunkId, abort.signal)
-      .then((chunk) => {
+      .then(async (chunk) => {
         const node = chunk.nodes.find((n) => n.sourceNodeId === nodeId);
         if (!node) throw Error('missing node');
+        const body = await bookTeachingBody(
+          'c',
+          nav.chunkId,
+          nodeId,
+          node.titleDisplay,
+          [node.body],
+          abort.signal,
+        );
         if (!abort.signal.aborted) {
-          setLoaded({ key: nodeId, node, chunk });
+          setLoaded({ key: nodeId, node: { ...node, body: body.join('\n\n') }, chunk });
           setFailed('');
         }
       })
@@ -344,6 +354,7 @@ function SourcePage({ nodeId }: { nodeId: string }) {
     ) ?? [];
   return (
     <div className="c6-course-page c6-reading-page">
+      <CourseReturn path="/courses" />
       <Breadcrumbs
         items={[
           { label: '课程目录', to: '/courses' },
@@ -422,6 +433,7 @@ function SourcePage({ nodeId }: { nodeId: string }) {
             </nav>
           )}
           {lesson && <LearningSaveStatus />}
+          <CourseReturn path="/courses" />
         </>
       )}
     </div>

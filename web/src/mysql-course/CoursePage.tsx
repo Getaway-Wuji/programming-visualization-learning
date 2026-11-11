@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   CourseNav,
+  CourseReturn,
   CourseLoadState,
   CourseSearch,
   CourseMode,
@@ -9,6 +10,8 @@ import {
   CourseNext,
 } from '../course-ui/CourseUi';
 import { ReadingEnd } from '../c6-learning/ReadingEnd';
+import { C6TeachingReading } from '../components/C6TeachingReading';
+import { bookTeachingBody } from '../content/book-teaching';
 import { useLearning } from '../learning/react';
 import { useJavaResource } from '../java/use-resource';
 import { isMysqlProgress, mysqlExercises } from './identities';
@@ -23,6 +26,19 @@ import './mysql.css';
 const lessonPath = (id: string) => '/mysql/lesson/' + id;
 const numbered = (node: MysqlCatalogEntry) => node.number + ' ' + node.title;
 const loadIndex = (_: null, signal: AbortSignal) => loadMysqlManifest(signal);
+const loadDetailedLesson = async (id: string, signal: AbortSignal) => {
+  const value = await loadMysqlLesson(id, signal);
+  const lesson = value.lesson;
+  const body = await bookTeachingBody(
+    'mysql',
+    `unit-${String(lesson.group).padStart(2, '0')}`,
+    id,
+    lesson.title,
+    lesson.body,
+    signal,
+  );
+  return { ...value, lesson: { ...lesson, body } };
+};
 export function MysqlNav() {
   return <CourseNav language="MySQL" path="/mysql" />;
 }
@@ -203,7 +219,7 @@ function Catalog() {
   );
 }
 function Lesson({ id }: { id: string }) {
-  const resource = useJavaResource(id, loadMysqlLesson);
+  const resource = useJavaResource(id, loadDetailedLesson);
   if (!resource.value) return <MysqlLoadState failed={resource.failed} retry={resource.retry} />;
   const { index, lesson } = resource.value;
   const parent = index.catalog.find((node) => node.id === lesson.parent);
@@ -223,11 +239,7 @@ function Lesson({ id }: { id: string }) {
         <SourceNote node={lesson} />
       </p>
       <h1 tabIndex={-1}>{numbered(lesson)}</h1>
-      {lesson.body.map((text) => (
-        <p key={text}>
-          <MysqlText text={text} />
-        </p>
-      ))}
+      <C6TeachingReading text={lesson.body.join('\n\n')} repeatedTitle={lesson.title} />
       {children.length > 0 && (
         <ul className="mysql-tree">
           {children.map((child) => (
@@ -291,17 +303,9 @@ function Lesson({ id }: { id: string }) {
         <p className="mysql-muted">
           <SourceNote node={lesson} />
         </p>
-        <ul>
-          {lesson.references.map((ref) => (
-            <li key={ref.url}>
-              <a href={ref.url} target="_blank" rel="noreferrer">
-                {ref.title}
-              </a>
-            </li>
-          ))}
-        </ul>
       </section>
       {lesson.leaf && <ReadingEnd lessonId={lesson.id} language="mysql" />}
+      <CourseReturn path="/mysql" />
       <nav className="mysql-page-turn" aria-label="相邻章节">
         {previous && <Link to={lessonPath(previous.id)}>上一节 · {numbered(previous)}</Link>}
         {next && <Link to={lessonPath(next.id)}>下一节 · {numbered(next)}</Link>}

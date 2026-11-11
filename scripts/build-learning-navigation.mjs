@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { isTeachingEditorial } from '../shared/contracts/teaching-editorial.mjs';
 
 const read = (path) => JSON.parse(readFileSync(path, 'utf8'));
 const title = (node) =>
@@ -7,11 +9,45 @@ const title = (node) =>
 const output = 'web/src/generated/learning-navigation';
 mkdirSync(output, { recursive: true });
 for (const language of ['python', 'java', 'cpp', 'rust', 'mysql']) {
-  const folder = `content/${language === 'python' ? 'python3' : language === 'rust' ? 'rust2018' : language}/course`;
-  const manifest = read(`${folder}/manifest-1.0.0.json`);
+  const sourceLanguage =
+    language === 'python' ? 'python3' : language === 'rust' ? 'rust2018' : language;
+  const folder = `content/${sourceLanguage}/course`;
+  const articleCourse = language === 'python' || language === 'java';
+  let release = null;
+  if (articleCourse) {
+    const current = read(`content/build/${sourceLanguage}-course-current.json`);
+    assert.deepEqual(Object.keys(current), ['releaseFile']);
+    assert(
+      typeof current.releaseFile === 'string' &&
+        current.releaseFile.startsWith(`${sourceLanguage}-course-editorial-`) &&
+        !/[\\/]/u.test(current.releaseFile),
+    );
+    release = read(`content/build/${current.releaseFile}`);
+    const editorialId = language === 'java' ? 'editorial.java.runoob' : 'editorial.python.runoob3';
+    assert(isTeachingEditorial(release.editorialRef, editorialId));
+    assert.equal(
+      current.releaseFile,
+      `${sourceLanguage}-course-editorial-${release.editorialRef.version}.json`,
+    );
+    assert.equal(
+      release.manifestFile,
+      `manifest-1.0.0-editorial-${release.editorialRef.version}.json`,
+    );
+  }
+  const manifestBytes = readFileSync(`${folder}/${release?.manifestFile ?? 'manifest-1.0.0.json'}`);
+  if (release) {
+    assert.equal(manifestBytes.length, release.manifestBytes);
+    assert.equal(
+      createHash('sha256').update(manifestBytes).digest('hex'),
+      release.manifestSha256,
+      `${language}: active navigation manifest hash`,
+    );
+  }
+  const manifest = JSON.parse(manifestBytes);
+  if (release) assert.deepEqual(manifest.editorialRef, release.editorialRef);
   const subjects = [];
   const lessons = [];
-  if (language === 'python' || language === 'java') {
+  if (articleCourse) {
     for (const chunk of manifest.chunks) {
       const article = read(`${folder}/${chunk.file}`);
       for (const node of article.nodes) {

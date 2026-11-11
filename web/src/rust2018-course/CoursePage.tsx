@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   CourseNav,
+  CourseReturn,
   CourseLoadState,
   CourseSearch,
   CourseMode,
@@ -9,6 +10,8 @@ import {
   CourseNext,
 } from '../course-ui/CourseUi';
 import { ReadingEnd } from '../c6-learning/ReadingEnd';
+import { C6TeachingReading } from '../components/C6TeachingReading';
+import { bookTeachingBody } from '../content/book-teaching';
 import { useLearning } from '../learning/react';
 import { useJavaResource } from '../java/use-resource';
 import { isRustProgress, rustExercises } from './identities';
@@ -23,6 +26,19 @@ import './rust.css';
 
 const lessonPath = (id: string) => '/rust/lesson/' + id;
 const loadIndex = (_: null, signal: AbortSignal) => loadRustManifest(signal);
+const loadDetailedLesson = async (id: string, signal: AbortSignal) => {
+  const value = await loadRustLesson(id, signal);
+  const lesson = value.lesson;
+  const body = await bookTeachingBody(
+    'rust2018',
+    `unit-${String(lesson.group).padStart(2, '0')}`,
+    id,
+    lesson.title,
+    lesson.body,
+    signal,
+  );
+  return { ...value, lesson: { ...lesson, body } };
+};
 
 export function RustNav() {
   return <CourseNav language="Rust" path="/rust" />;
@@ -188,7 +204,7 @@ function Catalog() {
 }
 
 function Lesson({ id }: { id: string }) {
-  const resource = useJavaResource(id, loadRustLesson);
+  const resource = useJavaResource(id, loadDetailedLesson);
   if (!resource.value) return <RustLoadState failed={resource.failed} retry={resource.retry} />;
   const { index, lesson } = resource.value;
   const parent = index.catalog.find((node) => node.id === lesson.parent);
@@ -208,11 +224,7 @@ function Lesson({ id }: { id: string }) {
         PDF 第 {lesson.physicalPage} 页
       </p>
       <h1 tabIndex={-1}>{lesson.title}</h1>
-      {lesson.body.map((text) => (
-        <p key={text}>
-          <RustText text={text} />
-        </p>
-      ))}
+      <C6TeachingReading text={lesson.body.join('\n\n')} repeatedTitle={lesson.title} />
       {children.length > 0 && (
         <ul className="rust-tree">
           {children.map((child) => (
@@ -272,6 +284,7 @@ function Lesson({ id }: { id: string }) {
         </section>
       )}
       {lesson.leaf && <ReadingEnd lessonId={lesson.id} language="rust" />}
+      <CourseReturn path="/rust" />
       <nav className="rust-page-turn" aria-label="相邻章节">
         {previous && <Link to={lessonPath(previous.id)}>上一节 · {previous.title}</Link>}
         {next && <Link to={lessonPath(next.id)}>下一节 · {next.title}</Link>}

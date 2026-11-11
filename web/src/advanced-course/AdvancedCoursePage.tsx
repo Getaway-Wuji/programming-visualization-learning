@@ -1,4 +1,5 @@
 import { KmpCatalog } from '../advanced-algorithms/KmpCatalog';
+import { CaseWalkthrough } from '../components/CaseWalkthrough';
 import { Link, useParams } from 'react-router';
 import { Breadcrumbs, MissingPage } from '../components/Ui';
 import { ReadingBoundary } from '../components/CourseReading';
@@ -128,6 +129,7 @@ export default function AdvancedCoursePage() {
                   {entry.explanation.map((text) => (
                     <p key={text}>{text}</p>
                   ))}
+                  <CaseWalkthrough caseId={entry.caseRef.id} returnTo="/advanced" />
                 </section>
                 <section>
                   <h2>复杂度为何如此</h2>

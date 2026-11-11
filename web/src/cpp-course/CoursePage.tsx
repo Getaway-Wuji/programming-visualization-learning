@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   CourseNav,
+  CourseReturn,
   CourseLoadState,
   CourseSearch,
   CourseMode,
@@ -9,6 +10,8 @@ import {
   CourseNext,
 } from '../course-ui/CourseUi';
 import { ReadingEnd } from '../c6-learning/ReadingEnd';
+import { C6TeachingReading } from '../components/C6TeachingReading';
+import { bookTeachingBody } from '../content/book-teaching';
 import { useLearning } from '../learning/react';
 import { useJavaResource } from '../java/use-resource';
 import { isCppProgress, cppExercises } from './identities';
@@ -23,6 +26,19 @@ import './cpp.css';
 
 const lessonPath = (id: string) => '/cpp/lesson/' + id;
 const loadIndex = (_: null, signal: AbortSignal) => loadCppManifest(signal);
+const loadDetailedLesson = async (id: string, signal: AbortSignal) => {
+  const value = await loadCppLesson(id, signal);
+  const lesson = value.lesson;
+  const body = await bookTeachingBody(
+    'cpp',
+    `unit-${String(lesson.group).padStart(2, '0')}`,
+    id,
+    lesson.title,
+    lesson.body,
+    signal,
+  );
+  return { ...value, lesson: { ...lesson, body } };
+};
 
 export function CppNav() {
   return <CourseNav language="C++" path="/cpp" />;
@@ -195,7 +211,7 @@ function Catalog() {
 }
 
 function Lesson({ id }: { id: string }) {
-  const resource = useJavaResource(id, loadCppLesson);
+  const resource = useJavaResource(id, loadDetailedLesson);
   if (!resource.value) return <CppLoadState failed={resource.failed} retry={resource.retry} />;
   const { index, lesson } = resource.value;
   const parent = index.catalog.find((node) => node.id === lesson.parent);
@@ -217,11 +233,7 @@ function Lesson({ id }: { id: string }) {
       <h1 tabIndex={-1}>
         {lesson.number} {lesson.title}
       </h1>
-      {lesson.body.map((text) => (
-        <p key={text}>
-          <CppText text={text} />
-        </p>
-      ))}
+      <C6TeachingReading text={lesson.body.join('\n\n')} repeatedTitle={lesson.title} />
       {children.length > 0 && (
         <ul className="cpp-tree">
           {children.map((child) => (
@@ -283,6 +295,7 @@ function Lesson({ id }: { id: string }) {
         </section>
       )}
       {lesson.leaf && <ReadingEnd lessonId={lesson.id} language="cpp" />}
+      <CourseReturn path="/cpp" />
       <nav className="cpp-page-turn" aria-label="相邻章节">
         {previous && <Link to={lessonPath(previous.id)}>上一节 · {previous.title}</Link>}
         {next && <Link to={lessonPath(next.id)}>下一节 · {next.title}</Link>}

@@ -40,7 +40,9 @@ for (const course of courses) {
         timeout: 800,
       });
     }).toPass({ timeout: 8000 });
-    await nav.getByRole('link', { name: course.language + ' 目录', exact: true }).click();
+    await nav
+      .getByRole('link', { name: '← 返回 ' + course.language + ' 课程目录', exact: true })
+      .click();
     await expect(next.getByRole('heading').getByRole('link')).not.toHaveAttribute(
       'href',
       firstPath!,

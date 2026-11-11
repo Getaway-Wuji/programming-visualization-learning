@@ -355,15 +355,28 @@ test('one controlled real Worker failure leaves the other independent; rerun rec
 });
 test('missing WASM and restoration do not invent accepted traces', async ({ page }) => {
   const module = /c_viz_advanced_bg[^/]*\.wasm/;
+  await observe(page);
   await page.route(module, (route) => route.abort());
-  await open(page, specs[1]);
-  await run(page);
-  await expect(lane(page, 0)).toHaveAttribute('data-phase', 'failed');
-  await expect(lane(page, 1)).toHaveAttribute('data-phase', 'failed');
-  await expect(root(page)).toHaveAttribute('data-length', '0');
+  await page.goto('/#/advanced/examples/' + specs[1].id + '/compare');
+  await waitForPhase2Archive(page);
+  const preparation = page.getByTestId('engine-preparation');
+  await expect(preparation).toHaveAttribute('data-state', 'failed');
+  await expect(preparation.getByRole('alert')).toContainText('执行资源未能完整下载或校验');
+  await expect(root(page)).toHaveCount(0);
+  expect(
+    await page.evaluate(
+      () => (window as unknown as { solutionsProbe: Probe }).solutionsProbe.posts,
+    ),
+  ).toEqual([]);
+
   await page.unroute(module);
+  await preparation.getByRole('button', { name: '重试加载', exact: true }).click();
+  await expect(root(page)).toHaveAttribute('data-phase', 'idle');
+  await expect(root(page)).toHaveAttribute('data-length', '0');
   await run(page);
   await expect(page.getByTestId('solutions-outcome')).toHaveAttribute('data-outcome', 'equal');
+  await expect(lane(page, 0)).toHaveAttribute('data-phase', 'accepted');
+  await expect(lane(page, 1)).toHaveAttribute('data-phase', 'accepted');
 });
 test('both real executions and replay mint no learning facts, rewards or persistent input; sources are optional', async ({
   page,

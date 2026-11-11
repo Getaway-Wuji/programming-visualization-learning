@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, Navigate, useParams } from 'react-router';
 import {
   CourseNav,
+  CourseReturn,
   CourseLoadState,
   CourseSearch,
   CourseMode,
@@ -11,6 +12,7 @@ import {
   useCourseNavigation,
 } from '../course-ui/CourseUi';
 import { ReadingEnd } from '../c6-learning/ReadingEnd';
+import { C6TeachingReading } from '../components/C6TeachingReading';
 import { useLearning } from '../learning/react';
 import type { JavaArticle, JavaCourseNode, JavaManifest } from './content-types';
 import { loadJavaArticle, loadJavaManifest } from './repository';
@@ -199,9 +201,16 @@ function ArticleBody({
         找不到这个小节。 <Link to={coursePath(order)}>返回文章</Link>
       </p>
     );
+  if (node.status === 'context-only') {
+    let parent = data.nodes.find((value) => value.sourceNodeId === node.parent);
+    while (parent?.status === 'context-only') {
+      const parentId = parent.parent;
+      parent = data.nodes.find((value) => value.sourceNodeId === parentId);
+    }
+    return <Navigate replace to={coursePath(order, parent?.platformRef.id)} />;
+  }
   const example = data.examples.find((value) => value.id === node.exampleId);
   const activity = data.activities.find((value) => value.id === node.activityId);
-  const source = node.sourceRef + (node.anchor ? '#' + encodeURIComponent(node.anchor) : '');
   const next = data.nodes
     .slice(data.nodes.indexOf(node) + 1)
     .find((row) => row.status !== 'context-only');
@@ -220,42 +229,26 @@ function ArticleBody({
             completed={completed.has(node.platformRef.id)}
           />
         )}
-        {node.status === 'context-only' && (
-          <p>
-            这是原文章中的示例标题。
-            <Link
-              to={coursePath(
-                order,
-                data.nodes.find((value) => value.sourceNodeId === node.parent)?.platformRef.id,
-              )}
-            >
-              返回上级内容
-            </Link>
-          </p>
-        )}
         {node.goal && <p className="python-goal">{node.goal}</p>}
-        {node.body?.map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
+        {node.body && <C6TeachingReading text={node.body.join('\n\n')} />}
+        {data.diagrams?.map((diagram) => (
+          <section key={diagram.title}>
+            <h2>{diagram.title}</h2>
+            <ol>
+              {diagram.steps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+          </section>
         ))}
-        {!section &&
-          data.diagrams?.map((diagram) => (
-            <section key={diagram.title}>
-              <h2>{diagram.title}</h2>
-              <ol>
-                {diagram.steps.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ol>
-            </section>
-          ))}
         {example?.status === 'reading-only' && activity?.kind === 'optional-self-check' && (
           <section className="python-sheet">
             <h2>阅读示例</h2>
-            <p>{example.prompt}</p>
+            <C6TeachingReading text={example.prompt} />
             <p className="muted">{example.reason}</p>
             <details>
               <summary>选做自检 · 展开解析</summary>
-              <p>{activity.reveal}</p>
+              <C6TeachingReading text={activity.reveal} />
             </details>
           </section>
         )}
@@ -273,30 +266,6 @@ function ArticleBody({
             <Link to={'/java/practice/' + activity.id}>打开练习</Link>
           </section>
         )}
-        {node.status === 'reference-only' && data.references.length > 0 && (
-          <ul>
-            {data.references.map((ref, index) => (
-              <li key={ref.url + index}>
-                <a href={ref.url} rel="noreferrer">
-                  {ref.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-        <p>
-          <a href={source} rel="noreferrer">
-            来源文章
-          </a>
-        </p>
-        {!section &&
-          data.supplementalSources?.map((ref) => (
-            <p key={ref.url}>
-              <a href={ref.url} rel="noreferrer">
-                {ref.title}
-              </a>
-            </p>
-          ))}
         {next && (
           <p>
             <Link to={coursePath(order, next.platformRef.id)}>继续阅读 {next.titleDisplay}</Link>
@@ -317,6 +286,7 @@ function ArticleBody({
             knowledgeId={node.questionId ? javaTopicId(node.questionId) : undefined}
           />
         )}
+        <CourseReturn path="/java" />
       </article>
     </div>
   );

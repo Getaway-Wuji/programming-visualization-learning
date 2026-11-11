@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="690" viewBox="0 0 560 690" role="img" aria-labelledby="title desc">
+  <title id="title">基类引用经虚接口调用Square的面积实现</title>
+  <desc id="desc">先根据const Shape引用检查area接口，再根据它绑定的同一个Square对象选择Square的最终重写，返回9。引用没有复制或切片对象。</desc>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#315e86" stroke-width="1.5"/></marker></defs>
+  <rect width="560" height="690" rx="18" fill="#f7f9fc"/>
+  <g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" fill="#172b40">
+    <text x="28" y="49" font-size="30" font-weight="700">同一对象，两种类型视角</text>
+    <rect x="28" y="83" width="504" height="108" rx="12" fill="#fff" stroke="#91a8c1"/>
+    <text x="48" y="124" font-size="27">const Shape&amp; shape = square;</text>
+    <text x="48" y="166" font-size="25">引用绑定已有对象，没有复制</text>
+    <path d="M280 192V226" stroke="#315e86" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="28" y="236" width="504" height="108" rx="12" fill="#e6eef8" stroke="#91a8c1"/>
+    <text x="48" y="277" font-size="27" font-weight="700">① 静态类型：const Shape&amp;</text>
+    <text x="48" y="319" font-size="25">检查 area() 可见、签名正确</text>
+    <path d="M280 345V379" stroke="#315e86" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="28" y="389" width="504" height="108" rx="12" fill="#fff" stroke="#91a8c1"/>
+    <text x="48" y="430" font-size="27" font-weight="700">② 选中的接口是虚函数</text>
+    <text x="48" y="472" font-size="25">根据绑定对象选择最终重写</text>
+    <path d="M280 498V532" stroke="#315e86" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="28" y="542" width="504" height="108" rx="12" fill="#dcebe8" stroke="#6f9b90"/>
+    <text x="48" y="583" font-size="27" font-weight="700">③ 实际对象：Square</text>
+    <text x="48" y="625" font-size="26">Square::area() 返回 9</text>
+  </g>
+</svg>

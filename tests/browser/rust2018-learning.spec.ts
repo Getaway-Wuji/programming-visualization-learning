@@ -142,7 +142,7 @@ test('public Rust catalog preserves every book node, parent guides and independe
       (row) => (row.subjectRef as { id: string }).id === readingId,
     ),
   ).toHaveLength(1);
-  await page.getByRole('link', { name: 'Rust 目录', exact: true }).click();
+  await page.getByRole('link', { name: '← 返回 Rust 课程目录', exact: true }).click();
   await page.getByRole('searchbox', { name: '搜索目录' }).fill('没有这一个Rust小节');
   await expect(page.getByText('没有匹配的小节。')).toBeVisible();
 });

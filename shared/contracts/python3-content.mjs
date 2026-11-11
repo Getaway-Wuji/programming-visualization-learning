@@ -1,3 +1,5 @@
+import { isTeachingEditorial, compareTeachingVersions } from './teaching-editorial.mjs';
+
 export const python3CourseBudgets = Object.freeze({
   manifest: 262144,
   chunk: 1048576,
@@ -30,6 +32,7 @@ const catalogRef = { id: 'catalog-set.c-python', version: '1.0.0' };
 const sourceMapSha256 = '9586127b76149c308336e410f10f137c680841d27985f1db597bcd5ec123396a';
 const quizOrder = 40;
 const referenceOrders = new Set([39, 61]);
+const editorialId = 'editorial.python.runoob3';
 
 function requireContent(condition, field) {
   if (!condition) throw new Error('Invalid Python CONTENT4: ' + field);
@@ -77,8 +80,13 @@ async function readAsset(bytes, pin, limit) {
 }
 
 export async function parsePython3CourseManifest(bytes, release) {
+  const editorial = release.editorialRef !== undefined;
   requireContent(
-    exact(release.packageRef, packageRef) && release.manifestFile === 'manifest-1.0.0.json',
+    exact(release.packageRef, packageRef) &&
+      (editorial
+        ? isTeachingEditorial(release.editorialRef, editorialId) &&
+          release.manifestFile === 'manifest-1.0.0-editorial-' + release.editorialRef.version + '.json'
+        : release.manifestFile === 'manifest-1.0.0.json'),
     'release',
   );
   const manifest = await readAsset(
@@ -102,6 +110,10 @@ export async function parsePython3CourseManifest(bytes, release) {
       exact(manifest.budgets, python3CourseBudgets),
     'course versions, hashes and budgets',
   );
+  requireContent(
+    editorial ? exact(manifest.editorialRef, release.editorialRef) : !('editorialRef' in manifest),
+    'editorial identity',
+  );
   const sections = uniqueIndex(manifest.sections, (row) => row.sourceNodeId, 'sections');
   requireContent(sections.size === 2, 'section count');
   const articles = uniqueIndex(manifest.chunks, (row) => row.sourceNodeId, 'article nodes');
@@ -118,9 +130,14 @@ export async function parsePython3CourseManifest(bytes, release) {
   const sidePositions = new Set();
   for (const [index, row] of manifest.chunks.entries()) {
     const order = index + 1 + Number(index + 1 >= quizOrder);
+    const revised = row.editorialRef !== undefined;
     requireContent(
       row.articleSourceOrder === order &&
-        row.file === 'article-' + String(order).padStart(2, '0') + '-1.0.0.json' &&
+        (!revised || (editorial && isTeachingEditorial(row.editorialRef, editorialId) &&
+          compareTeachingVersions(row.editorialRef.version, manifest.editorialRef.version) <= 0)) &&
+        row.file ===
+          'article-' + String(order).padStart(2, '0') +
+            (revised ? '-1.0.0-editorial-' + row.editorialRef.version + '.json' : '-1.0.0.json') &&
         sections.has(row.parent) &&
         hasText(row.titleDisplay) &&
         row.platformRef.version === packageRef.version &&
@@ -137,6 +154,39 @@ export async function parsePython3CourseManifest(bytes, release) {
     sidePositions.add(position);
     size += row.bytes;
   }
+  if (editorial) {
+    requireContent(
+      Array.isArray(manifest.teachingSources) && manifest.teachingSources.length > 0 &&
+        manifest.teachingSources.every((source) =>
+          Object.keys(source).sort().join(',') === 'articleOrders,kind,physicalPageRanges,sha256,title' &&
+          source.kind === 'user-supplied-pdf' && hasText(source.title) &&
+          shaPattern.test(source.sha256) &&
+          Array.isArray(source.physicalPageRanges) && source.physicalPageRanges.length > 0 &&
+          source.physicalPageRanges.every((range) => Array.isArray(range) && range.length === 2 &&
+            Number.isInteger(range[0]) && Number.isInteger(range[1]) &&
+            range[0] > 0 && range[1] >= range[0] && range[1] <= 482) &&
+          Array.isArray(source.articleOrders) && source.articleOrders.length > 0 &&
+          new Set(source.articleOrders).size === source.articleOrders.length &&
+          source.articleOrders.every((order) => manifest.chunks.some((entry) =>
+            entry.articleSourceOrder === order && entry.editorialRef))),
+      'editorial teaching sources',
+    );
+    requireContent(manifest.chunks.filter((entry) => entry.editorialRef).every((entry) =>
+      manifest.teachingSources.some((source) => source.articleOrders.includes(entry.articleSourceOrder))),
+    'editorial source coverage');
+    requireContent(Array.isArray(manifest.media), 'editorial media');
+    const media = uniqueIndex(manifest.media, (row) => row.file, 'media files');
+    for (const asset of media.values()) {
+      requireContent(
+        /^[a-z0-9]+(?:-[a-z0-9]+)*\.(?:svg|png|jpg|jpeg|webp)$/u.test(asset.file) &&
+          Object.keys(asset).sort().join(',') === 'bytes,file,sha256' &&
+          Number.isInteger(asset.bytes) && asset.bytes > 0 &&
+          asset.bytes <= python3CourseBudgets.chunk && shaPattern.test(asset.sha256),
+        'media asset',
+      );
+      size += asset.bytes;
+    }
+  } else requireContent(!('media' in manifest) && !('teachingSources' in manifest), 'legacy media');
   requireContent(size <= python3CourseBudgets.total, 'course byte budget');
   const quiz = manifest.supplementarySidebarLinks;
   requireContent(
@@ -205,6 +255,12 @@ export async function parsePython3CourseChunk(bytes, manifest, articleOrder) {
   const entry = manifest.chunks.find((row) => row.articleSourceOrder === articleOrder);
   requireContent(entry, 'article order ' + articleOrder);
   const chunk = await readAsset(bytes, entry, python3CourseBudgets.chunk);
+  requireContent(
+    entry.editorialRef
+      ? exact(chunk.editorialRef, entry.editorialRef)
+      : !('editorialRef' in chunk),
+    'article editorial identity',
+  );
   requireContent(
     exact(chunk.packageRef, packageRef) &&
       chunk.articleSourceOrder === articleOrder &&

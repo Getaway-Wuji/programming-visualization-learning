@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { CaseWalkthrough } from '../components/CaseWalkthrough';
 import { Link, useParams } from 'react-router';
 import { Breadcrumbs, MissingPage } from '../components/Ui';
 import { LearningSaveStatus, useLearning } from '../learning/react';
@@ -151,6 +152,7 @@ function Workspace({ spec }: { spec: AdvancedAlgorithmSpec }) {
         )}
       />
       <LearningSaveStatus />
+      <CaseWalkthrough caseId={spec.id} />
       <nav className="advanced-bottom" aria-label="算法导航">
         <Link to="/advanced/algorithms">返回筛法与序列</Link>
         <Link to="/cases">算法与演示</Link>

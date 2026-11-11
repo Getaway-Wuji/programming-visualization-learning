@@ -1,8 +1,9 @@
 export const pythonCourseRelease = {
   packageRef: { id: 'content.python.runoob3', version: '1.0.0' },
-  manifestFile: 'manifest-1.0.0.json',
-  manifestSha256: '1a9393fe03a7563e38395538b6ae60b448ae0511bec21bb8d17ebe9379709476',
-  manifestBytes: 29847,
+  editorialRef: { id: 'editorial.python.runoob3', version: '1.9.0' },
+  manifestFile: 'manifest-1.0.0-editorial-1.9.0.json',
+  manifestBytes: 37929,
+  manifestSha256: 'cfde468bb836618140892df05b22106f27a14bb4eaa12cf2a24c12b15c385a4c',
 } as const;
 export const pythonLessonIds = [
   'py3.section.d7e2f9f2ac65f14ae313a94d',

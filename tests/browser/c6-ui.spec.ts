@@ -151,7 +151,7 @@ test('an actual old app pass resets atomically to the new book once, with no Bro
   ).toBeVisible();
   const reset = await readCoreArchive(current);
   expect(reset.meta.generation).not.toBe(old.meta.generation);
-  expect(reset.meta.schemaVersion).toBe('10.0.0');
+  expect(reset.meta.schemaVersion).toBe('15.0.0');
   expect(reset.progress).toEqual([]);
   expect(reset.ledger).toEqual([]);
   expect(reset.settings.theme).toBe(old.settings.theme);

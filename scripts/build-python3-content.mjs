@@ -1,21 +1,29 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { format, resolveConfig } from 'prettier';
 import {
   parsePython3CourseChunk,
   parsePython3CourseManifest,
+  python3CourseBudgets,
   python3CourseCounts,
 } from '../shared/contracts/python3-content.mjs';
+import {
+  loadEditorialCourseAssets,
+  publishEditorialCourseAssets,
+} from './editorial-course-assets.mjs';
 
 const root = new URL('../', import.meta.url);
-const folder = new URL('content/python3/course/', root);
-const publicFolder = new URL('web/public/content/python3/course/', root);
 const read = (file) => readFile(new URL(file, root));
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
-const release = JSON.parse(await read('content/build/python3-course-1.0.0.json'));
-const manifestBytes = await readFile(new URL('manifest-1.0.0.json', folder));
-const manifest = await parsePython3CourseManifest(manifestBytes, release);
+const bundle = await loadEditorialCourseAssets({
+  language: 'python3',
+  editorialId: 'editorial.python.runoob3',
+  parseManifest: parsePython3CourseManifest,
+  parseChunk: parsePython3CourseChunk,
+  budgets: python3CourseBudgets,
+});
+const { release, manifest } = bundle;
 const [wasm, registry] = await Promise.all([
   read('web/src/generated/python3/c_viz_python3_bg.wasm'),
   read('content/python3/judges-1.0.0.json'),
@@ -24,10 +32,6 @@ assert.equal(hash(wasm), manifest.engine.buildSha256, 'Python course engine buil
 assert.equal(hash(registry), manifest.judgeRegistrySha256, 'Python course judge registry');
 const questions = new Map(JSON.parse(registry).map(({ id, cases }) => [id, cases]));
 assert.equal(questions.size, python3CourseCounts.executionQuestions);
-const expectedAssets = [release.manifestFile, ...manifest.chunks.map((entry) => entry.file)].sort();
-assert.deepEqual((await readdir(folder)).sort(), expectedAssets);
-
-const assets = new Map([[release.manifestFile, manifestBytes]]);
 const seenSourceIds = new Set(manifest.sections.map((row) => row.sourceNodeId));
 const seenPlatformIds = new Set();
 const counts = Object.fromEntries(Object.keys(python3CourseCounts).map((key) => [key, 0]));
@@ -35,9 +39,7 @@ const lessonIds = [];
 const exerciseIndex = {};
 counts.supplementarySidebarLinks = manifest.supplementarySidebarLinks.length;
 for (const entry of manifest.chunks) {
-  const bytes = await readFile(new URL(entry.file, folder));
-  const chunk = await parsePython3CourseChunk(bytes, manifest, entry.articleSourceOrder);
-  assets.set(entry.file, bytes);
+  const chunk = bundle.chunks.get(entry.articleSourceOrder);
   counts.sourceArticles++;
   counts.sourceSubheadings += chunk.nodes.length - 1;
   for (const node of chunk.nodes) {
@@ -90,10 +92,7 @@ for (const entry of manifest.chunks) {
 assert.equal(questions.size, 0);
 assert.deepEqual(counts, python3CourseCounts);
 
-await mkdir(publicFolder, { recursive: true });
-await Promise.all(
-  [...assets].map(([file, bytes]) => writeFile(new URL(file, publicFolder), bytes)),
-);
+await publishEditorialCourseAssets(bundle);
 await writeFile(
   new URL('web/src/python3/release.generated.ts', root),
   await format(
@@ -116,7 +115,9 @@ console.log(
     counts.teachingLeaves +
     ' lessons, ' +
     counts.judgeCases +
-    ' locked judge cases; manifest ' +
+    ' locked judge cases; editorial ' +
+    release.editorialRef.version +
+    '; manifest ' +
     release.manifestSha256 +
     '.',
 );
