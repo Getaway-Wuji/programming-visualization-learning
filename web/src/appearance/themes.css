@@ -73,6 +73,44 @@
   color: var(--p05-text);
   background: var(--p05-ground);
   --border-tone: var(--p05-border);
+  --appearance-panel-radius: 10px;
+  --appearance-control-radius: 7px;
+  --appearance-panel-fill: var(--p05-surface);
+  --appearance-panel-border: var(--p05-border);
+  --appearance-panel-shadow: none;
+}
+:root[data-appearance='cute'] {
+  --appearance-panel-radius: 25px;
+  --appearance-control-radius: 18px;
+  --appearance-panel-fill: color-mix(in srgb, var(--p05-raised) 32%, var(--p05-surface));
+  --appearance-panel-shadow:
+    0 8px 20px color-mix(in srgb, var(--p05-accent) 9%, transparent),
+    inset 0 1px color-mix(in srgb, var(--p05-text) 5%, transparent);
+}
+:root[data-appearance='glass'] {
+  --appearance-panel-radius: 20px;
+  --appearance-control-radius: 14px;
+  --appearance-panel-fill: color-mix(in srgb, var(--p05-surface) 88%, transparent);
+  --appearance-panel-border: color-mix(in srgb, var(--p05-border) 81%, var(--p05-control));
+  --appearance-panel-shadow:
+    0 10px 24px color-mix(in srgb, var(--p05-text) 7%, transparent),
+    inset 0 1px color-mix(in srgb, var(--p05-surface) 84%, var(--p05-text));
+}
+:root[data-appearance='soft'] {
+  --appearance-panel-radius: 22px;
+  --appearance-control-radius: 13px;
+  --appearance-panel-shadow: 5px 7px 16px var(--relief-low), -4px -4px 12px var(--relief-hi);
+}
+:root[data-appearance='cool'] {
+  --appearance-panel-radius: 7px;
+  --appearance-control-radius: 5px;
+  --appearance-panel-shadow: inset 0 1px color-mix(in srgb, var(--p05-accent) 24%, transparent);
+}
+:root[data-appearance='tech'] {
+  --appearance-panel-radius: 14px;
+  --appearance-control-radius: 10px;
+  --appearance-panel-fill: color-mix(in srgb, var(--p05-raised) 30%, var(--p05-surface));
+  --appearance-panel-shadow: 4px 6px 14px var(--mist-low), inset 0 1px var(--mist-hi);
 }
 [data-appearance] body {
   background: var(--p05-ground);
@@ -496,8 +534,11 @@
   width: 35%;
   height: 80%;
 }
+.mini-cute {
+  --theme-preview-radius: 14px;
+}
 .mini-cute .theme-diagram {
-  background: #fbe6f0;
+  background: radial-gradient(ellipse at 90% 5%, #efbfd3, #fff5f7 80%);
 }
 .mini-cute .theme-diagram i {
   border-radius: 12px;
@@ -506,19 +547,15 @@
 }
 .mini-cute .theme-diagram b,
 .mini-cute .theme-diagram em {
-  left: 59%;
-  width: 35%;
+  border-radius: 13px 19px 13px 15px;
+  border-color: #eecad8;
+  background: #fff8fa;
 }
-.mini-cute .theme-diagram b {
-  left: 27%;
-  width: 25%;
-}
-.mini-cute .theme-diagram em {
-  left: 58%;
-  width: 35%;
+.mini-glass {
+  --theme-preview-radius: 12px;
 }
 .mini-glass .theme-diagram {
-  background: linear-gradient(135deg, #dce5eb, #e7deec);
+  background: linear-gradient(130deg, #e6edf0 20%, #f7fcfd 48%, #c6dce2);
 }
 .mini-glass .theme-diagram i,
 .mini-glass .theme-diagram b,
@@ -526,6 +563,9 @@
   background: #ffffffa0;
   border: 1px solid white;
   border-radius: 10px;
+}
+.mini-soft {
+  --theme-preview-radius: 12px;
 }
 .mini-soft .theme-diagram {
   background: #ebeae6;
@@ -562,6 +602,12 @@
     3px 3px 6px #cbcac2,
     -3px -3px 6px white;
 }
+.mini-soft .theme-diagram b {
+  background: linear-gradient(145deg, #f2f0e9, #e7dfc5);
+}
+.mini-cool {
+  --theme-preview-radius: 4px;
+}
 .mini-cool .theme-diagram {
   background: #0f1326;
 }
@@ -579,7 +625,7 @@
   width: 69%;
   background: #1c2748;
   border-color: #617bc5;
-  border-radius: 10px;
+  border-radius: 4px;
   box-shadow: inset 0 -3px 8px #6c83e244;
 }
 .mini-cool .theme-diagram b {
@@ -591,7 +637,7 @@
   height: 18%;
 }
 .mini-tech .theme-diagram {
-  background: #eef0f7;
+  background: radial-gradient(#b7bfd5 1px, transparent 1px) 0 0 / 7px 7px #eef0f7;
 }
 .mini-tech .theme-diagram i,
 .mini-tech .theme-diagram b,

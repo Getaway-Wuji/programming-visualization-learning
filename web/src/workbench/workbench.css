@@ -152,7 +152,9 @@
 .workbench-region-content > .workbench-panel,
 .workbench-region-content > .practice-generated-code > .workbench-panel {
   min-height: 520px;
-  border-radius: 12px;
+  border-color: var(--appearance-panel-border, var(--line));
+  border-radius: var(--appearance-panel-radius, 12px);
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 .workbench-region-content > .practice-generated-code {
   min-width: 0;
@@ -230,8 +232,10 @@
 :is(.python-work, .cpp-editor-grid, .rust-editor-grid)
   > :is(.python-sheet, .cpp-sheet, .rust-sheet) {
   padding: clamp(12px, 1.4vw, 22px);
-  border-radius: 12px;
+  border-color: var(--appearance-panel-border, var(--border-tone, var(--line)));
+  border-radius: var(--appearance-panel-radius, 12px);
   background: var(--p05-surface, var(--surface-tone, #fff));
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 :is(.python-work, .cpp-editor-grid, .rust-editor-grid)
   > :is(.python-sheet, .cpp-sheet, .rust-sheet)

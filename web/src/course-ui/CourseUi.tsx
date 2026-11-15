@@ -150,7 +150,7 @@ export function CourseNext({
         </h2>
         {description && <p className="course-help">{description}</p>}
       </div>
-      <Link className="button button-secondary" to={to}>
+      <Link className="button button-primary" to={to}>
         {complete ? '回顾课程' : started ? '继续阅读' : '开始阅读'}
       </Link>
     </section>

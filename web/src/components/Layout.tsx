@@ -9,6 +9,8 @@ import { useWorkbench } from '../workbench/react';
 import { useAchievements } from '../achievements/react';
 import { useReviews } from '../review-scheduler/react';
 import { HomePanel } from '../learning/HomePanel';
+import { useSidebarSelection } from './useSidebarSelection';
+import './sidebar-selection.css';
 
 const navigation = [
   { to: '/', label: '学习首页', icon: 'home' },
@@ -118,6 +120,16 @@ export function Layout({ children }: { children: ReactNode }) {
     location.pathname.startsWith('/advanced/algorithms/');
   const focused = toolRoute && workbench.layout.workbenchMode === 'focus';
   const collapsed = focused || workbench.layout.sidebar === 'collapsed';
+  const selectedPath =
+    navigation.find(
+      ({ to }) =>
+        location.pathname === to || (to !== '/' && location.pathname.startsWith(`${to}/`)),
+    )?.to ??
+    (courseRoute ? '/courses' : caseRoute ? '/cases' : undefined) ??
+    (location.pathname === '/bugs' || location.pathname.startsWith('/bugs/')
+      ? '/practice'
+      : undefined);
+  const { navigationRef, pillRef } = useSidebarSelection(selectedPath, narrow, collapsed);
   return (
     <div
       className="app-shell p05-app"
@@ -192,7 +204,8 @@ export function Layout({ children }: { children: ReactNode }) {
             一步一懂<small>编程可视化教学平台</small>
           </span>
         </Link>
-        <nav id="primary-navigation" aria-label="主导航">
+        <nav id="primary-navigation" aria-label="主导航" ref={navigationRef}>
+          <span aria-hidden="true" className="sidebar-selection-pill" ref={pillRef} />
           {navigationGroups.map((group) => (
             <div className="nav-group" key={group.label}>
               <p className="nav-group-label">{group.label}</p>
@@ -205,16 +218,8 @@ export function Layout({ children }: { children: ReactNode }) {
                   onClick={() => {
                     if (menuOpen) closeMenu(item.to === location.pathname);
                   }}
-                  className={`nav-link${location.pathname === item.to || (item.to !== '/' && location.pathname.startsWith(`${item.to}/`)) || (item.to === '/practice' && location.pathname.startsWith('/bugs')) || (item.to === '/courses' && courseRoute) || (item.to === '/cases' && caseRoute) ? ' active' : ''}`}
-                  aria-current={
-                    location.pathname === item.to ||
-                    (item.to !== '/' && location.pathname.startsWith(`${item.to}/`)) ||
-                    (item.to === '/practice' && location.pathname.startsWith('/bugs')) ||
-                    (item.to === '/courses' && courseRoute) ||
-                    (item.to === '/cases' && caseRoute)
-                      ? 'page'
-                      : undefined
-                  }
+                  className={`nav-link${selectedPath === item.to ? ' active' : ''}`}
+                  aria-current={selectedPath === item.to ? 'page' : undefined}
                 >
                   <Icon name={item.icon} />
                   <span>{item.label}</span>

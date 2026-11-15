@@ -18,7 +18,7 @@ const copy = (): AppearanceConfiguration => structuredClone(config);
 describe('P0.5-02 closed static appearance configuration', () => {
   it('loads six complete profiles without teaching capabilities or design fixture data', () => {
     expect(loaded.status).toBe('ready');
-    expect(config.configRef).toEqual({ id: 'appearance.config.p05', version: '1.0.2' });
+    expect(config.configRef).toEqual({ id: 'appearance.config.p05', version: '1.0.1' });
     expect(Object.keys(config.themes).sort()).toEqual([...APPEARANCE_THEME_IDS].sort());
     expect(new Set(Object.values(config.themes).map((theme) => theme.profile.shell)).size).toBe(6);
     expect(Object.isFrozen(config.themes.tech.dark)).toBe(true);
@@ -36,7 +36,7 @@ describe('P0.5-02 closed static appearance configuration', () => {
     for (const candidate of [
       { ...config, contractVersion: '1.1.0' },
       { ...config, schemaVersion: '1.0.1' },
-      { ...config, configRef: { ...config.configRef, version: '1.0.3' } },
+      { ...config, configRef: { ...config.configRef, version: '1.0.2' } },
       { ...config, capabilities: ['exercise.passed'] },
       { ...config, themes: { ...config.themes, future: config.themes.minimal } },
       missing,
@@ -178,10 +178,10 @@ describe('P0.5-02 readable accent derivation', () => {
   it('uses a mode-specific default only for null and never modifies the supplied override', () => {
     const overrides = { minimal: '#6D28D9', cute: '#DB2777' };
     expect(deriveAppearanceColors(config.themes.minimal.light, null, 'light').rawAccent).toBe(
-      '#6339BC',
+      '#1D5FBF',
     );
     expect(deriveAppearanceColors(config.themes.minimal.dark, null, 'dark').rawAccent).toBe(
-      '#C2ACFF',
+      '#82B1FF',
     );
     deriveAppearanceColors(config.themes.cute.dark, overrides.cute, 'dark');
     deriveAppearanceColors(config.themes.minimal.light, overrides.minimal, 'light');

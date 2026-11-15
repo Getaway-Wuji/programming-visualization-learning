@@ -75,7 +75,7 @@
 .mysql-screen select,
 .mysql-search input {
   font: inherit;
-  border-radius: 0.375rem;
+  border-radius: var(--appearance-control-radius, 0.375rem);
 }
 .mysql-screen button,
 .mysql-screen .button {
@@ -209,7 +209,9 @@
 }
 .mysql-screen:has(.mysql-work-grid) .mysql-sheet {
   padding: clamp(12px, 1.4vw, 22px);
-  border-radius: 12px;
+  border-color: var(--appearance-panel-border, var(--mysql-line));
+  border-radius: var(--appearance-panel-radius, 12px);
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 .mysql-sql-column,
 .mysql-data-column {

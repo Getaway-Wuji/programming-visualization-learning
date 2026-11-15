@@ -88,6 +88,7 @@ test('all six saved themes keep one left sidebar and use the available desktop s
     await saveTheme(page, theme);
     await page.reload();
     await ready(page);
+    await expect(page.getByTestId('appearance-settings')).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('data-appearance', theme);
     for (const width of [1366, 1440, 1920, 2560]) {
       await page.setViewportSize({ width, height: 900 });
@@ -112,6 +113,58 @@ test('all six saved themes keep one left sidebar and use the available desktop s
     body: JSON.stringify(samples),
     contentType: 'application/json',
   });
+});
+
+test('the navigation capsule stretches towards the current route, then settles in both directions', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  await ready(page);
+  const nav = navigation(page);
+  const current = nav.locator('[aria-current="page"]');
+  const pill = nav.locator('.sidebar-selection-pill');
+  const sampleMotion = () =>
+    pill.evaluate((element) => {
+      const movement = element.getAnimations()[0];
+      if (!movement?.effect) throw new Error('Expected an active capsule animation');
+      const duration = Number(movement.effect.getComputedTiming().duration);
+      movement.pause();
+      const frames = [0, 0.3, 0.75].map((step) => {
+        movement.currentTime = duration * step;
+        const { y, height } = element.getBoundingClientRect();
+        return { y, height };
+      });
+      movement.finish();
+      return frames;
+    });
+
+  const link = (name: string) => nav.getByRole('link', { name, exact: true });
+  await expect(current).toHaveText('学习首页');
+  const home = (await current.boundingBox())!;
+  await link('MySQL 课程').click();
+  await expect(current).toHaveText('MySQL 课程');
+  const mysql = (await current.boundingBox())!;
+  const [start, extended, arrived] = await sampleMotion();
+  expect(start.y).toBeCloseTo(home.y, 0);
+  expect(extended.height).toBeGreaterThan(start.height * 1.5);
+  expect(arrived.y + arrived.height).toBeCloseTo(mysql.y + mysql.height, 0);
+  expect(await pill.boundingBox()).toMatchObject({ y: mysql.y, height: mysql.height });
+
+  await page.goBack();
+  await expect(current).toHaveText('学习首页');
+  const [, reverseExtension, reverseArrival] = await sampleMotion();
+  expect(reverseExtension.height).toBeGreaterThan(home.height * 1.5);
+  expect(reverseArrival.y).toBeCloseTo(home.y, 0);
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(page.locator('html')).toHaveAttribute('data-reduced-motion', 'on');
+  await link('Python 课程').focus();
+  await page.keyboard.press('Enter');
+  await expect(current).toHaveText('Python 课程');
+  expect(await pill.evaluate((element) => element.getAnimations().length)).toBe(0);
+  expect(await pill.boundingBox()).toEqual(await current.boundingBox());
 });
 
 test('every theme opens a left vertical drawer on narrow screens and Escape restores the opener', async ({

@@ -2,20 +2,24 @@
   width: min(100%, 54rem);
   margin-inline: auto;
   padding: clamp(1.1rem, 3.2vw, 2.5rem);
-  border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.85rem;
+  border: 1px solid var(--appearance-panel-border, var(--border-tone, var(--line)));
+  border-radius: var(--appearance-panel-radius, 0.85rem);
   background: var(--p05-surface, var(--surface-tone, var(--panel)));
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 .python-article-grid > .python-reading {
   padding: clamp(1rem, 2.8vw, 2.25rem);
-  border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.85rem;
+  border: 1px solid var(--appearance-panel-border, var(--border-tone, var(--line)));
+  border-radius: var(--appearance-panel-radius, 0.85rem);
   background: var(--p05-surface, var(--surface-tone, var(--panel)));
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 .python-article-grid > .python-directory {
   padding: 0.88rem;
-  border-radius: 0.8rem;
-  background: var(--p05-surface, var(--surface-tone, var(--panel)));
+  border-color: var(--appearance-panel-border, var(--border-tone, var(--line)));
+  border-radius: var(--appearance-panel-radius, 0.8rem);
+  background: var(--appearance-panel-fill, var(--p05-surface, var(--surface-tone, var(--panel))));
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 .python-article-grid .python-directory summary {
   min-height: 44px;

@@ -147,9 +147,10 @@
 .c6-workbench .c6-source-pane,
 .c6-workbench .c6-result-pane {
   padding: clamp(12px, 1.4vw, 22px);
-  border: 1px solid var(--border-tone, var(--line));
-  border-radius: 12px;
+  border: 1px solid var(--appearance-panel-border, var(--border-tone, var(--line)));
+  border-radius: var(--appearance-panel-radius, 12px);
   background: var(--p05-surface, var(--surface-tone, #fff));
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 .c6-workbench-grid {
   display: grid;
@@ -175,7 +176,7 @@
   width: 100%;
   color: inherit;
   border: 1px solid var(--border-tone, #cfd9ca);
-  border-radius: 8px;
+  border-radius: var(--appearance-control-radius, 8px);
   background: var(--p05-raised, var(--surface-tone, #fff));
   padding: 14px;
   font-family: Consolas, 'Cascadia Mono', monospace;

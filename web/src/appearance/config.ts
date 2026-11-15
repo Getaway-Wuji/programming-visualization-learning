@@ -1,4 +1,4 @@
-import configurationJson from '../../../content/c/appearance/config-1.0.2.json?raw';
+import configurationJson from '../../../content/c/appearance/config-1.0.1.json?raw';
 
 export const APPEARANCE_THEME_IDS = ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech'] as const;
 export type AppearanceThemeId = (typeof APPEARANCE_THEME_IDS)[number];
@@ -40,7 +40,7 @@ export interface AppearanceTheme {
 export interface AppearanceConfiguration {
   readonly contractVersion: '1.0.0';
   readonly schemaVersion: '1.0.0';
-  readonly configRef: { readonly id: 'appearance.config.p05'; readonly version: '1.0.2' };
+  readonly configRef: { readonly id: 'appearance.config.p05'; readonly version: '1.0.1' };
   readonly defaultPreset: 'minimal';
   readonly defaultMode: 'light';
   readonly fonts: { readonly ui: string; readonly code: string };
@@ -191,7 +191,7 @@ export function decodeAppearanceConfiguration(value: unknown): AppearanceConfigu
   requireRule(value.contractVersion === '1.0.0' && value.schemaVersion === '1.0.0');
   row(value.configRef, ['id', 'version']);
   requireRule(
-    value.configRef.id === 'appearance.config.p05' && value.configRef.version === '1.0.2',
+    value.configRef.id === 'appearance.config.p05' && value.configRef.version === '1.0.1',
   );
   requireRule(value.defaultPreset === 'minimal' && value.defaultMode === 'light');
   row(value.fonts, ['ui', 'code']);
@@ -289,29 +289,29 @@ const fallbackTheme: AppearanceTheme = frozen({
     motion: 'quiet',
   },
   light: {
-    ground: '#F6F5F2',
+    ground: '#F3F5F7',
     surface: '#FFFFFF',
-    raised: '#F4F1F8',
-    active: '#EBE5F7',
-    text: '#211B2E',
-    muted: '#60596C',
-    border: '#E2DDE7',
-    control: '#81768F',
-    accent: '#6339BC',
+    raised: '#F7F8FA',
+    active: '#E8EBEF',
+    text: '#18212B',
+    muted: '#566170',
+    border: '#DFE4E9',
+    control: '#7C8797',
+    accent: '#1D5FBF',
     positive: '#146C43',
     negative: '#B42318',
     warning: '#875600',
   },
   dark: {
-    ground: '#15131B',
-    surface: '#1E1B28',
-    raised: '#282333',
-    active: '#332B46',
-    text: '#F5F0FC',
-    muted: '#C1B7CE',
-    border: '#3E354B',
-    control: '#998CA9',
-    accent: '#C2ACFF',
+    ground: '#101112',
+    surface: '#191B1D',
+    raised: '#232629',
+    active: '#30353B',
+    text: '#F2F4F6',
+    muted: '#B8C0CA',
+    border: '#353A41',
+    control: '#7E8A98',
+    accent: '#82B1FF',
     positive: '#71D5A3',
     negative: '#FFAAA3',
     warning: '#E9C171',

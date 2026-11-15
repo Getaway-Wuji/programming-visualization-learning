@@ -1,0 +1,84 @@
+:root[data-appearance] .p05-app #primary-navigation {
+  --sidebar-selection-fill: var(--p05-active);
+  --sidebar-selection-edge: color-mix(in srgb, var(--p05-accent) 26%, var(--p05-border));
+  --sidebar-selection-shadow: none;
+  position: relative;
+  isolation: isolate;
+}
+
+:root[data-appearance='cute'] .p05-app #primary-navigation {
+  --sidebar-selection-fill: color-mix(in srgb, var(--p05-accent) 9%, var(--p05-surface));
+  --sidebar-selection-shadow: inset 0 1px 0 var(--p05-surface);
+}
+
+:root[data-appearance='glass'] .p05-app #primary-navigation {
+  --sidebar-selection-fill: color-mix(in srgb, var(--p05-surface) 88%, transparent);
+  --sidebar-selection-shadow: 0 4px 12px color-mix(in srgb, var(--p05-text) 7%, transparent);
+}
+
+:root[data-appearance='soft'] .p05-app #primary-navigation {
+  --sidebar-selection-fill: var(--p05-surface);
+  --sidebar-selection-shadow:
+    inset 3px 3px 8px var(--relief-low), inset -3px -3px 8px var(--relief-hi);
+}
+
+:root[data-appearance='cool'] .p05-app #primary-navigation {
+  --sidebar-selection-fill: var(--p05-raised);
+  --sidebar-selection-shadow:
+    inset 0 0 8px color-mix(in srgb, var(--p05-accent) 26%, transparent),
+    0 0 12px color-mix(in srgb, var(--p05-accent) 13%, transparent);
+}
+
+:root[data-appearance='tech'] .p05-app #primary-navigation {
+  --sidebar-selection-fill: var(--p05-surface);
+  --sidebar-selection-shadow: 3px 4px 10px var(--mist-low), -3px -3px 8px var(--mist-hi);
+}
+
+.sidebar-selection-pill {
+  display: none;
+  position: absolute;
+  top: 0;
+  z-index: -1;
+  border: 1px solid var(--sidebar-selection-edge);
+  border-radius: 999px;
+  background: var(--sidebar-selection-fill);
+  box-shadow: var(--sidebar-selection-shadow);
+  pointer-events: none;
+}
+
+:root[data-appearance] .p05-app #primary-navigation .nav-link {
+  border-radius: 999px;
+  transition: color 150ms ease;
+}
+
+:root[data-appearance] .p05-app #primary-navigation .nav-link[aria-current='page'] {
+  color: var(--p05-text);
+  background: var(--sidebar-selection-fill);
+  border-color: var(--sidebar-selection-edge);
+  box-shadow: var(--sidebar-selection-shadow);
+}
+
+:root[data-appearance] .p05-app #primary-navigation .nav-link[aria-current='page']::before {
+  content: none;
+}
+
+@media (min-width: 1101px) and (forced-colors: none) {
+  #primary-navigation[data-selection-pill='true'] .sidebar-selection-pill {
+    display: block;
+  }
+
+  :root[data-appearance]
+    .p05-app
+    #primary-navigation[data-selection-pill='true']
+    .nav-link[aria-current='page'] {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
+
+@media (forced-colors: active) {
+  :root[data-appearance] .p05-app #primary-navigation .nav-link[aria-current='page'] {
+    border-color: Highlight;
+  }
+}

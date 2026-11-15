@@ -11,7 +11,7 @@
   align-items: center;
   min-height: 44px;
   padding-inline: 0.8rem;
-  border-radius: 0.55rem;
+  border-radius: var(--appearance-control-radius, 0.55rem);
   color: var(--muted);
   font-size: 0.875rem;
   font-weight: 600;
@@ -44,14 +44,41 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.75rem 1.25rem;
+}
+.course-header,
+.course-nav
+  + :is(.cpp-title, .rust-title, .mysql-title):has(+ :is(.course-progress, .course-load-state)),
+.c6-course-page:has(> .c6-search) > .page-heading {
   padding: clamp(1rem, 2.6vw, 2rem);
-  border: 1px solid var(--border-tone, var(--line));
+  border: 1px solid var(--appearance-panel-border, var(--border-tone, var(--line)));
   border-inline-start: 3px solid var(--p05-accent, var(--green));
-  border-radius: 0.8rem;
-  background: linear-gradient(
-    108deg,
-    var(--p05-active, var(--surface-raised, var(--panel))),
-    var(--p05-surface, var(--surface-tone, var(--panel))) 65%
+  border-radius: var(--appearance-panel-radius, 0.8rem);
+  background: var(--course-banner, var(--appearance-panel-fill, var(--surface-tone, #fff)));
+  box-shadow: var(--appearance-panel-shadow, none);
+}
+[data-appearance='cute'] {
+  --course-banner: radial-gradient(
+    ellipse at 92% 0%,
+    color-mix(in srgb, var(--p05-accent) 14%, var(--p05-surface)),
+    var(--appearance-panel-fill, var(--p05-surface)) 74%
+  );
+}
+[data-appearance='glass'] {
+  --course-banner: linear-gradient(
+    112deg,
+    color-mix(in srgb, var(--p05-raised) 87%, transparent),
+    var(--appearance-panel-fill, var(--p05-surface)),
+    color-mix(in srgb, var(--p05-active) 72%, transparent)
+  );
+}
+[data-appearance='cool'] {
+  --course-banner: linear-gradient(112deg, var(--p05-active), var(--p05-surface) 72%);
+}
+[data-appearance='tech'] {
+  --course-banner: linear-gradient(
+    153deg,
+    var(--appearance-panel-fill, var(--p05-surface)) 35%,
+    var(--p05-raised)
   );
 }
 .python-screen .course-header h1,
@@ -99,7 +126,7 @@
   color: var(--p05-text, var(--ink));
   background: var(--p05-raised, var(--surface-tone, var(--panel)));
   border: 1px solid var(--p05-control, var(--border-tone, var(--line)));
-  border-radius: 0.6rem;
+  border-radius: var(--appearance-control-radius, 0.6rem);
 }
 .course-search input::placeholder {
   color: var(--muted);
@@ -147,9 +174,10 @@
   flex-wrap: wrap;
   gap: 0.75rem 1.25rem;
   padding: clamp(1rem, 2.3vw, 1.45rem);
-  border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.8rem;
-  background: var(--p05-surface, var(--surface-raised, var(--panel)));
+  border: 1px solid var(--appearance-panel-border, var(--border-tone, var(--line)));
+  border-radius: var(--appearance-panel-radius, 0.8rem);
+  background: var(--appearance-panel-fill, var(--p05-surface, var(--surface-raised, var(--panel))));
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 .course-next > div {
   min-width: 0;
@@ -177,9 +205,6 @@
 }
 .p05-app .course-next > .button {
   min-height: 44px;
-  border-color: var(--p05-accent, var(--green));
-  background: var(--p05-accent, var(--green));
-  color: var(--p05-accent-on, white);
   font-weight: 600;
 }
 .p05-app .course-next > .button:hover {
@@ -213,9 +238,10 @@
 .course-catalog-panel:is(.cpp-sheet, .rust-sheet, .mysql-sheet) {
   min-width: 0;
   padding: clamp(1rem, 2.3vw, 1.6rem);
-  border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.8rem;
-  background: var(--p05-surface, var(--surface-tone, var(--panel)));
+  border: 1px solid var(--appearance-panel-border, var(--border-tone, var(--line)));
+  border-radius: var(--appearance-panel-radius, 0.8rem);
+  background: var(--appearance-panel-fill, var(--p05-surface, var(--surface-tone, var(--panel))));
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 .course-catalog-grid,
 .python-screen .rust-catalog-grid,
@@ -309,7 +335,7 @@
 .course-load-state {
   padding: 1rem;
   border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.8rem;
+  border-radius: var(--appearance-panel-radius, 0.8rem);
   background: var(--p05-surface, var(--surface-tone, var(--panel)));
 }
 .course-language-list {

@@ -35,9 +35,10 @@
   max-width: 52rem;
   margin-inline: auto;
   padding: clamp(1rem, 3vw, 2.5rem);
-  border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.85rem;
+  border: 1px solid var(--appearance-panel-border, var(--border-tone, var(--line)));
+  border-radius: var(--appearance-panel-radius, 0.85rem);
   background: var(--p05-surface, var(--surface-tone, var(--panel)));
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 .c6-reading-page > .course-reading-return:first-child {
   margin-block: 0 0.85rem;
@@ -55,23 +56,13 @@
 .c6-course-page .page-heading {
   max-width: 62rem;
 }
-.c6-course-page:has(> .c6-search) > .page-heading {
-  padding: clamp(1rem, 2.6vw, 2rem);
-  border: 1px solid var(--border-tone, var(--line));
-  border-inline-start: 3px solid var(--p05-accent, var(--green));
-  border-radius: 0.8rem;
-  background: linear-gradient(
-    108deg,
-    var(--p05-active, var(--surface-raised, var(--panel))),
-    var(--p05-surface, var(--surface-tone, var(--panel))) 65%
-  );
-}
 .c6-course-page:has(> .c6-search) > section {
   max-width: 62rem;
   padding: clamp(1rem, 2.3vw, 1.6rem);
-  border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.8rem;
-  background: var(--p05-surface, var(--surface-tone, var(--panel)));
+  border: 1px solid var(--appearance-panel-border, var(--border-tone, var(--line)));
+  border-radius: var(--appearance-panel-radius, 0.8rem);
+  background: var(--appearance-panel-fill, var(--p05-surface, var(--surface-tone, var(--panel))));
+  box-shadow: var(--appearance-panel-shadow, none);
 }
 .c6-course-page:has(> .c6-search) > section > h2,
 .c6-course-page .c6-section > h2 {
@@ -127,7 +118,7 @@
   color: var(--p05-text, var(--ink));
   background: var(--p05-raised, var(--surface-tone, var(--panel)));
   border: 1px solid var(--p05-control, var(--border-tone, var(--line)));
-  border-radius: 0.6rem;
+  border-radius: var(--appearance-control-radius, 0.6rem);
   font: inherit;
   font-weight: 400;
 }
