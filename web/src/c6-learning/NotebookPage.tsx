@@ -32,7 +32,7 @@ function Notebook() {
   const mistakes = state.snapshot && !uncertain ? collectC6Mistakes(state.snapshot, index) : null;
   const marked = marks.rows.filter((m) => isC6Mark(m, index) && m.marked);
   return (
-    <div className="c6-course-page learning-notebook">
+    <div className="course-frame c6-course-page learning-notebook">
       <PageHeading
         kicker="本地复习"
         title="错题与陌生点"

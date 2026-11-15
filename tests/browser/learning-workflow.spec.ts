@@ -191,7 +191,12 @@ test('mobile practice keeps code and actions accessible while preserving pane ed
   await expect(page.getByTestId('oj-verdict')).toHaveText('通过');
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByTestId('c6-draft-save-status')).toHaveText('草稿已保存');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+  expect(
+    await page.evaluate(() => {
+      const root = document.documentElement;
+      return root.scrollWidth - root.clientWidth;
+    }),
+  ).toBeLessThanOrEqual(0);
 });
 
 test('compact mobile toolbar keeps secondary tools reachable', async ({ page }) => {

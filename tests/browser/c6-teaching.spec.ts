@@ -130,7 +130,12 @@ test('literal C operators, output newlines and HTML remain text; tables scroll i
   await expect(page.locator('article script')).toHaveCount(0);
   await expect(page.locator('article a')).toHaveCount(0);
   expect(await page.locator('article pre').last().textContent()).toBe('first\nsecond\n');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+  expect(
+    await page.evaluate(() => {
+      const root = document.documentElement;
+      return root.scrollWidth - root.clientWidth;
+    }),
+  ).toBeLessThanOrEqual(0);
   const scrolling = await page.locator('.c6-reading-table').evaluate((element) => {
     element.scrollLeft = 50;
     return { left: element.scrollLeft, wider: element.scrollWidth > element.clientWidth };

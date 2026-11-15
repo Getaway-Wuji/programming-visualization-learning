@@ -1,4 +1,6 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
+
+test.use({ launchOptions: { ignoreDefaultArgs: ['--hide-scrollbars'] } });
 
 const courses = [
   { language: 'Python', path: '/python', heading: 'Python 3 课程' },
@@ -59,38 +61,107 @@ for (const course of courses) {
   });
 }
 
-test('MySQL catalog, workbench and review share a centered content width', async ({ page }) => {
-  for (const width of [1920, 390]) {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto('/#/mysql');
-    const main = page.getByRole('main');
-    const nav = main.getByRole('navigation', { name: 'MySQL 学习', exact: true });
-    const screen = main.locator('.mysql-screen');
-    let catalogWidth: number | undefined;
+async function measureCenteredContent(main: Locator, heading: string, selector: string) {
+  await expect(main.getByRole('heading', { level: 1, name: heading, exact: true })).toBeVisible();
+  const geometry = await main.locator(selector).evaluate((element) => {
+    const content = element.getBoundingClientRect();
+    const lane = element.closest('main')!.getBoundingClientRect();
+    return {
+      left: content.left,
+      width: content.width,
+      centerOffset: Math.abs((content.left + content.right - lane.left - lane.right) / 2),
+      horizontalOverflow:
+        document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    };
+  });
+  expect(geometry.centerOffset, `${heading} is centered`).toBeLessThanOrEqual(1);
+  expect(geometry.horizontalOverflow, `${heading} fits`).toBe(false);
+  return geometry;
+}
 
-    for (const [link, heading] of [
-      [null, 'MySQL 课程'],
-      ['SQL 工作台', 'SQL 工作台'],
-      ['判题复盘', 'MySQL 判题复盘'],
-    ] as const) {
-      if (link) await nav.getByRole('link', { name: link, exact: true }).click();
-      await expect(
-        main.getByRole('heading', { level: 1, name: heading, exact: true }),
-      ).toBeVisible();
-      const geometry = await screen.evaluate((element) => {
-        const content = element.getBoundingClientRect();
-        const lane = element.closest('main')!.getBoundingClientRect();
-        return {
-          width: content.width,
-          centerOffset: Math.abs((content.left + content.right - lane.left - lane.right) / 2),
-          horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
-        };
-      });
-      catalogWidth ??= geometry.width;
-      expect(geometry.width, `${heading} width at ${width}px`).toBeCloseTo(catalogWidth, 0);
-      expect(geometry.centerOffset, `${heading} center at ${width}px`).toBeLessThanOrEqual(1);
-      expect(geometry.horizontalOverflow, `${heading} fits at ${width}px`).toBe(false);
-    }
+const courseLayouts = [
+  {
+    language: 'C',
+    path: '/courses',
+    heading: '课程目录',
+    catalogSelector: '.c6-course-page',
+    navLabel: 'C 语言学习',
+    workbench: { link: '工作台', heading: 'C 代码工作台', selector: '.custom-code-page' },
+    review: { heading: '错题与陌生点', selector: '.learning-notebook' },
+  },
+  ...courses.map(({ language, path, heading }) => {
+    const selector = language === 'MySQL' ? '.mysql-screen' : '.python-screen';
+    const languageWorkbench = language === 'MySQL' ? 'SQL 工作台' : `${language} 工作台`;
+    const review = language === 'Python' || language === 'Java' ? '复盘' : '判题复盘';
+    return {
+      language,
+      path,
+      heading,
+      catalogSelector: selector,
+      navLabel: `${language} 学习`,
+      workbench: {
+        link: language === 'MySQL' ? languageWorkbench : '工作台',
+        heading: languageWorkbench,
+        selector,
+      },
+      review: { heading: `${language} ${review}`, selector },
+    };
+  }),
+];
+
+test.describe('centered language navigation with visible scrollbars', () => {
+  for (const layout of courseLayouts) {
+    test(`${layout.language} catalog, workbench and review share a centered content width`, async ({
+      page,
+    }) => {
+      for (const width of [1920, 390]) {
+        await test.step(`viewport ${width}px`, async () => {
+          await page.setViewportSize({ width, height: 900 });
+          await page.goto('/#' + layout.path);
+          const main = page.getByRole('main');
+          const nav = main.getByRole('navigation', { name: layout.navLabel, exact: true });
+          const catalog = await measureCenteredContent(
+            main,
+            layout.heading,
+            layout.catalogSelector,
+          );
+
+          await nav.getByRole('link', { name: layout.workbench.link, exact: true }).click();
+          const workbench = await measureCenteredContent(
+            main,
+            layout.workbench.heading,
+            layout.workbench.selector,
+          );
+
+          if (layout.language === 'C') {
+            const menu = page.getByRole('button', { name: '展开或收起导航', exact: true });
+            if (await menu.isVisible()) await menu.click();
+            await page
+              .getByRole('navigation', { name: '主导航', exact: true })
+              .getByRole('link', { name: layout.review.heading, exact: true })
+              .click();
+          } else {
+            await nav.getByRole('link', { name: '判题复盘', exact: true }).click();
+          }
+          const review = await measureCenteredContent(
+            main,
+            layout.review.heading,
+            layout.review.selector,
+          );
+
+          for (const [pageName, geometry] of [
+            ['workbench', workbench],
+            ['review', review],
+          ] as const) {
+            expect(geometry.left, `${pageName} aligns with catalog`).toBeCloseTo(catalog.left, 0);
+            expect(geometry.width, `${pageName} matches catalog width`).toBeCloseTo(
+              catalog.width,
+              0,
+            );
+          }
+        });
+      }
+    });
   }
 });
 

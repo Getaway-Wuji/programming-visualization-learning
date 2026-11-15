@@ -5,6 +5,7 @@
   font-size: 15px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  scrollbar-gutter: stable;
   --ink: #23372f;
   --muted: #657169;
   --green: #315d49;
@@ -20,7 +21,7 @@
 }
 body {
   margin: 0;
-  min-width: 320px;
+  min-width: min(320px, 100%);
   line-height: 1.65;
 }
 .nav-group {
@@ -266,6 +267,10 @@ svg {
   min-width: 0;
   padding: 30px 36px 48px;
   margin: 0 auto;
+}
+:is(.course-frame, .python-screen, .mysql-screen, .page-loading--course, .page-loading--workbench) {
+  max-inline-size: 79rem;
+  margin-inline: auto;
 }
 .page-heading {
   margin-bottom: 27px;

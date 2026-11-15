@@ -10,7 +10,7 @@ export default function IndependentPracticePage({ review = false }: { review?: b
   return (
     <C6Boundary>
       {question ? (
-        <div data-mode={review ? 'exercise-review' : undefined}>
+        <div className="course-frame" data-mode={review ? 'exercise-review' : undefined}>
           <p>
             <Link to="/bugs">Bug 修复闯关</Link>
           </p>

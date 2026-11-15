@@ -187,7 +187,7 @@ export default function CustomCodePage() {
   );
   return (
     <div
-      className="custom-code-page"
+      className="course-frame custom-code-page"
       data-testid="custom-code-page"
       data-status={status}
       data-cursor={view.cursor}

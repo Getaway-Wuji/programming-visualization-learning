@@ -561,7 +561,7 @@ function Workbench({ document }: { document: Document }) {
     result && 'cases' in result ? (acceptedC6Proof(result)?.judge?.status ?? result.status) : null;
   return (
     <div
-      className="c6-workbench"
+      className="course-frame c6-workbench"
       data-document-id={document.id}
       data-practice-pane={exerciseOnly ? practicePane : undefined}
     >

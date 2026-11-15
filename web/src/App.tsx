@@ -132,12 +132,13 @@ function AppRoutes() {
   const location = useLocation();
   const { state } = useLearning();
   const { pathname } = location;
-  const loadingVariant =
-    /^\/(?:python|java|cpp|rust|mysql)\/(?:workbench|example|practice)(?:\/|$)/.test(pathname)
-      ? 'workbench'
-      : /^\/(?:courses|lessons|python|java|cpp|rust|mysql)(?:\/|$)/.test(pathname)
-        ? 'course'
-        : 'page';
+  const workbenchLoading =
+    pathname === '/custom-code' ||
+    /^\/(?:practice|c6\/program)\//.test(pathname) ||
+    /^\/(?:python|java|cpp|rust|mysql)\/(?:workbench|example|practice)(?:\/|$)/.test(pathname);
+  const courseLoading =
+    /^\/(?:courses|lessons|practice|notebook|python|java|cpp|rust|mysql)(?:\/|$)/.test(pathname);
+  const loadingVariant = workbenchLoading ? 'workbench' : courseLoading ? 'course' : 'page';
   if (state.c6 && !state.snapshot && state.status === 'loading')
     return (
       <Layout>
