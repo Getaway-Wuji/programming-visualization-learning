@@ -74,6 +74,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   router?.dispose();
   container.remove();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
 });
 
@@ -81,13 +82,28 @@ describe('route engine preparation boundary', () => {
   it('does not mount an executable child before preparation, then mounts it exactly once', async () => {
     await render();
     expect(status()?.dataset).toMatchObject({ engine: 'mysql', state: 'loading' });
-    expect(container.textContent).toContain('当前尚未开始运行程序');
     expect(container.querySelector('[data-workspace]')).toBeNull();
     expect(mounted).toEqual([]);
     await act(async () => attempts[0].resolve());
     expect(status()?.dataset.state).toBe('ready');
     expect(mounted).toEqual(['mysql']);
     expect(container.querySelector('[data-workspace="mysql"]')).not.toBeNull();
+  });
+
+  it('keeps a brief engine preparation silent and opens immediately once ready', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    await render();
+    await act(async () => vi.advanceTimersByTime(250));
+
+    const placeholder = status()?.querySelector<HTMLElement>('[data-testid="page-loading"]');
+    expect(placeholder?.dataset.visible).toBe('false');
+    expect(status()?.querySelector('h1')).toBeNull();
+    expect(status()?.textContent).toBe('');
+
+    await act(async () => attempts[0].resolve());
+    expect(status()?.dataset.state).toBe('ready');
+    expect(status()?.querySelector('[data-testid="page-loading"]')).toBeNull();
+    expect(mounted).toEqual(['mysql']);
   });
 
   it('aborts the old route and ignores its late ready while the next engine is still preparing', async () => {
@@ -103,11 +119,9 @@ describe('route engine preparation boundary', () => {
     expect(mounted).toEqual(['python']);
   });
 
-  it('keeps reading navigation available, aborts preparation and ignores a late failure', async () => {
+  it('aborts preparation when navigating to reading and ignores a late failure', async () => {
     await render('/mysql');
     const old = attempts[0];
-    const link = container.querySelector<HTMLAnchorElement>('a[href="/"]');
-    expect(link?.textContent).toBe('返回学习首页');
     await act(async () => router.navigate('/reading'));
     expect(old.signal.aborted).toBe(true);
     await act(async () => old.reject(new Error('late download failure')));
@@ -121,27 +135,30 @@ describe('route engine preparation boundary', () => {
     await act(async () => attempts[0].reject({ code: 'E_PREPARATION_TIMEOUT' }));
     expect(status()?.dataset.state).toBe('failed');
     expect(container.querySelector('[role="alert"]')?.textContent).toContain('本次准备已停止');
+    expect(status()?.querySelector('a[href="/"]')?.textContent).toBe('返回学习首页');
     const retry = container.querySelector('button');
     expect(retry?.textContent).toBe('重试加载');
     await act(async () => retry!.click());
     expect(attempts[0].signal.aborted).toBe(true);
     expect(attempts[1].signal.aborted).toBe(false);
     expect(status()?.dataset.state).toBe('loading');
+    expect(document.activeElement).toBe(status());
     expect(mounted).toEqual([]);
     await act(async () => attempts[1].resolve());
     expect(mounted).toEqual(['mysql']);
+    expect(document.activeElement).toBe(container.querySelector('[data-workspace]'));
   });
 
-  it('hands an owned preparation title focus to the finished title', async () => {
+  it('hands owned preparation focus to the finished title', async () => {
     await render();
-    container.querySelector<HTMLElement>('h1')!.focus();
+    status()!.focus();
     await act(async () => attempts[0].resolve());
     expect(document.activeElement).toBe(container.querySelector('[data-workspace]'));
   });
 
   it('does not steal focus when the user has moved to another navigation control', async () => {
     await render();
-    container.querySelector<HTMLElement>('h1')!.focus();
+    status()!.focus();
     const control = document.createElement('button');
     document.body.append(control);
     control.focus();

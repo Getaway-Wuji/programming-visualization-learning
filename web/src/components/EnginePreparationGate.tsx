@@ -1,5 +1,7 @@
 import {
   Fragment,
+  startTransition,
+  useCallback,
   useEffect,
   useId,
   useLayoutEffect,
@@ -9,6 +11,7 @@ import {
 } from 'react';
 import { Link, useLocation } from 'react-router';
 import { prepareEngine, type PreparationEngine } from '../engine/preparation';
+import { PageLoading } from './PageLoading';
 import { usePreparationAdmission, type PreparationTicket } from './engine-preparation-state';
 import './engine-preparation.css';
 
@@ -57,13 +60,16 @@ function PreparationSession({
   const [failure, setFailure] = useState('');
   const panel = useRef<HTMLElement>(null);
   const readyContent = useRef<HTMLDivElement>(null);
-  const heading = useRef<HTMLHeadingElement>(null);
+  const loadingWasShown = useRef(false);
   const focusWhenReady = useRef(false);
   const titleId = useId();
   const descriptionId = useId();
   const beginAdmission = admission?.begin;
   const readyAdmission = admission?.ready;
   const endAdmission = admission?.end;
+  const noteVisibleLoading = useCallback(() => {
+    loadingWasShown.current = true;
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -76,12 +82,16 @@ function PreparationSession({
     void prepareEngine(engine, controller.signal).then(
       () => {
         if (!current || controller.signal.aborted) return;
-        if (ticket) readyAdmission?.(ticket);
         focusWhenReady.current ||= panel.current?.contains(document.activeElement) ?? false;
-        setLoadState({ scope: admissionScope, phase: 'ready' });
+        // Keep the same placeholder if the workspace module still needs to load.
+        startTransition(() => {
+          if (ticket) readyAdmission?.(ticket);
+          setLoadState({ scope: admissionScope, phase: 'ready' });
+        });
       },
       (cause: unknown) => {
         if (!current || controller.signal.aborted) return;
+        loadingWasShown.current = false;
         setFailure(failureMessage(cause));
         setLoadState({ scope: admissionScope, phase: 'failed' });
       },
@@ -94,8 +104,13 @@ function PreparationSession({
   }, [engine, attempt, admissionScope, beginAdmission, readyAdmission, endAdmission]);
 
   useLayoutEffect(() => {
-    if (phase !== 'ready' || !focusWhenReady.current || !readyContent.current) return;
+    if (phase !== 'ready' || !readyContent.current) return;
     const content = readyContent.current;
+    if (loadingWasShown.current && !document.documentElement.dataset.themeReveal)
+      content.dataset.pageArrival = 'true';
+    loadingWasShown.current = false;
+    if (!focusWhenReady.current) return;
+    focusWhenReady.current = false;
     const focusTitle = () => {
       const active = document.activeElement;
       // Navigation stays usable during loading. Never take focus back from it
@@ -119,7 +134,7 @@ function PreparationSession({
     return (
       <div
         ref={readyContent}
-        className="engine-preparation-ready"
+        className="page-arrival"
         data-testid="engine-preparation"
         data-engine={engine}
         data-state="ready"
@@ -132,46 +147,46 @@ function PreparationSession({
   return (
     <section
       ref={panel}
-      className="engine-preparation-panel"
+      className={failed ? 'engine-preparation-panel' : undefined}
       data-testid="engine-preparation"
       data-engine={engine}
       data-state={phase}
-      aria-labelledby={titleId}
-      aria-describedby={descriptionId}
-      aria-busy={!failed}
+      tabIndex={-1}
+      aria-label={failed ? undefined : `${label} 执行引擎`}
+      aria-labelledby={failed ? titleId : undefined}
+      aria-describedby={failed ? descriptionId : undefined}
     >
-      <h1 ref={heading} id={titleId} tabIndex={-1}>
-        {failed ? `${label} 执行引擎暂时无法加载` : `正在加载 ${label} 执行引擎`}
-      </h1>
-      <p id={descriptionId} role={failed ? 'alert' : 'status'}>
-        {failed
-          ? failure
-          : '首次使用需要下载执行资源。下载和校验完成后才会打开工作区，当前尚未开始运行程序。'}
-      </p>
-      {!failed && <progress aria-label={`正在加载 ${label} 执行引擎`} />}
-      <p className="engine-preparation-note">
-        加载时间受网络影响。你可以先前往课程阅读，稍后再进入工作台。
-      </p>
-      <div className="engine-preparation-actions">
-        {failed && (
-          <button
-            type="button"
-            className="button button-primary"
-            onClick={() => {
-              focusWhenReady.current = true;
-              setFailure('');
-              setLoadState({ scope: admissionScope, phase: 'loading' });
-              setAttempt((value) => value + 1);
-              requestAnimationFrame(() => heading.current?.focus({ preventScroll: true }));
-            }}
-          >
-            重试加载
-          </button>
-        )}
-        <Link className="button button-secondary" to="/">
-          返回学习首页
-        </Link>
-      </div>
+      {failed ? (
+        <>
+          <h1 id={titleId}>{label} 执行引擎暂时无法加载</h1>
+          <p id={descriptionId} role="alert">
+            {failure}
+          </p>
+          <div className="engine-preparation-actions">
+            <button
+              type="button"
+              className="button button-primary"
+              onClick={() => {
+                panel.current?.focus({ preventScroll: true });
+                setFailure('');
+                setLoadState({ scope: admissionScope, phase: 'loading' });
+                setAttempt((value) => value + 1);
+              }}
+            >
+              重试加载
+            </button>
+            <Link className="button button-secondary" to="/">
+              返回学习首页
+            </Link>
+          </div>
+        </>
+      ) : (
+        <PageLoading
+          variant="workbench"
+          label={`正在准备 ${label} 工作区，当前尚未开始运行程序。`}
+          onShown={noteVisibleLoading}
+        />
+      )}
     </section>
   );
 }

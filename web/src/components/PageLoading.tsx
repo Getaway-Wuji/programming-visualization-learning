@@ -10,7 +10,7 @@ import {
 } from 'react';
 import './page-loading.css';
 
-type LoadingVariant = 'page' | 'course' | 'article';
+type LoadingVariant = 'page' | 'course' | 'article' | 'workbench';
 
 export function PageLoading({
   variant = 'page',
@@ -26,7 +26,7 @@ export function PageLoading({
     const delay = window.setTimeout(() => {
       onShown?.();
       setVisible(true);
-    }, 120);
+    }, 300);
     return () => window.clearTimeout(delay);
   }, [onShown]);
 
@@ -49,8 +49,8 @@ export function PageLoading({
           <span />
         </div>
         <div className="page-loading-layout">
-          {variant === 'course' && (
-            <div className="page-loading-sheet page-loading-rail">
+          {(variant === 'course' || variant === 'workbench') && (
+            <div className="page-loading-sheet page-loading-companion">
               <span />
               <span />
               <span />

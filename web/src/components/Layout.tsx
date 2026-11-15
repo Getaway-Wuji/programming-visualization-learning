@@ -96,7 +96,9 @@ export function Layout({ children }: { children: ReactNode }) {
     if (focusHeading()) return;
     main?.focus({ preventScroll: true });
     const observer = new MutationObserver(() => {
-      if (focusHeading()) observer.disconnect();
+      const active = document.activeElement;
+      if ((active && active !== main && active !== document.body) || focusHeading())
+        observer.disconnect();
     });
     if (main) observer.observe(main, { childList: true, subtree: true });
     return () => observer.disconnect();

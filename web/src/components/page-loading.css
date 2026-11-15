@@ -81,6 +81,10 @@
   align-items: start;
 }
 
+.page-loading--workbench .page-loading-layout {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .page-loading-sheet {
   display: grid;
   gap: clamp(12px, 1.5vw, 18px);
@@ -119,7 +123,7 @@
 
 @keyframes page-loading-reveal {
   from {
-    opacity: 0.25;
+    opacity: 0;
   }
 }
 
@@ -145,10 +149,10 @@
 }
 
 @media (max-width: 760px) {
-  .page-loading--course .page-loading-layout {
+  :is(.page-loading--course, .page-loading--workbench) .page-loading-layout {
     grid-template-columns: minmax(0, 1fr);
   }
-  .page-loading-rail {
+  .page-loading-companion {
     display: none;
   }
 }

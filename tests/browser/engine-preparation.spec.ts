@@ -246,7 +246,14 @@ for (const [language, duration] of [
       const gate = page.getByTestId('engine-preparation');
       await expect(gate).toHaveAttribute('data-engine', language);
       await expect(gate).toHaveAttribute('data-state', 'loading');
-      await expect(gate.getByRole('status')).toContainText('当前尚未开始运行程序');
+      const placeholder = gate.getByTestId('page-loading');
+      await expect(placeholder).toHaveAttribute('data-visible', 'true');
+      await expect(placeholder.locator('[aria-hidden="true"]')).toBeVisible();
+      const status = gate.getByRole('status');
+      await expect(status).toContainText('当前尚未开始运行程序');
+      await expect(status).toHaveCSS('height', '1px');
+      await expect(gate.getByRole('heading', { level: 1 })).toHaveCount(0);
+      await expect(page.getByRole('navigation', { name: '主导航', exact: true })).toBeVisible();
       await expect(
         page.getByRole('textbox', { name: source[language].label, exact: true }),
       ).toHaveCount(0);
@@ -258,11 +265,55 @@ for (const [language, duration] of [
       await expectNoLearningFacts(page);
       release();
       await run2718(page, language);
+      await expect(placeholder).toHaveCount(0);
     } finally {
       release();
     }
   });
 }
+
+test('MySQL keeps one visible placeholder from engine download to the lazily loaded workbench', async ({
+  page,
+}) => {
+  let releaseEngine = () => {};
+  let releaseWorkbench = () => {};
+  let requestWorkbench = () => {};
+  const engineHeld = new Promise<void>((resolve) => {
+    releaseEngine = resolve;
+  });
+  const workbenchHeld = new Promise<void>((resolve) => {
+    releaseWorkbench = resolve;
+  });
+  const workbenchRequested = new Promise<void>((resolve) => {
+    requestWorkbench = resolve;
+  });
+  await page.route('**/c_viz_mysql_bg-*.wasm', async (route) => {
+    await engineHeld;
+    await route.continue();
+  });
+  await page.route('**/Workbench-*.js', async (route) => {
+    requestWorkbench();
+    await workbenchHeld;
+    await route.continue();
+  });
+  try {
+    await page.goto('/#/mysql/workbench');
+    const preparation = page.getByTestId('engine-preparation');
+    const skeleton = preparation.getByTestId('page-loading');
+    await expect(skeleton).toHaveAttribute('data-visible', 'true');
+    releaseEngine();
+    await workbenchRequested;
+    await expect(skeleton.locator('.page-loading-visual')).toBeVisible();
+    await expect(page.getByTestId('page-loading')).toHaveCount(1);
+    releaseWorkbench();
+    await waitForEnginePreparation(page);
+    await expect(page.getByRole('heading', { name: 'SQL 工作台', exact: true })).toBeVisible();
+    await expect(page.getByTestId('page-loading')).toHaveCount(0);
+  } finally {
+    releaseEngine();
+    releaseWorkbench();
+  }
+});
 
 test('navigation cancels an older preparation and its late response cannot ready another language', async ({
   page,

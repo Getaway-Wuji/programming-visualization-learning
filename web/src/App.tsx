@@ -131,11 +131,13 @@ class PageBoundary extends Component<{ children: ReactNode }, { failed: boolean 
 function AppRoutes() {
   const location = useLocation();
   const { state } = useLearning();
-  const loadingVariant = /^\/(?:courses|lessons|python|java|cpp|rust|mysql)(?:\/|$)/.test(
-    location.pathname,
-  )
-    ? 'course'
-    : 'page';
+  const { pathname } = location;
+  const loadingVariant =
+    /^\/(?:python|java|cpp|rust|mysql)\/(?:workbench|example|practice)(?:\/|$)/.test(pathname)
+      ? 'workbench'
+      : /^\/(?:courses|lessons|python|java|cpp|rust|mysql)(?:\/|$)/.test(pathname)
+        ? 'course'
+        : 'page';
   if (state.c6 && !state.snapshot && state.status === 'loading')
     return (
       <Layout>
