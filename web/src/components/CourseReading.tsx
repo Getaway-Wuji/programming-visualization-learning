@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { useLearning } from '../learning/react';
 import { StatePanel } from './Ui';
+import { PageLoading } from './PageLoading';
 import { courseBundleFailure } from '../content/course-bundle';
 
 export function ReadingBoundary({ children }: { children: ReactNode }) {
@@ -16,13 +17,7 @@ export function ReadingBoundary({ children }: { children: ReactNode }) {
           </button>
         </p>
       )}
-      {status === 'loading' && (
-        <StatePanel
-          kind="loading"
-          title="正在读取课程"
-          description="正在准备课程正文与本地学习记录。"
-        />
-      )}
+      {status === 'loading' && <PageLoading variant="article" label="正在读取课程" />}
       {status === 'failed' && (
         <StatePanel
           kind="error"

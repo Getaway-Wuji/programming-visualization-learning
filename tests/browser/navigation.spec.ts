@@ -33,6 +33,54 @@ async function noHorizontalOverflow(page: Page) {
     .toBe(true);
 }
 
+const cCourseModule = /\/assets\/CoursePages-[^/]+\.js$/;
+
+for (const reducedMotion of ['no-preference', 'reduce'] as const) {
+  test(`cold course navigation uses a layout placeholder with ${reducedMotion} motion`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion });
+    await page.goto('/#/java');
+    await expect(page.locator('main h1')).toContainText('Java');
+    const navigation = page.getByRole('navigation', { name: '主导航', exact: true });
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route(cCourseModule, async (route) => {
+      await gate;
+      await route.continue();
+    });
+    try {
+      await navigation.getByRole('link', { name: 'C 语言课程', exact: true }).click();
+      await expect(navigation).toBeVisible();
+      const placeholder = page.getByTestId('page-loading');
+      await expect(placeholder.getByRole('status')).toHaveText('正在加载页面');
+      await expect(placeholder.locator('.page-loading-visual')).toBeVisible();
+      await expect(placeholder.getByRole('heading')).toHaveCount(0);
+      await expect(placeholder.locator('.page-loading-meter span')).toHaveCSS(
+        'animation-name',
+        reducedMotion === 'reduce' ? 'none' : 'page-loading-sweep',
+      );
+    } finally {
+      release();
+    }
+    const heading = page.getByRole('heading', { name: '课程目录', exact: true });
+    await expect(heading).toBeFocused();
+    await expect(page.getByTestId('page-loading')).toHaveCount(0);
+    await expect(page.locator('.page-arrival[data-page-arrival="true"] > *')).toHaveCSS(
+      'animation-name',
+      reducedMotion === 'reduce' ? 'none' : 'page-arrival-fade',
+    );
+
+    await navigation.getByRole('link', { name: 'Java 课程', exact: true }).click();
+    await expect(page.locator('main h1')).toContainText('Java');
+    await navigation.getByRole('link', { name: 'C 语言课程', exact: true }).click();
+    await expect(heading).toBeFocused();
+    await expect(page.locator('.page-arrival[data-page-arrival="true"]')).toHaveCount(0);
+  });
+}
+
 test('public routes preserve content relationships, refresh and browser history', async ({
   page,
 }) => {
@@ -286,18 +334,18 @@ test('unknown addresses and real lazy module failures provide recovery', async (
     release = resolve;
   });
   const cold = await page.context().newPage();
-  await cold.route(/\/assets\/CoursePages-[^/]+\.js$/, async (route) => {
+  await cold.route(cCourseModule, async (route) => {
     await gate;
     await route.continue();
   });
   await cold.goto('/#/courses', { waitUntil: 'domcontentloaded' });
   try {
-    await expect(cold.locator('.state-loading[role="status"]')).toContainText('正在准备页面');
+    await expect(cold.getByTestId('page-loading').getByRole('status')).toHaveText('正在加载页面');
   } finally {
     release();
   }
   await ready(cold, 'PAGE-02');
-  await cold.unroute(/\/assets\/CoursePages-[^/]+\.js$/);
+  await cold.unroute(cCourseModule);
   await cold.close();
 
   await page.route(/\/assets\/IndependentPracticePage-[^/]+\.js$/, (route) =>

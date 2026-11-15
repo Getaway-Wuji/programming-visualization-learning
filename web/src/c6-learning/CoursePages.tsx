@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 import { BugCatalogLink } from '../bugs/BugCatalogLink';
 import { Breadcrumbs, PageHeading, StatePanel } from '../components/Ui';
+import { PageLoading } from '../components/PageLoading';
 import { C6TeachingReading } from '../components/C6TeachingReading';
 import { bookTeachingBody } from '../content/book-teaching';
 import { CourseOpenLink, CourseProgress, CourseReturn, CourseSearch } from '../course-ui/CourseUi';
@@ -72,24 +73,20 @@ function TraceIllustration() {
 
 export function C6Boundary({ children }: { children: ReactNode }) {
   const { state, service } = useLearning();
-  if (state.c6?.status !== 'ready' || !state.c6.index || !state.c6.manifest)
+  if (state.c6?.status === 'failed')
     return (
       <StatePanel
-        kind={state.c6?.status === 'failed' ? 'error' : 'loading'}
-        title={state.c6?.status === 'failed' ? '课程暂时无法读取' : '正在准备 C 课程'}
-        description={
-          state.c6?.status === 'failed'
-            ? '请检查连接后重试，课程资源校验通过后才能开始学习。'
-            : '正在读取教材目录和学习要求。'
-        }
+        kind="error"
+        title="课程暂时无法读取"
+        description="请检查连接后重试，课程资源校验通过后才能开始学习。"
       >
-        {state.c6?.status === 'failed' && (
-          <button className="button button-primary" onClick={() => void service.start()}>
-            重试读取
-          </button>
-        )}
+        <button className="button button-primary" onClick={() => void service.start()}>
+          重试读取
+        </button>
       </StatePanel>
     );
+  if (state.c6?.status !== 'ready' || !state.c6.index || !state.c6.manifest)
+    return <PageLoading variant="article" label="正在读取 C 语言课程目录" />;
   return children;
 }
 export function c6NodePath(index: C6LearningIndex, nodeId: string): string {
@@ -494,19 +491,22 @@ function SourcePage({ nodeId }: { nodeId: string }) {
           kicker={nav.chunkId === 'chA' || nav.chunkId === 'chB' ? '参考资料' : 'C 语言课程'}
           title={nav.titleDisplay}
         />
-        {!node && (
-          <StatePanel
-            kind={failed === nodeId ? 'error' : 'loading'}
-            title={failed === nodeId ? '本节内容读取失败' : '正在读取本节'}
-            description="正文和代码按章节加载。"
-          >
-            {failed === nodeId && (
-              <button className="button button-secondary" onClick={() => retry((n) => n + 1)}>
+        {!node &&
+          (failed === nodeId ? (
+            <StatePanel kind="error" title="本节内容读取失败" description="正文和代码按章节加载。">
+              <button
+                className="button button-secondary"
+                onClick={() => {
+                  setFailed('');
+                  retry((n) => n + 1);
+                }}
+              >
                 重试本节
               </button>
-            )}
-          </StatePanel>
-        )}
+            </StatePanel>
+          ) : (
+            <PageLoading variant="article" label="正在读取本节" />
+          ))}
         {node && (
           <>
             <C6TeachingReading

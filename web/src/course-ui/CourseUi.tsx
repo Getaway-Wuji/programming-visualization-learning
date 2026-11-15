@@ -1,5 +1,6 @@
 import { useEffect, useState, type ComponentProps } from 'react';
 import { Link, useLocation, useResolvedPath } from 'react-router';
+import { PageLoading } from '../components/PageLoading';
 import {
   loadLanguageNavigation,
   type LanguageNavigation,
@@ -94,13 +95,13 @@ export function CourseLoadState({
   retry: () => void;
 }) {
   return (
-    <div className="course-load-state" role={failed ? 'alert' : 'status'}>
+    <div className="course-load-state" role={failed ? 'alert' : undefined}>
       {failed ? (
         <>
           暂时无法读取 {language} 课程。 <button onClick={retry}>重试</button>
         </>
       ) : (
-        <>正在读取 {language} 课程…</>
+        <PageLoading variant="article" label={`正在读取 ${language} 课程`} />
       )}
     </div>
   );

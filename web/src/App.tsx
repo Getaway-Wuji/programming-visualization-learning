@@ -1,4 +1,4 @@
-import { Component, lazy, Suspense, useState } from 'react';
+import { Component, lazy, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   createHashRouter,
@@ -10,6 +10,7 @@ import {
 } from 'react-router';
 import { Layout } from './components/Layout';
 import { MissingPage, StatePanel } from './components/Ui';
+import { PageLoading, PageLoadingBoundary } from './components/PageLoading';
 import { EnginePreparationGate } from './components/EnginePreparationGate';
 import { PreparationAdmissionProvider } from './components/engine-preparation-state';
 import type { PreparationEngine } from './engine/preparation';
@@ -130,28 +131,21 @@ class PageBoundary extends Component<{ children: ReactNode }, { failed: boolean 
 function AppRoutes() {
   const location = useLocation();
   const { state } = useLearning();
+  const loadingVariant = /^\/(?:courses|lessons|python|java|cpp|rust|mysql)(?:\/|$)/.test(
+    location.pathname,
+  )
+    ? 'course'
+    : 'page';
   if (state.c6 && !state.snapshot && state.status === 'loading')
     return (
       <Layout>
-        <StatePanel
-          kind="loading"
-          title="正在准备本地学习环境"
-          description="正在核对当前课程并读取本地档案，准备完成后即可开始。"
-        />
+        <PageLoading variant={loadingVariant} label="正在读取本地学习档案和课程" />
       </Layout>
     );
   return (
     <Layout>
       <PageBoundary key={`${location.pathname}:${state.sessionEpoch}`}>
-        <Suspense
-          fallback={
-            <StatePanel
-              kind="loading"
-              title="正在准备页面"
-              description="正在加载页面资源，请稍候。"
-            />
-          }
-        >
+        <PageLoadingBoundary variant={loadingVariant}>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/courses" element={<CoursePage />} />
@@ -279,7 +273,7 @@ function AppRoutes() {
             <Route path="/achievements" element={<AchievementsPage />} />
             <Route path="*" element={<MissingPage />} />
           </Routes>
-        </Suspense>
+        </PageLoadingBoundary>
       </PageBoundary>
     </Layout>
   );
