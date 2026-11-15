@@ -26,9 +26,6 @@
   padding-block: 0.62rem;
   font-weight: 650;
 }
-.python-article-grid .python-directory summary::marker {
-  color: var(--p05-accent, var(--green-dark));
-}
 .python-article-grid .python-tree {
   font-size: 0.9rem;
 }
@@ -167,6 +164,11 @@
 }
 .c6-figure-dialog::backdrop {
   background: rgb(0 0 0 / 60%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-appearance]:not([data-reduced-motion='on']) .c6-figure-dialog[open] {
+    animation: controls-reveal var(--interaction-reveal) var(--interaction-ease);
+  }
 }
 .c6-figure-toolbar {
   display: flex;

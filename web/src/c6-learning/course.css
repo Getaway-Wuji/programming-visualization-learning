@@ -88,9 +88,22 @@
   color: inherit;
   text-decoration: none;
 }
-.c6-node-list a:hover {
+.c6-node-list a:focus-visible {
   color: var(--p05-accent, var(--green-dark));
   background: var(--p05-active, var(--surface-raised, var(--panel)));
+}
+@media (hover: hover) and (pointer: fine) {
+  .c6-node-list a:hover {
+    color: var(--p05-accent, var(--green-dark));
+    background: var(--p05-active, var(--surface-raised, var(--panel)));
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-reduced-motion='on']) .c6-node-list a {
+    transition:
+      color var(--interaction-quick, 140ms) ease,
+      background-color var(--interaction-quick, 140ms) ease;
+  }
 }
 .c6-node-list a > span:first-child {
   font-weight: 600;
@@ -139,9 +152,6 @@
 }
 .c6-reading-page summary {
   min-height: 44px;
-}
-.c6-reading-page summary::marker {
-  color: var(--p05-accent, var(--green-dark));
 }
 .c6-course-page details .c6-teaching-reading {
   margin-top: 12px;

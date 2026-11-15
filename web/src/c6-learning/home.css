@@ -138,14 +138,15 @@
   border: 1px solid var(--p05-control);
 }
 
-.home-hero-actions .button:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
 .home-hero-actions svg {
   width: 17px;
   height: 17px;
+  transition: transform var(--interaction-quick) var(--interaction-ease);
+}
+
+.home-hero-actions .button:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .home-trace {
@@ -322,13 +323,9 @@
   color: var(--p05-text);
   text-align: left;
   transition:
-    background-color 150ms ease,
-    border-color 150ms ease;
-}
-
-.home-languages button:hover {
-  border-color: var(--p05-accent);
-  background: var(--p05-raised);
+    background-color var(--interaction-quick) ease,
+    border-color var(--interaction-quick) ease,
+    box-shadow var(--interaction-quick) ease;
 }
 
 .home-languages button[aria-pressed='true'] {
@@ -346,6 +343,7 @@
   border-radius: var(--appearance-control-radius);
   background: color-mix(in srgb, var(--language-tone) 16%, var(--p05-surface));
   color: color-mix(in srgb, var(--language-tone) 65%, var(--p05-text));
+  transition: transform var(--interaction-quick) var(--interaction-ease);
   font:
     700 12px/1 ui-monospace,
     monospace;
@@ -369,6 +367,27 @@
   width: 13px;
   height: 13px;
   color: var(--p05-accent);
+  transition: transform var(--interaction-quick) var(--interaction-ease);
+}
+
+@media (hover: hover) {
+  .home-hero-actions .button:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .home-hero-actions .button-primary:hover svg,
+  .home-languages button:not([aria-pressed='true']):hover .home-language-name svg {
+    transform: translateX(3px);
+  }
+  .home-languages button:not([aria-pressed='true']):hover {
+    border-color: var(--p05-accent);
+    background: var(--p05-raised);
+  }
+}
+
+.home-hero-actions .home-demo-action:active svg,
+.home-languages button:active .home-language-mark {
+  transform: scale(0.86);
 }
 
 .home-language-detail {
@@ -437,11 +456,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-languages button {
+  .home-languages :is(button, .home-language-mark, svg),
+  .home-hero-actions svg {
     transition: none;
+    transform: none !important;
   }
 }
 
-[data-reduced-motion='on'] .home-languages button {
-  transition: none;
+[data-reduced-motion='on'] .home-languages :is(.home-language-mark, svg),
+[data-reduced-motion='on'] .home-hero-actions svg {
+  transform: none !important;
 }

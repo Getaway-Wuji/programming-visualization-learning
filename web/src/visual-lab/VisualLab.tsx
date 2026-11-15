@@ -374,8 +374,10 @@ function Lab({ spec }: { spec: VisualSpec }) {
             <button
               className="button button-primary button-small"
               disabled={!snap.view.state || snap.view.cursor >= snap.endCursor}
+              data-workbench-playing={snap.view.playing}
               onClick={() => controller.toggle()}
             >
+              <span className="workbench-play-glyph" aria-hidden="true" />
               {snap.view.playing ? '暂停' : '播放'}
             </button>
             <button

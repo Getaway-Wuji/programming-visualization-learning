@@ -85,7 +85,12 @@ export function MysqlTrace({
         <button disabled={cursor === 0} onClick={() => move(cursor - 1)}>
           上一步
         </button>
-        <button disabled={cursor === length} onClick={() => setPlaying(!playing)}>
+        <button
+          disabled={cursor === length}
+          data-workbench-playing={playing && cursor < length}
+          onClick={() => setPlaying(!playing)}
+        >
+          <span className="workbench-play-glyph" aria-hidden="true" />
           {playing && cursor < length ? '暂停' : '播放'}
         </button>
         <button disabled={cursor === length} onClick={() => move(cursor + 1)}>

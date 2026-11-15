@@ -66,7 +66,10 @@ export function ThemeModeToggle() {
         disabled={disabled}
         onClick={() => void toggle()}
       >
-        <Icon name={dark ? 'sun' : 'moon'} />
+        <span className="theme-mode-symbols" aria-hidden="true">
+          <Icon name="moon" className="theme-mode-moon" />
+          <Icon name="sun" className="theme-mode-sun" />
+        </span>
       </button>
       {failed && (
         <span className="theme-mode-error notice" role="alert">

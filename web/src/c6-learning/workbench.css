@@ -320,8 +320,7 @@
     position: sticky;
     top: 8px;
     z-index: 3;
-    gap: 8px;
-    padding: 4px;
+    --segment-gap: 8px;
     margin-bottom: 16px;
     background: var(--p05-raised, var(--paper));
     border: 1px solid var(--border-tone, var(--line));
@@ -329,10 +328,17 @@
   }
   .c6-practice-switch .button {
     flex: 1;
+    min-width: 0;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
   }
-  .c6-practice-switch [aria-pressed='true'] {
-    background: var(--p05-accent, var(--green));
-    color: var(--p05-accent-on, #fff);
+  .c6-practice-switch .button[aria-pressed='true'] {
+    color: var(--p05-accent, var(--green));
+    font-weight: 650;
+  }
+  .c6-practice-switch .button[aria-pressed='true']:hover {
+    background: transparent;
     border-color: transparent;
   }
   [data-practice-pane='question'] .c6-practice-body,

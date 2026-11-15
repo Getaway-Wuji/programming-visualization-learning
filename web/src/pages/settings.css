@@ -19,6 +19,9 @@
   padding: 8px 12px;
   border-radius: var(--appearance-control-radius);
   font-size: 14px;
+  transition:
+    background-color var(--interaction-quick) ease,
+    color var(--interaction-quick) ease;
 }
 
 .settings-layout .settings-tab:hover {
@@ -71,10 +74,19 @@
   align-items: start;
   padding: clamp(10px, 1.2vw, 16px);
   border-radius: 13px;
+  transition:
+    background-color var(--interaction-quick) ease,
+    border-color var(--interaction-quick) ease,
+    box-shadow var(--interaction-quick) ease;
 }
 
-.settings-panel .theme-option:hover {
-  border-color: var(--p05-accent);
+@media (hover: hover) {
+  .settings-panel .theme-option:not(:disabled):hover {
+    border-color: var(--p05-accent);
+  }
+  .settings-panel .theme-option:not(:disabled):hover .theme-diagram {
+    transform: translateY(-2px);
+  }
 }
 
 .settings-panel .theme-option[aria-pressed='true'] {
@@ -103,6 +115,24 @@
 .settings-panel .theme-diagram {
   min-width: 0;
   border-radius: var(--theme-preview-radius, 8px);
+  transition: transform var(--interaction-quick) var(--interaction-ease);
+}
+
+.settings-panel .theme-option:not(:disabled):active .theme-diagram {
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-layout :is(.settings-tab, .theme-option, .theme-diagram) {
+    transition: none;
+  }
+  .settings-panel .theme-diagram {
+    transform: none !important;
+  }
+}
+
+[data-reduced-motion='on'] .settings-panel .theme-diagram {
+  transform: none !important;
 }
 
 .settings-panel .appearance-actions {

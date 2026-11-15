@@ -125,6 +125,9 @@
   gap: 0.45rem;
   margin-top: 0.65rem;
 }
+.mysql-actions .workbench-play-glyph {
+  margin-inline-end: 0.45em;
+}
 .mysql-catalog-grid {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(14rem, 1fr);
@@ -507,21 +510,24 @@
   }
   .mysql-pane-tabs {
     display: flex;
-    gap: 0.25rem;
-    padding: 0.25rem;
+    --segment-fill: var(--mysql-paper);
+    --segment-edge: var(--mysql-line);
     border: 1px solid var(--mysql-line);
     border-radius: 12px;
     background: var(--mysql-frame);
   }
   .mysql-pane-tabs button {
     flex: 1;
+    min-width: 0;
+    background: transparent;
     border-color: transparent;
   }
   .mysql-pane-tabs button[aria-pressed='true'] {
     color: var(--p05-accent, var(--green));
-    background: var(--mysql-paper);
-    border-color: var(--mysql-line);
     font-weight: 650;
+  }
+  .mysql-screen .mysql-pane-tabs button[aria-pressed='true']:hover {
+    background: transparent;
   }
   .mysql-work-grid[data-pane='sql'] .mysql-data-column,
   .mysql-work-grid[data-pane='data'] .mysql-sql-column {

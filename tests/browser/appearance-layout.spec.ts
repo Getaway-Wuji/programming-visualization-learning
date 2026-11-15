@@ -115,7 +115,7 @@ test('all six saved themes keep one left sidebar and use the available desktop s
   });
 });
 
-test('the navigation capsule stretches towards the current route, then settles in both directions', async ({
+test('the navigation drop has a broad leading edge and a tapered tail in both directions', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -131,13 +131,33 @@ test('the navigation capsule stretches towards the current route, then settles i
       if (!movement?.effect) throw new Error('Expected an active capsule animation');
       const duration = Number(movement.effect.getComputedTiming().duration);
       movement.pause();
-      const frames = [0, 0.3, 0.75].map((step) => {
-        movement.currentTime = duration * step;
-        const { y, height } = element.getBoundingClientRect();
-        return { y, height };
-      });
-      movement.finish();
-      return frames;
+      // Measure the actual painted outline through the browser's clip-path hit testing.
+      element.style.setProperty('z-index', '2');
+      element.style.setProperty('pointer-events', 'auto');
+      try {
+        return [0, 0.3, 0.75].map((step) => {
+          movement.currentTime = duration * step;
+          const rect = element.getBoundingClientRect();
+          const wideAt = (position: number) =>
+            [0.24, 0.76].every(
+              (column) =>
+                document.elementFromPoint(
+                  rect.x + rect.width * column,
+                  rect.y + rect.height * position,
+                ) === element,
+            );
+          return {
+            y: rect.y,
+            height: rect.height,
+            broadAbove: wideAt(0.28),
+            broadBelow: wideAt(0.72),
+          };
+        });
+      } finally {
+        element.style.removeProperty('z-index');
+        element.style.removeProperty('pointer-events');
+        movement.finish();
+      }
     });
 
   const link = (name: string) => nav.getByRole('link', { name, exact: true });
@@ -149,6 +169,7 @@ test('the navigation capsule stretches towards the current route, then settles i
   const [start, extended, arrived] = await sampleMotion();
   expect(start.y).toBeCloseTo(home.y, 0);
   expect(extended.height).toBeGreaterThan(start.height * 1.5);
+  expect(extended).toMatchObject({ broadAbove: false, broadBelow: true });
   expect(arrived.y + arrived.height).toBeCloseTo(mysql.y + mysql.height, 0);
   expect(await pill.boundingBox()).toMatchObject({ y: mysql.y, height: mysql.height });
 
@@ -156,6 +177,7 @@ test('the navigation capsule stretches towards the current route, then settles i
   await expect(current).toHaveText('学习首页');
   const [, reverseExtension, reverseArrival] = await sampleMotion();
   expect(reverseExtension.height).toBeGreaterThan(home.height * 1.5);
+  expect(reverseExtension).toMatchObject({ broadAbove: true, broadBelow: false });
   expect(reverseArrival.y).toBeCloseTo(home.y, 0);
 
   await page.emulateMedia({ reducedMotion: 'reduce' });

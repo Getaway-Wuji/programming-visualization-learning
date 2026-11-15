@@ -21,7 +21,13 @@ export function CourseNav({ language, path }: { language: string; path: string }
         className={catalog ? undefined : 'course-return'}
         aria-current={catalog ? 'page' : undefined}
       >
-        {catalog ? `${language} 目录` : `← 返回 ${language} 课程目录`}
+        {catalog ? (
+          `${language} 目录`
+        ) : (
+          <>
+            <span className="course-return-arrow">←</span> 返回 {language} 课程目录
+          </>
+        )}
       </Link>
       <Link to={`${path}/workbench`} aria-current={work ? 'page' : undefined}>
         {language === 'MySQL' ? 'SQL 工作台' : '工作台'}
@@ -40,7 +46,7 @@ export function CourseReturn({ path }: { path: string }) {
   return (
     <nav className="course-reading-return" aria-label="返回课程">
       <Link className="button button-secondary" to={path}>
-        ← 返回课程目录
+        <span className="course-return-arrow">←</span> 返回课程目录
       </Link>
     </nav>
   );
