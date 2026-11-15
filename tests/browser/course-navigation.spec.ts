@@ -59,6 +59,41 @@ for (const course of courses) {
   });
 }
 
+test('MySQL catalog, workbench and review share a centered content width', async ({ page }) => {
+  for (const width of [1920, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/#/mysql');
+    const main = page.getByRole('main');
+    const nav = main.getByRole('navigation', { name: 'MySQL 学习', exact: true });
+    const screen = main.locator('.mysql-screen');
+    let catalogWidth: number | undefined;
+
+    for (const [link, heading] of [
+      [null, 'MySQL 课程'],
+      ['SQL 工作台', 'SQL 工作台'],
+      ['判题复盘', 'MySQL 判题复盘'],
+    ] as const) {
+      if (link) await nav.getByRole('link', { name: link, exact: true }).click();
+      await expect(
+        main.getByRole('heading', { level: 1, name: heading, exact: true }),
+      ).toBeVisible();
+      const geometry = await screen.evaluate((element) => {
+        const content = element.getBoundingClientRect();
+        const lane = element.closest('main')!.getBoundingClientRect();
+        return {
+          width: content.width,
+          centerOffset: Math.abs((content.left + content.right - lane.left - lane.right) / 2),
+          horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
+        };
+      });
+      catalogWidth ??= geometry.width;
+      expect(geometry.width, `${heading} width at ${width}px`).toBeCloseTo(catalogWidth, 0);
+      expect(geometry.centerOffset, `${heading} center at ${width}px`).toBeLessThanOrEqual(1);
+      expect(geometry.horizontalOverflow, `${heading} fits at ${width}px`).toBe(false);
+    }
+  }
+});
+
 test('the shared notebook exposes a review destination for every other language', async ({
   page,
 }) => {
