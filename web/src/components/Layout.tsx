@@ -28,7 +28,8 @@ const navigation = [
   { to: '/settings', label: '设置', icon: 'settings' },
 ] as const;
 const navigationGroups = [
-  { label: '课程学习', items: navigation.slice(0, 7) },
+  { label: '总览', items: navigation.slice(0, 1) },
+  { label: '课程学习', items: navigation.slice(1, 7) },
   { label: '实践工具', items: navigation.slice(7, 11) },
   { label: '我的学习', items: navigation.slice(11) },
 ];
@@ -191,7 +192,6 @@ export function Layout({ children }: { children: ReactNode }) {
             一步一懂<small>编程可视化教学平台</small>
           </span>
         </Link>
-        <p className="sidebar-note">从代码，到理解。</p>
         <nav id="primary-navigation" aria-label="主导航">
           {navigationGroups.map((group) => (
             <div className="nav-group" key={group.label}>
@@ -256,9 +256,14 @@ export function Layout({ children }: { children: ReactNode }) {
                             ? '进阶课程 · C / C++'
                             : ['/memory', '/compare'].includes(location.pathname)
                               ? '程序执行观察'
-                              : location.pathname === '/'
-                                ? '我的学习 · 六种语言'
-                                : 'C 语言 · 从零开始'}
+                              : (navigation
+                                  .slice(7)
+                                  .find((item) => location.pathname.startsWith(item.to))?.label ??
+                                (location.pathname === '/'
+                                  ? '我的学习 · 六种语言'
+                                  : location.pathname.startsWith('/bugs')
+                                    ? '练习'
+                                    : 'C 语言 · 从零开始'))}
           </span>
           <div className="local-note">
             {toolRoute && (

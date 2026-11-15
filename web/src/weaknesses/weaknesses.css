@@ -5,11 +5,23 @@
   gap: 24px;
   align-items: start;
 }
+.weakness-layout > :is(section, aside) {
+  min-width: 0;
+  padding: clamp(16px, 2.4vw, 28px);
+  border: 1px solid var(--p05-border);
+  border-radius: 14px;
+}
 .weakness-toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 24px;
+  align-items: center;
+  gap: 4px 20px;
   margin-bottom: 16px;
+}
+.weakness-toolbar .text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 .weakness-layout[data-empty='yes'] {
   grid-template-columns: minmax(0, 1fr);
@@ -41,13 +53,17 @@
 }
 .weakness-evidence {
   margin-top: 16px;
+  padding-inline: 12px;
+  background: var(--p05-raised);
+  border: 1px solid var(--p05-border);
+  border-radius: 8px;
 }
 .weakness-evidence li {
   padding: 12px 0;
   border-top: 1px solid var(--p05-border);
 }
 .weakness-page summary {
-  min-height: 40px;
+  min-height: 44px;
   cursor: pointer;
   padding: 8px 0;
 }
@@ -65,6 +81,9 @@
   align-items: center;
   gap: 8px;
   min-height: 44px;
+}
+.weakness-page label input {
+  accent-color: var(--p05-accent);
 }
 @media (max-width: 1000px) {
   .weakness-layout {

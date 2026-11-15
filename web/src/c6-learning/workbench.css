@@ -1,6 +1,10 @@
 .c6-workbench {
   min-width: 0;
 }
+.c6-workbench .page-heading .page-title {
+  font-size: clamp(1.65rem, 3vw, 2.25rem);
+  font-weight: 680;
+}
 .c6-practice-switch {
   display: none;
 }
@@ -11,13 +15,12 @@
   .c6-exercise-shell {
     display: grid;
     grid-template-columns: minmax(220px, 0.7fr) minmax(0, 2fr);
-    gap: 24px;
+    gap: clamp(16px, 2vw, 28px);
     align-items: start;
   }
   .c6-exercise-shell > .c6-exercise-description {
     max-height: calc(100dvh - 190px);
     overflow: auto;
-    padding-right: 12px;
     overscroll-behavior: contain;
   }
   .c6-exercise-description .practice-sample-pair,
@@ -36,7 +39,10 @@
 }
 .oj-answer > label {
   display: block;
-  margin: 16px 0 8px;
+  margin: 12px 0 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--p05-muted, var(--muted));
 }
 .oj-answer .c6-source-editor {
   min-height: 340px;
@@ -74,11 +80,15 @@
   align-items: center;
   gap: 16px;
   min-height: 40px;
-  margin-bottom: 16px;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border-tone, var(--line));
 }
 .c6-block-title > h2 {
   flex-shrink: 0;
   margin: 0;
+  font-size: 1.1rem;
+  font-weight: 650;
 }
 .c6-practice-layout .block-help,
 .c6-practice-layout .block-drag-feedback {
@@ -111,22 +121,40 @@
   overflow: auto;
 }
 .oj-verdict {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 20px 0 0;
+  display: inline-flex;
+  align-self: start;
+  align-items: center;
+  padding: 0.4rem 0.9rem;
+  margin: 12px 0 0;
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 8px;
+  background: var(--p05-raised, var(--surface-tone, #f4f6f0));
+  font-size: 1rem;
+  font-weight: 650;
 }
 .oj-verdict[data-verdict='passed'] {
   color: var(--p05-accent, var(--green));
+  background: var(--p05-active, var(--lime));
 }
 .c6-exercise-description {
   max-width: 64rem;
   margin-bottom: 24px;
   line-height: 1.7;
 }
+.c6-workbench .c6-exercise-description,
+.c6-workbench .oj-answer,
+.c6-workbench .c6-block-pane.card,
+.c6-workbench .c6-source-pane,
+.c6-workbench .c6-result-pane {
+  padding: clamp(12px, 1.4vw, 22px);
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 12px;
+  background: var(--p05-surface, var(--surface-tone, #fff));
+}
 .c6-workbench-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: 24px;
+  gap: clamp(14px, 1.4vw, 24px);
   align-items: start;
 }
 .c6-source-pane,
@@ -136,7 +164,8 @@
 .c6-source-pane > label {
   display: block;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--p05-muted, var(--muted));
   margin: 12px 0 8px;
 }
 .c6-source-editor,
@@ -147,7 +176,7 @@
   color: inherit;
   border: 1px solid var(--border-tone, #cfd9ca);
   border-radius: 8px;
-  background: var(--surface-tone, #fff);
+  background: var(--p05-raised, var(--surface-tone, #fff));
   padding: 14px;
   font-family: Consolas, 'Cascadia Mono', monospace;
   font-size: 0.875rem;
@@ -169,7 +198,11 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin: 16px 0;
+  margin: 12px 0;
+}
+.c6-source-pane > .c6-action-row:first-child,
+.c6-trace > .c6-trace-controls:first-child {
+  margin-top: 0;
 }
 .c6-action-row .button,
 .c6-trace-controls .button {
@@ -193,6 +226,14 @@
 .c6-output {
   min-height: 64px;
 }
+.c6-trace > section + section {
+  margin-top: 18px;
+}
+.c6-trace h3 {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 650;
+}
 .c6-cursor-label {
   display: grid;
   gap: 8px;
@@ -200,6 +241,7 @@
 }
 .c6-cursor-label input {
   width: 100%;
+  accent-color: var(--p05-accent, var(--green));
 }
 .c6-trace .text-link {
   margin-left: 12px;
@@ -212,6 +254,8 @@
 .c6-table-scroll {
   max-width: 100%;
   overflow: auto;
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 8px;
 }
 .c6-table-scroll table {
   width: 100%;
@@ -227,8 +271,12 @@
   vertical-align: top;
 }
 .c6-table-scroll thead th {
-  color: var(--muted);
-  font-weight: 400;
+  color: var(--p05-text, var(--ink));
+  background: var(--p05-raised, var(--surface-tone, #f4f6f0));
+  font-weight: 650;
+}
+.c6-table-scroll tbody tr:last-child td {
+  border-bottom: 0;
 }
 .c6-table-scroll small {
   display: block;
@@ -244,7 +292,8 @@
   border-bottom: 1px solid var(--border-tone, #e3e8df);
 }
 .c6-case-tabs button {
-  padding: 10px 4px;
+  min-height: 42px;
+  padding: 8px 10px;
   border: 0;
   border-bottom: 2px solid transparent;
   background: transparent;
@@ -254,7 +303,10 @@
   cursor: pointer;
 }
 .c6-case-tabs .c6-case-selected {
-  border-bottom-color: currentColor;
+  border-bottom-color: var(--p05-accent, var(--green));
+  color: var(--p05-accent, var(--green));
+  background: var(--p05-active, var(--lime));
+  border-radius: 6px 6px 0 0;
   font-weight: 600;
 }
 .c6-block-pane {
@@ -268,9 +320,11 @@
     top: 8px;
     z-index: 3;
     gap: 8px;
-    padding: 8px 0;
+    padding: 4px;
     margin-bottom: 16px;
-    background: var(--p05-ground, var(--paper));
+    background: var(--p05-raised, var(--paper));
+    border: 1px solid var(--border-tone, var(--line));
+    border-radius: 12px;
   }
   .c6-practice-switch .button {
     flex: 1;

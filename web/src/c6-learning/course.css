@@ -34,9 +34,50 @@
 .c6-reading-page {
   max-width: 52rem;
   margin-inline: auto;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.85rem;
+  background: var(--p05-surface, var(--surface-tone, var(--panel)));
+}
+.c6-reading-page > .course-reading-return:first-child {
+  margin-block: 0 0.85rem;
+}
+.c6-reading-page .page-heading {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-tone, var(--line));
+}
+.c6-course-page.c6-reading-page .page-title,
+.c6-course-page:has(> .c6-search) .page-title {
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.25;
 }
 .c6-course-page .page-heading {
   max-width: 62rem;
+}
+.c6-course-page:has(> .c6-search) > .page-heading {
+  padding: clamp(1rem, 2.6vw, 2rem);
+  border: 1px solid var(--border-tone, var(--line));
+  border-inline-start: 3px solid var(--p05-accent, var(--green));
+  border-radius: 0.8rem;
+  background: linear-gradient(
+    108deg,
+    var(--p05-active, var(--surface-raised, var(--panel))),
+    var(--p05-surface, var(--surface-tone, var(--panel))) 65%
+  );
+}
+.c6-course-page:has(> .c6-search) > section {
+  max-width: 62rem;
+  padding: clamp(1rem, 2.3vw, 1.6rem);
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.8rem;
+  background: var(--p05-surface, var(--surface-tone, var(--panel)));
+}
+.c6-course-page:has(> .c6-search) > section > h2,
+.c6-course-page .c6-section > h2 {
+  margin-bottom: 0.8rem;
+  font-size: 1.23rem;
+  font-weight: 700;
 }
 .c6-node-list {
   list-style: none;
@@ -44,11 +85,11 @@
   padding: 0;
 }
 .c6-node-list li {
-  border-bottom: 1px solid var(--border-tone, #e3e8df);
+  border-top: 1px solid var(--border-tone, var(--line));
 }
 .c6-node-list a {
-  min-height: 64px;
-  padding: 14px 0;
+  min-height: 52px;
+  padding: 11px 4px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -57,10 +98,12 @@
   text-decoration: none;
 }
 .c6-node-list a:hover {
-  color: var(--green-dark);
+  color: var(--p05-accent, var(--green-dark));
+  background: var(--p05-active, var(--surface-raised, var(--panel)));
 }
 .c6-node-list a > span:first-child {
-  font-weight: 500;
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 .c6-node-detail {
   flex-shrink: 0;
@@ -71,19 +114,25 @@
   display: grid;
   gap: 8px;
   max-width: 34rem;
-  margin: 0 0 28px;
+  margin: 0 0 1.25rem;
+  color: var(--muted);
   font-size: 0.875rem;
+  font-weight: 600;
 }
 .c6-search input {
   min-width: 0;
   width: 100%;
-  min-height: 40px;
+  min-height: 44px;
   padding: 8px 12px;
-  color: inherit;
-  background: var(--surface-tone, #fff);
-  border: 1px solid var(--border-tone, #cfd9ca);
-  border-radius: 6px;
+  color: var(--p05-text, var(--ink));
+  background: var(--p05-raised, var(--surface-tone, var(--panel)));
+  border: 1px solid var(--p05-control, var(--border-tone, var(--line)));
+  border-radius: 0.6rem;
   font: inherit;
+  font-weight: 400;
+}
+.c6-search input::placeholder {
+  color: var(--muted);
 }
 .c6-reference-section,
 .c6-section {
@@ -96,6 +145,12 @@
   cursor: pointer;
   padding: 10px 0;
   font-weight: 500;
+}
+.c6-reading-page summary {
+  min-height: 44px;
+}
+.c6-reading-page summary::marker {
+  color: var(--p05-accent, var(--green-dark));
 }
 .c6-course-page details .c6-teaching-reading {
   margin-top: 12px;

@@ -1,29 +1,125 @@
+:is(.cpp-sheet.cpp-reading, .rust-sheet.rust-reading, .mysql-sheet.mysql-reading) {
+  width: min(100%, 54rem);
+  margin-inline: auto;
+  padding: clamp(1.1rem, 3.2vw, 2.5rem);
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.85rem;
+  background: var(--p05-surface, var(--surface-tone, var(--panel)));
+}
+.python-article-grid > .python-reading {
+  padding: clamp(1rem, 2.8vw, 2.25rem);
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.85rem;
+  background: var(--p05-surface, var(--surface-tone, var(--panel)));
+}
+.python-article-grid > .python-directory {
+  padding: 0.88rem;
+  border-radius: 0.8rem;
+  background: var(--p05-surface, var(--surface-tone, var(--panel)));
+}
+.python-article-grid .python-directory summary {
+  min-height: 44px;
+  padding-block: 0.62rem;
+  font-weight: 650;
+}
+.python-article-grid .python-directory summary::marker {
+  color: var(--p05-accent, var(--green-dark));
+}
+.python-article-grid .python-tree {
+  font-size: 0.9rem;
+}
+.python-article-grid .python-tree a {
+  display: inline-block;
+  padding: 0.38rem 0.45rem;
+  border-radius: 0.35rem;
+}
+.python-article-grid .python-tree a:is(:hover, [aria-current='page']) {
+  color: var(--p05-accent, var(--green-dark));
+  background: var(--p05-active, var(--surface-raised, var(--panel)));
+}
+:is(.python-screen, .mysql-screen)
+  :is(.python-reading, .cpp-reading, .rust-reading, .mysql-reading)
+  > h1 {
+  margin-block: 0 0.7rem;
+  color: var(--p05-text, var(--ink));
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.python-reading > .course-mode {
+  margin: 0 0 0.65rem;
+}
+.python-reading > .python-goal {
+  font-size: 0.97rem;
+}
+:is(.python-screen, .mysql-screen)
+  :is(.python-reading, .cpp-reading, .rust-reading, .mysql-reading)
+  > .c6-teaching-reading {
+  margin-top: 1.25rem;
+}
+.python-reading > .course-next {
+  margin-block: 1.25rem;
+}
+.python-reading > .python-sheet {
+  margin-block: 1.25rem;
+  background: var(--p05-raised, var(--surface-tone, var(--panel)));
+}
+:is(.python-screen, .mysql-screen) :is(.cpp-page-turn, .rust-page-turn, .mysql-page-turn) a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-block: 0.4rem;
+  color: var(--p05-accent, var(--green-dark));
+}
+@media (min-width: 1000px) {
+  .python-article-grid > .python-directory {
+    position: sticky;
+    top: 1rem;
+  }
+}
+@media (max-width: 960px) {
+  .python-article-grid > .python-reading {
+    max-width: none;
+  }
+}
+@media (max-width: 760px) {
+  .python-article-grid .python-tree a {
+    min-height: 44px;
+    padding-block: 0.65rem;
+  }
+}
+
 .c6-teaching-reading {
   min-width: 0;
   max-width: 52rem;
-  color: var(--text-tone, var(--ink));
-  font-size: max(1rem, 16px);
-  line-height: 1.85;
+  color: var(--p05-text, var(--text-tone, var(--ink)));
+  font-size: max(1.075rem, 16px);
+  line-height: 1.9;
   overflow-wrap: anywhere;
 }
-.c6-teaching-reading > :first-child {
-  margin-top: 0;
-}
 .c6-teaching-reading h1 {
-  font-size: 1.6rem;
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+  line-height: 1.4;
+}
+/* Keep the reading typography above the language-level sheet defaults. */
+.c6-teaching-reading.c6-teaching-reading h2 {
+  margin: 2.15rem 0 0.68rem;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.42;
+}
+.c6-teaching-reading.c6-teaching-reading h3 {
+  margin: 1.6rem 0 0.55rem;
+  font-size: clamp(1.05rem, 1.7vw, 1.2rem);
+  font-weight: 650;
   line-height: 1.45;
 }
-.c6-teaching-reading h2 {
-  margin: 2rem 0 0.75rem;
-  font-size: 1.3rem;
-  line-height: 1.5;
+.c6-teaching-reading.c6-teaching-reading > :first-child {
+  margin-top: 0;
 }
-.c6-teaching-reading h3 {
-  margin: 1.5rem 0 0.5rem;
-  font-size: 1.1rem;
-}
-.c6-teaching-reading p {
-  margin: 0.8rem 0;
+.c6-teaching-reading.c6-teaching-reading p {
+  margin: 0.9rem 0;
+  line-height: inherit;
 }
 .c6-teaching-reading img {
   display: block;
@@ -34,17 +130,22 @@
 .c6-reading-figure {
   display: block;
   max-width: 100%;
-  margin-block: 1rem;
+  margin: 1.35rem 0;
+  padding: 0.65rem;
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.7rem;
+  background: var(--p05-raised, var(--surface-tone, var(--panel)));
 }
 .c6-reading-figure img {
   margin: 0;
+  border-radius: 0.35rem;
 }
 .c6-reading-figure img[src$='.svg'] {
   width: 100%;
 }
 :root[data-appearance] .p05-app .c6-reading-figure > button.button {
   min-height: 44px;
-  margin-top: 0.5rem;
+  margin-top: 0.65rem;
   color: var(--p05-text, var(--ink));
   background: var(--p05-surface, var(--panel));
   border: 1px solid var(--p05-control, var(--line));
@@ -54,14 +155,14 @@
   max-width: min(96vw, 80rem);
   max-height: 90vh;
   padding: 1rem;
-  border: 1px solid var(--line);
-  border-radius: 0.75rem;
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.85rem;
   background: var(--p05-surface, var(--surface-tone, var(--panel)));
   color: var(--p05-text, var(--text-tone, var(--ink)));
   font-size: max(1rem, 16px);
 }
 .c6-figure-dialog::backdrop {
-  background: rgb(0 0 0 / 50%);
+  background: rgb(0 0 0 / 60%);
 }
 .c6-figure-toolbar {
   display: flex;
@@ -69,6 +170,8 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-tone, var(--line));
 }
 .c6-figure-toolbar p {
   margin: 0;
@@ -92,7 +195,10 @@
 }
 .c6-teaching-reading ul,
 .c6-teaching-reading ol {
-  padding-left: 1.5rem;
+  padding-inline-start: 1.5rem;
+}
+.c6-teaching-reading li::marker {
+  color: var(--p05-accent, var(--green-dark));
 }
 .c6-teaching-reading li + li {
   margin-top: 0.4rem;
@@ -101,20 +207,26 @@
   margin: 0.4rem 0;
 }
 .c6-teaching-reading code {
-  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-family: var(--font-mono, Consolas, 'Cascadia Mono', monospace);
 }
 .c6-teaching-reading :not(pre) > code {
-  font-size: 0.92em;
+  padding: 0.08em 0.28em;
+  border-radius: 0.24rem;
+  color: var(--p05-text, var(--ink));
+  background: var(--p05-active, var(--surface-tone, var(--panel)));
+  font-size: 0.89em;
   white-space: break-spaces;
 }
-.c6-teaching-reading pre {
+.c6-teaching-reading.c6-teaching-reading pre {
   max-width: 100%;
-  margin: 1rem 0;
-  padding: 1rem;
+  margin: 1.2rem 0;
+  padding: clamp(0.85rem, 2vw, 1.3rem);
   overflow: auto;
-  border-radius: 8px;
-  background: var(--surface-tone, #f1f4f0);
-  font-size: max(0.875rem, 14px);
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.65rem;
+  color: var(--p05-text, var(--ink));
+  background: var(--p05-raised, var(--surface-tone, var(--panel)));
+  font-size: max(0.9rem, 14px);
   line-height: 1.65;
   white-space: pre;
   overflow-wrap: normal;
@@ -124,24 +236,29 @@
   white-space: inherit;
 }
 .c6-teaching-reading a {
-  color: var(--green-dark);
+  color: var(--p05-accent, var(--green-dark));
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
 .c6-teaching-reading blockquote {
-  margin: 1rem 0;
-  padding-left: 1rem;
-  border-left: 2px solid var(--line);
+  margin: 1.25rem 0;
+  padding: 0.25rem 1rem;
+  border-inline-start: 3px solid var(--p05-accent, var(--green));
+  border-radius: 0.3rem;
+  background: var(--p05-active, var(--surface-tone, var(--panel)));
 }
 .c6-teaching-reading hr {
+  margin: 1.8rem 0;
   border: 0;
-  border-top: 1px solid var(--line);
-  margin: 1.5rem 0;
+  border-top: 1px solid var(--border-tone, var(--line));
 }
 .c6-reading-table {
   max-width: 100%;
+  margin: 1.25rem 0;
   overflow-x: auto;
-  margin: 1rem 0;
+  border: 1px solid var(--border-tone, var(--line));
+  border-radius: 0.65rem;
+  background: var(--p05-surface, var(--surface-tone, var(--panel)));
 }
 .c6-reading-scroll-hint {
   display: none;
@@ -154,37 +271,32 @@
   font-size: 0.93rem;
 }
 .c6-reading-table th {
-  color: var(--muted);
-  font-weight: 500;
-  text-align: left;
+  color: var(--p05-text, var(--ink));
+  background: var(--p05-raised, var(--surface-tone, var(--panel)));
+  font-weight: 650;
+  text-align: start;
 }
 .c6-reading-table th,
 .c6-reading-table td {
   min-width: 6rem;
-  padding: 0.6rem 0.75rem;
+  padding: 0.65rem 0.75rem;
   vertical-align: top;
 }
 .c6-reading-table td {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--border-tone, var(--line));
 }
 .c6-teaching-reading :is(pre, .c6-reading-table):focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 3px;
 }
 @media (max-width: 640px) {
-  .c6-teaching-reading .c6-reading-scroll-hint {
+  .c6-teaching-reading.c6-teaching-reading .c6-reading-scroll-hint {
     display: block;
-    margin: 1rem 0 0;
+    margin: 1rem 0 0.3rem;
     color: var(--muted);
     font-size: 0.8rem;
   }
   .c6-reading-table {
-    margin-top: 0.25rem;
-  }
-  .c6-teaching-reading h1 {
-    font-size: 1.4rem;
-  }
-  .c6-teaching-reading pre {
-    padding: 0.8rem;
+    margin-top: 0;
   }
 }

@@ -13,6 +13,7 @@ import { c6DisplayReference } from './display';
 import { c6IndependentReference, c6IndependentHref } from './independent';
 import { languages } from '../learning/languages';
 import '../course-ui/course-ui.css';
+import '../review-notebook/notebook.css';
 
 export default function C6NotebookPage() {
   return (
@@ -31,7 +32,7 @@ function Notebook() {
   const mistakes = state.snapshot && !uncertain ? collectC6Mistakes(state.snapshot, index) : null;
   const marked = marks.rows.filter((m) => isC6Mark(m, index) && m.marked);
   return (
-    <div className="c6-course-page">
+    <div className="c6-course-page learning-notebook">
       <PageHeading
         kicker="本地复习"
         title="错题与陌生点"

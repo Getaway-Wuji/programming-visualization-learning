@@ -16,6 +16,57 @@ import { C6KnowledgeOverview } from './Knowledge';
 import { ReadingEnd } from './ReadingEnd';
 import { languages, recentLearningLanguage } from '../learning/languages';
 import { LanguageStudyCard } from '../learning/LanguageStudyCard';
+import { Icon } from '../components/Icon';
+import './home.css';
+
+const languageTiles = {
+  c: { mark: 'C', detail: '变量、指针与内存' },
+  python: { mark: 'Py', detail: '从语法到数据处理' },
+  java: { mark: 'Ja', detail: '类、对象与集合' },
+  cpp: { mark: 'C++', detail: '泛型与数据结构' },
+  rust: { mark: 'Rs', detail: '所有权与借用' },
+  mysql: { mark: 'SQL', detail: '查询、表与事务' },
+} as const;
+
+function TraceIllustration() {
+  return (
+    <div className="home-trace" aria-hidden="true">
+      <div className="home-trace-heading">
+        <span className="home-trace-file">
+          <Icon name="code" /> bubble-sort.c
+        </span>
+        <span className="home-trace-tag">执行示意</span>
+      </div>
+      <div className="home-trace-source">
+        <span>01</span>
+        <code>int a[] = {'{3, 1, 2}'};</code>
+        <span>02</span>
+        <code>if (a[0] &gt; a[1])</code>
+        <span>03</span>
+        <code className="home-trace-active">swap(&amp;a[0], &amp;a[1]);</code>
+      </div>
+      <div className="home-trace-arrays">
+        <div>
+          <span>交换前</span>
+          <div className="home-trace-cells">
+            <b>3</b>
+            <b>1</b>
+            <b>2</b>
+          </div>
+        </div>
+        <Icon name="arrow" />
+        <div>
+          <span>交换后</span>
+          <div className="home-trace-cells">
+            <b>1</b>
+            <b>3</b>
+            <b>2</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function C6Boundary({ children }: { children: ReactNode }) {
   const { state, service } = useLearning();
@@ -128,37 +179,67 @@ function Home() {
     index.lessons.find((l) => !state.projection?.lessons.find((p) => p.id === l[0])?.completed);
   const title = manifest.nodes.find((n) => `node.${n.id}` === next?.[1])?.titleDisplay;
   return (
-    <div className="c6-course-page">
-      <PageHeading
-        kicker="我的学习"
-        title={`继续学 ${selectedLanguage.label}`}
-        description={
-          selectedLanguage.id === 'c'
-            ? '按章节顺序阅读、运行，再动手练习。'
-            : '接着最近的学习进度，阅读、自检，并在工作台观察真实执行。'
-        }
-      />
-      <div className="learning-language-picker" aria-label="选择学习语言">
-        {languages.map((language) => (
-          <button
-            key={language.id}
-            type="button"
-            aria-pressed={selectedLanguage.id === language.id}
-            onClick={() =>
-              setSearch(
-                (current) => {
-                  const next = new URLSearchParams(current);
-                  next.set('language', language.id);
-                  return next;
-                },
-                { replace: true },
-              )
-            }
-          >
-            {language.label}
-          </button>
-        ))}
-      </div>
+    <div className="c6-course-page study-home">
+      <section className="home-hero">
+        <div className="home-hero-copy">
+          <PageHeading
+            kicker="一步一懂 / 编程可视化"
+            title={`继续学 ${selectedLanguage.label}`}
+            description="从课本读懂一个概念，再亲手写代码，看看变量、内存和输出怎么变。"
+          />
+          <div className="home-hero-actions">
+            <Link className="button button-primary" to={selectedLanguage.directory}>
+              浏览课程
+              <Icon name="arrow" />
+            </Link>
+            <Link className="button home-demo-action" to="/visualize/case.c.bubble-sort">
+              <Icon name="play" />
+              试试冒泡排序
+            </Link>
+          </div>
+        </div>
+        <TraceIllustration />
+      </section>
+      <section className="home-languages" aria-label="选择学习语言">
+        <div className="home-section-heading">
+          <h2>选择学习语言</h2>
+          <span>按语言查看课程与学习进度</span>
+        </div>
+        <ul>
+          {languages.map((language) => (
+            <li key={language.id}>
+              <button
+                type="button"
+                data-language={language.id}
+                aria-label={language.label}
+                aria-describedby={`home-language-${language.id}`}
+                aria-pressed={selectedLanguage.id === language.id}
+                onClick={() =>
+                  setSearch(
+                    (current) => {
+                      const next = new URLSearchParams(current);
+                      next.set('language', language.id);
+                      return next;
+                    },
+                    { replace: true },
+                  )
+                }
+              >
+                <span className="home-language-mark" aria-hidden="true">
+                  {languageTiles[language.id].mark}
+                </span>
+                <span className="home-language-name">
+                  {language.label}
+                  <Icon name={selectedLanguage.id === language.id ? 'check' : 'chevron'} />
+                </span>
+                <span className="home-language-detail" id={`home-language-${language.id}`}>
+                  {languageTiles[language.id].detail}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
       <div className="c6-home-columns">
         {selectedLanguage.id !== 'c' ? (
           <LanguageStudyCard language={selectedLanguage.id} />

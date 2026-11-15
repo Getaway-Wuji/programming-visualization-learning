@@ -1,0 +1,129 @@
+.settings-layout {
+  grid-template-columns: minmax(168px, 192px) minmax(0, 1fr);
+  gap: clamp(16px, 2vw, 28px);
+  align-items: start;
+}
+
+.settings-layout .settings-nav {
+  padding: 6px;
+  gap: 4px;
+  background: var(--p05-surface);
+  border-color: var(--p05-border);
+  border-radius: 14px;
+}
+
+.settings-layout .settings-tab {
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.settings-layout .settings-tab:hover {
+  color: var(--p05-text);
+  background: var(--p05-raised);
+}
+
+.settings-layout .settings-tab[aria-selected='true'] {
+  color: var(--p05-accent);
+  background: var(--p05-active);
+  font-weight: 650;
+}
+
+.settings-layout .settings-panel {
+  min-width: 0;
+  padding: clamp(16px, 2.7vw, 32px);
+  border: 1px solid var(--p05-border);
+}
+
+.settings-layout .settings-panel h2 {
+  font-size: clamp(20px, 1.8vw, 25px);
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.settings-panel .appearance-heading {
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-bottom: 20px;
+}
+
+.settings-panel .appearance-heading h2 {
+  margin-bottom: 6px;
+}
+
+.settings-panel .appearance-heading p {
+  margin-bottom: 0;
+}
+
+.settings-panel .appearance-heading .badge {
+  max-width: 100%;
+}
+
+.settings-panel .theme-option {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  align-items: start;
+  padding: clamp(10px, 1.2vw, 16px);
+  border-radius: 13px;
+}
+
+.settings-panel .theme-option:hover {
+  border-color: var(--p05-accent);
+}
+
+.settings-panel .theme-option[aria-pressed='true'] {
+  background: var(--p05-active);
+  border-color: var(--p05-accent);
+  box-shadow: inset 0 0 0 1px var(--p05-accent);
+  outline: none;
+}
+
+.settings-panel .theme-option:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.settings-panel .theme-option strong {
+  margin: 10px 0 4px;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.settings-panel .theme-option small {
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.settings-panel .theme-diagram {
+  min-width: 0;
+  border-radius: 8px;
+}
+
+.settings-panel .appearance-actions {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--p05-border);
+}
+
+.settings-panel .settings-field :is(input, select) {
+  min-width: 0;
+  color: var(--p05-text);
+  background: var(--p05-raised);
+  border-color: var(--p05-control);
+}
+
+@media (max-width: 1100px) {
+  .settings-layout .settings-nav {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .settings-layout .settings-nav,
+  .settings-panel .theme-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

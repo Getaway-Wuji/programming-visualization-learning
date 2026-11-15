@@ -3,8 +3,11 @@
   gap: 20px;
   min-width: 0;
 }
+.study-notes-page > .page-heading {
+  margin-bottom: 0;
+}
 .study-notes-page h2 {
-  font-size: 20px;
+  font-size: clamp(18px, 1.6vw, 22px);
   margin: 0 0 12px;
 }
 .study-notes-page h3 {
@@ -12,6 +15,17 @@
 }
 .study-notes-page h4 {
   font-size: 16px;
+}
+.study-notes-page :is(.note-filter, .note-workspace > section) {
+  min-width: 0;
+  padding: clamp(16px, 2.2vw, 28px);
+  background: var(--p05-surface);
+  border: 1px solid var(--p05-border);
+  border-radius: 14px;
+}
+.study-notes-page :is(.note-filter, .note-workspace > section) > p:last-child {
+  margin-bottom: 0;
+  overflow-wrap: anywhere;
 }
 .note-filter-fields {
   display: grid;
@@ -21,15 +35,16 @@
 .note-filter-fields label {
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 .note-filter-fields select,
 .note-filter-fields input {
   width: 100%;
   min-width: 0;
-  min-height: 40px;
+  min-height: 44px;
   color: var(--p05-text);
-  background: var(--p05-surface);
-  border: 1px solid var(--p05-border);
+  background: var(--p05-raised);
+  border: 1px solid var(--p05-control);
   border-radius: 8px;
   padding: 8px;
   font: inherit;
@@ -45,13 +60,25 @@
 .note-types {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 6px 10px;
 }
 .note-types label {
   display: flex;
   gap: 8px;
   align-items: center;
-  min-height: 32px;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid var(--p05-border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.note-types label:has(input:checked) {
+  background: var(--p05-active);
+  border-color: var(--p05-accent);
+}
+.note-types input,
+.note-candidate-list input {
+  accent-color: var(--p05-accent);
 }
 /* Two equal columns plus one 20px gutter fill the content width; narrow layouts stack. */
 .note-workspace {
@@ -69,16 +96,24 @@
   margin: 16px 0;
   max-height: 560px;
   overflow: auto;
+  scrollbar-gutter: stable;
 }
 .note-candidate-list li {
   border-top: 1px solid var(--p05-border);
 }
 .note-candidate-list label {
-  padding: 14px 4px;
+  padding: 14px 8px;
   display: flex;
   gap: 12px;
   align-items: start;
   cursor: pointer;
+}
+.note-candidate-list label:has(input:checked) {
+  background: var(--p05-active);
+}
+.note-candidate-list label:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
 }
 .note-candidate-list input {
   margin-top: 5px;
@@ -121,7 +156,8 @@
 }
 .note-preview-entry summary {
   cursor: pointer;
-  min-height: 28px;
+  min-height: 44px;
+  padding-block: 8px;
 }
 .note-preview-entry pre {
   max-height: 400px;
@@ -174,12 +210,13 @@
 }
 .note-download input {
   min-width: 0;
+  min-height: 44px;
   width: 100%;
   padding: 10px;
   font: inherit;
   color: var(--p05-text);
-  background: var(--p05-surface);
-  border: 1px solid var(--p05-border);
+  background: var(--p05-raised);
+  border: 1px solid var(--p05-control);
   border-radius: 8px;
 }
 .note-download p {

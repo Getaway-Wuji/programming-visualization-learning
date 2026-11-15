@@ -1,85 +1,139 @@
 .course-nav {
   display: flex;
   align-items: center;
-  gap: 0.25rem 0.85rem;
   flex-wrap: wrap;
-  padding-block: 0.3rem;
+  gap: 0.25rem 0.4rem;
+  padding-bottom: 0.6rem;
   border-bottom: 1px solid var(--border-tone, var(--line));
 }
 .course-nav a {
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
-  padding-inline: 0.4rem;
-  color: inherit;
+  min-height: 44px;
+  padding-inline: 0.8rem;
+  border-radius: 0.55rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 600;
   text-decoration: none;
-  border-bottom: 2px solid transparent;
+}
+.course-nav a:is(:hover, [aria-current='page']) {
+  color: var(--p05-accent, var(--green-dark));
+  background: var(--p05-active, var(--surface-tone, var(--panel)));
 }
 .course-nav a[aria-current='page'] {
-  border-bottom-color: currentColor;
-  font-weight: 650;
-}
-.course-nav a:hover {
-  text-decoration: underline;
+  box-shadow: inset 0 -2px var(--p05-accent, var(--green));
 }
 .course-nav a.course-return {
-  min-height: 44px;
-  padding-inline: 0.75rem;
   border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.4rem;
-  background: var(--surface-tone, var(--panel));
-  font-weight: 600;
+  color: var(--p05-accent, var(--green-dark));
 }
 .course-reading-return {
   margin-block: 1.5rem 0.5rem;
 }
-.course-reading-return > a {
+.p05-app .course-reading-return > a.button {
   min-height: 44px;
 }
-.course-header {
+
+/* Banner and controls for the course catalog, including its initial loading state. */
+.course-header,
+.course-nav
+  + :is(.cpp-title, .rust-title, .mysql-title):has(+ :is(.course-progress, .course-load-state)) {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.75rem 1.25rem;
+  padding: clamp(1rem, 2.6vw, 2rem);
+  border: 1px solid var(--border-tone, var(--line));
+  border-inline-start: 3px solid var(--p05-accent, var(--green));
+  border-radius: 0.8rem;
+  background: linear-gradient(
+    108deg,
+    var(--p05-active, var(--surface-raised, var(--panel))),
+    var(--p05-surface, var(--surface-tone, var(--panel))) 65%
+  );
 }
-.course-header p {
-  margin-block: 0.35rem 0;
+.python-screen .course-header h1,
+.course-nav
+  + :is(.cpp-title, .rust-title, .mysql-title):has(+ :is(.course-progress, .course-load-state))
+  h1 {
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.python-screen .course-header p,
+.course-nav
+  + :is(.cpp-title, .rust-title, .mysql-title):has(+ :is(.course-progress, .course-load-state))
+  p {
+  margin-block: 0.6rem 0;
   color: var(--muted);
+  font-size: 0.94rem;
+}
+.p05-app .course-header > .button,
+.p05-app
+  .course-nav
+  + :is(.cpp-title, .rust-title, .mysql-title):has(+ :is(.course-progress, .course-load-state))
+  > .button {
+  min-height: 44px;
 }
 .course-search {
   display: grid;
-  grid-template-columns: 5rem minmax(8rem, 25rem);
+  grid-template-columns: auto minmax(8rem, 1fr);
   align-items: center;
   gap: 0.75rem;
-  margin-block: 0.25rem 1rem;
+  max-width: 34rem;
+  margin-block: 0.7rem 1.25rem;
+  color: var(--muted);
   font-size: 0.875rem;
+  font-weight: 600;
 }
 .course-search input {
   min-width: 0;
   width: 100%;
-  min-height: 2.75rem;
+  min-height: 44px;
   margin: 0 !important;
-  padding: 0.5rem 0.7rem;
+  padding: 0.5rem 0.8rem;
   font: inherit;
-  color: inherit;
-  background: var(--surface-tone, var(--panel));
-  border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.4rem;
+  font-weight: 400;
+  color: var(--p05-text, var(--ink));
+  background: var(--p05-raised, var(--surface-tone, var(--panel)));
+  border: 1px solid var(--p05-control, var(--border-tone, var(--line)));
+  border-radius: 0.6rem;
+}
+.course-search input::placeholder {
+  color: var(--muted);
 }
 .course-progress {
   display: flex;
   align-items: center;
-  gap: 0.65rem 1rem;
+  gap: 0.5rem 0.9rem;
   flex-wrap: wrap;
-  padding-block: 0.25rem;
+  padding: 0.25rem 0.25rem 0.1rem;
   font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
 }
+.course-progress > span:first-child {
+  font-weight: 650;
+}
 .course-progress progress {
-  min-width: 8rem;
+  appearance: none;
+  min-width: min(8rem, 100%);
   width: 12rem;
   height: 0.55rem;
+  border: 0;
+  border-radius: 1rem;
+  background: var(--border-tone, var(--line));
+  overflow: hidden;
+}
+.course-progress progress::-webkit-progress-bar {
+  background: var(--border-tone, var(--line));
+}
+.course-progress progress::-webkit-progress-value {
+  background: var(--p05-accent, var(--green));
+}
+.course-progress progress::-moz-progress-bar {
+  background: var(--p05-accent, var(--green));
 }
 .course-help {
   color: var(--muted);
@@ -92,78 +146,171 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.75rem 1.25rem;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background: var(--surface-raised, var(--panel));
+  padding: clamp(1rem, 2.3vw, 1.45rem);
   border: 1px solid var(--border-tone, var(--line));
-}
-.course-next h2 {
-  margin: 0.15rem 0 0;
-  font-size: 1rem;
-}
-.course-next p {
-  margin: 0;
-}
-.course-next-label {
-  font-size: 0.8rem;
-  color: var(--muted);
+  border-radius: 0.8rem;
+  background: var(--p05-surface, var(--surface-raised, var(--panel)));
 }
 .course-next > div {
   min-width: 0;
   flex: 1 1 14rem;
 }
-.course-next .course-help {
+.course-next div h2 {
+  margin: 0.15rem 0 0;
+  font-size: 1.18rem;
+  font-weight: 700;
+}
+.course-next h2 a:hover {
+  color: var(--p05-accent, var(--green-dark));
+  text-decoration: underline;
+}
+.course-next div p {
+  margin: 0;
+}
+.course-next p.course-next-label {
+  font-size: 0.8rem;
+  font-weight: 650;
+  color: var(--p05-accent, var(--green-dark));
+}
+.course-next p.course-help {
   margin-top: 0.35rem;
 }
+.p05-app .course-next > .button {
+  min-height: 44px;
+  border-color: var(--p05-accent, var(--green));
+  background: var(--p05-accent, var(--green));
+  color: var(--p05-accent-on, white);
+  font-weight: 600;
+}
+.p05-app .course-next > .button:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .course-mode {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.25rem 0.55rem;
-  margin-inline-start: 0.65rem;
-  font-size: 0.75rem;
-  line-height: 1.7;
+  gap: 0.18rem 0.35rem;
+  margin-inline-start: 0.55rem;
   color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.6;
   vertical-align: baseline;
 }
+.course-mode > span {
+  padding: 0.08rem 0.4rem;
+  border-radius: 0.3rem;
+}
+.course-mode[data-mode='runnable'] > span:first-child,
 .course-mode .course-read {
-  font-weight: 600;
-  color: var(--p05-accent, var(--green));
+  color: var(--p05-accent, var(--green-dark));
+  background: var(--p05-active, var(--surface-raised, var(--panel)));
+  font-weight: 650;
 }
-.course-catalog-panel {
+
+.course-catalog-panel,
+.course-catalog-panel:is(.cpp-sheet, .rust-sheet, .mysql-sheet) {
   min-width: 0;
-  padding: 1rem;
+  padding: clamp(1rem, 2.3vw, 1.6rem);
   border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.5rem;
-  background: var(--surface-tone, var(--panel));
+  border-radius: 0.8rem;
+  background: var(--p05-surface, var(--surface-tone, var(--panel)));
 }
-.course-catalog-grid {
+.course-catalog-grid,
+.python-screen .rust-catalog-grid,
+.mysql-screen .mysql-catalog-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(14rem, 1fr);
-  gap: 1rem;
+  grid-template-columns: minmax(0, 2.25fr) minmax(14rem, 1fr);
+  gap: clamp(0.9rem, 1.7vw, 1.4rem);
   align-items: start;
 }
-.course-catalog-panel:is(.cpp-sheet, .rust-sheet, .mysql-sheet) {
-  border-radius: 0.5rem;
-}
 .course-catalog-panel h2 {
-  margin-top: 0;
+  margin: 0 0 0.65rem;
+  font-size: 1.04rem;
+  font-weight: 650;
 }
-.course-catalog-panel section + section {
-  margin-top: 1.4rem;
+.course-catalog-panel > h2 {
+  font-size: 1.23rem;
+  font-weight: 700;
+}
+.course-catalog-panel > section {
+  margin-top: 1.5rem;
 }
 .course-catalog-panel li {
-  line-height: 1.65;
+  line-height: 1.55;
 }
 .course-catalog-panel li > a {
   display: inline-block;
-  padding-block: 0.4rem;
+  min-height: 44px;
+  padding-block: 0.7rem;
 }
+.course-catalog-panel li > a:hover {
+  color: var(--p05-accent, var(--green-dark));
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.course-catalog-panel li:has(> .course-mode) {
+  overflow-wrap: anywhere;
+}
+.course-catalog-panel > :is(.cpp-tree, .rust-tree, .mysql-tree) {
+  margin: 0;
+}
+.course-catalog-panel :is(.cpp-tree, .rust-tree, .mysql-tree) > li {
+  padding-block: 0;
+  border-top: 1px solid var(--border-tone, var(--line));
+}
+.course-catalog-panel :is(.cpp-tree, .rust-tree, .mysql-tree) summary {
+  min-height: 44px;
+  padding-block: 0.7rem;
+  font-weight: 600;
+}
+.course-catalog-panel :is(.cpp-tree, .rust-tree, .mysql-tree) summary::marker {
+  color: var(--p05-accent, var(--green-dark));
+}
+.course-catalog-panel :is(.cpp-tree, .rust-tree, .mysql-tree) summary:hover {
+  color: var(--p05-accent, var(--green-dark));
+}
+.course-catalog-panel :is(.cpp-tree, .rust-tree, .mysql-tree) details > ul {
+  margin: 0 0 0.45rem 0.4rem;
+  padding-inline-start: 0.8rem;
+  border-inline-start: 1px solid var(--border-tone, var(--line));
+}
+.course-catalog-panel :is(.cpp-guide, .rust-guide) {
+  display: inline-block;
+  margin-block: 0.15rem 0.55rem;
+  color: var(--p05-accent, var(--green-dark));
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.course-catalog-panel.python-catalog {
+  container-type: inline-size;
+}
+.course-catalog-panel.python-catalog > section > .python-list {
+  columns: 1;
+  padding-inline-start: 1.6rem;
+}
+.course-catalog-panel .python-list > li {
+  padding-block: 0;
+  border-top: 1px solid var(--border-tone, var(--line));
+}
+.course-catalog-panel .python-list > li::marker {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+@container (min-width: 49rem) {
+  .course-catalog-panel.python-catalog > section > .python-list {
+    columns: 2;
+    column-gap: 2.75rem;
+  }
+}
+
 .course-load-state {
   padding: 1rem;
   border: 1px solid var(--border-tone, var(--line));
-  border-radius: 0.5rem;
-  background: var(--surface-tone, var(--panel));
+  border-radius: 0.8rem;
+  background: var(--p05-surface, var(--surface-tone, var(--panel)));
 }
 .course-language-list {
   display: flex;
@@ -171,22 +318,25 @@
   gap: 0.5rem 1rem;
 }
 .course-language-list a {
-  min-height: 2.75rem;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
 }
+
 @media (max-width: 960px) {
-  .course-catalog-grid {
+  .course-catalog-grid,
+  .python-screen .rust-catalog-grid,
+  .mysql-screen .mysql-catalog-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (max-width: 600px) {
   .course-nav {
-    gap: 0.2rem 0.5rem;
+    gap: 0.2rem 0.3rem;
+    padding-bottom: 0.45rem;
   }
   .course-nav a {
-    padding-inline: 0.2rem;
-    font-size: 0.875rem;
+    padding-inline: 0.55rem;
   }
   .course-search {
     grid-template-columns: minmax(0, 1fr);
@@ -198,16 +348,10 @@
   .course-progress .course-help {
     width: 100%;
   }
-  .course-next {
-    gap: 0.65rem;
-  }
   .course-next > div {
     flex-basis: 100%;
   }
   .course-mode {
-    font-size: 0.75rem;
-  }
-  .course-catalog-panel {
-    padding: 0.8rem;
+    margin-inline-start: 0.3rem;
   }
 }

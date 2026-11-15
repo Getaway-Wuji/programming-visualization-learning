@@ -2,12 +2,12 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
-const source = 'content/c/appearance/config-1.0.1.json';
+const source = 'content/c/appearance/config-1.0.2.json';
 const bytes = await readFile(new URL(source, root));
 const value = JSON.parse(bytes.toString('utf8'));
 assert.equal(value.contractVersion, '1.0.0');
 assert.equal(value.schemaVersion, '1.0.0');
-assert.deepEqual(value.configRef, { id: 'appearance.config.p05', version: '1.0.1' });
+assert.deepEqual(value.configRef, { id: 'appearance.config.p05', version: '1.0.2' });
 const sha256 = createHash('sha256').update(bytes).digest('hex');
 const manifest = {
   purpose: 'appearance-configuration',
@@ -15,7 +15,7 @@ const manifest = {
   schemaVersion: '1.0.0',
   configRef: value.configRef,
   source,
-  file: 'content/appearance/config-1.0.1.json',
+  file: 'content/appearance/config-1.0.2.json',
   bytes: bytes.length,
   sha256,
   load: 'same-reviewed-bytes-bundled-in-application',

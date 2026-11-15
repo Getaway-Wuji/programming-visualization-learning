@@ -2,6 +2,23 @@ import { expect, test, type Page } from '@playwright/test';
 import type { ThemeId } from '../../web/src/storage/model';
 
 const themes: readonly ThemeId[] = ['minimal', 'cute', 'glass', 'soft', 'cool', 'tech'];
+const mainDestinations = [
+  '/',
+  '/courses',
+  '/python',
+  '/java',
+  '/cpp',
+  '/rust',
+  '/mysql',
+  '/practice',
+  '/advanced',
+  '/cases',
+  '/custom-code',
+  '/notebook',
+  '/study-notes',
+  '/achievements',
+  '/settings',
+];
 const menu = (page: Page) => page.getByRole('button', { name: '展开或收起导航', exact: true });
 const navigation = (page: Page) => page.getByRole('navigation', { name: '主导航', exact: true });
 
@@ -117,23 +134,33 @@ test('every theme opens a left vertical drawer on narrow screens and Escape rest
         const sidebar = element.closest('.sidebar')!.getBoundingClientRect();
         const links = Array.from(element.querySelectorAll('a')).map((link) => {
           const { x, y, width, height } = link.getBoundingClientRect();
-          const hit = document.elementFromPoint(x + width / 2, y + height / 2);
-          return { x, y, width, height, hit: hit === link || link.contains(hit) };
+          return { x, y, width, height, href: link.getAttribute('href') };
         });
         return { x: sidebar.x, y: sidebar.y, width: sidebar.width, links };
       });
       expect(geometry.x).toBeCloseTo(0, 0);
       expect(geometry.y).toBeCloseTo(0, 0);
       expect(geometry.width).toBeCloseTo(216, 0);
-      expect(geometry.links).toHaveLength(11);
+      expect(geometry.links.map((link) => link.href)).toEqual(
+        mainDestinations.map((destination) => '#' + destination),
+      );
+      const links = navigation(page).getByRole('link');
       for (const [index, link] of geometry.links.entries()) {
         expect(link.width).toBeGreaterThan(100);
-        expect(link.hit).toBe(true);
         expect(link.x).toBeCloseTo(geometry.links[0].x, 0);
         if (index > 0)
           expect(link.y).toBeGreaterThanOrEqual(
             geometry.links[index - 1].y + geometry.links[index - 1].height,
           );
+        const target = links.nth(index);
+        await target.scrollIntoViewIfNeeded();
+        expect(
+          await target.evaluate((element) => {
+            const { x, y, width, height } = element.getBoundingClientRect();
+            const hit = document.elementFromPoint(x + width / 2, y + height / 2);
+            return element.contains(hit);
+          }),
+        ).toBe(true);
       }
       samples.push({ theme, viewportWidth: width, ...geometry });
       if (theme === 'cute' && width === 390)

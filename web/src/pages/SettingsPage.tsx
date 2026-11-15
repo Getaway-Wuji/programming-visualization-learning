@@ -8,6 +8,7 @@ import { AppearanceSettings } from '../appearance/AppearanceSettings';
 import { SavedBlockWorkspacePreference } from '../appearance/BlockWorkspacePreference';
 import { AiSettings } from '../ai-debug/Settings';
 import { BackupPanel } from '../storage/BackupPanel';
+import './settings.css';
 
 const tabs = [
   { id: 'appearance', label: '外观与主题' },

@@ -186,7 +186,7 @@ export default function C6NotesPage() {
   ].join(':');
   return (
     <C6Boundary>
-      <div className="c6-course-page">
+      <div className="c6-course-page study-notes-page">
         <PageHeading
           kicker="本地笔记"
           title="学习笔记"
