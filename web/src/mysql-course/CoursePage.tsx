@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   CourseNav,
+  CourseOpenLink,
   CourseReturn,
   CourseLoadState,
   CourseSearch,
@@ -9,6 +10,7 @@ import {
   CourseProgress,
   CourseNext,
 } from '../course-ui/CourseUi';
+import { CourseReader } from '../course-ui/CourseReader';
 import { ReadingEnd } from '../c6-learning/ReadingEnd';
 import { C6TeachingReading } from '../components/C6TeachingReading';
 import { bookTeachingBody } from '../content/book-teaching';
@@ -77,10 +79,10 @@ function BookCatalog({ index }: { index: MysqlManifest }) {
   const rows = (parent: string | null) => (
     <ul className="mysql-tree">
       {byParent.get(parent)?.map((node) => (
-        <li key={node.id}>
+        <li key={node.id} data-card-expansion-source={node.leaf ? '' : undefined}>
           {node.leaf ? (
             <>
-              <Link to={lessonPath(node.id)}>{numbered(node)}</Link>
+              <CourseOpenLink to={lessonPath(node.id)}>{numbered(node)}</CourseOpenLink>
               <CourseMode
                 runnable={runnableLessons.has(node.id)}
                 practice={runnableLessons.has(node.id)}
@@ -90,7 +92,7 @@ function BookCatalog({ index }: { index: MysqlManifest }) {
           ) : (
             <details open={node.order === 1 ? true : undefined}>
               <summary>{numbered(node)}</summary>
-              <Link to={lessonPath(node.id)}>阅读导读</Link>
+              <CourseOpenLink to={lessonPath(node.id)}>阅读导读</CourseOpenLink>
               {rows(node.id)}
             </details>
           )}
@@ -109,8 +111,8 @@ function BookCatalog({ index }: { index: MysqlManifest }) {
         matches.length ? (
           <ul className="mysql-tree">
             {matches.map((node) => (
-              <li key={node.id}>
-                <Link to={lessonPath(node.id)}>{numbered(node)}</Link>
+              <li key={node.id} data-card-expansion-source="">
+                <CourseOpenLink to={lessonPath(node.id)}>{numbered(node)}</CourseOpenLink>
                 {node.leaf && (
                   <CourseMode
                     runnable={runnableLessons.has(node.id)}
@@ -147,12 +149,12 @@ function Catalog() {
   const first = index?.catalog.find((node) => node.leaf);
   return (
     <>
-      <header className="mysql-title">
+      <header className="course-header">
         <div>
           <h1 tabIndex={-1}>MySQL 课程</h1>
           <p>从关系与表结构，到查询、数据变更和事务。</p>
         </div>
-        <Link className="button" to="/mysql/workbench">
+        <Link className="button button-secondary" to="/mysql/workbench">
           打开 SQL 工作台
         </Link>
       </header>
@@ -172,20 +174,18 @@ function Catalog() {
               description="按目录顺序继续未读小节，也可随时打开标为可运行的小节动手观察。"
             />
           )}
-          <div className="mysql-catalog-grid">
-            <BookCatalog index={index} />
-            <aside className="mysql-sheet course-catalog-panel" aria-label="MySQL 课程练习">
-              <h2>课程练习</h2>
-              <p>每题用四组独立数据库验证当前 SQL。</p>
-              <ul className="mysql-tree">
-                {Object.entries(mysqlExercises).map(([id, profile]) => (
-                  <li key={id}>
-                    <Link to={'/mysql/practice/' + id}>{profile.title}</Link>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-          </div>
+          <BookCatalog index={index} />
+          <aside className="course-catalog-panel" aria-label="MySQL 课程练习">
+            <h2>课程练习</h2>
+            <p>每题用四组独立数据库验证当前 SQL。</p>
+            <ul className="mysql-tree">
+              {Object.entries(mysqlExercises).map(([id, profile]) => (
+                <li key={id}>
+                  <Link to={'/mysql/practice/' + id}>{profile.title}</Link>
+                </li>
+              ))}
+            </ul>
+          </aside>
         </>
       ) : (
         <MysqlLoadState failed={resource.failed} retry={resource.retry} />
@@ -198,13 +198,20 @@ function Lesson({ id }: { id: string }) {
   if (!resource.value) return <MysqlLoadState failed={resource.failed} retry={resource.retry} />;
   const { index, lesson } = resource.value;
   const parent = index.catalog.find((node) => node.id === lesson.parent);
-  const children = index.catalog.filter((node) => node.parent === id);
+  const outline = index.catalog
+    .filter((node) => node.group === lesson.group)
+    .map((node) => ({
+      id: node.id,
+      parent: node.parent,
+      title: numbered(node),
+      path: lessonPath(node.id),
+    }));
   const previous = index.catalog[lesson.order - 2],
     next = index.catalog[lesson.order];
   const example = lesson.example,
     activity = lesson.activity;
   return (
-    <article className="mysql-sheet mysql-reading">
+    <CourseReader outline={outline} current={id} articleClassName="mysql-reading">
       {parent && (
         <p className="mysql-muted">
           <Link to={lessonPath(parent.id)}>{numbered(parent)}</Link>
@@ -212,15 +219,6 @@ function Lesson({ id }: { id: string }) {
       )}
       <h1 tabIndex={-1}>{numbered(lesson)}</h1>
       <C6TeachingReading text={lesson.body.join('\n\n')} repeatedTitle={lesson.title} />
-      {children.length > 0 && (
-        <ul className="mysql-tree">
-          {children.map((child) => (
-            <li key={child.id}>
-              <Link to={lessonPath(child.id)}>{numbered(child)}</Link>
-            </li>
-          ))}
-        </ul>
-      )}
       {example && (
         <section className="mysql-section">
           <h2>{example.mode === 'wasm' ? '可运行示例' : '阅读示例'}</h2>
@@ -276,13 +274,13 @@ function Lesson({ id }: { id: string }) {
         {previous && <Link to={lessonPath(previous.id)}>上一节 · {numbered(previous)}</Link>}
         {next && <Link to={lessonPath(next.id)}>下一节 · {numbered(next)}</Link>}
       </nav>
-    </article>
+    </CourseReader>
   );
 }
 export default function MysqlCoursePage() {
   const { lessonId } = useParams();
   return (
-    <div className="mysql-screen">
+    <div className="python-screen mysql-screen mysql-course-page">
       <MysqlNav />
       {lessonId ? <Lesson key={lessonId} id={lessonId} /> : <Catalog />}
     </div>

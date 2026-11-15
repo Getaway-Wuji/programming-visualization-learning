@@ -1,0 +1,57 @@
+@property --theme-wave-radius {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes theme-reveal-wave {
+  from {
+    --theme-wave-radius: 0px;
+  }
+  to {
+    --theme-wave-radius: var(--theme-wave-end);
+  }
+}
+
+:root[data-theme-reveal]::view-transition {
+  pointer-events: none;
+}
+
+:root[data-theme-reveal]::view-transition-group(root),
+:root[data-theme-reveal]::view-transition-old(root) {
+  animation: none;
+}
+
+:root[data-theme-reveal]::view-transition-old(root),
+:root[data-theme-reveal]::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+:root[data-theme-reveal]::view-transition-new(root) {
+  animation: theme-reveal-wave 600ms cubic-bezier(0.3, 0.07, 0.2, 1) both;
+  /* The soft leading edge and two quieter outer rings reveal layers of the incoming theme. */
+  mask-image: radial-gradient(
+    circle at var(--theme-wave-x) var(--theme-wave-y),
+    #000 max(0px, calc(var(--theme-wave-radius) - 7px)),
+    rgb(0 0 0 / 82%) max(0px, calc(var(--theme-wave-radius) - 3px)),
+    transparent var(--theme-wave-radius),
+    transparent calc(var(--theme-wave-radius) + 2px),
+    rgb(0 0 0 / 32%) calc(var(--theme-wave-radius) + 4px),
+    transparent calc(var(--theme-wave-radius) + 7px),
+    transparent calc(var(--theme-wave-radius) + 9px),
+    rgb(0 0 0 / 13%) calc(var(--theme-wave-radius) + 11px),
+    transparent calc(var(--theme-wave-radius) + 14px)
+  );
+}
+
+:root[data-theme-reveal][data-reduced-motion='on']::view-transition-new(root) {
+  animation: none;
+  mask-image: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme-reveal]::view-transition-new(root) {
+    animation: none;
+    mask-image: none;
+  }
+}

@@ -8,7 +8,9 @@ import {
   CourseMode,
   CourseProgress,
   CourseNext,
+  CourseOpenLink,
 } from '../course-ui/CourseUi';
+import { useCardExpansion } from '../course-ui/card-expansion';
 import { ReadingEnd } from '../c6-learning/ReadingEnd';
 import { C6TeachingReading } from '../components/C6TeachingReading';
 import { bookTeachingBody } from '../content/book-teaching';
@@ -79,12 +81,12 @@ function BookCatalog({ index }: { index: CppManifest }) {
   const rows = (parent: string | null) => (
     <ul className="cpp-tree">
       {byParent.get(parent)?.map((node) => (
-        <li key={node.id}>
+        <li key={node.id} data-card-expansion-source={node.leaf || undefined}>
           {node.leaf ? (
             <>
-              <Link to={lessonPath(node.id)}>
+              <CourseOpenLink to={lessonPath(node.id)}>
                 {node.number} {node.title}
-              </Link>
+              </CourseOpenLink>
               <CourseMode
                 runnable={runnableLessons.has(node.id)}
                 practice={runnableLessons.has(node.id)}
@@ -96,9 +98,9 @@ function BookCatalog({ index }: { index: CppManifest }) {
               <summary>
                 {node.number} {node.title}
               </summary>
-              <Link className="cpp-guide" to={lessonPath(node.id)}>
+              <CourseOpenLink className="cpp-guide" to={lessonPath(node.id)}>
                 阅读导读
-              </Link>
+              </CourseOpenLink>
               {rows(node.id)}
             </details>
           )}
@@ -117,10 +119,10 @@ function BookCatalog({ index }: { index: CppManifest }) {
         matches.length ? (
           <ul className="cpp-tree">
             {matches.map((row) => (
-              <li key={row.id}>
-                <Link to={lessonPath(row.id)}>
+              <li key={row.id} data-card-expansion-source>
+                <CourseOpenLink to={lessonPath(row.id)}>
                   {row.number} {row.title}
-                </Link>
+                </CourseOpenLink>
                 {row.leaf && (
                   <CourseMode
                     runnable={runnableLessons.has(row.id)}
@@ -207,6 +209,7 @@ function Catalog() {
 
 function Lesson({ id }: { id: string }) {
   const resource = useJavaResource(id, loadDetailedLesson);
+  const panel = useCardExpansion<HTMLElement>(!!resource.value);
   if (!resource.value) return <CppLoadState failed={resource.failed} retry={resource.retry} />;
   const { index, lesson } = resource.value;
   const parent = index.catalog.find((node) => node.id === lesson.parent);
@@ -216,7 +219,7 @@ function Lesson({ id }: { id: string }) {
   const example = lesson.example;
   const activity = lesson.activity;
   return (
-    <article className="cpp-sheet cpp-reading">
+    <article className="cpp-sheet cpp-reading" ref={panel}>
       {parent && (
         <p className="cpp-muted">
           <Link to={lessonPath(parent.id)}>{parent.title}</Link>

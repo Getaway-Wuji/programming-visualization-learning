@@ -1,8 +1,11 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type MouseEvent } from 'react';
+import { flushSync } from 'react-dom';
 import { Link } from 'react-router';
 import { Icon } from '../components/Icon';
 import { useLearning } from '../learning/react';
 import { useAppearance } from './react';
+import { revealTheme } from './theme-reveal';
+import './theme-reveal.css';
 
 export function ThemeModeToggle() {
   const { state, service } = useLearning();
@@ -19,36 +22,57 @@ export function ThemeModeToggle() {
     ['loading', 'saving', 'readonly', 'conflict'].includes(state.status) ||
     state.recovery?.writable === false ||
     state.recovery?.resettable.includes('settings');
-  const toggle = async () => {
+  const toggle = async (event: MouseEvent<HTMLButtonElement>) => {
     if (disabled || !snapshot || pending.current) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const origin =
+      event.detail === 0
+        ? { x: bounds.left + bounds.width / 2, y: bounds.top + bounds.height / 2 }
+        : { x: event.clientX, y: event.clientY };
     setFailed(false);
     const theme = dark ? 'light' : 'dark';
-    if (appearance.draft) {
-      appearance.edit({ mode: theme });
-      return;
-    }
     pending.current = true;
     setSaving(true);
     const epoch = state.sessionEpoch;
-    try {
-      await service.saveDisplay(
-        {
-          theme,
-          reducedMotion: snapshot.settings.reducedMotion,
-          playbackRate: snapshot.settings.playbackRate,
-        },
-        snapshot.meta.revision,
-      );
+    const sameSession = () => {
       const current = service.getState();
-      if (
+      return (
         current.sessionEpoch === epoch &&
         current.snapshot?.meta.generation === snapshot.meta.generation
-      )
-        setFailed(
-          !current.lastSaved ||
-            current.status !== 'ready' ||
-            current.snapshot.settings.theme !== theme,
+      );
+    };
+    try {
+      await revealTheme(theme, origin, async () => {
+        if (!sameSession()) return false;
+        if (appearance.draft) {
+          flushSync(() => appearance.edit({ mode: theme }));
+          return true;
+        }
+        const latest = service.getState().snapshot;
+        if (!latest) return false;
+        await service.saveDisplay(
+          {
+            theme,
+            reducedMotion: latest.settings.reducedMotion,
+            playbackRate: latest.settings.playbackRate,
+          },
+          latest.meta.revision,
         );
+        if (!sameSession()) return false;
+        const current = service.getState();
+        const saved =
+          current.lastSaved &&
+          current.status === 'ready' &&
+          current.snapshot?.settings.theme === theme;
+        // Commit the confirmed storage update into the new view-transition snapshot.
+        flushSync(() => {
+          setFailed(!saved);
+          setSaving(false);
+        });
+        return saved;
+      });
+    } catch {
+      if (sameSession()) setFailed(true);
     } finally {
       pending.current = false;
       setSaving(false);
@@ -64,7 +88,7 @@ export function ThemeModeToggle() {
         aria-pressed={dark}
         title={appearance.draft ? `${label}，随主题预览一同保存` : label}
         disabled={disabled}
-        onClick={() => void toggle()}
+        onClick={(event) => void toggle(event)}
       >
         <span className="theme-mode-symbols" aria-hidden="true">
           <Icon name="moon" className="theme-mode-moon" />

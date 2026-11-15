@@ -9,6 +9,10 @@
   color: var(--mysql-text);
   font-size: 0.875rem;
 }
+.mysql-screen.mysql-course-page {
+  gap: 1rem;
+  font-size: inherit;
+}
 .mysql-screen h1 {
   font-size: 1.5rem;
   line-height: 1.4;
@@ -128,12 +132,6 @@
 .mysql-actions .workbench-play-glyph {
   margin-inline-end: 0.45em;
 }
-.mysql-catalog-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(14rem, 1fr);
-  gap: 1rem;
-  align-items: start;
-}
 .mysql-progress progress {
   flex: 1;
   max-width: 28rem;
@@ -165,7 +163,6 @@
   min-width: 10rem;
 }
 .mysql-reading {
-  max-width: 56rem;
   line-height: 1.75;
 }
 .mysql-reading > h1 {
@@ -486,9 +483,6 @@
   }
   .mysql-table-layout {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  }
-  .mysql-catalog-grid {
-    grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (max-width: 640px) {

@@ -1,11 +1,6 @@
 :root[data-appearance] .p05-app #primary-navigation {
   --sidebar-selection-fill: var(--p05-active);
   --sidebar-selection-edge: color-mix(in srgb, var(--p05-accent) 26%, var(--p05-border));
-  --sidebar-selection-motion-fill: color-mix(
-    in srgb,
-    var(--p05-accent) 13%,
-    var(--sidebar-selection-fill)
-  );
   --sidebar-selection-shadow: none;
   position: relative;
   isolation: isolate;
@@ -43,6 +38,7 @@
   display: none;
   position: absolute;
   top: 0;
+  left: 0;
   z-index: -1;
   border: 1px solid var(--sidebar-selection-edge);
   border-radius: 999px;

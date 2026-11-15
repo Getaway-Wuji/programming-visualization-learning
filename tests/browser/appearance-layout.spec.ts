@@ -78,6 +78,55 @@ async function expectDrawerClosed(page: Page, focused = true) {
   if (focused) await expect(menu(page)).toBeFocused();
 }
 
+test('theme change ripples from the pointer and persists the revealed mode', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'no-preference' });
+  await page.goto('/#/settings?panel=display');
+  await ready(page);
+  await expect(page.getByRole('tabpanel')).toBeVisible();
+  const root = page.locator('html');
+  const toggle = page.getByTestId('theme-mode-toggle');
+  await expect(toggle).toBeEnabled();
+  const supported = await page.evaluate(
+    () => !!document.startViewTransition && typeof CSS.registerProperty === 'function',
+  );
+  const bounds = (await toggle.boundingBox())!;
+  const x = Math.floor(bounds.x + 13);
+  const y = Math.floor(bounds.y + 17);
+  await page.mouse.click(x, y);
+  if (supported) {
+    await expect(root).toHaveAttribute('data-theme-reveal', 'active');
+    expect(
+      await root.evaluate((html) => [
+        html.style.getPropertyValue('--theme-wave-x'),
+        html.style.getPropertyValue('--theme-wave-y'),
+      ]),
+    ).toEqual([`${x}px`, `${y}px`]);
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          document
+            .getAnimations()
+            .some(
+              (effect) =>
+                effect instanceof CSSAnimation && effect.animationName === 'theme-reveal-wave',
+            ),
+        ),
+      )
+      .toBe(true);
+  }
+  await expect(root).toHaveAttribute('data-theme', 'dark');
+  await expect(root).not.toHaveAttribute('data-theme-reveal', 'active');
+  await page.reload();
+  await expect(root).toHaveAttribute('data-theme', 'dark');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(root).toHaveAttribute('data-reduced-motion', 'on');
+  await expect(toggle).toBeEnabled();
+  await toggle.focus();
+  await page.keyboard.press('Enter');
+  await expect(root).toHaveAttribute('data-theme', 'light');
+  await expect(root).not.toHaveAttribute('data-theme-reveal', 'active');
+});
+
 test('all six saved themes keep one left sidebar and use the available desktop settings width', async ({
   page,
 }, info) => {
@@ -115,7 +164,7 @@ test('all six saved themes keep one left sidebar and use the available desktop s
   });
 });
 
-test('the navigation drop has a broad leading edge and a tapered tail in both directions', async ({
+test('the rounded route highlight slides, follows target width and settles after a small rebound', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -125,68 +174,84 @@ test('the navigation drop has a broad leading edge and a tapered tail in both di
   const nav = navigation(page);
   const current = nav.locator('[aria-current="page"]');
   const pill = nav.locator('.sidebar-selection-pill');
-  const sampleMotion = () =>
-    pill.evaluate((element) => {
+  const link = (name: string) => nav.getByRole('link', { name, exact: true });
+
+  // Exercise the same motion with different link widths, even in the regular full-width sidebar.
+  await link('MySQL 课程').evaluate((element) => {
+    element.style.width = '132px';
+    element.style.marginInlineStart = '8px';
+  });
+  const sampleMotion = (leavePaused = false) =>
+    pill.evaluate((element, leavePaused) => {
       const movement = element.getAnimations()[0];
-      if (!movement?.effect) throw new Error('Expected an active capsule animation');
+      if (!movement?.effect) throw new Error('Expected an active highlight animation');
       const duration = Number(movement.effect.getComputedTiming().duration);
       movement.pause();
-      // Measure the actual painted outline through the browser's clip-path hit testing.
-      element.style.setProperty('z-index', '2');
-      element.style.setProperty('pointer-events', 'auto');
-      try {
-        return [0, 0.3, 0.75].map((step) => {
-          movement.currentTime = duration * step;
-          const rect = element.getBoundingClientRect();
-          const wideAt = (position: number) =>
-            [0.24, 0.76].every(
-              (column) =>
-                document.elementFromPoint(
-                  rect.x + rect.width * column,
-                  rect.y + rect.height * position,
-                ) === element,
-            );
-          return {
-            y: rect.y,
-            height: rect.height,
-            broadAbove: wideAt(0.28),
-            broadBelow: wideAt(0.72),
-          };
-        });
-      } finally {
-        element.style.removeProperty('z-index');
-        element.style.removeProperty('pointer-events');
-        movement.finish();
-      }
-    });
+      const sample = (progress: number) => {
+        movement.currentTime = duration * progress;
+        const { x, y, width, height } = element.getBoundingClientRect();
+        return { x, y, width, height };
+      };
+      const samples = Array.from({ length: 21 }, (_, i) => sample(i / 20));
+      const paused = leavePaused ? sample(0.35) : null;
+      if (!leavePaused) movement.finish();
+      return { samples, paused };
+    }, leavePaused);
 
-  const link = (name: string) => nav.getByRole('link', { name, exact: true });
   await expect(current).toHaveText('学习首页');
+  await expect(pill).toHaveCSS('clip-path', 'none');
   const home = (await current.boundingBox())!;
+  const boundsDifference = (actual: typeof home | null, expected: typeof home | null) =>
+    actual && expected
+      ? Math.max(
+          ...(['x', 'y', 'width', 'height'] as const).map((key) =>
+            Math.abs(actual[key] - expected[key]),
+          ),
+        )
+      : Infinity;
   await link('MySQL 课程').click();
   await expect(current).toHaveText('MySQL 课程');
   const mysql = (await current.boundingBox())!;
-  const [start, extended, arrived] = await sampleMotion();
-  expect(start.y).toBeCloseTo(home.y, 0);
-  expect(extended.height).toBeGreaterThan(start.height * 1.5);
-  expect(extended).toMatchObject({ broadAbove: false, broadBelow: true });
-  expect(arrived.y + arrived.height).toBeCloseTo(mysql.y + mysql.height, 0);
-  expect(await pill.boundingBox()).toMatchObject({ y: mysql.y, height: mysql.height });
+  const { samples: down } = await sampleMotion();
+  expect(boundsDifference(down[0], home)).toBeLessThan(0.1);
+  expect(down[7].y).toBeGreaterThan(home.y);
+  expect(down[7].y).toBeLessThan(mysql.y);
+  expect(down[7].width).toBeLessThan(home.width);
+  expect(down[7].width).toBeGreaterThan(mysql.width);
+  const downwardRebound = Math.max(...down.map(({ y }) => y)) - mysql.y;
+  expect(downwardRebound).toBeGreaterThan(0.5);
+  expect(downwardRebound).toBeLessThanOrEqual(3.1);
+  expect(boundsDifference(await pill.boundingBox(), mysql)).toBeLessThan(0.1);
 
   await page.goBack();
   await expect(current).toHaveText('学习首页');
-  const [, reverseExtension, reverseArrival] = await sampleMotion();
-  expect(reverseExtension.height).toBeGreaterThan(home.height * 1.5);
-  expect(reverseExtension).toMatchObject({ broadAbove: true, broadBelow: false });
-  expect(reverseArrival.y).toBeCloseTo(home.y, 0);
+  const { samples: up, paused } = await sampleMotion(true);
+  expect(boundsDifference(up[0], mysql)).toBeLessThan(0.1);
+  expect(up[7].y).toBeGreaterThan(home.y);
+  expect(up[7].y).toBeLessThan(mysql.y);
+  expect(up[7].width).toBeGreaterThan(mysql.width);
+  expect(up[7].width).toBeLessThan(home.width);
+  expect(Math.min(...up.map(({ y }) => y))).toBeLessThan(home.y - 0.5);
+
+  await link('Python 课程').click();
+  await expect(current).toHaveText('Python 课程');
+  const { samples: interrupted } = await sampleMotion();
+  expect(boundsDifference(interrupted[0], paused)).toBeLessThan(0.1);
+  expect(boundsDifference(await pill.boundingBox(), await current.boundingBox())).toBeLessThan(0.1);
+
+  await page.getByRole('button', { name: '收起侧栏', exact: true }).click();
+  await expect(page.locator('.app-shell')).toHaveAttribute('data-sidebar', 'collapsed');
+  await expect
+    .poll(async () => boundsDifference(await pill.boundingBox(), await current.boundingBox()))
+    .toBeLessThan(0.1);
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('html')).toHaveAttribute('data-reduced-motion', 'on');
-  await link('Python 课程').focus();
+  await link('学习首页').focus();
   await page.keyboard.press('Enter');
-  await expect(current).toHaveText('Python 课程');
+  await expect(current).toHaveText('学习首页');
   expect(await pill.evaluate((element) => element.getAnimations().length)).toBe(0);
-  expect(await pill.boundingBox()).toEqual(await current.boundingBox());
+  expect(boundsDifference(await pill.boundingBox(), await current.boundingBox())).toBeLessThan(0.1);
 });
 
 test('every theme opens a left vertical drawer on narrow screens and Escape restores the opener', async ({

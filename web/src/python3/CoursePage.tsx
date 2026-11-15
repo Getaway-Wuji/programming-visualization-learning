@@ -8,9 +8,11 @@ import {
   CourseMode,
   CourseProgress,
   CourseNext,
+  CourseOpenLink,
   CourseResume,
   useCourseNavigation,
 } from '../course-ui/CourseUi';
+import { useCardExpansion } from '../course-ui/card-expansion';
 import { ReadingEnd } from '../c6-learning/ReadingEnd';
 import { C6TeachingReading } from '../components/C6TeachingReading';
 import { useLearning } from '../learning/react';
@@ -82,14 +84,18 @@ function Catalog({ manifest }: { manifest: PythonManifest }) {
             <h2>{section.titleOriginal ?? '基础教程'}</h2>
             <ol className="python-list">
               {entries.map((e) => (
-                <li key={e.path} value={e.order}>
+                <li
+                  key={e.path}
+                  value={e.order}
+                  data-card-expansion-source={!e.external || undefined}
+                >
                   {e.external ? (
                     <a href={e.path} rel="noreferrer">
                       {e.title}（来源参考）
                     </a>
                   ) : (
                     <>
-                      <Link to={e.path}>{e.title}</Link>
+                      <CourseOpenLink to={e.path}>{e.title}</CourseOpenLink>
                       <CourseMode runnable={e.runnable} practice={e.runnable} contains />
                     </>
                   )}
@@ -104,8 +110,8 @@ function Catalog({ manifest }: { manifest: PythonManifest }) {
           <h2>匹配小节</h2>
           <ul className="python-list">
             {leaves.map(([id, title, path, mode]) => (
-              <li key={id}>
-                <Link to={path}>{title}</Link>
+              <li key={id} data-card-expansion-source>
+                <CourseOpenLink to={path}>{title}</CourseOpenLink>
                 <CourseMode
                   runnable={mode !== 'reading'}
                   practice={mode === 'practice'}
@@ -184,6 +190,7 @@ function ArticleBody({
   order: number;
   section?: string;
 }) {
+  const panel = useCardExpansion<HTMLElement>();
   const { state } = useLearning();
   const completed = new Set(
     state.snapshot?.progress
@@ -220,7 +227,7 @@ function ArticleBody({
         <summary>本篇目录</summary>
         <Tree data={data} order={order} active={node.platformRef.id} />
       </details>
-      <article className="python-reading" key={node.platformRef.id}>
+      <article className="python-reading" key={node.platformRef.id} ref={panel}>
         <h1 tabIndex={-1}>{node.titleDisplay}</h1>
         {node.leaf && node.status === 'authored' && (
           <CourseMode

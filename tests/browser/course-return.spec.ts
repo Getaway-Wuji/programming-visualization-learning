@@ -63,15 +63,45 @@ test('the Java return button remains readable and usable on a phone', async ({ p
   await expect(page.getByRole('searchbox', { name: '搜索目录' })).toBeVisible();
 });
 
-test('reading navigation fits desktop, tablet and phone widths', async ({ page }, testInfo) => {
-  for (const width of [1440, 810, 390]) {
+test('C and MySQL course frames follow the centered Java layout across screen sizes', async ({
+  page,
+}) => {
+  const courses = [
+    ['/java', '/java/article/2/java.lesson.6b7b5f950b05e17d1042'],
+    ['/courses', '/lessons/lesson.c6.s14.3.1'],
+    ['/mysql', '/mysql/lesson/mysql.lesson.1.1.1'],
+  ] as const;
+  for (const width of [1920, 1440, 810, 390]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto('/#/java/article/2/java.lesson.6b7b5f950b05e17d1042');
-    await expect(page.getByRole('heading', { name: '主要特性', exact: true })).toBeVisible();
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
-    );
-    expect(overflow).toBe(false);
-    await page.screenshot({ path: testInfo.outputPath(`reading-${width}.png`), fullPage: true });
+    const catalogs = [];
+    const articles = [];
+    for (const [catalog, lesson] of courses) {
+      await page.goto('/#' + catalog);
+      const header = page.locator('main .course-header');
+      await expect(header).toBeVisible();
+      await expect(page.getByRole('searchbox', { name: '搜索目录' })).toBeVisible();
+      const bounds = (await header.boundingBox())!;
+      const main = (await page.locator('main').boundingBox())!;
+      expect(Math.abs(bounds.x + bounds.width / 2 - (main.x + main.width / 2))).toBeLessThan(1);
+      catalogs.push(bounds);
+      await page.goto('/#' + lesson);
+      await expect(page.locator('main .c6-teaching-reading').first()).toBeVisible();
+      const article = (await page.locator('.python-article-grid > article').boundingBox())!;
+      const outline = (await page.locator('.python-directory > summary').boundingBox())!;
+      articles.push(article);
+      if (width < 740) expect(outline.y + outline.height).toBeLessThan(article.y);
+      else expect(outline.x + outline.width).toBeLessThan(article.x);
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+        ),
+      ).toBe(false);
+    }
+    for (const samples of [catalogs, articles]) {
+      for (const sample of samples.slice(1)) {
+        expect(Math.abs(sample.x - samples[0].x)).toBeLessThan(1);
+        expect(Math.abs(sample.width - samples[0].width)).toBeLessThan(1);
+      }
+    }
   }
 });

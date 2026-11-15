@@ -1,10 +1,12 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router';
+import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 import { BugCatalogLink } from '../bugs/BugCatalogLink';
 import { Breadcrumbs, PageHeading, StatePanel } from '../components/Ui';
 import { C6TeachingReading } from '../components/C6TeachingReading';
 import { bookTeachingBody } from '../content/book-teaching';
-import { CourseReturn } from '../course-ui/CourseUi';
+import { CourseOpenLink, CourseProgress, CourseReturn, CourseSearch } from '../course-ui/CourseUi';
+import { CourseReader } from '../course-ui/CourseReader';
+import { requestCardExpansion, useCardExpansion } from '../course-ui/card-expansion';
 import { LearningSaveStatus, useLearning } from '../learning/react';
 import { DailyGoalSummary } from '../learning/goal-components';
 import { HomePanel, homePanels } from '../learning/HomePanel';
@@ -126,7 +128,7 @@ function NodeRows({ nodes }: { nodes: readonly C6NavigationNode[] }) {
         const progress = state.projection?.lessons.find((l) => l.id === lesson?.[0]);
         return (
           <li key={node.id}>
-            <Link to={c6NodePath(index, node.id)}>
+            <CourseOpenLink to={c6NodePath(index, node.id)}>
               <span>{node.titleDisplay}</span>
               <span className="c6-node-detail">
                 {node.chunkId === 'chA' || node.chunkId === 'chB'
@@ -141,7 +143,7 @@ function NodeRows({ nodes }: { nodes: readonly C6NavigationNode[] }) {
                           ? '小节'
                           : '展开阅读'}
               </span>
-            </Link>
+            </CourseOpenLink>
           </li>
         );
       })}
@@ -157,7 +159,9 @@ export function C6HomePage() {
 }
 function Home() {
   const { state } = useLearning();
+  const location = useLocation();
   const [search, setSearch] = useSearchParams();
+  const studyPanel = useCardExpansion<HTMLElement>();
   const requested = search.get('panel');
   const panel =
     requested && Object.hasOwn(homePanels, requested)
@@ -214,16 +218,20 @@ function Home() {
                 aria-label={language.label}
                 aria-describedby={`home-language-${language.id}`}
                 aria-pressed={selectedLanguage.id === language.id}
-                onClick={() =>
-                  setSearch(
-                    (current) => {
-                      const next = new URLSearchParams(current);
-                      next.set('language', language.id);
-                      return next;
-                    },
-                    { replace: true },
-                  )
-                }
+                onClick={(event) => {
+                  const next = new URLSearchParams(search);
+                  next.set('language', language.id);
+                  if (selectedLanguage.id !== language.id)
+                    requestCardExpansion(
+                      event.currentTarget,
+                      `/?${next.toString()}`,
+                      location.key,
+                      {
+                        revealTarget: event.detail > 0,
+                      },
+                    );
+                  setSearch(next, { replace: true });
+                }}
               >
                 <span className="home-language-mark" aria-hidden="true">
                   {languageTiles[language.id].mark}
@@ -242,9 +250,14 @@ function Home() {
       </section>
       <div className="c6-home-columns">
         {selectedLanguage.id !== 'c' ? (
-          <LanguageStudyCard language={selectedLanguage.id} />
+          <LanguageStudyCard language={selectedLanguage.id} panelRef={studyPanel} />
         ) : (
-          <section className="card c6-next-section" aria-labelledby="c6-next-title">
+          <section
+            className="card c6-next-section"
+            aria-labelledby="c6-next-title"
+            data-card-expansion-source
+            ref={studyPanel}
+          >
             <p className="muted">
               {state.projection ? `${completed} / 404 个小节已完成` : '正在确认学习进度'}
             </p>
@@ -253,9 +266,9 @@ function Home() {
             )}
             <h2 id="c6-next-title">{title ?? '全书小节已完成'}</h2>
             {next ? (
-              <Link className="button button-primary" to={`/lessons/${next[0]}`}>
+              <CourseOpenLink className="button button-primary" to={`/lessons/${next[0]}`}>
                 {started ? '继续阅读' : '开始阅读'}
-              </Link>
+              </CourseOpenLink>
             ) : (
               <Link className="button button-primary" to="/courses">
                 回顾全书
@@ -319,51 +332,77 @@ export function C6CoursePage() {
   const { chapterId } = useParams();
   return <C6Boundary>{chapterId ? <SourcePage nodeId={chapterId} /> : <Directory />}</C6Boundary>;
 }
+
+function C6CourseNav({ directory = false }: { directory?: boolean }) {
+  return (
+    <nav className="course-nav" aria-label="C 语言学习">
+      <Link
+        to="/courses"
+        className={directory ? undefined : 'course-return'}
+        aria-current={directory ? 'page' : undefined}
+      >
+        {directory ? (
+          'C 语言目录'
+        ) : (
+          <>
+            <span className="course-return-arrow">←</span> 返回课程目录
+          </>
+        )}
+      </Link>
+      <Link to="/practice">课程练习</Link>
+      <Link to="/custom-code">工作台</Link>
+    </nav>
+  );
+}
+
 function Directory() {
   const { state } = useLearning();
   const [query, setQuery] = useState('');
-  const nodes = state.c6!.manifest!.nodes;
+  const { nodes, counts } = state.c6!.manifest!;
   const roots = nodes.filter((n) => n.parentId === null);
-  const filtered = nodes.filter((n) =>
-    n.titleDisplay.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()),
-  );
+  const keyword = query.trim().toLocaleLowerCase();
+  const filtered = nodes.filter((n) => n.titleDisplay.toLocaleLowerCase().includes(keyword));
   return (
-    <div className="c6-course-page">
-      <PageHeading kicker="C 语言课程" title="课程目录" description="17 章 · 404 个学习小节" />
-      <label className="c6-search">
-        查找章节或主题
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="例如：14.3.1、结构、指针"
-        />
-      </label>
-      {query.trim() ? (
-        <section aria-label="章节搜索结果">
-          <p className="muted">找到 {filtered.length} 个目录项</p>
-          <NodeRows nodes={filtered} />
-          {!filtered.length && <p>没有匹配章节，请换一个关键词。</p>}
-        </section>
-      ) : (
-        <>
-          <section aria-labelledby="c6-chapters-title">
-            <h2 id="c6-chapters-title">正文章节</h2>
-            <NodeRows nodes={roots.filter((n) => n.chunkId !== 'chA' && n.chunkId !== 'chB')} />
+    <div className="python-screen c6-course-page">
+      <C6CourseNav directory />
+      <header className="course-header">
+        <div>
+          <h1 tabIndex={-1}>课程目录</h1>
+          <p>C 语言课程 · 17 章 · {counts.lessons} 个学习小节</p>
+        </div>
+        <Link className="button button-secondary" to="/practice">
+          进入练习
+        </Link>
+      </header>
+      <CourseProgress
+        count={state.projection?.lessons.filter((lesson) => lesson.completed).length}
+        total={counts.lessons}
+        label="C 课程完成进度"
+      />
+      <section className="course-catalog-panel" aria-label="教材目录">
+        <h2>教材目录</h2>
+        <CourseSearch query={query} change={setQuery} />
+        {keyword ? (
+          <section aria-label="章节搜索结果">
+            <p className="muted">找到 {filtered.length} 个目录项</p>
+            <NodeRows nodes={filtered} />
+            {!filtered.length && <p role="status">没有匹配章节，请换一个关键词。</p>}
           </section>
-          <section className="c6-reference-section" aria-labelledby="c6-reference-title">
-            <h2 id="c6-reference-title">参考资料</h2>
-            <p className="muted">附录 A、B 用于查阅，不计入课程完成进度与奖励。</p>
-            <NodeRows nodes={roots.filter((n) => n.chunkId === 'chA' || n.chunkId === 'chB')} />
-          </section>
-          <p className="inline-actions">
-            <Link className="button button-primary" to="/practice">
-              进入练习
-            </Link>
-          </p>
-          <BugCatalogLink />
-        </>
-      )}
+        ) : (
+          <>
+            <section aria-labelledby="c6-chapters-title">
+              <h2 id="c6-chapters-title">正文章节</h2>
+              <NodeRows nodes={roots.filter((n) => n.chunkId !== 'chA' && n.chunkId !== 'chB')} />
+            </section>
+            <section aria-labelledby="c6-reference-title">
+              <h2 id="c6-reference-title">参考资料</h2>
+              <p className="muted">附录 A、B 用于查阅，不计入课程完成进度与奖励。</p>
+              <NodeRows nodes={roots.filter((n) => n.chunkId === 'chA' || n.chunkId === 'chB')} />
+            </section>
+          </>
+        )}
+      </section>
+      {!keyword && <BugCatalogLink />}
     </div>
   );
 }
@@ -421,7 +460,14 @@ function SourcePage({ nodeId }: { nodeId: string }) {
   const chunk = loaded?.key === nodeId ? loaded.chunk : null;
   const lesson = index.lessons.find((l) => l[1] === `node.${nodeId}`);
   const parent = manifest.nodes.find((n) => n.id === nav.parentId);
-  const children = manifest.nodes.filter((n) => n.parentId === nodeId);
+  const outline = manifest.nodes
+    .filter((entry) => entry.chunkId === nav.chunkId)
+    .map((entry) => ({
+      id: entry.id,
+      parent: entry.parentId,
+      title: entry.titleDisplay,
+      path: c6NodePath(index, entry.id),
+    }));
   const currentAt = index.lessons.findIndex((l) => l[0] === lesson?.[0]);
   const next = currentAt >= 0 ? index.lessons[currentAt + 1] : null;
   const guides =
@@ -429,86 +475,87 @@ function SourcePage({ nodeId }: { nodeId: string }) {
       (a) => a.sourceNodeRef.id === `node.${nodeId}` && a.kind === 'source-design-guide',
     ) ?? [];
   return (
-    <div className="c6-course-page c6-reading-page">
-      <CourseReturn path="/courses" />
-      <Breadcrumbs
-        items={[
-          { label: '课程目录', to: '/courses' },
-          ...(parent ? [{ label: parent.titleDisplay, to: c6NodePath(index, parent.id) }] : []),
-          { label: nav.titleDisplay },
-        ]}
-      />
-      <PageHeading
-        kicker={nav.chunkId === 'chA' || nav.chunkId === 'chB' ? '参考资料' : 'C 语言课程'}
-        title={nav.titleDisplay}
-      />
-      {!node && (
-        <StatePanel
-          kind={failed === nodeId ? 'error' : 'loading'}
-          title={failed === nodeId ? '本节内容读取失败' : '正在读取本节'}
-          description="正文和代码按章节加载。"
-        >
-          {failed === nodeId && (
-            <button className="button button-secondary" onClick={() => retry((n) => n + 1)}>
-              重试本节
-            </button>
-          )}
-        </StatePanel>
-      )}
-      {node && (
-        <>
-          <C6TeachingReading
-            text={
-              node.body.startsWith(`# ${nav.titleDisplay}\n`)
-                ? node.body.slice(nav.titleDisplay.length + 3)
-                : node.body
-            }
-          />
-          {guides.length > 0 && (
-            <section className="c6-section">
-              <h2>来源习题指导 · 选做</h2>
-              <p className="muted">用于思考与自行设计；阅读指导不记为原题代码通过。</p>
-              {guides.map(
-                (guide) =>
-                  guide.kind === 'source-design-guide' && (
-                    <details key={guide.ref.id}>
-                      <summary>{guide.goal}</summary>
-                      <C6TeachingReading text={guide.discussion} />
-                    </details>
-                  ),
-              )}
-            </section>
-          )}
-          {lesson && lesson[5].length > 0 && (
-            <section className="c6-section c6-section-practice">
-              <h2>动手练习</h2>
-              {lesson[5].map((id) => (
-                <Link key={id} className="button button-secondary" to={`/practice/${id}`}>
-                  {state.projection?.exercises.find((e) => e.id === id)?.passed
-                    ? '去练习（已通过）'
-                    : '去练习'}
+    <div className="python-screen c6-course-page">
+      <C6CourseNav />
+      <CourseReader
+        outline={outline}
+        current={nodeId}
+        articleClassName="c6-reading-page"
+        ready={node !== null}
+      >
+        <Breadcrumbs
+          items={[
+            { label: '课程目录', to: '/courses' },
+            ...(parent ? [{ label: parent.titleDisplay, to: c6NodePath(index, parent.id) }] : []),
+            { label: nav.titleDisplay },
+          ]}
+        />
+        <PageHeading
+          kicker={nav.chunkId === 'chA' || nav.chunkId === 'chB' ? '参考资料' : 'C 语言课程'}
+          title={nav.titleDisplay}
+        />
+        {!node && (
+          <StatePanel
+            kind={failed === nodeId ? 'error' : 'loading'}
+            title={failed === nodeId ? '本节内容读取失败' : '正在读取本节'}
+            description="正文和代码按章节加载。"
+          >
+            {failed === nodeId && (
+              <button className="button button-secondary" onClick={() => retry((n) => n + 1)}>
+                重试本节
+              </button>
+            )}
+          </StatePanel>
+        )}
+        {node && (
+          <>
+            <C6TeachingReading
+              text={
+                node.body.startsWith(`# ${nav.titleDisplay}\n`)
+                  ? node.body.slice(nav.titleDisplay.length + 3)
+                  : node.body
+              }
+            />
+            {guides.length > 0 && (
+              <section className="c6-section">
+                <h2>来源习题指导 · 选做</h2>
+                <p className="muted">用于思考与自行设计；阅读指导不记为原题代码通过。</p>
+                {guides.map(
+                  (guide) =>
+                    guide.kind === 'source-design-guide' && (
+                      <details key={guide.ref.id}>
+                        <summary>{guide.goal}</summary>
+                        <C6TeachingReading text={guide.discussion} />
+                      </details>
+                    ),
+                )}
+              </section>
+            )}
+            {lesson && lesson[5].length > 0 && (
+              <section className="c6-section c6-section-practice">
+                <h2>动手练习</h2>
+                {lesson[5].map((id) => (
+                  <Link key={id} className="button button-secondary" to={`/practice/${id}`}>
+                    {state.projection?.exercises.find((e) => e.id === id)?.passed
+                      ? '去练习（已通过）'
+                      : '去练习'}
+                  </Link>
+                ))}
+              </section>
+            )}
+            {lesson && <ReadingEnd key={lesson[0]} lessonId={lesson[0]} knowledgeId={lesson[3]} />}
+            {next && (
+              <nav className="c6-next-link" aria-label="下一小节">
+                <Link className="text-link" to={`/lessons/${next[0]}`}>
+                  下一小节：{manifest.nodes.find((n) => `node.${n.id}` === next[1])?.titleDisplay}
                 </Link>
-              ))}
-            </section>
-          )}
-          {lesson && <ReadingEnd key={lesson[0]} lessonId={lesson[0]} knowledgeId={lesson[3]} />}
-          {children.length > 0 && (
-            <section className="c6-section">
-              <h2>本部分目录</h2>
-              <NodeRows nodes={children} />
-            </section>
-          )}
-          {next && (
-            <nav className="c6-next-link" aria-label="下一小节">
-              <Link className="text-link" to={`/lessons/${next[0]}`}>
-                下一小节：{manifest.nodes.find((n) => `node.${n.id}` === next[1])?.titleDisplay}
-              </Link>
-            </nav>
-          )}
-          {lesson && <LearningSaveStatus />}
-          <CourseReturn path="/courses" />
-        </>
-      )}
+              </nav>
+            )}
+            {lesson && <LearningSaveStatus />}
+            <CourseReturn path="/courses" />
+          </>
+        )}
+      </CourseReader>
     </div>
   );
 }

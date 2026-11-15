@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type Ref } from 'react';
 import { Link } from 'react-router';
 import { useLearning } from './react';
+import { CourseOpenLink } from '../course-ui/CourseUi';
 import {
   completedLanguageLessons,
   languages,
@@ -9,7 +10,13 @@ import {
   type TextLanguage,
 } from './languages';
 
-export function LanguageStudyCard({ language }: { language: TextLanguage }) {
+export function LanguageStudyCard({
+  language,
+  panelRef,
+}: {
+  language: TextLanguage;
+  panelRef?: Ref<HTMLElement>;
+}) {
   const { state } = useLearning();
   const [resource, setResource] = useState<{
     language: TextLanguage;
@@ -36,7 +43,12 @@ export function LanguageStudyCard({ language }: { language: TextLanguage }) {
   const completed = completedLanguageLessons(state.snapshot, language);
   const next = index?.lessons.find(([id]) => !completed.has(id));
   return (
-    <section className="card c6-next-section" aria-label={`${metadata.label} 继续学习`}>
+    <section
+      className="card c6-next-section"
+      aria-label={`${metadata.label} 继续学习`}
+      data-card-expansion-source
+      ref={panelRef}
+    >
       <p className="muted">
         {completed.size} / {index?.lessons.length ?? metadata.total} 个小节已阅读
       </p>
@@ -48,9 +60,9 @@ export function LanguageStudyCard({ language }: { language: TextLanguage }) {
       {index ? (
         <>
           <h2>{next?.[1] ?? '本语言小节已全部阅读'}</h2>
-          <Link className="button button-primary" to={next?.[2] ?? metadata.directory}>
+          <CourseOpenLink className="button button-primary" to={next?.[2] ?? metadata.directory}>
             {next ? (completed.size ? '继续阅读' : '开始阅读') : '回顾课程'}
-          </Link>
+          </CourseOpenLink>
           {next && (
             <p className="muted">
               {next[3] === 'practice'

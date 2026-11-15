@@ -8,7 +8,9 @@ import {
   CourseMode,
   CourseProgress,
   CourseNext,
+  CourseOpenLink,
 } from '../course-ui/CourseUi';
+import { useCardExpansion } from '../course-ui/card-expansion';
 import { ReadingEnd } from '../c6-learning/ReadingEnd';
 import { C6TeachingReading } from '../components/C6TeachingReading';
 import { bookTeachingBody } from '../content/book-teaching';
@@ -79,10 +81,10 @@ function BookCatalog({ index }: { index: RustManifest }) {
   const rows = (parent: string | null) => (
     <ul className="rust-tree">
       {byParent.get(parent)?.map((node) => (
-        <li key={node.id}>
+        <li key={node.id} data-card-expansion-source={node.leaf || undefined}>
           {node.leaf ? (
             <>
-              <Link to={lessonPath(node.id)}>{node.title}</Link>
+              <CourseOpenLink to={lessonPath(node.id)}>{node.title}</CourseOpenLink>
               <CourseMode
                 runnable={runnableLessons.has(node.id)}
                 practice={runnableLessons.has(node.id)}
@@ -92,9 +94,9 @@ function BookCatalog({ index }: { index: RustManifest }) {
           ) : (
             <details open={node.depth === 1 && node.order === 1 ? true : undefined}>
               <summary>{node.title}</summary>
-              <Link className="rust-guide" to={lessonPath(node.id)}>
+              <CourseOpenLink className="rust-guide" to={lessonPath(node.id)}>
                 阅读导读
-              </Link>
+              </CourseOpenLink>
               {rows(node.id)}
             </details>
           )}
@@ -111,8 +113,8 @@ function BookCatalog({ index }: { index: RustManifest }) {
         matches.length ? (
           <ul className="rust-tree">
             {matches.map((row) => (
-              <li key={row.id}>
-                <Link to={lessonPath(row.id)}>{row.title}</Link>
+              <li key={row.id} data-card-expansion-source>
+                <CourseOpenLink to={lessonPath(row.id)}>{row.title}</CourseOpenLink>
                 {row.leaf && (
                   <CourseMode
                     runnable={runnableLessons.has(row.id)}
@@ -199,6 +201,7 @@ function Catalog() {
 
 function Lesson({ id }: { id: string }) {
   const resource = useJavaResource(id, loadDetailedLesson);
+  const panel = useCardExpansion<HTMLElement>(!!resource.value);
   if (!resource.value) return <RustLoadState failed={resource.failed} retry={resource.retry} />;
   const { index, lesson } = resource.value;
   const parent = index.catalog.find((node) => node.id === lesson.parent);
@@ -208,7 +211,7 @@ function Lesson({ id }: { id: string }) {
   const example = lesson.example;
   const activity = lesson.activity;
   return (
-    <article className="rust-sheet rust-reading">
+    <article className="rust-sheet rust-reading" ref={panel}>
       {parent && (
         <p className="rust-muted">
           <Link to={lessonPath(parent.id)}>{parent.title}</Link>

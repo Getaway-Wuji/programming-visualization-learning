@@ -1,11 +1,43 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router';
+import { useEffect, useState, type ComponentProps } from 'react';
+import { Link, useLocation, useResolvedPath } from 'react-router';
 import {
   loadLanguageNavigation,
   type LanguageNavigation,
   type TextLanguage,
 } from '../learning/languages';
+import { requestCardExpansion } from './card-expansion';
 import './course-ui.css';
+
+export function CourseOpenLink({ onClick, ...props }: ComponentProps<typeof Link>) {
+  const from = useLocation();
+  const { pathname, search } = useResolvedPath(props.to, { relative: props.relative });
+  const destination = pathname + search;
+  return (
+    <Link
+      {...props}
+      onClick={(event) => {
+        onClick?.(event);
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.altKey ||
+          event.ctrlKey ||
+          event.metaKey ||
+          event.shiftKey ||
+          props.reloadDocument ||
+          (props.target && props.target !== '_self') ||
+          destination === from.pathname + from.search
+        ) {
+          return;
+        }
+        const source = event.currentTarget.closest<HTMLElement>(
+          '[data-card-expansion-source], [data-card-origin]',
+        );
+        requestCardExpansion(source ?? event.currentTarget, destination, from.key);
+      }}
+    />
+  );
+}
 
 /** Shared course controls keep language pages in the same place without changing learning facts. */
 export function CourseNav({ language, path }: { language: string; path: string }) {
@@ -146,19 +178,19 @@ export function CourseNext({
   description?: string;
 }) {
   return (
-    <section className="course-next" aria-label="推荐下一步">
+    <section className="course-next" aria-label="推荐下一步" data-card-expansion-source>
       <div>
         <p className="course-next-label">
           {complete ? '课程已读完，可继续复习' : started ? '接着学' : '从这里开始'}
         </p>
         <h2>
-          <Link to={to}>{title}</Link>
+          <CourseOpenLink to={to}>{title}</CourseOpenLink>
         </h2>
         {description && <p className="course-help">{description}</p>}
       </div>
-      <Link className="button button-primary" to={to}>
+      <CourseOpenLink className="button button-primary" to={to}>
         {complete ? '回顾课程' : started ? '继续阅读' : '开始阅读'}
-      </Link>
+      </CourseOpenLink>
     </section>
   );
 }
