@@ -152,6 +152,7 @@
 .home-trace {
   min-width: 0;
   width: min(100%, 460px);
+  margin: 0;
   justify-self: end;
   border: 1px solid var(--trace-edge);
   border-radius: var(--appearance-panel-radius);
@@ -216,6 +217,7 @@
   padding: 2px 6px;
   background: transparent;
   font: inherit;
+  white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
@@ -234,13 +236,47 @@
   border-top: 1px solid var(--appearance-panel-border);
 }
 
-.home-trace-arrays > div > span {
+.home-trace-arrays > div > span,
+.home-trace-result caption {
   display: block;
   margin-bottom: 6px;
   color: var(--p05-muted);
   font:
     11px/1.5 system-ui,
     sans-serif;
+}
+
+.home-trace-result {
+  padding: 12px 17px 17px;
+  border-top: 1px solid var(--appearance-panel-border);
+}
+
+.home-trace-result table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--p05-surface);
+  color: var(--p05-text);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.home-trace-result caption {
+  display: table-caption;
+  text-align: left;
+}
+
+.home-trace-result :is(th, td) {
+  padding: 3px 8px;
+  border: 1px solid var(--appearance-panel-border);
+  text-align: left;
+}
+
+.home-trace-result th {
+  background: var(--trace-highlight);
+}
+
+.home-trace-result :is(th, td):last-child {
+  text-align: right;
 }
 
 .home-trace-arrays > svg {
