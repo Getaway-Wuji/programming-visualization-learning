@@ -1,5 +1,5 @@
 //! EDIT2 is an analysis endpoint, not execution or learning authority.
-//! One checked Rust tree is projected only if the entire document fits the old twenty blocks.
+//! Project a checked Rust tree only if the entire document fits the teaching blocks.
 use crate::{
     api,
     budget::Meter,
@@ -195,7 +195,7 @@ impl Mapping<'_, '_> {
                 if let Kind::Expression(Expr::Call(name, args)) =
                     self.checked.program.nodes[e].kind.clone()
                 {
-                    if name != "printf" || args.is_empty() {
+                    if args.is_empty() {
                         return Err(());
                     }
                     let Kind::Expression(Expr::String(format)) =
@@ -203,6 +203,32 @@ impl Mapping<'_, '_> {
                     else {
                         return Err(());
                     };
+                    if name == "scanf" {
+                        let [_, address] = args.as_slice() else {
+                            return Err(());
+                        };
+                        let Kind::Expression(Expr::Unary(op, target)) =
+                            &self.checked.program.nodes[*address].kind
+                        else {
+                            return Err(());
+                        };
+                        let Kind::Expression(Expr::Name(target_name)) =
+                            &self.checked.program.nodes[*target].kind
+                        else {
+                            return Err(());
+                        };
+                        if format != b"%d"
+                            || op != "&"
+                            || !Self::name(target_name)
+                            || self.checked.expr_types[*target] != Some(Ty::Int)
+                        {
+                            return Err(());
+                        }
+                        return self.node(id, "scan", json!({"name":target_name}));
+                    }
+                    if name != "printf" {
+                        return Err(());
+                    }
                     if format.iter().any(|b| !(32..=126).contains(b) && *b != 10) {
                         return Err(());
                     }
@@ -408,6 +434,7 @@ fn text(v: &Value) -> String {
         ),
         "assign" => format!("{}={};", s("name"), child("value")),
         "array_write" => format!("{}[{}]={};", s("name"), child("index"), child("value")),
+        "scan" => format!("scanf(\"%d\",&{});", s("name")),
         "print" => {
             let args = v["args"]
                 .as_array()
@@ -541,7 +568,7 @@ pub fn execute(
     result["program"] = Value::Null;
     result["blockMap"] = json!([]);
     result["diagnostics"] = json!([]);
-    result["profileRef"] = json!({"id":"block-set.c6.common-int","version":"1.0.0"});
+    result["profileRef"] = json!({"id":"block-set.c6.common-int","version":"1.1.0"});
     match checked {
         Ok(checked) => {
             result["status"] = json!("code-only");

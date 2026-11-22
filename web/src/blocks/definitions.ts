@@ -280,6 +280,14 @@ export function registerTeachingBlocks() {
       statement(this);
     },
   };
+  Blockly.Blocks.cv_scan = {
+    init(this: Blockly.Block) {
+      text(this, 'HEAD', '读入整数到', 'NAME', 'n');
+      statement(this);
+      this.setColour(300);
+      this.setTooltip('使用 scanf("%d", &变量) 读入一个整数。请先声明 int 变量。');
+    },
+  };
   Blockly.Blocks.cv_print = {
     init(this: Blockly.Block) {
       this.appendDummyInput('HEAD')
@@ -340,6 +348,7 @@ export function teachingToolbox(
       category('运算与判断', '#8d62b4', ['unary', 'arithmetic', 'compare', 'logic']),
       category('条件与循环', '#b88235', ['if', 'while', 'for', 'break', 'continue']),
       category('数组与输出', '#9d5f93', ['array_declare', 'array_read', 'array_write', 'print']),
+      ...(allowed.includes('scan') ? [category('标准输入', '#9d5f93', ['scan'])] : []),
     ],
   };
 }

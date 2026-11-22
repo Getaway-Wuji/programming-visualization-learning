@@ -16,15 +16,15 @@ fn send(source: &str, reference: &Value) -> Result<Value, &'static str> {
     let input = codec::encode(&request(source, reference), &mut meter, 65536).unwrap();
     let output = api::execute(&input, &"a".repeat(64), &mut meter)?;
     let value: Value = serde_json::from_slice(&output).unwrap();
-    assert_eq!(value["aggregate"]["resultBytes"], output.len());
-    assert_eq!(value["aggregate"]["fuel"], meter.used());
-    let steps: usize = value["cases"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .map(|c| c["packet"]["trace"]["steps"].as_array().unwrap().len())
-        .sum();
-    assert_eq!(value["aggregate"]["steps"], steps);
+    if let Some(cases) = value["cases"].as_array() {
+        assert_eq!(value["aggregate"]["resultBytes"], output.len());
+        assert_eq!(value["aggregate"]["fuel"], meter.used());
+        let steps: usize = cases
+            .iter()
+            .map(|c| c["packet"]["trace"]["steps"].as_array().unwrap().len())
+            .sum();
+        assert_eq!(value["aggregate"]["steps"], steps);
+    }
     Ok(value)
 }
 fn programs() -> Value {
@@ -161,13 +161,16 @@ fn all_44_reject_illegal_code_and_keep_real_limited_prefixes() {
             .as_str()
             .unwrap()
             .replace("int main(void)", "int never_main(void)");
+        let invalid = format!("{dead}int main(void){{return missing;}}");
+        let rejected = send(&invalid, &row["profileRef"]).unwrap();
+        let start = invalid.rfind("missing").unwrap();
+        assert!(rejected.get("cases").is_none());
+        assert!(rejected["trace"].is_null());
+        assert_eq!(rejected["terminal"]["status"], "error");
+        assert_eq!(rejected["terminal"]["code"], "E_UNDECLARED");
         assert_eq!(
-            send(
-                &format!("{dead}int main(void){{return missing;}}"),
-                &row["profileRef"]
-            )
-            .unwrap_err(),
-            "E_UNDECLARED"
+            rejected["terminal"]["byteRange"],
+            json!({"start": start, "end": start + "missing".len()})
         );
         let source = format!("{dead}int main(void){{while(1){{}}}}");
         let bytes = serde_json::to_vec(&request(&source, &row["profileRef"])).unwrap();

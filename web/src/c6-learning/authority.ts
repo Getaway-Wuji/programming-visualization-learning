@@ -1,10 +1,10 @@
 import { acceptedC6Proof, acceptedC6Request, c6RunRequest } from '../engine/c6-client';
 import type { C6JudgeRequest, C6Response } from '../engine/c6-types';
 import { canonicalC6Json } from '../engine/c6-protocol';
+import { engineBuild } from '../generated/c6-teaching/engine-build';
 import { StorageError } from '../storage/errors';
 import type { C6LearningIndex } from './index';
 import { isLoadedC6LearningIndex } from './index';
-import { c6LearningRelease } from './release.generated';
 import { assertC6Attempt, type C6Attempt } from './model';
 
 declare const leaseBrand: unique symbol;
@@ -71,7 +71,7 @@ export function createC6CourseAuthority(index: C6LearningIndex, current: () => C
       if (
         !request ||
         canonicalC6Json(request) !== canonicalC6Json(data.request) ||
-        proof?.engineBuildSha256 !== c6LearningRelease.engineBuildSha256 ||
+        proof?.engineBuildSha256 !== engineBuild.wasmSha256 ||
         !proof.judge ||
         proof.judge.profileId !== data.request.profileRef.id
       )

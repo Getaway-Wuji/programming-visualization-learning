@@ -109,7 +109,14 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.log(JSON.stringify({ ...summary, written: false, semanticAcceptanceInferred: false }));
   } else {
     const wasm = readFileSync('web/src/generated/c6-teaching/c_viz_c6_bg.wasm');
-    assert.equal(hash(wasm), result.release.engineBuildSha256);
+    const originalBuild = JSON.parse(
+      readFileSync('content/build/c6-teaching-engine-0.1.0.json', 'utf8'),
+    );
+    const currentBuild = JSON.parse(
+      readFileSync('content/build/c6-teaching-engine-current.json', 'utf8'),
+    );
+    assert.equal(result.release.engineBuildSha256, originalBuild.wasmSha256);
+    assert.equal(hash(wasm), currentBuild.wasmSha256);
     const pin = await format(
       `// Generated from the reviewed independent CONTENT3 product source.\nexport const c6TeachingRelease = ${JSON.stringify(result.release)} as const;\n`,
       { ...(await resolveConfig('.prettierrc.json')), parser: 'typescript' },

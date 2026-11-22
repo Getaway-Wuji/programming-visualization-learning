@@ -29,6 +29,7 @@ export function DiagnosticPanel({
               data-code={diagnostic.code}
               data-stage={diagnostic.stage ?? 'unspecified'}
             >
+              {diagnostic.rawMessage && <p className="diagnostic-caption">原始解释器诊断</p>}
               <p className="diagnostic-heading" role="alert">
                 <code data-testid="diagnostic-gcc">{view.gcc}</code>
               </p>
@@ -53,6 +54,13 @@ export function DiagnosticPanel({
                 </>
               ) : (
                 <p className="diagnostic-caption">{view.unavailable}</p>
+              )}
+              {diagnostic.rawMessage && (
+                <p>
+                  <strong>通俗解释</strong>
+                  {' · '}
+                  {view.summary}
+                </p>
               )}
               <p data-testid="diagnostic-explanation">{view.explanation}</p>
               <p>

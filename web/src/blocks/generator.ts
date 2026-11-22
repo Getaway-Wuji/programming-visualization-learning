@@ -391,13 +391,15 @@ export function generateBlockSource(
             ? ['init', 'condition', 'update', 'body']
             : item.kind === 'array_declare'
               ? ['name', 'length', 'values']
-              : item.kind === 'print'
-                ? ['format', 'args']
-                : item.kind === 'return'
-                  ? ['value']
-                  : item.kind === 'scope'
-                    ? ['body']
-                    : [];
+              : item.kind === 'scan'
+                ? ['name']
+                : item.kind === 'print'
+                  ? ['format', 'args']
+                  : item.kind === 'return'
+                    ? ['value']
+                    : item.kind === 'scope'
+                      ? ['body']
+                      : [];
     const control = item.kind === 'if' || item.kind === 'while' || item.kind === 'for';
     const id = node(item, item.kind, fields, depth + (control ? 1 : 0));
     const nested = (list: readonly BlockStatement[], parent: Scope, loops: number) => {
@@ -465,6 +467,10 @@ export function generateBlockSource(
         case 'continue':
           if (!loopDepth) fail('BLOCK_LOOP', id);
           append(`${item.kind};`);
+          break;
+        case 'scan':
+          reference(scope, item.name, 'scalar', id);
+          append(`scanf("%d", &${item.name});`);
           break;
         case 'print': {
           if (depth + 1 > BLOCK_LIMITS.depth) fail('BLOCK_LIMIT', id);

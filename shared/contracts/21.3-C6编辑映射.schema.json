@@ -254,7 +254,10 @@
               "const": "block-set.c6.common-int"
             },
             "version": {
-              "const": "1.0.0"
+              "enum": [
+                "1.0.0",
+                "1.1.0"
+              ]
             }
           }
         }
@@ -262,6 +265,28 @@
     },
     "block": {
       "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "name"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$(?![\\s\\S])"
+            },
+            "kind": {
+              "const": "scan"
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 32768
+            }
+          }
+        },
         {
           "type": "object",
           "additionalProperties": false,

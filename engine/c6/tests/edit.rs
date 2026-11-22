@@ -83,7 +83,7 @@ fn ast_depth_64_mapping_uses_flat_links_inside_json_depth_32() {
     assert!(result["program"]["rootId"].as_str().is_some());
 }
 #[test]
-fn supported_new_constructs_are_whole_document_code_only() {
+fn judge_programs_map_only_when_every_statement_has_a_block() {
     let programs: Value = serde_json::from_str(include_str!(
         "../../../shared/fixtures/c6/21.3/judge-programs.json"
     ))
@@ -91,13 +91,28 @@ fn supported_new_constructs_are_whole_document_code_only() {
     for row in programs["programs"].as_array().unwrap() {
         for variant in ["primary", "alternative"] {
             let result = analyze(row[variant].as_str().unwrap()).unwrap();
+            let supports_scan = matches!(
+                (row["profileRef"]["id"].as_str().unwrap(), variant),
+                (
+                    "judge.c6.s2.1" | "judge.c6.s3.2" | "judge.c6.s3.4.1",
+                    "primary"
+                ) | ("judge.c6.s6.5.1", "alternative")
+                    | ("judge.c6.s7.1" | "judge.c6.s12.1.4", _)
+            );
             assert_eq!(
-                result["status"], "code-only",
+                result["status"],
+                if supports_scan { "mapped" } else { "code-only" },
                 "{} {variant}",
                 row["profileRef"]
             );
-            assert!(result["program"].is_null());
-            assert_eq!(result["blockMap"], json!([]));
+            if supports_scan {
+                let mut all = BTreeSet::new();
+                kinds(&result["program"], &mut all);
+                assert!(all.contains("scan"));
+            } else {
+                assert!(result["program"].is_null());
+                assert_eq!(result["blockMap"], json!([]));
+            }
         }
     }
     for source in [
@@ -110,6 +125,9 @@ fn supported_new_constructs_are_whole_document_code_only() {
         "int main(){typedef int T;T x=2;return x;}",
         "int helper(){return 1;}int main(){return 0;}",
         "#include <stdio.h>\nint main(){printf(\"%4d\",2);return 0;}",
+        "#include <stdio.h>\nint main(){int x;int count=scanf(\"%d\",&x);return count;}",
+        "#include <stdio.h>\nint main(){char x;scanf(\"%c\",&x);return 0;}",
+        "#include <stdio.h>\nint main(){int x[2];scanf(\"%d\",&x[1]);return 0;}",
     ] {
         assert_eq!(analyze(source).unwrap()["status"], "code-only", "{source}");
     }

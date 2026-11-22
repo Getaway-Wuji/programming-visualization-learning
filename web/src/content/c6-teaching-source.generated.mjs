@@ -966,6 +966,7 @@ const schema83 = {
                 'E_INPUT_INVALID',
                 'E_LEX_INVALID',
                 'E_PARSE_INVALID',
+                'E_EXPECTED_SEMICOLON',
                 'E_NAME_INVALID',
                 'E_UNSUPPORTED_SYNTAX',
                 'E_DEPTH_LIMIT',
@@ -1048,6 +1049,7 @@ const schema83 = {
                       'E_INPUT_INVALID',
                       'E_LEX_INVALID',
                       'E_PARSE_INVALID',
+                      'E_EXPECTED_SEMICOLON',
                       'E_NAME_INVALID',
                       'E_UNSUPPORTED_SYNTAX',
                       'E_DEPTH_LIMIT',
@@ -21900,6 +21902,7 @@ const schema69 = {
             'E_INPUT_INVALID',
             'E_LEX_INVALID',
             'E_PARSE_INVALID',
+            'E_EXPECTED_SEMICOLON',
             'E_NAME_INVALID',
             'E_UNSUPPORTED_SYNTAX',
             'E_DEPTH_LIMIT',
@@ -21982,6 +21985,7 @@ const schema69 = {
                   'E_INPUT_INVALID',
                   'E_LEX_INVALID',
                   'E_PARSE_INVALID',
+                  'E_EXPECTED_SEMICOLON',
                   'E_NAME_INVALID',
                   'E_UNSUPPORTED_SYNTAX',
                   'E_DEPTH_LIMIT',
@@ -26549,6 +26553,7 @@ function validate41(
                                 data66 === 'E_INPUT_INVALID' ||
                                 data66 === 'E_LEX_INVALID' ||
                                 data66 === 'E_PARSE_INVALID' ||
+                                data66 === 'E_EXPECTED_SEMICOLON' ||
                                 data66 === 'E_NAME_INVALID' ||
                                 data66 === 'E_UNSUPPORTED_SYNTAX' ||
                                 data66 === 'E_DEPTH_LIMIT' ||
@@ -27739,6 +27744,7 @@ function validate41(
                                                                 data81 === 'E_INPUT_INVALID' ||
                                                                 data81 === 'E_LEX_INVALID' ||
                                                                 data81 === 'E_PARSE_INVALID' ||
+                                                                data81 === 'E_EXPECTED_SEMICOLON' ||
                                                                 data81 === 'E_NAME_INVALID' ||
                                                                 data81 === 'E_UNSUPPORTED_SYNTAX' ||
                                                                 data81 === 'E_DEPTH_LIMIT' ||

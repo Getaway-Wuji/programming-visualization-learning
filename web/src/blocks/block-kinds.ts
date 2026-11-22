@@ -20,7 +20,8 @@ export const BLOCK_TYPES = [
   'return',
   'scope',
 ] as const;
-export type TeachingBlockKind = (typeof BLOCK_TYPES)[number];
+export const C6_BLOCK_TYPES = [...BLOCK_TYPES, 'scan'] as const;
+export type TeachingBlockKind = (typeof C6_BLOCK_TYPES)[number];
 export const BLOCK_LABELS: Record<TeachingBlockKind, string> = {
   main: '主程序',
   integer: '整数',
@@ -39,6 +40,7 @@ export const BLOCK_LABELS: Record<TeachingBlockKind, string> = {
   array_declare: '声明数组',
   array_read: '读取数组',
   array_write: '写入数组',
+  scan: '读入整数',
   print: '输出',
   return: '返回',
   scope: '独立作用域',

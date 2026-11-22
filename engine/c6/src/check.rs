@@ -403,7 +403,8 @@ impl Checker<'_, '_> {
         }
         match name {
             "printf" => {
-                let parts = formats::print(&self.format(args[0])?).map_err(|c| self.err(c, id))?;
+                let parts =
+                    formats::print(&self.format(args[0])?).map_err(|c| self.err(c, args[0]))?;
                 self.expr(args[0])?;
                 let mut at = 1;
                 for part in parts {
@@ -432,7 +433,8 @@ impl Checker<'_, '_> {
                 Ok(Ty::Int)
             }
             "scanf" => {
-                let format = formats::scan(&self.format(args[0])?).map_err(|c| self.err(c, id))?;
+                let format =
+                    formats::scan(&self.format(args[0])?).map_err(|c| self.err(c, args[0]))?;
                 self.expr(args[0])?;
                 let target = self.expr(args[1])?.decay();
                 let Ty::Pointer(base) = target.bare() else {

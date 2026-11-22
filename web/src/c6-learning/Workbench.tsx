@@ -5,16 +5,15 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { PageHeading, StatePanel } from '../components/Ui';
 import { DiagnosticPanel } from '../diagnostics/DiagnosticPanel';
-import type { DisplayDiagnostic } from '../diagnostics/presentation';
 import { createSourceIndex } from '../player/source-location';
 import { C6ExecutionClient, c6RunRequest, acceptedC6Proof } from '../engine/c6-client';
-import { c6BlockProgram } from '../engine/c6-protocol';
 import { C6Player } from '../engine/c6-player';
 import type { C6JudgeResult, C6Result } from '../engine/c6-types';
 import type { C6CourseExercise } from '../content/c6-course-types';
 import type { C6TeachingProgram } from '../content/c6-teaching-types';
 import { LearningSaveStatus, useLearning } from '../learning/react';
 import { generateBlockSource } from '../blocks/generator';
+import { C6_BLOCK_TYPES } from '../blocks/block-kinds';
 import type { BlockProgram } from '../blocks/model';
 import type { C6RunLease } from './authority';
 import { C6Boundary, C6LegacyLink, c6NodePath } from './CoursePages';
@@ -24,6 +23,8 @@ import { PracticeExamples } from '../components/PracticeExamples';
 import { CodeEditor, type CodeEditorHandle } from '../components/CodeEditor';
 import { useBlockMapping } from './use-block-mapping';
 import { useUnsavedChanges } from '../workbench/use-unsaved-changes';
+import { PracticeFeedback, sourceDiagnostic, terminalDiagnostics } from './PracticeFeedback';
+import { c6OutputVerdict } from './output-policy';
 
 const BlockWorkspace = lazy(() =>
   import('../blocks/BlockWorkspace').then((m) => ({ default: m.BlockWorkspace })),
@@ -172,32 +173,10 @@ function TraceView({
   const step = result.trace?.steps[cursor - 1];
   const range = result.nodeMap.find((n) => n.nodeId === step?.nodeId)?.byteRange;
   const location = range ? createSourceIndex(source).range(range) : null;
-  const diagnostic: DisplayDiagnostic[] = result.terminal.code
-    ? [
-        {
-          code: result.terminal.code,
-          ...(result.terminal.byteRange
-            ? {
-                location: {
-                  kind: 'source' as const,
-                  nodeId:
-                    result.nodeMap.find(
-                      (n) =>
-                        n.byteRange.start <= result.terminal.byteRange!.start &&
-                        n.byteRange.end >= result.terminal.byteRange!.end,
-                    )?.nodeId ?? 'unmapped',
-                  byteRange: result.terminal.byteRange,
-                  edge: 'whole' as const,
-                },
-              }
-            : {}),
-        },
-      ]
-    : [];
   return (
     <section className="c6-trace" aria-label="真实执行轨迹" data-cursor={cursor}>
       <DiagnosticPanel
-        diagnostics={diagnostic}
+        diagnostics={terminalDiagnostics(result.terminal, source)}
         source={{ text: source, language: 'c', nodes: result.nodeMap }}
         onLocateSource={(r) => locate(r.start, r.end)}
       />
@@ -399,8 +378,8 @@ function Workbench({ document }: { document: Document }) {
   useUnsavedChanges(dirty);
   const validInput = input.length <= 256 && [...input].every((c) => c.charCodeAt(0) <= 127);
   const packet = result && 'cases' in result ? result.cases[caseIndex]?.packet : result;
-  const mapped = useMemo(() => (edit?.status === 'mapped' ? c6BlockProgram(edit) : null), [edit]);
-  const currentMapping = edit?.sourceRevision === sourceRevision;
+  const currentEdit = edit?.sourceRevision === sourceRevision ? edit : null;
+  const mapped = currentEdit?.status === 'mapped';
   const emptyBlocks = useMemo<BlockProgram>(
     () => ({
       id: 'main.practice',
@@ -442,8 +421,15 @@ function Workbench({ document }: { document: Document }) {
   };
   const locate = (start: number, end: number) => {
     const range = createSourceIndex(source).range({ start, end });
-    if (!range || !area.current) return;
-    area.current.select(range.utf16Range.start, range.utf16Range.end);
+    if (!range) return;
+    const select = () => {
+      if (area.current?.text() === source)
+        area.current.select(range.utf16Range.start, range.utf16Range.end);
+    };
+    if (document.exercise && practicePane !== 'code') {
+      setPracticePane('code');
+      requestAnimationFrame(select);
+    } else select();
   };
   const run = async (judge: boolean) => {
     blockMapping.pause();
@@ -484,9 +470,10 @@ function Workbench({ document }: { document: Document }) {
           : 0,
       );
       if (judge && active.current.lease) {
-        const saving = service.recordC6Judge(active.current.lease, response, state.sessionEpoch);
+        const lease = active.current.lease;
         active.current.lease = null;
-        await saving;
+        if ('cases' in response) await service.recordC6Judge(lease, response, state.sessionEpoch);
+        else service.invalidateC6Practice(lease);
       }
     } catch (failure) {
       if (token === active.current.token)
@@ -498,11 +485,17 @@ function Workbench({ document }: { document: Document }) {
               : '本次操作未完成',
         );
     } finally {
-      if (token === active.current.token) setBusy(false);
+      if (token === active.current.token) {
+        if (active.current.lease) service.invalidateC6Practice(active.current.lease);
+        active.current.lease = null;
+        setBusy(false);
+      }
     }
   };
   const analyze = () => {
     setBlocksRequested(true);
+    setPracticePane('blocks');
+    setBlockCandidate('');
     blockMapping.retry();
   };
   const save = async () => {
@@ -540,7 +533,7 @@ function Workbench({ document }: { document: Document }) {
     }
   };
   const blocksChanged = (program: BlockProgram | null) => {
-    if (!currentMapping || mapping || busy || mappingError || tooLarge) return;
+    if (!mapped || mapping || busy || mappingError || tooLarge) return;
     if (!program) {
       setBlockCandidate('');
       return;
@@ -557,8 +550,17 @@ function Workbench({ document }: { document: Document }) {
   const title =
     state.c6!.manifest!.nodes.find((n) => n.id === document.nodeId)?.titleDisplay ?? '所属章节';
   const exerciseOnly = Boolean(document.exercise);
+  const judgement =
+    result && 'cases' in result
+      ? (acceptedC6Proof(result)?.judge ?? c6OutputVerdict(result))
+      : null;
   const verdict =
-    result && 'cases' in result ? (acceptedC6Proof(result)?.judge?.status ?? result.status) : null;
+    judgement?.status ??
+    (result && document.exercise && !('cases' in result)
+      ? result.terminal.status === 'error'
+        ? 'failed'
+        : 'incomplete'
+      : null);
   return (
     <div
       className="course-frame c6-workbench"
@@ -665,7 +667,7 @@ function Workbench({ document }: { document: Document }) {
                   <button
                     className="button button-secondary"
                     disabled={busy || tooLarge}
-                    onClick={() => void analyze()}
+                    onClick={analyze}
                   >
                     同步到积木
                   </button>
@@ -691,7 +693,24 @@ function Workbench({ document }: { document: Document }) {
                       : '提交未完成，请重试'}
                 </p>
               )}
-              {error && <p role="alert">{error}。代码已保留，请重试。</p>}
+              {result && verdict !== 'passed' && document.exercise && (
+                <PracticeFeedback
+                  result={result}
+                  exercise={document.exercise}
+                  failedCaseKey={judgement?.failedCaseKey ?? null}
+                  source={source}
+                  onLocateSource={(range) => locate(range.start, range.end)}
+                />
+              )}
+              {error &&
+                (error.startsWith('E_') ? (
+                  <DiagnosticPanel
+                    diagnostics={[sourceDiagnostic(error, null)]}
+                    source={{ text: source, language: 'c' }}
+                  />
+                ) : (
+                  <p role="alert">{error}。代码已保留，请重试。</p>
+                ))}
               <LearningSaveStatus dirty={dirty} />
             </section>
           )}
@@ -762,7 +781,7 @@ function Workbench({ document }: { document: Document }) {
                       <button
                         className="button button-secondary"
                         disabled={busy || tooLarge}
-                        onClick={() => void analyze()}
+                        onClick={analyze}
                       >
                         同步到积木
                       </button>
@@ -905,30 +924,38 @@ function Workbench({ document }: { document: Document }) {
             </>
           )}
           {!reading && showBlocks && (
-            <section
-              className={`c6-block-pane${exerciseOnly ? ' card' : ''}`}
-              aria-busy={mapping || !currentMapping}
-            >
+            <section className={`c6-block-pane${exerciseOnly ? ' card' : ''}`} aria-busy={mapping}>
               <div className="c6-block-title">
                 <h2>积木视图</h2>
                 <div className="c6-block-status">
                   {mappingError ? (
                     <p role="alert">
                       {mappingError}{' '}
-                      <button className="text-link" onClick={analyze}>
+                      <button className="text-link" disabled={busy || tooLarge} onClick={analyze}>
                         重试同步
                       </button>
                     </p>
                   ) : (
-                    currentMapping && !mapped && <p className="muted">仅支持部分语法，原稿保留。</p>
+                    <p className="muted" role="status">
+                      {tooLarge
+                        ? '源码超过 32 KiB，无法同步。'
+                        : mapping
+                          ? '正在同步积木…'
+                          : mapped
+                            ? '已同步当前代码'
+                            : currentEdit
+                              ? `当前代码暂不能完整转为积木。${presentedBlocks ? '已显示上次同步结果。' : ''}`
+                              : ''}
+                    </p>
                   )}
                 </div>
               </div>
               <Suspense fallback={<div className="c6-block-placeholder" />}>
                 <BlockWorkspace
                   value={presentedBlocks ?? emptyBlocks}
+                  allowedKinds={C6_BLOCK_TYPES}
                   onChange={blocksChanged}
-                  disabled={busy || mapping || !currentMapping || !!mappingError || tooLarge}
+                  disabled={busy || mapping || !mapped || !!mappingError || tooLarge}
                 />
               </Suspense>
               {blockCandidate && blockCandidate !== source && (
@@ -952,21 +979,13 @@ function Workbench({ document }: { document: Document }) {
               <details className="c6-block-diagnostics">
                 <summary>代码提示</summary>
                 <div>
-                  {currentMapping && !mapped && (
-                    <p>当前代码暂不能完整转为积木。可另行搭建积木，预览后应用；原稿会保留。</p>
-                  )}
-                  {currentMapping && edit.diagnostics.length > 0 && (
+                  {!mapping && !mapped && <p>源码保留在编辑器中，可以继续修改或提交。</p>}
+                  {currentEdit && currentEdit.diagnostics.length > 0 && (
                     <DiagnosticPanel
-                      diagnostics={edit.diagnostics.map((d) => ({
-                        code: d.code,
-                        location: {
-                          kind: 'source',
-                          nodeId: 'unmapped',
-                          byteRange: d.byteRange,
-                          edge: 'whole',
-                        },
-                      }))}
-                      source={{ text: source, language: 'c', nodes: edit.nodeMap }}
+                      diagnostics={currentEdit.diagnostics.map((d) =>
+                        sourceDiagnostic(d.code, d.byteRange),
+                      )}
+                      source={{ text: source, language: 'c' }}
                       onLocateSource={(r) => locate(r.start, r.end)}
                     />
                   )}

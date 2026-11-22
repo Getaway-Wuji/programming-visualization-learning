@@ -241,6 +241,22 @@ async function validateRun(
         boundaries.has(result.terminal.byteRange.end) &&
         result.terminal.byteRange.start <= result.terminal.byteRange.end,
     );
+  const syntax = result.terminal.syntax;
+  if (syntax)
+    c6Assert(
+      result.trace === null &&
+        result.terminal.status === 'error' &&
+        result.terminal.byteRange !== null &&
+        boundaries.has(syntax.found.start) &&
+        boundaries.has(syntax.found.end) &&
+        syntax.found.start <= syntax.found.end &&
+        (syntax.expected === ';'
+          ? result.terminal.code === 'E_EXPECTED_SEMICOLON' &&
+            result.terminal.byteRange.start === result.terminal.byteRange.end &&
+            result.terminal.byteRange.end <= syntax.found.start
+          : result.terminal.code === 'E_PARSE_INVALID' &&
+            c6Equal(result.terminal.byteRange, syntax.found)),
+    );
   if (!result.trace) {
     c6Assert(
       result.terminal.status !== 'completed' &&
@@ -411,6 +427,7 @@ export function c6BlockProgram(result: C6EditResult): BlockProgram | null {
     continue: [],
     array_declare: [],
     array_write: ['index', 'value'],
+    scan: [],
     print: [],
     return: ['value'],
     scope: [],
@@ -428,6 +445,7 @@ export function c6BlockProgram(result: C6EditResult): BlockProgram | null {
     c6Assert(typeof id === 'string' && depth <= 64 && !visited.has(id));
     const node = nodes.get(id);
     c6Assert(node && Object.hasOwn(childFields, node.kind as string));
+    if (node.kind === 'scan') c6Assert(result.profileRef.version === '1.1.0');
     visited.add(id);
     const value = { ...node };
     for (const key of childFields[node.kind as string])
@@ -478,7 +496,6 @@ function validateEdit(result: C6EditResult, request: C6EditRequest, buildId: str
     c6Assert(c6Equal(result[key], request[key]));
   c6Assert(
     c6Equal(result.engine, { ...request.engine, buildId }) &&
-      c6Equal(result.profileRef, { id: 'block-set.c6.common-int', version: '1.0.0' }) &&
       ['mapped', 'code-only', 'invalid', 'unsupported'].includes(result.status) &&
       Array.isArray(result.nodeMap) &&
       Array.isArray(result.blockMap) &&
@@ -543,7 +560,14 @@ export async function decodeC6Response(
     return value as C6EditResult;
   }
   if ('judgeVersion' in request) {
-    c6Assert(schema.judgeResult(value));
+    if (!schema.judgeResult(value)) {
+      // Parsing and semantic checks can reject the submission before any test case runs.
+      const rejected = value as C6Result;
+      await validateRun(rejected, request, buildId, 0, guard);
+      c6Assert(rejected.trace === null);
+      guard();
+      return rejected;
+    }
     const result = value as C6JudgeResult;
     c6Assert(
       c6Equal(result.profileRef, request.profileRef) &&

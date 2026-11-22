@@ -396,6 +396,7 @@
                     "E_INPUT_INVALID",
                     "E_LEX_INVALID",
                     "E_PARSE_INVALID",
+                    "E_EXPECTED_SEMICOLON",
                     "E_NAME_INVALID",
                     "E_UNSUPPORTED_SYNTAX",
                     "E_DEPTH_LIMIT",
@@ -468,6 +469,25 @@
               "type": "integer",
               "minimum": 0,
               "maximum": 20000
+            },
+            "syntax": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["expected", "found"],
+              "properties": {
+                "expected": {
+                  "enum": [";", "(", ")", "]", "{", "}", ":", "while", "expression"]
+                },
+                "found": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["start", "end"],
+                  "properties": {
+                    "start": { "type": "integer", "minimum": 0, "maximum": 32768 },
+                    "end": { "type": "integer", "minimum": 0, "maximum": 32768 }
+                  }
+                }
+              }
             },
             "returnValue": {
               "anyOf": [

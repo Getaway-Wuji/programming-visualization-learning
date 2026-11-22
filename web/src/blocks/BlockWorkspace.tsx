@@ -7,6 +7,7 @@ import {
   teachingToolbox,
   type TeachingBlockKind,
 } from './definitions';
+import { C6_BLOCK_TYPES } from './block-kinds';
 import type { BlockProgram } from './model';
 import { blockInteractionPlugins, type BlockInteractionState } from './interaction';
 import {
@@ -471,7 +472,7 @@ export function BlockWorkspace({
               disabled={disabled}
               onChange={(event) => setAddKind(event.target.value as TeachingBlockKind)}
             >
-              {BLOCK_TYPES.map((kind) => (
+              {(allowedKinds.includes('scan') ? C6_BLOCK_TYPES : BLOCK_TYPES).map((kind) => (
                 <option key={kind} value={kind} disabled={!allowedKinds.includes(kind)}>
                   {BLOCK_LABELS[kind]}
                   {allowedKinds.includes(kind) ? '' : '（未解锁）'}

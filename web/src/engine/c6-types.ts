@@ -148,6 +148,7 @@ export interface C6Result {
     status: 'completed' | 'error' | 'limited' | 'cancelled';
     code: string | null;
     byteRange: { start: number; end: number } | null;
+    syntax?: { expected: string; found: { start: number; end: number } };
     cursor: number;
     returnValue: C6Value;
   };

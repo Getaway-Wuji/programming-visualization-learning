@@ -9,6 +9,7 @@ export interface DisplayDiagnostic {
   origin?: Diagnostic['origin'];
   location?: ExecutionLocation;
   details?: Diagnostic['details'];
+  rawMessage?: string;
 }
 export interface DiagnosticSource {
   text: string;
@@ -95,7 +96,7 @@ export function presentDiagnostic(diagnostic: DisplayDiagnostic, source: Diagnos
     range,
     blockIds,
     excerpt,
-    gcc: `${file}${range ? `:${range.start.line}:${range.start.column}` : ''}: error: ${copy.summary} [${diagnostic.code}]`,
+    gcc: `${file}${range ? `:${range.start.line}:${range.start.column}` : ''}: error: ${diagnostic.rawMessage ?? copy.summary} [${diagnostic.code}]`,
     stage: diagnostic.stage ? stages[diagnostic.stage] : '阶段未单独提供',
     origin: diagnostic.origin ? origins[diagnostic.origin] : '执行结果',
     unavailable:

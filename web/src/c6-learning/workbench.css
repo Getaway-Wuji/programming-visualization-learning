@@ -136,6 +136,21 @@
   color: var(--p05-accent, var(--green));
   background: var(--p05-active, var(--lime));
 }
+.c6-practice-feedback {
+  margin-top: 16px;
+  min-width: 0;
+}
+.c6-practice-feedback :is(h3, h4) {
+  margin: 0 0 8px;
+}
+.c6-practice-feedback .sample-source {
+  margin: 0 0 12px;
+}
+.c6-practice-outputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: 12px;
+}
 .c6-exercise-description {
   max-width: 64rem;
   margin-bottom: 24px;

@@ -2,10 +2,10 @@
 use crate::{
     api::{self, Packet, Wire},
     budget::Meter,
-    check, codec,
+    codec,
     runtime::{Proof, Runtime, UserWrite},
     state::{self, Totals},
-    syntax::{self, Kind},
+    syntax::Kind,
     types::{Ty, Val},
 };
 use serde_json::{Value, json};
@@ -597,9 +597,10 @@ pub fn execute(
     }
     let profile = profile(&request["profileRef"], meter)?;
     let source = request["source"].as_str().unwrap();
-    let program = syntax::parse(source, meter)
-        .and_then(|p| check::check(p, meter))
-        .map_err(|e| e.code)?;
+    let program = match api::check_program(source, meter) {
+        Ok(program) => program,
+        Err(error) => return api::rejected_program(request, build_id, meter, error),
+    };
     let meta = api::encode_metadata(&api::metadata(request, build_id, Some(&program)), meter)?;
     let mut totals = Totals::default();
     let mut cases = vec![];

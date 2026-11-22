@@ -187,6 +187,9 @@ export function loadBlockProgram(workspace: Blockly.Workspace, program: BlockPro
           value('INDEX', node.index);
           value('VALUE', node.value);
           break;
+        case 'scan':
+          field('NAME', node.name);
+          break;
         case 'print':
           field('FORMAT', formatField(node.format));
           node.args.forEach((arg, index) => value(`ARG${index}`, arg));
@@ -413,6 +416,8 @@ export function readBlockWorkspace(
           if (/^ARG\d+$/.test(input.name)) args.push(required(input.name));
         return { id, kind, format: parseFormat(field('FORMAT')), args };
       }
+      case 'scan':
+        return { id, kind, name: field('NAME') };
       case 'return':
         return { id, kind, value: required('VALUE') };
       case 'scope':

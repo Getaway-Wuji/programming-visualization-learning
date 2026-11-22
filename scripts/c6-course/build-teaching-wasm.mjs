@@ -1,4 +1,4 @@
-// Publish the reviewed build beside the immutable earlier C6 build.
+// Publish the current teaching runtime beside the immutable legacy runtime.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
@@ -9,7 +9,7 @@ import { checkEnvironment } from '../environment.mjs';
 import { run } from '../process.mjs';
 import { inspectWasm } from '../wasm-inspect.mjs';
 
-const lock = JSON.parse(readFileSync('content/build/c6-teaching-engine-0.1.0.json', 'utf8'));
+const lock = JSON.parse(readFileSync('content/build/c6-teaching-engine-current.json', 'utf8'));
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const proof = (path) => ({ path, sha256: hash(readFileSync(path)) });
 function collect(folder) {
@@ -34,8 +34,8 @@ const paths = [
 assert.equal(lock.formatVersion, 1);
 assert.equal(lock.engineId, 'engine.rust.c6');
 assert.equal(lock.engineVersion, '0.1.0');
-assert.equal(lock.wasmSha256, '804d686bdf75f56ba41970aac199e45c72b805bcb5ac2d0102815bd5236d5069');
-assert.equal(lock.wasmBytes, 938812);
+assert.match(lock.wasmSha256, /^[0-9a-f]{64}$/);
+assert(Number.isInteger(lock.wasmBytes) && lock.wasmBytes > 0);
 assert.deepEqual(
   lock.inputs.map((entry) => entry.path),
   paths,

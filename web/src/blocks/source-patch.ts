@@ -58,6 +58,8 @@ function render(node: Statement, depth: number, newline: string): string {
       return `${simple(node)};`;
     case 'array_declare':
       return `int ${node.name}[${node.length}]${node.values === null ? '' : ` = {${node.values.join(', ')}}`};`;
+    case 'scan':
+      return `scanf("%d", &${node.name});`;
     case 'print':
       return `printf("${node.format.replaceAll('\\', '\\\\').replaceAll('"', '\\"').replaceAll('\n', '\\n')}"${node.args.map((arg) => `, ${expression(arg)}`).join('')});`;
     case 'return':

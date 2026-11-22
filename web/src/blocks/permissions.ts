@@ -27,7 +27,7 @@ if (
       rule.learningRevision < 1 ||
       rule.blocks.length === 0 ||
       new Set(rule.blocks).size !== rule.blocks.length ||
-      rule.blocks.some((kind) => !BLOCK_TYPES.includes(kind)),
+      rule.blocks.some((kind) => !BLOCK_TYPES.some((type) => type === kind)),
   )
 )
   throw new Error('BLOCK_PERMISSION_POLICY');

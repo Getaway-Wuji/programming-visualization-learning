@@ -7,7 +7,7 @@ import type { Ref } from '../storage/model';
 import { isSafeUint, isUtcTime, isUuid } from '../storage/validation';
 import { createSourceIndex, type SourceRange } from '../player/source-location';
 import { SNAPSHOT_LIMITS, SnapshotError } from '../snapshot-export/types';
-import { c6LearningRelease } from './release.generated';
+import { engineBuild } from '../generated/c6-teaching/engine-build';
 import { isC6SourceNode, type C6LearningIndex } from './index';
 
 export interface C6SnapshotDocument {
@@ -101,7 +101,7 @@ export async function captureC6Snapshot(
     !proof ||
     'editVersion' in request ||
     'editVersion' in capture.result ||
-    proof.engineBuildSha256 !== c6LearningRelease.engineBuildSha256 ||
+    proof.engineBuildSha256 !== engineBuild.wasmSha256 ||
     !Object.isFrozen(capture.result) ||
     !isC6SourceNode(index, capture.nodeRef.id) ||
     capture.nodeRef.version !== '2.0.0'

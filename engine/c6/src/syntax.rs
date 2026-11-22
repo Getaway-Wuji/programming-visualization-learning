@@ -572,6 +572,11 @@ fn lex(source: &str, meter: &mut Meter) -> Result<(Vec<Token>, BTreeSet<String>,
     Ok((out, headers, user_macros > 0))
 }
 
+pub(crate) struct SyntaxExpectation {
+    pub expected: &'static str,
+    pub found: ByteRange,
+}
+
 struct Parser<'a> {
     tokens: Vec<Token>,
     at: usize,
@@ -588,6 +593,7 @@ struct Parser<'a> {
     meter: &'a mut Meter,
     enum_count: usize,
     typedef_count: usize,
+    expectation: Option<SyntaxExpectation>,
 }
 impl<'a> Parser<'a> {
     fn token(&self) -> &Token {
@@ -604,9 +610,24 @@ impl<'a> Parser<'a> {
             false
         }
     }
-    fn take(&mut self, s: &str) -> Result<Token, Fault> {
+    fn expected(&mut self, token: &'static str) -> Fault {
+        let found = self.token().range;
+        self.expectation = Some(SyntaxExpectation {
+            expected: token,
+            found,
+        });
+        if token == ";" {
+            let end = self
+                .at
+                .checked_sub(1)
+                .map_or(found.start, |i| self.tokens[i].range.end);
+            return fault("E_EXPECTED_SEMICOLON", range(end, end));
+        }
+        fault("E_PARSE_INVALID", found)
+    }
+    fn take(&mut self, s: &'static str) -> Result<Token, Fault> {
         if !self.is(s) {
-            return Err(self.err("E_PARSE_INVALID"));
+            return Err(self.expected(s));
         }
         let t = self.token().clone();
         self.at += 1;
@@ -961,7 +982,7 @@ impl<'a> Parser<'a> {
             let mut stmts = vec![];
             while !self.is("}") {
                 if matches!(self.token().kind, TokenKind::End) {
-                    return Err(self.err("E_PARSE_INVALID"));
+                    return Err(self.expected("}"));
                 }
                 stmts.push(self.statement()?)
             }
@@ -1222,7 +1243,13 @@ impl<'a> Parser<'a> {
                     )?
                 }
             }
-            _ => return Err(fault("E_PARSE_INVALID", tok.range)),
+            _ => {
+                self.expectation = Some(SyntaxExpectation {
+                    expected: "expression",
+                    found: tok.range,
+                });
+                return Err(fault("E_PARSE_INVALID", tok.range));
+            }
         };
         loop {
             let text = self.token().text.clone();
@@ -1439,6 +1466,14 @@ fn precedence(s: &str) -> Option<(u8, bool)> {
     })
 }
 pub fn parse(source: &str, meter: &mut Meter) -> Result<Program, Fault> {
+    parse_with_expectation(source, meter, &mut None)
+}
+
+pub(crate) fn parse_with_expectation(
+    source: &str,
+    meter: &mut Meter,
+    expectation: &mut Option<SyntaxExpectation>,
+) -> Result<Program, Fault> {
     if source.len() > meter.limits().source_bytes {
         return Err(fault("E_SOURCE_LIMIT", range(0, source.len())));
     }
@@ -1470,8 +1505,12 @@ pub fn parse(source: &str, meter: &mut Meter) -> Result<Program, Fault> {
         meter,
         enum_count: 0,
         typedef_count: 0,
+        expectation: None,
     };
-    p.top()?;
+    if let Err(error) = p.top() {
+        *expectation = p.expectation;
+        return Err(error);
+    }
     let root = p.push(Kind::Marker("translation-unit"), range(0, source.len()))?;
     Ok(Program {
         root,

@@ -70,10 +70,15 @@ export function useBlockMapping({
   return {
     edit,
     presentedBlocks,
-    mapping: enabled && !suspended && (mapping || edit?.sourceRevision !== sourceRevision),
+    mapping:
+      enabled && !suspended && !error && (mapping || edit?.sourceRevision !== sourceRevision),
     error,
     clearError: () => setError(''),
-    retry: () => setRetry((value) => value + 1),
+    retry: () => {
+      setError('');
+      setMapping(true);
+      setRetry((value) => value + 1);
+    },
     pause,
   };
 }

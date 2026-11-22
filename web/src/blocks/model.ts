@@ -105,6 +105,10 @@ export interface BlockPrint extends BlockNode {
   readonly format: string;
   readonly args: readonly BlockExpression[];
 }
+export interface BlockScan extends BlockNode {
+  readonly kind: 'scan';
+  readonly name: string;
+}
 export interface BlockReturn extends BlockNode {
   readonly kind: 'return';
   readonly value: BlockExpression;
@@ -124,6 +128,7 @@ export type BlockStatement =
   | BlockContinue
   | BlockArrayDeclare
   | BlockArrayWrite
+  | BlockScan
   | BlockPrint
   | BlockReturn
   | BlockScope;

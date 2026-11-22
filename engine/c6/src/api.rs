@@ -292,43 +292,70 @@ pub fn execute(bytes: &[u8], build_id: &str, meter: &mut Meter) -> Result<Vec<u8
                     .all(|b| (32..=126).contains(&b) || b"\t\n\r".contains(&b))
         })
         .ok_or("E_INPUT_INVALID")?;
-    let checked = syntax::parse(source, meter).and_then(|p| check::check(p, meter));
-
-    let packet = match checked {
-        Ok(checked) => {
-            let encoded = encode_metadata(&metadata(&request, build_id, Some(&checked)), meter)?;
-            let mut totals = Totals::default();
-            let mut runtime = Runtime::new(
-                &checked,
-                input.as_bytes(),
-                BTreeSet::new(),
-                metadata_bytes(&encoded),
-                &mut totals,
-                meter,
-            )
-            .map_err(|e| e.code)?;
-            let result = runtime.run().map(|v| v.value);
-            let cursor = runtime.journal.steps.len();
-            let terminal = terminal(result, cursor);
-            let journal = runtime.journal;
-            let used = meter.used();
-            Packet {
-                metadata: encoded,
-                journal: Some(journal),
-                terminal,
-                fuel_used: used,
-            }
-        }
-        Err(error) => {
-            let encoded = encode_metadata(&metadata(&request, build_id, None), meter)?;
-            Packet {
-                metadata: encoded,
-                journal: None,
-                terminal: terminal(Err(error), 0),
-                fuel_used: meter.used(),
-            }
-        }
+    let checked = match check_program(source, meter) {
+        Ok(checked) => checked,
+        Err(error) => return rejected_program(&request, build_id, meter, error),
     };
+    let encoded = encode_metadata(&metadata(&request, build_id, Some(&checked)), meter)?;
+    let mut totals = Totals::default();
+    let mut runtime = Runtime::new(
+        &checked,
+        input.as_bytes(),
+        BTreeSet::new(),
+        metadata_bytes(&encoded),
+        &mut totals,
+        meter,
+    )
+    .map_err(|e| e.code)?;
+    let result = runtime.run().map(|v| v.value);
+    let terminal = terminal(result, runtime.journal.steps.len());
+    let packet = Packet {
+        metadata: encoded,
+        journal: Some(runtime.journal),
+        terminal,
+        fuel_used: meter.used(),
+    };
+    finish_packet(packet, meter)
+}
+
+pub(crate) struct CompileFailure {
+    fault: Fault,
+    expectation: Option<syntax::SyntaxExpectation>,
+}
+
+pub(crate) fn check_program(
+    source: &str,
+    meter: &mut Meter,
+) -> Result<check::Checked, CompileFailure> {
+    let mut expectation = None;
+    let parsed = syntax::parse_with_expectation(source, meter, &mut expectation)
+        .map_err(|fault| CompileFailure { fault, expectation })?;
+    check::check(parsed, meter).map_err(|fault| CompileFailure {
+        fault,
+        expectation: None,
+    })
+}
+
+pub(crate) fn rejected_program(
+    request: &Value,
+    build_id: &str,
+    meter: &mut Meter,
+    error: CompileFailure,
+) -> Result<Vec<u8>, &'static str> {
+    let mut terminal = terminal(Err(error.fault), 0);
+    if let Some(info) = error.expectation {
+        terminal["syntax"] = json!({"expected": info.expected, "found": info.found});
+    }
+    let packet = Packet {
+        metadata: encode_metadata(&metadata(request, build_id, None), meter)?,
+        journal: None,
+        terminal,
+        fuel_used: meter.used(),
+    };
+    finish_packet(packet, meter)
+}
+
+fn finish_packet(packet: Packet, meter: &mut Meter) -> Result<Vec<u8>, &'static str> {
     meter
         .begin_finalization()
         .map_err(|e| codec_code(codec::CodecError::Budget(e)))?;

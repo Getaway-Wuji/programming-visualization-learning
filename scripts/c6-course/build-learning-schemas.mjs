@@ -6,6 +6,8 @@ const index = read('content/c/primer6-learning/index-1.0.0.json');
 const manifest = read('content/c/primer6-teaching/manifest-2.0.0.json');
 const previous = read('shared/contracts/19.1-存档结构9.0.0.schema.json');
 const execution = read('shared/contracts/21.2-C6执行与判题.schema.json');
+const currentBuild = read('content/build/c6-teaching-engine-current.json');
+const acceptedC6Build = { enum: [index.engineBuildSha256, currentBuild.wasmSha256] };
 const copy = (value) => structuredClone(value);
 const ref = (name) => ({ $ref: `#/$defs/${name}` });
 const object = (properties) => ({
@@ -41,7 +43,7 @@ definitions.c6Attempt = object({
   sourceSha256: hash,
   requestSha256: hash,
   resultSha256: hash,
-  engineBuildSha256: literal(index.engineBuildSha256),
+  engineBuildSha256: acceptedC6Build,
   profileRef: publicRef(
     index.exercises.map((e) => e[3]),
     '1.0.0',
@@ -159,7 +161,7 @@ const point = object({
 const range = object({ byteRange: pair, utf16Range: pair, start: point, end: point });
 const protocol = execution.$defs.result.properties;
 const engine = copy(protocol.engine);
-engine.properties.buildId = literal(index.engineBuildSha256);
+engine.properties.buildId = acceptedC6Build;
 const snapshot = {
   $schema: storage.$schema,
   $id: 'urn:c-viz:current-snapshot:2.0.0',

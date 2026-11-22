@@ -191,6 +191,16 @@ export const diagnosticMessages = {
 } satisfies Record<DiagnosticCode, DiagnosticMessage>;
 
 export const memoryMessages: Record<string, DiagnosticMessage> = {
+  E_EXPECTED_SEMICOLON: message(
+    '缺少分号 ;',
+    '解释器读到这里时需要一个分号来结束语句。',
+    '在标记处补上英文分号 ;。',
+  ),
+  E_FORMAT_UNSUPPORTED: message(
+    '格式字符串不受支持',
+    '输入或输出函数的格式字符串含有当前 C 解释器不支持的说明符或写法。',
+    '检查格式字符串。例如读入一个 int 可写 scanf("%d", &n)。',
+  ),
   E_BOUNDS: diagnosticMessages.E_INDEX_BOUNDS,
   E_OVERFLOW: diagnosticMessages.E_INT_OVERFLOW,
   E_UNSUPPORTED_VERSION: diagnosticMessages.E_PROTOCOL_VERSION,
@@ -282,6 +292,14 @@ export const memoryMessages: Record<string, DiagnosticMessage> = {
 };
 
 const expectations: Record<string, string> = {
+  '(': '这里需要左括号 (。',
+  ')': '这里需要右括号 )。',
+  ']': '这里需要右方括号 ]。',
+  '{': '这里需要左花括号 { 来开始代码块。',
+  '}': '这里需要右花括号 } 来结束代码块。',
+  ':': '这里需要英文冒号 :。',
+  while: 'do 的循环体后需要用 while 写出循环条件。',
+  expression: '这里需要一个表达式，例如数值、变量或算式。',
   'closing block comment delimiter': '注释缺少结束标记 */。',
   'closing string quote': '字符串缺少结束双引号。',
   'string without raw newline or NUL': '字符串中不能直接换行；输出换行请使用转义 \\n。',

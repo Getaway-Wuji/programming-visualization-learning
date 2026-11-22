@@ -6,6 +6,7 @@ import { isPositiveInt, isUtcTime, isUuid, validationInternals } from '../storag
 import type { C6LearningIndex } from './index';
 import { isC6SourceNode } from './index';
 import { c6LearningRelease } from './release.generated';
+import { engineBuild } from '../generated/c6-teaching/engine-build';
 
 export interface C6Attempt {
   eventId: string;
@@ -110,7 +111,8 @@ export function assertC6Attempt(value: unknown, profileId: string): asserts valu
       hash(r.sourceSha256) &&
       hash(r.requestSha256) &&
       hash(r.resultSha256) &&
-      r.engineBuildSha256 === c6LearningRelease.engineBuildSha256 &&
+      (r.engineBuildSha256 === c6LearningRelease.engineBuildSha256 ||
+        r.engineBuildSha256 === engineBuild.wasmSha256) &&
       profile.id === profileId &&
       profile.version === '1.0.0' &&
       ['passed', 'failed', 'incomplete'].includes(String(r.status)) &&
