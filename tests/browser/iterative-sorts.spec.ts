@@ -409,8 +409,7 @@ test('catalog exposes exactly three new C++ cases and retains all seven original
   page: p,
 }) => {
   await ready(p);
-  await p.goto('/#/cases');
-  await p.getByText('基础语法与更多案例', { exact: true }).click();
+  await p.goto('/#/advanced/observations');
   await expect(p.getByTestId('cpp-sort-catalog').getByRole('link')).toHaveCount(3);
   await expect(p.locator('main a[href^="#/visualize/"]')).toHaveCount(7);
   await p.getByRole('link', { name: '查看计数排序工作区 →', exact: true }).click();
@@ -418,7 +417,7 @@ test('catalog exposes exactly three new C++ cases and retains all seven original
   await expect(
     p
       .getByRole('navigation', { name: '主导航' })
-      .getByRole('link', { name: '算法与演示', exact: true }),
+      .getByRole('link', { name: '进阶课程', exact: true }),
   ).toHaveAttribute('aria-current', 'page');
 });
 test('switching among actual C++, original C, memory and paired C engines preserves their boundaries without learning writes', async ({

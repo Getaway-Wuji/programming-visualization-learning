@@ -9,10 +9,10 @@ const guides = [...teaching.entries, ...examples.entries, ...cCases.entries];
 
 export function CaseWalkthrough({
   caseId,
-  returnTo = '/cases',
+  returnTo = '/advanced/observations',
 }: {
   readonly caseId: string;
-  readonly returnTo?: '/cases' | '/advanced';
+  readonly returnTo?: '/advanced/observations' | '/advanced';
 }) {
   const guide = guides.find((entry) => entry.caseId === caseId);
   if (!guide) return null;

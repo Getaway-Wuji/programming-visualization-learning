@@ -345,7 +345,7 @@ test('leaving a playing page and returning through browser history cannot revive
   await accepted(page);
   await button(page, '播放').click();
   await page.getByRole('link', { name: '返回案例目录', exact: true }).click();
-  await expect(page).toHaveURL(/#\/cases$/);
+  await expect(page).toHaveURL(/#\/advanced\/observations$/u);
   await expect(controls(page)).toHaveCount(0);
   await page.waitForTimeout(650);
   await page.goBack();

@@ -180,4 +180,5 @@ export const paths = {
   practice: (id: string) => `/practice/${encodeURIComponent(id)}`,
   review: (id: string) => `/practice/${encodeURIComponent(id)}/review`,
   visualize: (id: string) => `/visualize/${encodeURIComponent(id)}`,
+  algorithmLab: (slug: string) => `/algorithms/lab/${encodeURIComponent(slug)}`,
 };

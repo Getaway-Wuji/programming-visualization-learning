@@ -199,7 +199,7 @@ export default function MemoryPage() {
     >
       <Breadcrumbs
         items={[
-          { label: '算法与演示', to: '/cases' },
+          { label: '程序观察案例', to: '/advanced/observations' },
           { label: recursive ? '递归与调用栈' : '内存观察' },
         ]}
       />
@@ -594,8 +594,8 @@ export default function MemoryPage() {
           </Link>
         </section>
       )}
-      <Link className="text-link" to="/cases">
-        返回算法与演示
+      <Link className="text-link" to="/advanced/observations">
+        返回程序观察案例
       </Link>
     </div>
   );

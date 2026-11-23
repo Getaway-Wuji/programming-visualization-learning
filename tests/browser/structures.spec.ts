@@ -576,11 +576,10 @@ test('presets and case switching discard the old identity; catalog and unknown r
   await run(p, specs[1].defaultDraft);
   const next = await captured(p, 'second-identity');
   expect(next.result.identity.runId).not.toBe(first.result.identity.runId);
-  await p.goto('/#/cases');
-  await p.getByText('基础语法与更多案例', { exact: true }).click();
+  await p.goto('/#/advanced/observations');
   await expect(p.getByTestId('cpp-structure-catalog').getByRole('link')).toHaveCount(2);
   await expect(p.locator('main a[href^="#/visualize/"]')).toHaveCount(7);
-  await expect(p.locator('main details a[href^="#/algorithms/"]')).toHaveCount(6);
+  await expect(p.locator('main a[href^="#/algorithms/case.cpp."]')).toHaveCount(6);
   await p.goto('/#/structures/missing');
   await expect(p.getByRole('heading', { name: '找不到这个结构案例' })).toBeVisible();
 });

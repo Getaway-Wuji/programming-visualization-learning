@@ -7,7 +7,7 @@ test('home restores panels and goal and navigation lead directly to real exercis
   page,
 }) => {
   await page.goto('/#/');
-  await expect(page.getByRole('heading', { name: '继续学 C', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '学习 C', exact: true })).toBeVisible();
   await expect(page.locator('.c6-next-section')).toHaveCSS(
     'background-color',
     'rgb(255, 255, 255)',
@@ -81,11 +81,36 @@ test('case screen hides technical notices and random seeds', async ({ page }) =>
   await expect(page.getByTestId('case-execution')).not.toContainText('种子：');
 });
 
+test('C home bubble action opens the same compact lab as the algorithm directory', async ({
+  page,
+}) => {
+  await page.goto('/#/?language=c');
+  const bubble = page.getByRole('link', { name: '试试冒泡排序（C++）', exact: true });
+  await expect(bubble).toHaveAttribute('href', '#/algorithms/lab/bubble');
+  await bubble.click();
+  await expect(page).toHaveURL(/#\/algorithms\/lab\/bubble$/u);
+  await expect(page.getByTestId('visual-lab')).toHaveAttribute('data-module', 'bubble');
+  await expect(
+    page.getByRole('navigation', { name: '主导航' }).getByRole('link', { name: '算法与演示' }),
+  ).toHaveAttribute('aria-current', 'page');
+  await page.getByRole('link', { name: '← 算法目录', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '算法与演示', level: 1 })).toBeVisible();
+  await expect(page.locator('.lab-category a[href="#/algorithms/lab/bubble"]')).toHaveCount(1);
+});
+
 test('catalog includes every reference module and searches across categories', async ({ page }) => {
   await page.goto('/#/cases');
-  await expect(page.locator('.lab-category a')).toHaveCount(40);
+  const cards = page.locator('.lab-category a');
+  await expect(cards).toHaveCount(40);
+  const algorithmDestinations = await cards.evaluateAll((links) =>
+    links.map((link) => link.getAttribute('href')).sort(),
+  );
+  expect(algorithmDestinations).toEqual(
+    visualModules.map(({ slug }) => `#/algorithms/lab/${slug}`).sort(),
+  );
+  await expect(page.locator('main a[href^="#/"]:not([href="#/"])')).toHaveCount(40);
   await page.getByRole('searchbox').fill('红黑树');
-  await expect(page.locator('.lab-category a')).toHaveCount(1);
+  await expect(cards).toHaveCount(1);
   await page.getByRole('link', { name: /红黑树 用左倾/ }).click();
   await expect(page.getByTestId('visual-lab')).toHaveAttribute('data-module', 'rbtree');
 });

@@ -158,7 +158,7 @@ test('home and reading routes do not prepare or execute an engine', async ({ pag
     if (request.url().endsWith('.wasm')) requests.push(request.url());
   });
   await page.goto('/#/');
-  await expect(page.getByRole('heading', { name: '继续学 C', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '学习 C', exact: true })).toBeVisible();
   await page
     .getByRole('navigation', { name: '主导航', exact: true })
     .getByRole('link', { name: 'MySQL 课程', exact: true })

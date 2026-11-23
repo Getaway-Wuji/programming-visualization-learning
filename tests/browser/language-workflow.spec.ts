@@ -136,7 +136,7 @@ test('a real MySQL reading selects its language on home and preserves its named 
     .getByRole('link', { name: '学习首页', exact: true })
     .click();
   await expect(
-    page.getByRole('heading', { level: 1, name: '继续学 MySQL', exact: true }),
+    page.getByRole('heading', { level: 1, name: '学习 MySQL', exact: true }),
   ).toBeVisible();
   const study = page.getByRole('region', { name: 'MySQL 继续学习', exact: true });
   await expect(study).toContainText('1 / 300 个小节已阅读');
@@ -168,7 +168,7 @@ test('all six manual home language choices keep daily-goal and workspace destina
       picker.getByRole('button', { name: workbench.language, exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
     await expect(
-      page.getByRole('heading', { level: 1, name: '继续学 ' + workbench.language, exact: true }),
+      page.getByRole('heading', { level: 1, name: '学习 ' + workbench.language, exact: true }),
     ).toBeVisible();
     await expect(page.getByTestId('goal-progress-lesson').getByRole('link')).toHaveAttribute(
       'href',
@@ -189,9 +189,7 @@ test('cold and warm in-app workbench routes focus every heading while initial do
   context,
 }) => {
   await page.goto('/#/');
-  await expect(
-    page.getByRole('heading', { level: 1, name: '继续学 C', exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: '学习 C', exact: true })).toBeVisible();
   const home = (current: Page) =>
     current
       .getByRole('navigation', { name: '主导航', exact: true })

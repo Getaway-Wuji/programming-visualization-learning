@@ -395,8 +395,8 @@ export default function NotesPage() {
         <Link className="text-link" to="/notebook">
           查看错题与陌生点
         </Link>
-        <Link className="text-link" to="/cases">
-          从算法与演示加入快照
+        <Link className="text-link" to="/advanced/observations">
+          从程序观察案例添加快照
         </Link>
         <Link className="text-link" to="/memory">
           从内存观察加入快照

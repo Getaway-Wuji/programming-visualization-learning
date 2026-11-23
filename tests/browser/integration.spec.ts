@@ -453,7 +453,13 @@ test('continuous public learning navigation integrates reviewed reading, validat
     .getByRole('link', { name: '算法与演示' })
     .click();
   await routeReady('PAGE-05', '/cases');
-  await page.getByText('基础语法与更多案例', { exact: true }).click();
+  await expect(page.locator('main a[href^="#/algorithms/lab/"]')).toHaveCount(40);
+  await page
+    .getByRole('navigation', { name: '主导航' })
+    .getByRole('link', { name: '进阶课程', exact: true })
+    .click();
+  await page.getByRole('link', { name: '程序观察案例', exact: true }).click();
+  await expect(page).toHaveURL(/#\/advanced\/observations$/u);
   await page.locator('main a[href="#/visualize/case.c.bubble-sort"]').click();
   await routeReady('PAGE-06', '/visualize/case.c.bubble-sort');
   const caseSample = await readySample(page);

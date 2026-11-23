@@ -192,8 +192,7 @@ test('course and algorithm catalog entries link four precise cases and unknown i
   await expect(page.getByTestId('advanced-algorithm-catalog').locator('li')).toHaveCount(4);
   await page.getByRole('link', { name: '查看四个算法 →', exact: true }).click();
   await expect(page.getByRole('heading', { name: '筛法与序列', exact: true })).toBeVisible();
-  await page.goto('/#/cases');
-  await page.getByText('基础语法与更多案例', { exact: true }).click();
+  await page.goto('/#/advanced/observations');
   await expect(page.getByTestId('advanced-algorithm-catalog').locator('li')).toHaveCount(4);
   await page.getByRole('link', { name: '欧拉筛', exact: true }).click();
   await expect(root(page)).toHaveAttribute('data-case', specs[1].id);

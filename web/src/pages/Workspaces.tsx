@@ -176,11 +176,19 @@ export function VisualizePage() {
   const { caseId } = useParams();
   const item = cases.find((value) => value.id === caseId);
   if (!item)
-    return <MissingPage title="找不到这个案例" backTo="/cases" backLabel="返回算法与演示" />;
+    return (
+      <MissingPage
+        title="找不到这个案例"
+        backTo="/advanced/observations"
+        backLabel="返回程序观察案例"
+      />
+    );
   const lesson = lessons.find((value) => value.id === item.lessonId)!;
   return (
     <div data-page-id="PAGE-06" data-mode="case">
-      <Breadcrumbs items={[{ label: '算法与演示', to: '/cases' }, { label: item.title }]} />
+      <Breadcrumbs
+        items={[{ label: '程序观察案例', to: '/advanced/observations' }, { label: item.title }]}
+      />
       <PageHeading
         kicker={item.kind === 'algorithm' ? '算法案例 · 可视化工作区' : '语法演示 · 可视化工作区'}
         title={item.title}

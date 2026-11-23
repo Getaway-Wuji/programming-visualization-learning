@@ -155,7 +155,7 @@ function Workspace({ spec }: { spec: AdvancedAlgorithmSpec }) {
       <CaseWalkthrough caseId={spec.id} />
       <nav className="advanced-bottom" aria-label="算法导航">
         <Link to="/advanced/algorithms">返回筛法与序列</Link>
-        <Link to="/cases">算法与演示</Link>
+        <Link to="/advanced/observations">程序观察案例</Link>
         <Link to="/advanced">进阶课程与复习入口</Link>
       </nav>
     </div>

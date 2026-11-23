@@ -113,7 +113,6 @@ export function CoursePage() {
 }
 
 export function CasesPage() {
-  const { state } = useLearning();
   return (
     <div data-page-id="PAGE-05">
       <Breadcrumbs items={[{ label: '学习首页', to: '/' }, { label: '算法与演示' }]} />
@@ -123,70 +122,81 @@ export function CasesPage() {
         description="选择算法、修改数据，逐步观察每一次比较、移动和状态变化。"
       />
       <VisualLabCatalog />
-      <details>
-        <summary>基础语法与更多案例</summary>
-        {(['demo', 'algorithm'] as const).map((kind) => (
-          <section key={kind}>
-            <div className="section-heading">
-              <h2>{kind === 'demo' ? '基础语法演示' : '排序与查找'}</h2>
-              <span className="badge badge-muted">
-                {kind === 'demo' ? '4 个语法演示' : '3 个算法案例'}
-              </span>
-            </div>
-            <div className="case-grid">
-              {cases
-                .filter((item) => item.kind === kind)
-                .map((item) => (
-                  <article className="card case-card" key={item.id}>
-                    <div className="case-icon">
-                      <Icon name={kind === 'demo' ? 'code' : 'chart'} />
-                    </div>
-                    <h3>{item.title}</h3>
-                    <p className="muted">{item.description}</p>
-                    {item.id === 'case.c.binary-search-first' && (
-                      <p className="notice">输入须为非递减数组。</p>
-                    )}
-                    <span className="badge badge-muted">可运行与回放</span>
-                    <p className="muted">{subjectLearningText(state, 'case', item.id)}</p>
-                    <Link className="card-link" to={paths.visualize(item.id)}>
-                      查看演示工作区
-                      <Icon name="arrow" />
-                    </Link>
-                  </article>
-                ))}
-            </div>
-          </section>
-        ))}
-        <AlgorithmCatalog />
-        <p>
-          <Link className="button" to="/compare">
-            打开同数据双算法对比
-          </Link>{' '}
-          比较冒泡与选择排序，或归并与快速排序。
-        </p>
-        <StructureCatalog />
-        <NodeCaseCatalog />
-        <ClassicCatalog />
-        <AdvancedAlgorithmCatalog />
-        <KmpCatalog />
-        <section aria-labelledby="advanced-observation-title">
+    </div>
+  );
+}
+
+export function ObservationCasesPage() {
+  const { state } = useLearning();
+  return (
+    <div>
+      <Breadcrumbs items={[{ label: '进阶课程', to: '/advanced' }, { label: '程序观察案例' }]} />
+      <PageHeading
+        kicker="C 与 C++"
+        title="程序观察案例"
+        description="回放 C 基础案例，或查看算法实现中的数组、指针、内存和调用栈。"
+      />
+      {(['demo', 'algorithm'] as const).map((kind) => (
+        <section key={kind}>
           <div className="section-heading">
-            <h2 id="advanced-observation-title">进阶观察 · 内存与调用栈</h2>
+            <h2>{kind === 'demo' ? '基础语法演示' : '排序与查找'}</h2>
+            <span className="badge badge-muted">
+              {kind === 'demo' ? '4 个语法演示' : '3 个算法案例'}
+            </span>
           </div>
-          <p>
-            <Link className="text-link" to="/memory">
-              打开内存观察 →
-            </Link>{' '}
-            逐步查看指针、对象与教学地址。
-          </p>
-          <p>
-            <Link className="text-link" to="/memory?example=hanoi&view=stack">
-              打开递归与调用栈 →
-            </Link>{' '}
-            观察函数进入、返回及局部状态，点击源码行号设置断点。
-          </p>
+          <div className="case-grid">
+            {cases
+              .filter((item) => item.kind === kind)
+              .map((item) => (
+                <article className="card case-card" key={item.id}>
+                  <div className="case-icon">
+                    <Icon name={kind === 'demo' ? 'code' : 'chart'} />
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p className="muted">{item.description}</p>
+                  {item.id === 'case.c.binary-search-first' && (
+                    <p className="notice">输入须为非递减数组。</p>
+                  )}
+                  <span className="badge badge-muted">可运行与回放</span>
+                  <p className="muted">{subjectLearningText(state, 'case', item.id)}</p>
+                  <Link className="card-link" to={paths.visualize(item.id)}>
+                    查看演示工作区
+                    <Icon name="arrow" />
+                  </Link>
+                </article>
+              ))}
+          </div>
         </section>
-      </details>
+      ))}
+      <AlgorithmCatalog />
+      <p>
+        <Link className="button" to="/compare">
+          打开同数据双算法对比
+        </Link>{' '}
+        比较冒泡与选择排序，或归并与快速排序。
+      </p>
+      <StructureCatalog />
+      <NodeCaseCatalog />
+      <ClassicCatalog />
+      <AdvancedAlgorithmCatalog />
+      <KmpCatalog />
+      <section aria-labelledby="advanced-observation-title">
+        <div className="section-heading">
+          <h2 id="advanced-observation-title">进阶观察 · 内存与调用栈</h2>
+        </div>
+        <p>
+          <Link className="text-link" to="/memory">
+            打开内存观察 →
+          </Link>{' '}
+          逐步查看指针、对象与教学地址。
+        </p>
+        <p>
+          <Link className="text-link" to="/memory?example=hanoi&view=stack">
+            打开递归与调用栈 →
+          </Link>{' '}
+          观察函数进入、返回及局部状态，点击源码行号设置断点。
+        </p>
+      </section>
     </div>
   );
 }

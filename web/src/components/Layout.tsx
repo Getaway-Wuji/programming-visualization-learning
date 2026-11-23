@@ -104,6 +104,7 @@ export function Layout({ children }: { children: ReactNode }) {
     return () => observer.disconnect();
   }, [location.pathname]);
   const courseRoute = /^\/(lessons|c6\/program)\//.test(location.pathname);
+  const algorithmLabRoute = location.pathname.startsWith('/algorithms/lab/');
   const caseRoute =
     location.pathname.startsWith('/visualize/') ||
     location.pathname.startsWith('/algorithms/') ||
@@ -127,7 +128,13 @@ export function Layout({ children }: { children: ReactNode }) {
       ({ to }) =>
         location.pathname === to || (to !== '/' && location.pathname.startsWith(`${to}/`)),
     )?.to ??
-    (courseRoute ? '/courses' : caseRoute ? '/cases' : undefined) ??
+    (courseRoute
+      ? '/courses'
+      : algorithmLabRoute
+        ? '/cases'
+        : caseRoute
+          ? '/advanced'
+          : undefined) ??
     (location.pathname === '/bugs' || location.pathname.startsWith('/bugs/')
       ? '/practice'
       : undefined);

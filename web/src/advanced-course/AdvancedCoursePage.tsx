@@ -113,6 +113,8 @@ export default function AdvancedCoursePage() {
                 当前可使用上方四节阅读与既有真实案例；C++通用语言课程、Python和Java执行尚未开放，将按后续任务逐项开放。
               </p>
               <Link to="/advanced/migration">语言迁移与语法对照：从已有语言读懂C++</Link>
+              {' · '}
+              <Link to="/advanced/observations">程序观察案例</Link>
             </section>
           </>
         ) : !resolved ? (

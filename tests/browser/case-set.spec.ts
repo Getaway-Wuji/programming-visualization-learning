@@ -809,8 +809,7 @@ test('binary input refuses unsorted and invalid drafts before preparing, preserv
 test('all four demonstration and three algorithm catalog links open the correct real input workspace', async ({
   page,
 }, testInfo) => {
-  await page.goto('/#/cases');
-  await page.getByText('基础语法与更多案例', { exact: true }).click();
+  await page.goto('/#/advanced/observations');
   await expect(page.locator('.case-card a[href^="#/visualize/case.c."]')).toHaveCount(7);
   const visited = [];
   for (const caseId of caseSetIds) {
@@ -828,8 +827,7 @@ test('all four demonstration and three algorithm catalog links open the correct 
     );
     visited.push({ caseId, route: new URL(page.url()).hash });
     await page.getByRole('link', { name: '返回案例目录', exact: true }).click();
-    await expect(page).toHaveURL(/#\/cases$/u);
-    await page.getByText('基础语法与更多案例', { exact: true }).click();
+    await expect(page).toHaveURL(/#\/advanced\/observations$/u);
   }
   await testInfo.attach('08.4-seven-catalog-links', {
     body: JSON.stringify(visited),

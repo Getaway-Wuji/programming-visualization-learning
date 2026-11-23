@@ -94,7 +94,7 @@ function NodeCaseWorkspace({ spec }: { spec: NodeCase }) {
       <Breadcrumbs
         items={[
           { label: '学习首页', to: '/' },
-          { label: '算法与演示', to: '/cases' },
+          { label: '程序观察案例', to: '/advanced/observations' },
           { label: spec.title },
         ]}
       />
@@ -451,8 +451,8 @@ function NodeCaseWorkspace({ spec }: { spec: NodeCase }) {
             {item.title}
           </Link>
         ))}
-        <Link className="text-link" to="/cases">
-          返回算法与演示 →
+        <Link className="text-link" to="/advanced/observations">
+          返回程序观察案例 →
         </Link>
       </nav>
       <CaseWalkthrough caseId={spec.id} />
@@ -465,6 +465,10 @@ export default function NodeCasePage() {
   return spec ? (
     <NodeCaseWorkspace key={spec.id} spec={spec} />
   ) : (
-    <MissingPage title="找不到这个节点案例" backTo="/cases" backLabel="返回算法与演示" />
+    <MissingPage
+      title="找不到这个节点案例"
+      backTo="/advanced/observations"
+      backLabel="返回程序观察案例"
+    />
   );
 }

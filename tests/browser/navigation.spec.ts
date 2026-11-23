@@ -136,12 +136,19 @@ test('public routes preserve content relationships, refresh and browser history'
     .getByRole('link', { name: '算法与演示' })
     .click();
   await ready(page, 'PAGE-05');
+  await expect(page.locator('main a[href^="#/algorithms/lab/"]')).toHaveCount(40);
+  await expect(page.locator('main a[href^="#/visualize/"]')).toHaveCount(0);
+  await page
+    .getByRole('navigation', { name: '主导航' })
+    .getByRole('link', { name: '进阶课程', exact: true })
+    .click();
+  await page.getByRole('link', { name: '程序观察案例', exact: true }).click();
+  await expect(page).toHaveURL(/#\/advanced\/observations$/u);
   await expect(page.locator('main a[href^="#/visualize/"]')).toHaveCount(7);
-  await page.locator('summary').filter({ hasText: '基础语法与更多案例' }).click();
   await page.locator('main a[href="#/visualize/case.c.bubble-sort"]').click();
   await ready(page, 'PAGE-06');
   await expect(
-    page.getByRole('navigation', { name: '主导航' }).getByRole('link', { name: '算法与演示' }),
+    page.getByRole('navigation', { name: '主导航' }).getByRole('link', { name: '进阶课程' }),
   ).toHaveAttribute('aria-current', 'page');
   await expect(page.getByRole('heading', { name: '案例讲解', exact: true })).toBeVisible();
   await page

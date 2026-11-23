@@ -38,6 +38,9 @@ const CoursePage = lazy(() =>
 const CasesPage = lazy(() =>
   import('./pages/CatalogPages').then((module) => ({ default: module.CasesPage })),
 );
+const ObservationCasesPage = lazy(() =>
+  import('./pages/CatalogPages').then((module) => ({ default: module.ObservationCasesPage })),
+);
 const LessonPage = lazy(() =>
   import('./c6-learning/CoursePages').then((module) => ({ default: module.C6LessonPage })),
 );
@@ -211,6 +214,7 @@ function AppRoutes() {
             />
             <Route path="/cpp/review" element={<CppReviewPage />} />
             <Route path="/advanced" element={<AdvancedCoursePage />} />
+            <Route path="/advanced/observations" element={<ObservationCasesPage />} />
             <Route path="/advanced/migration" element={<LanguageMigrationPage />} />
             <Route path="/advanced/examples" element={<ExamplePage />} />
             <Route path="/advanced/algorithms" element={<AdvancedAlgorithmPage />} />

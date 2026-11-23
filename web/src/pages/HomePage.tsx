@@ -229,8 +229,8 @@ export function HomePage() {
                 浏览算法与演示
                 <Icon name="arrow" />
               </Link>
-              <Link className="text-link" to={paths.visualize('case.c.bubble-sort')}>
-                打开冒泡排序
+              <Link className="text-link" to={paths.algorithmLab('bubble')}>
+                打开冒泡排序（C++）
                 <Icon name="arrow" />
               </Link>
             </div>

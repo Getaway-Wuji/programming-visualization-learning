@@ -506,8 +506,7 @@ test('catalog exposes one bucket case and keeps the five prior C++ and seven C c
   page: p,
 }) => {
   await ready(p);
-  await p.goto('/#/cases');
-  await p.getByText('基础语法与更多案例', { exact: true }).click();
+  await p.goto('/#/advanced/observations');
   await expect(p.getByTestId('cpp-sort-catalog').getByRole('link')).toHaveCount(3);
   await expect(p.getByTestId('cpp-recursive-catalog').getByRole('link')).toHaveCount(3);
   await expect(p.getByTestId('cpp-bucket-catalog').getByRole('link')).toHaveCount(1);
@@ -517,7 +516,7 @@ test('catalog exposes one bucket case and keeps the five prior C++ and seven C c
   await expect(
     p
       .getByRole('navigation', { name: '主导航' })
-      .getByRole('link', { name: '算法与演示', exact: true }),
+      .getByRole('link', { name: '进阶课程', exact: true }),
   ).toHaveAttribute('aria-current', 'page');
 });
 test('switching among actual C++, original C, memory and paired C engines preserves their boundaries without learning writes', async ({

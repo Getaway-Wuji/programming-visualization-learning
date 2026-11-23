@@ -61,6 +61,9 @@ export function C6AdvancedPage({ lessonId }: { lessonId?: string }) {
             <p>
               <Link to="/advanced/migration">语言迁移与语法对照</Link>
             </p>
+            <p>
+              <Link to="/advanced/observations">程序观察案例</Link>
+            </p>
           </>
         ) : (
           <>

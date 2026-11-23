@@ -79,7 +79,7 @@ test('unsaved edits are protected on sidebar navigation and browser back', async
   await Promise.all([confirm(false), page.goBack()]);
   await expect(editor(page)).toContainText('// preserved unsaved text');
   await Promise.all([confirm(true), home.click()]);
-  await expect(page.getByRole('heading', { name: '继续学 C', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '学习 C', exact: true })).toBeVisible();
 });
 
 test('saved edits can leave without a warning and restore on return', async ({ page }) => {
@@ -96,7 +96,7 @@ test('saved edits can leave without a warning and restore on return', async ({ p
     .getByRole('navigation', { name: '主导航' })
     .getByRole('link', { name: '学习首页', exact: true })
     .click();
-  await expect(page.getByRole('heading', { name: '继续学 C', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '学习 C', exact: true })).toBeVisible();
   expect(dialogs).toBe(0);
   await page
     .getByRole('navigation', { name: '主导航' })
@@ -168,7 +168,7 @@ test('custom code also protects unsaved edits and allows leaving after saving', 
   await page.getByRole('button', { name: '保存草稿', exact: true }).click();
   await expect(page.getByTestId('custom-save-status')).toContainText('草稿已保存');
   await home.click();
-  await expect(page.getByRole('heading', { name: '继续学 C', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '学习 C', exact: true })).toBeVisible();
 });
 
 test('mobile practice keeps code and actions accessible while preserving pane edits', async ({
@@ -202,7 +202,7 @@ test('mobile practice keeps code and actions accessible while preserving pane ed
 test('compact mobile toolbar keeps secondary tools reachable', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/#/');
-  await expect(page.getByRole('heading', { name: '继续学 C', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '学习 C', exact: true })).toBeVisible();
   expect((await page.locator('.topbar').boundingBox())!.height).toBeLessThanOrEqual(72);
   await page.locator('.topbar-more > summary').click();
   await page.getByRole('link', { name: '本地数据', exact: true }).click();
@@ -232,7 +232,7 @@ test('home keeps optional AI unloaded and AI settings still initializes on deman
   const requests: string[] = [];
   page.on('request', (request) => requests.push(request.url()));
   await page.goto('/#/');
-  await expect(page.getByRole('heading', { name: '继续学 C', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '学习 C', exact: true })).toBeVisible();
   expect(
     requests.filter((url) => /c6-teaching-(chunk|source)|\/session-[^/]+\.js/.test(url)),
   ).toEqual([]);

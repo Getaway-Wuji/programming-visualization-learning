@@ -119,7 +119,7 @@ function LegacyComparisonPage() {
       <Breadcrumbs
         items={[
           { label: '学习首页', to: '/' },
-          { label: '算法与演示', to: '/cases' },
+          { label: '程序观察案例', to: '/advanced/observations' },
           { label: '同数据对比' },
         ]}
       />

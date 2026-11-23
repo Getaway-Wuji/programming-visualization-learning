@@ -742,12 +742,11 @@ test('catalog, presets, case identity and unknown route keep existing navigation
   await run(p, specs[1].defaultDraft);
   const b = await captured(p, 'identity-bst');
   expect(b.result.identity.runId).not.toBe(a.result.identity.runId);
-  await p.goto('/#/cases');
-  await p.getByText('基础语法与更多案例', { exact: true }).click();
+  await p.goto('/#/advanced/observations');
   await expect(p.getByTestId('cpp-node-catalog').getByRole('link')).toHaveCount(2);
   await expect(p.getByTestId('cpp-structure-catalog').getByRole('link')).toHaveCount(2);
   await expect(p.locator('main a[href^="#/visualize/"]')).toHaveCount(7);
-  await expect(p.locator('main details a[href^="#/algorithms/"]')).toHaveCount(6);
+  await expect(p.locator('main a[href^="#/algorithms/case.cpp."]')).toHaveCount(6);
   await p.goto('/#/nodes/missing');
   await expect(p.getByRole('heading', { name: '找不到这个节点案例' })).toBeVisible();
 });

@@ -20,6 +20,7 @@ import { ReadingEnd } from './ReadingEnd';
 import { languages, recentLearningLanguage, type LearningLanguage } from '../learning/languages';
 import { LanguageStudyCard } from '../learning/LanguageStudyCard';
 import { Icon } from '../components/Icon';
+import { paths } from '../navigation';
 import './home.css';
 
 const languageTiles = {
@@ -257,9 +258,9 @@ function Home() {
               <Icon name="arrow" />
             </Link>
             {selectedLanguage.id === 'c' ? (
-              <Link className="button home-demo-action" to="/visualize/case.c.bubble-sort">
+              <Link className="button home-demo-action" to={paths.algorithmLab('bubble')}>
                 <Icon name="play" />
-                试试冒泡排序
+                试试冒泡排序（C++）
               </Link>
             ) : (
               <Link className="button home-demo-action" to={selectedLanguage.workbench}>

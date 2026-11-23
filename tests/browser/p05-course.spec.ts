@@ -817,8 +817,7 @@ test('fresh archive: 404 page-end completions and 44 real code answers across 17
   expect(repeated.ledger).toEqual(completed.ledger);
   expect(repeated.dailyFacts).toEqual(completed.dailyFacts);
   expect(repeated.receipts).toHaveLength(449);
-  await page.goto('/#/cases');
-  await page.getByText('基础语法与更多案例', { exact: true }).click();
+  await page.goto('/#/advanced/observations');
   await currentLocalReady(page);
   const caseLinks = page.locator('.case-grid .case-card .card-link[href^="#/visualize/"]');
   await expect(caseLinks).toHaveCount(7);

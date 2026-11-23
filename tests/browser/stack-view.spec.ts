@@ -287,8 +287,7 @@ test('catalog entry, three widths and six themes show the real recursive call ch
   page,
 }) => {
   test.setTimeout(90000);
-  await page.goto('/#/cases');
-  await page.getByText('基础语法与更多案例', { exact: true }).click();
+  await page.goto('/#/advanced/observations');
   await page.getByRole('link', { name: '打开递归与调用栈 →', exact: true }).click();
   await expectEditorValue(page.getByLabel('观察样例', { exact: true }), 'hanoi');
   await expect(page.getByRole('button', { name: '调用栈视图', exact: true })).toHaveAttribute(

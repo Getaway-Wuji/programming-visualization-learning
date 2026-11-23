@@ -623,12 +623,11 @@ test('catalog, presets, fixed arity, fresh case identity and unknown route', asy
   await run(p, [84, -30]);
   const b = await captured(p, 'identity-gcd');
   expect(b.result.identity.runId).not.toBe(a.result.identity.runId);
-  await p.goto('/#/cases');
-  await p.getByText('基础语法与更多案例', { exact: true }).click();
+  await p.goto('/#/advanced/observations');
   await expect(p.getByTestId('cpp-classic-catalog').getByRole('link')).toHaveCount(4);
   await expect(p.getByTestId('cpp-node-catalog').getByRole('link')).toHaveCount(2);
   await expect(p.getByTestId('cpp-structure-catalog').getByRole('link')).toHaveCount(2);
-  await expect(p.locator('main details a[href^="#/algorithms/"]')).toHaveCount(6);
+  await expect(p.locator('main a[href^="#/algorithms/case.cpp."]')).toHaveCount(6);
   await expect(p.locator('main a[href^="#/visualize/"]')).toHaveCount(7);
   await p.goto('/#/classics/missing');
   await expect(p.getByRole('heading', { name: '找不到这个经典案例' })).toBeVisible();

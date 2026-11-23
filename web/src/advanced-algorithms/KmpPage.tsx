@@ -58,7 +58,7 @@ export default function KmpPage() {
       <Breadcrumbs
         items={[
           { label: '进阶课程', to: '/advanced' },
-          { label: '算法与演示', to: '/cases' },
+          { label: '程序观察案例', to: '/advanced/observations' },
           { label: kmpSpec.title },
         ]}
       />
@@ -147,7 +147,7 @@ export default function KmpPage() {
       <CaseWalkthrough caseId={kmpSpec.id} />
       <nav className="advanced-bottom" aria-label="KMP导航">
         <Link to="/advanced/algorithms">筛法与序列</Link>
-        <Link to="/cases">算法与演示</Link>
+        <Link to="/advanced/observations">程序观察案例</Link>
         <Link to="/advanced">进阶课程与复习入口</Link>
       </nav>
     </div>

@@ -315,8 +315,7 @@ test('editing during pending execution cancels old group; navigation and reload 
   await p.waitForTimeout(1100);
   await expect(lane(p, 0)).toHaveAttribute('data-length', '0');
   await expect(lane(p, 1)).toHaveAttribute('data-length', '0');
-  await p.goto('/#/cases');
-  await p.getByText('基础语法与更多案例', { exact: true }).click();
+  await p.goto('/#/advanced/observations');
   await p.getByRole('link', { name: '打开同数据双算法对比' }).click();
   await expectEditorValue(p.getByTestId('input-field-values'), '7, -3, 0, 5, -3, 2, 9');
   await expect(group(p)).toHaveAttribute('data-phase', 'idle');

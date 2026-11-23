@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { paths } from '../navigation';
 import { visualCategories, visualModules } from './catalog';
 import './lab.css';
 
@@ -15,7 +16,7 @@ export function VisualLabCatalog() {
     <section className="lab-catalog" aria-label="算法可视化目录">
       <div className="lab-catalog-heading">
         <h2>
-          算法可视化 <span className="muted">{visualModules.length} 个模块</span>
+          算法可视化 <span className="muted">C++ · {visualModules.length} 个模块</span>
         </h2>
         <label>
           查找算法
@@ -50,7 +51,7 @@ export function VisualLabCatalog() {
                   .filter((s) => s.category === name)
                   .map((spec) => (
                     <li key={spec.slug}>
-                      <Link to={`/algorithms/lab/${spec.slug}`}>
+                      <Link to={paths.algorithmLab(spec.slug)}>
                         <strong>{spec.title}</strong>
                         <span className="muted">{spec.description}</span>
                         <span aria-hidden="true">→</span>

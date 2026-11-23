@@ -277,8 +277,8 @@ async function captureRuns(page: Page, directory: string, label: string, offset:
 }
 
 async function runAssignment(page: Page) {
-  await follow(page, '#/cases');
-  await page.getByText('基础语法与更多案例', { exact: true }).click();
+  await follow(page, '#/advanced');
+  await follow(page, '#/advanced/observations');
   await follow(page, `#/visualize/${caseId}`);
   const panel = page.getByTestId('case-execution');
   await expect(panel).toHaveAttribute('data-state', 'ready');

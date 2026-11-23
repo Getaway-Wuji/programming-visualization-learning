@@ -200,10 +200,9 @@ test('invalid and oversized drafts never execute; two explicit empty rows execut
 test('course and case directory open the precise KMP workspace, reading uses original review links', async ({
   page,
 }) => {
-  for (const url of ['/#/advanced', '/#/cases']) {
+  for (const url of ['/#/advanced', '/#/advanced/observations']) {
     await page.goto(url);
     await waitForPhase2Archive(page);
-    if (url.endsWith('/cases')) await page.getByText('基础语法与更多案例', { exact: true }).click();
     const link = page
       .getByTestId('kmp-catalog')
       .getByRole('link', { name: 'KMP字符串匹配', exact: true });
