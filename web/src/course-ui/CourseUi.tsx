@@ -160,7 +160,6 @@ export function CourseProgress({
     <div className="course-progress">
       <span>{count === undefined ? '正在读取阅读进度' : `已读 ${count} / ${total} 小节`}</span>
       <progress value={count} max={total} aria-label={label} />
-      <span className="course-help">读到页末自动记录，练习独立判定。</span>
     </div>
   );
 }
@@ -170,13 +169,11 @@ export function CourseNext({
   to,
   started = false,
   complete = false,
-  description,
 }: {
   title: string;
   to: string;
   started?: boolean;
   complete?: boolean;
-  description?: string;
 }) {
   return (
     <section className="course-next" aria-label="推荐下一步" data-card-expansion-source>
@@ -187,7 +184,6 @@ export function CourseNext({
         <h2>
           <CourseOpenLink to={to}>{title}</CourseOpenLink>
         </h2>
-        {description && <p className="course-help">{description}</p>}
       </div>
       <CourseOpenLink className="button button-primary" to={to}>
         {complete ? '回顾课程' : started ? '继续阅读' : '开始阅读'}
@@ -249,12 +245,6 @@ export function CourseResume({
   const target = next ?? navigation.value.lessons[0];
   if (!target) return null;
   return (
-    <CourseNext
-      title={target[1]}
-      to={target[2]}
-      started={completed.size > 0}
-      complete={!next}
-      description="按目录顺序继续未读小节，也可从目录打开可运行示例与练习。"
-    />
+    <CourseNext title={target[1]} to={target[2]} started={completed.size > 0} complete={!next} />
   );
 }

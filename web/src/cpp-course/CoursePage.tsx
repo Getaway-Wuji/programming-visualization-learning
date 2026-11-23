@@ -181,14 +181,12 @@ function Catalog() {
               to={lessonPath((next ?? first)!.id)}
               started={completed.size > 0}
               complete={!next}
-              description="按目录顺序继续未读小节，也可随时打开标为可运行的小节动手观察。"
             />
           )}
           <div className="course-catalog-grid">
             <BookCatalog index={index} />
             <aside className="cpp-sheet course-catalog-panel" aria-label="C++ 课程练习">
               <h2>课程练习</h2>
-              <p className="course-help">每题用四组独立输入验证当前代码，阅读与练习分别记录。</p>
               <ul className="cpp-tree">
                 {Object.entries(cppExercises).map(([id, profile]) => (
                   <li key={id}>

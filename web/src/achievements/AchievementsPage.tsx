@@ -22,7 +22,6 @@ export default function AchievementsPage() {
       <div className="achievement-overview">
         <strong data-testid="achievement-total">{known ? `${unlocked} / 3` : '待确认'}</strong>
         <span>{known ? '枚徽章已解锁' : '本地成就尚未确认'}</span>
-        <p>不增加积分；只保存在当前浏览器，清除本地档案会一起移除。</p>
       </div>
       <AchievementStatus />
       <ol className="achievement-list">

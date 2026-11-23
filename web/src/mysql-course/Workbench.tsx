@@ -453,9 +453,6 @@ function Editor({
                 </select>
               </label>
             )}
-            <p className="mysql-muted">
-              重置仅恢复数据库，保留当前 SQL。判题始终使用四组独立初始数据。
-            </p>
           </div>
         </aside>
       </div>
@@ -480,7 +477,6 @@ function Editor({
               </div>
             ))}
           </div>
-          <p className="mysql-muted">复盘重新验证当前 SQL，显示所选组的真实表格和轨迹。</p>
         </section>
       )}
       {response?.replay && (

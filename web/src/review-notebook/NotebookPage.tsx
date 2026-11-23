@@ -44,9 +44,6 @@ export default function NotebookPage() {
       <div className="notebook-layout">
         <section className="card section-card" aria-labelledby="mistake-title">
           <h2 id="mistake-title">错题记录 {rows ? `· ${rows.length} 题` : ''}</h2>
-          <p className="muted">
-            记录答案不符、教学目标未满足和程序错误。取消、资源超限与系统故障不计入错题。通过后保留记录并标为已修复；再次答错会重新打开。
-          </p>
           {state.pendingCount > 0 && (
             <p className="notice">有学习操作尚未保存，列表只显示已保存记录。请使用上方重试入口。</p>
           )}

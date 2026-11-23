@@ -431,7 +431,6 @@ function Lab({ spec }: { spec: VisualSpec }) {
           <h2 id="algorithm-reading" tabIndex={-1}>
             {spec.title}：过程与结果
           </h2>
-          <p>以下推演对应文中写明的输入；修改输入后，请结合本次运行的状态、源码和输出观察变化。</p>
           <C6TeachingReading text={guide.body.join('\n\n')} />
           <p>
             <Link className="text-link" to="/cases">

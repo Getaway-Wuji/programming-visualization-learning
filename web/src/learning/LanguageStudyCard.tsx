@@ -63,15 +63,6 @@ export function LanguageStudyCard({
           <CourseOpenLink className="button button-primary" to={next?.[2] ?? metadata.directory}>
             {next ? (completed.size ? '继续阅读' : '开始阅读') : '回顾课程'}
           </CourseOpenLink>
-          {next && (
-            <p className="muted">
-              {next[3] === 'practice'
-                ? '本节包含可运行示例与独立练习。'
-                : next[3] === 'run'
-                  ? '本节可以运行示例并观察执行过程。'
-                  : '本节通过阅读与自检理解知识。'}
-            </p>
-          )}
         </>
       ) : resource?.language === language && resource.failed ? (
         <>

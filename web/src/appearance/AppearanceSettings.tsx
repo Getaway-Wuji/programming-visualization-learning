@@ -102,7 +102,6 @@ export function AppearanceSettings() {
       <div className="appearance-heading">
         <div>
           <h2>外观与主题</h2>
-          <p className="muted">选择喜欢的界面风格，积木也会同步换肤。</p>
         </div>
         <span className="badge">
           {state.appearanceReadOnly

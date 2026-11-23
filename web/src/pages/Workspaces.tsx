@@ -77,7 +77,6 @@ export function PracticePage() {
         <SubjectLearningStatus kind="exercise" id={lesson.exerciseId} />
       </WorkspaceContext>
       <PracticeExecution id={lesson.exerciseId} />
-      <p className="muted">积木只生成受支持的 C 程序。返回本节可查看已保存的历史进度。</p>
       <Link className="text-link" to={paths.lesson(lesson.id)}>
         返回本节学习
       </Link>

@@ -283,7 +283,6 @@ function ArticleBody({
             title={unread.titleDisplay}
             to={coursePath(order, unread.platformRef.id)}
             started={completed.size > 0}
-            description="本篇下一步 · 阅读与练习分别记录。"
           />
         )}
         {node.leaf && node.status === 'authored' && (

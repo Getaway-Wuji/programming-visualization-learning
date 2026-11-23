@@ -37,7 +37,6 @@ export function AiSettings() {
       <div className="ai-heading">
         <div>
           <h2 id="ai-settings-title">AI解释（可选）</h2>
-          <p>默认关闭。只在当前标签页临时启用，刷新或退出工作台后关闭；正常学习无需开启。</p>
         </div>
         <span role="status">{state.enabled ? '已开启' : busy ? '正在验证' : '未开启'}</span>
       </div>

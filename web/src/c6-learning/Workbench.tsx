@@ -259,7 +259,6 @@ function TraceView({
           </section>
           <section>
             <h3>虚拟内存 · {snapshot.objects.length} 个对象</h3>
-            <p className="muted">地址属于教学虚拟内存。后退会恢复对象、生命周期、栈和输出。</p>
             <div className="c6-table-scroll" tabIndex={0} aria-label="虚拟内存对象表，可横向滚动">
               <table>
                 <thead>

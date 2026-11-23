@@ -128,7 +128,6 @@ function LegacyComparisonPage() {
         <div className="comparison-title-row">
           <div>
             <h2>当前步骤的真实计数</h2>
-            <p className="muted">输入仅供本页使用；对比不记录学习事实或积分。</p>
           </div>
           <button
             className="button"

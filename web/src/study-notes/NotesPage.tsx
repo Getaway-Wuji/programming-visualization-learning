@@ -400,9 +400,6 @@ export default function NotesPage() {
       </div>
       <section className="note-tray" aria-labelledby="note-tray">
         <h2 id="note-tray">本次快照 · {documents.length}/8 份</h2>
-        <p className="muted">
-          在真实运行的“保存当前快照”中加入；当前源码、输入和完整状态随快照保留。已有下载文件由你自行管理。
-        </p>
         {!!documents.length && (
           <ul>
             {documents.map((d) => (

@@ -98,15 +98,13 @@ export function DailyGoalSummary({ language }: { language?: LearningLanguage } =
               </li>
             ))}
           </ul>
-          <p className="muted">
-            {status === 'preview'
-              ? '选一节课或一道练习，开始今天的学习。'
-              : status === 'achieved'
-                ? dailyReward?.status === 'posted'
-                  ? `打卡已保存，${dailyReward.points} 分已入账。`
-                  : '打卡已保存，奖励待入账。'
-                : '今天的目标已固定。完成新的学习活动后自动记录打卡，每日只奖励一次。'}
-          </p>
+          {status === 'achieved' && (
+            <p className="muted">
+              {dailyReward?.status === 'posted'
+                ? `打卡已保存，${dailyReward.points} 分已入账。`
+                : '打卡已保存，奖励待入账。'}
+            </p>
+          )}
           {projected?.reachable === false && !goal?.achievedAt && (
             <p className="notice">当前可用内容不足以达到这份目标。原目标保留，请恢复内容后继续。</p>
           )}
@@ -202,9 +200,6 @@ function GoalEditor() {
       }}
     >
       <h3>安排后续日期</h3>
-      <p className="muted">
-        每天每项内容只计一次。重复学习可计新一天的进度，内容首次奖励仍只发一次。
-      </p>
       <p>已保存：{targetText(template.targets)}</p>
       <fieldset disabled={disabled}>
         <legend>自定义目标，至少选择一项</legend>

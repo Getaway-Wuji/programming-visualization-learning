@@ -173,14 +173,12 @@ function Catalog() {
               to={lessonPath((next ?? first)!.id)}
               started={completed.size > 0}
               complete={!next}
-              description="按目录顺序继续未读小节，也可随时打开标为可运行的小节动手观察。"
             />
           )}
           <div className="rust-catalog-grid">
             <BookCatalog index={index} />
             <section className="rust-sheet course-catalog-panel" aria-label="Rust 课程练习">
               <h2>课程练习</h2>
-              <p className="rust-muted">从基础输出到所有权与借用，每题用四组输入验证当前代码。</p>
               <ul className="rust-tree">
                 {Object.entries(rustExercises).map(([id, profile]) => (
                   <li key={id}>

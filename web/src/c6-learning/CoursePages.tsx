@@ -267,7 +267,6 @@ function Home() {
       <section className="home-languages" aria-label="选择学习语言">
         <div className="home-section-heading">
           <h2>选择学习语言</h2>
-          <span>按语言查看课程与学习进度</span>
         </div>
         <ul>
           {languages.map((language) => (
@@ -337,7 +336,6 @@ function Home() {
             <Link className="text-link" to="/courses">
               查看课程目录
             </Link>
-            <p className="muted">读到页末自动完成小节，练习可以从左侧菜单随时进入。</p>
             <div className="c6-home-practice-shortcuts">
               <h3>动手练习</h3>
               <div className="inline-actions">
@@ -455,7 +453,6 @@ function Directory() {
             </section>
             <section aria-labelledby="c6-reference-title">
               <h2 id="c6-reference-title">参考资料</h2>
-              <p className="muted">附录 A、B 用于查阅，不计入课程完成进度与奖励。</p>
               <NodeRows nodes={roots.filter((n) => n.chunkId === 'chA' || n.chunkId === 'chB')} />
             </section>
           </>
@@ -581,7 +578,6 @@ function SourcePage({ nodeId }: { nodeId: string }) {
             {guides.length > 0 && (
               <section className="c6-section">
                 <h2>来源习题指导 · 选做</h2>
-                <p className="muted">用于思考与自行设计；阅读指导不记为原题代码通过。</p>
                 {guides.map(
                   (guide) =>
                     guide.kind === 'source-design-guide' && (

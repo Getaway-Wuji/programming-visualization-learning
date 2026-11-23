@@ -43,9 +43,6 @@ export function C6KnowledgeOverview() {
         我的知识图谱 ·{' '}
         {state.projection ? `${completed.size + chapterLit} / 421 已点亮` : '学习记录待确认'}
       </h2>
-      <p className="muted">
-        完成小节后点亮对应知识；章内小节全部完成后点亮整章。不熟悉的知识可以单独标记。
-      </p>
       <KnowledgeMarksStatus />
       {chapters.map((chapter) => {
         const lessons = chapter.lessons;

@@ -45,9 +45,6 @@ function Notebook() {
       <section className="course-next" aria-label="按语言查看复盘">
         <div>
           <h2>各语言判题复盘</h2>
-          <p className="course-help">
-            下方汇总 C 语言错题；其他语言的最近提交与首次通过记录可从这里查看。
-          </p>
         </div>
         <nav className="course-language-list" aria-label="语言复盘">
           {languages
@@ -61,9 +58,6 @@ function Notebook() {
       </section>
       <section className="c6-section">
         <h2>错题记录{mistakes ? ` · ${mistakes.length} 题` : ''}</h2>
-        <p className="muted">
-          答案不符、教学目标未满足和程序错误计入错题；取消和系统故障不计入。通过后标为已修复，再次答错会重新打开。
-        </p>
         {!mistakes ? (
           <p>学习记录暂不能确认，请恢复本地档案。</p>
         ) : !mistakes.length ? (

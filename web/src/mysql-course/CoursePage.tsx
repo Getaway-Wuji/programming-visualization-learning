@@ -170,13 +170,11 @@ function Catalog() {
               to={lessonPath((next ?? first)!.id)}
               started={completed.size > 0}
               complete={!next}
-              description="按目录顺序继续未读小节，也可随时打开标为可运行的小节动手观察。"
             />
           )}
           <BookCatalog index={index} />
           <aside className="course-catalog-panel" aria-label="MySQL 课程练习">
             <h2>课程练习</h2>
-            <p>每题用四组独立数据库验证当前 SQL。</p>
             <ul className="mysql-tree">
               {Object.entries(mysqlExercises).map(([id, profile]) => (
                 <li key={id}>

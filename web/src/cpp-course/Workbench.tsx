@@ -286,9 +286,6 @@ function Editor({
         </div>
         {target.lesson && <Link to={'/cpp/lesson/' + target.lesson}>返回小节</Link>}
       </header>
-      {target.example && (
-        <p className="muted">示例可临时修改和运行。需要保留修改时，请复制到自由工作台并保存。</p>
-      )}
       {!writable && (
         <p className="muted">当前只能临时编辑和运行；草稿与判题记录需要可写的本地档案。</p>
       )}
@@ -437,7 +434,6 @@ function Editor({
               ))}
             </div>
           )}
-          <p className="cpp-muted">运行使用这里的输入。判题使用题目的四组固定输入。</p>
         </aside>
       </div>
       {busy && <p role="status">{busy}</p>}

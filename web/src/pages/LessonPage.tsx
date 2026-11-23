@@ -150,9 +150,6 @@ export default function LessonPage() {
                 </section>
                 <section className="card section-card" id="lesson-study-confirmation" tabIndex={-1}>
                   <h2>记录本节学习</h2>
-                  <p className="muted">
-                    学习确认与必修练习通过共同决定小节完成。浏览、刷新和查看解析不会自动通过练习。
-                  </p>
                   <div className="inline-actions">
                     <button
                       className="button button-secondary"
