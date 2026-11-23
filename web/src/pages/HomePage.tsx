@@ -36,11 +36,7 @@ export function HomePage() {
   return (
     <div className="p05-home" data-page-id="PAGE-01">
       <div className="home-heading">
-        <PageHeading
-          kicker="学习，从看懂开始"
-          title="让每一步，都看得明白。"
-          description="从一行代码开始，理解程序怎样改变数据。"
-        />
+        <PageHeading kicker="学习，从看懂开始" title="让每一步，都看得明白。" />
         <span className="home-archive-label">
           {state.temporary ? '临时使用，尚未保存' : projection ? '本地学习档案' : '正在读取记录'}
         </span>

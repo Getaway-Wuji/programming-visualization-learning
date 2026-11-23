@@ -55,11 +55,7 @@ export default function RecursiveComparisonPage() {
           { label: 'C++递归排序对比' },
         ]}
       />
-      <PageHeading
-        kicker="C++ · 同数据 · 真实轨迹"
-        title="归并与快速，同步观察"
-        description="同一整数序列，生成两份独立输入。沿统一原子步骤游标观察数组、递归帧和实际计数。"
-      />
+      <PageHeading kicker="C++ · 同数据 · 真实轨迹" title="归并与快速，同步观察" />
       <section className="sort-input" aria-label="C++对比共同输入">
         <label htmlFor="pair-values">共同整数序列</label>
         <input

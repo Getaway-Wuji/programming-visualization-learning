@@ -465,7 +465,6 @@ export default function ExamplePage() {
       <Breadcrumbs items={[{ label: '进阶课程', to: '/advanced' }, { label: '经典例题' }]} />
       <header className="advanced-heading">
         <h1 tabIndex={-1}>经典例题</h1>
-        <p>把枚举、数组写入和二分边界，放回一个具体问题中理解。</p>
       </header>
       <ExampleCatalog />
       <p>

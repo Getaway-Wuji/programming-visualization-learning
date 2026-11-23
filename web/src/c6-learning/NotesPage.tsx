@@ -187,11 +187,7 @@ export default function C6NotesPage() {
   return (
     <C6Boundary>
       <div className="c6-course-page study-notes-page">
-        <PageHeading
-          kicker="本地笔记"
-          title="学习笔记"
-          description="选择当前档案中的真实记录、保存草稿和运行快照，核对后下载。"
-        />
+        <PageHeading kicker="本地笔记" title="学习笔记" />
         {!savedC6NotesSnapshot(state) || marks.status !== 'ready' ? (
           <>
             <LearningSaveStatus />

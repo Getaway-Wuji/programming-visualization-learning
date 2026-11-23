@@ -206,11 +206,6 @@ export default function MemoryPage() {
       <PageHeading
         kicker={recursive ? '程序执行 · 函数与递归' : '程序执行 · 指针与对象'}
         title={recursive ? '递归与调用栈' : '内存观察'}
-        description={
-          recursive
-            ? '查看每次调用保存的参数与局部状态。函数返回后，后退可恢复原帧。'
-            : '从同一步查看变量与对象。前进、后退或切换视图，观察引用怎样建立与失效。'
-        }
       />
       <div className="memory-example-controls">
         <label>

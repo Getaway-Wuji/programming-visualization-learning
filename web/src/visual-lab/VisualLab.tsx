@@ -214,7 +214,6 @@ function Lab({ spec }: { spec: VisualSpec }) {
             ← 算法目录
           </Link>
           <h1>{spec.title}</h1>
-          <p>{spec.description}</p>
           {guide && (
             <button
               className="button lab-reading-link"

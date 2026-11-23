@@ -24,7 +24,6 @@ export default function RustReviewPage() {
       <header className="rust-title">
         <div>
           <h1>Rust 判题复盘</h1>
-          <p>查看当前浏览器保存的最近提交和首次通过记录。</p>
         </div>
         <Link className="button" to="/rust">
           返回课程

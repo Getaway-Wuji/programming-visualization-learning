@@ -39,11 +39,7 @@ export default function CompilationPage() {
       data-completed={flow.completed}
     >
       <Breadcrumbs items={[{ label: '学习首页', to: '/' }, { label: '编译流程' }]} />
-      <PageHeading
-        kicker="从源码到程序文件"
-        title="编译流程，分四步看。"
-        description="看清每一步的输入、输出，以及错误为什么会在这里停下。"
-      />
+      <PageHeading kicker="从源码到程序文件" title="编译流程，分四步看。" />
       <p className="compilation-notice">
         <strong>教学模拟</strong> · 所有中间内容都是预编写的概念示意。本页不调用
         GCC、汇编器或链接器，不生成机器产物。

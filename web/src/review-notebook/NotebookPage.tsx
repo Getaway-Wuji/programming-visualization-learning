@@ -33,11 +33,7 @@ export default function NotebookPage() {
   const marked = marks.rows.filter((r) => r.marked);
   return (
     <div className="notebook-page" data-page-id="PAGE-15-2">
-      <PageHeading
-        kicker="本地复习"
-        title="错题与陌生点"
-        description="把真实练习中的困难留下来，也可以主动标记还不熟悉的知识。"
-      />
+      <PageHeading kicker="本地复习" title="错题与陌生点" />
       <LearningSaveStatus />
       <Link className="text-link" to="/study-notes">
         选择记录并整理学习笔记 →

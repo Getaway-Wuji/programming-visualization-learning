@@ -272,7 +272,6 @@ function Editor({
       <header className="rust-title">
         <div>
           <h1 tabIndex={-1}>{target.title}</h1>
-          <p>Rust 2018 教学子集 · 输入、变量与轨迹在当前浏览器中处理。</p>
         </div>
         {target.lesson && <Link to={'/rust/lesson/' + target.lesson}>返回小节</Link>}
       </header>

@@ -98,11 +98,7 @@ function NodeCaseWorkspace({ spec }: { spec: NodeCase }) {
           { label: spec.title },
         ]}
       />
-      <PageHeading
-        kicker="C++ · 操作序列 · 真实回放"
-        title={spec.title}
-        description={spec.description}
-      />
+      <PageHeading kicker="C++ · 操作序列 · 真实回放" title={spec.title} />
       <section className="node-input" aria-label="节点操作序列">
         <label htmlFor="node-commands">逐行操作</label>
         <textarea

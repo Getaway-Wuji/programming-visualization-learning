@@ -31,7 +31,6 @@ export default function MysqlReviewPage() {
       <header className="mysql-title">
         <div>
           <h1>MySQL 判题复盘</h1>
-          <p>当前浏览器保存的最近提交和首次通过记录。</p>
         </div>
         <Link to="/mysql">返回课程</Link>
       </header>

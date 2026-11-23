@@ -155,7 +155,6 @@ function Catalog() {
       <header className="rust-title">
         <div>
           <h1 tabIndex={-1}>Rust 课程</h1>
-          <p>按教材顺序阅读，观察变量、所有权、借用和函数调用。</p>
         </div>
         <Link className="button" to="/rust/workbench">
           打开工作台

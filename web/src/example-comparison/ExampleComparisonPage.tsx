@@ -108,7 +108,6 @@ function Workspace({ spec }: { spec: ExampleSpec }) {
       />
       <header className="advanced-heading">
         <h1 tabIndex={-1}>{spec.title.split('：')[0]}：同题两解</h1>
-        <p>同一原始输入，两份独立C++程序。比较答案、真实写入与不同边界处理。</p>
       </header>
       <form
         className="example-input"

@@ -192,11 +192,7 @@ export default function CustomCodePage() {
       data-status={status}
       data-cursor={view.cursor}
     >
-      <PageHeading
-        kicker="自由练习"
-        title="C 代码工作台"
-        description="粘贴教学 C 程序，用真实执行观察变量、内存和调用栈。"
-      />
+      <PageHeading kicker="自由练习" title="C 代码工作台" />
       <div className="custom-actions">
         <button
           className="button button-primary"

@@ -152,7 +152,6 @@ function Catalog() {
       <header className="course-header">
         <div>
           <h1 tabIndex={-1}>MySQL 课程</h1>
-          <p>从关系与表结构，到查询、数据变更和事务。</p>
         </div>
         <Link className="button button-secondary" to="/mysql/workbench">
           打开 SQL 工作台

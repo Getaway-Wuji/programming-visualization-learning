@@ -20,7 +20,6 @@ export function C6AdvancedPage({ lessonId }: { lessonId?: string }) {
       <div className="advanced-course" data-testid="advanced-course">
         <header className="advanced-heading">
           <h1>{entry?.title ?? '进阶课程'}</h1>
-          <p>从新书中的边界、循环与状态出发，观察已支持的 C++ 算法。</p>
         </header>
         {lessonId && !entry ? (
           <p>

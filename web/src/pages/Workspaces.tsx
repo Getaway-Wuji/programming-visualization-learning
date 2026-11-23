@@ -72,11 +72,7 @@ export function PracticePage() {
           { label: lesson.exerciseTitle },
         ]}
       />
-      <PageHeading
-        kicker="动手练习 · 程序与输入"
-        title={lesson.exerciseTitle}
-        description="用 C 代码或积木解答，提交后逐步复盘真实执行。"
-      />
+      <PageHeading kicker="动手练习 · 程序与输入" title={lesson.exerciseTitle} />
       <WorkspaceContext>
         <SubjectLearningStatus kind="exercise" id={lesson.exerciseId} />
       </WorkspaceContext>
@@ -192,7 +188,6 @@ export function VisualizePage() {
       <PageHeading
         kicker={item.kind === 'algorithm' ? '算法案例 · 可视化工作区' : '语法演示 · 可视化工作区'}
         title={item.title}
-        description={item.description}
       />
       <WorkspaceContext label="案例与输入说明">
         <SubjectLearningStatus kind="case" id={item.id} />
@@ -226,11 +221,7 @@ export function ReviewPage() {
           { label: '本次复盘' },
         ]}
       />
-      <PageHeading
-        kicker="练习复盘 · 当前提交"
-        title={`${lesson.exerciseTitle} · 本次复盘`}
-        description="复盘共享本题当前有效提交；查看、返回和播放不会重新运行。刷新或离开本题后不恢复临时结果。"
-      />
+      <PageHeading kicker="练习复盘 · 当前提交" title={`${lesson.exerciseTitle} · 本次复盘`} />
       <WorkspaceContext label="复盘信息">
         <SubjectLearningStatus kind="exercise" id={lesson.exerciseId} />
       </WorkspaceContext>

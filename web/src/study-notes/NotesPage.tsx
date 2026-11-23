@@ -382,11 +382,7 @@ export default function NotesPage() {
   const lease = `${state.sessionEpoch}:${snapshot?.meta.generation}:${snapshot?.meta.revision}:${practiceState.status}:${documents.map((d) => d.snapshotId).join(',')}`;
   return (
     <div className="study-notes-page" data-page-id="PAGE-20-1">
-      <PageHeading
-        kicker="本地整理"
-        title="学习笔记"
-        description="把选中的学习记录、错题、解析与运行快照整理在一起。"
-      />
+      <PageHeading kicker="本地整理" title="学习笔记" />
       <LearningSaveStatus />
       <p className="notice">
         只在当前标签页整理，不上传。刷新会清空本次选择与临时快照；已下载的Markdown压缩包由你自行管理。

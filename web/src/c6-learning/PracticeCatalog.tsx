@@ -12,11 +12,7 @@ export function C6PracticeCatalog() {
   return (
     <C6Boundary>
       <div className="course-frame">
-        <PageHeading
-          kicker="动手写代码"
-          title="练习"
-          description="选择章节练习，写代码并提交检查；也可以挑战 Bug 修复。"
-        />
+        <PageHeading kicker="动手写代码" title="练习" />
         <p className="inline-actions">
           <Link className="button button-primary" to="/bugs">
             Bug 修复闯关

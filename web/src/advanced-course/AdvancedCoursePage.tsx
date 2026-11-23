@@ -33,11 +33,6 @@ export default function AdvancedCoursePage() {
       />
       <header className="advanced-heading">
         <h1 tabIndex={-1}>{entry?.title ?? '进阶课程'}</h1>
-        <p>
-          {entry
-            ? '从已有知识出发，读源码、看真实执行，再回到练习检验。'
-            : '先把边界、循环与状态学扎实，再走向C++算法。'}
-        </p>
       </header>
       <LearningSaveStatus />
       <ReadingBoundary>

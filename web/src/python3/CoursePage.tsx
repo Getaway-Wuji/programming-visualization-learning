@@ -327,7 +327,6 @@ export default function PythonCoursePage() {
           <header className="course-header">
             <div>
               <h1 tabIndex={-1}>Python 3 课程</h1>
-              <p>按文章阅读，在可运行小节里观察程序的每一步。</p>
             </div>
             <Link className="button button-secondary" to="/python/workbench">
               打开工作台

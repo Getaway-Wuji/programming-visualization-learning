@@ -5,12 +5,10 @@ import { Icon } from './Icon';
 export function PageHeading({
   kicker,
   title,
-  description,
   children,
 }: {
   kicker: string;
   title: string;
-  description?: string;
   children?: ReactNode;
 }) {
   return (
@@ -19,7 +17,6 @@ export function PageHeading({
       <h1 tabIndex={-1} className="page-title">
         {title}
       </h1>
-      {description && <p className="page-description">{description}</p>}
       {children}
     </header>
   );

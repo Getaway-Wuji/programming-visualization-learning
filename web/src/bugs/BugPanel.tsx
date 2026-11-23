@@ -45,11 +45,7 @@ export default function BugPage() {
   return (
     <div data-page-id="PAGE-14-3">
       <Breadcrumbs items={[{ label: 'C 语言课程', to: '/courses' }, { label: 'Bug 闯关' }]} />
-      <PageHeading
-        kicker="从错误中练习"
-        title="找出问题，修好程序。"
-        description="语法、逻辑、指针与死循环各两关。先看真实错误，再用全部测试验证修复。"
-      />
+      <PageHeading kicker="从错误中练习" title="找出问题，修好程序。" />
 
       {!available && (
         <p role="status">

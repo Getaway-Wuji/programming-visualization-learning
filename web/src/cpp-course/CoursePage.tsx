@@ -163,7 +163,6 @@ function Catalog() {
       <header className="cpp-title">
         <div>
           <h1 tabIndex={-1}>C++ 课程</h1>
-          <p>按教材顺序阅读，用真实程序观察变量、指针和调用帧。</p>
         </div>
         <Link className="button" to="/cpp/workbench">
           打开工作台

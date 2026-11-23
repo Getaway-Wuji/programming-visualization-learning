@@ -86,11 +86,7 @@ function StructureWorkspace({ spec }: { spec: StructureCase }) {
           { label: spec.title },
         ]}
       />
-      <PageHeading
-        kicker="C++ · 操作序列 · 真实回放"
-        title={spec.title}
-        description={spec.description}
-      />
+      <PageHeading kicker="C++ · 操作序列 · 真实回放" title={spec.title} />
       <section className="structure-input" aria-label="结构操作序列">
         <label htmlFor="structure-commands">逐行操作</label>
         <textarea

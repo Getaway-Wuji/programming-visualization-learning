@@ -81,7 +81,6 @@ export default function LessonPage() {
             <PageHeading
               kicker={`第 ${chapter?.order ?? ''} 章 · ${chapter?.title ?? ''}`}
               title={lesson.title}
-              description="先理解目标和示例，再主动确认学习，最后通过本节必修练习。"
             />
             <p className="notice" data-testid="lesson-progress">
               {!savedCompletion

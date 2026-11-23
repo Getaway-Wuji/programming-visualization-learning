@@ -91,11 +91,7 @@ function SortWorkspace({ spec }: { spec: SortCase }) {
           { label: spec.title },
         ]}
       />
-      <PageHeading
-        kicker="C++ · 真实执行与回放"
-        title={spec.title}
-        description={spec.description}
-      />
+      <PageHeading kicker="C++ · 真实执行与回放" title={spec.title} />
       <section className="sort-input" aria-label="排序案例输入">
         <label htmlFor="sort-values">整数序列</label>
         <input

@@ -111,11 +111,7 @@ export default function GeneratedPracticePage() {
       data-testid="generated-practice"
       data-status={snap.status}
     >
-      <PageHeading
-        kicker="规则生成 · C 基础"
-        title="换一道，再练一次"
-        description="选择知识与难度，用固定种子得到一道可复现的题。参考解和你的提交都由浏览器内的 Rust 解释器真实执行。"
-      />
+      <PageHeading kicker="规则生成 · C 基础" title="换一道，再练一次" />
       <p className="practice-scope">
         临时加练 · 不计分，不改变课程进度或薄弱点记录 ·
         草稿与结果刷新后丢弃。保留种子可重新生成同一道题。

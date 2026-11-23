@@ -36,7 +36,6 @@ export default function JavaReviewPage() {
     <section className="python-screen java-screen">
       <JavaNavigation />
       <h1 tabIndex={-1}>Java 复盘</h1>
-      <p className="muted">查看保存在本机的最近判题结果和首次通过记录。</p>
       {!ready && state.status !== 'loading' && <p role="alert">本地学习档案暂不可用。</p>}
       {state.status === 'loading' && <p role="status">正在读取本地档案…</p>}
       {ready && failed && (

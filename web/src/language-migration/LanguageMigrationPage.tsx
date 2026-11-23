@@ -58,7 +58,6 @@ export default function LanguageMigrationPage() {
       />
       <header className="advanced-heading">
         <h1 tabIndex={-1}>语言迁移与语法对照</h1>
-        <p>从熟悉的语言出发，比较写法与边界，先读懂当前C++算法。</p>
       </header>
       <p className="migration-boundary">
         静态教学对照：代码与标注均为预写内容，不执行代码，不产生真实轨迹，也不计学习完成或积分。

@@ -171,11 +171,7 @@ export default function WeaknessPage() {
     visible = history ? rows : active;
   return (
     <div className="weakness-page" data-page-id="PAGE-19-1">
-      <PageHeading
-        kicker="本地复习"
-        title="薄弱点与学习依据"
-        description="从已保存的真实练习、挑战作答和你的自评中，找出值得复习的关联知识。"
-      />
+      <PageHeading kicker="本地复习" title="薄弱点与学习依据" />
       <LearningSaveStatus />
       <div className="weakness-toolbar">
         <Link className="text-link" to="/generated-practice">

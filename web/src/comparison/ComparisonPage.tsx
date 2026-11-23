@@ -123,11 +123,7 @@ function LegacyComparisonPage() {
           { label: '同数据对比' },
         ]}
       />
-      <PageHeading
-        kicker="两种算法 · 同一份输入"
-        title="同样的数据，怎样走完排序？"
-        description="分别运行原 C 冒泡与选择排序，用同一游标查看两条真实轨迹。每拍各走一个原子步骤，不代表相同算法阶段。"
-      />
+      <PageHeading kicker="两种算法 · 同一份输入" title="同样的数据，怎样走完排序？" />
       <section className="comparison-summary" aria-label="对比设置与当前计数">
         <div className="comparison-title-row">
           <div>

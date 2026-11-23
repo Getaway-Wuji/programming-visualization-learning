@@ -18,11 +18,7 @@ export default function AchievementsPage() {
       data-testid="achievements-page"
     >
       <Breadcrumbs items={[{ label: '学习首页', to: '/' }, { label: '学习成就' }]} />
-      <PageHeading
-        kicker="本地学习记录"
-        title="学习成就"
-        description="把完成过的学习经历留在这里。每枚徽章都有明确条件，可以随时查看来源。"
-      />
+      <PageHeading kicker="本地学习记录" title="学习成就" />
       <div className="achievement-overview">
         <strong data-testid="achievement-total">{known ? `${unlocked} / 3` : '待确认'}</strong>
         <span>{known ? '枚徽章已解锁' : '本地成就尚未确认'}</span>

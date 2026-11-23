@@ -244,9 +244,6 @@ function Editor({
       <header className="python-title">
         <div>
           <h1 tabIndex={-1}>{target.title}</h1>
-          <p className="muted">
-            Java · {target.example ? '教学示例' : isExercise ? '课程练习' : '自由代码工作台'}
-          </p>
         </div>
         {target.lessonPath && <Link to={target.lessonPath}>回到课程小节</Link>}
       </header>

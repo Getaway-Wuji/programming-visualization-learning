@@ -282,7 +282,6 @@ function Editor({
       <header className="mysql-title">
         <div>
           <h1 tabIndex={-1}>{target.title}</h1>
-          <p>输入 SQL，观察对应表格与查询结果。</p>
         </div>
         {target.lesson && <Link to={'/mysql/lesson/' + target.lesson}>返回小节</Link>}
       </header>

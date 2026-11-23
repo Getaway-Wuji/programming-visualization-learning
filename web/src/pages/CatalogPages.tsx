@@ -31,11 +31,7 @@ export function CoursePage() {
           ...(selected ? [{ label: selected.title }] : []),
         ]}
       />
-      <PageHeading
-        kicker="C 语言入门"
-        title={selected?.title ?? '从基础开始，一步步学懂。'}
-        description="按章节学习目标、讲解与示例，主动记录学习，并通过必修练习完成小节。"
-      />
+      <PageHeading kicker="C 语言入门" title={selected?.title ?? '从基础开始，一步步学懂。'} />
       <LearningSaveStatus />
       <ReadingBoundary>
         {chapterId && !selected ? (
@@ -116,11 +112,7 @@ export function CasesPage() {
   return (
     <div data-page-id="PAGE-05">
       <Breadcrumbs items={[{ label: '学习首页', to: '/' }, { label: '算法与演示' }]} />
-      <PageHeading
-        kicker="看懂程序怎样执行"
-        title="算法与演示"
-        description="选择算法、修改数据，逐步观察每一次比较、移动和状态变化。"
-      />
+      <PageHeading kicker="看懂程序怎样执行" title="算法与演示" />
       <VisualLabCatalog />
     </div>
   );
@@ -131,11 +123,7 @@ export function ObservationCasesPage() {
   return (
     <div>
       <Breadcrumbs items={[{ label: '进阶课程', to: '/advanced' }, { label: '程序观察案例' }]} />
-      <PageHeading
-        kicker="C 与 C++"
-        title="程序观察案例"
-        description="回放 C 基础案例，或查看算法实现中的数组、指针、内存和调用栈。"
-      />
+      <PageHeading kicker="C 与 C++" title="程序观察案例" />
       {(['demo', 'algorithm'] as const).map((kind) => (
         <section key={kind}>
           <div className="section-heading">

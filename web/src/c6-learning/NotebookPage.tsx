@@ -33,11 +33,7 @@ function Notebook() {
   const marked = marks.rows.filter((m) => isC6Mark(m, index) && m.marked);
   return (
     <div className="course-frame c6-course-page learning-notebook">
-      <PageHeading
-        kicker="本地复习"
-        title="错题与陌生点"
-        description="保留真实练习中的困难，主动标记还不熟悉的知识。"
-      />
+      <PageHeading kicker="本地复习" title="错题与陌生点" />
       <div className="c6-action-row">
         <Link className="text-link" to="/weaknesses">
           查看薄弱点依据

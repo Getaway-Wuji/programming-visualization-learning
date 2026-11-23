@@ -98,11 +98,7 @@ function ClassicWorkspace({ spec }: { spec: ClassicCase }) {
           { label: spec.title },
         ]}
       />
-      <PageHeading
-        kicker="C++ · 经典问题 · 真实回放"
-        title={spec.title}
-        description={spec.description}
-      />
+      <PageHeading kicker="C++ · 经典问题 · 真实回放" title={spec.title} />
       <section className="classic-input" aria-label="经典问题输入">
         <label htmlFor="classic-commands">输入整数</label>
         <textarea

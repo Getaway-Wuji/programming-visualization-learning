@@ -243,15 +243,7 @@ function Home() {
     <div className="c6-course-page study-home">
       <section className="home-hero">
         <div className="home-hero-copy">
-          <PageHeading
-            kicker="一步一懂 / 编程可视化"
-            title={`学习 ${selectedLanguage.label}`}
-            description={
-              selectedLanguage.id === 'mysql'
-                ? '从课本读懂一个概念，再亲手写 SQL，看看查询结果和表中的数据怎么变。'
-                : '从课本读懂一个概念，再亲手写代码，看看变量、内存和输出怎么变。'
-            }
-          />
+          <PageHeading kicker="一步一懂 / 编程可视化" title={`学习 ${selectedLanguage.label}`} />
           <div className="home-hero-actions">
             <Link className="button button-primary" to={selectedLanguage.directory}>
               浏览课程
@@ -436,7 +428,6 @@ function Directory() {
       <header className="course-header">
         <div>
           <h1 tabIndex={-1}>课程目录</h1>
-          <p>C 语言课程 · 17 章 · {counts.lessons} 个学习小节</p>
         </div>
         <Link className="button button-secondary" to="/practice">
           进入练习

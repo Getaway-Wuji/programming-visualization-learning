@@ -23,7 +23,6 @@ export default function CppReviewPage() {
       <header className="cpp-title">
         <div>
           <h1>C++ 判题复盘</h1>
-          <p>查看当前浏览器保存的最近提交和首次通过记录。</p>
         </div>
         <Link className="button" to="/cpp">
           返回课程

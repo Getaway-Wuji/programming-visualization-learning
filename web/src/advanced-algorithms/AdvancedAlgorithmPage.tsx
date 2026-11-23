@@ -178,7 +178,6 @@ export default function AdvancedAlgorithmPage() {
       <Breadcrumbs items={[{ label: '进阶课程', to: '/advanced' }, { label: '筛法与序列' }]} />
       <header className="advanced-heading">
         <h1 tabIndex={-1}>筛法与序列</h1>
-        <p>从排除一个合数，到保留一项递推状态，沿真实C++执行理解四个算法。</p>
       </header>
       <AdvancedAlgorithmCatalog />
       <p>筛法包含上界0/1，序列允许明确空输入；算法阅读与运行不另记完成或积分。</p>

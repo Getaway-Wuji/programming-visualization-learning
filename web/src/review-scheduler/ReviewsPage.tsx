@@ -47,11 +47,7 @@ export default function ReviewsPage() {
   const enabled = state.status === 'ready' && learning.clockStatus !== 'rollback';
   return (
     <div className="review-page" data-page-id="PAGE-15-3">
-      <PageHeading
-        kicker="本地复习"
-        title="今日复习"
-        description="回顾真实错题和自己标记的陌生点，再用自评安排下一次复习。"
-      />
+      <PageHeading kicker="本地复习" title="今日复习" />
       <ReviewStatus />
       {learning.clockStatus === 'rollback' && (
         <p role="alert">本地时间明显倒退，请校准时间并重新读取；当前不能保存评价。</p>
