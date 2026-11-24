@@ -25,7 +25,6 @@ import { KnowledgeMarksProvider } from './review-notebook/marks';
 import { AchievementProvider } from './achievements/react';
 const AchievementsPage = lazy(() => import('./achievements/AchievementsPage'));
 import { ReviewProvider } from './review-scheduler/react';
-import { AiProvider } from './ai-debug/react';
 import { NotesProvider } from './study-notes/session';
 const NotesPage = lazy(() => import('./c6-learning/NotesPage'));
 const NotebookPage = lazy(() => import('./c6-learning/NotebookPage'));
@@ -310,11 +309,7 @@ export function App() {
     createHashRouter([
       {
         path: '*',
-        element: (
-          <AiProvider>
-            <PreparedApplication />
-          </AiProvider>
-        ),
+        element: <PreparedApplication />,
       },
     ]),
   );

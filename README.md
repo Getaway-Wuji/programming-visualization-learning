@@ -30,33 +30,30 @@ pwsh -NoProfile -File scripts/task.ps1 dev
 - 学习首页可切换六种语言，并根据最近保存的学习活动推荐下一小节；每种语言提供目录、工作台和复盘入口。目录中区分阅读、自检、可运行示例和独立练习。
 - 六语言代码输入区提供关键字、字符串、数字和注释着色，以及教学子集的关键字、常用函数和当前文档标识符提示。按 Ctrl+Space 打开提示，使用方向键选择，Enter 或 Tab 接受；先按 Escape 再按 Tab 可以离开编辑器。输入提示不会扩大解释器实际支持范围。C++ 和 Rust 示例修改后也有离开保护，可复制到自由工作台保存。
 - 首次进入执行页面时先下载并校验当前引擎，页面会明确显示加载状态；完成后才打开工作区，失败可重试，离开页面会取消准备。此时尚未运行程序，也不会记录学习完成或奖励。程序开始执行后仍使用原有的1000毫秒截止，不因网络加载流程而放宽；首次加载时间受网络影响，不能视为程序执行耗时。
-- 在「设置 → 本地数据」下载完整已保存档案的本地备份。恢复前会校验版本和内容并预览，确认后覆盖当前浏览器档案；恢复失败会保留原档案。备份包含各语言进度和草稿、奖励防重、复习记录、偏好与背景，不包含 API Key、未保存代码及本次临时快照。临时内容应先保存或单独导出。
-- 可选 AI 调试默认关闭，需在设置中临时输入自己的 API Key。启用后，经用户确认的上下文会发送给所选官方服务；学习记录仍保存在浏览器。
+- 在「设置 → 本地数据」下载完整已保存档案的本地备份。恢复前会校验版本和内容并预览，确认后覆盖当前浏览器档案；恢复失败会保留原档案。备份包含各语言进度和草稿、奖励防重、复习记录、偏好与背景，不包含未保存代码及本次临时快照。临时内容应先保存或单独导出。
 - 笔记支持本地 Markdown、PNG、JSON ZIP 导出；不提供 PDF 导出。
 
 从旧档案 DB1—9 首次切换至《C Primer Plus》课程时，按 C 课程首次启用规则重建学习档案，有效的主题、头像和背景等非学习偏好保留。DB10—14 升级至 DB15 时保留已有学习记录、奖励、草稿与偏好，并补充缺少的 Python、Java、C++、Rust 或 MySQL 活动及草稿存储。MySQL草稿包含SQL、当前教学表和未结束事务的起点，可在恢复后继续运行。若其他页面阻塞升级，关闭对应页面后重新读取即可。
 
-## 启用可选 AI
+## 静态发布（腾讯云 EdgeOne Pages 国际版）
 
-先完成产品构建，再构建并启动本机网关：
+先完成本机产品构建，再生成不含预压缩重复文件的 EdgeOne 预构建发布目录：
 
 ```powershell
 pwsh -NoProfile -File scripts/task.ps1 build
-pwsh -NoProfile -File scripts/task.ps1 ai:build
-pwsh -NoProfile -File scripts/task.ps1 ai:serve
+pwsh -NoProfile -File scripts/task.ps1 prepare:edgeone
 ```
 
-打开网关启动时显示的本机地址（默认 `http://127.0.0.1:4173`），在设置中选择服务并临时输入自己的 API Key。网关同时托管产品静态文件和同源 AI 接口，不需要把 Key 写入环境文件、启动参数或仓库。若另用默认端口 5173 的开发页面，保持开发页运行，并在另一终端执行 `pwsh -NoProfile -File scripts/task.ps1 ai:serve --port 4189 --origin http://127.0.0.1:5173`，与开发页面的同源转发配置保持一致。仅填写 Key 不会自动启动网关。
+生成目录位于 `.artifacts/edgeone-publish`，包含 `public/` 静态产物与 `edgeone.json`（含严格 CSP、Blockly 两条样式哈希、WASM `application/wasm` 类型及缓存策略）。不要直接让云端 Linux 构建环境运行当前依赖固定 Windows 工具的完整构建链；只上传预构建产物，不上传教材、本机档案、QA 页面、截图、日志或凭据。
 
-生产环境由网关直接托管，或由外层服务器将同一来源的 `/api/ai/v2/` 转发到网关；子目录部署时接口前缀与 `VITE_BASE_PATH` 一致。构建生成 Brotli/gzip 静态副本，网关根据浏览器能力自动选择；使用其他静态服务器时也应启用这些压缩副本。代码与学习记录的执行和保存位置仍按上面的边界说明。
+在 `.artifacts/edgeone-publish` 目录内使用 EdgeOne CLI 发布（或将目录导入 EdgeOne Pages）：
 
-## Vercel 静态发布
+```powershell
+cd .artifacts/edgeone-publish
+edgeone pages deploy ./public -n <你的项目名>
+```
 
-使用已通过源码锁和WASM哈希检查的 `web/dist`，按 Vercel Build Output API v3 打包到发布目录的 `.vercel/output/static`，并在 `.vercel/output/config.json` 配置原有严格CSP、WASM的 `application/wasm` 类型和缓存策略；Blockly的两条样式哈希取自本次构建的 `ai-gateway-policy.json`。只有带内容哈希的资源使用长期缓存，HTML和课程JSON使用重新校验。页面采用 `/#/...` 路由，不要把缺失的脚本、课程或API统一改写为首页。
-
-在绑定相应Vercel项目的发布目录运行 `vercel deploy --prebuilt --prod`。只上传生产构建产物，不上传教材、本机档案、QA页面、截图、日志或凭据；不要直接让Vercel的Linux构建环境运行当前依赖固定Windows工具的完整构建链。Vercel会按浏览器能力提供传输压缩。
-
-纯静态发布提供课程、本地学习和浏览器内执行，不会启动独立的Rust AI网关。需要可选AI时，仍须配置真实网关和同源转发。域名、协议或端口改变会产生独立的本地学习空间，已有档案可通过「设置 → 本地数据」的备份与恢复迁移。
+页面采用 `/#/...` 路由，不要把缺失的脚本或课程 JSON 统一改写为首页。域名、协议或端口改变会产生独立的本地学习空间，已有档案可通过「设置 → 本地数据」的备份与恢复迁移。
 
 ## 开发与验证
 
@@ -82,9 +79,22 @@ pwsh -NoProfile -File scripts/task.ps1 test:cross-browser
 
 迁移检查需要本机保留的历史构建；尚未支持 Firefox 的旧版先在 Chrome 中真实完成学习，再将原始物理分区完整读入 Firefox，核对结构与数据全等后检查其实际升级、清除和新课学习。历史构建保持原样，不将此过程称为旧版 Firefox 执行支持。原生 Firefox 使用 `.tools/firefox/core/firefox.exe` 和 `.tools/geckodriver/geckodriver.exe`。性能检查使用现有 Windows 主机采样与本地 HTTPS 证书配置，要求可见浏览器和符合既定条件的显示环境；不满足条件会报告失败，不降低阈值。所有截图、执行原包和报告保存在 `.artifacts/`，不上传仓库。
 
-`content/` 保存课程和案例，`engine/` 保存 Rust 解释器，`web/` 保存前端，`server/ai-proxy/` 保存可选 AI 网关，`shared/contracts/` 和 `tests/fixtures/` 保存程序与测试实际使用的协议和固定输入。
+`content/` 保存课程和案例，`engine/` 保存 Rust 解释器，`web/` 保存前端，`shared/contracts/` 和 `tests/fixtures/` 保存程序与测试实际使用的协议和固定输入。
 
 构建核对源码输入和 WASM 哈希，不依赖历史交接、截图或测试日志。历史发布元数据保留既有程序与机器协议的稳定身份，不会恢复已清除的学习档案，也不代表本次重新执行过历史验收。修改构建输入后，运行 `lock:build` 更新输入清单，再执行相应检查。
+
+## 目录结构
+
+仓库按功能划分为以下目录：
+
+- `web/`：前端应用（React + TypeScript + CodeMirror + Blockly），`web/dist/` 为本地构建输出。
+- `engine/`：六种语言（C、Python、Java、C++、Rust、MySQL）与算法/内存观察的 Rust/WASM 解释器引擎。
+- `content/`：六种语言的课程内容、案例、练习及构建输入源码锁（`content/build/source-lock.json`）。
+- `shared/`：共享 JSON Schema 协议与固定测试样例输入。
+- `scripts/`：环境检查、WASM/课程构建、质量验证与 EdgeOne 静态发布打包脚本。
+- `tests/`：Vitest 单元测试与 Playwright 浏览器工作流回归测试。
+- `docs/`：公开项目文档（如需求规格说明书与仓库规范）。
+- `参考教材/`、`项目文档/`：仅保留在本机的参考教材 PDF 与研发过程文档，由 `.gitignore` 阻止上传仓库。
 
 ## 仓库范围
 

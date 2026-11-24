@@ -6,14 +6,12 @@ import { LearningSaveStatus, useLearning } from '../learning/react';
 import type { Settings } from '../storage/model';
 import { AppearanceSettings } from '../appearance/AppearanceSettings';
 import { SavedBlockWorkspacePreference } from '../appearance/BlockWorkspacePreference';
-import { AiSettings } from '../ai-debug/Settings';
 import { BackupPanel } from '../storage/BackupPanel';
 import './settings.css';
 
 const tabs = [
   { id: 'appearance', label: '外观与主题' },
   { id: 'display', label: '显示设置' },
-  { id: 'ai', label: 'AI解释（可选）' },
   { id: 'data', label: '本地数据' },
 ] as const;
 
@@ -344,7 +342,6 @@ function SettingsContent() {
               )}
             </>
           )}
-          {selected === 'ai' && <AiSettings />}
           {selected === 'data' && (
             <>
               <h2>本地数据与保存</h2>

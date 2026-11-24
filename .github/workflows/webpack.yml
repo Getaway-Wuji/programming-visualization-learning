@@ -45,9 +45,6 @@ jobs:
       - name: Check Rust and run workspace tests
         if: ${{ !cancelled() && steps.product_build.outcome == 'success' }}
         run: pwsh -NoProfile -File scripts/task.ps1 check:rust
-      - name: Test optional AI gateway
-        if: ${{ !cancelled() && steps.product_build.outcome == 'success' }}
-        run: pwsh -NoProfile -File scripts/task.ps1 test:ai-proxy
       - name: Install the pinned Chromium browser
         if: ${{ !cancelled() && steps.product_build.outcome == 'success' }}
         run: pwsh -NoProfile -File scripts/task.ps1 browser:install:chromium

@@ -246,6 +246,94 @@ test('semicolon repair submits successfully with the OJ editor', async ({ page }
   await expect(page.getByTestId('practice-feedback')).toHaveText('通过');
 });
 
+const scanfAnswer = `#include <stdio.h>
+int main(void) {
+    /* 读入一个整数 */
+    int n;
+    scanf("%d", &n);
+    printf("n=%d", n);
+    return 0;
+}`;
+
+test('C exercise syncs scanf with the destination variable and preserves it when applying blocks', async ({
+  page,
+}) => {
+  await page.goto('/#/practice/exercise.c6.s2.1');
+  const editor = page.getByRole('textbox', { name: '完整 C 源码 · main.c', exact: true });
+  await expect(editor).toBeEditable();
+  await editor.fill(scanfAnswer);
+  await page.getByRole('button', { name: '同步到积木', exact: true }).click();
+  const pane = page.locator('.c6-block-pane');
+  await expect(pane.getByText('已同步当前代码', { exact: true })).toBeVisible();
+  await expect(pane.locator('.blocklySvg')).toContainText('读入整数到');
+  expect(await blockOptions(page, /^\d+\. 读入整数 · n$/)).toHaveLength(1);
+  expect(await editorText(page)).toBe(scanfAnswer);
+
+  const [print] = await blockOptions(page, /^\d+\. 输出 · n=%d$/);
+  await selectBlock(page, print);
+  await blockWorkspace(page)
+    .getByRole('textbox', { name: '输出格式', exact: true })
+    .fill('n=%d\\n');
+  await expect(pane.locator('.c6-source-read')).toContainText('scanf("%d", &n);');
+  await pane.getByRole('button', { name: '应用生成代码', exact: true }).click();
+  await expect.poll(() => editorText(page)).toContain('scanf("%d", &n);');
+  await page.getByRole('button', { name: '提交', exact: true }).click();
+  await expect(page.getByTestId('oj-verdict')).toHaveText('通过');
+});
+
+test('C exercise explains compilation, runtime and output failures next to the submission', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/#/practice/exercise.c6.s2.1');
+  const editor = page.getByRole('textbox', { name: '完整 C 源码 · main.c', exact: true });
+  await expect(editor).toBeEditable();
+  const submit = page.getByRole('button', { name: '提交', exact: true });
+  const feedback = page.getByRole('region', { name: '判题详情' });
+
+  await editor.fill(scanfAnswer.replace('scanf("%d", &n);', 'scanf("%d", &n)'));
+  await submit.click();
+  await expect(feedback.getByRole('heading', { name: '编译错误' })).toBeVisible();
+  await expect(feedback.getByTestId('diagnostic-gcc')).toContainText(
+    'expected ";" before "printf"',
+  );
+  await expect(feedback).toContainText('通俗解释');
+  await expect(feedback).toContainText('缺少分号');
+  const locate = feedback.getByRole('button', { name: /第 5 行，第 20 列/ });
+  await locate.click();
+  await expect(editor).toBeFocused();
+  expect(await editorText(page)).toContain('scanf("%d", &n)\n');
+
+  await editor.fill(scanfAnswer.replace('scanf("%d", &n);', 'scanf("%d", &n;'));
+  await submit.click();
+  await expect(feedback.getByTestId('diagnostic-gcc')).toContainText('expected ")" before ";"');
+  await expect(feedback.getByTestId('diagnostic-explanation')).toContainText('这里需要右括号 )');
+
+  await editor.fill(scanfAnswer.replace('n=%d', 'n=%z'));
+  await expect(feedback).toHaveCount(0);
+  await submit.click();
+  await expect(feedback).toContainText('格式字符串不受支持');
+  await expect(feedback.getByTestId('diagnostic-source-mark')).toHaveText('"n=%z"');
+  await expect(feedback.getByRole('button', { name: /第 6 行/ })).toBeVisible();
+
+  await editor.fill(scanfAnswer.replace('n=%d", n', 'n=%d", n/0'));
+  await submit.click();
+  await expect(feedback.getByRole('heading', { name: '运行错误' })).toBeVisible();
+  await expect(feedback).toContainText('除数为零');
+
+  await editor.fill(scanfAnswer.replace('n=%d', 'n= %d'));
+  await submit.click();
+  await expect(feedback.getByRole('heading', { name: '输出格式不符' })).toBeVisible();
+  await expect(feedback).toContainText('第 1 组输入');
+  await expect(feedback.getByText('n=-9', { exact: true })).toBeVisible();
+  await expect(feedback.getByText('n= -9', { exact: true })).toBeVisible();
+
+  await editor.fill(scanfAnswer);
+  await submit.click();
+  await expect(page.getByTestId('oj-verdict')).toHaveText('通过');
+  await expect(feedback).toHaveCount(0);
+});
+
 test('block preview and repeated application keep only the explicit return', async ({ page }) => {
   await page.goto('/#/practice/exercise.c6.s2.1');
   const editor = page.getByRole('textbox', { name: '完整 C 源码 · main.c', exact: true });

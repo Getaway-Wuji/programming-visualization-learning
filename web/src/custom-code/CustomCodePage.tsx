@@ -8,8 +8,6 @@ import { memoryDiagnostics, memoryStepLabels } from '../memory/presentation';
 import { CustomCodeController } from './controller';
 import { CustomViews } from './Views';
 import type { CustomDraft } from '../storage/custom-draft';
-import { useAi } from '../ai-debug/react';
-import { AiPanel } from '../ai-debug/Panel';
 import './custom-code.css';
 import { useUnsavedChanges } from '../workbench/use-unsaved-changes';
 import { CodeEditor, type CodeEditorHandle } from '../components/CodeEditor';
@@ -17,34 +15,8 @@ const initial =
   '#include <stdio.h>\n\nint main() {\n  int number;\n  scanf("%d", &number);\n  printf("%d\\n", number * 2);\n  return 0;\n}\n';
 export default function CustomCodePage() {
   const { service, state: learning } = useLearning();
-  const { session: ai } = useAi();
-  const [inputRevision, setInputRevision] = useState(() => crypto.randomUUID());
-  const [selection, setSelection] = useState<{ start: number; end: number } | null>(null);
-  const aiLease = useRef({ token: 0 });
   const [controller] = useState(() => new CustomCodeController());
   const snap = useSyncExternalStore(controller.subscribe, controller.getSnapshot);
-  useEffect(() => {
-    const lease = aiLease.current;
-    const token = ++lease.token;
-    const identity = () => {
-      const s = controller.getSnapshot();
-      return `${s.runs}:${s.result?.identity.runId ?? ''}:${s.view.cursor}`;
-    };
-    let previous = identity();
-    const unsubscribe = controller.subscribe(() => {
-      const next = identity();
-      if (next !== previous) {
-        previous = next;
-        ai.invalidateContext();
-      }
-    });
-    return () => {
-      unsubscribe();
-      queueMicrotask(() => {
-        if (lease.token === token) ai.clear();
-      });
-    };
-  }, [ai, controller]);
   const [source, setSource] = useState(initial),
     [input, setInput] = useState('7'),
     [mode, setMode] = useState('basic'),
@@ -295,21 +267,8 @@ export default function CustomCodePage() {
                 value={source}
                 onChange={(text) => {
                   edits.current++;
-                  ai.invalidateContext();
-                  setSelection(null);
                   controller.setSource(text, 'c');
                   setSource(text);
-                }}
-                onSelect={(range) => {
-                  const bytes = new TextEncoder().encode(editor.current?.text() ?? source);
-                  const next = {
-                    start: new TextDecoder().decode(bytes.slice(0, range.start)).length,
-                    end: new TextDecoder().decode(bytes.slice(0, range.end)).length,
-                  };
-                  if (next.start !== selection?.start || next.end !== selection?.end) {
-                    ai.invalidateContext();
-                    setSelection(next);
-                  }
                 }}
               />
               {!sourceValid && <p role="alert">代码超过32 KiB，原文已保留。请缩短后运行或保存。</p>}
@@ -350,8 +309,6 @@ export default function CustomCodePage() {
                 onChange={(e) => {
                   controller.invalidate();
                   setInput(e.target.value);
-                  setInputRevision(crypto.randomUUID());
-                  ai.invalidateContext();
                 }}
               />
             </label>
@@ -525,37 +482,6 @@ export default function CustomCodePage() {
             ) : (
               <p className="custom-empty">暂无执行状态。运行支持范围内的程序后查看。</p>
             )}
-            <AiPanel
-              input={{
-                source,
-                result,
-                state: view.state,
-                cursor: view.cursor,
-                inputRevision,
-                selection,
-              }}
-              pause={() => controller.pause()}
-              locate={(fact) => {
-                const range = fact.kind === 'state' ? null : fact.byteRange;
-                if (fact.kind !== 'diagnostic') {
-                  controller.seek(fact.kind === 'step' ? fact.step : fact.atCursor);
-                  setMode(fact.kind === 'state' ? 'memory' : 'basic');
-                  setEditing(false);
-                } else if (range) {
-                  setEditing(true);
-                  const start = new TextDecoder().decode(
-                    new TextEncoder().encode(source).slice(0, range.start),
-                  ).length;
-                  const end = new TextDecoder().decode(
-                    new TextEncoder().encode(source).slice(0, range.end),
-                  ).length;
-                  requestAnimationFrame(() => {
-                    editor.current?.focus();
-                    editor.current?.select(start, end);
-                  });
-                }
-              }}
-            />
           </section>
         }
       />

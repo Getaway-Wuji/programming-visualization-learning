@@ -226,7 +226,7 @@ test('desktop shows question and code together and uses the actual algorithm lan
   await expect(page.getByRole('button', { name: '播放', exact: true })).toBeVisible();
 });
 
-test('home keeps optional AI unloaded and AI settings still initializes on demand', async ({
+test('home keeps teaching chunks unloaded and settings omits removed AI panel', async ({
   page,
 }) => {
   const requests: string[] = [];
@@ -237,7 +237,9 @@ test('home keeps optional AI unloaded and AI settings still initializes on deman
     requests.filter((url) => /c6-teaching-(chunk|source)|\/session-[^/]+\.js/.test(url)),
   ).toEqual([]);
   await page.goto('/#/settings?panel=ai');
-  await expect(page.getByRole('heading', { name: 'AI解释（可选）', exact: true })).toBeVisible();
-  await expect(page.getByLabel('AI服务', { exact: true })).toBeEnabled();
-  await expect(page.getByText('未开启', { exact: true })).toBeVisible();
+  await expect(page.getByRole('tab', { name: '外观与主题', exact: true })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+  await expect(page.getByRole('tab', { name: /AI/ })).toHaveCount(0);
 });

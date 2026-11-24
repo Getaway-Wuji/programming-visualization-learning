@@ -27,7 +27,7 @@ const localCourseTools = new Set([
   ].map((name) => `scripts/c6-course/${name}`),
 ]);
 export const isLocalWorkFile = (path) =>
-  /^(?:\.agents|\.codex|\.taste-skill|\.tools|\.artifacts|项目文档|node_modules|target|test-results|playwright-report|c\+\+ 资源)\//.test(
+  /^(?:\.agents|\.codex|\.taste-skill|\.tools|\.artifacts|项目文档|参考教材|node_modules|target|test-results|playwright-report|c\+\+ 资源)\//.test(
     path,
   ) ||
   /(?:^|\/)(?:AGENTS|SKILL)\.md$/.test(path) ||

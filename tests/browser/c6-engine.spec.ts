@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { c6LearningRelease } from '../../web/src/c6-learning/release.generated';
+import { engineBuild } from '../../web/src/generated/c6-teaching/engine-build';
 test.beforeEach(async ({ page }) => {
   await page.goto('/c6-harness.html');
   await page.waitForFunction(() => !!window.c6Test);
@@ -14,10 +14,8 @@ test('real typed C6 Worker facts, complete reverse and changed source/input', as
       input,
     });
     expect(run.result.terminal.status).toBe('completed');
-    expect(run.result.engine.buildId).toBe(c6LearningRelease.engineBuildSha256);
-    expect(await page.evaluate(() => window.c6Test.build.wasmSha256)).toBe(
-      c6LearningRelease.engineBuildSha256,
-    );
+    expect(run.result.engine.buildId).toBe(engineBuild.wasmSha256);
+    expect(await page.evaluate(() => window.c6Test.build.wasmSha256)).toBe(engineBuild.wasmSha256);
     expect(run.receipt).toBe(true);
     expect(run.inspect.activeWorkers).toBe(0);
     expect(run.elapsedMs).toBeLessThan(1000);
